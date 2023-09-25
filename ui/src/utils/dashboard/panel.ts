@@ -20,9 +20,10 @@ import { StatRules } from "src/views/dashboard/plugins/built-in/panel/stat/Overr
 import { TableRules } from "src/views/dashboard/plugins/built-in/panel/table/OverridesEditor";
 import { GridPos, OverrideItem, Panel, PanelType } from "types/dashboard";
 import { PanelPluginComponents } from "types/plugins/plugin";
+import { isEmpty } from "utils/validate";
 
 export const updateGridPos = (panel: Panel, newPos: GridPos) => {
-    console.log("here333333",panel.id, panel.gridPos.y, newPos.y)
+    console.log("here333333", panel.id, panel.gridPos.y, newPos.y)
     panel.gridPos.x = newPos.x;
     panel.gridPos.y = newPos.y;
     panel.gridPos.w = newPos.w;
@@ -44,7 +45,7 @@ export const findRuleInOverride = (override: OverrideItem, ruleType) => {
 }
 
 
-export const getPanelOverridesRules = (panelType, externalPanels:  Record<string,PanelPluginComponents> ): string[] => {
+export const getPanelOverridesRules = (panelType, externalPanels: Record<string, PanelPluginComponents>): string[] => {
     //@needs-update-when-add-new-panel-overrides
     switch (panelType) {
         case PanelType.Graph:
@@ -67,6 +68,10 @@ export const getPanelOverridesRules = (panelType, externalPanels:  Record<string
                 return []
             }
             const rules = p.overrideRules
-            return  Object.keys(rules).map(k => rules[k])
+            if (!isEmpty(rules)) {
+                return Object.keys(rules).map(k => rules[k])
+            } else {
+                return []
+            }
     }
 }

@@ -14,6 +14,8 @@
 import { EditorInputItem } from "src/components/editor/EditorItem";
 import { OverrideRule } from "types/dashboard";
 import React from "react";
+import { ColorPicker } from "components/ColorPicker";
+import { palettes } from "utils/colors";
 
 interface Props {
     override: OverrideRule
@@ -23,14 +25,14 @@ interface Props {
 
 const OverrideEditor = (props: Props) => {
     const { override, onChange } = props
-    console.log("here333333:",props)
     switch (override.type) {
         case OverrideRules.SeriesName:
             return <EditorInputItem value={override.value} onChange={onChange} placeholder="change series name" />
+        case OverrideRules.SeriesColor:
+            return <ColorPicker color={override.value} onChange={onChange} defaultColor={palettes[0]} />
         default:
             return <></>
     }
-
 }
 
 export default OverrideEditor
@@ -38,6 +40,7 @@ export default OverrideEditor
 export enum OverrideRules {
     // basic
     SeriesName = 'Series.displayName',
+    SeriesColor = "Series.color"
 }
 
 // Get override targets names and values or overrides `Target name` selector
@@ -61,5 +64,5 @@ const d: SeriesData[] = flatten(data)
 // If return [] or null or undefined, Datav will use the default function to get override targets
 export const getOverrideTargets = (panel, data) => {
     // for demonstration purpose, we just return a hard coded targets list
-    return [{label:"demo", value: "demo"}]
+    return ['Volume','MA5','MA10','MA20','MA30']
 }

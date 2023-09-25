@@ -17,7 +17,7 @@ import { Panel, PanelEditorProps } from "types/dashboard"
 import React, { memo } from "react";
 import { useStore } from "@nanostores/react"
 import { commonMsg, textPanelMsg } from "src/i18n/locales/en"
-import { PluginSettings, initSettings } from "./types"
+import { PluginSettings, downColor, initSettings, upColor } from "./types"
 import { EditorInputItem, EditorNumberItem } from "components/editor/EditorItem";
 import { dispatch } from "use-bus";
 import { PanelForceRebuildEvent } from "src/data/bus-events";
@@ -25,7 +25,7 @@ import { defaultsDeep } from "lodash";
 import RadionButtons from "components/RadioButtons";
 import { UnitPicker } from "components/Unit";
 import { Units } from "types/panel/plugins";
-import ValueCalculation from "components/ValueCalculation";
+import { ColorPicker } from "components/ColorPicker";
 
 const PanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
     const t = useStore(commonMsg)
@@ -38,20 +38,56 @@ const PanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
                     const plugin: PluginSettings = panel.plugins[panel.type]
                     plugin.animation = e.currentTarget.checked
                     // force the panel to rebuild to avoid some problems
-                    // we can also clone the props.data in Panel.tsx to resolve this problem, but it will cause performance issues
                     dispatch(PanelForceRebuildEvent + panel.id)
                 })} />
             </PanelEditItem>
             <PanelEditItem title={"Chart opacity"}>
-                <EditorNumberItem value={options.chartOpacity} min={0} max={1} step={0.1} onChange={v => onChange((panel: Panel) => { const plugin: PluginSettings = panel.plugins[panel.type];plugin.chartOpacity = v })} />
+                <EditorNumberItem value={options.chartOpacity} min={0} max={1} step={0.1} onChange={v => onChange((panel: Panel) => { const plugin: PluginSettings = panel.plugins[panel.type]; plugin.chartOpacity = v })} />
             </PanelEditItem>
-            {/* <PanelEditItem title="Title">
-            <EditorInputItem value={options.title} onChange={v => onChange((panel: Panel) => {
-                const plugin: PluginSettings = panel.plugins[panel.type]
-                plugin.title = v
-                dispatch(PanelForceRebuildEvent + panel.id)
-            })} />
-        </PanelEditItem> */}
+        </PanelAccordion>
+        <PanelAccordion title={"K chart"}>
+            <PanelEditItem title="Display name">
+                <EditorInputItem value={options.kChart.displayName} onChange={v => onChange((panel: Panel) => {
+                    const plugin: PluginSettings = panel.plugins[panel.type]
+                    plugin.kChart.displayName = v
+                })} />
+            </PanelEditItem>
+            <PanelEditItem title="Fix tooltip">
+                <Switch defaultChecked={options.kChart.fixTooltip} onChange={e => onChange((panel: Panel) => {
+                    const plugin: PluginSettings = panel.plugins[panel.type]
+                    plugin.kChart.fixTooltip = e.currentTarget.checked
+
+                })} />
+            </PanelEditItem>
+            <PanelEditItem title="Up color">
+                <ColorPicker color={options.kChart.upColor} presetColors={[{label: "default", value: upColor }]} onChange={(v) => onChange((panel: Panel) => {
+                    const plugin: PluginSettings = panel.plugins[panel.type]
+                    plugin.kChart.upColor = v
+                })} />
+            </PanelEditItem>
+            <PanelEditItem title="Down color">
+                <ColorPicker color={options.kChart.downColor} presetColors={[{label: "default", value: downColor }]} onChange={(v) => onChange((panel: Panel) => {
+                    const plugin: PluginSettings = panel.plugins[panel.type]
+                    plugin.kChart.downColor = v
+                })} />
+            </PanelEditItem>
+        </PanelAccordion>
+        <PanelAccordion title={"Volume chart"}>
+            <PanelEditItem title="Show">
+                <Switch defaultChecked={options.volumeChart.show} onChange={e => onChange((panel: Panel) => {
+                    const plugin: PluginSettings = panel.plugins[panel.type]
+                    plugin.volumeChart.show = e.currentTarget.checked
+                    dispatch(PanelForceRebuildEvent + panel.id)
+
+                })} />
+            </PanelEditItem>
+            <PanelEditItem title="Sync color" desc="Whether use the same colors as K chart">
+                <Switch defaultChecked={options.volumeChart.syncColor} onChange={e => onChange((panel: Panel) => {
+                    const plugin: PluginSettings = panel.plugins[panel.type]
+                    plugin.volumeChart.syncColor = e.currentTarget.checked
+
+                })} />
+            </PanelEditItem>
         </PanelAccordion>
         <PanelAccordion title={"Mark on chart"} >
             <PanelEditItem title="Max point">
@@ -90,7 +126,7 @@ const PanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
                 } />
             </PanelEditItem>
             <PanelEditItem title={t.decimal}>
-                <EditorNumberItem value={options.value.decimal} min={0} max={5} step={1} onChange={v => onChange((panel: Panel) => { const plugin: PluginSettings = panel.plugins[panel.type];plugin.value.decimal = v })} />
+                <EditorNumberItem value={options.value.decimal} min={0} max={5} step={1} onChange={v => onChange((panel: Panel) => { const plugin: PluginSettings = panel.plugins[panel.type]; plugin.value.decimal = v })} />
             </PanelEditItem>
             {/* <PanelEditItem title={t.calc} desc={t.calcTips}>
                 <ValueCalculation value={options.value.calc} onChange={v => {
@@ -99,6 +135,15 @@ const PanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
             </PanelEditItem> */}
         </PanelAccordion>
         <PanelAccordion title={"MA line"} >
+            <PanelEditItem title="Line symbol">
+                <RadionButtons options={[{ label: "None", value: "none" }, { label: "Circle", value: "circle" }, { label: "Empty Circle", value: "emptyCircle" }]} value={options.maLine.lineSymbol} onChange={v => onChange((panel: Panel) => {
+                    const plugin: PluginSettings = panel.plugins[panel.type]
+                    plugin.maLine.lineSymbol = v
+                })} />
+            </PanelEditItem>
+            <PanelEditItem title="Line width">
+                <EditorNumberItem value={options.maLine.lineWidth} min={1} max={5} step={1} onChange={v => onChange((panel: Panel) => { const plugin: PluginSettings = panel.plugins[panel.type]; plugin.maLine.lineWidth = v })} />
+            </PanelEditItem>
             <PanelEditItem title={"MA5"} desc="Draw a line chart, the value of each point is the average of last 5 points (including current point)">
                 <Switch defaultChecked={options.maLine.ma5} onChange={e => onChange((panel: Panel) => {
                     const plugin: PluginSettings = panel.plugins[panel.type]

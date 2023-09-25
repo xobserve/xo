@@ -18,9 +18,8 @@ import { SeriesData } from "types/seriesData";
 import React from "react";
 import { isEmpty } from "utils/validate";
 import NoData from "src/views/dashboard/components/PanelNoData";
-import { cloneDeep, defaultsDeep } from "lodash";
+import { defaultsDeep } from "lodash";
 import { PluginSettings, initSettings } from "./types";
-import { formatUnit } from "components/Unit";
 import { buildOptions } from "./buildOptions";
 
 interface Props extends PanelProps {
@@ -54,7 +53,7 @@ const PanelComponent = (props: Props) => {
     const echartOptions = useMemo(() => {
         const option = buildOptions(panel, props.data, colorMode)
         return option
-    }, [props.data, colorMode, options])
+    }, [props.data,panel.overrides, colorMode, options])
 
 
     console.log("here333333:", echartOptions)

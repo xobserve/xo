@@ -3,8 +3,20 @@ import { ValueSetting } from "types/panel/plugins"
 
 export interface PluginSettings  {
     animation: boolean
-    chartOpacity: number 
+    chartOpacity: number
+    kChart: {
+        displayName: string
+        fixTooltip: boolean
+        upColor: string 
+        downColor: string
+    }
+    volumeChart: {
+        show: boolean
+        syncColor: boolean
+    } 
     maLine: {
+        lineSymbol: "none" |"circle" | "emptyCircle" 
+        lineWidth: number
         ma5: boolean
         ma10: boolean
         ma20: boolean
@@ -19,11 +31,25 @@ export interface PluginSettings  {
     }
 }
 
+export const upColor = "#00da3c"
+export const downColor = "#ec0000"
 
 export const initSettings: PluginSettings = {
     animation: false,
     chartOpacity: 0.8,
+    kChart: {
+        displayName: "",
+        fixTooltip: true,
+        upColor: upColor,
+        downColor: downColor
+    },
+    volumeChart: {
+        show: false,
+        syncColor: true,
+    },
     maLine: {
+        lineSymbol: "none",
+        lineWidth: 2,
         ma5: true,
         ma10: true,
         ma20: true,

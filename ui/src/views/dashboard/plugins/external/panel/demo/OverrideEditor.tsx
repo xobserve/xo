@@ -61,5 +61,5 @@ const d: SeriesData[] = flatten(data)
 // If return [] or null or undefined, Datav will use the default function to get override targets
 export const getOverrideTargets = (panel, data) => {
     // for demonstration purpose, we just return a hard coded targets list
-    return [{label:"demo", value: "demo"}]
+    return ["demo"]
 }

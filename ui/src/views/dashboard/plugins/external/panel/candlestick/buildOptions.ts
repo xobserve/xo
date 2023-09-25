@@ -3,12 +3,16 @@ import { PluginSettings } from "./types";
 import { cloneDeep } from "lodash";
 import { isEmpty } from "utils/validate";
 import { formatUnit } from "components/Unit";
+import { findOverride, findRuleInOverride } from "utils/dashboard/panel";
+import { OverrideRules } from "./OverrideEditor";
+import { paletteColorNameToHex } from "utils/colors";
 
 export const buildOptions = (panel: Panel, data: any, colorMode: "light" | "dark") => {
     const options: PluginSettings = panel.plugins[panel.type]
 
-    const upColor = '#00da3c';
-    const downColor = '#ec0000';
+    const upColor = paletteColorNameToHex(options.kChart.upColor, colorMode)
+    const downColor = paletteColorNameToHex(options.kChart.downColor, colorMode)
+    
     // Each item: open，close，lowest，highest
     const data0 = splitData(cloneDeep(data.flat()));
     function splitData(rawData) {
@@ -18,7 +22,10 @@ export const buildOptions = (panel: Panel, data: any, colorMode: "light" | "dark
         for (let i = 0; i < rawData.length; i++) {
             categoryData.push(rawData[i].splice(0, 1)[0]);
             values.push(rawData[i]);
+            if (rawData[i][4]) {
             volumes.push([i, rawData[i][4], rawData[i][0] > rawData[i][1] ? 1 : -1]);
+
+            }
         }
         return {
             categoryData: categoryData,
@@ -74,6 +81,22 @@ export const buildOptions = (panel: Panel, data: any, colorMode: "light" | "dark
         })
     }
 
+    const solidKChart = false
+    const showVolume = options.volumeChart.show && !isEmpty(data0.volumes)
+    const volumeGrid = showVolume ?  [{
+        left: '5%',
+        right: (options.mark.minLine != "none" || options.mark.maxLine != "none") ? '6%' : '2%',
+        top: '65%',
+        height: '13%'
+    }] : []
+
+    const volumeOverride = findOverride(panel, "Volume")
+    const ma5verride = findOverride(panel, "MA5")
+    const ma10verride = findOverride(panel, "MA10")
+    const ma20verride = findOverride(panel, "MA20")
+    const ma30verride = findOverride(panel, "MA30")
+    const kChartName = options.kChart.displayName
+
     return  {
         animation: options.animation,
         tooltip: {
@@ -87,7 +110,7 @@ export const buildOptions = (panel: Panel, data: any, colorMode: "light" | "dark
             textStyle: {
                 color: '#000'
             },
-            position: function (pos, params, el, elRect, size) {
+            position: options.kChart.fixTooltip && function (pos, params, el, elRect, size) {
                 const obj = {
                     top: 10
                 };
@@ -119,9 +142,9 @@ export const buildOptions = (panel: Panel, data: any, colorMode: "light" | "dark
                 colorAlpha: 0.1
             }
         },
-        visualMap: {
+        visualMap: showVolume && [{
             show: false,
-            seriesIndex: -1,
+            seriesIndex: options.volumeChart.syncColor ? 1 : -1,
             dimension: 2,
             pieces: [
                 {
@@ -134,22 +157,34 @@ export const buildOptions = (panel: Panel, data: any, colorMode: "light" | "dark
                 }
             ]
         },
+        !solidKChart && {
+            show: false,
+            seriesIndex: 0,
+            dimension: 2,
+            pieces: [
+                {
+                    value: 1,
+                    color: downColor
+                },
+                {
+                    value: -1,
+                    color: upColor
+                }
+            ]
+        }],
         legend: {
             show: true,
-            data: ['K', 'MA5', 'MA10', 'MA20', 'MA30']
+            data: [isEmpty(kChartName) ? 'K' : kChartName, findRuleInOverride(ma5verride, OverrideRules.SeriesName) ?? 'MA5', findRuleInOverride(ma10verride, OverrideRules.SeriesName) ?? 'MA10', findRuleInOverride(ma20verride, OverrideRules.SeriesName) ?? 'MA20', findRuleInOverride(ma30verride, OverrideRules.SeriesName) ?? 'MA30']
         },
         grid: [{
             top: '8%',
             left: '5%',
             right: (options.mark.minLine != "none" || options.mark.maxLine != "none") ? '6%' : '2%',
-            height: '50%',
+            height: showVolume ? '50%' : null,
+            bottom: showVolume ? null : "20%"
         },
-        {
-            left: '5%',
-            right: (options.mark.minLine != "none" || options.mark.maxLine != "none") ? '6%' : '2%',
-            top: '65%',
-            height: '13%'
-        }],
+        ...volumeGrid
+        ],
         xAxis: [
             {
                 type: 'category',
@@ -163,7 +198,7 @@ export const buildOptions = (panel: Panel, data: any, colorMode: "light" | "dark
                     z: 100
                 }
             },
-            {
+            showVolume && {
                 type: 'category',
                 gridIndex: 1,
                 data: data0.categoryData,
@@ -187,7 +222,7 @@ export const buildOptions = (panel: Panel, data: any, colorMode: "light" | "dark
                 }),
             },
         },
-        {
+        showVolume && {
             scale: true,
             gridIndex: 1,
             splitNumber: 2,
@@ -215,7 +250,7 @@ export const buildOptions = (panel: Panel, data: any, colorMode: "light" | "dark
         ],
         series: [
             {
-                name: 'K',
+                name: isEmpty(kChartName) ? 'K' : kChartName,
                 type: 'candlestick',
                 data: data0.values,
                 itemStyle: {
@@ -250,51 +285,72 @@ export const buildOptions = (panel: Panel, data: any, colorMode: "light" | "dark
                     ]
                 }
             },
-            {
-                name: 'Volume',
+            showVolume && {
+                name: findRuleInOverride(volumeOverride, OverrideRules.SeriesName) ?? 'Volume',
                 type: 'bar',
                 xAxisIndex: 1,
                 yAxisIndex: 1,
                 data: data0.volumes,
                 itemStyle: {
-                    opacity: options.chartOpacity
+                    opacity: options.chartOpacity,
+                    color: paletteColorNameToHex(findRuleInOverride(volumeOverride, OverrideRules.SeriesColor),colorMode) ?? null,
                 },
             },
             options.maLine.ma5 && {
-                name: 'MA5',
+                name: findRuleInOverride(ma5verride, OverrideRules.SeriesName) ?? 'MA5',
                 type: 'line',
                 data: calculateMA(5),
                 smooth: true,
                 lineStyle: {
-                    opacity: 0.5
-                }
+                    opacity: 0.5,
+                    width: options.maLine.lineWidth
+                },
+                itemStyle: {
+                    color: paletteColorNameToHex(findRuleInOverride(ma5verride, OverrideRules.SeriesColor),colorMode) ?? null,
+                },
+                symbol: options.maLine.lineSymbol
             },
             options.maLine.ma10 && {
-                name: 'MA10',
+                name: findRuleInOverride(ma10verride, OverrideRules.SeriesName) ?? 'MA10',
                 type: 'line',
                 data: calculateMA(10),
                 smooth: true,
                 lineStyle: {
-                    opacity: 0.5
-                }
+                    opacity: 0.5,
+                    width: options.maLine.lineWidth
+                },
+                itemStyle: {
+                    color: paletteColorNameToHex(findRuleInOverride(ma10verride, OverrideRules.SeriesColor),colorMode) ?? null,
+                },
+                symbol: options.maLine.lineSymbol
             },
             options.maLine.ma20 && {
-                name: 'MA20',
+                name: findRuleInOverride(ma20verride, OverrideRules.SeriesName) ?? 'MA20',
                 type: 'line',
                 data: calculateMA(20),
                 smooth: true,
                 lineStyle: {
-                    opacity: 0.5
-                }
+                    opacity: 0.5,
+                    width: options.maLine.lineWidth
+                },
+                itemStyle: {
+                    color: paletteColorNameToHex(findRuleInOverride(ma20verride, OverrideRules.SeriesColor),colorMode) ?? null,
+                },
+                symbol: options.maLine.lineSymbol
             },
             options.maLine.ma30 && {
-                name: 'MA30',
+                name: findRuleInOverride(ma30verride, OverrideRules.SeriesName) ?? 'MA30',
                 type: 'line',
                 data: calculateMA(30),
                 smooth: true,
                 lineStyle: {
-                    opacity: 0.5
-                }
+                    opacity: 0.5,
+                    width: options.maLine.lineWidth
+                },
+                itemStyle: {
+                    color: paletteColorNameToHex(findRuleInOverride(ma30verride, OverrideRules.SeriesColor),colorMode) ?? null,
+                },
+                symbol: options.maLine.lineSymbol
             }
         ]
     };
