@@ -52,7 +52,7 @@ const PanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
                     plugin.kChart.displayName = v
                 })} />
             </PanelEditItem>
-            <PanelEditItem title="Fix tooltip">
+            <PanelEditItem title="Fixed tooltip">
                 <Switch defaultChecked={options.kChart.fixTooltip} onChange={e => onChange((panel: Panel) => {
                     const plugin: PluginSettings = panel.plugins[panel.type]
                     plugin.kChart.fixTooltip = e.currentTarget.checked
@@ -83,6 +83,13 @@ const PanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
                     const plugin: PluginSettings = panel.plugins[panel.type]
                     plugin.kChart.splitArea = e.currentTarget.checked
 
+                })} />
+            </PanelEditItem>
+            <PanelEditItem title="Solid bar">
+                <Switch defaultChecked={options.kChart.solidBar} onChange={e => onChange((panel: Panel) => {
+                    const plugin: PluginSettings = panel.plugins[panel.type]
+                    plugin.kChart.solidBar = e.currentTarget.checked
+                    dispatch(PanelForceRebuildEvent + panel.id)
                 })} />
             </PanelEditItem>
         </PanelAccordion>

@@ -84,7 +84,7 @@ export const buildOptions = (panel: Panel, data: SeriesData[], colorMode: "light
         })
     }
 
-    const solidKChart = false
+    const solidKChart = options.kChart.solidBar
     const showVolume = options.volumeChart.show && !isEmpty(data0.volumes)
     const volumeGrid = showVolume ? (!options.volumeChart.showYAxisLabel ? [{
         left: '5%',

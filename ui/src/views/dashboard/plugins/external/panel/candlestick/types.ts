@@ -11,6 +11,7 @@ export interface PluginSettings  {
         downColor: string
         splitLine: boolean
         splitArea: boolean
+        solidBar: boolean
     }
     volumeChart: {
         show: boolean
@@ -49,6 +50,7 @@ export const initSettings: PluginSettings = {
         downColor: downColor,
         splitLine: false, 
         splitArea: true,
+        solidBar: true
     },
     volumeChart: {
         show: false,
