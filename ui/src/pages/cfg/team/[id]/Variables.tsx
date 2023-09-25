@@ -18,17 +18,13 @@ import RadionButtons from "src/components/RadioButtons"
 import DatasourceSelect from "src/components/datasource/Select"
 import { EditorInputItem, EditorNumberItem } from "src/components/editor/EditorItem"
 import { Form, FormSection } from "src/components/form/Form"
-import Page from "layouts/page/Page"
 import { isArray, isEmpty } from "lodash"
 import { useEffect, useRef, useState } from "react"
-import { FaArrowDown, FaArrowUp, FaChevronDown, FaChevronUp, FaCog } from "react-icons/fa"
-import { cfgLinks } from "src/data/nav-links"
 import { initVariable } from "src/data/variable"
 
 import HttpVariableEditor from "src/views/dashboard/plugins/built-in/datasource/http/VariableEditor"
 import PrometheusVariableEditor from "src/views/dashboard/plugins/built-in/datasource/prometheus/VariableEditor"
 import { DatasourceType } from "types/dashboard"
-import { Datasource } from "types/datasource"
 import { Variable, VariableQueryType, VariableRefresh } from "types/variable"
 import { useImmer } from "use-immer"
 import { requestApi } from "utils/axios/request"
@@ -48,6 +44,7 @@ import { useSearchParam } from "react-use"
 import { $datasources } from "src/views/datasource/store"
 import { Team } from "types/teams"
 import { externalDatasourcePlugins } from "src/views/dashboard/plugins/external/plugins"
+import Loading from "components/loading/Loading"
 
 
 
@@ -163,7 +160,9 @@ const TeamVariablesPage = ({team}:{team:Team})  => {
                 <Box></Box>
                 <Button size="sm" onClick={onAddVariable}>{t.newItem({ name: t.variable })}</Button>
             </Flex>
-            {variables && <VariablesTable variables={variables} onEdit={onEditVariable} onRemove={onRemoveVariable} />}
+            {variables ? 
+            <VariablesTable variables={variables} onEdit={onEditVariable} onRemove={onRemoveVariable} /> 
+            : <Loading style={{marginTop: '50px'}}/>}
         </Box>
         {variable && <EditVariable key={variable.id} v={variable} isEdit={editMode} onClose={() => {
             removeParamFromUrl(['editVar'])

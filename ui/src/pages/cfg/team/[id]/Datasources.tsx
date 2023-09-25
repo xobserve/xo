@@ -26,6 +26,7 @@ import { useStore } from "@nanostores/react"
 import { cfgDatasourceMsg, commonMsg } from "src/i18n/locales/en"
 import { Team } from "types/teams"
 import { externalDatasourcePlugins } from "src/views/dashboard/plugins/external/plugins"
+import Loading from "components/loading/Loading"
 
 const TeamDatasources = ({ team }: { team: Team }) => {
     const t = useStore(commonMsg)
@@ -93,7 +94,7 @@ const TeamDatasources = ({ team }: { team: Team }) => {
                 <Button size="sm" onClick={() => navigate(ReserveUrls.New + `/datasource?teamId=${team.id}`)}>{t.newItem({ name: t.datasource })}</Button>
             </Flex>
 
-            <VStack alignItems="left" spacing={2} mt="3">
+            {datasources ?<VStack alignItems="left" spacing={2} mt="3">
                 {
                     builtInDatasources?.map(ds => {
                         return <DatasourceCard ds={ds} selectedDs={datasource} dsIcon={`/plugins/datasource/${ds.type}.svg`} t={t} onEdit={() => { setDatasource(ds); onOpen() }} onDelete={() => { onAlertOpen(); setDatasource(ds) }} />
@@ -105,7 +106,7 @@ const TeamDatasources = ({ team }: { team: Team }) => {
                         return <DatasourceCard ds={ds} selectedDs={datasource} dsIcon={`/plugins/external/datasource/${ds.type}.svg`} t={t} onEdit={() => { setDatasource(ds); onOpen() }} onDelete={() => { onAlertOpen(); setDatasource(ds) }} />
                     })
                 }
-            </VStack>
+            </VStack> : <Loading style={{marginTop: '50px'}}/>}
         </Box>
         <Modal isOpen={isOpen} onClose={onEditClose}>
             <ModalOverlay />
