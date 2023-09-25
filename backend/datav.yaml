@@ -10,7 +10,7 @@ common:
 server:
     ## api server listening address
     ## ip:host
-    listening_addr: localhost:10086
+    listening_addr: 0.0.0.0:10086
     ## If leave empty, datav will use above `listening_addr` as api server address in UI 
     ## Let's assume you have created domain names pointed to UI and api sever, you need to set this field to the new api server address
     ## e.g https://api.datav.io
