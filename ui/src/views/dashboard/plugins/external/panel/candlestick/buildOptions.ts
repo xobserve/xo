@@ -89,8 +89,8 @@ export const buildOptions = (panel: Panel, data: SeriesData[], colorMode: "light
     const volumeGrid = showVolume ? [{
         left: '6%',
         right: ((options.mark.minLine != "none" || options.mark.maxLine != "none") ? '6%' : '2%'),
-        top: '65%',
-        height: '13%'
+        top: options.volumeChart.top,
+        height: options.volumeChart.height
     }]: []
 
     const volumeOverride = findOverride(panel, "Volume")
@@ -201,7 +201,7 @@ export const buildOptions = (panel: Panel, data: SeriesData[], colorMode: "light
             top: '8%',
             left: '6%',
             right: (options.mark.minLine != "none" || options.mark.maxLine != "none") ? '6%' : '2%',
-            height: showVolume ? '50%' : null,
+            height: showVolume ? options.kChart.height : null,
             bottom: showVolume ? null : "20%"
         },
         ...volumeGrid

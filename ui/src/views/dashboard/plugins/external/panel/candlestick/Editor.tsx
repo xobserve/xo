@@ -92,6 +92,12 @@ const PanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
                     dispatch(PanelForceRebuildEvent + panel.id)
                 })} />
             </PanelEditItem>
+            <PanelEditItem title="height">
+                <EditorInputItem value={options.kChart.height} onChange={v => onChange((panel: Panel) => {
+                    const plugin: PluginSettings = panel.plugins[panel.type]
+                    plugin.kChart.height = v
+                })} />
+            </PanelEditItem>
         </PanelAccordion>
         <PanelAccordion title={"Volume chart"}>
             <PanelEditItem title="Show">
@@ -107,6 +113,18 @@ const PanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
                     const plugin: PluginSettings = panel.plugins[panel.type]
                     plugin.volumeChart.syncColor = e.currentTarget.checked
 
+                })} />
+            </PanelEditItem>
+            <PanelEditItem title="height">
+                <EditorInputItem value={options.volumeChart.height} onChange={v => onChange((panel: Panel) => {
+                    const plugin: PluginSettings = panel.plugins[panel.type]
+                    plugin.volumeChart.height = v
+                })} />
+            </PanelEditItem>
+            <PanelEditItem title="top">
+                <EditorInputItem value={options.volumeChart.top} onChange={v => onChange((panel: Panel) => {
+                    const plugin: PluginSettings = panel.plugins[panel.type]
+                    plugin.volumeChart.top = v
                 })} />
             </PanelEditItem>
             <PanelEditItem title="Show Y-axis label">
