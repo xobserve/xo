@@ -86,16 +86,12 @@ export const buildOptions = (panel: Panel, data: SeriesData[], colorMode: "light
 
     const solidKChart = options.kChart.solidBar
     const showVolume = options.volumeChart.show && !isEmpty(data0.volumes)
-    const volumeGrid = showVolume ? (!options.volumeChart.showYAxisLabel ? [{
-        left: '5%',
+    const volumeGrid = showVolume ? [{
+        left: '6%',
         right: ((options.mark.minLine != "none" || options.mark.maxLine != "none") ? '6%' : '2%'),
         top: '65%',
         height: '13%'
-    }] : [{
-        left: '5%',
-        top: '65%',
-        height: '13%'
-    }]): []
+    }]: []
 
     const volumeOverride = findOverride(panel, "Volume")
     const ma5verride = findOverride(panel, "MA5")
@@ -138,7 +134,26 @@ export const buildOptions = (panel: Panel, data: SeriesData[], colorMode: "light
                 }
             ],
             label: {
-                backgroundColor: '#777'
+                backgroundColor: '#777',
+                formatter: function (params) {
+                    if (params.axisDimension != 'y') {
+                        return params.value
+                    }
+
+                    if (params.axisIndex == 0) {
+                        // K chart
+                        return formatUnit(params.value, options.value.units, options.value.decimal)
+                    }
+
+                    if (params.axisIndex == 1) {
+                        // K chart
+                        return formatUnit(params.value, options.volumeChart.value.units, options.volumeChart.value.decimal)
+                    }
+
+                    return params.value
+
+     
+                }
             }
         },
         brush: {
@@ -184,7 +199,7 @@ export const buildOptions = (panel: Panel, data: SeriesData[], colorMode: "light
         },
         grid: [{
             top: '8%',
-            left: '5%',
+            left: '6%',
             right: (options.mark.minLine != "none" || options.mark.maxLine != "none") ? '6%' : '2%',
             height: showVolume ? '50%' : null,
             bottom: showVolume ? null : "20%"
@@ -235,7 +250,7 @@ export const buildOptions = (panel: Panel, data: SeriesData[], colorMode: "light
             scale: true,
             gridIndex: 1,
             splitNumber: 2,
-            position: "right",
+            position: "left",
             axisLabel: { 
                 show: options.volumeChart.showYAxisLabel,
                 formatter: (function (value) {
@@ -311,6 +326,10 @@ export const buildOptions = (panel: Panel, data: SeriesData[], colorMode: "light
                     color: paletteColorNameToHex(findRuleInOverride(volumeOverride, OverrideRules.SeriesColor),colorMode) ?? null,
                 },
                 tooltip: {
+                    axisPointer: {
+                        type: 'item'
+                    },
+                    trigger: 'axis',
                     valueFormatter: (function (value) {
                         if (isEmpty(value)) {
                             return value
