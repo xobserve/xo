@@ -322,7 +322,7 @@ export const buildOptions = (panel: Panel, data: SeriesData[], colorMode: "light
                 yAxisIndex: 1,
                 data: data0.volumes,
                 itemStyle: {
-                    opacity: options.chartOpacity,
+                    opacity: options.chartOpacity - 0.1,
                     color: paletteColorNameToHex(findRuleInOverride(volumeOverride, OverrideRules.SeriesColor),colorMode) ?? null,
                 },
                 tooltip: {
