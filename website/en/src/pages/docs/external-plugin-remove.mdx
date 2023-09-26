@@ -1,0 +1,54 @@
+---
+title: Remove plugins
+description: 
+---
+
+import TextList  from '@/components/docs/TextList'
+import Code  from '@/components/docs/Code'
+
+
+There are two ways to remove external plugins, we recommend that general users use the first method.
+If you are a plugin developer or encounter unexpected situations, you can use the second method.
+
+## Remove through script
+
+Let's remove the panel plugin `demo` installed in previous chapters through the script:
+
+1. Enter the `ui/external-plugins` directory of the Datav source code and run the following script
+
+```bash 
+go run removePlugin.go panel.demo
+```
+
+When you see the `Remove plugins successfully!` prompt, it means that the plugin has been successfully removed.
+
+> Note that the script will not delete the source code under `ui/external-plugins/panel`, if you do not manually delete the source code, the next time you run the plugins install script, the plugin will still be installed
+
+
+### Remove multiple plugins at the same time
+
+If you want to delete multiple plugins at the same time, it is strongly recommended to complete it in the same script call.
+Since some limitations in the current implementation, if you delete a plugin and do not delete its source code directory, it will continue to be installed when you delete the next plugin!!
+
+```bash 
+go run removePlugin.go panel.demo,datasource.demo
+```
+
+The above statement will delete the `demo` plugin of the panel type and the `demo` plugin of the data source type at the same time.
+
+## Manually remove
+
+You can also manually delete the plugin, take the datasource plugin `demo` as an example.
+
+1. Enter `ui/public/plugins/external/datasource` directory
+2. Delete `demo.svg` icon
+3. Modify `plugins.json` to remove string: `{"type":"demo"}`
+4. Enter `ui/src/views/dashboard/plugins/external` directory
+5. Modify `plugins.ts` and remove `import DemoDatasrouceComponents from "./datasource/demo"`, `"demo": DemoDatasrouceComponents,`.
+6. Enter `ui/src/views/dashboard/plugins/external/datasource` directory
+7. Delete `demo` directory
+
+Up to now, the `demo` data source plugin has been deleted. The steps you manually completed are exactly the same as the steps executed by the `removePlugin.go` script. 
+
+Therefore, if you don't need the plugin, don't forget to manually delete the source code directory of the plugin `ui/external-plugins/datasource/demo`.
+

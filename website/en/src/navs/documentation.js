@@ -80,6 +80,11 @@ export const documentationNav = {
     // pages["plugin-bargauge"],
     pages["plugin-pie"],
   ],
+  'External Plugins': [
+    pages["external-panel-install"],
+    pages["external-datasource-install"],
+    pages["external-plugin-remove"],
+ ]
   // Accessibility: [pages['screen-readers']],
   // 'Official Plugins': [
   //   pages['typography-plugin'],
