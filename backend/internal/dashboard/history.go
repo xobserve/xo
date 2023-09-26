@@ -18,6 +18,7 @@ import (
 	"time"
 
 	"github.com/DataObserve/datav/backend/pkg/common"
+	"github.com/DataObserve/datav/backend/pkg/config"
 	"github.com/DataObserve/datav/backend/pkg/db"
 	"github.com/DataObserve/datav/backend/pkg/e"
 	"github.com/DataObserve/datav/backend/pkg/models"
@@ -44,7 +45,13 @@ func InitHistory() {
 
 		if count >= MaxHistoriesCount {
 			// delete 5 least recently updated
-			_, err := db.Conn.Exec("DELETE FROM dashboard_history WHERE dashboard_id=? and version IN (SELECT version FROM dashboard_history WHERE dashboard_id=? ORDER BY version LIMIT ? )", dash.Id, dash.Id, DeleteCount)
+			var err error
+			if config.Data.Database.ConnectTo == "sqlite" {
+				_, err = db.Conn.Exec("DELETE FROM dashboard_history WHERE dashboard_id=? and version IN (SELECT version FROM dashboard_history WHERE dashboard_id=? ORDER BY version LIMIT ? )", dash.Id, dash.Id, DeleteCount)
+
+			} else {
+				_, err = db.Conn.Exec("DELETE FROM dashboard_history WHERE dashboard_id=? ORDER BY version LIMIT ?", dash.Id, DeleteCount)
+			}
 			if err != nil {
 				logger.Warn("delete history count error", "erorr", err)
 				time.Sleep(1 * time.Second)
