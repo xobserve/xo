@@ -58,6 +58,8 @@
     "clone": "克隆",
     "copied": "已复制",
     "share": "分享",
+    "shareHelp": "创建指向此仪表板的链接，使用下面的选项进行自定义",
+    "currentTimeRange": "使用当前时间段",
     "remove": "移除",
     "mode": "模式",
     "label": "标签",
