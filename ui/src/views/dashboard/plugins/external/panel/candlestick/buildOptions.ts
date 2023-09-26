@@ -2,11 +2,11 @@ import { Panel } from "types/dashboard";
 import { PluginSettings } from "./types";
 import { cloneDeep } from "lodash";
 import { isEmpty } from "utils/validate";
-import { formatUnit } from "components/Unit";
 import { findOverride, findRuleInOverride } from "utils/dashboard/panel";
 import { OverrideRules } from "./OverrideEditor";
 import { paletteColorNameToHex } from "utils/colors";
 import { FieldType, SeriesData } from "types/seriesData";
+import { formatUnit } from "../../../components/UnitPicker";
 
 export const buildOptions = (panel: Panel, data: SeriesData[], colorMode: "light" | "dark") => {
     const options: PluginSettings = panel.plugins[panel.type]

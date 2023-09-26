@@ -23,9 +23,9 @@ import { dispatch } from "use-bus";
 import { PanelForceRebuildEvent } from "src/data/bus-events";
 import { defaultsDeep } from "lodash";
 import RadionButtons from "components/RadioButtons";
-import { UnitPicker } from "components/Unit";
 import { Units } from "types/panel/plugins";
 import { ColorPicker } from "components/ColorPicker";
+import { UnitPicker } from "../../../components/UnitPicker";
 
 const PanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
     const t = useStore(commonMsg)
