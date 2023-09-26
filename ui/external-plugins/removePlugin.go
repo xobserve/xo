@@ -91,4 +91,6 @@ export const externalDatasourcePlugins: Record<string,DatasourcePluginComponents
 	// rebuild the plugins
 	cmd := exec.Command("bash", "-c", fmt.Sprintf("go run buildPlugins.go -skip %s", args[1]))
 	cmd.CombinedOutput()
+
+	log.Println("Remove plugins successfully!")
 }

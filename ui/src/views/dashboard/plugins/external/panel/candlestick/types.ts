@@ -11,8 +11,6 @@ export interface PluginSettings  {
         downColor: string
         splitLine: boolean
         splitArea: boolean
-        solidBar: boolean
-        height: string
     }
     volumeChart: {
         show: boolean
@@ -20,8 +18,6 @@ export interface PluginSettings  {
         value: ValueSetting
         splitLine: boolean 
         showYAxisLabel: boolean
-        top: string 
-        height: string
     } 
     maLine: {
         lineSymbol: "none" |"circle" | "emptyCircle" 
@@ -53,8 +49,6 @@ export const initSettings: PluginSettings = {
         downColor: downColor,
         splitLine: false, 
         splitArea: true,
-        solidBar: true,
-        height: "50%"
     },
     volumeChart: {
         show: false,
@@ -64,9 +58,7 @@ export const initSettings: PluginSettings = {
             decimal: 2,
         },
         splitLine: false,
-        showYAxisLabel: false,
-        top: "65%",
-        height: "13%"
+        showYAxisLabel: false
     },
     maLine: {
         lineSymbol: "none",

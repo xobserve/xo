@@ -52,7 +52,7 @@ const PanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
                     plugin.kChart.displayName = v
                 })} />
             </PanelEditItem>
-            <PanelEditItem title="Fixed tooltip">
+            <PanelEditItem title="Fix tooltip">
                 <Switch defaultChecked={options.kChart.fixTooltip} onChange={e => onChange((panel: Panel) => {
                     const plugin: PluginSettings = panel.plugins[panel.type]
                     plugin.kChart.fixTooltip = e.currentTarget.checked
@@ -85,19 +85,6 @@ const PanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
 
                 })} />
             </PanelEditItem>
-            <PanelEditItem title="Solid bar">
-                <Switch defaultChecked={options.kChart.solidBar} onChange={e => onChange((panel: Panel) => {
-                    const plugin: PluginSettings = panel.plugins[panel.type]
-                    plugin.kChart.solidBar = e.currentTarget.checked
-                    dispatch(PanelForceRebuildEvent + panel.id)
-                })} />
-            </PanelEditItem>
-            <PanelEditItem title="height">
-                <EditorInputItem value={options.kChart.height} onChange={v => onChange((panel: Panel) => {
-                    const plugin: PluginSettings = panel.plugins[panel.type]
-                    plugin.kChart.height = v
-                })} />
-            </PanelEditItem>
         </PanelAccordion>
         <PanelAccordion title={"Volume chart"}>
             <PanelEditItem title="Show">
@@ -113,18 +100,6 @@ const PanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
                     const plugin: PluginSettings = panel.plugins[panel.type]
                     plugin.volumeChart.syncColor = e.currentTarget.checked
 
-                })} />
-            </PanelEditItem>
-            <PanelEditItem title="height">
-                <EditorInputItem value={options.volumeChart.height} onChange={v => onChange((panel: Panel) => {
-                    const plugin: PluginSettings = panel.plugins[panel.type]
-                    plugin.volumeChart.height = v
-                })} />
-            </PanelEditItem>
-            <PanelEditItem title="top">
-                <EditorInputItem value={options.volumeChart.top} onChange={v => onChange((panel: Panel) => {
-                    const plugin: PluginSettings = panel.plugins[panel.type]
-                    plugin.volumeChart.top = v
                 })} />
             </PanelEditItem>
             <PanelEditItem title="Show Y-axis label">
