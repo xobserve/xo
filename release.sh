@@ -21,7 +21,13 @@ cp datav.sql ../release/linux/datav.sql
 cp datav.sql ../release/windows/datav.sql
 
 ## build ui
-cd ../ui
+
+## install external plugins
+cd ../ui/external-plugins
+go run buildPlugins.go
+
+## build ui static files
+cd ..
 npm install -g vite
 vite build
 cp ./404.html ./build/404.html

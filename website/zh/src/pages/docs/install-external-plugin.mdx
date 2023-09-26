@@ -6,3 +6,30 @@ description:
 import TextList  from '@/components/docs/TextList'
 import Code  from '@/components/docs/Code'
 
+Datav 原生提供的组件虽然质量挺高，但是数量较为有限，特别是数据源插件，因此我们通过支持第三方插件的方式，给予用户更多的选择。
+
+> 关于如何开发三方插件，请参考开发者指南: https://github.com/data-observe/datav/wiki#developer-guides
+
+下面我们来一起安装一个简单的 Panel 插件：demo，它其实就是一个简单的文本组件，用于展示一段文本。
+
+## 下载插件
+
+在 https://github.com/data-observe/panel-plugin-demo 下载插件源码，然后解压到 Datav 的源码目录下：`/DATAV_ROOT/ui/external_plugins/panel`,
+此时你看到的目录结构如下所示：
+
+```bash
+├── backend
+├── release
+├── ui
+│   ├── external_plugins
+│   │   ├── panel
+│   │   │   ├── demo
+│   │   │   ├── candlestick
+```
+
+可以看到，除了我们新加的 demo 目录外，还有一个 candlestick 目录，这是 Datav 原生提供的一个外部插件，在[开发者指南中](https://github.com/data-observe/datav/wiki)，我们将通过它来学习如何开发一个复杂的外部 panel 插件。
+
+
+
+
+
