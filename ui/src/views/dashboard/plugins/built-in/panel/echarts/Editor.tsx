@@ -27,11 +27,11 @@ import { commonMsg, echartsPanelMsg } from "src/i18n/locales/en"
 import { colors } from "utils/colors"
 import moment from "moment"
 import loadash from 'lodash'
-import ThresholdEditor from "src/components/Threshold/ThresholdEditor"
+import ThresholdEditor from "src/views/dashboard/plugins/components/Threshold/ThresholdEditor"
 import * as echarts from 'echarts';
 import { dispatch } from "use-bus"
 import { PanelForceRebuildEvent } from "src/data/bus-events"
-import { UnitPicker, formatUnit } from "components/Unit"
+import { UnitPicker, formatUnit } from "src/views/dashboard/plugins/components/UnitPicker"
 import { Units } from "types/panel/plugins"
 import { EditorNumberItem } from "components/editor/EditorItem"
 

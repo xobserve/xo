@@ -24,7 +24,7 @@ import moment from "moment"
 import { isEmpty } from "utils/validate"
 import { AlertToolbarOptions } from "types/plugins/alert"
 import { paletteColorNameToHex } from "utils/colors"
-import { getStringColorMapping } from "components/StringColorMapping"
+import { getStringColorMapping } from "src/views/dashboard/plugins/components/StringColorMapping"
 
 
 interface Props {

@@ -12,13 +12,13 @@
 // limitations under the License.
 
 import { Box, Flex, HStack, Text, useColorMode, useColorModeValue, useToast, VStack } from "@chakra-ui/react"
-import { formatUnit } from "src/components/Unit"
+import { formatUnit } from "src/views/dashboard/plugins/components/UnitPicker"
 import React from "react"
 import { Unit } from "types/panel/plugins"
 import { ThresholdsConfig } from "types/threshold"
 import { paletteColorNameToHex } from "utils/colors"
 import { measureText } from "utils/measureText"
-import { getThreshold } from "../Threshold/utils"
+import { getThreshold } from "../../views/dashboard/plugins/components/Threshold/utils"
 import { alpha } from "../uPlot/colorManipulator"
 import { commonInteractionEvent, genDynamicFunction } from "utils/dashboard/dynamicCall"
 import { isFunction } from "lodash"

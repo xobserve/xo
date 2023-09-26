@@ -18,7 +18,7 @@ import { calcValueOnArray, isSeriesData } from "utils/seriesData";
 import React from "react";
 import BarGauge, { BarGaugeValue } from "src/components/BarGauge/BarGauge";
 import { findOverride, findRuleInOverride } from "utils/dashboard/panel";
-import { formatUnit } from "src/components/Unit";
+import { formatUnit } from "src/views/dashboard/plugins/components/UnitPicker";
 import { measureText } from "utils/measureText";
 import { BarGaugeRules } from "./OverrideEditor";
 import { isEmpty } from "utils/validate";

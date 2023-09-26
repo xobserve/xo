@@ -19,7 +19,7 @@ import uPlot from "uplot";
 import { systemDateFormats } from "utils/datetime/formats";
 import { dateTimeFormat } from "utils/datetime/formatter";
 import customColors from "src/theme/colors";
-import { formatUnit } from "src/components/Unit";
+import { formatUnit } from "src/views/dashboard/plugins/components/UnitPicker";
 import { measureText } from "utils/measureText";
 import { SeriesData } from "types/seriesData";
 import { GraphRules } from "./OverridesEditor";

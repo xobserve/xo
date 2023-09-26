@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import ThresholdEditor from "src/components/Threshold/ThresholdEditor";
+import ThresholdEditor from "src/views/dashboard/plugins/components/Threshold/ThresholdEditor";
 import { EditorInputItem, EditorSliderItem } from "src/components/editor/EditorItem";
 import React, { memo } from "react";
 import { OverrideRule } from "types/dashboard";

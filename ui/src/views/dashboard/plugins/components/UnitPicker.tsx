@@ -22,7 +22,7 @@ import { getInitUnits } from "src/data/panel/initPlugins"
 import { isEmpty } from "utils/validate"
 import { VariableCurrentValue } from "src/data/variable"
 import { replaceWithVariables } from "utils/variable"
-import { EditorInputItem } from "./editor/EditorItem"
+import { EditorInputItem } from "../../../../components/editor/EditorItem"
 
 interface Props {
     value: Units

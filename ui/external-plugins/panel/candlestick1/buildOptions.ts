@@ -2,7 +2,7 @@ import { Panel } from "types/dashboard";
 import { PluginSettings } from "./types";
 import { cloneDeep } from "lodash";
 import { isEmpty } from "utils/validate";
-import { formatUnit } from "src/views/dashboard/plugins/components/UnitPicker";
+import { formatUnit } from "components/Unit";
 import { findOverride, findRuleInOverride } from "utils/dashboard/panel";
 import { OverrideRules } from "./OverrideEditor";
 import { paletteColorNameToHex } from "utils/colors";

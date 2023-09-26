@@ -13,7 +13,7 @@
 import RadionButtons from "src/components/RadioButtons";
 import { ColorPicker } from "src/components/ColorPicker";
 import { EditorInputItem, EditorNumberItem, EditorSliderItem } from "src/components/editor/EditorItem";
-import { UnitPicker } from "src/components/Unit";
+import { UnitPicker } from "src/views/dashboard/plugins/components/UnitPicker";
 import { OverrideRule, Panel } from "types/dashboard";
 import React from "react";
 import { useStore } from "@nanostores/react";
@@ -21,9 +21,9 @@ import { commonMsg, tablePanelMsg } from "src/i18n/locales/en";
 import { Box, Checkbox, Text } from "@chakra-ui/react";
 import { isEmpty } from "utils/validate";
 import { CodeEditorModal } from "src/components/CodeEditor/CodeEditorModal";
-import ThresholdEditor from "src/components/Threshold/ThresholdEditor";
+import ThresholdEditor from "src/views/dashboard/plugins/components/Threshold/ThresholdEditor";
 import { cloneDeep } from "lodash";
-import ValueMapping from "src/components/ValueMapping/ValueMapping";
+import ValueMapping from "src/views/dashboard/plugins/components/ValueMapping/ValueMapping";
 import { dispatch } from "use-bus";
 import { PanelForceRebuildEvent } from "src/data/bus-events";
 

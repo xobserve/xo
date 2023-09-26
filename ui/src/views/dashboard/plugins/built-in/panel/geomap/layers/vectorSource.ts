@@ -7,10 +7,10 @@ import countries from 'public/plugins/panel/geomap/countries.json'
 import countryNames from 'public/plugins/panel/geomap/countryNames.json'
 import cities from 'public/plugins/panel/geomap/cities.json'
 import { Panel } from 'types/dashboard';
-import { getThreshold } from 'src/components/Threshold/utils';
+import { getThreshold } from 'src/views/dashboard/plugins/components/Threshold/utils';
 import { ThresholdsMode } from 'types/threshold';
 import { paletteColorNameToHex } from 'utils/colors';
-import { formatUnit } from 'src/components/Unit';
+import { formatUnit } from 'src/views/dashboard/plugins/components/UnitPicker';
 import { calcValueOnArray } from 'utils/seriesData';
 import { findOverride, findRuleInOverride } from 'utils/dashboard/panel';
 import { GeomapRules } from '../OverridesEditor';

@@ -24,7 +24,7 @@ import { formatLabelId, getLabelNameColor } from "../utils";
 import { MobileVerticalBreakpointNum } from "src/data/constants";
 import { toJSON, toPrettyJSON } from "utils/is";
 import { commonInteractionEvent, genDynamicFunction } from "utils/dashboard/dynamicCall";
-import { getStringColorMapping } from "components/StringColorMapping";
+import { getStringColorMapping } from "src/views/dashboard/plugins/components/StringColorMapping";
 
 interface LogItemProps {
     log: Log

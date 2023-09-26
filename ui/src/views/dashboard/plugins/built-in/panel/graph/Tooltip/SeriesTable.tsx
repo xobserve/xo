@@ -14,7 +14,7 @@
 // Render series table in tooltip
 import React from "react";
 import { Box, HStack, Table, TableContainer, Tbody, Td, Text, Tr, useMediaQuery } from "@chakra-ui/react"
-import { formatUnit } from "src/components/Unit"
+import { formatUnit } from "src/views/dashboard/plugins/components/UnitPicker"
 import { orderBy, round } from "lodash"
 import { memo } from "react"
 import { OverrideItem, PanelProps, PanelType } from "types/dashboard"

@@ -31,7 +31,7 @@ import { dispatch } from "use-bus"
 import { PanelForceRebuildEvent } from "src/data/bus-events"
 import { CodeEditorModal } from "components/CodeEditor/CodeEditorModal"
 import { ClickActionsEditor } from "src/views/dashboard/edit-panel/components/ClickActionsEditor"
-import StringColorMappingEditor from "components/StringColorMapping"
+import StringColorMappingEditor from "src/views/dashboard/plugins/components/StringColorMapping"
 
 const LogPanelEditor = memo((props: PanelEditorProps) => {
     const { panel, onChange } = props

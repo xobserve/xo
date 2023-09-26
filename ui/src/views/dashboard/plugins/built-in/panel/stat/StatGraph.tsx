@@ -20,13 +20,13 @@ import { isEmpty, isFunction } from "lodash"
 import lodash from "lodash"
 import Tooltip from "../graph/Tooltip";
 import { Box, Center, Flex, Text, useColorMode, Tooltip as ChakraTooltip, useToast } from "@chakra-ui/react";
-import { formatUnit } from "src/components/Unit";
+import { formatUnit } from "src/views/dashboard/plugins/components/UnitPicker";
 import { ValueCalculationType } from "types/value";
 import { calcValueOnArray, calcValueOnSeriesData } from "utils/seriesData";
 import { FieldType, SeriesData } from "types/seriesData";
 import { getGradientBackgroundColor, getTextColorForAlphaBackground, paletteColorNameToHex } from "utils/colors";
 import { ThresholdsMode } from "types/threshold";
-import { getThreshold } from "src/components/Threshold/utils";
+import { getThreshold } from "src/views/dashboard/plugins/components/Threshold/utils";
 import { LayoutOrientation } from "types/layout";
 import tinycolor from "tinycolor2";
 import { findOverride, findRuleInOverride } from "utils/dashboard/panel";

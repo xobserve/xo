@@ -12,7 +12,7 @@
 // limitations under the License.
 import { Box, Center, border, useColorMode, useMediaQuery } from "@chakra-ui/react";
 import ChartComponent from "src/components/charts/Chart";
-import { formatUnit } from "src/components/Unit";
+import { formatUnit } from "src/views/dashboard/plugins/components/UnitPicker";
 import { memo, useMemo, useState } from "react";
 import { OverrideItem, Panel, PanelProps } from "types/dashboard"
 import { PieLegendPlacement } from "types/panel/plugins";
@@ -23,7 +23,7 @@ import { calcValueOnSeriesData, isSeriesData } from "utils/seriesData";
 import React from "react";
 import { paletteColorNameToHex, paletteMap, palettes } from "utils/colors";
 import { ValueCalculationType } from "types/value";
-import { getThreshold } from "src/components/Threshold/utils";
+import { getThreshold } from "src/views/dashboard/plugins/components/Threshold/utils";
 import { ThresholdsMode } from "types/threshold";
 import { isEmpty } from "utils/validate";
 import { isFunction } from "lodash";

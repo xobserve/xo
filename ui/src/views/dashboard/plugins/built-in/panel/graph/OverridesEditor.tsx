@@ -14,12 +14,12 @@ import { Box, Button, HStack, Select, Switch, Tooltip } from "@chakra-ui/react";
 import RadionButtons from "src/components/RadioButtons";
 import { ColorPicker } from "src/components/ColorPicker";
 import { EditorInputItem, EditorNumberItem, EditorSliderItem } from "src/components/editor/EditorItem";
-import { UnitPicker } from "src/components/Unit";
+import { UnitPicker } from "src/views/dashboard/plugins/components/UnitPicker";
 import { OverrideRule, Panel } from "types/dashboard";
 import React from "react";
 import { dispatch } from "use-bus";
 import { PanelForceRebuildEvent } from "src/data/bus-events";
-import ThresholdEditor from "src/components/Threshold/ThresholdEditor";
+import ThresholdEditor from "src/views/dashboard/plugins/components/Threshold/ThresholdEditor";
 import { palettes } from "utils/colors";
 
 interface Props {

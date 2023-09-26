@@ -25,7 +25,7 @@ import { isEmpty } from "utils/validate";
 import { ThresholdsMode } from "types/threshold";
 import { replaceWithVariables } from "utils/variable";
 import { VariableCurrentValue } from "src/data/variable";
-import { formatUnit } from "components/Unit";
+import { formatUnit } from "src/views/dashboard/plugins/components/UnitPicker";
 import NoData from "src/views/dashboard/components/PanelNoData";
 
 interface Props extends PanelProps {

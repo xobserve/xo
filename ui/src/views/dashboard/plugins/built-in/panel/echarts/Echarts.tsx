@@ -29,7 +29,7 @@ import { setVariable } from "src/views/variables/SelectVariable";
 import { setDateTime } from "src/components/DatePicker/DatePicker";
 import { $variables } from "src/views/variables/store";
 import NoData from "src/views/dashboard/components/PanelNoData";
-import { formatUnit } from "components/Unit";
+import { formatUnit } from "src/views/dashboard/plugins/components/UnitPicker";
 
 const EchartsPanel = memo((props: PanelProps) => {
     const { panel, width, height } = props

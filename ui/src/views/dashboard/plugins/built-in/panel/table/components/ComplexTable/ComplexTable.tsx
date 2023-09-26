@@ -20,12 +20,12 @@ import { Box, Button, HStack, Text, Tooltip, useColorMode, useToast } from '@cha
 import { findOverride, findOverrideRule, findRuleInOverride } from 'utils/dashboard/panel';
 import { Panel } from 'types/dashboard';
 import { TableRules } from '../../OverridesEditor';
-import { formatUnit } from 'src/components/Unit';
+import { formatUnit } from 'src/views/dashboard/plugins/components/UnitPicker';
 import { DefaultDecimal } from 'src/data/constants';
 import { commonInteractionEvent, genDynamicFunction } from 'utils/dashboard/dynamicCall';
 import moment from 'moment';
 import { ThresholdsConfig, ThresholdsMode } from 'types/threshold';
-import { getThreshold } from 'src/components/Threshold/utils';
+import { getThreshold } from 'src/views/dashboard/plugins/components/Threshold/utils';
 import lodash from 'lodash'
 import { useNavigate } from 'react-router-dom';
 import { isEmpty } from 'utils/validate';

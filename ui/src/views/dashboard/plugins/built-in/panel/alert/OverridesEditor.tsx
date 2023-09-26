@@ -15,10 +15,10 @@
 
 import { ColorPicker } from "src/components/ColorPicker";
 import { EditorInputItem, EditorNumberItem, EditorSliderItem } from "src/components/editor/EditorItem";
-import { UnitPicker } from "src/components/Unit";
+import { UnitPicker } from "src/views/dashboard/plugins/components/UnitPicker";
 import { OverrideRule } from "types/dashboard";
 import React from "react";
-import ThresholdEditor from "src/components/Threshold/ThresholdEditor";
+import ThresholdEditor from "src/views/dashboard/plugins/components/Threshold/ThresholdEditor";
 
 interface Props {
     override: OverrideRule
