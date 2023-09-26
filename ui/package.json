@@ -82,6 +82,7 @@
     "react-virtualized-auto-sizer": "1.0.20",
     "react-window": "1.8.6",
     "recompose": "^0.30.0",
+    "save-as-file": "^0.3.0",
     "scroll-into-view-if-needed": "^2.2.29",
     "short-number": "^1.0.7",
     "swr": "^0.3.11",
