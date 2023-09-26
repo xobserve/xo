@@ -17,16 +17,7 @@
 </p>
 
 <div>
-  <table>
-      <tr>
-          <td align="center">
-               <img src="https://github.com/data-observe/assets/blob/main/datav-readme/home-example1.jpg?raw=true" width="500px" />
-          </td>
-          <td align="center">
-                <img src="https://github.com/data-observe/assets/blob/main/datav-readme/white-host.jpg?raw=true" width="500px" />
-          </td>
-      </tr>
-  </table>
+  <img src="https://github.com/data-observe/assets/blob/main/datav-readme/home-example1.jpg?raw=true" />
   <p align="center">
     English | <a href="./README-CN.md">简体中文</a>
   </p>
