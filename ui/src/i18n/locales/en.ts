@@ -72,7 +72,7 @@ export const commonMsg = i18n("common", {
   "copied": "Copied",
   "share": "Share",
   "shareHelp": "Create a direct link to this dashboard, customized with the options below.",
-  "exportHelp": "Export this dashboard meta data.",
+  "exportHelp": "Export dashbaord for sharing.",
   "currentTimeRange": "Current time range",
   "remove": "Remove",
   "mode": "Mode",
