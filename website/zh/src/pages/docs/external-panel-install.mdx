@@ -1,0 +1,117 @@
+---
+title: 安装图表插件
+description: 
+---
+
+import TextList  from '@/components/docs/TextList'
+import Code  from '@/components/docs/Code'
+
+Datav 原生提供的组件虽然质量挺高，但是数量较为有限，特别是数据源插件，因此我们通过支持第三方插件的方式，给予用户更多的选择。
+
+> 关于如何开发三方插件，请参考开发者指南: https://github.com/data-observe/datav/wiki#developer-guides
+
+下面我们来一起安装一个简单的 Panel 插件：demo，它其实就是一个简单的文本组件，用于展示一段文本。
+
+## 安装插件并编译
+
+### 下载 Datav 源码
+
+首先，我们需要下载 Datav 源码。由于本文档只是演示如何安装插件，大家可以直接从 `main` 分支下载： https://github.com/data-observe/datav ，如果是生产环境使用，请下载 release 版本。
+
+### 下载插件
+
+在 https://github.com/data-observe/panel-plugin-demo 下载插件源码并解压，然后复制里面的 `demo` 文件夹到 Datav 的源码目录下：`/DATAV_ROOT/ui/external_plugins/panel`,
+此时你看到的 Datav 目录结构如下所示：
+
+```bash
+├── backend
+├── release.sh
+├── README.md
+├── ui
+│   ├── external_plugins
+│   │   ├── datasource
+│   │   ├── buildPlugins.go
+│   │   ├── removePlugins.go
+│   │   ├── README.md
+│   │   ├── panel
+│   │   │   ├── demo
+│   │   │   │   ├── Editor.tsx
+│   │   │   │   ├── Panel.ts
+│   │   │   │   ├── index.tsx
+│   │   │   │   ├── demo.svg
+│   │   │   │   ├── README.md    
+│   │   │   ├── candlestick
+```
+
+可以看到，在 `panel` 目录下，已经有了新家的 `demo` 插件目录， 除了我们新加的 demo 目录外，还有一个 candlestick 目录，这是 Datav 原生提供的一个外部插件，在[开发者指南中](https://github.com/data-observe/datav/wiki)，我们将通过它来学习如何开发一个复杂的外部 panel 插件。
+
+### 安装插件
+
+将插件源码放入指定目录后，需要调用相应的脚本进行安装，还是在 `/DATAV_ROOT/ui/external_plugins/panel` 下，运行
+
+```bash 
+go run buildPlugins.go
+2023/09/26 09:49:08 Generate panel plugins file successfully!
+```
+
+当看到如上提示时，说明我们的插件源码已经安装到相应的目录下，关于具体的安装到哪些目录下，可以参考[开发者指南](https://github.com/data-observe/datav/wiki/Panel-plugins#installed-plugin-files).
+
+
+### 编译 Datav
+
+现在 UI 源码中已经包含了新插件的源码，我们需要对 Datav 进行重新编译
+
+> 注意：本文只是演示插件的使用，实际场景中你往往只需要重新编译 UI ，然后将编译后的静态文件放在相应的静态文件服务器下即可，例如 Nginx 或者 Datav 自带的静态文件服务器，事实上，本文档就是使用了 Datav 自带的静态文件服务器。
+
+进入 Datav 源码的根目录，运行 `release.sh`: 
+
+```bash
+./release.sh 
+```
+
+该脚本将对 Datav 进行完整编译，最终为多个平台生成 Datav 的可执行文件，以及前端静态资源文件，编译完成后，你可以在根目录下的发现一个新出现的 `release` 目录，大致内容如下：
+
+```bash
+├── datav-darwin-amd64.zip
+├── datav-linux-amd64.zip
+├── datav-windows-amd64.zip
+```
+
+### 解压所需的编译文件
+
+假设你使用的是 `macos`，那只需解压 `release` 目录中的 `datav-darwin-amd64.zip`, 解压后的目录结构如下:
+
+```bash 
+├── datav   # 后端服务可执行文件
+├── datav.sql # mysql 需要的数据库文件
+├── datav.yaml # 后端服务配置文件
+├── ui # 前端静态资源文件
+```
+
+### 启动 Datav 服务
+结构很简单，也很清晰，下一步我们就可以启动 Datav 的 API 服务和静态资源服务，看起来很复杂对吧？事实上，只需要：
+
+```bash 
+./datav
+```
+
+大家可能好奇，不是要启动一个 API 服务和一个静态资源服务吗？怎么就启动了 API 服务？事实上，`datav` 中还自带了一个静态资源服务。
+
+最妙的是，API 服务和静态资源服务还共享同一个端口，方便大家使用，当然，大家还可以将 UI 静态资源独立到 Nginx 服务器下，这种方式更适合生成环境的使用。
+
+
+
+
+## 使用新安装的插件
+
+启动 `datav` 后，打开浏览器访问 `http://localhost:10086`，随便创建一个图表并编辑，你将看到如下界面：
+
+
+<img src={require('@/img/docs/external-plugins/demo.jpg').default.src} alt="custom-background" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
+
+
+可以看到新的 `demo` 插件已经成功出现在 Panel 列表中，有两个点值的注意：
+
+- `demo` 被放置在 `External plugins` 标签下
+- `demo` 旁边还有一个 `Candlestick` 插件，是 Datav 预装的一个外部插件，它是一个相当强大、功能完善的图表插件
+

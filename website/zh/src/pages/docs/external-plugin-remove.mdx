@@ -1,0 +1,50 @@
+---
+title: 删除外部插件
+description: 
+---
+
+import TextList  from '@/components/docs/TextList'
+import Code  from '@/components/docs/Code'
+
+
+有两种方式来删除外部插件，我们推荐一般用户使用第一种方式，如果是插件开发者或者遇到了意外情况，可以使用第二种方式。
+
+## 通过脚本删除
+
+下面来通过脚本删除安装的 demo 图表插件:
+
+1. 进入 Datav 源码中的 `ui/external-plugins` 目录，运行以下脚本
+
+```bash 
+go run removePlugin.go panel.demo
+```
+
+当看到 `Remove plugins successfully!` 提示时，表示插件已经成功被删除。
+
+> 需要注意的是，该脚本不会删除 `ui/external-plugins/panel` 下的源码，如果你不手动删除源码，那下次安装插件，该插件依然会被安装
+
+
+### 同时删除多个插件
+
+如果你要同时删除多个插件，强烈推荐在同一个脚本调用中完成，受限于目前的实现，如果你在删除一个插件后，没有删除它的源码目录，那它会在删除下一个插件时，继续被安装！！
+
+```bash 
+go run removePlugin.go panel.demo,datasource.demo
+```
+
+以上语句会同时删除图表类型的 `demo` 插件和数据源类型的 `demo` 插件。
+
+## 手动删除
+
+还可以手动删除插件，下面删除数据源插件 `demo` 为例。
+
+1. 进入 `ui/public/plugins/external/datasource` 目录
+2. 删除 `demo.svg` 图标
+3. 修改 `plugins.json`， 删除 `{"type":"demo"}` 这一段文本。
+4. 进入 `ui/src/views/dashboard/plugins/external` 目录
+5. 修改 `plugins.ts`，删除 `import DemoDatasrouceComponents from "./datasource/demo"`, `"demo": DemoDatasrouceComponents,` 这两行文本。
+6. 进入 `ui/src/views/dashboard/plugins/external/datasource` 目录
+7. 删除 `demo` 文件夹
+
+至此，`demo` 数据源插件已经被删除，你手动完成的这些步骤跟 `removePlugin.go` 脚本的执行步骤一模一样。因此，如果不需要该插件了，别忘了手动删除插件的源码目录 `ui/external-plugins/datasource/demo` .
+

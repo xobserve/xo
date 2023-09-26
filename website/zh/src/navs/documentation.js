@@ -81,7 +81,9 @@ export const documentationNav = {
     pages["plugin-pie"],
   ],
   '外部插件': [
-     pages["install-external-plugin"]
+     pages["external-panel-install"],
+     pages["external-datasource-install"],
+     pages["external-plugin-remove"],
   ]
   // Accessibility: [pages['screen-readers']],
   // 'Official Plugins': [
