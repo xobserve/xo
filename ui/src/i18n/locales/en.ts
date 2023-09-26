@@ -67,6 +67,8 @@ export const commonMsg = i18n("common", {
   "clone": "Clone",
   "copied": "Copied",
   "share": "Share",
+  "shareHelp": "Create a direct link to this dashboard, customized with the options below.",
+  "currentTimeRange": "Current time range",
   "remove": "Remove",
   "mode": "Mode",
   "label": "Label",

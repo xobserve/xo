@@ -11,19 +11,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Box, Button, Modal, ModalBody, ModalContent, ModalHeader, ModalOverlay, StyleProps, useClipboard, useDisclosure } from "@chakra-ui/react"
+import { Box, Button, Modal, ModalBody, ModalContent, Text, ModalHeader, ModalOverlay, StyleProps, useClipboard, useDisclosure, Switch, HStack, Input, VStack } from "@chakra-ui/react"
 import React, { useState } from "react"
 import { BsShare } from "react-icons/bs"
 import { Dashboard } from "types/dashboard"
 import { parseVariableFormat } from "utils/format"
 import { getCurrentTimeRange } from "src/components/DatePicker/TimePicker"
 import queryString from 'query-string';
-import { FaCopy, FaRegCopy } from "react-icons/fa"
+import { FaCopy, FaRegCopy, FaShare } from "react-icons/fa"
 import { useStore } from "@nanostores/react"
 import { commonMsg } from "src/i18n/locales/en"
 import { dispatch } from "use-bus"
 import { ShareUrlEvent } from "src/data/bus-events"
 import { $variables } from "../variables/store"
+import { Form } from "components/form/Form"
+import FormItem from "components/form/Item"
 
 interface Props extends StyleProps {
     dashboard: Dashboard
@@ -38,7 +40,7 @@ const DashboardShare = ({ dashboard, ...rest }: Props) => {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [shareUrl, setShareUrl] = useState(null)
     const { onCopy, setValue, hasCopied } = useClipboard("", 5000);
-
+    const [enableCurrentTimeRange, setEnableCurrentTimeRange] = useState(true)
     const onShare = () => {
         let url = window.origin + location.pathname + '?'
         const dashData = JSON.stringify(dashboard.data)
@@ -46,14 +48,19 @@ const DashboardShare = ({ dashboard, ...rest }: Props) => {
         for (const k of Object.keys(shareUrlParams)) {
             delete shareUrlParams[k]
         }
-    
+
         const timeRange = getCurrentTimeRange()
-        shareUrlParams['from'] = timeRange.start.getTime()
-        shareUrlParams['to'] = timeRange.end.getTime()
-    
+        setEnableCurrentTimeRange(s => {
+            if (s) {
+                shareUrlParams['from'] = timeRange.start.getTime()
+                shareUrlParams['to'] = timeRange.end.getTime()
+            }
+            return s
+        })
+
         for (const v of variables) {
             if (usingVariables.includes(v.name)) {
-                shareUrlParams['var-'+ v.name] =  v.selected
+                shareUrlParams['var-' + v.name] = v.selected
                 for (const v1 of variables) {
                     // to avoid circle refer evets: 
                     // A refer B : A send event to B, then B refer to A, B send event to A
@@ -61,7 +68,7 @@ const DashboardShare = ({ dashboard, ...rest }: Props) => {
                         continue
                     }
                     if ((v.datasource?.toString())?.indexOf('${' + v1.name + '}') >= 0 || v.value?.indexOf('${' + v1.name + '}') >= 0) {
-                        shareUrlParams['var-'+ v1.name] =  v1.selected
+                        shareUrlParams['var-' + v1.name] = v1.selected
                     }
                 }
 
@@ -69,7 +76,7 @@ const DashboardShare = ({ dashboard, ...rest }: Props) => {
         }
         dispatch(ShareUrlEvent)
         setTimeout(() => {
-            url += queryString.stringify(shareUrlParams,{sort: false})
+            url += queryString.stringify(shareUrlParams, { sort: false })
             setShareUrl(url)
             setValue(url)
             onOpen()
@@ -79,14 +86,39 @@ const DashboardShare = ({ dashboard, ...rest }: Props) => {
 
     return (<>
         <Box onClick={onShare} {...rest}><BsShare /></Box>
-        
+
         <Modal isOpen={isOpen} onClose={onClose} autoFocus={false}>
             <ModalOverlay />
-            <ModalContent minWidth="500px">
-                <ModalHeader>{t.share}</ModalHeader>
+            <ModalContent minWidth="600px">
+                <ModalHeader maxHeight='20' paddingBottom={'1'}>
+                    <HStack>
+                        <Box>
+                            <FaShare />
+                        </Box>
+                        <Text fontSize='md'>
+                            {t.share}
+                        </Text>
+                    </HStack>
+                </ModalHeader>
                 <ModalBody>
-                    <Box fontSize="1.1rem" wordBreak="break-all" p="2" className="code-bg" borderRadius={4} width="fit-content">{shareUrl}</Box>
-                    <Button mt="4" leftIcon={<FaRegCopy />} onClick={onCopy} variant={hasCopied ? "solid" : "outline"}>{hasCopied ? t.copied : t.copy}</Button>
+                    <VStack spacing={3} alignItems='inherit' justify='flex-start'>
+                        <Text fontSize='sm'>{t.shareHelp}</Text>
+                        <Form>
+                            <FormItem title={t.currentTimeRange} size="sm" alignItems={'center'}>
+                                <Switch defaultChecked={enableCurrentTimeRange} checked={enableCurrentTimeRange} onChange={(e) => {
+                                    setEnableCurrentTimeRange(e.currentTarget.checked)
+                                    onShare()
+                                }} />
+                            </FormItem>
+                        </Form>
+                        <HStack spacing={1}>
+                            <Input fontSize='xs' mr='1.5' wordBreak='break-all' p='1' className="code-bg" bgColor='#09090b' overflow='hidden' textOverflow='ellipsis' value={shareUrl} />
+                            <Button size="sm" leftIcon={<FaRegCopy />} onClick={onCopy} variant={hasCopied ? "solid" : "outline"}>
+                                {hasCopied ? t.copied : t.copy}
+                            </Button>
+                        </HStack>
+                    </VStack>
+                    <Box h='4'></Box>
                 </ModalBody>
             </ModalContent>
         </Modal>
