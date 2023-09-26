@@ -43,7 +43,7 @@ Datav 是一个现代化的数据可视化平台，构建于 2023 年，可以�
 
 ## 快速开始 & 文档
 
-文档地址： [datav.io/docs](https://datav.io/docs).
+文档地址： [datav.io/docs](https://zh.datav.io/docs).
 
 同时大家也可以试试在线 Demo:  [play.datav.io](https://play.datav.io).
 
