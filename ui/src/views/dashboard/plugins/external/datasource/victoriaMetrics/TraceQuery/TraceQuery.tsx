@@ -1,17 +1,10 @@
-import React, { useEffect, useState } from "react"
-import vmData from "./mockData.json"
+import React, { memo } from "react"
 import NestedNav from "./NestedNav"
 import Trace, { TracingData } from "./types"
 
-const TraceQuery = () => {
-    const [trace, setTrace] = useState<Trace>(null)
-    useEffect(() => {
-        //@ts-ignore
-        const traceData: TracingData = vmData.trace
-        setTrace(new Trace(traceData, "go_gc_duration_seconds"))
-         
-    },[])
-
+const TraceQuery = memo(({data, query}: {data: TracingData; query: string}) => {
+    console.log("here33333:",query)
+    const trace = new Trace(data, query)
 
     return (<>
         {trace && <NestedNav
@@ -19,7 +12,7 @@ const TraceQuery = () => {
           totalMsec={trace.duration}
         />}
     </>)
-}
+})
 
 export default TraceQuery
 

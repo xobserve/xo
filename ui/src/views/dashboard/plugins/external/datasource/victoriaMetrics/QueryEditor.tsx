@@ -29,6 +29,10 @@ import RadionButtons from "src/components/RadioButtons";
 import { MobileBreakpoint } from "src/data/constants";
 import Loading from "components/loading/Loading";
 import TraceQuery from "./TraceQuery/TraceQuery";
+import useBus from "use-bus";
+import { SeriesData } from "types/seriesData";
+import { PanelDataEvent } from "src/data/bus-events";
+import { useSearchParam } from "react-use";
 
 
 
@@ -36,7 +40,21 @@ const QueryEditor = ({ datasource, query, onChange }: DatasourceEditorProps) => 
     const t1 = useStore(prometheusDsMsg)
     const [tempQuery, setTempQuery] = useState<PanelQuery>(cloneDeep(query))
     const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
+    const [panelData, setPanelData] = useState<SeriesData[]>(null)
     const Stack = isLargeScreen ? HStack : VStack
+    const edit = useSearchParam("edit")
+
+    useBus(
+        (e) => { return e.type == PanelDataEvent + edit },
+        (e) => {
+            setPanelData(e.data?.flat())
+        },
+        [edit]
+    )
+
+    const queryData: any = panelData?.find(s => s.queryId == tempQuery.id)
+    const queryStr = queryData?.fields.find(f => f.labels).labels["__name__"]
+
     return (
         <Form spacing={1}>
             <FormItem size="sm" title={<PromMetricSelect  enableInput={false} width={isLargeScreen ? "300px" : "100px"} dsId={datasource.id} value={tempQuery.metrics} onChange={v => {
@@ -93,7 +111,7 @@ const QueryEditor = ({ datasource, query, onChange }: DatasourceEditorProps) => 
                 {/* {isLargeScreen && <ExpandTimeline t1={t1} tempQuery={tempQuery} setTempQuery={setTempQuery} onChange={onChange}/>} */}
             </Stack>
 
-            {tempQuery.data.traceQuery && <TraceQuery />}
+            {queryData?.trace && <TraceQuery data={queryData.trace} query={queryStr} />}
         </Form>
     )
 }
@@ -111,6 +129,8 @@ const ExpandTimeline = ({t1, tempQuery,setTempQuery,onChange}) => {
     }} />
 </FormItem>
 }
+
+
 interface MetricSelectProps {
     dsId: number
     value: string

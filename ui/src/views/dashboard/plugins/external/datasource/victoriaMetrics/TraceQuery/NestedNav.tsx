@@ -60,7 +60,7 @@ export default NestedNav;
 
 const  getStyles =  (theme) => ({
   wrapper: css({
-    paddingLeft: `4px`,
+    paddingLeft: `8px`,
     background: theme.colors.background.secondary,
     borderRadius: `4px`,
     border: `1px solid ${theme.colors.border.weak}`,
@@ -69,8 +69,8 @@ const  getStyles =  (theme) => ({
   }),
   content: css`
     display: grid;
-    gap: 2px;
-    padding: 4px;
+    gap: 4px;
+    padding: 8px;
     border-radius: 4px,
   `,
   topRow: css`

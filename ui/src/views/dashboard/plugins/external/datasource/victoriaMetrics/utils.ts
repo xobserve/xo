@@ -36,12 +36,12 @@ export const demoDataToPanelData= (rawData: any, panel: Panel, query: PanelQuery
         expandTimeRange = et == "always"
     }
 
-    return prometheusToSeriesData(panel, rawData, query, range, expandTimeRange)
+    return vmToSeriesData(panel, rawData, query, range, expandTimeRange)
 }
 
-const prometheusToSeriesData = (panel: Panel, data: any, query: PanelQuery, range: TimeRange, expandTimeRange = false): SeriesData[] => {
+const vmToSeriesData = (panel: Panel, data0: any, query: PanelQuery, range: TimeRange, expandTimeRange = false): SeriesData[] => {
     const formats = parseLegendFormat(query.legend)
-
+    const data = data0.data
     let res: SeriesData[] = []
     if (data.resultType === "matrix") {
         for (const m of data.result) {
@@ -103,7 +103,7 @@ const prometheusToSeriesData = (panel: Panel, data: any, query: PanelQuery, rang
 
 
             const series: SeriesData = {
-                // id: query.id,
+                queryId: query.id,
                 name: metric,
                 // length: m.values.length,
                 fields: [
@@ -119,6 +119,8 @@ const prometheusToSeriesData = (panel: Panel, data: any, query: PanelQuery, rang
                         labels: m.metric
                     }
                 ],
+                //@ts-ignore
+                trace: data0.trace
             }
 
             // replace legend format of promethues datasource with corresponding labels
