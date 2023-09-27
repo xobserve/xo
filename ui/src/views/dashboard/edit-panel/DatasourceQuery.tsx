@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box, Button, Flex, HStack, Image, Select, Text, Tooltip, VStack, Drawer, DrawerCloseButton, DrawerContent, DrawerHeader, DrawerOverlay, useDisclosure, DrawerBody, Tabs, TabList, TabPanels, TabPanel, Tab, useColorMode, } from "@chakra-ui/react"
+import { Box, Button, Flex, HStack, Image, Select, Text, Tooltip, VStack, Drawer, DrawerCloseButton, DrawerContent, DrawerHeader, DrawerOverlay, useDisclosure, DrawerBody, Tabs, TabList, TabPanels, TabPanel, Tab, useColorMode, useColorModeValue, } from "@chakra-ui/react"
 import { useState } from "react"
 import { FaAngleDown, FaAngleRight, FaBookOpen, FaEye, FaEyeSlash, FaPlus, FaTrashAlt } from "react-icons/fa"
 import { DatasourceType, Panel, PanelQuery } from "types/dashboard"
@@ -38,6 +38,8 @@ import { $datasources } from "src/views/datasource/store"
 import { externalDatasourcePlugins } from "../plugins/external/plugins"
 import getPrometheusDocs from "../plugins/built-in/datasource/prometheus/docs"
 import { MarkdownRender } from "components/markdown/MarkdownRender"
+import customColors from "theme/colors"
+import Toc from "components/Toc/Toc"
 
 interface Props {
     panel: Panel
@@ -48,7 +50,7 @@ const EditPanelQuery = (props: Props) => {
     const t = useStore(commonMsg)
     const { isOpen: isDocsOpen, onOpen: onDocsOpen, onClose: onDocsClose } = useDisclosure()
     const [docsTab, setDocsTab] = useState(0)
-    const {colorMode} = useColorMode()
+    const { colorMode } = useColorMode()
     const { panel, onChange } = props
     const selectDatasource = (id) => {
         const datasources = $datasources.get()
@@ -115,7 +117,7 @@ const EditPanelQuery = (props: Props) => {
     const externalDs = externalDatasourcePlugins[currentDatasource?.type]
     const dsIcon = externalDs ? `/plugins/external/datasource/${currentDatasource?.type}.svg` : `/plugins/datasource/${currentDatasource?.type}.svg`
 
-    let docs: { tab: string, content: string }[] = [];;
+    let docs: { tab: string, content: string, toc: { level: string; content: string }[] }[] = [];;
     if (externalDs && externalDs.getDocs) {
         docs = externalDs.getDocs()
     } else {
@@ -129,7 +131,7 @@ const EditPanelQuery = (props: Props) => {
         }
     }
 
-
+    console.log("here333333:", docs)
     return (<>
         <Box className="bordered-top" p="2" borderRadius="0" height="100%">
             <Flex justifyContent="space-between" alignItems="start">
@@ -170,9 +172,9 @@ const EditPanelQuery = (props: Props) => {
             <DrawerOverlay />
             <DrawerContent>
                 <DrawerCloseButton />
-                <DrawerHeader>{upperFirst(currentDatasource?.type)} Docs</DrawerHeader>
-                <DrawerBody width="100%">
-                    <Tabs defaultIndex={docsTab} onChange={(index) => setDocsTab(index)}>
+                {/* <DrawerHeader>{upperFirst(currentDatasource?.type)} Docs</DrawerHeader> */}
+                <DrawerBody width="100%" pl="0">
+                    <Tabs defaultIndex={docsTab} onChange={(index) => setDocsTab(index)} >
                         <TabList>
                             {
                                 docs.map((d, index) => {
@@ -180,10 +182,15 @@ const EditPanelQuery = (props: Props) => {
                                 })
                             }
                         </TabList>
-                        <TabPanels>
+                        <TabPanels >
                             {
                                 docs.map((d, index) => {
-                                    return <TabPanel><MarkdownRender md={d.content} width="100%" /> </TabPanel>
+                                    return <TabPanel pl="0">
+                                        <Toc toc={d.toc}/>
+                                        <Box pl="6">
+                                            <MarkdownRender md={d.content} width="100%" />
+                                        </Box>
+                                    </TabPanel>
                                 })
                             }
                         </TabPanels>
