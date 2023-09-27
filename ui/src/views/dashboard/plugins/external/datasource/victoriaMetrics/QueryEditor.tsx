@@ -33,6 +33,8 @@ import useBus from "use-bus";
 import { SeriesData } from "types/seriesData";
 import { PanelDataEvent } from "src/data/bus-events";
 import { useSearchParam } from "react-use";
+import { $datasources } from "src/views/datasource/store";
+import { FaEye } from "react-icons/fa";
 
 
 
@@ -55,6 +57,8 @@ const QueryEditor = ({ datasource, query, onChange }: DatasourceEditorProps) => 
     const queryData: any = panelData?.find(s => s.queryId == tempQuery.id)
     const queryStr = queryData?.fields.find(f => f.labels).labels["__name__"]
 
+    const ds = $datasources.get().find(d => d.id == datasource.id)
+  
     return (
         <Form spacing={1}>
             <FormItem size="sm" title={<PromMetricSelect  enableInput={false} width={isLargeScreen ? "300px" : "100px"} dsId={datasource.id} value={tempQuery.metrics} onChange={v => {
@@ -76,7 +80,7 @@ const QueryEditor = ({ datasource, query, onChange }: DatasourceEditorProps) => 
                     />
                 </Box>
             </FormItem>
-            <Stack alignItems={isLargeScreen ? "center" : "start"}>
+            <Stack alignItems={isLargeScreen ? "center" : "start"} spacing={isLargeScreen ? 4 : 2}>
                 <FormItem labelWidth={"150px"} size="sm" title="Legend">
                     <Input
                         value={tempQuery.legend}
@@ -96,6 +100,8 @@ const QueryEditor = ({ datasource, query, onChange }: DatasourceEditorProps) => 
                         setTempQuery(q)
                         onChange(q)
                     }} />
+                </FormItem>
+                <FormItem labelWidth={"150px"} size="sm" title="View in vmui" alignItems="center" desc="Open vmui to view curren metrics" onLabelClick={() => window.open(`${ds.url}/vmui?g0.expr=${tempQuery.metrics}`)}>
                 </FormItem>
                 {/* {isLargeScreen && <ExpandTimeline t1={t1} tempQuery={tempQuery} setTempQuery={setTempQuery} onChange={onChange}/>} */}
             </Stack>
