@@ -141,7 +141,7 @@ const DatasourceEditor = ({ ds, onChange = null, teamEditable=true }: Props) => 
                 <HStack>
                     <Select width="fit-content" value={datasource.type} onChange={e => {
                         const v = e.currentTarget.value
-                        setDatasource((d: Datasource) => { d.type = v as any })
+                        setDatasource((d: Datasource) => { d.type = v as any;d.url = null })
                     }}>
                         {Object.keys(DatasourceType).map((key, index) => {
                             return <option key={index} value={DatasourceType[key]}>{key}</option>

@@ -26,7 +26,7 @@ import { globalTeamId } from "types/teams"
 const initDatasource: Datasource = {
     id: 0,
     name: '',
-    url: '',
+    url: null,
     type: DatasourceType.Prometheus,
     teamId: globalTeamId
 }
