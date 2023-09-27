@@ -54,6 +54,7 @@ const PrometheusQueryEditor = ({ datasource, query, onChange }: DatasourceEditor
                         }}
                         isSingleLine
                         placeholder={t1.enterPromQL}
+                        height="31px"
                     />
                 </Box>
                 {/* <Input

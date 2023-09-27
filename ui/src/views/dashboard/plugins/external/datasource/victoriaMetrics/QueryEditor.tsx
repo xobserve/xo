@@ -94,7 +94,7 @@ const QueryEditor = ({ datasource, query, onChange }: DatasourceEditorProps) => 
                         }}
                         isSingleLine
                         placeholder={t1.enterPromQL}
-                        bordered="bordered-bottom"
+                        height="31px"
                     />
                     </Box>
                     
