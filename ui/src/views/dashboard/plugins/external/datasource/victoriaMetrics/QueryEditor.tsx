@@ -71,7 +71,6 @@ const QueryEditor = ({ datasource, query, onChange }: DatasourceEditorProps) => 
                         onBlur={() => {
                             onChange(tempQuery)
                         }}
-                        height="100px"
                         isSingleLine
                         placeholder={t1.enterPromQL}
                     />

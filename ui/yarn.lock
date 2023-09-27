@@ -5736,6 +5736,11 @@ monaco-editor@^0.39.0:
   resolved "https://registry.yarnpkg.com/monaco-editor/-/monaco-editor-0.39.0.tgz#3cf8e3718d6aac347d374516a6837d1c13d967d2"
   integrity sha512-zhbZ2Nx93tLR8aJmL2zI1mhJpsl87HMebNBM6R8z4pLfs8pj604pIVIVwyF1TivcfNtIPpMXL+nb3DsBmE/x6Q==
 
+monaco-promql@^1.7.4:
+  version "1.7.4"
+  resolved "https://registry.yarnpkg.com/monaco-promql/-/monaco-promql-1.7.4.tgz#64feb0850cba5d62255b7c952e919ba124b0413d"
+  integrity sha512-ehiDBi7or/ndoRL98Lj9NgttXcAKNlH85OatV1bfdpseeVA8ziUm7Yi7mhICW6ORc7FZDDfUFcYg0SVrFYEpnw==
+
 ms@2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.2.tgz#d09d1f357b443f493382a8eb3ccd183872ae6009"

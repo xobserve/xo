@@ -61,6 +61,7 @@
     "memoize-one": "6.0.0",
     "moment": "^2.27.0",
     "monaco-editor": "^0.39.0",
+    "monaco-promql": "^1.7.4",
     "namor": "^1.1.2",
     "nanostores": "^0.9.3",
     "ol": "^7.2.2",
