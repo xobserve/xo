@@ -35,6 +35,8 @@ import { PanelDataEvent } from "src/data/bus-events";
 import { useSearchParam } from "react-use";
 import { $datasources } from "src/views/datasource/store";
 import { FaEye } from "react-icons/fa";
+import { requestApi } from "utils/axios/request";
+import { isEmpty } from "utils/validate";
 
 
 
@@ -45,7 +47,20 @@ const QueryEditor = ({ datasource, query, onChange }: DatasourceEditorProps) => 
     const [panelData, setPanelData] = useState<SeriesData[]>(null)
     const Stack = isLargeScreen ? HStack : VStack
     const edit = useSearchParam("edit")
-
+    const [expandedMetrics, setExpandedMetrics] = useState<string>(null)
+    useEffect(() => {
+        const q = query?.metrics
+        if (!isEmpty(q)) {
+            // /prometheus/expand-with-exprs
+            requestApi.get(`/proxy/${datasource.id}/prometheus/expand-with-exprs?query=${q}&format=json`).then((res:any) => {
+                if (res?.status == "success") {
+                    setExpandedMetrics(res.expr)
+                }
+            })
+            return 
+        } 
+        setExpandedMetrics(null)
+    },[query?.metrics])
     useBus(
         (e) => { return e.type == PanelDataEvent + edit },
         (e) => {
@@ -58,14 +73,14 @@ const QueryEditor = ({ datasource, query, onChange }: DatasourceEditorProps) => 
     const queryStr = queryData?.fields.find(f => f.labels).labels["__name__"]
 
     const ds = $datasources.get().find(d => d.id == datasource.id)
-  
+        
     return (
         <Form spacing={1}>
             <FormItem size="sm" title={<PromMetricSelect  enableInput={false} width={isLargeScreen ? "300px" : "150px"} dsId={datasource.id} value={tempQuery.metrics} onChange={v => {
                 setTempQuery({ ...tempQuery, metrics: v })
                 onChange({ ...tempQuery, metrics: v })
             }} />} >
-                <Box width={"calc(100% - 180px)"}>
+                <HStack  minWidth={isLargeScreen ? "calc(100% - 330px)" : "calc(100% - 180px)"}> 
                     <CodeEditor
                         language={LogqlLang}
                         value={tempQuery.metrics}
@@ -79,7 +94,7 @@ const QueryEditor = ({ datasource, query, onChange }: DatasourceEditorProps) => 
                         placeholder={t1.enterPromQL}
                         bordered="bordered-bottom"
                     />
-                </Box>
+                </HStack>
             </FormItem>
             <Stack alignItems={isLargeScreen ? "center" : "start"} spacing={isLargeScreen ? 4 : 1}>
                 <FormItem labelWidth={"150px"} size="sm" title="Legend">

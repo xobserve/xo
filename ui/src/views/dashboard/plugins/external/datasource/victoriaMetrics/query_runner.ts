@@ -214,7 +214,6 @@ export const queryDemoLabels = async (dsId, metric = "", useCurrentTimerange = t
     }
 }
 
-
 const isDemoDatasourceValid = (ds: Datasource) => {
     if (!isURL(ds.url, { require_tld: false })) {
         return 'invalid url'
