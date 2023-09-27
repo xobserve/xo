@@ -215,8 +215,7 @@ export const VariablesTable = ({ variables, onEdit, onRemove }: TableProps) => {
                             isLargeScreen && <>
                                 <Th>{t1.queryType}</Th>
                                 <Th>{t.datasource}</Th>
-                                <Th>{t1.refresh}</Th>
-                                <Th>{t1.regexFilter}</Th>
+                                <Th>{t.description}</Th>
                             </>
                         }
 
@@ -231,8 +230,8 @@ export const VariablesTable = ({ variables, onEdit, onRemove }: TableProps) => {
                                 isLargeScreen && <>
                                     <Td>{t[variable.type]}</Td>
                                     <Td>{datasources?.find(ds => ds.id == variable.datasource)?.name}</Td>
-                                    <Td>{t1[variable.refresh]} {variable.refresh == VariableRefresh.Manually && <Button size="sm" mt="-1" variant="ghost" ml="1" onClick={() => reloadValues(variable.id, variable.name)}>{t1.reload}</Button>}</Td>
-                                    <Td>{variable.regex}</Td>
+                                    {/* <Td>{t1[variable.refresh]} {variable.refresh == VariableRefresh.Manually && <Button size="sm" mt="-1" variant="ghost" ml="1" onClick={() => reloadValues(variable.id, variable.name)}>{t1.reload}</Button>}</Td> */}
+                                    <Td>{variable.description}</Td>
                                 </>
                             }
                             <Td>

@@ -20,10 +20,15 @@ interface Props {
     onChange: any
 }
 
+const defaultUrl = "http://localhost:8428"
 const DatasourceEditor = ({ datasource, onChange }: Props) => {
+    if (datasource.url === null) {
+        onChange(d => {d.url = defaultUrl})
+        return 
+    }
     return (<>
         <FormItem title="URL">
-            <Input value={datasource.url} placeholder="http://localhost:9090" onChange={e => {
+            <Input value={datasource.url} placeholder={defaultUrl} onChange={e => {
                 const v = e.currentTarget.value
                 onChange((d: Datasource) => { d.url = v })
             }} />
