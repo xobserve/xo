@@ -131,7 +131,6 @@ const EditPanelQuery = (props: Props) => {
         }
     }
 
-    console.log("here333333:", docs)
     return (<>
         <Box className="bordered-top" p="2" borderRadius="0" height="100%">
             <Flex justifyContent="space-between" alignItems="start">
@@ -174,7 +173,7 @@ const EditPanelQuery = (props: Props) => {
                 <DrawerCloseButton />
                 {/* <DrawerHeader>{upperFirst(currentDatasource?.type)} Docs</DrawerHeader> */}
                 <DrawerBody width="100%" pl="0">
-                    <Tabs defaultIndex={docsTab} onChange={(index) => setDocsTab(index)} >
+                    <Tabs isLazy defaultIndex={docsTab} onChange={(index) => {setDocsTab(index)}} >
                         <TabList>
                             {
                                 docs.map((d, index) => {
@@ -186,7 +185,10 @@ const EditPanelQuery = (props: Props) => {
                             {
                                 docs.map((d, index) => {
                                     return <TabPanel pl="0">
-                                        <Toc toc={d.toc}/>
+                                        {d.toc && <Box  position="fixed" top="0" ml="0px" transform='translateX(-100%)'>
+                                            <Toc toc={d.toc}/>
+                                        </Box>}
+                                      
                                         <Box pl="6">
                                             <MarkdownRender md={d.content} width="100%" />
                                         </Box>

@@ -56,7 +56,7 @@ const tf = (code, id, options) => {
 
   const toc = indicies.map(index => ({
     level: index.tagName.replace('h', ''),
-    content: DomUtils.getInnerHTML(index),
+    content: DomUtils.getText(index),
   }))
 
   content.addContext(`const toc = ${JSON.stringify(toc)}`)

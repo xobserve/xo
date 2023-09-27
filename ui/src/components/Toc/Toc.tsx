@@ -6,9 +6,9 @@ import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
 
 const Toc = ({toc}) => {
     const [activeId, setActiveId] = useState(null);
-    useIntersectionObserver(setActiveId);
+    useIntersectionObserver('.markdown-render',setActiveId);
 
-    return <VStack alignItems="left" position="fixed" ml="0px" transform='translateX(-100%)' background={useColorModeValue(customColors.primaryColor.light, customColors.bodyBg.dark)}  py="2">
+    return <VStack alignItems="left"  background={useColorModeValue(customColors.primaryColor.light, customColors.bodyBg.dark)}  py="2" maxH="100vh" overflowY="auto">
     {
         toc.map(t => {
             const level = Number(t.level)

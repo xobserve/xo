@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 
 
-export const useIntersectionObserver = (setActiveId) => {
+export const useIntersectionObserver = (container, setActiveId) => {
     const headingElementsRef = useRef({});
     useEffect(() => {
         const callback = (headings) => {
@@ -34,8 +34,9 @@ export const useIntersectionObserver = (setActiveId) => {
             rootMargin: "0px 0px -40% 0px"
         });
 
-        const headingElements = Array.from(document.querySelectorAll("h2, h3,h4,h5,h6"));
+        const headingElements = Array.from(document.querySelectorAll(`${container} h1,${container} h2, ${container} h3, ${container} h4, ${container} h5`));
         
+        console.log("here333333:",headingElements)
         headingElements.forEach((element) => observer.observe(element));
 
         return () => observer.disconnect();
