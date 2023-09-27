@@ -123,8 +123,8 @@ const EditPanelQuery = (props: Props) => {
 
             <VStack alignItems="left" mt="3" spacing="2">
                 {panel.datasource.queries?.map((query, index) => {
-                    return <Box key={index}>
-                        <Flex justifyContent="space-between" className="label-bg" py="1" px="2" mb="1">
+                    return <Box key={index} className="bordered" p="1">
+                        <Flex justifyContent="space-between"  py="0" px="2" mb="1">
                             <Text className="color-text">{String.fromCharCode(query.id)}</Text>
                             <HStack layerStyle="textSecondary" fontSize="12px" spacing={3}>
                                 {query.visible ? <FaEye cursor="pointer" onClick={() => onVisibleChange(query.id, false)}/> : <FaEyeSlash cursor="pointer" onClick={() => onVisibleChange(query.id, true)}/>}
@@ -132,7 +132,7 @@ const EditPanelQuery = (props: Props) => {
                             </HStack>
                         </Flex>
                         {
-                            <Box pl="4"><CustomQueryEditor key={panel.datasource.id + query.id} panel={panel} query={query} selected={panel.datasource} dsType={currentDatasource?.type} onChange={onChange} /></Box>
+                            <Box px="2" pt="2"><CustomQueryEditor key={panel.datasource.id + query.id} panel={panel} query={query} selected={panel.datasource} dsType={currentDatasource?.type} onChange={onChange} /></Box>
                         }
                     </Box>
                 })}

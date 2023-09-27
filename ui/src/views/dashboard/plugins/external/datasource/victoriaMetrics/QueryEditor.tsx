@@ -61,11 +61,11 @@ const QueryEditor = ({ datasource, query, onChange }: DatasourceEditorProps) => 
   
     return (
         <Form spacing={1}>
-            <FormItem size="sm" title={<PromMetricSelect  enableInput={false} width={isLargeScreen ? "300px" : "100px"} dsId={datasource.id} value={tempQuery.metrics} onChange={v => {
+            <FormItem size="sm" title={<PromMetricSelect  enableInput={false} width={isLargeScreen ? "300px" : "150px"} dsId={datasource.id} value={tempQuery.metrics} onChange={v => {
                 setTempQuery({ ...tempQuery, metrics: v })
                 onChange({ ...tempQuery, metrics: v })
             }} />} >
-                <Box width="100%">
+                <Box width={"calc(100% - 180px)"}>
                     <CodeEditor
                         language={LogqlLang}
                         value={tempQuery.metrics}
@@ -77,10 +77,11 @@ const QueryEditor = ({ datasource, query, onChange }: DatasourceEditorProps) => 
                         }}
                         isSingleLine
                         placeholder={t1.enterPromQL}
+                        bordered="bordered-bottom"
                     />
                 </Box>
             </FormItem>
-            <Stack alignItems={isLargeScreen ? "center" : "start"} spacing={isLargeScreen ? 4 : 2}>
+            <Stack alignItems={isLargeScreen ? "center" : "start"} spacing={isLargeScreen ? 4 : 1}>
                 <FormItem labelWidth={"150px"} size="sm" title="Legend">
                     <Input
                         value={tempQuery.legend}

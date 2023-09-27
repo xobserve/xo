@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 
 //--- import monaco-editor from node-modules instead of cdn ---
 // import * as monaco from 'monaco-editor';
@@ -39,7 +39,7 @@ interface Props {
   options?: editor.IEditorOptions
   isSingleLine?: boolean
   placeholder?: string
-  bordered?: boolean
+  bordered?: string
   height?: string
 }
 
@@ -73,7 +73,7 @@ function installLogQL(monaco) {
   }
 }
 
-function CodeEditor({ value, onChange, onBlur, onMount, language = "typescript", readonly = false, fontSize = 12, options = {}, isSingleLine = false, placeholder = null, bordered = true, height = "100%" }: Props) {
+function CodeEditor({ value, onChange, onBlur, onMount, language = "typescript", readonly = false, fontSize = 12, options = {}, isSingleLine = false, placeholder = null, bordered = "bordered", height = "100%" }: Props) {
   const { colorMode } = useColorMode()
   const containerRef = useRef<HTMLDivElement>(null);
   const handleEditorOnMount = (editor) => {
@@ -85,7 +85,11 @@ function CodeEditor({ value, onChange, onBlur, onMount, language = "typescript",
     // focus on editor
     // editor.focus();
   };
-
+  
+  useEffect(() => {
+    handleEditorOnChange(value)
+  },[value])
+  
   const handleEditorOnChange = (
     value: string | undefined,
   ) => {
@@ -145,7 +149,7 @@ function CodeEditor({ value, onChange, onBlur, onMount, language = "typescript",
           const containerDiv = containerRef.current;
           if (containerDiv !== null) {
             const pixelHeight = editor.getContentHeight();
-            containerDiv.style.height = `${pixelHeight + 2}px`;
+            containerDiv.style.height = `${pixelHeight + 5}px`;
             containerDiv.style.width = '100%';
             const pixelWidth = containerDiv.clientWidth;
             editor.layout({ width: pixelWidth, height: pixelHeight });
