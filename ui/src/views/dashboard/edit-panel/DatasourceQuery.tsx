@@ -137,7 +137,7 @@ const EditPanelQuery = (props: Props) => {
                     <Image width="30px" height="30px" src={dsIcon} />
                     <Box width="200px"><DatasourceSelect value={panel.datasource.id} onChange={selectDatasource} variant="unstyled" /></Box>
                     {!isNumber(panel.datasource.id) && <Text textStyle="annotation">current: {currentDatasource?.name}</Text>}
-                    {docs && docs.length > 0 && <Tooltip label={`View ${currentDatasource?.type} docs`}><Box cursor="pointer" onClick={onDocsOpen}><FaBookOpen className={colorMode == "light" ? "color-text" : null} /></Box></Tooltip>}
+                    {docs && docs.length > 0 && <Tooltip label={`View ${currentDatasource?.type} docs`}><Box opacity={0.8} cursor="pointer" onClick={onDocsOpen}><FaBookOpen className={colorMode == "light" ? "color-text" : null} /></Box></Tooltip>}
                 </HStack>
                 <DatasourceQueryOption {...props} />
             </Flex>
