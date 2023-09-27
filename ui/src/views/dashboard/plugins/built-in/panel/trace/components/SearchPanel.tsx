@@ -163,15 +163,14 @@ const TraceSearchPanel = ({ timeRange, dashboardId, panel, onSearch, onSearchIds
             case DatasourceType.Jaeger:
                 const res = await queryJaegerServices(panel.datasource.id)
                 const ss = sortBy(res)
-                setServices(ss)
-                if (ss.length > 0) {
-                    if (isEmpty(service)) {
-                        setService(ss[0])
-                    }
-                }
-                
+                setServices(ss)  
                 setTimeout(() => {
                     setInited(true)
+                    if (ss.length > 0) {
+                        if (isEmpty(service)) {
+                            setService(ss[0])
+                        }
+                    }
                 }, 500)
 
                 break;

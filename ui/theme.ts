@@ -40,7 +40,7 @@ const customTheme = extendTheme(
     {
         // 设置默认使用的主题模式
         config: {
-            initialColorMode: "dark",
+            initialColorMode: "light",
             useSystemColorMode: false,
         },
         // 预定义一些样式，可以在属性中通过 `layerStyle="xxx"` 的方式引入
