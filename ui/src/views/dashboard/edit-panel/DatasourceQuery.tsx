@@ -10,9 +10,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box, Button, Flex, HStack, Image, Select, Text, VStack } from "@chakra-ui/react"
+import { Box, Button, Flex, HStack, Image, Select, Text, Tooltip, VStack } from "@chakra-ui/react"
 import { useState } from "react"
-import { FaAngleDown, FaAngleRight, FaEye, FaEyeSlash, FaPlus, FaTrashAlt } from "react-icons/fa"
+import { FaAngleDown, FaAngleRight, FaBookOpen, FaEye, FaEyeSlash, FaPlus, FaTrashAlt } from "react-icons/fa"
 import { DatasourceType, Panel, PanelQuery } from "types/dashboard"
 import JaegerQueryEditor from "../plugins/built-in/datasource/jaeger/QueryEditor"
 import PrometheusQueryEditor from "../plugins/built-in/datasource/prometheus/QueryEditor"
@@ -36,6 +36,7 @@ import { getDatasource } from "utils/datasource"
 import { isNumber } from "lodash"
 import { $datasources } from "src/views/datasource/store"
 import { externalDatasourcePlugins } from "../plugins/external/plugins"
+import getPrometheusDocs from "../plugins/built-in/datasource/prometheus/docs"
 
 interface Props {
     panel: Panel
@@ -110,6 +111,21 @@ const EditPanelQuery = (props: Props) => {
     const externalDs = externalDatasourcePlugins[currentDatasource?.type]
     const dsIcon = externalDs ? `/plugins/external/datasource/${currentDatasource?.type}.svg`  : `/plugins/datasource/${currentDatasource?.type}.svg`
     
+    let docs; 
+    if (externalDs && externalDs.getDocs) {
+        docs = externalDs.getDocs()
+    } else {
+        switch (currentDatasource?.type) {
+            case DatasourceType.Prometheus:
+                docs = getPrometheusDocs()
+                break;
+        
+            default:
+                break;
+        }
+    }
+
+
     return (<>
         <Box className="bordered-top" p="2" borderRadius="0" height="100%">
             <Flex justifyContent="space-between" alignItems="start">
@@ -117,6 +133,7 @@ const EditPanelQuery = (props: Props) => {
                     <Image width="30px" height="30px" src={dsIcon} />
                     <Box width="200px"><DatasourceSelect value={panel.datasource.id} onChange={selectDatasource}  variant="unstyled" /></Box>
                     {!isNumber(panel.datasource.id) && <Text textStyle="annotation">current: {currentDatasource?.name}</Text>}
+                    {docs && <Tooltip label={`View ${currentDatasource?.type} docs`}><Box cursor="pointer"><FaBookOpen /></Box></Tooltip>}
                 </HStack>
                 <DatasourceQueryOption {...props} />
             </Flex>
