@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box, Center, Image, SimpleGrid, Switch, Text } from "@chakra-ui/react"
+import { Box, Center,  Image, SimpleGrid, Switch, Text } from "@chakra-ui/react"
 import { upperFirst } from "lodash"
 import { Panel, PanelEditorProps, PanelType } from "types/dashboard"
 import PanelAccordion from "./Accordion"
@@ -83,12 +83,12 @@ const PanelSettings = memo(({ panel, onChange }: PanelEditorProps) => {
                         </PanelEditItem> */}
                         <PanelEditItem title={t1.condition} desc={panel.conditionRender.type == "variable" ? t1.conditionTips : "Check condition in a function, return true or false"}>
                             {panel.conditionRender.type == "variable" ?
-                             <EditorInputItem  value={panel.conditionRender.value} placeholder="e.g varNameA=value1, value1 can be regex"  onChange={v => onChange((panel: Panel) => {
-                                panel.conditionRender.value = v
-                            })}/> :
-                             <CodeEditorModal value={panel.conditionRender.value} onChange={v => onChange((panel: Panel) => {
-                                panel.conditionRender.value = v
-                            })}/>
+                                <EditorInputItem value={panel.conditionRender.value} placeholder="e.g varNameA=value1, value1 can be regex" onChange={v => onChange((panel: Panel) => {
+                                    panel.conditionRender.value = v
+                                })} /> :
+                                <CodeEditorModal value={panel.conditionRender.value} onChange={v => onChange((panel: Panel) => {
+                                    panel.conditionRender.value = v
+                                })} />
                             }
                         </PanelEditItem>
                     </>
@@ -114,20 +114,20 @@ const PanelSettings = memo(({ panel, onChange }: PanelEditorProps) => {
                 </SimpleGrid>
             </PanelAccordion>
             {
-                externalPanelPlugins.length > 0 &&  <PanelAccordion  title={t1.externalPanels + (isExternalPanel ? ` -> ${panel.type}` : "")} defaultOpen={false}>
-                <SimpleGrid columns={3} spacing="2">
-                    {
-                        externalPanelPlugins.map((p) => {
-                            return <VisulizationItem
-                                selected={panel.type == p.type}
-                                title={upperFirst(p.type)}
-                                imageUrl={`/plugins/external/panel/${p.type}.svg`}
-                                onClick={() => onChangeVisualization(p.type)}
-                            />
-                        })
-                    }
-                </SimpleGrid>
-            </PanelAccordion>
+                externalPanelPlugins.length > 0 && <PanelAccordion title={t1.externalPanels + (isExternalPanel ? ` -> ${panel.type}` : "")} defaultOpen={false}>
+                    <SimpleGrid columns={3} spacing="2">
+                        {
+                            externalPanelPlugins.map((p) => {
+                                return <VisulizationItem
+                                    selected={panel.type == p.type}
+                                    title={upperFirst(p.type)}
+                                    imageUrl={`/plugins/external/panel/${p.type}.svg`}
+                                    onClick={() => onChangeVisualization(p.type)}
+                                />
+                            })
+                        }
+                    </SimpleGrid>
+                </PanelAccordion>
             }
         </>
     )
