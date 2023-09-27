@@ -75,16 +75,6 @@ const QueryEditor = ({ datasource, query, onChange }: DatasourceEditorProps) => 
                         placeholder={t1.enterPromQL}
                     />
                 </Box>
-                {/* <Input
-                    value={tempQuery.metrics}
-                    onChange={(e) => {
-                        setTempQuery({ ...tempQuery, metrics: e.currentTarget.value })
-                    }}
-                    onBlur={() => onChange(tempQuery)}
-                    width="100%"
-                    placeholder={t1.enterPromQL}
-                    size="sm"
-                /> */}
             </FormItem>
             <Stack alignItems={isLargeScreen ? "center" : "start"}>
                 <FormItem labelWidth={"150px"} size="sm" title="Legend">
