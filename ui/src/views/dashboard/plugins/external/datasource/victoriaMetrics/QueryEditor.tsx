@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box, HStack, Input, VStack, useMediaQuery, useToast } from "@chakra-ui/react"
+import { Box, HStack, Input, VStack, useMediaQuery, useToast, Switch } from "@chakra-ui/react"
 import { cloneDeep } from "lodash"
 import { useEffect, useState } from "react"
 import { PanelQuery } from "types/dashboard"
@@ -28,6 +28,7 @@ import CodeEditor, { LogqlLang } from "src/components/CodeEditor/CodeEditor";
 import RadionButtons from "src/components/RadioButtons";
 import { MobileBreakpoint } from "src/data/constants";
 import Loading from "components/loading/Loading";
+import TraceQuery from "./TraceQuery/TraceQuery";
 
 
 
@@ -35,6 +36,7 @@ const QueryEditor = ({ datasource, query, onChange }: DatasourceEditorProps) => 
     const t1 = useStore(prometheusDsMsg)
     const [tempQuery, setTempQuery] = useState<PanelQuery>(cloneDeep(query))
     const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
+    const Stack = isLargeScreen ? HStack : VStack
     return (
         <Form spacing={1}>
             <FormItem size="sm" title={<PromMetricSelect  enableInput={false} width={isLargeScreen ? "300px" : "100px"} dsId={datasource.id} value={tempQuery.metrics} onChange={v => {
@@ -51,7 +53,7 @@ const QueryEditor = ({ datasource, query, onChange }: DatasourceEditorProps) => 
                         onBlur={() => {
                             onChange(tempQuery)
                         }}
-                        height="70px"
+                        height="100px"
                         isSingleLine
                         placeholder={t1.enterPromQL}
                     />
@@ -67,7 +69,7 @@ const QueryEditor = ({ datasource, query, onChange }: DatasourceEditorProps) => 
                     size="sm"
                 /> */}
             </FormItem>
-            <HStack>
+            <Stack alignItems={isLargeScreen ? "center" : "start"}>
                 <FormItem labelWidth={"150px"} size="sm" title="Legend">
                     <Input
                         value={tempQuery.legend}
@@ -80,9 +82,18 @@ const QueryEditor = ({ datasource, query, onChange }: DatasourceEditorProps) => 
                         size="sm"
                     />
                 </FormItem>
-                {isLargeScreen && <ExpandTimeline t1={t1} tempQuery={tempQuery} setTempQuery={setTempQuery} onChange={onChange}/>}
-            </HStack>
-            {!isLargeScreen && <ExpandTimeline t1={t1} tempQuery={tempQuery} setTempQuery={setTempQuery} onChange={onChange}/>}
+                <FormItem labelWidth={"150px"} size="sm" title="Trace query" alignItems="center">
+                    <Switch defaultChecked={tempQuery.data['traceQuery']} onChange={(e) => {
+                        tempQuery.data['traceQuery'] = e.target.checked
+                        const q = { ...tempQuery, data: cloneDeep(tempQuery.data) }
+                        setTempQuery(q)
+                        onChange(q)
+                    }} />
+                </FormItem>
+                {/* {isLargeScreen && <ExpandTimeline t1={t1} tempQuery={tempQuery} setTempQuery={setTempQuery} onChange={onChange}/>} */}
+            </Stack>
+
+            {tempQuery.data.traceQuery && <TraceQuery />}
         </Form>
     )
 }
