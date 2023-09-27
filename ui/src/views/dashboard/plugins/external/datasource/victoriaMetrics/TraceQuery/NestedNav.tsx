@@ -34,7 +34,7 @@ const NestedNav: FC<RecursiveProps> = ({ trace, totalMsec }) => {
       <div className={styles.content} onClick={handleListClick(trace.idValue)}>
         <div className={styles.topRow}>
           <div className={styles.arrow}>
-            {hasChildren && (openLevels[trace.idValue] ? <FaAngleRight /> : <FaAngleDown />)}
+            {hasChildren && (openLevels[trace.idValue] ? <FaAngleDown /> : <FaAngleRight />)}
           </div>
           <div className={styles.progressWrapper}>
             <div className={styles.progressLine} style={{ width: `${progress}%`, }}/>

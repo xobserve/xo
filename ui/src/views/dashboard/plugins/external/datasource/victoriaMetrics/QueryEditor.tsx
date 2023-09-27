@@ -180,7 +180,6 @@ interface LabelSelectProps {
 
 export const PromLabelSelect = ({ dsId, metric, value, onChange, width = "220px", variant = "unstyled", useCurrentTimerange = true }: LabelSelectProps) => {
     const [labels, setLabels] = useState<string[]>([])
-    const toast = useToast()
     const [loading, setLoading] = useState(false)
 
     useEffect(() => {
