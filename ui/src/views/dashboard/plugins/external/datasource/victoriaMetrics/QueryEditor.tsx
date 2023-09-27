@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box, HStack, Input, VStack, useMediaQuery, useToast, Switch } from "@chakra-ui/react"
+import { Box, HStack, Input, VStack, useMediaQuery, useToast, Switch, Button } from "@chakra-ui/react"
 import { cloneDeep } from "lodash"
 import { useEffect, useState } from "react"
 import { PanelQuery } from "types/dashboard"
@@ -26,7 +26,7 @@ import { prometheusDsMsg } from "src/i18n/locales/en";
 import { useStore } from "@nanostores/react";
 import CodeEditor, { LogqlLang } from "src/components/CodeEditor/CodeEditor";
 import RadionButtons from "src/components/RadioButtons";
-import { MobileBreakpoint } from "src/data/constants";
+import { IsSmallScreen } from "src/data/constants";
 import Loading from "components/loading/Loading";
 import TraceQuery from "./TraceQuery/TraceQuery";
 import useBus from "use-bus";
@@ -34,7 +34,6 @@ import { SeriesData } from "types/seriesData";
 import { PanelDataEvent } from "src/data/bus-events";
 import { useSearchParam } from "react-use";
 import { $datasources } from "src/views/datasource/store";
-import { FaEye } from "react-icons/fa";
 import { requestApi } from "utils/axios/request";
 import { isEmpty } from "utils/validate";
 
@@ -43,7 +42,8 @@ import { isEmpty } from "utils/validate";
 const QueryEditor = ({ datasource, query, onChange }: DatasourceEditorProps) => {
     const t1 = useStore(prometheusDsMsg)
     const [tempQuery, setTempQuery] = useState<PanelQuery>(cloneDeep(query))
-    const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
+    const [isSmallScreen] = useMediaQuery(IsSmallScreen)
+    const isLargeScreen = !isSmallScreen
     const [panelData, setPanelData] = useState<SeriesData[]>(null)
     const Stack = isLargeScreen ? HStack : VStack
     const edit = useSearchParam("edit")
@@ -74,13 +74,15 @@ const QueryEditor = ({ datasource, query, onChange }: DatasourceEditorProps) => 
 
     const ds = $datasources.get().find(d => d.id == datasource.id)
         
+    console.log("here33333:",isLargeScreen)
     return (
         <Form spacing={1}>
             <FormItem size="sm" title={<PromMetricSelect  enableInput={false} width={isLargeScreen ? "300px" : "150px"} dsId={datasource.id} value={tempQuery.metrics} onChange={v => {
                 setTempQuery({ ...tempQuery, metrics: v })
                 onChange({ ...tempQuery, metrics: v })
             }} />} >
-                <HStack  minWidth={isLargeScreen ? "calc(100% - 330px)" : "calc(100% - 180px)"}> 
+                <Stack width="100%" alignItems="end"> 
+                    <Box width={isLargeScreen ? "calc(100% - 100px)" : "calc(100% - 5px)"}>
                     <CodeEditor
                         language={LogqlLang}
                         value={tempQuery.metrics}
@@ -94,7 +96,10 @@ const QueryEditor = ({ datasource, query, onChange }: DatasourceEditorProps) => 
                         placeholder={t1.enterPromQL}
                         bordered="bordered-bottom"
                     />
-                </HStack>
+                    </Box>
+                    
+                <Button size="sm" variant="ghost">Expand</Button>
+                </Stack>
             </FormItem>
             <Stack alignItems={isLargeScreen ? "center" : "start"} spacing={isLargeScreen ? 4 : 1}>
                 <FormItem labelWidth={"150px"} size="sm" title="Legend">

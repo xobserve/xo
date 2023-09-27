@@ -111,7 +111,7 @@ const EditPanelQuery = (props: Props) => {
     const dsIcon = externalDs ? `/plugins/external/datasource/${currentDatasource?.type}.svg`  : `/plugins/datasource/${currentDatasource?.type}.svg`
     
     return (<>
-        <Box className="bordered" p="2" borderRadius="0" height="100%">
+        <Box className="bordered-top" p="2" borderRadius="0" height="100%">
             <Flex justifyContent="space-between" alignItems="start">
                 <HStack>
                     <Image width="30px" height="30px" src={dsIcon} />
@@ -123,7 +123,7 @@ const EditPanelQuery = (props: Props) => {
 
             <VStack alignItems="left" mt="3" spacing="2">
                 {panel.datasource.queries?.map((query, index) => {
-                    return <Box key={index} className="bordered" p="1">
+                    return <Box key={index} className="bordered" p="1" pb="2">
                         <Flex justifyContent="space-between"  py="0" px="2" mb="1">
                             <Text className="color-text">{String.fromCharCode(query.id)}</Text>
                             <HStack layerStyle="textSecondary" fontSize="12px" spacing={3}>

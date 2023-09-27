@@ -39,7 +39,7 @@ interface Props {
   options?: editor.IEditorOptions
   isSingleLine?: boolean
   placeholder?: string
-  bordered?: string
+  bordered?: boolean
   height?: string
 }
 
@@ -73,7 +73,7 @@ function installLogQL(monaco) {
   }
 }
 
-function CodeEditor({ value, onChange, onBlur, onMount, language = "typescript", readonly = false, fontSize = 12, options = {}, isSingleLine = false, placeholder = null, bordered = "bordered", height = "100%" }: Props) {
+function CodeEditor({ value, onChange, onBlur, onMount, language = "typescript", readonly = false, fontSize = 12, options = {}, isSingleLine = false, placeholder = null, bordered = true, height = "100%" }: Props) {
   const { colorMode } = useColorMode()
   const containerRef = useRef<HTMLDivElement>(null);
   const handleEditorOnMount = (editor) => {
@@ -87,7 +87,9 @@ function CodeEditor({ value, onChange, onBlur, onMount, language = "typescript",
   };
   
   useEffect(() => {
-    handleEditorOnChange(value)
+    if (placeholder) {
+      handleEditorOnChange(value)
+    }
   },[value])
   
   const handleEditorOnChange = (
@@ -141,23 +143,21 @@ function CodeEditor({ value, onChange, onBlur, onMount, language = "typescript",
         !value && placeholder && handleEditorOnMount(editor)
         onMount && onMount(editor)
         
-        // this code makes the editor resize itself so that the content fits
-        // (it will grow taller when necessary)
-        // FIXME: maybe move this functionality into CodeEditor, like:
-        // <CodeEditor resizingMode="single-line"/>
-        const updateElementHeight = () => {
-          const containerDiv = containerRef.current;
-          if (containerDiv !== null) {
-            const pixelHeight = editor.getContentHeight();
-            containerDiv.style.height = `${pixelHeight + 5}px`;
-            containerDiv.style.width = '100%';
-            const pixelWidth = containerDiv.clientWidth;
-            editor.layout({ width: pixelWidth, height: pixelHeight });
-          }
-        };
-
-        editor.onDidContentSizeChange(updateElementHeight);
-        updateElementHeight();
+        if (isSingleLine) {
+          const updateElementHeight = () => {
+            const containerDiv = containerRef.current;
+            if (containerDiv !== null) {
+              const pixelHeight = editor.getContentHeight();
+              containerDiv.style.height = `${pixelHeight + 5}px`;
+              containerDiv.style.width = '100%';
+              const pixelWidth = containerDiv.clientWidth;
+              editor.layout({ width: pixelWidth, height: pixelHeight });
+            }
+          };
+  
+          editor.onDidContentSizeChange(updateElementHeight);
+          updateElementHeight();
+        }
       }}
     />
     {placeholder && <div className="monaco-placeholder">{placeholder}</div>}

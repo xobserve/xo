@@ -50,7 +50,7 @@ const DatasourceSelect = ({ value, onChange, allowTypes = [], variant = "unstyle
 
 
     return (
-        <InputSelect width="100%"  isClearable value={value?.toString()} label={datasources.find(ds => ds.id == value)?.name} placeholder={"select datasource, support variable"}  size="md" options={options} onChange={onChange} enableInput />
+        <InputSelect width="100%"  isClearable value={value?.toString()} label={datasources.find(ds => ds.id == value)?.name} placeholder={"select datasource, support variable"}  size="md" options={options} onChange={onChange} variant="unstyled" enableInput />
     // <ChakraSelect value={{ value: value, label: datasources.find(ds => ds.id == value)?.name }} placeholder="select datasource" variant={variant} size={size} options={options}
     //     onChange={onChange}
     //     components={customComponents}
