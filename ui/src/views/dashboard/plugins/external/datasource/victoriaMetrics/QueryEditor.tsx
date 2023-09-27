@@ -36,6 +36,7 @@ import { useSearchParam } from "react-use";
 import { $datasources } from "src/views/datasource/store";
 import { requestApi } from "utils/axios/request";
 import { isEmpty } from "utils/validate";
+import { FaExternalLinkAlt } from "react-icons/fa";
 
 
 
@@ -48,19 +49,20 @@ const QueryEditor = ({ datasource, query, onChange }: DatasourceEditorProps) => 
     const Stack = isLargeScreen ? HStack : VStack
     const edit = useSearchParam("edit")
     const [expandedMetrics, setExpandedMetrics] = useState<string>(null)
+    const [expanded, setExpanded] = useState(false)
     useEffect(() => {
         const q = query?.metrics
         if (!isEmpty(q)) {
             // /prometheus/expand-with-exprs
-            requestApi.get(`/proxy/${datasource.id}/prometheus/expand-with-exprs?query=${q}&format=json`).then((res:any) => {
+            requestApi.get(`/proxy/${datasource.id}/prometheus/expand-with-exprs?query=${q}&format=json`).then((res: any) => {
                 if (res?.status == "success") {
                     setExpandedMetrics(res.expr)
                 }
             })
-            return 
-        } 
+            return
+        }
         setExpandedMetrics(null)
-    },[query?.metrics])
+    }, [query?.metrics])
     useBus(
         (e) => { return e.type == PanelDataEvent + edit },
         (e) => {
@@ -73,32 +75,41 @@ const QueryEditor = ({ datasource, query, onChange }: DatasourceEditorProps) => 
     const queryStr = queryData?.fields.find(f => f.labels).labels["__name__"]
 
     const ds = $datasources.get().find(d => d.id == datasource.id)
-        
-    console.log("here33333:",isLargeScreen)
+
+    console.log("here33333:", isLargeScreen)
     return (
         <Form spacing={1}>
-            <FormItem size="sm" title={<PromMetricSelect  enableInput={false} width={isLargeScreen ? "300px" : "150px"} dsId={datasource.id} value={tempQuery.metrics} onChange={v => {
+            <FormItem size="sm" title={<PromMetricSelect enableInput={false} width={isLargeScreen ? "300px" : "150px"} dsId={datasource.id} value={tempQuery.metrics} onChange={v => {
                 setTempQuery({ ...tempQuery, metrics: v })
                 onChange({ ...tempQuery, metrics: v })
             }} />} >
-                <Stack width="100%" alignItems="end"> 
+                <Stack width="100%" alignItems={isLargeScreen ? "center" : "end"}>
                     <Box width={isLargeScreen ? "calc(100% - 100px)" : "calc(100% - 5px)"}>
-                    <CodeEditor
-                        language={LogqlLang}
-                        value={tempQuery.metrics}
-                        onChange={(v) => {
-                            setTempQuery({ ...tempQuery, metrics: v })
-                        }}
-                        onBlur={() => {
-                            onChange(tempQuery)
-                        }}
-                        isSingleLine
-                        placeholder={t1.enterPromQL}
-                        height="31px"
-                    />
+                        <CodeEditor
+                            language={LogqlLang}
+                            value={tempQuery.metrics}
+                            onChange={(v) => {
+                                setTempQuery({ ...tempQuery, metrics: v })
+                            }}
+                            onBlur={() => {
+                                onChange(tempQuery)
+                            }}
+                            isSingleLine
+                            placeholder={t1.enterPromQL}
+                        // height="31px"
+                        />
+                        {expanded && <CodeEditor
+                            language={LogqlLang}
+                            value={expandedMetrics}
+                            isSingleLine
+                            placeholder={t1.enterPromQL}
+                            readonly
+                        />}
                     </Box>
-                    
-                <Button size="sm" variant="ghost">Expand</Button>
+                    <HStack spacing={1}>
+                        <Button size="xs" variant="ghost" onClick={() => setExpanded(!expanded)}>{!expanded ? "Expand" : "Collapse"}</Button>
+                        <Box onClick={() => window.open(`${ds.url}/vmui/#/expand-with-exprs?expr=${tempQuery.metrics}`)} textStyle="annotation" cursor="pointer" fontSize="0.7rem"><FaExternalLinkAlt /></Box>
+                    </HStack>
                 </Stack>
             </FormItem>
             <Stack alignItems={isLargeScreen ? "center" : "start"} spacing={isLargeScreen ? 4 : 1}>
@@ -134,16 +145,18 @@ const QueryEditor = ({ datasource, query, onChange }: DatasourceEditorProps) => 
 
 export default QueryEditor
 
-
-const ExpandTimeline = ({t1, tempQuery,setTempQuery,onChange}) => {
+const md = `
+#aaa
+`
+const ExpandTimeline = ({ t1, tempQuery, setTempQuery, onChange }) => {
     return <FormItem labelWidth="150px" size="sm" title={t1.expandTimeline} desc={t1.expandTimelineDesc}>
-    <RadionButtons size="sm" options={[{ label: "Auto", value: "auto" }, { label: "Always", value: 'always' }, { label: "None", value: 'none' }]} value={tempQuery.data['expandTimeline']} onChange={(v) => {
-        tempQuery.data['expandTimeline'] = v
-        const q = { ...tempQuery, data: cloneDeep(tempQuery.data) }
-        setTempQuery(q)
-        onChange(q)
-    }} />
-</FormItem>
+        <RadionButtons size="sm" options={[{ label: "Auto", value: "auto" }, { label: "Always", value: 'always' }, { label: "None", value: 'none' }]} value={tempQuery.data['expandTimeline']} onChange={(v) => {
+            tempQuery.data['expandTimeline'] = v
+            const q = { ...tempQuery, data: cloneDeep(tempQuery.data) }
+            setTempQuery(q)
+            onChange(q)
+        }} />
+    </FormItem>
 }
 
 
@@ -189,7 +202,7 @@ export const PromMetricSelect = ({ dsId, value, onChange, width = "200px", varia
         <Box onClick={loadMetrics} position="relative" width={width}>
             <InputSelect width={width} isClearable value={value} placeholder={t1.selecMetrics} variant={variant} size="md" options={metricsList.map((m) => { return { label: m, value: m } })} onChange={v => onChange(v)} enableInput={enableInput}
             />
-            {loading && <Box position="absolute" right="50%" top="6px  "><Loading size="sm"/></Box>}
+            {loading && <Box position="absolute" right="50%" top="6px  "><Loading size="sm" /></Box>}
         </Box>
 
     )
@@ -228,10 +241,10 @@ export const PromLabelSelect = ({ dsId, metric, value, onChange, width = "220px"
     }
 
     return (
-        <Box  width={width} position="relative">
+        <Box width={width} position="relative">
             <ChakraSelect value={{ value: value, label: value }} placeholder="Metrics" variant={variant} size="md" options={labels.map((m) => { return { label: m, value: m } })} onChange={v => onChange(v)}
             />
-            {loading && <Box position="absolute" right="55%" top="6px  "><Loading size="sm"/></Box>}
+            {loading && <Box position="absolute" right="55%" top="6px  "><Loading size="sm" /></Box>}
         </Box>
 
     )
