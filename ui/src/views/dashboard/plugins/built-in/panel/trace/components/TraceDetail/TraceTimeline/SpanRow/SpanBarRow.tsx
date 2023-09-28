@@ -26,11 +26,12 @@ import { TraceSpan } from 'types/plugins/trace';
 import { ViewedBoundsFunctionType } from '../utils';
 import { IoAlert } from 'react-icons/io5';
 import { AiOutlineArrowRight } from 'react-icons/ai';
-import { FaNetworkWired } from 'react-icons/fa';
+import { FaEye, FaNetworkWired } from 'react-icons/fa';
 import { MdOutlineUploadFile } from 'react-icons/md';
-import { Box, Flex, Text, useColorMode, useColorModeValue } from '@chakra-ui/react';
+import { Box, Flex, Popover, PopoverArrow, PopoverBody, PopoverContent, PopoverTrigger, Portal, Text, useColorMode, useColorModeValue } from '@chakra-ui/react';
 import customColors from 'src/theme/colors';
-import {formatDuration} from 'utils/date'
+import { formatDuration } from 'utils/date'
+import KeyValuesTable from './SpanDetail/KeyValuesTable';
 
 type SpanBarRowProps = {
     className?: string;
@@ -98,7 +99,7 @@ const SpanBarRow = (props: SpanBarRowProps) => {
         onDetailToggled,
         onChildrenToggled
     } = props;
-
+    const [onHover, setOnHover] = React.useState(false)
     const _detailToggle = () => {
         onDetailToggled(span.spanID);
     };
@@ -166,19 +167,19 @@ const SpanBarRow = (props: SpanBarRowProps) => {
                 background: useColorModeValue(matchLightBg, matchDarkBg),
             },
             '.span-row.is-expanded.is-matching-filter .span-view': {
-                background:useColorModeValue(matchLightBg, matchDarkBg),
+                background: useColorModeValue(matchLightBg, matchDarkBg),
             },
             '.span-row.is-matching-filter:hover .span-name-wrapper': {
                 background: useColorModeValue(matchLightBg, matchDarkBg),
             },
             '.span-row.is-matching-filter:hover .span-view': {
-                backgroundColor:useColorModeValue(matchLightBg, matchDarkBg),
+                backgroundColor: useColorModeValue(matchLightBg, matchDarkBg),
             },
             '.span-row.is-expanded.is-matching-filter:hover .span-view': {
                 // background: '#ffeccf'
             }
 
-        }}>
+        }} onMouseEnter={() => { setOnHover(true) }} onMouseLeave={() => setOnHover(false)}>
             <TimelineRow
                 className={`
           span-row
@@ -187,7 +188,7 @@ const SpanBarRow = (props: SpanBarRowProps) => {
           ${isMatchingFilter ? 'is-matching-filter' : ''}
         `}
             >
-                <TimelineRow.Cell className="span-name-column" width={columnDivision}>
+                <TimelineRow.Cell className="span-name-column" style={{ position: "relative" }} width={columnDivision}>
                     <Box className={`span-name-wrapper ${isMatchingFilter ? 'is-matching-filter' : ''}`} bg={useColorModeValue('#f8f8f8', customColors.bodyBg.dark)}>
                         <SpanTreeOffset
                             childrenVisible={isChildrenExpanded}
@@ -252,6 +253,23 @@ const SpanBarRow = (props: SpanBarRowProps) => {
                             </ReferencesButton>
                         )}
                     </Box>
+                  
+                    {onHover && <Popover trigger="hover" placement="auto-end" offset={[12, -10]}>
+                            <PopoverTrigger><Box position='absolute' right="2" top="2" fontSize="0.6rem" cursor="pointer">
+                                <FaEye className='color-text'/>
+                                </Box>
+                            </PopoverTrigger>
+                            <Portal>
+                            <PopoverContent zIndex={1000} minW="500px">
+                                <PopoverArrow />
+                                <PopoverBody>
+                                      <KeyValuesTable data={span.tags} linksGetter={null} />
+                                      <KeyValuesTable data={span.process.tags} linksGetter={null} />
+                                </PopoverBody>
+                            </PopoverContent>
+                            </Portal>
+                        </Popover>
+                    }
                 </TimelineRow.Cell>
                 <TimelineRow.Cell
                     className="span-view"

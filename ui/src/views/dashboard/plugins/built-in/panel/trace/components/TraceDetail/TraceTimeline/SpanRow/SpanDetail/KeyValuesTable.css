@@ -17,7 +17,7 @@ limitations under the License.
 .KeyValueTable {
   /* background: #fff; */
   margin-bottom: 0.7em;
-  max-height: 450px;
+  max-height: 500px;
   overflow: auto;
 }
 
