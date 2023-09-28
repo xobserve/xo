@@ -93,7 +93,6 @@ const DashboardCard = ({ dashboard, owner, query, onClick, starred, session }: P
                             setWeight(v??0)
                         }} onKeyDown={e => {
                             if (e.key === 'Enter') {
-                                console.log
                                 submitWeight()
                             }
                         }} />}
