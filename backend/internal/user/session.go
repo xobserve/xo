@@ -13,6 +13,7 @@
 package user
 
 import (
+	"context"
 	"database/sql"
 	"strconv"
 
@@ -27,8 +28,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func storeSession(s *models.Session) error {
-	_, err := db.Conn.Exec(`INSERT INTO  sessions (user_id,sid) VALUES (?,?)`, s.User.Id, s.Token)
+func storeSession(ctx context.Context, s *models.Session) error {
+	_, err := db.Conn.ExecContext(ctx, `INSERT INTO  sessions (user_id,sid) VALUES (?,?)`, s.User.Id, s.Token)
 	if err != nil {
 		logger.Warn("store session error", "error", err)
 		return err
@@ -36,9 +37,9 @@ func storeSession(s *models.Session) error {
 	return nil
 }
 
-func loadSession(sid string) *models.Session {
+func loadSession(ctx context.Context, sid string) *models.Session {
 	var userid int64
-	err := db.Conn.QueryRow(`SELECT user_id FROM sessions WHERE sid=?`, sid).Scan(&userid)
+	err := db.Conn.QueryRowContext(ctx, `SELECT user_id FROM sessions WHERE sid=?`, sid).Scan(&userid)
 	if err != nil {
 		if err != sql.ErrNoRows {
 			logger.Warn("query session error", "error", err)
@@ -46,7 +47,7 @@ func loadSession(sid string) *models.Session {
 		return nil
 	}
 
-	user, err := models.QueryUserById(userid)
+	user, err := models.QueryUserById(ctx, userid)
 	if err != nil {
 		logger.Warn("query user error", "error", err)
 		return nil
@@ -62,15 +63,15 @@ func loadSession(sid string) *models.Session {
 	}
 }
 
-func deleteSession(sid string) {
-	_, err := db.Conn.Exec(`DELETE FROM sessions  WHERE sid=?`, sid)
+func deleteSession(ctx context.Context, sid string) {
+	_, err := db.Conn.ExecContext(ctx, `DELETE FROM sessions  WHERE sid=?`, sid)
 	if err != nil {
 		logger.Warn("delete session error", "error", err)
 	}
 }
 
-func deleteSessionByUserId(uid int64) {
-	_, err := db.Conn.Exec(`DELETE FROM sessions  WHERE user_id=?`, uid)
+func deleteSessionByUserId(ctx context.Context, uid int64) {
+	_, err := db.Conn.ExecContext(ctx, `DELETE FROM sessions  WHERE user_id=?`, uid)
 	if err != nil {
 		logger.Warn("delete session error", "error", err)
 	}
@@ -86,12 +87,12 @@ func CurrentUser(c *gin.Context) *models.User {
 	if createTime != 0 {
 		// check whether token is expired
 		if (time.Now().Unix() - createTime/1e9) > config.Data.User.SessionExpire {
-			deleteSession(token)
+			deleteSession(c.Request.Context(), token)
 			return nil
 		}
 	}
 
-	sess := loadSession(token)
+	sess := loadSession(c.Request.Context(), token)
 	if sess == nil {
 		// 用户未登陆或者session失效
 		return nil

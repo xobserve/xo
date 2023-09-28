@@ -13,6 +13,7 @@
 package models
 
 import (
+	"context"
 	"database/sql"
 	"encoding/json"
 	"time"
@@ -74,9 +75,9 @@ func (s TeamMembers) Less(i, j int) bool {
 	return s[i].RoleSortWeight > s[j].RoleSortWeight
 }
 
-func QueryTeam(id int64, name string) (*Team, error) {
+func QueryTeam(ctx context.Context, id int64, name string) (*Team, error) {
 	team := &Team{}
-	err := db.Conn.QueryRow(`SELECT id,name,is_public,allow_global,created_by,created,updated FROM team WHERE id=? or name=?`,
+	err := db.Conn.QueryRowContext(ctx, `SELECT id,name,is_public,allow_global,created_by,created,updated FROM team WHERE id=? or name=?`,
 		id, name).Scan(&team.Id, &team.Name, &team.IsPublic, &team.AllowGlobal, &team.CreatedById, &team.Created, &team.Updated)
 	if err != nil {
 		return nil, err
@@ -85,9 +86,9 @@ func QueryTeam(id int64, name string) (*Team, error) {
 	return team, nil
 }
 
-func QueryTeamNameById(id int64) (string, error) {
+func QueryTeamNameById(ctx context.Context, id int64) (string, error) {
 	var name string
-	err := db.Conn.QueryRow(`SELECT name FROM team WHERE id=?`,
+	err := db.Conn.QueryRowContext(ctx, `SELECT name FROM team WHERE id=?`,
 		id).Scan(&name)
 	if err != nil {
 		return "", err
@@ -96,9 +97,9 @@ func QueryTeamNameById(id int64) (string, error) {
 	return name, nil
 }
 
-func IsTeamExist(id int64, name string) bool {
+func IsTeamExist(ctx context.Context, id int64, name string) bool {
 	var qid int64
-	err := db.Conn.QueryRow(`SELECT id FROM team WHERE id=? or name=?`,
+	err := db.Conn.QueryRowContext(ctx, `SELECT id FROM team WHERE id=? or name=?`,
 		id, name).Scan(&qid)
 	if err != nil {
 		return false
@@ -111,10 +112,10 @@ func IsTeamExist(id int64, name string) bool {
 	return false
 }
 
-func QueryTeamMember(teamId int64, userId int64) (*TeamMember, error) {
+func QueryTeamMember(ctx context.Context, teamId int64, userId int64) (*TeamMember, error) {
 	member := &TeamMember{}
 	member.Role = ROLE_VIEWER
-	err := db.Conn.QueryRow(`SELECT role FROM team_member WHERE team_id=? and user_id=?`,
+	err := db.Conn.QueryRowContext(ctx, `SELECT role FROM team_member WHERE team_id=? and user_id=?`,
 		teamId, userId).Scan(&member.Role)
 	if err != nil && err != sql.ErrNoRows {
 		return member, err
@@ -130,9 +131,9 @@ func QueryTeamMember(teamId int64, userId int64) (*TeamMember, error) {
 	return member, nil
 }
 
-func QueryVisibleTeamsByUserId(userId int64) ([]int64, error) {
+func QueryVisibleTeamsByUserId(ctx context.Context, userId int64) ([]int64, error) {
 	membersMap := make(map[int64]bool)
-	rows, err := db.Conn.Query("SELECT team_id from team_member WHERE user_id=?", userId)
+	rows, err := db.Conn.QueryContext(ctx, "SELECT team_id from team_member WHERE user_id=?", userId)
 	if err != nil && err != sql.ErrNoRows {
 		return nil, err
 	}
@@ -147,7 +148,7 @@ func QueryVisibleTeamsByUserId(userId int64) ([]int64, error) {
 		membersMap[m] = true
 	}
 
-	rows, err = db.Conn.Query("SELECT id from team WHERE is_public=?", true)
+	rows, err = db.Conn.QueryContext(ctx, "SELECT id from team WHERE is_public=?", true)
 	if err != nil && err != sql.ErrNoRows {
 		return nil, err
 	}
@@ -170,8 +171,8 @@ func QueryVisibleTeamsByUserId(userId int64) ([]int64, error) {
 	return members, nil
 }
 
-func IsTeamAdmin(teamId, userId int64) (bool, error) {
-	teamMember, err := QueryTeamMember(teamId, userId)
+func IsTeamAdmin(ctx context.Context, teamId, userId int64) (bool, error) {
+	teamMember, err := QueryTeamMember(ctx, teamId, userId)
 	if err != nil {
 		return false, err
 	}
@@ -196,10 +197,10 @@ type SideMenu struct {
 	Data     interface{} `json:"data"`
 }
 
-func QuerySideMenu(id int64, teamId int64) (*SideMenu, error) {
+func QuerySideMenu(ctx context.Context, id int64, teamId int64) (*SideMenu, error) {
 	menu := &SideMenu{}
 	var rawJson []byte
-	err := db.Conn.QueryRow("SELECT team_id,is_public,brief,data from sidemenu WHERE id=? or team_id=?", id, teamId).Scan(&menu.TeamId, &menu.IsPublic, &menu.Brief, &rawJson)
+	err := db.Conn.QueryRowContext(ctx, "SELECT team_id,is_public,brief,data from sidemenu WHERE id=? or team_id=?", id, teamId).Scan(&menu.TeamId, &menu.IsPublic, &menu.Brief, &rawJson)
 	if err != nil {
 		return nil, err
 	}
@@ -208,9 +209,9 @@ func QuerySideMenu(id int64, teamId int64) (*SideMenu, error) {
 	return menu, nil
 }
 
-func IsTeamPublic(id int64) (bool, error) {
+func IsTeamPublic(ctx context.Context, id int64) (bool, error) {
 	var isPublic bool
-	err := db.Conn.QueryRow("SELECT is_public from team WHERE id=?", id).Scan(&isPublic)
+	err := db.Conn.QueryRowContext(ctx, "SELECT is_public from team WHERE id=?", id).Scan(&isPublic)
 	if err != nil {
 		return false, err
 	}
@@ -218,12 +219,12 @@ func IsTeamPublic(id int64) (bool, error) {
 	return isPublic, nil
 }
 
-func IsTeamVisibleToUser(teamId int64, userId int64) (bool, error) {
+func IsTeamVisibleToUser(ctx context.Context, teamId int64, userId int64) (bool, error) {
 	if teamId == GlobalTeamId {
 		return true, nil
 	}
 
-	isPublic, err := IsTeamPublic(teamId)
+	isPublic, err := IsTeamPublic(ctx, teamId)
 	if err != nil {
 		return false, err
 	}
@@ -232,7 +233,7 @@ func IsTeamVisibleToUser(teamId int64, userId int64) (bool, error) {
 		return true, nil
 	}
 
-	member, err := QueryTeamMember(teamId, userId)
+	member, err := QueryTeamMember(ctx, teamId, userId)
 	if err != nil {
 		return false, err
 	}

@@ -25,6 +25,7 @@ import (
 	"github.com/DataObserve/datav/backend/pkg/colorlog"
 	"github.com/DataObserve/datav/backend/pkg/common"
 	"github.com/gin-gonic/gin"
+	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 )
 
 var logger = colorlog.RootLogger.New("logger", "datasource")
@@ -33,18 +34,20 @@ func Proxy(c *gin.Context) {
 	targetURL := c.Query("proxy_url")
 
 	client := &http.Client{
-		Transport: &http.Transport{
-			DialContext: (&net.Dialer{
-				Timeout:   time.Duration(time.Minute * 1),
-				KeepAlive: time.Duration(time.Minute * 2),
-			}).DialContext,
-		},
+		Transport: otelhttp.NewTransport(
+			&http.Transport{
+				DialContext: (&net.Dialer{
+					Timeout:   time.Duration(time.Minute * 1),
+					KeepAlive: time.Duration(time.Minute * 2),
+				}).DialContext,
+			},
+		),
 	}
 	// read request json body and write to new request body
 	jsonData, _ := c.GetRawData()
 	reqBody := bytes.NewBuffer(jsonData)
 
-	outReq, err := http.NewRequest(c.Request.Method, targetURL, reqBody)
+	outReq, err := http.NewRequestWithContext(c.Request.Context(), c.Request.Method, targetURL, reqBody)
 	if err != nil {
 		logger.Warn("build datasource proxy req error", "url", targetURL, "error", err.Error())
 		c.JSON(502, common.RespError(err.Error()))

@@ -63,7 +63,7 @@ func (s *Server) Start() error {
 
 	log.L = log.L.With(zap.String("service", config.Data.Common.AppName))
 
-	err := storage.Init()
+	err := storage.Init(ot.TraceProvider)
 	if err != nil {
 		return err
 	}
@@ -88,6 +88,7 @@ func (s *Server) Start() error {
 		r.Use(gzip.Gzip(gzip.DefaultCompression))
 
 		otelPlugin := otelgin.Middleware(config.Data.Common.AppName)
+		r.Use(otelPlugin)
 		// global config
 		r.GET("/config/ui", getUIConfig)
 
@@ -136,6 +137,7 @@ func (s *Server) Start() error {
 		r.GET("/dashboard/starred/:id", CheckLogin(), dashboard.GetStarred)
 		r.DELETE("/dashboard/:id", MustLogin(), dashboard.Delete)
 		r.POST("/dashboard/weight", MustLogin(), dashboard.UpdateWeight)
+    
 		// annotation
 		r.POST("/annotation", MustLogin(), annotation.SetAnnotation)
 		r.GET("/annotation/:namespace", CheckLogin(), annotation.QueryNamespaceAnnotations)

@@ -38,7 +38,7 @@ func SetAnnotation(c *gin.Context) {
 		return
 	}
 
-	dash, err := models.QueryDashboard(anno.NamespaceId)
+	dash, err := models.QueryDashboard(c.Request.Context(), anno.NamespaceId)
 	if err != nil {
 		logger.Warn("query dashboard error", "error", err)
 		c.JSON(http.StatusBadRequest, common.RespError("dashboard not found"))
@@ -67,7 +67,7 @@ func SetAnnotation(c *gin.Context) {
 	u := user.CurrentUser(c)
 	if enableRole != models.ROLE_VIEWER {
 		if !u.Role.IsAdmin() {
-			isTeamAdmin, err := models.IsTeamAdmin(dash.OwnedBy, u.Id)
+			isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), dash.OwnedBy, u.Id)
 			if err != nil {
 				logger.Warn("check team admin err", "error", err)
 				c.JSON(http.StatusInternalServerError, common.RespError("check team admin err"))
@@ -84,7 +84,7 @@ func SetAnnotation(c *gin.Context) {
 	now := time.Now()
 
 	if anno.Id == 0 {
-		res, err := db.Conn.Exec("INSERT INTO annotation (text,time,duration,tags,namespace_id,group_id,userId,created,updated) VALUES (?,?,?,?,?,?,?,?,?)",
+		res, err := db.Conn.ExecContext(c.Request.Context(), "INSERT INTO annotation (text,time,duration,tags,namespace_id,group_id,userId,created,updated) VALUES (?,?,?,?,?,?,?,?,?)",
 			anno.Text, anno.Time, anno.Duration, tags, anno.NamespaceId, anno.GroupId, u.Id, now, now)
 		if err != nil {
 			if e.IsErrUniqueConstraint(err) {
@@ -104,7 +104,7 @@ func SetAnnotation(c *gin.Context) {
 		}
 		anno.Id = id
 	} else {
-		_, err := db.Conn.Exec("UPDATE annotation SET text=?,tags=?,duration=?, updated=? WHERE id=?",
+		_, err := db.Conn.ExecContext(c.Request.Context(), "UPDATE annotation SET text=?,tags=?,duration=?, updated=? WHERE id=?",
 			anno.Text, tags, anno.Duration, now, anno.Id)
 		if err != nil {
 			logger.Warn("update annotation err", "error", err)
@@ -120,7 +120,7 @@ func QueryNamespaceAnnotations(c *gin.Context) {
 	namespace := c.Param("namespace")
 	start := c.Query("start")
 	end := c.Query("end")
-	rows, err := db.Conn.Query("SELECT id,text,time,duration,tags,group_id,userId,created FROM annotation WHERE namespace_id=? and time >= ? and time <= ?", namespace, start, end)
+	rows, err := db.Conn.QueryContext(c.Request.Context(), "SELECT id,text,time,duration,tags,group_id,userId,created FROM annotation WHERE namespace_id=? and time >= ? and time <= ?", namespace, start, end)
 	if err != nil {
 		logger.Warn("query annotation err", "error", err)
 		c.JSON(http.StatusInternalServerError, common.RespError("query annotation err"))
@@ -155,14 +155,14 @@ func RemoveAnnotation(c *gin.Context) {
 
 	u := user.CurrentUser(c)
 	if !u.Role.IsAdmin() {
-		ownedBy, err := models.QueryDashboardBelongsTo(namespace)
+		ownedBy, err := models.QueryDashboardBelongsTo(c.Request.Context(), namespace)
 		if err != nil {
 			logger.Warn("query dashboard err", "error", err)
 			c.JSON(http.StatusInternalServerError, common.RespError("query dashboard err"))
 			return
 		}
 
-		isTeamAdmin, err := models.IsTeamAdmin(ownedBy, u.Id)
+		isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), ownedBy, u.Id)
 		if err != nil {
 			logger.Warn("check team admin err", "error", err)
 			c.JSON(http.StatusInternalServerError, common.RespError("check team admin err"))
@@ -175,7 +175,7 @@ func RemoveAnnotation(c *gin.Context) {
 		}
 	}
 
-	_, err := db.Conn.Exec("DELETE FROM annotation WHERE id=?", id)
+	_, err := db.Conn.ExecContext(c.Request.Context(), "DELETE FROM annotation WHERE id=?", id)
 	if err != nil {
 		logger.Warn("delete annotation err", "error", err)
 		c.JSON(http.StatusInternalServerError, common.RespError("delete annotation err"))
@@ -196,13 +196,13 @@ func RemoveGroupAnnotations(c *gin.Context) {
 
 	u := user.CurrentUser(c)
 	if !u.Role.IsAdmin() {
-		ownedBy, err := models.QueryDashboardBelongsTo(namespace)
+		ownedBy, err := models.QueryDashboardBelongsTo(c.Request.Context(), namespace)
 		if err != nil {
 			logger.Warn("query dashboard err", "error", err)
 			c.JSON(http.StatusInternalServerError, common.RespError("query dashboard err"))
 			return
 		}
-		isTeamAdmin, err := models.IsTeamAdmin(ownedBy, u.Id)
+		isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), ownedBy, u.Id)
 		if err != nil {
 			logger.Warn("check team admin err", "error", err)
 			c.JSON(http.StatusInternalServerError, common.RespError("check team admin err"))
@@ -216,7 +216,7 @@ func RemoveGroupAnnotations(c *gin.Context) {
 	}
 
 	deleteBefore := time.Now().Add(-time.Duration(expires) * time.Hour * 24)
-	_, err = db.Conn.Exec("DELETE FROM annotation WHERE namespace_id=? and group_id=? and created < ?", namespace, group, deleteBefore)
+	_, err = db.Conn.ExecContext(c.Request.Context(), "DELETE FROM annotation WHERE namespace_id=? and group_id=? and created < ?", namespace, group, deleteBefore)
 	if err != nil {
 		logger.Warn("delete annotation err", "error", err)
 		c.JSON(http.StatusInternalServerError, common.RespError("delete annotation err"))

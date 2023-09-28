@@ -13,6 +13,7 @@
 package user
 
 import (
+	"context"
 	"net/http"
 	"time"
 
@@ -32,14 +33,14 @@ func Init() error {
 
 func IsLogin(c *gin.Context) bool {
 	token := getToken(c)
-	sess := loadSession(token)
+	sess := loadSession(c.Request.Context(), token)
 
 	return sess != nil
 }
 
-func UpdatePassword(user *models.User, new string) *e.Error {
+func UpdatePassword(ctx context.Context, user *models.User, new string) *e.Error {
 	newPassword, _ := utils.EncodePassword(new, user.Salt)
-	_, err := db.Conn.Exec("UPDATE user SET password=?,updated=? WHERE id=?",
+	_, err := db.Conn.ExecContext(ctx, "UPDATE user SET password=?,updated=? WHERE id=?",
 		newPassword, time.Now(), user.Id)
 	if err != nil {
 		logger.Warn("update user password error", "error", err)
@@ -49,10 +50,10 @@ func UpdatePassword(user *models.User, new string) *e.Error {
 	return nil
 }
 
-func updateUserInfo(user *models.User) *e.Error {
+func updateUserInfo(ctx context.Context, user *models.User) *e.Error {
 	now := time.Now()
 
-	_, err := db.Conn.Exec("UPDATE user SET name=?,email=?,updated=? WHERE id=?",
+	_, err := db.Conn.ExecContext(ctx, "UPDATE user SET name=?,email=?,updated=? WHERE id=?",
 		user.Name, user.Email, now, user.Id)
 	if err != nil {
 		logger.Warn("update user error", "error", err)

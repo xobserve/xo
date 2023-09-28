@@ -23,7 +23,7 @@ import (
 
 func GetVariables(c *gin.Context) {
 	teamId, _ := strconv.ParseInt(c.Query("teamId"), 10, 64)
-	vars, err := variables.GetVariables(teamId)
+	vars, err := variables.GetVariables(c.Request.Context(), teamId)
 	if err != nil {
 		logger.Warn("query variables error", "error", err)
 		c.JSON(500, common.RespError(e.Internal))

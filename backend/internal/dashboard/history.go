@@ -76,7 +76,7 @@ func InitHistory() {
 
 func GetHistory(c *gin.Context) {
 	id := c.Param("id")
-	rows, err := db.Conn.Query("SELECT history,version,changes FROM dashboard_history WHERE dashboard_id=? ORDER BY version DESC", id)
+	rows, err := db.Conn.QueryContext(c.Request.Context(), "SELECT history,version,changes FROM dashboard_history WHERE dashboard_id=? ORDER BY version DESC", id)
 	if err != nil {
 		logger.Warn("query dashboard history error", "error,err")
 		c.JSON(http.StatusInternalServerError, common.RespError(e.Internal))

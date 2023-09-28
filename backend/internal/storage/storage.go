@@ -30,14 +30,17 @@ import (
 	"github.com/DataObserve/datav/backend/pkg/models"
 	"github.com/DataObserve/datav/backend/pkg/utils"
 	_ "github.com/go-sql-driver/mysql"
+	"go.nhat.io/otelsql"
+	sdktrace "go.opentelemetry.io/otel/sdk/trace"
+	semconv "go.opentelemetry.io/otel/semconv/v1.10.0"
 )
 
 var logger = colorlog.RootLogger.New("logger", "storage")
 
 var adminSalt, adminPW string
 
-func Init() error {
-	err := connectDatabase()
+func Init(tc *sdktrace.TracerProvider) error {
+	err := connectDatabase(tc)
 	if err != nil {
 		return err
 	}
@@ -66,11 +69,21 @@ func Init() error {
 	return nil
 }
 
-func connectDatabase() error {
+func connectDatabase(tc *sdktrace.TracerProvider) error {
 	var d *sql.DB
 	var err error
 	if config.Data.Database.ConnectTo == "mysql" {
-		d, err = sql.Open("mysql", fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?parseTime=true", config.Data.Database.Account, config.Data.Database.AccountSecret, config.Data.Database.Host, config.Data.Database.Port, config.Data.Database.Database))
+		driver, _ := otelsql.Register("mysql",
+			otelsql.TraceQueryWithArgs(),
+			otelsql.AllowRoot(),
+			otelsql.WithTracerProvider(tc),
+			otelsql.WithSystem(semconv.DBSystemMySQL),
+			otelsql.WithInstanceName(fmt.Sprintf("%s:%d", config.Data.Database.Host, config.Data.Database.Port)),
+		)
+		d, err = sql.Open(
+			driver,
+			fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?parseTime=true", config.Data.Database.Account, config.Data.Database.AccountSecret, config.Data.Database.Host, config.Data.Database.Port, config.Data.Database.Database),
+		)
 	} else if config.Data.Database.ConnectTo == "sqlite" {
 		var path string
 		dataPath := strings.TrimSpace(config.Data.Paths.SqliteData)
@@ -88,8 +101,14 @@ func connectDatabase() error {
 
 			path = dataPath + "/datav.db"
 		}
+		driver, _ := otelsql.Register("sqlite3",
+			otelsql.TraceQueryWithArgs(),
+			otelsql.AllowRoot(),
+			otelsql.WithTracerProvider(tc),
+			otelsql.WithSystem(semconv.DBSystemSqlite),
+		)
 
-		d, err = sql.Open("sqlite3", path+"?cache=shared&mode=rwc")
+		d, err = sql.Open(driver, path+"?cache=shared&mode=rwc")
 	} else {
 		return errors.New("error database")
 	}

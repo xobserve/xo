@@ -13,6 +13,7 @@
 package teams
 
 import (
+	"context"
 	"database/sql"
 	"encoding/json"
 	"net/http"
@@ -35,7 +36,7 @@ func GetSideMenu(c *gin.Context) {
 		return
 	}
 
-	menu, err := models.QuerySideMenu(0, teamId)
+	menu, err := models.QuerySideMenu(c.Request.Context(), 0, teamId)
 	if err != nil {
 		if err != sql.ErrNoRows {
 			logger.Error("query side menu error", "error", err)
@@ -57,7 +58,7 @@ func CreateMenu(c *gin.Context) {
 	}
 
 	u := user.CurrentUser(c)
-	isTeamAdmin, err := models.IsTeamAdmin(req.TeamId, u.Id)
+	isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), req.TeamId, u.Id)
 	if err != nil {
 		logger.Error("check team admin error", "error", err)
 		c.JSON(500, common.RespInternalError())
@@ -71,7 +72,7 @@ func CreateMenu(c *gin.Context) {
 
 	data, _ := json.Marshal(req.Data)
 	now := time.Now()
-	res, err := db.Conn.Exec("INSERT INTO sidemenu (team_id,is_public,brief,data,created_by,created,updated) VALUES (?,?,?,?,?,?,?)",
+	res, err := db.Conn.ExecContext(c.Request.Context(), "INSERT INTO sidemenu (team_id,is_public,brief,data,created_by,created,updated) VALUES (?,?,?,?,?,?,?)",
 		req.TeamId, false, req.Brief, data, u.Id, now, now)
 	if err != nil {
 		logger.Error("create sidemenu error", "error", err)
@@ -90,7 +91,7 @@ func UpdateSideMenu(c *gin.Context) {
 	u := user.CurrentUser(c)
 	// only team admin can do this
 	if !u.Role.IsAdmin() {
-		isTeamAdmin, err := models.IsTeamAdmin(menu.TeamId, u.Id)
+		isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), menu.TeamId, u.Id)
 		if err != nil {
 			logger.Warn("check team admin error", "error", err)
 			c.JSON(500, common.RespInternalError())
@@ -104,7 +105,7 @@ func UpdateSideMenu(c *gin.Context) {
 	}
 
 	data, _ := json.Marshal(menu.Data)
-	_, err := db.Conn.Exec("UPDATE sidemenu SET is_public=?,brief=?,data=?,updated=? WHERE team_id=?", menu.IsPublic, menu.Brief, data, time.Now(), menu.TeamId)
+	_, err := db.Conn.ExecContext(c.Request.Context(), "UPDATE sidemenu SET is_public=?,brief=?,data=?,updated=? WHERE team_id=?", menu.IsPublic, menu.Brief, data, time.Now(), menu.TeamId)
 	if err != nil {
 		logger.Error("update sidemenu error", "error", err)
 		c.JSON(500, common.RespInternalError())
@@ -117,7 +118,7 @@ func UpdateSideMenu(c *gin.Context) {
 func GetAvailableSidMenusForUser(c *gin.Context) {
 	userId := user.CurrentUserId(c)
 
-	teamIds, err := models.QueryVisibleTeamsByUserId(userId)
+	teamIds, err := models.QueryVisibleTeamsByUserId(c.Request.Context(), userId)
 	if err != nil {
 		logger.Warn("query team members by userId error", "error", err)
 		c.JSON(500, common.RespInternalError())
@@ -125,7 +126,7 @@ func GetAvailableSidMenusForUser(c *gin.Context) {
 	}
 
 	// get sidemenus which are set to public in teams
-	rows, err := db.Conn.Query("SELECT team_id from sidemenu where is_public=? and team_id != ?", true, models.GlobalTeamId)
+	rows, err := db.Conn.QueryContext(c.Request.Context(), "SELECT team_id from sidemenu where is_public=? and team_id != ?", true, models.GlobalTeamId)
 	if err != nil {
 		logger.Warn("query public team sidemenus error", "error", err)
 		c.JSON(500, common.RespInternalError())
@@ -150,7 +151,7 @@ func GetAvailableSidMenusForUser(c *gin.Context) {
 	sidemenus := make([]*models.SideMenu, 0)
 
 	for _, tid := range teamIds {
-		sm, err := models.QuerySideMenu(0, tid)
+		sm, err := models.QuerySideMenu(c.Request.Context(), 0, tid)
 		if err != nil {
 			if err != sql.ErrNoRows {
 				logger.Error("query sidemenu error", "teamId:", tid, "error", err)
@@ -158,7 +159,7 @@ func GetAvailableSidMenusForUser(c *gin.Context) {
 			continue
 		}
 
-		team, err := models.QueryTeam(tid, "")
+		team, err := models.QueryTeam(c.Request.Context(), tid, "")
 		if err != nil {
 			logger.Error("query team error", "teamId:", tid, "error", err)
 			continue
@@ -178,7 +179,7 @@ func SelectSideMenuForUser(c *gin.Context) {
 	userId := user.CurrentUserId(c)
 	teamId := c.Param("teamId")
 
-	err := SetSideMenuForUser(teamId, userId)
+	err := SetSideMenuForUser(c.Request.Context(), teamId, userId)
 	if err != nil {
 		logger.Warn("update side menu error", "error", err)
 		c.JSON(500, common.RespInternalError())
@@ -188,8 +189,8 @@ func SelectSideMenuForUser(c *gin.Context) {
 	c.JSON(200, common.RespSuccess(nil))
 }
 
-func SetSideMenuForUser(teamId string, userId int64) error {
-	_, err := db.Conn.Exec("UPDATE user SET sidemenu=? WHERE id=?", teamId, userId)
+func SetSideMenuForUser(ctx context.Context, teamId string, userId int64) error {
+	_, err := db.Conn.ExecContext(ctx, "UPDATE user SET sidemenu=? WHERE id=?", teamId, userId)
 	if err != nil {
 		return err
 	}
@@ -200,7 +201,7 @@ func SetSideMenuForUser(teamId string, userId int64) error {
 func GetCurrentSidemenu(c *gin.Context) {
 	u := user.CurrentUser(c)
 
-	menu, err := models.QuerySideMenu(u.SideMenu, 0)
+	menu, err := models.QuerySideMenu(c.Request.Context(), u.SideMenu, 0)
 	if err != nil {
 		if err != sql.ErrNoRows {
 			logger.Warn("query sidemenu error", "error", err)

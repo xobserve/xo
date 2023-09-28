@@ -13,6 +13,7 @@
 package datasource
 
 import (
+	"context"
 	"database/sql"
 	"net/http"
 	"strconv"
@@ -42,7 +43,7 @@ func SaveDatasource(c *gin.Context) {
 	u := user.CurrentUser((c))
 	// only admin or team admin can do this
 	if !u.Role.IsAdmin() {
-		isTeamAdmin, err := models.IsTeamAdmin(ds.TeamId, u.Id)
+		isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), ds.TeamId, u.Id)
 		if err != nil {
 			logger.Warn("Error query team admin", "error", err)
 			c.JSON(500, common.RespError(e.Internal))
@@ -57,7 +58,7 @@ func SaveDatasource(c *gin.Context) {
 	now := time.Now()
 	if ds.Id == 0 {
 		// create
-		res, err := db.Conn.Exec("INSERT INTO datasource (name,type,url,team_id,created,updated) VALUES (?,?,?,?,?,?)", ds.Name, ds.Type, ds.URL, ds.TeamId, now, now)
+		res, err := db.Conn.ExecContext(c.Request.Context(), "INSERT INTO datasource (name,type,url,team_id,created,updated) VALUES (?,?,?,?,?,?)", ds.Name, ds.Type, ds.URL, ds.TeamId, now, now)
 		if err != nil {
 			if e.IsErrUniqueConstraint(err) {
 				c.JSON(http.StatusBadRequest, common.RespError("name alread exist"))
@@ -77,7 +78,7 @@ func SaveDatasource(c *gin.Context) {
 			return
 		}
 		// update
-		_, err = db.Conn.Exec("UPDATE datasource SET name=?,type=?,url=?,updated=? WHERE id=?", ds.Name, ds.Type, ds.URL, now, ds.Id)
+		_, err = db.Conn.ExecContext(c.Request.Context(), "UPDATE datasource SET name=?,type=?,url=?,updated=? WHERE id=?", ds.Name, ds.Type, ds.URL, now, ds.Id)
 		if err != nil {
 			if e.IsErrUniqueConstraint(err) {
 				c.JSON(http.StatusBadRequest, common.RespError("name alread exist"))
@@ -100,9 +101,9 @@ func GetDatasources(c *gin.Context) {
 	var err error
 
 	if strings.TrimSpace(teamId) != "" {
-		rows, err = db.Conn.Query("SELECT id,name,type,url,team_id, created FROM datasource WHERE team_id=?", teamId)
+		rows, err = db.Conn.QueryContext(c.Request.Context(), "SELECT id,name,type,url,team_id, created FROM datasource WHERE team_id=?", teamId)
 	} else {
-		rows, err = db.Conn.Query("SELECT id,name,type,url,team_id, created FROM datasource")
+		rows, err = db.Conn.QueryContext(c.Request.Context(), "SELECT id,name,type,url,team_id, created FROM datasource")
 	}
 
 	if err != nil {
@@ -138,7 +139,7 @@ func DeleteDatasource(c *gin.Context) {
 		return
 	}
 
-	ds, err := GetDatasource(id)
+	ds, err := GetDatasource(c.Request.Context(), id)
 	if err != nil {
 		logger.Warn("Error query datasource", "error", err)
 		c.JSON(500, common.RespError(e.Internal))
@@ -147,7 +148,7 @@ func DeleteDatasource(c *gin.Context) {
 
 	u := user.CurrentUser((c))
 	if !u.Role.IsAdmin() {
-		isTeamAdmin, err := models.IsTeamAdmin(ds.TeamId, u.Id)
+		isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), ds.TeamId, u.Id)
 		if err != nil {
 			logger.Warn("Error query team admin", "error", err)
 			c.JSON(500, common.RespError(e.Internal))
@@ -159,7 +160,7 @@ func DeleteDatasource(c *gin.Context) {
 		}
 	}
 
-	_, err = db.Conn.Exec("DELETE FROM datasource WHERE id=?", id)
+	_, err = db.Conn.ExecContext(c.Request.Context(), "DELETE FROM datasource WHERE id=?", id)
 	if err != nil {
 		logger.Warn("delete datasource error", "error", err)
 		c.JSON(http.StatusInternalServerError, common.RespInternalError())
@@ -169,8 +170,8 @@ func DeleteDatasource(c *gin.Context) {
 	c.JSON(http.StatusOK, common.RespSuccess(nil))
 }
 
-func GetDatasource(id int64) (*models.Datasource, error) {
+func GetDatasource(ctx context.Context, id int64) (*models.Datasource, error) {
 	ds := &models.Datasource{}
-	err := db.Conn.QueryRow("SELECT name,type,url, created FROM datasource WHERE id=?", id).Scan(&ds.Name, &ds.Type, &ds.URL, &ds.Created)
+	err := db.Conn.QueryRowContext(ctx, "SELECT name,type,url, created FROM datasource WHERE id=?", id).Scan(&ds.Name, &ds.Type, &ds.URL, &ds.Created)
 	return ds, err
 }

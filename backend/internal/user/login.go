@@ -47,7 +47,7 @@ func Login(c *gin.Context) {
 
 	logger.Info("User loged in", "username", username)
 
-	user, err := models.QueryUserByName(username)
+	user, err := models.QueryUserByName(c.Request.Context(), username)
 	if err != nil {
 		logger.Warn("query user error", "error", err)
 		c.JSON(500, common.RespInternalError())
@@ -77,9 +77,9 @@ func Login(c *gin.Context) {
 func login(user *models.User, c *gin.Context) {
 	if config.Data.User.EnableMultiLogin {
 		lastSid := getToken(c)
-		deleteSession(lastSid)
+		deleteSession(c.Request.Context(), lastSid)
 	} else {
-		deleteSessionByUserId(user.Id)
+		deleteSessionByUserId(c.Request.Context(), user.Id)
 	}
 
 	token := strconv.FormatInt(time.Now().UnixNano(), 10)
@@ -90,14 +90,14 @@ func login(user *models.User, c *gin.Context) {
 		CreateTime: time.Now(),
 	}
 	//sub token验证成功，保存session
-	err := storeSession(session)
+	err := storeSession(c.Request.Context(), session)
 	if err != nil {
 		c.JSON(500, common.RespInternalError())
 		return
 	}
 
 	// 更新数据库中的user表
-	_, err = db.Conn.Exec(`UPDATE user SET last_seen_at=?,visit_count=visit_count+1 WHERE id=?`, time.Now(), user.Id)
+	_, err = db.Conn.ExecContext(c.Request.Context(), `UPDATE user SET last_seen_at=?,visit_count=visit_count+1 WHERE id=?`, time.Now(), user.Id)
 	if err != nil {
 		logger.Warn("set last login date error", "error", err)
 	}
@@ -114,7 +114,7 @@ func LoginGithub(c *gin.Context) {
 	c.Bind(&req)
 
 	lastSid := getToken(c)
-	deleteSession(lastSid)
+	deleteSession(c.Request.Context(), lastSid)
 
 	// get github token
 	tokenUrl := getGithubTokenAuthUrl(req.Code)
@@ -140,7 +140,7 @@ func LoginGithub(c *gin.Context) {
 	}
 
 	// query user by username
-	user, err := models.QueryUserByName(githubUser.Username)
+	user, err := models.QueryUserByName(c.Request.Context(), githubUser.Username)
 	if err != nil {
 		logger.Warn("query user error", "error", err)
 		c.JSON(500, common.RespInternalError())
@@ -161,7 +161,7 @@ func LoginGithub(c *gin.Context) {
 		}
 		defer tx.Rollback()
 
-		res, err := tx.Exec("INSERT INTO user (username,name,password,salt,come_from,created,updated) VALUES (?,?,?,?,?,?,?)",
+		res, err := tx.ExecContext(c.Request.Context(), "INSERT INTO user (username,name,password,salt,come_from,created,updated) VALUES (?,?,?,?,?,?,?)",
 			githubUser.Username, githubUser.Name, encodedPW, salt, "github", now, now)
 		if err != nil {
 			logger.Warn("new user error", "error", err)
@@ -176,7 +176,7 @@ func LoginGithub(c *gin.Context) {
 		}
 
 		// add user to global team
-		_, err = tx.Exec("INSERT INTO team_member (team_id,user_id,role,created,updated) VALUES (?,?,?,?,?)",
+		_, err = tx.ExecContext(c.Request.Context(), "INSERT INTO team_member (team_id,user_id,role,created,updated) VALUES (?,?,?,?,?)",
 			models.GlobalTeamId, id, models.ROLE_VIEWER, now, now)
 		if err != nil {
 			logger.Warn("new user error", "error", err)
@@ -206,7 +206,7 @@ func LoginGithub(c *gin.Context) {
 func Logout(c *gin.Context) {
 	token := getToken(c)
 	// 删除用户的session
-	deleteSession(token)
+	deleteSession(c.Request.Context(), token)
 
 	c.JSON(http.StatusOK, common.RespSuccess(nil))
 }
