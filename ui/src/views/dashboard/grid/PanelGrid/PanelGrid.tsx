@@ -464,7 +464,7 @@ const PanelHeader = ({ dashboardId, queryError, panel, onCopyPanel, onRemovePane
                         </Portal>
                     </Menu>
                 </Center>
-                <Box display="none"><FaBook className="grid-drag-handle" /></Box>
+                {/* <Box display="none"><FaBook className="grid-drag-handle" /></Box> */}
             </HStack>
             <PanelDecoration decoration={panel.styles.decoration} />
             {isOpen && <DebugPanel dashboardId={dashboardId} panel={panel} isOpen={isOpen} onClose={onClose} data={data} />}

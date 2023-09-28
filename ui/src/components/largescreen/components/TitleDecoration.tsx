@@ -21,8 +21,8 @@ interface Props {
 }
 
 const TitleDecoration = ({ styles, children }: Props) => {
-    const style = { width: styles.title.decoration.width, height: styles.title.decoration.height }
-    switch (styles.title.decoration.type) {            
+    const style = { width: styles?.title.decoration.width, height: styles?.title.decoration.height }
+    switch (styles?.title.decoration.type) {            
         case PanelTitleDecorationType.Decoration7:
             return <Decoration7 style={style} margin={styles.title.decoration.margin}>{children}</Decoration7>
         case PanelTitleDecorationType.Decoration11:

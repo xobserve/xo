@@ -13,7 +13,7 @@
 import { Menu, MenuButton, MenuItem, MenuList, useColorModeValue } from "@chakra-ui/react";
 import IconButton from "src/components/button/IconButton";
 import { PanelAdd } from "src/components/icons/PanelAdd";
-import { initPanel } from "src/data/panel/initPanel";
+import { initPanel, initRowPanel } from "src/data/panel/initPanel";
 import { Dashboard, Panel, PanelType } from "types/dashboard";
 import React from "react";
 import { useStore } from "@nanostores/react";
@@ -44,14 +44,16 @@ const AddPanel = ({ dashboard, onChange }: Props) => {
     }
 
 
-    const onAddPanel = (isRow?) => {
+    const onAddPanel = (isRow) => {
         if (!dashboard.data.panels) {
             dashboard.data.panels = []
         }
         const id = getNextPanelId()
-        const newPanel: Panel = initPanel(id)
+        let newPanel: Panel
         if (isRow) {
-            newPanel.type = PanelType.Row
+            newPanel = initRowPanel(id)
+        } else {
+           newPanel = initPanel(id)
         }
 
         // scroll to top after adding panel
@@ -80,7 +82,7 @@ const AddPanel = ({ dashboard, onChange }: Props) => {
                 <IconButton variant="ghost"><PanelAdd size={28} fill={useColorModeValue("var(--chakra-colors-brand-500)", "var(--chakra-colors-brand-200)")} /></IconButton>
             </MenuButton>
             <MenuList>
-                <MenuItem onClick={onAddPanel}>{t1.addPanel}</MenuItem>
+                <MenuItem onClick={() => onAddPanel(false)}>{t1.addPanel}</MenuItem>
                 <MenuItem onClick={() => onAddPanel(true)}>Add Row</MenuItem>
                 <MenuItem onClick={() => { onPastePanel() }} isDisabled={isEmpty(copiedPanel)}>{t1.pastePanel}</MenuItem>
             </MenuList>

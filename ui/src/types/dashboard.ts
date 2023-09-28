@@ -71,19 +71,19 @@ export interface Panel {
     collapsed: boolean
 
     // for plugin settings
-    plugins: PanelPlugins
+    plugins?: PanelPlugins
 
-    styles: PanelStyles
+    styles?: PanelStyles
 
-    datasource: PanelDatasource
+    datasource?: PanelDatasource
 
-    overrides: OverrideItem[]
+    overrides?: OverrideItem[]
 
-    valueMapping: ValueMappingItem[]
-    transform: string
-    enableTransform: boolean
-    enableConditionRender: boolean
-    conditionRender: {
+    valueMapping?: ValueMappingItem[]
+    transform?: string
+    enableTransform?: boolean
+    enableConditionRender?: boolean
+    conditionRender?: {
         type: "variable" | "custom",
         value: ""
     }

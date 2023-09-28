@@ -51,6 +51,19 @@ export const initPanel = (id?) => {
 }
 
 
+export const initRowPanel = (id) => {
+    const p  = {
+        id: id,
+        title: "New row",
+        desc: "",
+        collapsed: false,
+        type: PanelType.Row,
+        gridPos: { x: 0, y: 0, w: 24, h: 1.5 },
+    }
+
+    return p
+}
+
 export const initDatasource: PanelDatasource = {
     id: InitTestDataDatasourceId,
     queryOptions: {

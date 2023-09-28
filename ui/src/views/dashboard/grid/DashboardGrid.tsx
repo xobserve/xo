@@ -26,6 +26,7 @@ import { PanelGrid } from "./PanelGrid/PanelGrid";
 import { useKey, useSearchParam } from "react-use";
 import { addParamToUrl } from "utils/url";
 import { LazyLoader } from "../../../components/LazyLoader";
+import RowPanel from "./PanelGrid/RowPanel";
 
 
 
@@ -41,11 +42,11 @@ let windowWidth = 1920;
 let gridWidth = 0;
 let gridkey = 0
 const DashboardGrid = memo((props: GridProps) => {
-    console.log("dashboard grid rendered:",props.panels)
+    console.log("dashboard grid rendered:", props.panels)
     const inEdit = useSearchParam('edit')
     const viewPanel = useSearchParam("viewPanel")
 
-    const { dashboard,panels, onChange } = props
+    const { dashboard, panels, onChange } = props
 
     useKey(
         "Escape",
@@ -78,7 +79,7 @@ const DashboardGrid = memo((props: GridProps) => {
 
             if (panel.type === PanelType.Row) {
                 panelPos.w = GRID_COLUMN_COUNT;
-                panelPos.h = 1;
+                panelPos.h = 1.5;
                 panelPos.isResizable = false;
                 panelPos.isDraggable = panel.collapsed;
             }
@@ -111,28 +112,28 @@ const DashboardGrid = memo((props: GridProps) => {
     };
 
     const onRemovePanel = useCallback((panel: Panel) => {
-        onChange((dashboard:Dashboard) => {
+        onChange((dashboard: Dashboard) => {
             dashboard.data.panels = dashboard.data.panels.filter(p => p.id !== panel.id)
         })
     }, [dashboard])
 
     const onHidePanel = useCallback((panel: Panel) => {
-        onChange((dashboard:Dashboard) => {
+        onChange((dashboard: Dashboard) => {
             dashboard.data.hiddenPanels.push(panel.id)
         })
     }, [dashboard])
-    
+
     let mooSync = dashboard.data.sharedTooltip ? uPlot.sync(dashboard.id) : null
 
 
     const onDragStop = (layout, oldItem, newItem) => {
         onLayoutChange(layout)
-     };
-
-    const onResize = (layout, oldItem, newItem) => { 
     };
 
-    const onResizeStop = (layout, oldItem, newItem) => { 
+    const onResize = (layout, oldItem, newItem) => {
+    };
+
+    const onResizeStop = (layout, oldItem, newItem) => {
         onLayoutChange(layout)
     };
 
@@ -172,8 +173,8 @@ const DashboardGrid = memo((props: GridProps) => {
                 const draggable = width <= 769 ? false : dashboard.editable;
 
                 if (Math.abs(width - gridkey) > 6) {
-                    gridkey = width 
-                } 
+                    gridkey = width
+                }
 
                 // This is to avoid layout re-flows, accessing window.innerHeight can trigger re-flow
                 // We assume here that if width change height might have changed as well
@@ -185,12 +186,12 @@ const DashboardGrid = memo((props: GridProps) => {
 
                 // we need a finalWidth key to force refreshing the grid layout
                 // it solves the issues when resizing browser window
-
+      
                 return <>{
                     // finalWidth > 0
                     // &&
                     <Box
-                        key={gridkey}  
+                        key={gridkey}
                         width={width}
                         height="100%"
                         className="grid-layout-wrapper"
@@ -221,6 +222,7 @@ const DashboardGrid = memo((props: GridProps) => {
                                     panels.map((panel) => {
                                         return <GridItem
                                             key={panel.id}
+                                            panelType={panel.type}
                                             data-panelid={panel.id}
                                             gridPos={panel.gridPos}
                                             gridWidth={width}
@@ -228,9 +230,15 @@ const DashboardGrid = memo((props: GridProps) => {
                                             windowWidth={windowWidth}
                                         >
                                             {(width: number, height: number) => {
+                                                if (panel.type === PanelType.Row) {
+                                                    return <Box key={panel.id} id={`panel-${panel.id}`} position="absolute" width={width} height={height + 'px'} left="0" top="0">
+                                                        <RowPanel panel={panel} dashboard={dashboard} onChange={onChange}/>
+                                                        </Box>
+                                                }
+
                                                 const Wrapper = dashboard.data.lazyLoading ? LazyLoader : Box
                                                 return (<Box key={panel.id} id={`panel-${panel.id}`} >
-                                                    {!inEdit && <Wrapper  width={width} height={height}  ><PanelGrid dashboard={dashboard} panel={panel} width={width} height={height} onRemovePanel={onRemovePanel} onHidePanel={onHidePanel}  sync={mooSync} /></Wrapper> }
+                                                    {!inEdit && <Wrapper width={width} height={height}  ><PanelGrid dashboard={dashboard} panel={panel} width={width} height={height} onRemovePanel={onRemovePanel} onHidePanel={onHidePanel} sync={mooSync} /></Wrapper>}
                                                 </Box>)
                                             }}
                                         </GridItem>
@@ -240,7 +248,7 @@ const DashboardGrid = memo((props: GridProps) => {
                             </ReactGridLayout>
                             :
                             <>
-                                {!inEdit && <PanelGrid dashboard={dashboard} panel={panels.find(p => p.id.toString() == viewPanel)} width={width} height={viewPanelHeight} onRemovePanel={onRemovePanel} onHidePanel={onHidePanel}  sync={mooSync} />}
+                                {!inEdit && <PanelGrid dashboard={dashboard} panel={panels.find(p => p.id.toString() == viewPanel)} width={width} height={viewPanelHeight} onRemovePanel={onRemovePanel} onHidePanel={onHidePanel} sync={mooSync} />}
                             </>
                         }
                     </Box>}</>
@@ -254,6 +262,7 @@ export default DashboardGrid
 
 
 interface GridItemProps extends Record<string, any> {
+    panelType: PanelType;
     gridWidth?: number;
     gridPos?: GridPos;
     isViewing: string;
@@ -287,7 +296,7 @@ const GridItem = React.forwardRef<HTMLDivElement, GridItemProps>((props, ref) =>
 
     // props.children[0] is our main children. RGL adds the drag handle at props.children[1]
     return (
-        <Box {...divProps} ref={ref} className="react-grid-item" sx={windowWidth > 769 ? {
+        <Box {...divProps} ref={ref} className="react-grid-item" sx={(props.panelType != PanelType.Row && windowWidth > 769) ? {
             ".react-resizable-handle": {
                 position: "absolute",
                 width: "20px",

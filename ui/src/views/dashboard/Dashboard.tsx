@@ -12,7 +12,7 @@
 // limitations under the License.
 import { Box, useColorMode, useMediaQuery, useToast } from "@chakra-ui/react"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
-import { Dashboard, Panel } from "types/dashboard"
+import { Dashboard, Panel, PanelType } from "types/dashboard"
 import { requestApi } from "utils/axios/request"
 import DashboardHeader from "src/views/dashboard/DashboardHeader"
 import DashboardGrid from "src/views/dashboard/grid/DashboardGrid"
@@ -157,9 +157,11 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
     const initDash = (dash) => {
         dash.data.panels.forEach((panel: Panel) => {
             // console.log("33333 before",cloneDeep(panel.plugins))
-            panel = defaultsDeep(panel, delete initPanel().plugins[initPanelType])
-            panel.plugins[panel.type] = defaultsDeep(panel.plugins[panel.type], initPanelPlugins()[panel.type])
-            panel.styles = defaultsDeep(panel.styles, initPanelStyles)
+            if (panel.type != PanelType.Row) {
+                panel = defaultsDeep(panel, delete initPanel().plugins[initPanelType])
+                panel.plugins[panel.type] = defaultsDeep(panel.plugins[panel.type], initPanelPlugins()[panel.type])
+                panel.styles = defaultsDeep(panel.styles, initPanelStyles)
+            }
             // console.log("33333 after",cloneDeep(panel.plugins[panel.type]),cloneDeep(panel.overrides))
         })
 
