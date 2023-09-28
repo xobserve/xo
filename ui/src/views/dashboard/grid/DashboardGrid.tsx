@@ -48,6 +48,7 @@ const DashboardGrid = memo((props: GridProps) => {
 
     const { dashboard, panels, onChange } = props
 
+    const visiblePanels = useMemo(() => panels.filter(p => p.type == PanelType.Row || !p.collapsed), [panels])
     useKey(
         "Escape",
         () => {
@@ -62,7 +63,7 @@ const DashboardGrid = memo((props: GridProps) => {
     const buildLayout = () => {
         const layout: ReactGridLayout.Layout[] = [];
 
-        for (const panel of panels) {
+        for (const panel of visiblePanels) {
             if (!panel.gridPos) {
                 console.log('panel without gridpos');
                 continue;
@@ -78,10 +79,10 @@ const DashboardGrid = memo((props: GridProps) => {
 
 
             if (panel.type === PanelType.Row) {
-                panelPos.w = GRID_COLUMN_COUNT;
+                panelPos.w = GRID_COLUMN_COUNT; 
                 panelPos.h = 1.5;
                 panelPos.isResizable = false;
-                panelPos.isDraggable = panel.collapsed;
+                panelPos.isDraggable = true;
             }
 
             layout.push(panelPos);
@@ -92,7 +93,7 @@ const DashboardGrid = memo((props: GridProps) => {
     }
 
     const onLayoutChange = (newLayout: ReactGridLayout.Layout[]) => {
-        console.log("dashboard grid on layout change")
+        console.log("3333: dashboard grid on layout change", newLayout)
         onChange(dashboard => {
             for (const newPos of newLayout) {
                 let p;
@@ -149,7 +150,7 @@ const DashboardGrid = memo((props: GridProps) => {
         return height
     }, [viewPanel])
 
-
+    console.log("here33333:",panels)
     return (<Box style={{ flex: '1 1 auto' }} id="dashboard-grid" position="relative">
         <AutoSizer disableHeight>
             {({ width }) => {
@@ -214,12 +215,12 @@ const DashboardGrid = memo((props: GridProps) => {
                                 onDragStop={onDragStop}
                                 onResize={onResize}
                                 onResizeStop={onResizeStop}
-                                onLayoutChange={onLayoutChange}
+                                // onLayoutChange={onLayoutChange}
                                 compactType={dashboard.data.layout as any}
                                 allowOverlap={dashboard.data.allowPanelsOverlap}
                             >
                                 {
-                                    panels.map((panel) => {
+                                    visiblePanels.map((panel) => {
                                         return <GridItem
                                             key={panel.id}
                                             panelType={panel.type}
@@ -230,6 +231,7 @@ const DashboardGrid = memo((props: GridProps) => {
                                             windowWidth={windowWidth}
                                         >
                                             {(width: number, height: number) => {
+                                                console.log("here33333:", width)
                                                 if (panel.type === PanelType.Row) {
                                                     return <Box key={panel.id} id={`panel-${panel.id}`} position="absolute" width={width} height={height + 'px'} left="0" top="0">
                                                         <RowPanel panel={panel} dashboard={dashboard} onChange={onChange}/>
