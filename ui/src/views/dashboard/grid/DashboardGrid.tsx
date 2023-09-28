@@ -171,7 +171,7 @@ const DashboardGrid = memo((props: GridProps) => {
 
                 const draggable = width <= 769 ? false : dashboard.editable;
 
-                if (Math.abs(width - gridkey) > 6) {
+                if (Math.abs(width - gridkey) > 10) {
                     gridkey = width
                 }
 
@@ -185,7 +185,7 @@ const DashboardGrid = memo((props: GridProps) => {
 
                 // we need a finalWidth key to force refreshing the grid layout
                 // it solves the issues when resizing browser window
-      
+                
                 return <>{
                     // finalWidth > 0
                     // &&
@@ -293,7 +293,7 @@ const GridItem = React.forwardRef<HTMLDivElement, GridItemProps>((props, ref) =>
         width = parseFloat(props.style.width);
         height = parseFloat(props.style.height);
     }
-
+    
     // props.children[0] is our main children. RGL adds the drag handle at props.children[1]
     return (
         <Box {...divProps} ref={ref} className="react-grid-item" sx={(props.panelType != PanelType.Row && windowWidth > 769) ? {

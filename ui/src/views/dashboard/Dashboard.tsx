@@ -21,7 +21,7 @@ import { setVariableSelected } from "src/views/variables/SelectVariable"
 import { prevQueries, prevQueryData } from "src/views/dashboard/grid/PanelGrid/PanelGrid"
 import { unstable_batchedUpdates } from "react-dom"
 import useBus from 'use-bus'
-import { SetDashboardEvent, UpdatePanelEvent } from "src/data/bus-events"
+import { OnClonePanel, SetDashboardEvent, UpdatePanelEvent } from "src/data/bus-events"
 import React from "react";
 import { useImmer } from "use-immer"
 import { setAutoFreeze } from "immer";
@@ -31,7 +31,7 @@ import Border from "src/components/largescreen/components/Border"
 import useFullscreen from "hooks/useFullscreen"
 import { initDashboard } from "src/data/dashboard"
 import { initPanel, initPanelType } from "src/data/panel/initPanel"
-import { DashboardHeaderHeight } from "src/data/constants"
+import { DashboardHeaderHeight, GRID_COLUMN_COUNT } from "src/data/constants"
 import { updateTimeToNewest } from "src/components/DatePicker/DatePicker"
 import { $teamVariables, $variables } from "../variables/store"
 import { useStore } from "@nanostores/react"
@@ -48,6 +48,7 @@ import { $datasources, $teamDatasources } from "../datasource/store"
 import { Team, globalTeamId } from "types/teams"
 import { defaultDatasourceId } from "types/datasource"
 import { $teams } from "../team/store"
+import { getNextPanelId } from "./AddPanel"
 
 
 
@@ -107,6 +108,33 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
         }
     )
 
+    useBus(
+        (e) => { return e.type == OnClonePanel },
+        (e) => {
+            const target = e.data
+            setDashboard((dash: Dashboard) => {
+                const panel = dash.data.panels.find(p => p.id == target)
+                const newPanel = cloneDeep(panel)
+                newPanel.id = getNextPanelId(dash)
+                if (panel.gridPos.x + panel.gridPos.w * 2 <= GRID_COLUMN_COUNT) {
+                    newPanel.gridPos.x += panel.gridPos.w;
+                } else {
+                    // add below
+                    newPanel.gridPos.y += panel.gridPos.h;
+                }
+                dash.data.panels.unshift(newPanel)
+                dash.data.panels.sort((panelA, panelB) => {
+                    if (panelA.gridPos.y === panelB.gridPos.y) {
+                        return panelA.gridPos.x - panelB.gridPos.x;
+                    } else {
+                        return panelA.gridPos.y - panelB.gridPos.y;
+                    }
+                })
+            })
+        },
+        []
+    )
+
     useEffect(() => {
         if (dashboard) {
             $dashboard.set(dashboard)
@@ -145,11 +173,11 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
 
     const load = async () => {
         const res = await requestApi.get(`/dashboard/byId/${dashboardId}`)
-        const dash:Dashboard = initDash(res.data)
+        const dash: Dashboard = initDash(res.data)
         const team = $teams.get().find(t => t.id == dash.ownedBy)
         unstable_batchedUpdates(() => {
-            setDashboardVariables(res.data,team)
-            setDatasources(res.data,team)
+            setDashboardVariables(res.data, team)
+            setDatasources(res.data, team)
             setDashboard(cloneDeep(dash))
         })
     }
@@ -172,9 +200,9 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
     // combine variables which defined separately in dashboard and global
     const setDashboardVariables = (dash: Dashboard, team: Team) => {
         const gVars = (team.id !== globalTeamId && team.allowGlobal) ? $teamVariables.get()[globalTeamId] : []
- 
+
         const teamVars = $teamVariables.get()[dash.ownedBy] ?? []
-        
+
         const dashVars = cloneDeep(dash.data.variables)
         setVariableSelected(dashVars)
 
@@ -187,12 +215,12 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
             if (team.allowGlobal) {
                 dss = $teamDatasources.get()[globalTeamId]
             } else {
-              dss.push($teamDatasources.get()[globalTeamId]?.find(ds => ds.id == defaultDatasourceId))
-    
+                dss.push($teamDatasources.get()[globalTeamId]?.find(ds => ds.id == defaultDatasourceId))
+
             }
         }
-  
-        $datasources.set(concat(dss,$teamDatasources.get()[dash.ownedBy] ?? []) )
+
+        $datasources.set(concat(dss, $teamDatasources.get()[dash.ownedBy] ?? []))
     }
 
     const onDashbardChange = useCallback(f => {

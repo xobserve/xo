@@ -12,7 +12,7 @@
 // limitations under the License.
 import { Dashboard, DatasourceType, Panel, PanelProps, PanelQuery, PanelType } from "types/dashboard"
 import { Box, Center, HStack, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Portal, Text, Tooltip, useColorMode, useColorModeValue, useDisclosure, useToast } from "@chakra-ui/react";
-import { FaBook, FaBug, FaEdit, FaRegCopy, FaRegEye, FaRegEyeSlash, FaTrashAlt } from "react-icons/fa";
+import { FaBook, FaBug, FaEdit, FaRegClone, FaRegCopy, FaRegEye, FaRegEyeSlash, FaTrashAlt } from "react-icons/fa";
 import { IoMdInformation } from "react-icons/io";
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { query_prometheus_alerts, run_prometheus_query } from "../../plugins/built-in/datasource/prometheus/query_runner";
@@ -23,7 +23,7 @@ import { Variable } from "types/variable";
 import { hasVariableFormat, replaceQueryWithVariables, replaceWithVariables } from "utils/variable";
 import useBus, { dispatch } from 'use-bus'
 import { getCurrentTimeRange } from "src/components/DatePicker/TimePicker";
-import { PanelDataEvent, PanelForceRebuildEvent, TimeChangedEvent } from "src/data/bus-events";
+import { OnClonePanel, PanelDataEvent, PanelForceRebuildEvent, TimeChangedEvent } from "src/data/bus-events";
 import { addParamToUrl } from "utils/url";
 import { query_testdata_alerts, run_testdata_query } from "../../plugins/built-in/datasource/testdata/query_runner";
 import { run_jaeger_query } from "../../plugins/built-in/datasource/jaeger/query_runner";
@@ -312,16 +312,20 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
     }
 
 
-    const onCopyPanel = useCallback((panel) => {
-        toast({
-            title: "Copied",
-            description: "Panel copied, you can use it through **Add Panel** button",
-            status: "success",
-            duration: 3000,
-            isClosable: true,
-        })
-
-        $copiedPanel.set(cloneDeep(panel))
+    const onCopyPanel = useCallback((panel,type) => {
+        if (type == "copy") {
+            toast({
+                title: "Copied",
+                description: "Panel copied, you can use it through **Add Panel** button",
+                status: "success",
+                duration: 3000,
+                isClosable: true,
+            })
+    
+            $copiedPanel.set(cloneDeep(panel))
+        } else {
+            dispatch({type:OnClonePanel, data: panel.id})
+        }
     }, [])
 
     const panelBodyHeight = height - PANEL_HEADER_HEIGHT
@@ -417,7 +421,7 @@ interface PanelHeaderProps {
     dashboardId: string
     queryError: string
     panel: Panel
-    onCopyPanel: (panel: Panel) => void
+    onCopyPanel: (panel: Panel, type: string) => void
     onRemovePanel: (panel: Panel) => void
     onHidePanel: (panel: Panel) => void
     data: any[]
@@ -452,7 +456,8 @@ const PanelHeader = ({ dashboardId, queryError, panel, onCopyPanel, onRemovePane
                         <Portal>
                             <MenuList p="1" zIndex={1500}>
                                 <MenuItem icon={<FaEdit />} onClick={() => addParamToUrl({ edit: panel.id })}>{t.edit}</MenuItem>
-                                <MenuItem icon={<FaRegCopy />} onClick={() => onCopyPanel(panel)}>{t.copy}</MenuItem>
+                                <MenuItem icon={<FaRegCopy />} onClick={() => onCopyPanel(panel, "copy")}>{t.copy}</MenuItem>
+                                <MenuItem icon={<FaRegClone />} onClick={() => onCopyPanel(panel,"clone")}>{t.clone}</MenuItem>
                                 <MenuDivider my="1" />
                                 <MenuItem icon={<FaBug />} onClick={onOpen}>{t1.debugPanel}</MenuItem>
                                 <MenuItem icon={<FaRegEye />} onClick={() => addParamToUrl({ viewPanel: viewPanel ? null : panel.id })}>{viewPanel ? t1.exitlView : t1.viewPanel}</MenuItem>

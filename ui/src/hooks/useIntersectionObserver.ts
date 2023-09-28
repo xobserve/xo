@@ -36,7 +36,6 @@ export const useIntersectionObserver = (container, setActiveId) => {
 
         const headingElements = Array.from(document.querySelectorAll(`${container} h1,${container} h2, ${container} h3, ${container} h4, ${container} h5`));
         
-        console.log("here333333:",headingElements)
         headingElements.forEach((element) => observer.observe(element));
 
         return () => observer.disconnect();

@@ -76,7 +76,6 @@ const QueryEditor = ({ datasource, query, onChange }: DatasourceEditorProps) => 
 
     const ds = $datasources.get().find(d => d.id == datasource.id)
 
-    console.log("here33333:", isLargeScreen)
     return (
         <Form spacing={1}>
             <FormItem size="sm" title={<PromMetricSelect enableInput={false} width={isLargeScreen ? "300px" : "150px"} dsId={datasource.id} value={tempQuery.metrics} onChange={v => {

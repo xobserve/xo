@@ -31,29 +31,19 @@ const AddPanel = ({ dashboard, onChange }: Props) => {
     const copiedPanel = useStore($copiedPanel)
 
 
-    const getNextPanelId = () => {
-        let max = 0;
 
-        for (const panel of dashboard.data.panels) {
-            if (panel.id > max) {
-                max = panel.id;
-            }
-        }
-
-        return max + 1;
-    }
 
 
     const onAddPanel = (isRow) => {
         if (!dashboard.data.panels) {
             dashboard.data.panels = []
         }
-        const id = getNextPanelId()
+        const id = getNextPanelId(dashboard)
         let newPanel: Panel
         if (isRow) {
             newPanel = initRowPanel(id)
         } else {
-           newPanel = initPanel(id)
+            newPanel = initPanel(id)
         }
 
         // scroll to top after adding panel
@@ -65,7 +55,7 @@ const AddPanel = ({ dashboard, onChange }: Props) => {
 
     const onPastePanel = () => {
         if (copiedPanel) {
-            const id = getNextPanelId()
+            const id = getNextPanelId(dashboard)
             copiedPanel.id = id
             copiedPanel.gridPos = initPanel().gridPos
             onChange(dashboard => { dashboard.data.panels.unshift(copiedPanel) })
@@ -91,3 +81,16 @@ const AddPanel = ({ dashboard, onChange }: Props) => {
 }
 
 export default AddPanel
+
+
+export const getNextPanelId = (dashboard: Dashboard) => {
+    let max = 0;
+
+    for (const panel of dashboard.data.panels) {
+        if (panel.id > max) {
+            max = panel.id;
+        }
+    }
+
+    return max + 1;
+}
