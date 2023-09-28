@@ -182,41 +182,43 @@ func GetDashboard(c *gin.Context) {
 
 	span.End()
 
-	_, span2 := ot.Tracer.Start(traceCtx, "checkTeamPublic", trace.WithSpanKind(trace.SpanKindClient))
-	isTeamPublic, err := models.IsTeamPublic(dash.OwnedBy)
-	if err != nil {
-		span2.SetStatus(codes.Error, err.Error())
-		span2.End()
-		log.WithTrace(traceCtx).Warn("Error check isTeamPublic", zap.String("user", getVisitInfo(c, u)), zap.Error(err))
-		c.JSON(500, common.RespError(e.Internal))
-		return
-	}
-	span2.End()
-
-	if !isTeamPublic && dash.VisibleTo != "all" {
-		if u == nil {
-			c.JSON(http.StatusForbidden, common.RespError("you are not the team menber to view this dashboard"))
+	if dash.OwnedBy != models.GlobalTeamId {
+		_, span2 := ot.Tracer.Start(traceCtx, "checkTeamPublic", trace.WithSpanKind(trace.SpanKindClient))
+		isTeamPublic, err := models.IsTeamPublic(dash.OwnedBy)
+		if err != nil {
+			span2.SetStatus(codes.Error, err.Error())
+			span2.End()
+			log.WithTrace(traceCtx).Warn("Error check isTeamPublic", zap.String("user", getVisitInfo(c, u)), zap.Error(err))
+			c.JSON(500, common.RespError(e.Internal))
 			return
 		}
+		span2.End()
 
-		if !u.Role.IsAdmin() {
-			_, span0 := ot.Tracer.Start(traceCtx, "checkUserPrivilege", trace.WithSpanKind(trace.SpanKindClient))
-			member, err := models.QueryTeamMember(dash.OwnedBy, u.Id)
-			if err != nil {
-				log.WithTrace(traceCtx).Warn("Error query team member", zap.String("username", u.Username), zap.Error(err))
-				c.JSON(500, common.RespError(e.Internal))
-				span0.SetStatus(codes.Error, err.Error())
-				span0.End()
-				return
-			}
-			if member.Id == 0 {
-				log.WithTrace(traceCtx).Warn("Error no permission", zap.String("username", u.Username), zap.Error(err))
+		if !isTeamPublic && dash.VisibleTo != "all" {
+			if u == nil {
 				c.JSON(http.StatusForbidden, common.RespError("you are not the team menber to view this dashboard"))
-				span0.SetStatus(codes.Error, "no permission")
-				span0.End()
 				return
 			}
-			span0.End()
+
+			if !u.Role.IsAdmin() {
+				_, span0 := ot.Tracer.Start(traceCtx, "checkUserPrivilege", trace.WithSpanKind(trace.SpanKindClient))
+				member, err := models.QueryTeamMember(dash.OwnedBy, u.Id)
+				if err != nil {
+					log.WithTrace(traceCtx).Warn("Error query team member", zap.String("username", u.Username), zap.Error(err))
+					c.JSON(500, common.RespError(e.Internal))
+					span0.SetStatus(codes.Error, err.Error())
+					span0.End()
+					return
+				}
+				if member.Id == 0 {
+					log.WithTrace(traceCtx).Warn("Error no permission", zap.String("username", u.Username), zap.Error(err))
+					c.JSON(http.StatusForbidden, common.RespError("you are not the team menber to view this dashboard"))
+					span0.SetStatus(codes.Error, "no permission")
+					span0.End()
+					return
+				}
+				span0.End()
+			}
 		}
 	}
 
