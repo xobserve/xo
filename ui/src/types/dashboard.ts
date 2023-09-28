@@ -87,6 +87,7 @@ export interface Panel {
         type: "variable" | "custom",
         value: ""
     }
+    panels?: Panel[]
 }
 
 export interface ValueMappingItem {
