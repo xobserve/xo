@@ -97,10 +97,6 @@ limitations under the License.
     color: #808080;
   }
   
-  .span-name:hover > .endpoint-name {
-    color: #000;
-  }
-  
 
   .span-svc-name {
     padding: 0 0.25rem 0 0.5rem;
