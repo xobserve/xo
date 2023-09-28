@@ -202,7 +202,7 @@ const DashboardGrid = memo((props: GridProps) => {
                                 isBounded
                                 isDraggable={draggable}
                                 isResizable={draggable}
-                                containerPadding={[0, 0]}
+                                containerPadding={[0, 13]}
                                 useCSSTransforms={false}
                                 margin={[GRID_CELL_VMARGIN, GRID_CELL_VMARGIN]}
                                 cols={GRID_COLUMN_COUNT}
@@ -230,13 +230,13 @@ const DashboardGrid = memo((props: GridProps) => {
                                         >
                                             {(width: number, height: number) => {
                                                 if (panel.type === PanelType.Row) {
-                                                    return <Box key={panel.id} id={`panel-${panel.id}`} position="absolute" width={width} height={height + 'px'} left="0" top="0">
+                                                    return <Box  key={panel.id} id={`panel-${panel.id}`} position="absolute" width={width} height={height + 'px'} left="0" top="0">
                                                         <RowPanel panel={panel} onChange={onChange}/>
                                                         </Box>
                                                 }
 
                                                 const Wrapper = dashboard.data.lazyLoading ? LazyLoader : Box
-                                                return (<Box key={panel.id} id={`panel-${panel.id}`} >
+                                                return (<Box key={panel.id} id={`panel-${panel.id}`} mb="4">
                                                     {!inEdit && <Wrapper width={width} height={height}  ><PanelGrid dashboard={dashboard} panel={panel} width={width} height={height} onRemovePanel={onRemovePanel} onHidePanel={onHidePanel} sync={mooSync} /></Wrapper>}
                                                 </Box>)
                                             }}
