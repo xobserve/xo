@@ -22,7 +22,6 @@ import (
 	"time"
 
 	"github.com/DataObserve/datav/backend/internal/admin"
-	ot "github.com/DataObserve/datav/backend/internal/opentelemetry"
 	"github.com/DataObserve/datav/backend/internal/user"
 	"github.com/DataObserve/datav/backend/pkg/colorlog"
 	"github.com/DataObserve/datav/backend/pkg/common"
@@ -33,10 +32,6 @@ import (
 	"github.com/DataObserve/datav/backend/pkg/models"
 	"github.com/DataObserve/datav/backend/pkg/utils"
 	"github.com/gin-gonic/gin"
-	"go.opentelemetry.io/otel/attribute"
-	"go.opentelemetry.io/otel/codes"
-	semconv "go.opentelemetry.io/otel/semconv/v1.4.0"
-	"go.opentelemetry.io/otel/trace"
 	"go.uber.org/zap"
 )
 
@@ -171,8 +166,6 @@ func GetDashboard(c *gin.Context) {
 
 	}
 
-
-
 	if dash.OwnedBy != models.GlobalTeamId {
 		isTeamPublic, err := models.IsTeamPublic(c.Request.Context(), dash.OwnedBy)
 
@@ -203,7 +196,7 @@ func GetDashboard(c *gin.Context) {
 			}
 		}
 	}
-  
+
 	teamName, _ := models.QueryTeamNameById(c.Request.Context(), dash.OwnedBy)
 	if teamName == "" {
 		teamName = "not_found"
@@ -394,7 +387,7 @@ func GetStarred(c *gin.Context) {
 		c.JSON(http.StatusOK, common.RespSuccess(false))
 		return
 	}
-  
+
 	starred, err := models.QuertyDashboardStared(c.Request.Context(), u.Id, id)
 	if err != nil {
 		logger.Warn("unstar dashboard", "error", err)
