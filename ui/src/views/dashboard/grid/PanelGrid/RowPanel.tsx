@@ -148,7 +148,7 @@ const RowPanel = (props: Props) => {
         })
     }
     return (<>
-        <Flex className={"hover-bg " + (panel.collapsed ? "label-bg" : "label-bg")} py="2px" px="1" alignItems="center" justifyContent="space-between" width="100%" onMouseEnter={() => setOnHover(true)} onMouseLeave={() => setOnHover(false)}>
+        <Flex className={"hover-bg " + (panel.collapsed ? "label-bg" : "")} py="2px" px="1" alignItems="center" justifyContent="space-between" width="100%" onMouseEnter={() => setOnHover(true)} onMouseLeave={() => setOnHover(false)}>
             <HStack cursor={"pointer"} onClick={onRowClick} width="100%" spacing={3}>
                 <HStack>
                 <CollapseIcon collapsed={panel.collapsed} fontSize="0.6rem" />

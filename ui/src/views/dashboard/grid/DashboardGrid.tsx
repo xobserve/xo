@@ -194,6 +194,7 @@ const DashboardGrid = memo((props: GridProps) => {
                         width={width}
                         height="100%"
                         className="grid-layout-wrapper"
+                        pt={viewPanel && "10px"}
                     >
                         {!viewPanel
                             ?

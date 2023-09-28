@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Dashboard, DatasourceType, Panel, PanelProps, PanelQuery, PanelType } from "types/dashboard"
-import { Box, Center, HStack, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Portal,  Text, Tooltip, useColorMode, useColorModeValue, useDisclosure, useToast } from "@chakra-ui/react";
+import { Box, Center, HStack, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Portal, Text, Tooltip, useColorMode, useColorModeValue, useDisclosure, useToast } from "@chakra-ui/react";
 import { FaBook, FaBug, FaEdit, FaRegCopy, FaRegEye, FaRegEyeSlash, FaTrashAlt } from "react-icons/fa";
 import { IoMdInformation } from "react-icons/io";
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -320,7 +320,7 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
             duration: 3000,
             isClosable: true,
         })
-        
+
         $copiedPanel.set(cloneDeep(panel))
     }, [])
 
@@ -348,7 +348,7 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
                     })
                     console.error(error)
                 }
-              
+
             } else {
                 res = d
             }
@@ -456,10 +456,14 @@ const PanelHeader = ({ dashboardId, queryError, panel, onCopyPanel, onRemovePane
                                 <MenuDivider my="1" />
                                 <MenuItem icon={<FaBug />} onClick={onOpen}>{t1.debugPanel}</MenuItem>
                                 <MenuItem icon={<FaRegEye />} onClick={() => addParamToUrl({ viewPanel: viewPanel ? null : panel.id })}>{viewPanel ? t1.exitlView : t1.viewPanel}</MenuItem>
-                                <MenuDivider my="1" />
-                                <MenuItem icon={<FaRegEyeSlash />} onClick={() => onHidePanel(panel)}>{t1.hidePanel}</MenuItem>
-                                <MenuDivider my="1" />
-                                <MenuItem icon={<FaTrashAlt />} onClick={() => onRemovePanel(panel)}>{t.remove}</MenuItem>
+
+                                {!viewPanel && <>
+                                    <MenuDivider my="1" />
+                                    <MenuItem icon={<FaRegEyeSlash />} onClick={() => onHidePanel(panel)}>{t1.hidePanel}</MenuItem>
+                                    <MenuDivider my="1" />
+                                    <MenuItem icon={<FaTrashAlt />} onClick={() => onRemovePanel(panel)}>{t.remove}</MenuItem>
+
+                                </>}
                             </MenuList>
                         </Portal>
                     </Menu>
