@@ -86,15 +86,18 @@ export const setAttrsForData = (settings: NodeGraphSettings, data: NodeGraphPlug
             t += node.donutAttrs[key] ?? 0;
         })
 
-        const p = Math.log2(t / base)
-        if (p <= 1) {
-            node.size = settings.node.baseSize
-        } else if (p >= settings.node.maxSize) {
-            node.size = settings.node.baseSize * settings.node.maxSize
-
-        } else {
-            node.size = p * settings.node.baseSize
+        if (!node.size) {
+            const p = Math.log2(t / base)
+            if (p <= 1) {
+                node.size = settings.node.baseSize
+            } else if (p >= settings.node.maxSize) {
+                node.size = settings.node.baseSize * settings.node.maxSize
+    
+            } else {
+                node.size = p * settings.node.baseSize
+            }
         }
+       
 
         if (node.icon) {
             node.icon.width = node.size / 2.5
@@ -136,7 +139,7 @@ export const setAttrsForData = (settings: NodeGraphSettings, data: NodeGraphPlug
 export const nodeGraphDataToSeries = (data: NodeGraphPluginData): SeriesData[] => {
     const result: SeriesData[] = []
     const series: SeriesData = {
-        id: 65,
+        queryId: 65,
         name: "nodeGraphSeries",
         fields: [] 
     }

@@ -80,7 +80,7 @@ const DashboardCard = ({ dashboard, owner, query, onClick, starred, session }: P
                 <HStack alignItems="center" mt="2" spacing={1}>
                     <Text minWidth="fit-content" textStyle="annotation">{owner?.name}</Text>
                    
-                    {isAdmin(session.user.role) && <>
+                    {isAdmin(session?.user.role) && <>
                         <Divider type="vertical" />
                     {weight === null
                         ?

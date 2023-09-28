@@ -15,7 +15,7 @@ import { Box, Button, Flex, HStack, Modal, ModalBody, ModalContent, ModalHeader,
 import { ColorModeSwitcher } from "src/components/ColorModeSwitcher"
 import { memo, useCallback, useEffect, useState } from "react"
 import { Dashboard, Panel, PanelType } from "types/dashboard"
-import EditPanelQuery from "./Query"
+import EditPanelQuery from "./DatasourceQuery"
 import { useImmer } from "use-immer";
 import { removeParamFromUrl } from "utils/url";
 import { FaArrowDown, FaArrowUp } from "react-icons/fa";

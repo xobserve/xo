@@ -25,15 +25,21 @@ interface Props {
     query: string
     onItemClick?: any
     starredIds: Set<string>
+    selectedTags: string[] 
 }
 
-const TagsView = memo(({teams, dashboards, query, onItemClick,starredIds }: Props) => {
+const TagsView = memo(({teams, dashboards, query, onItemClick,starredIds,selectedTags }: Props) => {
     const {session} = useSession()
-    const keys = Array.from(dashboards.keys()).sort()
+    const keys = Array.from(dashboards.keys()).sort().filter(tag => {
+        if (selectedTags.length == 0) {
+            return true
+        }
+        return selectedTags.includes(tag)
+    })
     return (
         <>
             {
-                session && keys.map(tag => <Box>
+                keys.map(tag => <Box>
                     <ColorTag name={tag}/>
                     <VStack alignItems="left" mt="2">
                         {dashboards.get(tag).map(dash => <DashboardCard dashboard={dash} owner={teams.find(team => team.id == dash.ownedBy)} onClick={onItemClick} query={query} starred={starredIds.has(dash.id)} session={session}/> )}

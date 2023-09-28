@@ -22,6 +22,7 @@ import { requestApi } from "utils/axios/request"
 import { useNavigate } from "react-router-dom"
 import { useStore } from "@nanostores/react"
 import { cfgTeam, commonMsg } from "src/i18n/locales/en"
+import { $teams } from "src/views/team/store"
 
 const TeamSettings = (props: { team: Team }) => {
   const t = useStore(commonMsg)
@@ -56,6 +57,8 @@ const TeamSettings = (props: { team: Team }) => {
       isClosable: true,
     })
 
+    const teams = $teams.get().filter(t => t.id != team.id)
+    $teams.set(teams)
     setTimeout(() => {
       navigate(`/cfg/teams`)
     }, 1000)

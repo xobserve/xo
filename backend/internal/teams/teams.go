@@ -39,7 +39,7 @@ func GetTeams(c *gin.Context) {
 	q := `SELECT id,name,brief,allow_global,is_public,created_by FROM team`
 	u := user.CurrentUser(c)
 	if u == nil {
-		q = fmt.Sprintf("%s WHERE id = '%d'", q, models.GlobalTeamId)
+		q = fmt.Sprintf("%s WHERE id = '%d' or is_public=true", q, models.GlobalTeamId)
 	} else {
 		// user can see the teams he is in
 		if !u.Role.IsAdmin() {

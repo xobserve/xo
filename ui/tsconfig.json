@@ -54,6 +54,8 @@
   "include": [
     "src/pages/**/*.ts",
     "pages/**/*",
-    "src/**/*"
-, "src/i18n/i18n.ts"  ]
+    "src/**/*",
+    "src/i18n/i18n.ts",
+    "index.d.ts"
+  ]
 }

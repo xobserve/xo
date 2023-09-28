@@ -10,9 +10,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box, Button, Flex, HStack, Image, Select, Text, VStack } from "@chakra-ui/react"
+import { Box, Button, Flex, HStack, Image, Select, Text, Tooltip, VStack, Drawer, DrawerCloseButton, DrawerContent, DrawerHeader, DrawerOverlay, useDisclosure, DrawerBody, Tabs, TabList, TabPanels, TabPanel, Tab, useColorMode, useColorModeValue, } from "@chakra-ui/react"
 import { useState } from "react"
-import { FaAngleDown, FaAngleRight, FaEye, FaEyeSlash, FaPlus, FaTrashAlt } from "react-icons/fa"
+import { FaAngleDown, FaAngleRight, FaBookOpen, FaEye, FaEyeSlash, FaPlus, FaTrashAlt } from "react-icons/fa"
 import { DatasourceType, Panel, PanelQuery } from "types/dashboard"
 import JaegerQueryEditor from "../plugins/built-in/datasource/jaeger/QueryEditor"
 import PrometheusQueryEditor from "../plugins/built-in/datasource/prometheus/QueryEditor"
@@ -33,9 +33,13 @@ import { DatasourceMinInterval } from "src/data/constants"
 import LokiQueryEditor from "../plugins/built-in/datasource/loki/QueryEditor"
 import DatasourceSelect from "src/components/datasource/Select"
 import { getDatasource } from "utils/datasource"
-import { isNumber } from "lodash"
+import { isNumber, upperFirst } from "lodash"
 import { $datasources } from "src/views/datasource/store"
 import { externalDatasourcePlugins } from "../plugins/external/plugins"
+import getPrometheusDocs from "../plugins/built-in/datasource/prometheus/docs"
+import { MarkdownRender } from "components/markdown/MarkdownRender"
+import customColors from "theme/colors"
+import Toc from "components/Toc/Toc"
 
 interface Props {
     panel: Panel
@@ -44,6 +48,9 @@ interface Props {
 
 const EditPanelQuery = (props: Props) => {
     const t = useStore(commonMsg)
+    const { isOpen: isDocsOpen, onOpen: onDocsOpen, onClose: onDocsClose } = useDisclosure()
+    const [docsTab, setDocsTab] = useState(0)
+    const { colorMode } = useColorMode()
     const { panel, onChange } = props
     const selectDatasource = (id) => {
         const datasources = $datasources.get()
@@ -55,7 +62,7 @@ const EditPanelQuery = (props: Props) => {
             } else {
                 panel.datasource = { ...initDatasource, id: id }
             }
-            
+
         })
     }
 
@@ -96,49 +103,104 @@ const EditPanelQuery = (props: Props) => {
     }
 
     const onVisibleChange = (id, visible) => {
-            onChange((panel: Panel) => {
-                const ds = panel.datasource
-                for (var i = 0; i < ds.queries.length; i++) {
-                    if (ds.queries[i].id === id) {
-                        ds.queries[i].visible = visible
-                        break
-                    }
+        onChange((panel: Panel) => {
+            const ds = panel.datasource
+            for (var i = 0; i < ds.queries.length; i++) {
+                if (ds.queries[i].id === id) {
+                    ds.queries[i].visible = visible
+                    break
                 }
-            })
-        }
+            }
+        })
+    }
     const currentDatasource = getDatasource(panel.datasource.id)
     const externalDs = externalDatasourcePlugins[currentDatasource?.type]
-    const dsIcon = externalDs ? `/plugins/external/datasource/${currentDatasource?.type}.svg`  : `/plugins/datasource/${currentDatasource?.type}.svg`
-    
+    const dsIcon = externalDs ? `/plugins/external/datasource/${currentDatasource?.type}.svg` : `/plugins/datasource/${currentDatasource?.type}.svg`
+
+    let docs: { tab: string, content: string, toc: { level: string; content: string }[] }[] = [];;
+    if (externalDs && externalDs.getDocs) {
+        docs = externalDs.getDocs()
+    } else {
+        switch (currentDatasource?.type) {
+            case DatasourceType.Prometheus:
+                docs = getPrometheusDocs()
+                break;
+
+            default:
+                break;
+        }
+    }
+
     return (<>
-        <Box className="bordered" p="2" borderRadius="0" height="100%">
+        <Box className="bordered-top" p="2" borderRadius="0" height="100%">
             <Flex justifyContent="space-between" alignItems="start">
                 <HStack>
                     <Image width="30px" height="30px" src={dsIcon} />
-                    <Box width="200px"><DatasourceSelect value={panel.datasource.id} onChange={selectDatasource}  variant="unstyled" /></Box>
+                    <Box width="200px"><DatasourceSelect value={panel.datasource.id} onChange={selectDatasource} variant="unstyled" /></Box>
                     {!isNumber(panel.datasource.id) && <Text textStyle="annotation">current: {currentDatasource?.name}</Text>}
+                    {docs && docs.length > 0 && <Tooltip label={`View ${currentDatasource?.type} docs`}><Box opacity={0.8} cursor="pointer" onClick={onDocsOpen}><FaBookOpen className={colorMode == "light" ? "color-text" : null} /></Box></Tooltip>}
                 </HStack>
                 <DatasourceQueryOption {...props} />
             </Flex>
 
             <VStack alignItems="left" mt="3" spacing="2">
                 {panel.datasource.queries?.map((query, index) => {
-                    return <Box key={index}>
-                        <Flex justifyContent="space-between" className="label-bg" py="1" px="2" mb="1">
+                    return <Box key={index} className="bordered" p="1" pb="2">
+                        <Flex justifyContent="space-between" py="0" px="2" mb="1">
                             <Text className="color-text">{String.fromCharCode(query.id)}</Text>
                             <HStack layerStyle="textSecondary" fontSize="12px" spacing={3}>
-                                {query.visible ? <FaEye cursor="pointer" onClick={() => onVisibleChange(query.id, false)}/> : <FaEyeSlash cursor="pointer" onClick={() => onVisibleChange(query.id, true)}/>}
-                                <FaTrashAlt  cursor="pointer" onClick={() => removeQuery(query.id)} />
+                                {query.visible ? <FaEye cursor="pointer" onClick={() => onVisibleChange(query.id, false)} /> : <FaEyeSlash cursor="pointer" onClick={() => onVisibleChange(query.id, true)} />}
+                                <FaTrashAlt cursor="pointer" onClick={() => removeQuery(query.id)} />
                             </HStack>
                         </Flex>
                         {
-                            <Box pl="4"><CustomQueryEditor key={panel.datasource.id + query.id} panel={panel} query={query} selected={panel.datasource} dsType={currentDatasource?.type} onChange={onChange} /></Box>
+                            <Box px="2" pt="2"><CustomQueryEditor key={panel.datasource.id + query.id} panel={panel} query={query} selected={panel.datasource} dsType={currentDatasource?.type} onChange={onChange} /></Box>
                         }
                     </Box>
                 })}
             </VStack>
             <Button leftIcon={<FaPlus />} size="sm" variant="outline" onClick={onAddQuery} mt="4">{t.query}</Button>
         </Box>
+
+        <Drawer
+            isOpen={isDocsOpen}
+            placement='right'
+            onClose={onDocsClose}
+            size="lg"
+        >
+            <DrawerOverlay />
+            <DrawerContent>
+                <DrawerCloseButton />
+                {/* <DrawerHeader>{upperFirst(currentDatasource?.type)} Docs</DrawerHeader> */}
+                <DrawerBody width="100%" pl="0">
+                    <Tabs isLazy defaultIndex={docsTab} onChange={(index) => {setDocsTab(index)}} >
+                        <TabList>
+                            {
+                                docs.map((d, index) => {
+                                    return <Tab key={index}>{d.tab}</Tab>
+                                })
+                            }
+                        </TabList>
+                        <TabPanels >
+                            {
+                                docs.map((d, index) => {
+                                    return <TabPanel pl="0">
+                                        {d.toc && <Box  position="fixed" top="0" ml="0px" transform='translateX(-100%)'>
+                                            <Toc toc={d.toc}/>
+                                        </Box>}
+                                      
+                                        <Box pl="6">
+                                            <MarkdownRender md={d.content} width="100%" />
+                                        </Box>
+                                    </TabPanel>
+                                })
+                            }
+                        </TabPanels>
+                    </Tabs>
+
+                </DrawerBody>
+            </DrawerContent>
+        </Drawer>
     </>)
 }
 
@@ -166,11 +228,11 @@ const DatasourceQueryOption = ({ panel, onChange }: Props) => {
 
                     </FormItem>
                     <FormItem title={t1.minInterval} labelWidth="170px" size="sm" desc={t1.minIntervalTips}>
-                        <Box width="100px"><EditorInputItem  value={panel.datasource.queryOptions.minInterval} onChange={v => {
+                        <Box width="100px"><EditorInputItem value={panel.datasource.queryOptions.minInterval} onChange={v => {
                             onChange((panel: Panel) => {
                                 panel.datasource.queryOptions.minInterval = v
                             })
-                        }} placeholder="15s"/></Box>
+                        }} placeholder="15s" /></Box>
                     </FormItem>
 
                     <FormItem labelWidth="170px" size="sm" title={t1.finalInterval} desc={t1.finalIntervalTips} alignItems="center">
@@ -181,7 +243,7 @@ const DatasourceQueryOption = ({ panel, onChange }: Props) => {
         </VStack>
     )
 }
-const CustomQueryEditor = ({ panel,query, onChange, selected,dsType }) => {
+const CustomQueryEditor = ({ panel, query, onChange, selected, dsType }) => {
     const onQueryChange = (query: PanelQuery) => {
         onChange((panel: Panel) => {
             const ds = panel.datasource
@@ -194,21 +256,21 @@ const CustomQueryEditor = ({ panel,query, onChange, selected,dsType }) => {
         })
     }
 
-    
+
     //@needs-update-when-add-new-datasource
     switch (dsType) {
         case DatasourceType.Prometheus:
             return <PrometheusQueryEditor datasource={selected} query={query} onChange={onQueryChange} panel={panel} />
         case DatasourceType.TestData:
-            return <TestDataQueryEditor datasource={selected} query={query} onChange={onQueryChange} panel={panel}/>
+            return <TestDataQueryEditor datasource={selected} query={query} onChange={onQueryChange} panel={panel} />
         case DatasourceType.Jaeger:
-            return <JaegerQueryEditor datasource={selected} query={query} onChange={onQueryChange} panel={panel}/>
+            return <JaegerQueryEditor datasource={selected} query={query} onChange={onQueryChange} panel={panel} />
         case DatasourceType.ExternalHttp:
             return <HttpQueryEditor datasource={selected} query={query} onChange={onQueryChange} panel={panel} />
         case DatasourceType.Loki:
             return <LokiQueryEditor datasource={selected} query={query} onChange={onQueryChange} panel={panel} />
         default:
-            const p =  externalDatasourcePlugins[dsType]
+            const p = externalDatasourcePlugins[dsType]
             if (p && p.queryEditor) {
                 return <p.queryEditor datasource={selected} query={query} onChange={onQueryChange} panel={panel} />
             }

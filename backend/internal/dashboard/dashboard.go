@@ -151,14 +151,12 @@ func GetDashboard(c *gin.Context) {
 
 	dash, err := models.QueryDashboard(c.Request.Context(), id)
 	if err != nil {
-		// span.SetStatus(codes.Error, err.Error())
-		// span.End()
 		if err == sql.ErrNoRows {
-			log.WithTrace(traceCtx).Warn("Error query dashbaord", zap.String("username", u.Username), zap.Error(err))
+			log.WithTrace(traceCtx).Warn("Error query dashbaord", zap.String("user", getVisitInfo(c, u)), zap.Error(err))
 			c.JSON(404, common.RespError(fmt.Sprintf("dashboard id `%s` not found", id)))
 			return
 		}
-		log.WithTrace(traceCtx).Warn("Error query dashbaord", zap.String("username", u.Username), zap.Error(err))
+		log.WithTrace(traceCtx).Warn("Error query dashbaord", zap.String("user", getVisitInfo(c, u)), zap.Error(err))
 		c.JSON(500, common.RespError(e.Internal))
 		return
 	}
@@ -166,54 +164,46 @@ func GetDashboard(c *gin.Context) {
 	if config.Data.SelfMonitoring.MockErrorLogs {
 		r := rand.Intn(100)
 		if r > 70 {
-			log.WithTrace(traceCtx).Warn("Mock a warn msg for query dashbaord", zap.String("username", u.Username), zap.Error(errors.New("nothing happend, just mock a warn msg")))
+			log.WithTrace(traceCtx).Warn("Mock a warn msg for query dashbaord", zap.String("user", getVisitInfo(c, u)), zap.Error(errors.New("nothing happend, just mock a warn msg")))
 		} else if r > 35 {
-			log.WithTrace(traceCtx).Error("Mock a error msg for query dashbaord", zap.String("username", u.Username), zap.Error(errors.New("nothing happend, just mock a error msg")))
+			log.WithTrace(traceCtx).Error("Mock a error msg for query dashbaord", zap.String("user", getVisitInfo(c, u)), zap.Error(errors.New("nothing happend, just mock a error msg")))
 		}
 
 	}
 
-	// span.End()
 
-	_, span2 := ot.Tracer.Start(traceCtx, "checkTeamPublic", trace.WithSpanKind(trace.SpanKindClient))
-	isTeamPublic, err := models.IsTeamPublic(c.Request.Context(), dash.OwnedBy)
-	if err != nil {
-		span2.SetStatus(codes.Error, err.Error())
-		span2.End()
-		log.WithTrace(traceCtx).Warn("Error check isTeamPublic", zap.String("username", u.Username), zap.Error(err))
-		c.JSON(500, common.RespError(e.Internal))
-		return
-	}
-	span2.End()
 
-	if !isTeamPublic && dash.VisibleTo != "all" && !u.Role.IsAdmin() {
-		_, span0 := ot.Tracer.Start(traceCtx, "checkUserPrivilege", trace.WithSpanKind(trace.SpanKindClient))
-		member, err := models.QueryTeamMember(c.Request.Context(), dash.OwnedBy, u.Id)
+	if dash.OwnedBy != models.GlobalTeamId {
+		isTeamPublic, err := models.IsTeamPublic(c.Request.Context(), dash.OwnedBy)
+
 		if err != nil {
-			log.WithTrace(traceCtx).Warn("Error query team member", zap.String("username", u.Username), zap.Error(err))
+			log.WithTrace(traceCtx).Warn("Error check isTeamPublic", zap.String("user", getVisitInfo(c, u)), zap.Error(err))
 			c.JSON(500, common.RespError(e.Internal))
-			span0.SetStatus(codes.Error, err.Error())
-			span0.End()
 			return
 		}
-		if member.Id == 0 {
-			log.WithTrace(traceCtx).Warn("Error no permission", zap.String("username", u.Username), zap.Error(err))
-			c.JSON(http.StatusForbidden, common.RespError("you are not the team menber to view this dashboard"))
-			span0.SetStatus(codes.Error, "no permission")
-			span0.End()
-			return
-		}
-		span0.End()
-	}
 
-	_, span1 := ot.Tracer.Start(traceCtx, "getTeam", trace.WithSpanKind(trace.SpanKindClient))
-	defer span1.End()
-	span1.SetAttributes(
-		semconv.PeerServiceKey.String("mysql"),
-		attribute.
-			Key("sql.query").
-			String(fmt.Sprintf("SELECT name FROM team WHERE id=%d", dash.OwnedBy)),
-	)
+		if !isTeamPublic && dash.VisibleTo != "all" {
+			if u == nil {
+				c.JSON(http.StatusForbidden, common.RespError("you are not the team menber to view this dashboard"))
+				return
+			}
+
+			if !u.Role.IsAdmin() {
+				member, err := models.QueryTeamMember(c.Request.Context(), dash.OwnedBy, u.Id)
+				if err != nil {
+					log.WithTrace(traceCtx).Warn("Error query team member", zap.String("username", u.Username), zap.Error(err))
+					c.JSON(500, common.RespError(e.Internal))
+					return
+				}
+				if member.Id == 0 {
+					log.WithTrace(traceCtx).Warn("Error no permission", zap.String("username", u.Username), zap.Error(err))
+					c.JSON(http.StatusForbidden, common.RespError("you are not the team menber to view this dashboard"))
+					return
+				}
+			}
+		}
+	}
+  
 	teamName, _ := models.QueryTeamNameById(c.Request.Context(), dash.OwnedBy)
 	if teamName == "" {
 		teamName = "not_found"
@@ -221,9 +211,17 @@ func GetDashboard(c *gin.Context) {
 	dash.Editable = true
 	dash.OwnerName = teamName
 
-	log.WithTrace(traceCtx).Info("Get dashboard", zap.String("id", dash.Id), zap.String("title", dash.Title), zap.String("username", u.Username), zap.String("ip", c.ClientIP()))
+	log.WithTrace(traceCtx).Info("Get dashboard", zap.String("id", dash.Id), zap.String("title", dash.Title), zap.String("user", getVisitInfo(c, u)), zap.String("ip", c.ClientIP()))
 
 	c.JSON(200, common.RespSuccess(dash))
+}
+
+func getVisitInfo(c *gin.Context, u *models.User) string {
+	if u != nil {
+		return u.Username
+	}
+
+	return c.ClientIP()
 }
 
 func DeleteDashboard(c *gin.Context) {
@@ -392,6 +390,11 @@ func UnStar(c *gin.Context) {
 func GetStarred(c *gin.Context) {
 	id := c.Param("id")
 	u := user.CurrentUser(c)
+	if u == nil {
+		c.JSON(http.StatusOK, common.RespSuccess(false))
+		return
+	}
+  
 	starred, err := models.QuertyDashboardStared(c.Request.Context(), u.Id, id)
 	if err != nil {
 		logger.Warn("unstar dashboard", "error", err)
@@ -403,7 +406,13 @@ func GetStarred(c *gin.Context) {
 }
 
 func GetAllStarred(c *gin.Context) {
+	starredList := make([]string, 0)
+
 	u := user.CurrentUser(c)
+	if u == nil {
+		c.JSON(http.StatusOK, common.RespSuccess(starredList))
+		return
+	}
 
 	rows, err := db.Conn.QueryContext(c.Request.Context(), "SELECT dashboard_id FROM star_dashboard WHERE user_id=?", u.Id)
 	if err != nil {
@@ -412,7 +421,7 @@ func GetAllStarred(c *gin.Context) {
 		return
 	}
 	defer rows.Close()
-	starredList := make([]string, 0)
+
 	for rows.Next() {
 		var id string
 		err = rows.Scan(&id)

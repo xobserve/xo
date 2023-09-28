@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from "react";
+import React, { useEffect, useRef } from "react";
 
 //--- import monaco-editor from node-modules instead of cdn ---
 // import * as monaco from 'monaco-editor';
@@ -73,8 +73,9 @@ function installLogQL(monaco) {
   }
 }
 
-function CodeEditor({ value, onChange,onBlur, onMount, language = "typescript", readonly = false, fontSize = 12, options = {}, isSingleLine = false,placeholder=null,bordered=true, height="100%" }: Props) {
+function CodeEditor({ value, onChange, onBlur, onMount, language = "typescript", readonly = false, fontSize = 12, options = {}, isSingleLine = false, placeholder = null, bordered = true, height = "100%" }: Props) {
   const { colorMode } = useColorMode()
+  const containerRef = useRef<HTMLDivElement>(null);
   const handleEditorOnMount = (editor) => {
     // show placeholder when mounted
     let placeholder = document.querySelector(
@@ -84,7 +85,13 @@ function CodeEditor({ value, onChange,onBlur, onMount, language = "typescript", 
     // focus on editor
     // editor.focus();
   };
-
+  
+  useEffect(() => {
+    if (placeholder) {
+      handleEditorOnChange(value)
+    }
+  },[value])
+  
   const handleEditorOnChange = (
     value: string | undefined,
   ) => {
@@ -100,43 +107,60 @@ function CodeEditor({ value, onChange,onBlur, onMount, language = "typescript", 
     }
   };
 
-  return (<Box width="100%" height="100%" className={(isSingleLine && bordered) ? "bordered" : null} pl={isSingleLine ? 2 : 0} onBlur={onBlur} position="relative" sx={{
-    ".monaco-editor, .monaco-editor-background" : {
-      backgroundColor: isSingleLine ? 'transparent' :null
+  return (<Box ref={containerRef} width="100%" height="100%" className={(isSingleLine && bordered) ? "bordered" : null} pl={isSingleLine ? 2 : 0} onBlur={onBlur} position="relative" sx={{
+    ".monaco-editor, .monaco-editor-background": {
+      backgroundColor: isSingleLine ? 'transparent' : null
     }
   }}><MonacoEditor
-    language={language}
-    theme={colorMode === "dark" ? "vs-dark" : "vs-light"}
-    value={value}
-    height={height}
-    options={{
-      minimap: {
-        enabled: false
-      },
-      lineNumbers: "on",
-      automaticLayout: true,
-      lineNumbersMinChars: 4,
-      lineDecorationsWidth: 0,
-      overviewRulerBorder: false,
-      scrollbar: {
-        verticalSliderSize: 5,
-        horizontalSliderSize: 5,
-      },
-      readOnly: readonly,
-      fontSize: fontSize,
-      ...(isSingleLine ? singleLineOptions : {}),
-      ...options
-    }}
-    onChange={e => {
-      placeholder && handleEditorOnChange(e)
-      onChange && onChange(e)
-    }}
-    beforeMount={installLogQL}
-    onMount={(e) => {
-      !value && placeholder && handleEditorOnMount(e)
-      onMount && onMount(e)
-    }}
-  />
+      language={language}
+      theme={colorMode === "dark" ? "vs-dark" : "vs-light"}
+      value={value}
+      height={height}
+      options={{
+        minimap: {
+          enabled: false
+        },
+        lineNumbers: "on",
+        automaticLayout: true,
+        lineNumbersMinChars: 4,
+        lineDecorationsWidth: 0,
+        overviewRulerBorder: false,
+        scrollbar: {
+          verticalSliderSize: 5,
+          horizontalSliderSize: 5,
+        },
+        scrollBeyondLastLine: false,
+        readOnly: readonly,
+        fontSize: fontSize,
+        ...(isSingleLine ? singleLineOptions : {}),
+        ...options
+      }}
+      onChange={e => {
+        placeholder && handleEditorOnChange(e)
+        onChange && onChange(e)
+      }}
+      beforeMount={installLogQL}
+      onMount={(editor, monaco) => {
+        !value && placeholder && handleEditorOnMount(editor)
+        onMount && onMount(editor)
+        
+        if (isSingleLine) {
+          const updateElementHeight = () => {
+            const containerDiv = containerRef.current;
+            if (containerDiv !== null) {
+              const pixelHeight = editor.getContentHeight();
+              containerDiv.style.height = `${pixelHeight + 5}px`;
+              containerDiv.style.width = '100%';
+              const pixelWidth = containerDiv.clientWidth;
+              editor.layout({ width: pixelWidth, height: pixelHeight });
+            }
+          };
+  
+          editor.onDidContentSizeChange(updateElementHeight);
+          updateElementHeight();
+        }
+      }}
+    />
     {placeholder && <div className="monaco-placeholder">{placeholder}</div>}
   </Box>)
 }

@@ -26,7 +26,7 @@ import { prometheusDsMsg } from "src/i18n/locales/en";
 import { useStore } from "@nanostores/react";
 import CodeEditor, { LogqlLang } from "src/components/CodeEditor/CodeEditor";
 import RadionButtons from "src/components/RadioButtons";
-import { MobileBreakpoint } from "src/data/constants";
+import { IsSmallScreen } from "src/data/constants";
 import Loading from "components/loading/Loading";
 
 
@@ -34,14 +34,15 @@ import Loading from "components/loading/Loading";
 const PrometheusQueryEditor = ({ datasource, query, onChange }: DatasourceEditorProps) => {
     const t1 = useStore(prometheusDsMsg)
     const [tempQuery, setTempQuery] = useState<PanelQuery>(cloneDeep(query))
-    const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
+    const [isSmallScreen] = useMediaQuery(IsSmallScreen)
+    const isLargeScreen = !isSmallScreen
     return (
         <Form spacing={1}>
-            <FormItem size="sm" title={<PromMetricSelect  enableInput={false} width={isLargeScreen ? "300px" : "100px"} dsId={datasource.id} value={tempQuery.metrics} onChange={v => {
+            <FormItem size="sm" title={<PromMetricSelect  enableInput={false} width={isLargeScreen ? "300px" : "150px"} dsId={datasource.id} value={tempQuery.metrics} onChange={v => {
                 setTempQuery({ ...tempQuery, metrics: v })
                 onChange({ ...tempQuery, metrics: v })
             }} />} >
-                <Box width="100%">
+                <Box minWidth={isLargeScreen ? "calc(100% - 330px)" : "calc(100% - 180px)"}>
                     <CodeEditor
                         language={LogqlLang}
                         value={tempQuery.metrics}
@@ -51,9 +52,9 @@ const PrometheusQueryEditor = ({ datasource, query, onChange }: DatasourceEditor
                         onBlur={() => {
                             onChange(tempQuery)
                         }}
-                        height="70px"
                         isSingleLine
                         placeholder={t1.enterPromQL}
+                        height="31px"
                     />
                 </Box>
                 {/* <Input

@@ -33,7 +33,7 @@ const TeamsView = memo(({teams, dashboards, query, onItemClick,starredIds }: Pro
     return (
         <>
             {
-                session && keys.map(teamId => <PanelAccordion title={teams.find(t => t.id.toString() == teamId)?.name + ` ( ${dashboards.get(teamId).length} )`}>
+                keys.map(teamId => <PanelAccordion title={teams.find(t => t.id.toString() == teamId)?.name + ` ( ${dashboards.get(teamId).length} )`}>
                     <VStack alignItems="left">
                         {dashboards.get(teamId).map(dash => <DashboardCard dashboard={dash} owner={teams.find(team => team.id == dash.ownedBy)} onClick={onItemClick} query={query} starred={starredIds.has(dash.id)} session={session}/> )}
                     </VStack>

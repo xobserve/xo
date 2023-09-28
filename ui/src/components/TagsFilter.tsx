@@ -45,7 +45,7 @@ const TagsFilter = ({ value, tags, onChange,tagCount={},minWidth="260px" }: Prop
                 allowClear
                 mode="multiple"
                 style={{ width: 'fit-content', minWidth: minWidth}}
-                defaultValue={value}
+                value={value}
                 tagRender={tagRender}
                 onChange={onChange}
             >

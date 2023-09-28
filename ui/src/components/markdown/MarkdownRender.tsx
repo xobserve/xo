@@ -49,7 +49,7 @@ export function MarkdownRender({ md, fontSize,fontWeight="500",enableToc = false
         options={{
           overrides: {
           },
-          slugify: str => str.toLowerCase().replace(/[?\s]/g, "-")
+          slugify: (str:string) => str.replaceAll("`", "").toLowerCase().replace(/[?\s]/g, "-")
         }}
         maxWidth="100%"
       ></ChakraMarkdown>

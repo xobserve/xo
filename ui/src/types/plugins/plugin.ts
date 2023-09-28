@@ -11,6 +11,7 @@ export interface DatasourcePluginComponents {
     datasourceEditor: any // editor in add/edit datasource page
     variableEditor: any // editor in variable editor page
     queryEditor: any // edtidor in panel editor page
+    getDocs: any, //docs showing in panel editor
 
     runQuery: any // run a query to datasource an get result data
     replaceQueryWithVariables: any // replace above query with variables

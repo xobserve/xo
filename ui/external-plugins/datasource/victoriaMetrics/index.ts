@@ -10,12 +10,14 @@ import DemoDatasourceEditor from "./DatasourceEditor";
 import DemoVariableEditor from "./VariableEditor";
 import DemoQueryEditor from "./QueryEditor";
 import { queryAlerts, queryVariableValues, replaceQueryWithVariables, runQuery, testDatasource } from "./query_runner";
+import getDocs from "./docs";
 
 const demoComponents: DatasourcePluginComponents = {
     datasourceEditor: DemoDatasourceEditor,
     variableEditor:DemoVariableEditor,
     queryEditor: DemoQueryEditor,
-    
+    getDocs: getDocs, //docs showing in panel editor
+
     // defined in query_runner.ts
     runQuery: runQuery,
     testDatasource: testDatasource,

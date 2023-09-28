@@ -63,3 +63,23 @@ And the result is:
 Sometimes, dependency data in table format is very useful, for how to change view between NodeGraph and Table panel, please refer to [Conditional rendering](/docs/panel-conditional-rendering).
 
 
+
+## Set node size by passing data
+
+User can control the size of node by passing in data with `size` field in `node`, for example: 
+
+```json
+{
+    "id": "node-1",
+    "label": "Node1",
+    "data": {
+        "success": 100,
+        "error": 10
+    },
+    "size": 100,
+    "show": true,
+    "text": "100}\n10"
+}
+```
+
+The above JSON is getting through HTTP datasource from one of user services, the `size` field is used to control the size of node. If you don't set `size` field, the node size will be set automatically according to `baseSize` and `maxSize` config of `NodeGraph`.

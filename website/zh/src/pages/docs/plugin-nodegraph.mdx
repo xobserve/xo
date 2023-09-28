@@ -67,3 +67,22 @@ import Code  from '@/components/docs/Code'
 有时，表格形式的依赖关系数据非常有用，关于如何在 `NodeGraph` 和 `Table` 之间切换，请参考[条件渲染](/docs/panel-conditional-rendering)。
 
 
+## 传入数据设置节点大小
+
+用户可以通过传入的数据来控制节点的大小，例如： 
+
+```json
+{
+    "id": "node-1",
+    "label": "Node1",
+    "data": {
+        "success": 100,
+        "error": 10
+    },
+    "size": 100,
+    "show": true,
+    "text": "100}\n10"
+}
+```
+
+例如上面的 JSON 是一个 Node 节点的数据，该数据通过 HTTP 数据源从后台获取，其中 `size` 字段的值为 `100`，这个值会被用来控制节点的大小。未设置 `size` 的节点，会根据 `NodeGraph` 的 `baseSize` 和 `maxSize` 配置进行自动设置。
