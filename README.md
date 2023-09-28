@@ -26,7 +26,7 @@
 
 
 
-## About Datav
+## Datav
 
 Datav provides excellent chart features and interactivity, allowing you to correlate traces, metrics, and logs, as well as enabling jumps and drill-downs. This can help engineers quickly pinpointing the root causes of production issues.
 
