@@ -75,14 +75,14 @@ func connectDatabase(tc *sdktrace.TracerProvider) error {
 	if config.Data.Database.ConnectTo == "mysql" {
 		driver, _ := otelsql.Register("mysql",
 			otelsql.TraceQueryWithArgs(),
-			otelsql.AllowRoot(),
+			// otelsql.AllowRoot(),
 			otelsql.WithTracerProvider(tc),
 			otelsql.WithSystem(semconv.DBSystemMySQL),
 			otelsql.WithInstanceName(fmt.Sprintf("%s:%d", config.Data.Database.Host, config.Data.Database.Port)),
 		)
 		d, err = sql.Open(
 			driver,
-			fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?parseTime=true", config.Data.Database.Account, config.Data.Database.AccountSecret, config.Data.Database.Host, config.Data.Database.Port, config.Data.Database.Database),
+			fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?parseTime=true&interpolateParams=true", config.Data.Database.Account, config.Data.Database.AccountSecret, config.Data.Database.Host, config.Data.Database.Port, config.Data.Database.Database),
 		)
 	} else if config.Data.Database.ConnectTo == "sqlite" {
 		var path string

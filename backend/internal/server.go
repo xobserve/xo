@@ -88,7 +88,7 @@ func (s *Server) Start() error {
 		r.Use(gzip.Gzip(gzip.DefaultCompression))
 
 		otelPlugin := otelgin.Middleware(config.Data.Common.AppName)
-		r.Use(otelPlugin)
+		// r.Use(otelPlugin)
 		// global config
 		r.GET("/config/ui", getUIConfig)
 
@@ -101,7 +101,7 @@ func (s *Server) Start() error {
 		r.POST("/account/info", CheckLogin(), user.UpdateUserInfo)
 
 		// teams apis
-		r.GET("/teams/all", teams.GetTeams)
+		r.GET("/teams/all", otelPlugin, teams.GetTeams)
 		r.GET("/team/byId/:id", CheckLogin(), teams.GetTeam)
 		r.GET("/team/byDashId/:id", CheckLogin(), teams.GetTeamByDashId)
 		r.GET("/team/:id/members", CheckLogin(), teams.GetTeamMembers)
@@ -121,7 +121,7 @@ func (s *Server) Start() error {
 
 		// variable apis
 		r.POST("/variable/new", MustLogin(), variables.AddNewVariable)
-		r.GET("/variable/all", api.GetVariables)
+		r.GET("/variable/all", otelPlugin, api.GetVariables)
 		r.POST("/variable/update", MustLogin(), variables.UpdateVariable)
 		r.DELETE("/variable/:id", MustLogin(), variables.DeleteVariable)
 
@@ -137,7 +137,7 @@ func (s *Server) Start() error {
 		r.GET("/dashboard/starred/:id", CheckLogin(), dashboard.GetStarred)
 		r.DELETE("/dashboard/:id", MustLogin(), dashboard.Delete)
 		r.POST("/dashboard/weight", MustLogin(), dashboard.UpdateWeight)
-    
+
 		// annotation
 		r.POST("/annotation", MustLogin(), annotation.SetAnnotation)
 		r.GET("/annotation/:namespace", CheckLogin(), annotation.QueryNamespaceAnnotations)
@@ -145,7 +145,7 @@ func (s *Server) Start() error {
 		r.DELETE("/annotation/group/:namespace/:group/:expires", MustLogin(), annotation.RemoveGroupAnnotations)
 
 		// admin apis
-		r.GET("/admin/users", CheckLogin(), admin.GetUsers)
+		r.GET("/admin/users", CheckLogin(), otelPlugin, admin.GetUsers)
 		r.POST("/admin/user", MustLogin(), admin.UpdateUser)
 		r.POST("/admin/user/password", MustLogin(), admin.UpdateUserPassword)
 		r.POST("/admin/user/new", MustLogin(), admin.AddNewUser)
@@ -154,7 +154,7 @@ func (s *Server) Start() error {
 		r.GET("/admin/auditlogs", CheckLogin(), admin.QueryAuditLogs)
 		// datasource apis
 		r.POST("/datasource/save", MustLogin(), datasource.SaveDatasource)
-		r.GET("/datasource/all", datasource.GetDatasources)
+		r.GET("/datasource/all", otelPlugin, datasource.GetDatasources)
 		r.DELETE("/datasource/:id", MustLogin(), datasource.DeleteDatasource)
 
 		// proxy apis

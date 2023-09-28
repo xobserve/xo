@@ -71,7 +71,7 @@ func initResource() *sdkresource.Resource {
 }
 
 func initTracerProvider() *sdktrace.TracerProvider {
-	exp, err := newExporter(config.Data.Server.OtlpExportor)
+	exp, err := newExporter(config.Data.SelfMonitoring.OtlpExportor)
 	if err != nil {
 		logger.Crit("Error new exporter", "error", err)
 	}
@@ -104,8 +104,8 @@ func newExporter(exporterType string) (sdktrace.SpanExporter, error) {
 		var opts []otlptracehttp.Option = []otlptracehttp.Option{
 			otlptracehttp.WithInsecure(),
 		}
-		if config.Data.Server.OtlpEndpoint != "" {
-			opts = append(opts, otlptracehttp.WithEndpoint(config.Data.Server.OtlpEndpoint))
+		if config.Data.SelfMonitoring.OtlpEndpoint != "" {
+			opts = append(opts, otlptracehttp.WithEndpoint(config.Data.SelfMonitoring.OtlpEndpoint))
 		}
 		exporter, err = otlptrace.New(
 			context.Background(),

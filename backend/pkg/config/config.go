@@ -50,8 +50,6 @@ type Config struct {
 		ListeningAddr              string `yaml:"listening_addr"`
 		OverrideApiServerAddrForUI string `yaml:"override_api_server_addr_for_ui"`
 		UiStaticPath               string `yaml:"ui_static_path"`
-		OtlpExportor               string `yaml:"otlp_exportor"`
-		OtlpEndpoint               string `yaml:"otlp_endpoint"`
 	}
 
 	Dashboard struct {
@@ -93,7 +91,9 @@ type Config struct {
 	}
 
 	SelfMonitoring struct {
-		MockErrorLogs bool `yaml:"mock_error_logs"`
+		MockErrorLogs bool   `yaml:"mock_error_logs"`
+		OtlpExportor  string `yaml:"otlp_exportor"`
+		OtlpEndpoint  string `yaml:"otlp_endpoint"`
 	}
 	Plugins struct {
 		DisablePanels      []string `yaml:"disable_panels"`
