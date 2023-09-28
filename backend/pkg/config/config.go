@@ -43,6 +43,7 @@ type Config struct {
 		EnableGithubLogin bool   `yaml:"enable_github_login"`
 		GithubOAuthToken  string `yaml:"github_oauth_token"`
 		GithubOAuthSecret string `yaml:"github_oauth_secret"`
+		AllowAnonymous    bool   `yaml:"allow_anonymous"`
 	}
 
 	Server struct {

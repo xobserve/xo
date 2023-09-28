@@ -32,6 +32,7 @@ import { OnDashboardWeightChangeEvent } from "src/data/bus-events"
 import { MobileBreakpoint } from "src/data/constants"
 import Loading from "src/components/loading/Loading"
 import { $teams } from "../team/store"
+import { last } from "lodash"
 
 interface Props {
     title: string
@@ -84,6 +85,7 @@ const Search = memo((props: Props) => {
             
             const visibleTeams = $teams.get()
             const dashboards: Dashboard[] = res[0].data.filter((dash: Dashboard) => dash.visibleTo == "all" ||  visibleTeams.find(team => team.id == dash.ownedBy))
+   
             setRawDashboards(dashboards)
             const starred = new Set<string>()
             for (const id of res[1].data) {
@@ -116,6 +118,11 @@ const Search = memo((props: Props) => {
         }
         const tags = new Set()
         for (const dash of rawDashboards) {
+            if (isEmpty(dash.tags)) {
+                tags.add("untagged")
+                continue
+            }
+
             for (const tag of (dash.tags ?? [])) {
                 tags.add(tag)
             }
@@ -143,6 +150,11 @@ const Search = memo((props: Props) => {
             const title = caseSensitive ? dash.title : dash.title.toLowerCase()
             const q = caseSensitive ? query : query?.toLowerCase()
             if (isEmpty(q) || (id.includes(q) || title.includes(q))) {
+                if (selectedTags.includes("untagged") && isEmpty(dash.tags)) {
+                    result.push(dash)
+                    continue
+                }
+
                 if (selectedTags.length > 0) {
                     let matched = true
                     if (selectedTags.some(tag => !dash.tags?.includes(tag))) {
@@ -168,7 +180,11 @@ const Search = memo((props: Props) => {
 
         for (const dash of result) {
             teamCount[dash.ownedBy] = (teamCount[dash.ownedBy] ?? 0) + 1
-            for (const t of (dash.tags ?? [])) {
+            if (isEmpty(dash.tags)) {
+                tagCount["untagged"] = (tagCount["untagged"] ?? 0) + 1
+                continue
+            } 
+            for (const t of dash.tags) {
                 tagCount[t] = (tagCount[t] ?? 0) + 1
             }
         }
@@ -197,6 +213,15 @@ const Search = memo((props: Props) => {
 
         const result = new Map<string, Dashboard[]>()
         for (const dash of dashboards1) {
+            if (isEmpty(dash.tags)) {
+                if (!result.has("untagged")) {
+                    result.set("untagged", [])
+                }
+
+                result.get("untagged").push(dash)
+                continue
+            }
+
             for (const tag of dash.tags ?? []) {
                 if (!result.has(tag)) {
                     result.set(tag, [])
@@ -275,7 +300,16 @@ const Search = memo((props: Props) => {
                                         {filterStarred ? <AiFillStar /> : <AiOutlineStar />}
                                     </Box>
 
-                                    <TagsFilter value={selectedTags} tags={tags} onChange={setSelectedTags} tagCount={tagCount} minWidth={isLargeScreen ? "260px" : "48%" }/>
+                                    <TagsFilter value={selectedTags} tags={tags} onChange={(v:string[]) => {
+                                        if (last(v) == "untagged") {
+                                            setSelectedTags(["untagged"])
+                                        } else if (v.includes("untagged")) {
+                                            setSelectedTags(v.filter(t => t != "untagged"))
+                                        }
+                                        else {
+                                            setSelectedTags(v)
+                                        }
+                                    }} tagCount={tagCount} minWidth={isLargeScreen ? "260px" : "48%" }/>
                                     {teams && <TeamsFilter value={selectedTeams} teams={teams} onChange={setSelectedTeams} teamCount={teamCount} minWidth={isLargeScreen ? "260px" : "48%"}/>}
                                 </Flex>
                             </Flex>
@@ -287,7 +321,7 @@ const Search = memo((props: Props) => {
                                     layout == "teams" && <TeamsView teams={teams} dashboards={dashboards as Map<string, Dashboard[]>} onItemClick={onClose} query={query} starredIds={starredDashIds} />
                                 }
                                 {
-                                    layout == "tags" && <TagsView teams={teams} dashboards={dashboards as Map<string, Dashboard[]>} onItemClick={onClose} query={query} starredIds={starredDashIds} />
+                                    layout == "tags" && <TagsView selectedTags={selectedTags} teams={teams} dashboards={dashboards as Map<string, Dashboard[]>} onItemClick={onClose} query={query} starredIds={starredDashIds} />
                                 }
                             </VStack> : <Loading />}
                             {!isLargeScreen && <Button mt="2" onClick={onClose}>Close</Button>}  

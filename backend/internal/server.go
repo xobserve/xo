@@ -96,64 +96,64 @@ func (s *Server) Start() error {
 		r.POST("/login/github", user.LoginGithub)
 		r.POST("/logout", user.Logout)
 		r.GET("/user/session", user.GetSession)
-		r.POST("/account/password", IsLogin(), user.UpdateUserPassword)
-		r.POST("/account/info", IsLogin(), user.UpdateUserInfo)
+		r.POST("/account/password", CheckLogin(), user.UpdateUserPassword)
+		r.POST("/account/info", CheckLogin(), user.UpdateUserInfo)
 
 		// teams apis
 		r.GET("/teams/all", teams.GetTeams)
-		r.GET("/team/byId/:id", IsLogin(), teams.GetTeam)
-		r.GET("/team/byDashId/:id", IsLogin(), teams.GetTeamByDashId)
-		r.GET("/team/:id/members", IsLogin(), teams.GetTeamMembers)
-		r.POST("/team/member", IsLogin(), teams.UpdateTeamMember)
-		r.POST("/team/add/member", IsLogin(), teams.AddTeamMembers)
-		r.DELETE("/team/member/:teamId/:memberId", IsLogin(), teams.DeleteTeamMember)
-		r.POST("/team/update", IsLogin(), teams.UpdateTeam)
-		r.POST("/team/new", IsLogin(), admin.AddNewTeam)
-		r.DELETE("/team/:id", IsLogin(), teams.DeleteTeam)
-		r.DELETE("/team/leave/:id", IsLogin(), teams.LeaveTeam)
+		r.GET("/team/byId/:id", CheckLogin(), teams.GetTeam)
+		r.GET("/team/byDashId/:id", CheckLogin(), teams.GetTeamByDashId)
+		r.GET("/team/:id/members", CheckLogin(), teams.GetTeamMembers)
+		r.POST("/team/member", MustLogin(), teams.UpdateTeamMember)
+		r.POST("/team/add/member", MustLogin(), teams.AddTeamMembers)
+		r.DELETE("/team/member/:teamId/:memberId", MustLogin(), teams.DeleteTeamMember)
+		r.POST("/team/update", MustLogin(), teams.UpdateTeam)
+		r.POST("/team/new", MustLogin(), admin.AddNewTeam)
+		r.DELETE("/team/:id", MustLogin(), teams.DeleteTeam)
+		r.DELETE("/team/leave/:id", MustLogin(), teams.LeaveTeam)
 		r.GET("/team/sidemenu/:id", teams.GetSideMenu)
-		r.POST("/team/sidemenu", IsLogin(), teams.UpdateSideMenu)
-		r.GET("/team/sidemenus/forUser", IsLogin(), teams.GetAvailableSidMenusForUser)
-		r.POST("/team/sidemenu/select/:teamId", IsLogin(), teams.SelectSideMenuForUser)
-		r.GET("/team/sidemenu/current", IsLogin(), teams.GetCurrentSidemenu)
-		r.POST("/team/allowGlobal", IsLogin(), teams.UpdateAllowGlobal)
+		r.POST("/team/sidemenu", MustLogin(), teams.UpdateSideMenu)
+		r.GET("/team/sidemenus/forUser", CheckLogin(), teams.GetAvailableSidMenusForUser)
+		r.POST("/team/sidemenu/select/:teamId", MustLogin(), teams.SelectSideMenuForUser)
+		r.GET("/team/sidemenu/current", CheckLogin(), teams.GetCurrentSidemenu)
+		r.POST("/team/allowGlobal", MustLogin(), teams.UpdateAllowGlobal)
 
 		// variable apis
-		r.POST("/variable/new", IsLogin(), variables.AddNewVariable)
+		r.POST("/variable/new", MustLogin(), variables.AddNewVariable)
 		r.GET("/variable/all", api.GetVariables)
-		r.POST("/variable/update", IsLogin(), variables.UpdateVariable)
-		r.DELETE("/variable/:id", IsLogin(), variables.DeleteVariable)
+		r.POST("/variable/update", MustLogin(), variables.UpdateVariable)
+		r.DELETE("/variable/:id", MustLogin(), variables.DeleteVariable)
 
 		// dashboard apis
-		r.GET("/dashboard/byId/:id", IsLogin(), otelPlugin, dashboard.GetDashboard)
-		r.POST("/dashboard/save", IsLogin(), otelPlugin, dashboard.SaveDashboard)
-		r.GET("/dashboard/team/:id", IsLogin(), dashboard.GetTeamDashboards)
-		r.GET("/dashboard/history/:id", IsLogin(), otelPlugin, dashboard.GetHistory)
-		r.GET("/dashboard/simpleList", IsLogin(), otelPlugin, dashboard.GetSimpleList)
-		r.POST("/dashboard/star/:id", IsLogin(), dashboard.Star)
-		r.POST("/dashboard/unstar/:id", IsLogin(), dashboard.UnStar)
-		r.GET("/dashboard/starred", IsLogin(), dashboard.GetAllStarred)
-		r.GET("/dashboard/starred/:id", IsLogin(), dashboard.GetStarred)
-		r.DELETE("/dashboard/:id", IsLogin(), dashboard.Delete)
-		r.POST("/dashboard/weight", IsLogin(), dashboard.UpdateWeight)
+		r.GET("/dashboard/byId/:id", CheckLogin(), otelPlugin, dashboard.GetDashboard)
+		r.POST("/dashboard/save", MustLogin(), otelPlugin, dashboard.SaveDashboard)
+		r.GET("/dashboard/team/:id", CheckLogin(), dashboard.GetTeamDashboards)
+		r.GET("/dashboard/history/:id", CheckLogin(), otelPlugin, dashboard.GetHistory)
+		r.GET("/dashboard/simpleList", CheckLogin(), otelPlugin, dashboard.GetSimpleList)
+		r.POST("/dashboard/star/:id", MustLogin(), dashboard.Star)
+		r.POST("/dashboard/unstar/:id", MustLogin(), dashboard.UnStar)
+		r.GET("/dashboard/starred", CheckLogin(), dashboard.GetAllStarred)
+		r.GET("/dashboard/starred/:id", CheckLogin(), dashboard.GetStarred)
+		r.DELETE("/dashboard/:id", MustLogin(), dashboard.Delete)
+		r.POST("/dashboard/weight", MustLogin(), dashboard.UpdateWeight)
 		// annotation
-		r.POST("/annotation", IsLogin(), annotation.SetAnnotation)
-		r.GET("/annotation/:namespace", IsLogin(), annotation.QueryNamespaceAnnotations)
-		r.DELETE("/annotation/:namespace/:id", IsLogin(), annotation.RemoveAnnotation)
-		r.DELETE("/annotation/group/:namespace/:group/:expires", IsLogin(), annotation.RemoveGroupAnnotations)
+		r.POST("/annotation", MustLogin(), annotation.SetAnnotation)
+		r.GET("/annotation/:namespace", CheckLogin(), annotation.QueryNamespaceAnnotations)
+		r.DELETE("/annotation/:namespace/:id", MustLogin(), annotation.RemoveAnnotation)
+		r.DELETE("/annotation/group/:namespace/:group/:expires", MustLogin(), annotation.RemoveGroupAnnotations)
 
 		// admin apis
-		r.GET("/admin/users", IsLogin(), admin.GetUsers)
-		r.POST("/admin/user", IsLogin(), admin.UpdateUser)
-		r.POST("/admin/user/password", IsLogin(), admin.UpdateUserPassword)
-		r.POST("/admin/user/new", IsLogin(), admin.AddNewUser)
-		r.POST("/admin/user/role", IsLogin(), admin.UpdateUserRole)
-		r.DELETE("/admin/user/:id", IsLogin(), admin.DeleteUser)
-		r.GET("/admin/auditlogs", IsLogin(), admin.QueryAuditLogs)
+		r.GET("/admin/users", CheckLogin(), admin.GetUsers)
+		r.POST("/admin/user", MustLogin(), admin.UpdateUser)
+		r.POST("/admin/user/password", MustLogin(), admin.UpdateUserPassword)
+		r.POST("/admin/user/new", MustLogin(), admin.AddNewUser)
+		r.POST("/admin/user/role", MustLogin(), admin.UpdateUserRole)
+		r.DELETE("/admin/user/:id", MustLogin(), admin.DeleteUser)
+		r.GET("/admin/auditlogs", CheckLogin(), admin.QueryAuditLogs)
 		// datasource apis
-		r.POST("/datasource/save", IsLogin(), datasource.SaveDatasource)
+		r.POST("/datasource/save", MustLogin(), datasource.SaveDatasource)
 		r.GET("/datasource/all", datasource.GetDatasources)
-		r.DELETE("/datasource/:id", IsLogin(), datasource.DeleteDatasource)
+		r.DELETE("/datasource/:id", MustLogin(), datasource.DeleteDatasource)
 
 		// proxy apis
 		r.Any("/proxy/:id/*path", proxy.ProxyDatasource)
@@ -244,12 +244,18 @@ func Cors() gin.HandlerFunc {
 	}
 }
 
-// 判断用户是否登录
-func IsLogin() gin.HandlerFunc {
+// APIs can be accessed by anonymous users when the configuration is set
+// When disabled, unauthorized users will be rediret to login page
+func CheckLogin() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		if config.Data.User.AllowAnonymous {
+			c.Next()
+			return
+		}
+
 		logined := user.IsLogin(c)
 		if !logined {
-			c.JSON(http.StatusNotAcceptable, common.RespError(e.NoPermission))
+			c.JSON(http.StatusUnauthorized, common.RespError(e.NoPermission))
 			c.Abort()
 			return
 		}
@@ -257,12 +263,12 @@ func IsLogin() gin.HandlerFunc {
 	}
 }
 
-// 要求用户必须登录才能继续操作
-func NeedLogin() gin.HandlerFunc {
+// APIS cannot be accessed by anonymous users, give user a not-login tips
+func MustLogin() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		logined := user.IsLogin(c)
 		if !logined {
-			c.JSON(http.StatusUnauthorized, common.RespError(e.NeedLogin))
+			c.JSON(http.StatusForbidden, common.RespError(e.NoPermission))
 			c.Abort()
 			return
 		}

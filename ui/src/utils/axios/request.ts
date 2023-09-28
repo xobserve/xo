@@ -92,7 +92,7 @@ requestApi.interceptors.response.use(
       }
 
       // request to our api server
-      if (status == 406) {
+      if (status == 401) {
         // session expires
         const id = "Session expires, redirect to login page.."
         if (!toast.isActive(id)) {

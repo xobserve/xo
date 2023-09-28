@@ -30,7 +30,7 @@ const ListView = memo(({teams, dashboards, query, onItemClick,starredIds }: Prop
     return (
         <>
             {
-                session && dashboards.map(dash => <DashboardCard dashboard={dash} owner={teams.find(team => team.id == dash.ownedBy)} onClick={onItemClick} query={query} starred={starredIds.has(dash.id)} session={session}/> )
+                dashboards.map(dash => <DashboardCard dashboard={dash} owner={teams.find(team => team.id == dash.ownedBy)} onClick={onItemClick} query={query} starred={starredIds.has(dash.id)} session={session}/> )
             }
         </>
     )

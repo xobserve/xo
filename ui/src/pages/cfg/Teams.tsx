@@ -25,23 +25,17 @@ import { requestApi } from "utils/axios/request"
 import { useNavigate } from "react-router-dom"
 import { commonMsg } from "src/i18n/locales/en"
 import { useStore } from "@nanostores/react"
+import { $teams } from "src/views/team/store"
 
 const TeamsPage = () => {
     const t = useStore(commonMsg)
     const { session } = useSession()
     const toast = useToast()
     const navigate = useNavigate()
-    const [teams, setTeams] = useState<Team[]>(null)
     const [teamName, setTeamName] = useState<string>("")
     const [teamDesc, setTeamDesc] = useState<string>("")
-    useEffect(() => {
-        load()
-    }, [])
+    const teams = useStore($teams)
 
-    const load = async () => {
-        const res = await requestApi.get("/teams/all")
-        setTeams(res.data)
-    }
 
     const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -56,7 +50,7 @@ const TeamsPage = () => {
         })
 
         teams.unshift(res.data)
-        setTeams([...teams])
+        $teams.set([...teams])
     }
 
     return <>
@@ -73,6 +67,7 @@ const TeamsPage = () => {
                             <Th>{t.itemName({name: t.team})}</Th>
                             <Th>{t.yourRole}</Th>
                             <Th>{t.members}</Th>
+                            <Th>{t.public}</Th>
                             <Th>{t.createdBy}</Th>
                             <Th>{t.action}</Th>
                         </Tr>
@@ -84,6 +79,7 @@ const TeamsPage = () => {
                                 <Td>{team.name}</Td>
                                 <Td>{t[team.role] }</Td>
                                 <Td>{team.memberCount}</Td>
+                                <Td>{team.isPublic ? "true" : "false"}</Td>
                                 <Td>{team.createdBy} {session?.user?.id == team.createdById && <Tag>You</Tag>}</Td>
                                 <Td><Button variant="ghost" size="sm" px="0" onClick={() => navigate(`${ReserveUrls.Config}/team/${team.id}/members`)}>{t.manage}</Button></Td>
                             </Tr>

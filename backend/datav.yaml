@@ -38,6 +38,8 @@ user:
     # Apply at https://github.com/settings/developers
     github_oauth_token: 
     github_oauth_secret: 
+    # When enabled, guests can view public dashboards without log-in
+    allow_anonymous: false
 
 #################################### Paths ##############################
 # Path to where im.dev can store temp files, sessions, and the sqlite3 db (if that is used)

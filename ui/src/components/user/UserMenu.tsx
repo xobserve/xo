@@ -70,60 +70,60 @@ const UserMenu = ({ fontSize = "1.1rem", miniMode }) => {
     const isActive = window.location.pathname.startsWith('/account/')
     return (
         <>
-            {session ?
-                <Menu placement="right">
-                    {
-                        miniMode ?
-                            <MenuButton as={IconButton} size="md"
-                                fontSize={fontSize}
-                                aria-label=""
-                                variant="ghost"
-                                color={isActive ? useColorModeValue("brand.500", "brand.200") : "current"}
-                                _focus={{ border: null }}
-                                className="hover-text"
-                                icon={<FaUserAlt />}>
-                            </MenuButton>
-                            :
-                            <MenuButton className="hover-text">
-                                <HStack >
-                                    <FaUserAlt />
-                                    <Text fontSize={fontSize}>{t1.accountSetting}</Text>
-                                </HStack>
-                            </MenuButton>
-                    }
-                    <Portal>
-                        <MenuList zIndex={1000}>
-                            <Link to={`/account/setting`}><MenuItem icon={<FaUserAlt fontSize="1rem" />} >
-                                <Text>{session.user.name}</Text>
-                                <Text textStyle="annotation">{session.user.username}</Text>
-                            </MenuItem></Link>
-                            <MenuDivider />
-                            {isAdmin(session.user.role) && <><Link to={`/admin/users`}><MenuItem width="100%" icon={<FaStar fontSize="1rem" />} >{t1.adminPanel}</MenuItem></Link><MenuDivider /></>}
-                            <MenuItem width="100%"><Box width="100%"><ColorModeSwitcher miniMode={false} /></Box></MenuItem>
-                            <MenuItem width="100%" onClick={() => changeLang()} icon={<FaFont fontSize="1rem" />}>{t1.currentLang} - {locale.get() == "en" ? "English" : "简体中文"}</MenuItem>
+
+            <Menu placement="right">
+                {
+                    miniMode ?
+                        <MenuButton as={IconButton} size="md"
+                            fontSize={fontSize}
+                            aria-label=""
+                            variant="ghost"
+                            color={isActive ? useColorModeValue("brand.500", "brand.200") : "current"}
+                            _focus={{ border: null }}
+                            className="hover-text"
+                            icon={<FaUserAlt />}>
+                        </MenuButton>
+                        :
+                        <MenuButton className="hover-text">
+                            <HStack >
+                                <FaUserAlt />
+                                <Text fontSize={fontSize}>{t1.accountSetting}</Text>
+                            </HStack>
+                        </MenuButton>
+                }
+                <Portal>
+                    <MenuList zIndex={1000}>
+                        <Link to={session ? `/account/setting` : null}><MenuItem py="2px" cursor="default" bg="transparent" _hover={{bg: "transparent"}}  icon={<FaUserAlt fontSize="1rem" />} >
+                            <Text>{session?.user.name ?? "Datav guest"}</Text>
+                            {session && <Text textStyle="annotation">{session.user.username}</Text>}
+                        </MenuItem></Link>
+                        <MenuDivider />
+                        {session && isAdmin(session.user.role) && <><Link to={`/admin/users`}><MenuItem width="100%" icon={<FaStar fontSize="1rem" />} >{t1.adminPanel}</MenuItem></Link><MenuDivider /></>}
+                        <MenuItem width="100%"><Box width="100%"><ColorModeSwitcher miniMode={false} /></Box></MenuItem>
+                        <MenuItem width="100%" onClick={() => changeLang()} icon={<FaFont fontSize="1rem" />}>{t1.currentLang} - {locale.get() == "en" ? "English" : "简体中文"}</MenuItem>
+                        {session && <>
                             <MenuItem mt="2px" width="100%">    <UserSidemenus miniMode={false} /></MenuItem>
                             <MenuDivider />
-                            <Link to={`/account/setting`}><MenuItem  width="100%" icon={<FaRegSun fontSize="1rem" />}>{t1.accountSetting}</MenuItem></Link>
+                            <Link to={`/account/setting`}><MenuItem width="100%" icon={<FaRegSun fontSize="1rem" />}>{t1.accountSetting}</MenuItem></Link>
                             <MenuItem width="100%" onClick={() => logout()} icon={<FaSignOutAlt fontSize="1rem" />}>{t.logout}</MenuItem>
-                        </MenuList>
-                    </Portal>
-                </Menu> :
-                (miniMode ? <IconButton
-                    size="md"
-                    fontSize={fontSize}
-                    aria-label=""
-                    variant="ghost"
-                    color={isActive ? useColorModeValue("brand.500", "brand.200") : "current"}
-                    _focus={{ border: null }}
-                    onClick={() => login()}
-                    icon={<FaSignInAlt />}
-                /> :
-                    <HStack cursor="pointer" onClick={() => login()}>
-                        <FaSignInAlt fontSize="1.1rem" />
-                        <Text fontSize="0.95rem">{t.login}</Text>
-                    </HStack>)
-
-            }
+                        </>}
+                    </MenuList>
+                </Portal>
+            </Menu>
+            {!session && (miniMode ? <IconButton
+                size="md"
+                fontSize={fontSize}
+                aria-label=""
+                variant="outline"
+                color={useColorModeValue("brand.500", "brand.200")}
+                _focus={{ border: null }}
+                onClick={() => login()}
+                icon={<FaSignInAlt />}
+            /> :
+                <HStack cursor="pointer" onClick={() => login()}>
+                    <FaSignInAlt fontSize="1.1rem" />
+                    <Text fontSize="0.95rem">{t.login}</Text>
+                </HStack>)}
         </>
     )
 }
