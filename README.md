@@ -28,12 +28,11 @@
 
 ## About Datav
 
-Datav is a modern data visualization platform, built in 2023, that enables deep visualization and interactivity of Metrics, Traces, and Logs data.
+Datav provides excellent chart features and interactivity, allowing you to correlate traces, metrics, and logs, as well as enabling jumps and drill-downs. This can help engineers quickly pinpointing the root causes of production issues.
+
+Comparing to other general-purpose data visualization platforms datav is mainly focus on Observability and APM. It offers a extremely wide range of features that empower you to create your custom Observability UI.
 
 **You can build any Observability and APM ( Application Performance Management ) UI you want based on Datav, if you cannot, please file an issue and we will support it as soon as possible.**
-
-Unlike other general-purpose data visualization platforms, Datav is mainly focus on Observability and APM, and it has many cool features for you to build your own Observablity UI.
-
 
 ## Quick start & Documentation
 
@@ -41,7 +40,7 @@ The documentation is available at [datav.io/docs](https://datav.io/docs).
 
 You can also try online demo at [play.datav.io](https://play.datav.io).
 
-## Some features
+## Features
 
 Grafana is a great product and the most popular dashboarding tool in the world, and Datav has borrowed many of its features, besides these, Datav has its own advantages:
 
