@@ -13,6 +13,7 @@
 package models
 
 import (
+	"context"
 	"encoding/json"
 	"time"
 
@@ -45,12 +46,12 @@ type Dashboard struct {
 	Variables  []*Variable `json:"variables,omitempty"`
 }
 
-func QueryDashboard(id string) (*Dashboard, error) {
+func QueryDashboard(ctx context.Context, id string) (*Dashboard, error) {
 	dash := &Dashboard{}
 
 	var rawJSON []byte
 	var rawTags []byte
-	err := db.Conn.QueryRow("SELECT title,tags,data,owned_by,visible_to,weight,updated FROM dashboard WHERE id = ?", id).Scan(&dash.Title, &rawTags, &rawJSON, &dash.OwnedBy, &dash.VisibleTo, &dash.SortWeight, &dash.Updated)
+	err := db.Conn.QueryRowContext(ctx, "SELECT title,tags,data,owned_by,visible_to,weight,updated FROM dashboard WHERE id = ?", id).Scan(&dash.Title, &rawTags, &rawJSON, &dash.OwnedBy, &dash.VisibleTo, &dash.SortWeight, &dash.Updated)
 	if err != nil {
 		return nil, err
 	}
@@ -73,9 +74,9 @@ func QueryDashboard(id string) (*Dashboard, error) {
 	return dash, nil
 }
 
-func QuertyDashboardStared(uid int64, dashId string) (bool, error) {
+func QuertyDashboardStared(ctx context.Context, uid int64, dashId string) (bool, error) {
 	var count int
-	err := db.Conn.QueryRow("SELECT count(1) FROM star_dashboard WHERE user_id=? and dashboard_id=?", uid, dashId).Scan(&count)
+	err := db.Conn.QueryRowContext(ctx, "SELECT count(1) FROM star_dashboard WHERE user_id=? and dashboard_id=?", uid, dashId).Scan(&count)
 	if err != nil {
 		return false, err
 	}
@@ -83,9 +84,9 @@ func QuertyDashboardStared(uid int64, dashId string) (bool, error) {
 	return count > 0, nil
 }
 
-func QueryDashboardsByTeamId(teamId int64) ([]*Dashboard, error) {
+func QueryDashboardsByTeamId(ctx context.Context, teamId int64) ([]*Dashboard, error) {
 	dashboards := make([]*Dashboard, 0)
-	rows, err := db.Conn.Query(`SELECT id FROM dashboard WHERE owned_by=?`, teamId)
+	rows, err := db.Conn.QueryContext(ctx, `SELECT id FROM dashboard WHERE owned_by=?`, teamId)
 	if err != nil {
 		return nil, err
 	}
@@ -103,9 +104,9 @@ func QueryDashboardsByTeamId(teamId int64) ([]*Dashboard, error) {
 	return dashboards, nil
 }
 
-func QueryDashboardBelongsTo(id string) (int64, error) {
+func QueryDashboardBelongsTo(ctx context.Context, id string) (int64, error) {
 	var teamId int64
-	err := db.Conn.QueryRow("SELECT owned_by FROM dashboard WHERE id = ?", id).Scan(&teamId)
+	err := db.Conn.QueryRowContext(ctx, "SELECT owned_by FROM dashboard WHERE id = ?", id).Scan(&teamId)
 	if err != nil {
 		return 0, err
 	}

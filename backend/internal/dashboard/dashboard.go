@@ -62,7 +62,7 @@ func SaveDashboard(c *gin.Context) {
 		dash.Created = &now
 
 		if !u.Role.IsAdmin() {
-			isTeamAdmin, err := models.IsTeamAdmin(dash.OwnedBy, u.Id)
+			isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), dash.OwnedBy, u.Id)
 			if err != nil {
 				logger.Error("check team admin error", "error", err)
 				c.JSON(500, common.RespInternalError())
@@ -74,7 +74,7 @@ func SaveDashboard(c *gin.Context) {
 			}
 		}
 	} else {
-		belongs, err := models.QueryDashboardBelongsTo(dash.Id)
+		belongs, err := models.QueryDashboardBelongsTo(c.Request.Context(), dash.Id)
 		if err != nil {
 			logger.Error("query dashboarde owner error", "error", err)
 			c.JSON(500, common.RespInternalError())
@@ -82,7 +82,7 @@ func SaveDashboard(c *gin.Context) {
 		}
 
 		if !u.Role.IsAdmin() {
-			isTeamAdmin, err := models.IsTeamAdmin(belongs, u.Id)
+			isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), belongs, u.Id)
 			if err != nil {
 				logger.Error("check team admin error", "error", err)
 				c.JSON(500, common.RespInternalError())
@@ -111,7 +111,7 @@ func SaveDashboard(c *gin.Context) {
 		return
 	}
 	if !isUpdate {
-		_, err := db.Conn.Exec(`INSERT INTO dashboard (id,title, owned_by,visible_to, created_by,tags, data,created,updated) VALUES (?,?,?,?,?,?,?,?,?)`,
+		_, err := db.Conn.ExecContext(c.Request.Context(), `INSERT INTO dashboard (id,title, owned_by,visible_to, created_by,tags, data,created,updated) VALUES (?,?,?,?,?,?,?,?,?)`,
 			dash.Id, dash.Title, dash.OwnedBy, dash.VisibleTo, dash.CreatedBy, tags, jsonData, dash.Created, dash.Updated)
 		if err != nil {
 			if e.IsErrUniqueConstraint(err) {
@@ -123,7 +123,7 @@ func SaveDashboard(c *gin.Context) {
 			return
 		}
 	} else {
-		res, err := db.Conn.Exec(`UPDATE dashboard SET title=?,tags=?,data=?,owned_by=?,visible_to=?,updated=? WHERE id=?`,
+		res, err := db.Conn.ExecContext(c.Request.Context(), `UPDATE dashboard SET title=?,tags=?,data=?,owned_by=?,visible_to=?,updated=? WHERE id=?`,
 			dash.Title, tags, jsonData, dash.OwnedBy, dash.VisibleTo, dash.Updated, dash.Id)
 		if err != nil {
 			logger.Error("update dashboard error", "error", err)
@@ -146,20 +146,13 @@ func GetDashboard(c *gin.Context) {
 	id := c.Param("id")
 	u := user.CurrentUser(c)
 	traceCtx := c.Request.Context()
-	_, span := ot.Tracer.Start(traceCtx, "getDashboard", trace.WithSpanKind(trace.SpanKindClient))
-	span.SetAttributes(
-		semconv.PeerServiceKey.String("mysql"),
-		attribute.
-			Key("sql.query").
-			String(fmt.Sprintf("SELECT * FROM dashboard WHERE id=%s", id)),
-	)
 
 	// log.WithTrace(traceCtx).Info("Start to get dashboard", zap.String("id", id), zap.String("username", u.Username))
 
-	dash, err := models.QueryDashboard(id)
+	dash, err := models.QueryDashboard(c.Request.Context(), id)
 	if err != nil {
-		span.SetStatus(codes.Error, err.Error())
-		span.End()
+		// span.SetStatus(codes.Error, err.Error())
+		// span.End()
 		if err == sql.ErrNoRows {
 			log.WithTrace(traceCtx).Warn("Error query dashbaord", zap.String("username", u.Username), zap.Error(err))
 			c.JSON(404, common.RespError(fmt.Sprintf("dashboard id `%s` not found", id)))
@@ -180,10 +173,10 @@ func GetDashboard(c *gin.Context) {
 
 	}
 
-	span.End()
+	// span.End()
 
 	_, span2 := ot.Tracer.Start(traceCtx, "checkTeamPublic", trace.WithSpanKind(trace.SpanKindClient))
-	isTeamPublic, err := models.IsTeamPublic(dash.OwnedBy)
+	isTeamPublic, err := models.IsTeamPublic(c.Request.Context(), dash.OwnedBy)
 	if err != nil {
 		span2.SetStatus(codes.Error, err.Error())
 		span2.End()
@@ -195,7 +188,7 @@ func GetDashboard(c *gin.Context) {
 
 	if !isTeamPublic && dash.VisibleTo != "all" && !u.Role.IsAdmin() {
 		_, span0 := ot.Tracer.Start(traceCtx, "checkUserPrivilege", trace.WithSpanKind(trace.SpanKindClient))
-		member, err := models.QueryTeamMember(dash.OwnedBy, u.Id)
+		member, err := models.QueryTeamMember(c.Request.Context(), dash.OwnedBy, u.Id)
 		if err != nil {
 			log.WithTrace(traceCtx).Warn("Error query team member", zap.String("username", u.Username), zap.Error(err))
 			c.JSON(500, common.RespError(e.Internal))
@@ -221,7 +214,7 @@ func GetDashboard(c *gin.Context) {
 			Key("sql.query").
 			String(fmt.Sprintf("SELECT name FROM team WHERE id=%d", dash.OwnedBy)),
 	)
-	teamName, _ := models.QueryTeamNameById(dash.OwnedBy)
+	teamName, _ := models.QueryTeamNameById(c.Request.Context(), dash.OwnedBy)
 	if teamName == "" {
 		teamName = "not_found"
 	}
@@ -248,7 +241,7 @@ func DeleteDashboard(c *gin.Context) {
 	}
 
 	// delete dashboard
-	_, err := db.Conn.Exec("DELETE FROM dashboard WHERE id=?", id)
+	_, err := db.Conn.ExecContext(c.Request.Context(), "DELETE FROM dashboard WHERE id=?", id)
 	if err != nil {
 		logger.Warn("delete dashboard error", "error", err)
 		c.JSON(500, common.RespError(e.Internal))
@@ -268,13 +261,13 @@ func UpdateOwnedBy(c *gin.Context) {
 	}
 
 	// check if the new owner is a valid team
-	if !models.IsTeamExist(dash.OwnedBy, "") {
+	if !models.IsTeamExist(c.Request.Context(), dash.OwnedBy, "") {
 		c.JSON(400, common.RespError("targe team is not exist"))
 		return
 	}
 
 	// query the team which dashboard originally belongs to
-	ownedBy, err := models.QueryDashboardBelongsTo(dash.Id)
+	ownedBy, err := models.QueryDashboardBelongsTo(c.Request.Context(), dash.Id)
 	if err != nil {
 		logger.Warn("query dashboard belongs to error", "error", err)
 		c.JSON(500, common.RespInternalError())
@@ -284,7 +277,7 @@ func UpdateOwnedBy(c *gin.Context) {
 	u := user.CurrentUser(c)
 	// constrains need to be satisfied:
 	// 1. current user must be the admin of the team which dashboard originally belongs to
-	isTeamAdmin, err := models.IsTeamAdmin(ownedBy, u.Id)
+	isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), ownedBy, u.Id)
 	if err != nil {
 		logger.Error("check team admin error", "error", err)
 		c.JSON(500, common.RespInternalError())
@@ -295,7 +288,7 @@ func UpdateOwnedBy(c *gin.Context) {
 		return
 	}
 
-	_, err = db.Conn.Exec("UPDATE dashboard SET owned_by=? WHERE id=?", dash.OwnedBy, dash.Id)
+	_, err = db.Conn.ExecContext(c.Request.Context(), "UPDATE dashboard SET owned_by=? WHERE id=?", dash.OwnedBy, dash.Id)
 	if err != nil {
 		logger.Warn("update dashboard ownedBy error", "error", err)
 		c.JSON(500, common.RespInternalError())
@@ -314,7 +307,7 @@ func GetTeamDashboards(c *gin.Context) {
 
 	dashboards := make([]*models.Dashboard, 0)
 
-	rows, err := db.Conn.Query("SELECT id,title, created, updated FROM dashboard WHERE owned_by=?", teamId)
+	rows, err := db.Conn.QueryContext(c.Request.Context(), "SELECT id,title, created, updated FROM dashboard WHERE owned_by=?", teamId)
 	if err != nil {
 		logger.Warn("query team dashboards error", "error", err)
 		c.JSON(500, common.RespError(e.Internal))
@@ -339,16 +332,7 @@ func GetTeamDashboards(c *gin.Context) {
 func GetSimpleList(c *gin.Context) {
 	dashboards := make([]*models.Dashboard, 0)
 
-	_, span := ot.Tracer.Start(c.Request.Context(), "getDashboardList", trace.WithSpanKind(trace.SpanKindClient))
-	defer span.End()
-	span.SetAttributes(
-		semconv.PeerServiceKey.String("mysql"),
-		attribute.
-			Key("sql.query").
-			String("SELECT * FROM dashboard"),
-	)
-
-	rows, err := db.Conn.Query("SELECT dashboard.id,dashboard.title, dashboard.owned_by,team.name,dashboard.visible_to, dashboard.tags, dashboard.weight FROM dashboard INNER JOIN team ON dashboard.owned_by = team.id ORDER BY dashboard.weight DESC,dashboard.created DESC")
+	rows, err := db.Conn.QueryContext(c.Request.Context(), "SELECT dashboard.id,dashboard.title, dashboard.owned_by,team.name,dashboard.visible_to, dashboard.tags, dashboard.weight FROM dashboard INNER JOIN team ON dashboard.owned_by = team.id ORDER BY dashboard.weight DESC,dashboard.created DESC")
 	if err != nil {
 		logger.Warn("query simple dashboards error", "error", err)
 		c.JSON(500, common.RespError(e.Internal))
@@ -382,7 +366,7 @@ func GetSimpleList(c *gin.Context) {
 func Star(c *gin.Context) {
 	id := c.Param("id")
 	u := user.CurrentUser(c)
-	_, err := db.Conn.Exec("INSERT INTO star_dashboard (user_id, dashboard_id, created) VALUES (?,?,?)", u.Id, id, time.Now())
+	_, err := db.Conn.ExecContext(c.Request.Context(), "INSERT INTO star_dashboard (user_id, dashboard_id, created) VALUES (?,?,?)", u.Id, id, time.Now())
 	if err != nil {
 		logger.Warn("star dashboard", "error", err)
 		c.JSON(500, common.RespError(e.Internal))
@@ -395,7 +379,7 @@ func Star(c *gin.Context) {
 func UnStar(c *gin.Context) {
 	id := c.Param("id")
 	u := user.CurrentUser(c)
-	_, err := db.Conn.Exec("DELETE FROM star_dashboard WHERE user_id=? and dashboard_id=?", u.Id, id)
+	_, err := db.Conn.ExecContext(c.Request.Context(), "DELETE FROM star_dashboard WHERE user_id=? and dashboard_id=?", u.Id, id)
 	if err != nil {
 		logger.Warn("unstar dashboard", "error", err)
 		c.JSON(500, common.RespError(e.Internal))
@@ -408,7 +392,7 @@ func UnStar(c *gin.Context) {
 func GetStarred(c *gin.Context) {
 	id := c.Param("id")
 	u := user.CurrentUser(c)
-	starred, err := models.QuertyDashboardStared(u.Id, id)
+	starred, err := models.QuertyDashboardStared(c.Request.Context(), u.Id, id)
 	if err != nil {
 		logger.Warn("unstar dashboard", "error", err)
 		c.JSON(500, common.RespError(e.Internal))
@@ -421,7 +405,7 @@ func GetStarred(c *gin.Context) {
 func GetAllStarred(c *gin.Context) {
 	u := user.CurrentUser(c)
 
-	rows, err := db.Conn.Query("SELECT dashboard_id FROM star_dashboard WHERE user_id=?", u.Id)
+	rows, err := db.Conn.QueryContext(c.Request.Context(), "SELECT dashboard_id FROM star_dashboard WHERE user_id=?", u.Id)
 	if err != nil {
 		logger.Warn("get all starred dashboard error", "error", err)
 		c.JSON(500, common.RespError(e.Internal))
@@ -460,7 +444,7 @@ func Delete(c *gin.Context) {
 		}
 	}
 
-	dash, err := models.QueryDashboard(id)
+	dash, err := models.QueryDashboard(c.Request.Context(), id)
 	if err != nil {
 		logger.Warn("query dash belongs to error", "error", err)
 		c.JSON(500, common.RespError(e.Internal))
@@ -468,7 +452,7 @@ func Delete(c *gin.Context) {
 	}
 
 	if !u.Role.IsAdmin() {
-		isTeamAdmin, err := models.IsTeamAdmin(dash.OwnedBy, u.Id)
+		isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), dash.OwnedBy, u.Id)
 		if err != nil {
 			logger.Error("check team admin error", "error", err)
 			c.JSON(500, common.RespInternalError())
@@ -488,21 +472,21 @@ func Delete(c *gin.Context) {
 	}
 	defer tx.Rollback()
 
-	_, err = tx.Exec("DELETE FROM dashboard WHERE id=?", id)
+	_, err = tx.ExecContext(c.Request.Context(), "DELETE FROM dashboard WHERE id=?", id)
 	if err != nil {
 		logger.Warn("delete dashboard erorr", "error", err)
 		c.JSON(500, common.RespError(e.Internal))
 		return
 	}
 
-	_, err = tx.Exec("DELETE FROM star_dashboard WHERE dashboard_id=?", id)
+	_, err = tx.ExecContext(c.Request.Context(), "DELETE FROM star_dashboard WHERE dashboard_id=?", id)
 	if err != nil {
 		logger.Warn("delete dashboard star erorr", "error", err)
 		c.JSON(500, common.RespError(e.Internal))
 		return
 	}
 
-	_, err = tx.Exec("DELETE FROM annotation WHERE namespace_id=?", id)
+	_, err = tx.ExecContext(c.Request.Context(), "DELETE FROM annotation WHERE namespace_id=?", id)
 	if err != nil {
 		logger.Warn("delete dashboard annotations erorr", "error", err)
 		c.JSON(500, common.RespError(e.Internal))
@@ -516,7 +500,7 @@ func Delete(c *gin.Context) {
 		return
 	}
 
-	admin.WriteAuditLog(u.Id, admin.AuditDeleteDashboard, id, dash)
+	admin.WriteAuditLog(c.Request.Context(), u.Id, admin.AuditDeleteDashboard, id, dash)
 
 	c.JSON(200, common.RespSuccess(nil))
 }
@@ -541,7 +525,7 @@ func UpdateWeight(c *gin.Context) {
 		return
 	}
 
-	_, err = db.Conn.Exec("UPDATE dashboard SET weight=? WHERE id=?", req.Weight, req.Id)
+	_, err = db.Conn.ExecContext(c.Request.Context(), "UPDATE dashboard SET weight=? WHERE id=?", req.Weight, req.Id)
 	if err != nil {
 		logger.Warn("update dashboard weight error", "error", err)
 		c.JSON(500, common.RespError(e.Internal))

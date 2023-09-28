@@ -44,7 +44,7 @@ func GetTeams(c *gin.Context) {
 		// user can see the teams he is in
 		if !u.Role.IsAdmin() {
 			userId := user.CurrentUserId(c)
-			members, err := models.QueryVisibleTeamsByUserId(userId)
+			members, err := models.QueryVisibleTeamsByUserId(c.Request.Context(), userId)
 			if err != nil {
 				logger.Warn("get all teams error", "error", err)
 				c.JSON(500, common.RespInternalError())
@@ -76,7 +76,7 @@ func GetTeams(c *gin.Context) {
 		}
 	}
 
-	rows, err := db.Conn.Query(q)
+	rows, err := db.Conn.QueryContext(c.Request.Context(),q)
 	if err != nil {
 		logger.Warn("get all teams error", "error", err)
 		c.JSON(500, common.RespInternalError())
@@ -91,18 +91,18 @@ func GetTeams(c *gin.Context) {
 			continue
 		}
 
-		user, _ := models.QueryUserById(team.CreatedById)
+		user, _ := models.QueryUserById(c.Request.Context(), team.CreatedById)
 		team.CreatedBy = user.Username
 
 		count := 0
-		err = db.Conn.QueryRow("SELECT count(*) FROM team_member WHERE team_id=?", team.Id).Scan(&count)
+		err = db.Conn.QueryRowContext(c.Request.Context(), "SELECT count(*) FROM team_member WHERE team_id=?", team.Id).Scan(&count)
 		if err != nil {
 			logger.Warn("select team member count error", "error", err)
 		}
 
 		team.MemberCount = count
 		if u != nil {
-			member, _ := models.QueryTeamMember(team.Id, u.Id)
+			member, _ := models.QueryTeamMember(c.Request.Context(), team.Id, u.Id)
 			if member != nil && member.Id != 0 {
 				team.CurrentUserRole = member.Role
 			}
@@ -125,7 +125,7 @@ func GetTeam(c *gin.Context) {
 		return
 	}
 
-	team, err := models.QueryTeam(id, "")
+	team, err := models.QueryTeam(c.Request.Context(), id, "")
 	if err != nil {
 		if err != sql.ErrNoRows {
 			logger.Warn("get team  error", "error", err)
@@ -147,7 +147,7 @@ func GetTeamByDashId(c *gin.Context) {
 		return
 	}
 
-	teamId, err := models.QueryDashboardBelongsTo(id)
+	teamId, err := models.QueryDashboardBelongsTo(c.Request.Context(), id)
 	if err != nil {
 		if err != sql.ErrNoRows {
 			logger.Warn("get team  error", "error", err)
@@ -159,7 +159,7 @@ func GetTeamByDashId(c *gin.Context) {
 		return
 	}
 
-	team, err := models.QueryTeam(teamId, "")
+	team, err := models.QueryTeam(c.Request.Context(), teamId, "")
 	if err != nil {
 		if err != sql.ErrNoRows {
 			logger.Warn("get team  error", "error", err)
@@ -182,7 +182,7 @@ func GetTeamMembers(c *gin.Context) {
 	}
 
 	members := make(models.TeamMembers, 0)
-	rows, err := db.Conn.Query("SELECT user_id,role,created FROM team_member WHERE team_id=?", id)
+	rows, err := db.Conn.QueryContext(c.Request.Context(),"SELECT user_id,role,created FROM team_member WHERE team_id=?", id)
 	if err != nil && err != sql.ErrNoRows {
 		logger.Warn("get team members error", "error", err)
 		c.JSON(500, common.RespInternalError())
@@ -197,7 +197,7 @@ func GetTeamMembers(c *gin.Context) {
 			continue
 		}
 
-		u, _ := models.QueryUserById(member.Id)
+		u, _ := models.QueryUserById(c.Request.Context(), member.Id)
 		member.Username = u.Username
 		member.RoleSortWeight = models.RoleSortWeight(member.Role)
 		member.TeamId = id
@@ -218,7 +218,7 @@ func GetTeamMember(c *gin.Context) {
 		return
 	}
 
-	member, err := models.QueryTeamMember(teamId, userId)
+	member, err := models.QueryTeamMember(c.Request.Context(), teamId, userId)
 	if err != nil {
 		logger.Warn("get team member error", "error", err)
 		c.JSON(500, common.RespInternalError())
@@ -252,7 +252,7 @@ func AddTeamMembers(c *gin.Context) {
 	}
 
 	u := user.CurrentUser(c)
-	isTeamAdmin, err := models.IsTeamAdmin(req.TeamId, u.Id)
+	isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), req.TeamId, u.Id)
 	if err != nil {
 		logger.Warn("check team admin error", "error", err)
 		c.JSON(500, common.RespInternalError())
@@ -267,7 +267,7 @@ func AddTeamMembers(c *gin.Context) {
 
 	// check team exists
 	var id int64
-	err = db.Conn.QueryRow("SELECT id FROM team WHERE id=?", req.TeamId).Scan(&id)
+	err = db.Conn.QueryRowContext(c.Request.Context(), "SELECT id FROM team WHERE id=?", req.TeamId).Scan(&id)
 	if err != nil && err != sql.ErrNoRows {
 		logger.Warn("get team error", "error", err)
 		c.JSON(500, common.RespInternalError())
@@ -283,7 +283,7 @@ func AddTeamMembers(c *gin.Context) {
 	// check user exists
 	for _, member := range members {
 		var id int64
-		err := db.Conn.QueryRow("SELECT id FROM user WHERE username=?", member).Scan(&id)
+		err := db.Conn.QueryRowContext(c.Request.Context(), "SELECT id FROM user WHERE username=?", member).Scan(&id)
 		if err != nil && err != sql.ErrNoRows {
 			logger.Warn("get user error", "error", err)
 			c.JSON(500, common.RespInternalError())
@@ -300,7 +300,7 @@ func AddTeamMembers(c *gin.Context) {
 
 	now := time.Now()
 	for _, memberId := range memberIds {
-		_, err := db.Conn.Exec("INSERT INTO team_member (team_id,user_id,role,created,updated) VALUES (?,?,?,?,?)", req.TeamId, memberId, role, now, now)
+		_, err := db.Conn.ExecContext(c.Request.Context(), "INSERT INTO team_member (team_id,user_id,role,created,updated) VALUES (?,?,?,?,?)", req.TeamId, memberId, role, now, now)
 		if err != nil {
 			logger.Warn("add team member error", "error", err)
 			c.JSON(500, common.RespInternalError())
@@ -334,7 +334,7 @@ func DeleteTeamMember(c *gin.Context) {
 
 	// only team admin can do this
 	if !u.Role.IsAdmin() {
-		isTeamAdmin, err := models.IsTeamAdmin(teamId, u.Id)
+		isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), teamId, u.Id)
 		if err != nil {
 			logger.Warn("check team admin error", "error", err)
 			c.JSON(500, common.RespInternalError())
@@ -347,7 +347,7 @@ func DeleteTeamMember(c *gin.Context) {
 		}
 	}
 
-	_, err := db.Conn.Exec("DELETE FROM team_member where team_id=? and user_id=?", teamId, memberId)
+	_, err := db.Conn.ExecContext(c.Request.Context(), "DELETE FROM team_member where team_id=? and user_id=?", teamId, memberId)
 	if err != nil {
 		logger.Warn("delete team member error", "error", err)
 		c.JSON(500, common.RespInternalError())
@@ -373,7 +373,7 @@ func UpdateTeam(c *gin.Context) {
 
 	u := user.CurrentUser(c)
 	if !u.Role.IsAdmin() {
-		isTeamAdmin, err := models.IsTeamAdmin(team.Id, u.Id)
+		isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), team.Id, u.Id)
 		if err != nil {
 			logger.Warn("check team admin error", "error", err)
 			c.JSON(500, common.RespInternalError())
@@ -386,7 +386,7 @@ func UpdateTeam(c *gin.Context) {
 		}
 	}
 
-	_, err := db.Conn.Exec("UPDATE team SET name=?, is_public=? WHERE id=?", team.Name, team.IsPublic, team.Id)
+	_, err := db.Conn.ExecContext(c.Request.Context(), "UPDATE team SET name=?, is_public=? WHERE id=?", team.Name, team.IsPublic, team.Id)
 	if err != nil {
 		logger.Warn("update team error", "error", err)
 		c.JSON(500, common.RespInternalError())
@@ -410,7 +410,7 @@ func UpdateTeamMember(c *gin.Context) {
 		return
 	}
 
-	team, err := models.QueryTeam(member.TeamId, "")
+	team, err := models.QueryTeam(c.Request.Context(), member.TeamId, "")
 	if err != nil {
 		if err == sql.ErrNoRows {
 			c.JSON(400, common.RespError(e.TeamNotExist))
@@ -427,7 +427,7 @@ func UpdateTeamMember(c *gin.Context) {
 	}
 
 	if !u.Role.IsAdmin() {
-		isTeamAdmin, err := models.IsTeamAdmin(team.Id, u.Id)
+		isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), team.Id, u.Id)
 		if err != nil {
 			logger.Warn("check team admin error", "error", err)
 			c.JSON(500, common.RespInternalError())
@@ -439,7 +439,7 @@ func UpdateTeamMember(c *gin.Context) {
 			return
 		}
 	}
-	_, err = db.Conn.Exec("UPDATE team_member SET role=?,updated=? WHERE team_id=? and user_id=?", member.Role, time.Now(), member.TeamId, member.Id)
+	_, err = db.Conn.ExecContext(c.Request.Context(), "UPDATE team_member SET role=?,updated=? WHERE team_id=? and user_id=?", member.Role, time.Now(), member.TeamId, member.Id)
 	if err != nil {
 		logger.Warn("update team member error", "error", err)
 		c.JSON(500, common.RespInternalError())
@@ -469,7 +469,7 @@ func DeleteTeam(c *gin.Context) {
 		return
 	}
 
-	t, err := models.QueryTeam(teamId, "")
+	t, err := models.QueryTeam(c.Request.Context(), teamId, "")
 	if err != nil {
 		logger.Warn("query team error", "error", err)
 		c.JSON(500, common.RespInternalError())
@@ -484,20 +484,20 @@ func DeleteTeam(c *gin.Context) {
 	}
 	defer tx.Rollback()
 
-	_, err = tx.Exec("DELETE FROM team WHERE id=?", teamId)
+	_, err = tx.ExecContext(c.Request.Context(), "DELETE FROM team WHERE id=?", teamId)
 	if err != nil {
 		logger.Warn("delete team  error", "error", err)
 		c.JSON(500, common.RespInternalError())
 		return
 	}
 
-	_, err = tx.Exec("DELETE FROM team_member WHERE team_id=?", teamId)
+	_, err = tx.ExecContext(c.Request.Context(), "DELETE FROM team_member WHERE team_id=?", teamId)
 	if err != nil {
 		logger.Warn("delete team member error", "error", err)
 		c.JSON(500, common.RespInternalError())
 	}
 
-	_, err = tx.Exec("DELETE FROM sidemenu WHERE team_id=?", teamId)
+	_, err = tx.ExecContext(c.Request.Context(), "DELETE FROM sidemenu WHERE team_id=?", teamId)
 	if err != nil {
 		logger.Warn("delete team sidemenu error", "error", err)
 		c.JSON(500, common.RespInternalError())
@@ -510,7 +510,7 @@ func DeleteTeam(c *gin.Context) {
 		return
 	}
 
-	admin.WriteAuditLog(u.Id, admin.AuditDeleteTeam, strconv.FormatInt(teamId, 10), t)
+	admin.WriteAuditLog(c.Request.Context(), u.Id, admin.AuditDeleteTeam, strconv.FormatInt(teamId, 10), t)
 
 	c.JSON(200, common.RespSuccess(nil))
 }
@@ -528,7 +528,7 @@ func LeaveTeam(c *gin.Context) {
 	}
 
 	u := user.CurrentUser(c)
-	isTeamAdmin, err := models.IsTeamAdmin(teamId, u.Id)
+	isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), teamId, u.Id)
 	if err != nil {
 		logger.Warn("check team admin error", "error", err)
 		c.JSON(500, common.RespInternalError())
@@ -542,7 +542,7 @@ func LeaveTeam(c *gin.Context) {
 	}
 
 	userId := user.CurrentUserId(c)
-	_, err = db.Conn.Exec("DELETE FROM team_member where team_id=? and user_id=?", teamId, userId)
+	_, err = db.Conn.ExecContext(c.Request.Context(), "DELETE FROM team_member where team_id=? and user_id=?", teamId, userId)
 	if err != nil {
 		logger.Warn("leave team  error", "error", err)
 		c.JSON(500, common.RespInternalError())
@@ -583,7 +583,7 @@ func UpdateAllowGlobal(c *gin.Context) {
 		return
 	}
 
-	_, err = db.Conn.Exec("UPDATE team SET allow_global = ? WHERE id = ?", req.AllowGlobal, req.TeamId)
+	_, err = db.Conn.ExecContext(c.Request.Context(), "UPDATE team SET allow_global = ? WHERE id = ?", req.AllowGlobal, req.TeamId)
 	if err != nil {
 		logger.Warn("update team  error", "error", err)
 		c.JSON(500, common.RespInternalError())

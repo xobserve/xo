@@ -84,7 +84,7 @@ func getUIConfig(c *gin.Context) {
 	u := user.CurrentUser(c)
 	var sidemenuId int64 = models.GlobalTeamId
 	if u != nil {
-		isTeamVisible, err := models.IsTeamVisibleToUser(u.SideMenu, u.Id)
+		isTeamVisible, err := models.IsTeamVisibleToUser(c.Request.Context(), u.SideMenu, u.Id)
 		if err != nil {
 			logger.Warn("Error query sidemenu visible ", "error", err)
 			c.JSON(http.StatusInternalServerError, common.RespError(err.Error()))
@@ -94,11 +94,11 @@ func getUIConfig(c *gin.Context) {
 		if isTeamVisible {
 			sidemenuId = u.SideMenu
 		} else {
-			teams.SetSideMenuForUser(strconv.FormatInt(models.GlobalTeamId, 10), u.Id)
+			teams.SetSideMenuForUser(c.Request.Context(), strconv.FormatInt(models.GlobalTeamId, 10), u.Id)
 		}
 	}
 
-	menu, err := models.QuerySideMenu(int64(sidemenuId), 0)
+	menu, err := models.QuerySideMenu(c.Request.Context(), int64(sidemenuId), 0)
 	if err != nil {
 		if err != sql.ErrNoRows {
 			logger.Warn("query sidemenu error", "error", err)
@@ -108,7 +108,7 @@ func getUIConfig(c *gin.Context) {
 	}
 	cfg.Sidemenu = menu
 
-	vars, err := variables.GetVariables(0)
+	vars, err := variables.GetVariables(c.Request.Context(), 0)
 	if err != nil {
 		logger.Warn("query variables error", "error", err)
 		c.JSON(500, common.RespError(e.Internal))

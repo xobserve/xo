@@ -23,7 +23,7 @@ import (
 )
 
 func GetSession(c *gin.Context) {
-	session := loadSession(getToken(c))
+	session := loadSession(c.Request.Context(), getToken(c))
 	c.JSON(http.StatusOK, common.RespSuccess(session))
 }
 
@@ -56,7 +56,7 @@ func UpdateUserPassword(c *gin.Context) {
 		}
 	}
 
-	err := UpdatePassword(u, upm.New)
+	err := UpdatePassword(c.Request.Context(), u, upm.New)
 	if err != nil {
 		c.JSON(err.Status, common.RespError(err.Message))
 		return
@@ -71,7 +71,7 @@ func UpdateUserInfo(c *gin.Context) {
 
 	u := CurrentUser(c)
 	if u.Role.IsAdmin() || u.Id == targetUser.Id {
-		err := updateUserInfo(targetUser)
+		err := updateUserInfo(c.Request.Context(), targetUser)
 		if err != nil {
 			c.JSON(err.Status, common.RespError(err.Message))
 			return

@@ -29,7 +29,7 @@ import (
 )
 
 func GetUsers(c *gin.Context) {
-	rows, err := db.Conn.Query(`SELECT id,username,name,email,mobile,last_seen_at,created,visit_count FROM user`)
+	rows, err := db.Conn.QueryContext(c.Request.Context(), `SELECT id,username,name,email,mobile,last_seen_at,created,visit_count FROM user`)
 	if err != nil {
 		logger.Warn("get all users error", "error", err)
 		c.JSON(500, common.RespInternalError())
@@ -50,7 +50,7 @@ func GetUsers(c *gin.Context) {
 		if user.Id == models.SuperAdminId {
 			user.Role = models.ROLE_SUPER_ADMIN
 		} else {
-			globalMember, err := models.QueryTeamMember(models.GlobalTeamId, user.Id)
+			globalMember, err := models.QueryTeamMember(c.Request.Context(), models.GlobalTeamId, user.Id)
 			if err != nil {
 				logger.Warn("get all users team member error", "error", err)
 				continue
@@ -85,13 +85,13 @@ func UpdateUserPassword(c *gin.Context) {
 		return
 	}
 
-	targetUser, err := models.QueryUserById(req.Id)
+	targetUser, err := models.QueryUserById(c.Request.Context(), req.Id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, common.RespInternalError())
 		return
 	}
 
-	err1 := user.UpdatePassword(targetUser, req.Password)
+	err1 := user.UpdatePassword(c.Request.Context(), targetUser, req.Password)
 	if err1 != nil {
 		c.JSON(err1.Status, common.RespError(err1.Message))
 		return
@@ -140,7 +140,7 @@ func AddNewUser(c *gin.Context) {
 	encodedPW, _ := utils.EncodePassword(req.Password, salt)
 	now := time.Now()
 
-	res, err := db.Conn.Exec("INSERT INTO user (username,password,salt,email,created,updated) VALUES (?,?,?,?,?,?)",
+	res, err := db.Conn.ExecContext(c.Request.Context(), "INSERT INTO user (username,password,salt,email,created,updated) VALUES (?,?,?,?,?,?)",
 		req.Username, encodedPW, salt, req.Email, now, now)
 	if err != nil {
 		logger.Warn("new user error", "error", err)
@@ -151,7 +151,7 @@ func AddNewUser(c *gin.Context) {
 	id, _ := res.LastInsertId()
 
 	// add user to global team
-	_, err = db.Conn.Exec("INSERT INTO team_member (team_id,user_id,role,created,updated) VALUES (?,?,?,?,?)",
+	_, err = db.Conn.ExecContext(c.Request.Context(), ("INSERT INTO team_member (team_id,user_id,role,created,updated) VALUES (?,?,?,?,?)"),
 		models.GlobalTeamId, id, req.Role, now, now)
 	if err != nil {
 		logger.Warn("new user error", "error", err)
@@ -219,7 +219,7 @@ func DeleteUser(c *gin.Context) {
 		return
 	}
 
-	targetUser, err := models.QueryUserById(userId)
+	targetUser, err := models.QueryUserById(c.Request.Context(), userId)
 	if err != nil {
 		logger.Warn("query target user error when delete user", "error", err)
 		c.JSON(500, common.RespInternalError())
@@ -245,7 +245,7 @@ func DeleteUser(c *gin.Context) {
 		return
 	}
 
-	WriteAuditLog(currentUser.Id, AuditDeleteUser, strconv.FormatInt(userId, 10), targetUser)
+	WriteAuditLog(c.Request.Context(), currentUser.Id, AuditDeleteUser, strconv.FormatInt(userId, 10), targetUser)
 	c.JSON(200, nil)
 }
 
@@ -283,7 +283,7 @@ func AddNewTeam(c *gin.Context) {
 	}
 	defer tx.Rollback()
 
-	res, err := tx.Exec("INSERT INTO team (name,brief,created_by,created,updated) VALUES (?,?,?,?,?)",
+	res, err := tx.ExecContext(c.Request.Context(), "INSERT INTO team (name,brief,created_by,created,updated) VALUES (?,?,?,?,?)",
 		req.Name, req.Brief, u.Id, now, now)
 	if err != nil {
 		logger.Warn("new team error", "error", err)
@@ -294,7 +294,7 @@ func AddNewTeam(c *gin.Context) {
 	id, _ := res.LastInsertId()
 
 	// insert self as first team member
-	_, err = tx.Exec("INSERT INTO team_member (team_id,user_id,role,created,updated) VALUES (?,?,?,?,?)", id, u.Id, models.ROLE_ADMIN, now, now)
+	_, err = tx.ExecContext(c.Request.Context(), "INSERT INTO team_member (team_id,user_id,role,created,updated) VALUES (?,?,?,?,?)", id, u.Id, models.ROLE_ADMIN, now, now)
 	if err != nil {
 		logger.Warn("insert team member error", "error", err)
 		c.JSON(500, common.RespInternalError())
@@ -302,7 +302,7 @@ func AddNewTeam(c *gin.Context) {
 	}
 
 	data, _ := json.Marshal(models.InitTeamMenu)
-	_, err = tx.Exec("INSERT INTO sidemenu (team_id,is_public,brief,data,created_by,created,updated) VALUES (?,?,?,?,?,?,?)",
+	_, err = tx.ExecContext(c.Request.Context(), "INSERT INTO sidemenu (team_id,is_public,brief,data,created_by,created,updated) VALUES (?,?,?,?,?,?,?)",
 		id, false, req.Name+" team's sidemenu", data, u.Id, now, now)
 	if err != nil {
 		logger.Error("create sidemenu error", "error", err)

@@ -49,6 +49,8 @@ type Config struct {
 		ListeningAddr              string `yaml:"listening_addr"`
 		OverrideApiServerAddrForUI string `yaml:"override_api_server_addr_for_ui"`
 		UiStaticPath               string `yaml:"ui_static_path"`
+		OtlpExportor               string `yaml:"otlp_exportor"`
+		OtlpEndpoint               string `yaml:"otlp_endpoint"`
 	}
 
 	Dashboard struct {

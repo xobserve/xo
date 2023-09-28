@@ -1,6 +1,7 @@
 package admin
 
 import (
+	"context"
 	"encoding/json"
 	"time"
 
@@ -11,7 +12,7 @@ import (
 )
 
 func QueryAuditLogs(c *gin.Context) {
-	rows, err := db.Conn.Query("SELECT op_id,op_type,target_id,data,created FROM audit_logs ORDER BY created DESC")
+	rows, err := db.Conn.QueryContext(c.Request.Context(), "SELECT op_id,op_type,target_id,data,created FROM audit_logs ORDER BY created DESC")
 	if err != nil {
 		logger.Warn("query audit logs error", "error", err)
 		c.JSON(500, common.RespInternalError())
@@ -28,7 +29,7 @@ func QueryAuditLogs(c *gin.Context) {
 			logger.Warn("scan audit logs error", "error", err)
 			continue
 		}
-		log.Operator, _ = models.QueryUserById(log.OpId)
+		log.Operator, _ = models.QueryUserById(c.Request.Context(), log.OpId)
 		log.Data = string(rawData)
 		logs = append(logs, log)
 	}
@@ -46,7 +47,7 @@ const (
 	AuditDeleteDatasource = "datasource.delete"
 )
 
-func WriteAuditLog(opId int64, opType string, targetId string, data interface{}) {
+func WriteAuditLog(ctx context.Context, opId int64, opType string, targetId string, data interface{}) {
 	now := time.Now()
 	d, err := json.Marshal(data)
 	if err != nil {
@@ -54,7 +55,7 @@ func WriteAuditLog(opId int64, opType string, targetId string, data interface{})
 		return
 	}
 
-	_, err = db.Conn.Exec("INSERT INTO audit_logs (op_id,op_type,target_id,data,created) VALUES (?,?,?,?,?)",
+	_, err = db.Conn.ExecContext(ctx, "INSERT INTO audit_logs (op_id,op_type,target_id,data,created) VALUES (?,?,?,?,?)",
 		opId, opType, targetId, d, now)
 	if err != nil {
 		logger.Warn("write audit log  erorr", "error", err)

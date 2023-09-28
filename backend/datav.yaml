@@ -17,6 +17,10 @@ server:
     override_api_server_addr_for_ui: 
     ## Find and override api server address in this directory
     ui_static_path: ./ui/static
+    # OpenTelemetry exporter support otlp or stdout
+    otlp_exportor: otlp
+    # OpenTelemetry collector endpoint eq: jaeger collector endpoint    
+    otlp_endpoint: 
     
 #################################### Database ##############################
 database:

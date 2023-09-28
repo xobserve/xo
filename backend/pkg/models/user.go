@@ -13,6 +13,7 @@
 package models
 
 import (
+	"context"
 	"database/sql"
 	"time"
 
@@ -81,9 +82,9 @@ func (s Users) Less(i, j int) bool {
 // 	return user, nil
 // }
 
-func QueryUserById(id int64) (*User, error) {
+func QueryUserById(ctx context.Context, id int64) (*User, error) {
 	user := &User{}
-	err := db.Conn.QueryRow(`SELECT id,username,name,email,mobile,password,salt,sidemenu,last_seen_at,created FROM user WHERE id=?`,
+	err := db.Conn.QueryRowContext(ctx, `SELECT id,username,name,email,mobile,password,salt,sidemenu,last_seen_at,created FROM user WHERE id=?`,
 		id).Scan(&user.Id, &user.Username, &user.Name, &user.Email, &user.Mobile, &user.Password, &user.Salt, &user.SideMenu, &user.LastSeenAt, &user.Created)
 	if err != nil && err != sql.ErrNoRows {
 		return user, err
@@ -93,7 +94,7 @@ func QueryUserById(id int64) (*User, error) {
 		return user, nil
 	}
 
-	globalMember, err := QueryTeamMember(GlobalTeamId, user.Id)
+	globalMember, err := QueryTeamMember(ctx, GlobalTeamId, user.Id)
 	if err != nil {
 		return user, err
 	}
@@ -103,9 +104,9 @@ func QueryUserById(id int64) (*User, error) {
 	return user, nil
 }
 
-func QueryUserByName(username string) (*User, error) {
+func QueryUserByName(ctx context.Context, username string) (*User, error) {
 	user := &User{}
-	err := db.Conn.QueryRow(`SELECT id,username,name,email,mobile,password,salt,sidemenu,last_seen_at FROM user WHERE username=?`,
+	err := db.Conn.QueryRowContext(ctx, `SELECT id,username,name,email,mobile,password,salt,sidemenu,last_seen_at FROM user WHERE username=?`,
 		username).Scan(&user.Id, &user.Username, &user.Name, &user.Email, &user.Mobile, &user.Password, &user.Salt, &user.SideMenu, &user.LastSeenAt)
 	if err != nil && err != sql.ErrNoRows {
 		return user, err

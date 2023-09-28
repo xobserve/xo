@@ -71,7 +71,7 @@ func initResource() *sdkresource.Resource {
 }
 
 func initTracerProvider() *sdktrace.TracerProvider {
-	exp, err := newExporter("otlp")
+	exp, err := newExporter(config.Data.Server.OtlpExportor)
 	if err != nil {
 		logger.Crit("Error new exporter", "error", err)
 	}
@@ -101,7 +101,12 @@ func newExporter(exporterType string) (sdktrace.SpanExporter, error) {
 	case "jaeger":
 		return nil, errors.New("jaeger exporter is no longer supported, please use otlp")
 	case "otlp":
-		var opts []otlptracehttp.Option = []otlptracehttp.Option{otlptracehttp.WithInsecure()}
+		var opts []otlptracehttp.Option = []otlptracehttp.Option{
+			otlptracehttp.WithInsecure(),
+		}
+		if config.Data.Server.OtlpEndpoint != "" {
+			opts = append(opts, otlptracehttp.WithEndpoint(config.Data.Server.OtlpEndpoint))
+		}
 		exporter, err = otlptrace.New(
 			context.Background(),
 			otlptracehttp.NewClient(opts...),

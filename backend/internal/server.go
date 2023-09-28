@@ -63,7 +63,7 @@ func (s *Server) Start() error {
 
 	log.L = log.L.With(zap.String("service", config.Data.Common.AppName))
 
-	err := storage.Init()
+	err := storage.Init(ot.TraceProvider)
 	if err != nil {
 		return err
 	}
@@ -88,6 +88,7 @@ func (s *Server) Start() error {
 		r.Use(gzip.Gzip(gzip.DefaultCompression))
 
 		otelPlugin := otelgin.Middleware(config.Data.Common.AppName)
+		r.Use(otelPlugin)
 		// global config
 		r.GET("/config/ui", getUIConfig)
 
@@ -125,11 +126,11 @@ func (s *Server) Start() error {
 		r.DELETE("/variable/:id", IsLogin(), variables.DeleteVariable)
 
 		// dashboard apis
-		r.GET("/dashboard/byId/:id", IsLogin(), otelPlugin, dashboard.GetDashboard)
-		r.POST("/dashboard/save", IsLogin(), otelPlugin, dashboard.SaveDashboard)
+		r.GET("/dashboard/byId/:id", IsLogin(), dashboard.GetDashboard)
+		r.POST("/dashboard/save", IsLogin(), dashboard.SaveDashboard)
 		r.GET("/dashboard/team/:id", IsLogin(), dashboard.GetTeamDashboards)
-		r.GET("/dashboard/history/:id", IsLogin(), otelPlugin, dashboard.GetHistory)
-		r.GET("/dashboard/simpleList", IsLogin(), otelPlugin, dashboard.GetSimpleList)
+		r.GET("/dashboard/history/:id", IsLogin(), dashboard.GetHistory)
+		r.GET("/dashboard/simpleList", IsLogin(), dashboard.GetSimpleList)
 		r.POST("/dashboard/star/:id", IsLogin(), dashboard.Star)
 		r.POST("/dashboard/unstar/:id", IsLogin(), dashboard.UnStar)
 		r.GET("/dashboard/starred", IsLogin(), dashboard.GetAllStarred)
