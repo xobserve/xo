@@ -11,17 +11,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Dashboard, DatasourceType, Panel, PanelProps, PanelQuery, PanelType } from "types/dashboard"
-import { Box, Center, HStack, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Portal, Tab, TabList, TabPanel, TabPanels, Tabs, Text, Textarea, Tooltip, useColorMode, useColorModeValue, useDisclosure, usePrevious, useToast } from "@chakra-ui/react";
+import { Box, Center, HStack, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Portal,  Text, Tooltip, useColorMode, useColorModeValue, useDisclosure, useToast } from "@chakra-ui/react";
 import { FaBook, FaBug, FaEdit, FaRegCopy, FaRegEye, FaRegEyeSlash, FaTrashAlt } from "react-icons/fa";
 import { IoMdInformation } from "react-icons/io";
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { query_prometheus_alerts, run_prometheus_query } from "../../plugins/built-in/datasource/prometheus/query_runner";
-import { DatasourceMaxDataPoints, DatasourceMinInterval, PANEL_HEADER_HEIGHT, StorageCopiedPanelKey } from "src/data/constants";
+import { DatasourceMaxDataPoints, DatasourceMinInterval, PANEL_HEADER_HEIGHT } from "src/data/constants";
 import { cloneDeep, isEqual, isFunction } from "lodash";
 import { TimeRange } from "types/time";
 import { Variable } from "types/variable";
 import { hasVariableFormat, replaceQueryWithVariables, replaceWithVariables } from "utils/variable";
-import storage from "utils/localStorage";
 import useBus, { dispatch } from 'use-bus'
 import { getCurrentTimeRange } from "src/components/DatePicker/TimePicker";
 import { PanelDataEvent, PanelForceRebuildEvent, TimeChangedEvent } from "src/data/bus-events";
@@ -69,6 +68,7 @@ import ErrorBoundary from "src/components/ErrorBoudary";
 import { $datasources } from "src/views/datasource/store";
 import { Datasource } from "types/datasource";
 import { externalDatasourcePlugins, externalPanelPlugins } from "../../plugins/external/plugins";
+import { $copiedPanel } from "../../store/dashboard";
 
 interface PanelGridProps {
     dashboard: Dashboard
@@ -320,8 +320,8 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
             duration: 3000,
             isClosable: true,
         })
-
-        storage.set(StorageCopiedPanelKey, panel)
+        
+        $copiedPanel.set(cloneDeep(panel))
     }, [])
 
     const panelBodyHeight = height - PANEL_HEADER_HEIGHT

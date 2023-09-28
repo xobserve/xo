@@ -11,7 +11,6 @@ export enum ColorMode {
     Dark = "dark"
 }
 
-export const StorageCopiedPanelKey = "copiedPanel";
 
 
 export const DatasourceMaxDataPoints = 600

@@ -256,6 +256,7 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
                 position="relative"
             >
                 <DashboardBorder key={fullscreen.toString()} border={dashboard.data.styles.border} />
+                <Box id="dashboard-scroll-top"></Box>
                 {dashboard.data.panels?.length > 0 && <DashboardGrid dashboard={dashboard} panels={panels} onChange={onDashbardChange} />}
             </Box>
             <EditPanel dashboard={dashboard} onChange={onDashbardChange} />

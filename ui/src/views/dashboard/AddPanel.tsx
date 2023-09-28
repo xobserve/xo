@@ -10,16 +10,16 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Button, Modal, ModalBody, ModalContent, ModalOverlay, useColorModeValue, useDisclosure, VStack } from "@chakra-ui/react";
+import { Menu, MenuButton, MenuItem, MenuList, useColorModeValue } from "@chakra-ui/react";
 import IconButton from "src/components/button/IconButton";
 import { PanelAdd } from "src/components/icons/PanelAdd";
-import { StorageCopiedPanelKey } from "src/data/constants";
 import { initPanel } from "src/data/panel/initPanel";
-import { Dashboard,  Panel } from "types/dashboard";
-import storage from "utils/localStorage";
+import { Dashboard, Panel, PanelType } from "types/dashboard";
 import React from "react";
 import { useStore } from "@nanostores/react";
 import { dashboardMsg } from "src/i18n/locales/en";
+import { $copiedPanel } from "./store/dashboard";
+import { isEmpty } from "utils/validate";
 
 interface Props {
     dashboard: Dashboard
@@ -27,19 +27,8 @@ interface Props {
 }
 
 const AddPanel = ({ dashboard, onChange }: Props) => {
-    const t1 = useStore(dashboardMsg )
-    const { isOpen, onOpen, onClose } = useDisclosure()
-
-    const addPanel = () => {
-        const copiedPanel = storage.get(StorageCopiedPanelKey)
-        if (copiedPanel) {
-            onOpen()
-            return
-        }
-
-        onAddPanel()
-    };
-
+    const t1 = useStore(dashboardMsg)
+    const copiedPanel = useStore($copiedPanel)
 
 
     const getNextPanelId = () => {
@@ -55,43 +44,47 @@ const AddPanel = ({ dashboard, onChange }: Props) => {
     }
 
 
-    const onAddPanel = () => {
+    const onAddPanel = (isRow?) => {
         if (!dashboard.data.panels) {
             dashboard.data.panels = []
         }
         const id = getNextPanelId()
         const newPanel: Panel = initPanel(id)
-
+        if (isRow) {
+            newPanel.type = PanelType.Row
+        }
 
         // scroll to top after adding panel
-        window.scrollTo(0, 0);
-
+        const dashGrid = document.getElementById("dashboard-scroll-top")
+        dashGrid.scrollIntoView({ behavior: "smooth", block: "center" })
+        // dashGrid.scrollTo(0,0)
         onChange(dashboard => { dashboard.data.panels.unshift(newPanel) })
     }
+
     const onPastePanel = () => {
-        const copiedPanel = storage.get(StorageCopiedPanelKey)
-        storage.remove(StorageCopiedPanelKey)
         if (copiedPanel) {
             const id = getNextPanelId()
             copiedPanel.id = id
+            copiedPanel.gridPos = initPanel().gridPos
             onChange(dashboard => { dashboard.data.panels.unshift(copiedPanel) })
+            // scroll to top after adding panel
+            const dashGrid = document.getElementById("dashboard-scroll-top")
+            dashGrid.scrollIntoView({ behavior: "smooth", block: "center" })
             return
         }
     }
 
     return (<>
-        <IconButton onClick={addPanel} variant="ghost"><PanelAdd size={28} fill={useColorModeValue("var(--chakra-colors-brand-500)", "var(--chakra-colors-brand-200)")} /></IconButton>
-        <Modal isOpen={isOpen} onClose={onClose} >
-            <ModalOverlay />
-            <ModalContent mt="20%">
-                <ModalBody py="10">
-                    <VStack alignItems={"left"}>
-                        <Button onClick={() => { onAddPanel(); onClose() }} variant="outline">{t1.addPanel}</Button>
-                        <Button onClick={() => { onPastePanel(); onClose() }}>{t1.pastePanel}</Button>
-                    </VStack>
-                </ModalBody>
-            </ModalContent>
-        </Modal>
+        <Menu>
+            <MenuButton>
+                <IconButton variant="ghost"><PanelAdd size={28} fill={useColorModeValue("var(--chakra-colors-brand-500)", "var(--chakra-colors-brand-200)")} /></IconButton>
+            </MenuButton>
+            <MenuList>
+                <MenuItem onClick={onAddPanel}>{t1.addPanel}</MenuItem>
+                <MenuItem onClick={() => onAddPanel(true)}>Add Row</MenuItem>
+                <MenuItem onClick={() => { onPastePanel() }} isDisabled={isEmpty(copiedPanel)}>{t1.pastePanel}</MenuItem>
+            </MenuList>
+        </Menu>
     </>)
 }
 

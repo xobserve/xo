@@ -286,8 +286,9 @@ export const dashboardMsg = i18n("dashboard", {
   "refreshInterval": "refresh with interval",
   "fullscreenTips": "enter fullscreen mode",
   "exitFullscreenTips": "Press ESC to exit fullscreen mode",
-  "addPanel": "Add new panel",
-  "pastePanel": "Paste panel from clipboard"
+  "addPanel": "Add panel",
+  "addRow": "Add row",
+  "pastePanel": "Paste panel"
 })
 
 export const dashboardSaveMsg = i18n("dashboardSave", {
