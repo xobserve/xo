@@ -25,6 +25,7 @@ import { Variable } from "types/variable"
 import { JaegerDsQueryTypes } from "./VariableEditor"
 import { replaceWithVariablesHasMultiValues } from "utils/variable"
 import { getDatasource } from "utils/datasource"
+import { isEmpty } from "utils/validate"
 
 export const run_jaeger_query = async (panel: Panel, q: PanelQuery, range: TimeRange, ds: Datasource) => {
     let res = []
@@ -127,7 +128,7 @@ export const queryJaegerTraces = async (dsId, timeRange: TimeRange, service, ope
     const end = timeRange.end.getTime() * 1000
 
     let url = `/proxy/${ds.id}/api/traces?limit=${limit}&start=${start}&end=${end}&service=${service}`
-    if (operation != "all" && operation != '') {
+    if (operation != "all" && !isEmpty(operation)) {
         url += `&operation=${operation}`
     }
 
