@@ -62,6 +62,7 @@ import CustomScrollbar from "components/CustomScrollbar/CustomScrollbar"
 import SelectVariables from "src/views/variables/SelectVariable"
 import { externalPanelPlugins } from "../plugins/external/plugins"
 import ErrorBoundary from "components/ErrorBoudary"
+import { builtinPanelPlugins } from "../plugins/built-in/plugins"
 
 interface EditPanelProps {
     dashboard: Dashboard
@@ -402,23 +403,6 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
     </>)
 })
 
-//@needs-update-when-add-new-panel
-const loadablePanels = {
-    [PanelType.Text]: TextPanelEditor,
-    [PanelType.Graph]: GraphPanelEditor,
-    [PanelType.Table]: TablePanelEditor,
-    [PanelType.NodeGraph]: NodeGraphPanelEditor,
-    [PanelType.Echarts]: EchartsPanelEditor,
-    [PanelType.Pie]: PiePanelEditor,
-    [PanelType.Gauge]: GaugePanelEditor,
-    [PanelType.Stat]: StatPanelEditor,
-    [PanelType.Trace]: TracePanelEditor,
-    [PanelType.BarGauge]: BarGaugeEditor,
-    [PanelType.GeoMap]: GeoMapPanelEditor,
-    [PanelType.Log]: LogPanelEditor,
-    [PanelType.Bar]: BarPanelEditor,
-    [PanelType.Alert]: AlertPanelEditor,
-}
 
 interface CustomPanelEditorProps {
     tempPanel: Panel
@@ -428,11 +412,8 @@ interface CustomPanelEditorProps {
 
 const CustomPanelEditor = memo(({ tempPanel, setTempPanel, data }: CustomPanelEditorProps) => {
     const toast = useToast()
-    const Editor = loadablePanels[tempPanel.type]
-    if (Editor) {
-        return <Editor panel={tempPanel} onChange={setTempPanel} data={data} />
-    }
-    const p = externalPanelPlugins[tempPanel.type]
+
+    const p = builtinPanelPlugins[tempPanel.type] ?? externalPanelPlugins[tempPanel.type]
     if (!p) {
         const toastId = `panel type <${tempPanel.type}> not exist, maybe you need to re-install this plugin`
         if (!toast.isActive(toastId)) {

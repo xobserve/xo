@@ -17,7 +17,7 @@ import { IoMdInformation } from "react-icons/io";
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { query_prometheus_alerts, run_prometheus_query } from "../../plugins/built-in/datasource/prometheus/query_runner";
 import { DatasourceMaxDataPoints, DatasourceMinInterval, PANEL_HEADER_HEIGHT } from "src/data/constants";
-import { cloneDeep, isEqual, isFunction } from "lodash";
+import { cloneDeep, isEqual, isFunction, toString } from "lodash";
 import { TimeRange } from "types/time";
 import { Variable } from "types/variable";
 import { hasVariableFormat, replaceQueryWithVariables, replaceWithVariables } from "utils/variable";
@@ -69,6 +69,7 @@ import { $datasources } from "src/views/datasource/store";
 import { Datasource } from "types/datasource";
 import { externalDatasourcePlugins, externalPanelPlugins } from "../../plugins/external/plugins";
 import { $copiedPanel } from "../../store/dashboard";
+import { builtinPanelPlugins } from "../../plugins/built-in/plugins";
 
 interface PanelGridProps {
     dashboard: Dashboard
@@ -387,32 +388,11 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
 }
 
 
-//@needs-update-when-add-new-panel
-const loadablePanels = {
-    [PanelType.Text]: TextPanel,
-    [PanelType.Graph]: GraphPanelWrapper,
-    [PanelType.Table]: TablePanel,
-    [PanelType.NodeGraph]: NodeGraphPanelWrapper,
-    [PanelType.Echarts]: EchartsPanel,
-    [PanelType.Pie]: PiePanelWrapper,
-    [PanelType.Gauge]: GaugePanel,
-    [PanelType.Stat]: StatPanel,
-    [PanelType.Trace]: TracePanelWrapper,
-    [PanelType.BarGauge]: BarGaugePanel,
-    [PanelType.GeoMap]: GeoMapPanelWrapper,
-    [PanelType.Log]: LogPanelWrapper,
-    [PanelType.Bar]: BarPanelWrapper,
-    [PanelType.Alert]: AlertPanel,
-}
 const CustomPanelRender = memo((props: PanelProps) => {
-    const P = loadablePanels[props.panel.type]
-    if (P) {
-        return <P {...props} />
-    }
-
-    const ExternalP = externalPanelPlugins[props.panel.type].panel
-    if (ExternalP) {
-        return <ExternalP {...props} />
+    const plugin = builtinPanelPlugins[props.panel.type] ?? externalPanelPlugins[props.panel.type]
+    const PluginPanel = plugin && plugin.panel
+    if (PluginPanel) {
+        return <PluginPanel {...props} />
     }
     return <></>
 })
@@ -434,11 +414,12 @@ const PanelHeader = ({ dashboardId, queryError, panel, onCopyPanel, onRemovePane
     const title = replaceWithVariables(panel.title)
     const { isOpen, onOpen, onClose } = useDisclosure()
     const { colorMode } = useColorMode()
+
     return (
         <>
             <HStack className="grid-drag-handle hover-bg" height={`${PANEL_HEADER_HEIGHT - (isEmpty(title) ? 15 : 0)}px`} cursor="move" spacing="0" position={isEmpty(title) ? "absolute" : "relative"} width="100%" zIndex={1000}>
                 {(queryError || panel.desc) && <Box color={useColorModeValue(queryError ? "red" : "brand.500", queryError ? "red" : "brand.200")} position="absolute">
-                    <Tooltip label={queryError ?? replaceWithVariables(panel.desc)}>
+                    <Tooltip label={toString(queryError) ?? replaceWithVariables(panel.desc)}>
                         <Box>
                             <IoMdInformation fontSize="20px" cursor="pointer" />
                         </Box>

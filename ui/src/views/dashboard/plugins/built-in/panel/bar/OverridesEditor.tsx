@@ -20,6 +20,7 @@ import { OverrideRule } from "types/dashboard";
 import React from "react";
 import ThresholdEditor from "src/views/dashboard/plugins/components/Threshold/ThresholdEditor";
 import { Switch } from "@chakra-ui/react";
+import { getSeriesDataOverrideTargets } from "src/views/dashboard/utils/overrides";
 
 interface Props {
     override: OverrideRule
@@ -66,3 +67,8 @@ export enum BarRules {
     SeriesYAxist = 'Series.separateYAxis',
     SeriesThresholds = "Series.thresholds"
 } 
+
+
+export const getBarOverrideTargets = (panel, data) => {
+    return getSeriesDataOverrideTargets(data)    
+}

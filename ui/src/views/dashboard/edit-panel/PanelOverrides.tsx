@@ -35,45 +35,20 @@ import { MobileBreakpoint } from "src/data/constants";
 import PieOverridesEditor from "../plugins/built-in/panel/pie/OverridesEditor";
 import { externalPanelPlugins } from "../plugins/external/plugins";
 import { isEmpty } from "utils/validate";
+import { builtinPanelPlugins } from "../plugins/built-in/plugins";
 
 const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
     const t1 = useStore(panelMsg)
 
     const overrides = panel.overrides
     const names: { label: string; value: string }[] = useMemo(() => {
-        const p = externalPanelPlugins[panel.type]
+        const p = builtinPanelPlugins[panel.type] ??  externalPanelPlugins[panel.type]
         if (p) {
-            const r: string[] = p.getOverrideTargets(panel, data)
-            if (!isEmpty(r)) {
-                return r.map(v => ({label: v, value: v}))
-            }
+            const d = p.getOverrideTargets(panel, data)
+            return d ?? []
         }
 
-        switch (panel.type) {
-            case PanelType.Table:
-                const res = []
-                const d: SeriesData[] = flatten(data)
-                if (d.length > 0) {
-                    if (isArray(d[0].fields)) {
-                        for (const f of d[0].fields) {
-                            res.push({
-                                label: f.name,
-                                value: f.name
-                            })
-                        }
-                    }
-                }
-                return res
-
-            default:
-                return flatten(data)?.map((s: any) => {
-                    return {
-                        label: s.name,
-                        value: s.name
-                    }
-                })
-        }
-
+        return []
     }, [data])
 
 
@@ -115,7 +90,10 @@ const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
     }
 
     const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
-    const ExternalOverrideEditor = externalPanelPlugins[panel.type] && externalPanelPlugins[panel.type].overrideEditor
+    
+    const plugin = builtinPanelPlugins[panel.type] ?? externalPanelPlugins[panel.type]
+    const PluginOverrideEditor = plugin && plugin.overrideEditor 
+    
     return (<Form p="2">
         {
             overrides.map((o, i) =>
@@ -146,58 +124,8 @@ const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
                                     })}
                                 </ChakraSelect>
                             </FormItem>
-                            {/* @needs-update-when-add-new-panel-overrides */}
                             {
-                                panel.type == PanelType.Graph && <GraphOverridesEditor  override={rule} onChange={(v) => {
-                                    onChange((panel: Panel) => {
-                                        panel.overrides[i].overrides[j].value = v
-                                    })
-                                }} panel={panel}/>
-                            }
-                            {
-                                panel.type == PanelType.Table && <TableOverridesEditor panel={panel} override={rule} onChange={(v) => {
-                                    onChange((panel: Panel) => {
-                                        panel.overrides[i].overrides[j].value = v
-                                    })
-                                }} />
-                            }
-                            {
-                                panel.type == PanelType.BarGauge && <BarGaugeOverridesEditor override={rule} onChange={(v) => {
-                                    onChange((panel: Panel) => {
-                                        panel.overrides[i].overrides[j].value = v
-                                    })
-                                }} />
-                            }
-                            {
-                                panel.type == PanelType.Stat && <StatOverridesEditor override={rule} onChange={(v) => {
-                                    onChange((panel: Panel) => {
-                                        panel.overrides[i].overrides[j].value = v
-                                    })
-                                }} />
-                            }
-                            {
-                                panel.type == PanelType.GeoMap && <GeomapOverridesEditor override={rule} onChange={(v) => {
-                                    onChange((panel: Panel) => {
-                                        panel.overrides[i].overrides[j].value = v
-                                    })
-                                }} />
-                            }
-                            {
-                                panel.type == PanelType.Bar && <BarOverridesEditor override={rule} onChange={(v) => {
-                                    onChange((panel: Panel) => {
-                                        panel.overrides[i].overrides[j].value = v
-                                    })
-                                }} />
-                            }
-                            {
-                                panel.type == PanelType.Pie && <PieOverridesEditor override={rule} onChange={(v) => {
-                                    onChange((panel: Panel) => {
-                                        panel.overrides[i].overrides[j].value = v
-                                    })
-                                }} />
-                            }
-                            {
-                                ExternalOverrideEditor &&  <ExternalOverrideEditor override={rule} onChange={(v) => {
+                                PluginOverrideEditor &&  <PluginOverrideEditor override={rule} onChange={(v) => {
                                     onChange((panel: Panel) => {
                                         panel.overrides[i].overrides[j].value = v
                                     })

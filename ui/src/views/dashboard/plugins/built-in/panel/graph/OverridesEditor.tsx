@@ -21,6 +21,9 @@ import { dispatch } from "use-bus";
 import { PanelForceRebuildEvent } from "src/data/bus-events";
 import ThresholdEditor from "src/views/dashboard/plugins/components/Threshold/ThresholdEditor";
 import { palettes } from "utils/colors";
+import { SeriesData } from "types/seriesData";
+import { flatten, isArray } from "lodash";
+import { getSeriesDataOverrideTargets } from "src/views/dashboard/utils/overrides";
 
 interface Props {
     override: OverrideRule
@@ -80,4 +83,9 @@ export enum GraphRules {
     SeriesNegativeY = 'Series.negativeY',
     SeriesYAxis = 'Series.separateYAxis',
     SeriesThresholds = "Series.thresholds"
+}
+
+
+export const getGraphOverrideTargets = (panel, data) => {
+    return getSeriesDataOverrideTargets(data)    
 }

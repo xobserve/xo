@@ -18,6 +18,7 @@ import { GraphRules } from "src/views/dashboard/plugins/built-in/panel/graph/Ove
 import { PieRules } from "src/views/dashboard/plugins/built-in/panel/pie/OverridesEditor";
 import { StatRules } from "src/views/dashboard/plugins/built-in/panel/stat/OverridesEditor";
 import { TableRules } from "src/views/dashboard/plugins/built-in/panel/table/OverridesEditor";
+import { builtinPanelPlugins } from "src/views/dashboard/plugins/built-in/plugins";
 import { GridPos, OverrideItem, Panel, PanelType } from "types/dashboard";
 import { PanelPluginComponents } from "types/plugins/plugin";
 import { isEmpty } from "utils/validate";
@@ -45,32 +46,14 @@ export const findRuleInOverride = (override: OverrideItem, ruleType) => {
 
 
 export const getPanelOverridesRules = (panelType, externalPanels: Record<string, PanelPluginComponents>): string[] => {
-    //@needs-update-when-add-new-panel-overrides
-    switch (panelType) {
-        case PanelType.Graph:
-            return Object.keys(GraphRules).map(k => GraphRules[k])
-        case PanelType.Table:
-            return Object.keys(TableRules).map(k => TableRules[k])
-        case PanelType.BarGauge:
-            return Object.keys(BarGaugeRules).map(k => BarGaugeRules[k])
-        case PanelType.Stat:
-            return Object.keys(StatRules).map(k => StatRules[k])
-        case PanelType.GeoMap:
-            return Object.keys(GeomapRules).map(k => GeomapRules[k])
-        case PanelType.Bar:
-            return Object.keys(BarRules).map(k => BarRules[k])
-        case PanelType.Pie:
-            return Object.keys(PieRules).map(k => PieRules[k])
-        default:
-            const p = externalPanels[panelType]
-            if (!p) {
-                return []
-            }
-            const rules = p.overrideRules
-            if (!isEmpty(rules)) {
-                return Object.keys(rules).map(k => rules[k])
-            } else {
-                return []
-            }
+    const p = builtinPanelPlugins[panelType] ?? externalPanels[panelType]
+    if (!p) {
+        return []
+    }
+    const rules = p.overrideRules
+    if (!isEmpty(rules)) {
+        return Object.keys(rules).map(k => rules[k])
+    } else {
+        return []
     }
 }

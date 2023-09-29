@@ -22,6 +22,7 @@ import { Checkbox, HStack, Text } from "@chakra-ui/react";
 import { isEmpty } from "utils/validate";
 import ThresholdEditor from "src/views/dashboard/plugins/components/Threshold/ThresholdEditor";
 import { cloneDeep } from "lodash";
+import { getSeriesDataOverrideTargets } from "src/views/dashboard/utils/overrides";
 
 
 interface Props {
@@ -86,4 +87,8 @@ const OverrideNameEditor = ({ value, onChange }) => {
             }} />
         </HStack>
     </>
+}
+
+export const getBarguageOverrideTargets = (panel, data) => {
+    return getSeriesDataOverrideTargets(data)    
 }
