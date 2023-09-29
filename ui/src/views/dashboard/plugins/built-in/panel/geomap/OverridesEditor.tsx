@@ -16,6 +16,7 @@ import ThresholdEditor from "src/views/dashboard/plugins/components/Threshold/Th
 import { EditorInputItem, EditorSliderItem } from "src/components/editor/EditorItem";
 import React, { memo } from "react";
 import { OverrideRule } from "types/dashboard";
+import { getSeriesDataOverrideTargets } from "src/views/dashboard/utils/overrides";
 
 interface Props {
     override: OverrideRule
@@ -41,4 +42,8 @@ export enum GeomapRules {
     LocationName = "Location.displayName",
     LocationFill = "Location.fillOpacity",
     LocationThresholds = "Location.thresholds",
+}
+
+export const getGeomapOverrideTargets = (panel, data) => {
+    return getSeriesDataOverrideTargets(data)    
 }

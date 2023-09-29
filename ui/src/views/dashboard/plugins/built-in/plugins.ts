@@ -8,6 +8,7 @@ import barComponents from './panel/bar'
 import barGaugeComponents from './panel/barGauge'
 import echartsComponents from './panel/echarts'
 import gaugeComponents from './panel/gauge'
+import geomapComponents from './panel/geomap'
 
 export const builtinPanelPlugins: Record<string,PanelPluginComponents> = {
 	[PanelType.Graph]: graphComponents,
@@ -16,7 +17,7 @@ export const builtinPanelPlugins: Record<string,PanelPluginComponents> = {
     [PanelType.BarGauge]: barGaugeComponents,
     [PanelType.Echarts]: echartsComponents,
     [PanelType.Gauge]: gaugeComponents,
-
+    [PanelType.GeoMap]: geomapComponents,
 }
 
 export const builtinDatasourcePlugins: Record<string,DatasourcePluginComponents> = {

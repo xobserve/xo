@@ -20,7 +20,6 @@ import { nodeGraphData } from "./mocks/node_graph"
 import { prometheusToPanels } from "../prometheus/transformData"
 import { Datasource } from "types/datasource"
 import traceData from './mocks/traces.json'
-import geoData from './mocks/geomapSeriesData.json'
 import { Field, SeriesData } from "types/seriesData"
 import { getMockLogs } from "./mocks/logs"
 import { getMockAlerts } from "./mocks/alerts"
