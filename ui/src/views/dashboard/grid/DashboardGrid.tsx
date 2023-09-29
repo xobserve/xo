@@ -21,7 +21,6 @@ import { Box, useColorModeValue } from "@chakra-ui/react";
 import React, { CSSProperties, memo, useCallback, useMemo, useRef } from "react";
 import uPlot from "uplot";
 import AutoSizer from "react-virtualized-auto-sizer";
-import useGranaTheme from 'hooks/useExtraTheme';
 import { PanelGrid } from "./PanelGrid/PanelGrid";
 import { useKey, useSearchParam } from "react-use";
 import { addParamToUrl } from "utils/url";
@@ -156,21 +155,11 @@ const DashboardGrid = memo((props: GridProps) => {
                     return null;
                 }
 
-                // if (finalWidth == 0) {
-                //     setFinalWidth(width)
-                // } else {
-                //     if (h.current) {
-                //         clearTimeout(h.current)
-                //     }
-
-                //     h.current = setTimeout(() => {
-                //         setFinalWidth(width)
-                //         clearTimeout(h.current)
-                //     },200)
-                // }
-
                 const draggable = width <= 769 ? false : dashboard.editable;
 
+                // for some weird reason, the width is not always the same, it sometimes experiences slight jitter.
+                // so we need to use a threshold to avoid unnecessary re-renders
+                // jitter between 0 and 10 is acceptable
                 if (Math.abs(width - gridkey) > 10) {
                     gridkey = width
                 }
@@ -275,7 +264,6 @@ interface GridItemProps extends Record<string, any> {
  * A hacky way to intercept the react-layout-grid item dimensions and pass them to DashboardPanel
  */
 const GridItem = React.forwardRef<HTMLDivElement, GridItemProps>((props, ref) => {
-    const theme = useGranaTheme()
     let width = 100;
     let height = 100;
 

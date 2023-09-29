@@ -21,22 +21,22 @@ func main() {
 
 	args := os.Args
 	if len(args) != 2 {
-		log.Println("Usage: go run removePlugin.go [panel|datasource].[pluginType]  e.g. go run removePlugin.go panel.demo,datasource.demo , this will remove panel plugin demo and also remove datasource plugin demo")
+		log.Println("Usage: go run removePlugins.go [panel|datasource].[pluginType]  e.g. go run removePlugin.go panel.demo,datasource.demo , this will remove panel plugin demo and also remove datasource plugin demo")
 		return
 	}
 
 	if args[1] == "all" {
 		// remove svg
-		cmd := exec.Command("bash", "-c", fmt.Sprintf("rm -f ../public/plugins/external/*/*.svg"))
+		cmd := exec.Command("bash", "-c", fmt.Sprintf("rm -f ../ui/public/plugins/external/*/*.svg"))
 		cmd.CombinedOutput()
 
 		// reset plugins.json
-		err := os.WriteFile("../public/plugins/external/datasource/plugins.json", []byte("[]"), 0666)
+		err := os.WriteFile("../ui/public/plugins/external/datasource/plugins.json", []byte("[]"), 0666)
 		if err != nil {
 			log.Fatal("write plugin.json error", err)
 		}
 
-		err = os.WriteFile("../public/plugins/external/panel/plugins.json", []byte("[]"), 0666)
+		err = os.WriteFile("../ui/public/plugins/external/panel/plugins.json", []byte("[]"), 0666)
 		if err != nil {
 			log.Fatal("write plugin.json error", err)
 		}
@@ -51,12 +51,12 @@ export const externalDatasourcePlugins: Record<string,DatasourcePluginComponents
 }
 `
 
-		err = os.WriteFile("../src/views/dashboard/plugins/external/plugins.ts", []byte(externalPluginFile), 0666)
+		err = os.WriteFile("../ui/src/views/dashboard/plugins/external/plugins.ts", []byte(externalPluginFile), 0666)
 		if err != nil {
 			log.Fatal("write plugins.ts error", err)
 		}
 
-		cmd = exec.Command("bash", "-c", "rm -rf ../src/views/dashboard/plugins/external/*/*")
+		cmd = exec.Command("bash", "-c", "rm -rf ../ui/src/views/dashboard/plugins/external/*/*")
 		cmd.CombinedOutput()
 
 		return
@@ -80,11 +80,11 @@ export const externalDatasourcePlugins: Record<string,DatasourcePluginComponents
 		pluginType := p[1]
 
 		// remove svg
-		cmd := exec.Command("bash", "-c", fmt.Sprintf("rm -f ../public/plugins/external/%s/%s.svg", tp, pluginType))
+		cmd := exec.Command("bash", "-c", fmt.Sprintf("rm -f ../ui/public/plugins/external/%s/%s.svg", tp, pluginType))
 		cmd.CombinedOutput()
 
 		// remove plugin code
-		cmd1 := exec.Command("bash", "-c", fmt.Sprintf("rm -rf ../src/views/dashboard/plugins/external/%s/%s", tp, pluginType))
+		cmd1 := exec.Command("bash", "-c", fmt.Sprintf("rm -rf ../ui/src/views/dashboard/plugins/external/%s/%s", tp, pluginType))
 		cmd1.CombinedOutput()
 	}
 

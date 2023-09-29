@@ -1,3 +1,7 @@
+## External plugins
+
+This directory contains the source code of external plugins which are developed by community. The external plugins are not included in the default plugins, you need to [build them manually](https://datav.io/docs/external-panel-install) to use them.
+
 ## Keep the source code if you need it
 
 Please don't remove the plugins source code in this directory **if you still need it**, because every time you rebuild the plugins, the external plugins will be regenerated from the source code in this directory.
