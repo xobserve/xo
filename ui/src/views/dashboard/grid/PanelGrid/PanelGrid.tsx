@@ -10,12 +10,11 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Dashboard, DatasourceType, Panel, PanelProps, PanelQuery } from "types/dashboard"
+import { Dashboard, Panel, PanelProps, PanelQuery } from "types/dashboard"
 import { Box, Center, HStack, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Portal, Text, Tooltip, useColorMode, useColorModeValue, useDisclosure, useToast } from "@chakra-ui/react";
 import { FaBook, FaBug, FaEdit, FaRegClone, FaRegCopy, FaRegEye, FaRegEyeSlash, FaTrashAlt } from "react-icons/fa";
 import { IoMdInformation } from "react-icons/io";
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { query_prometheus_alerts, run_prometheus_query } from "../../plugins/built-in/datasource/prometheus/query_runner";
 import { DatasourceMaxDataPoints, DatasourceMinInterval, PANEL_HEADER_HEIGHT } from "src/data/constants";
 import { cloneDeep, isEqual, isFunction, toString } from "lodash";
 import { TimeRange } from "types/time";
@@ -25,14 +24,11 @@ import useBus, { dispatch } from 'use-bus'
 import { getCurrentTimeRange } from "src/components/DatePicker/TimePicker";
 import { OnClonePanel, PanelDataEvent, PanelForceRebuildEvent, TimeChangedEvent } from "src/data/bus-events";
 import { addParamToUrl } from "utils/url";
-import { query_testdata_alerts, run_testdata_query } from "../../plugins/built-in/datasource/testdata/query_runner";
-import { run_jaeger_query } from "../../plugins/built-in/datasource/jaeger/query_runner";
 import PanelBorder from "src/components/largescreen/components/Border";
 import TitleDecoration from "src/components/largescreen/components/TitleDecoration";
 import PanelDecoration from "src/components/largescreen/components/Decoration";
 import { useDedupEvent } from "hooks/useDedupEvent";
 import { calculateInterval } from "utils/datetime/range";
-import { run_http_query } from "../../plugins/built-in/datasource/http/query_runner";
 import { useSearchParam } from "react-use";
 import React from "react";
 import { useStore } from "@nanostores/react";
@@ -55,9 +51,10 @@ import { $datasources } from "src/views/datasource/store";
 import { Datasource } from "types/datasource";
 import { externalDatasourcePlugins, externalPanelPlugins } from "../../plugins/external/plugins";
 import { $copiedPanel } from "../../store/dashboard";
-import { builtinPanelPlugins } from "../../plugins/built-in/plugins";
+import { builtinDatasourcePlugins, builtinPanelPlugins } from "../../plugins/built-in/plugins";
 import { PanelTypeAlert } from "../../plugins/built-in/panel/alert/types";
 import { PanelTypeGraph } from "../../plugins/built-in/panel/graph/types";
+import { DatasourceTypeTestData } from "../../plugins/built-in/datasource/testdata/types";
 
 interface PanelGridProps {
     dashboard: Dashboard
@@ -207,7 +204,7 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
                 }
                 const q: PanelQuery = { ...cloneDeep(q0), interval }
                 replaceQueryWithVariables(q, datasource.type, intervalObj.interval)
-                if (datasource.type != DatasourceType.TestData && hasVariableFormat(q.metrics)) {
+                if (datasource.type != DatasourceTypeTestData && hasVariableFormat(q.metrics)) {
                     // there are variables still not replaced, maybe because variable's loadValues has not completed
                     continue
                 }
@@ -230,29 +227,9 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
 
 
                 let res
-                //@needs-update-when-add-new-datasource
-                switch (datasource.type) {
-                    case DatasourceType.Prometheus:
-                        res = run_prometheus_query(panel, q, timeRange, datasource)
-                        break;
-                    case DatasourceType.TestData:
-                        res = run_testdata_query(panel, q, timeRange, datasource)
-                        break;
-                    case DatasourceType.Jaeger:
-                        res = run_jaeger_query(panel, q, timeRange, datasource)
-                        break;
-                    case DatasourceType.ExternalHttp:
-                        res = run_http_query(panel, q, timeRange, datasource)
-                        break;
-                    case DatasourceType.Loki:
-                        res = run_loki_query(panel, q, timeRange, datasource)
-                        break
-                    default:
-                        const p = externalDatasourcePlugins[datasource.type]
-                        if (p && p.runQuery) {
-                            res = p.runQuery(panel, q, timeRange, datasource)
-                        }
-                        break;
+                const p = builtinDatasourcePlugins[datasource.type] ?? externalDatasourcePlugins[datasource.type]
+                if (p && p.runQuery) {
+                    res = p.runQuery(panel, q, timeRange, datasource)
                 }
 
                 promises.push({
@@ -301,7 +278,7 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
     }
 
 
-    const onCopyPanel = useCallback((panel,type) => {
+    const onCopyPanel = useCallback((panel, type) => {
         if (type == "copy") {
             toast({
                 title: "Copied",
@@ -310,10 +287,10 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
                 duration: 3000,
                 isClosable: true,
             })
-    
+
             $copiedPanel.set(cloneDeep(panel))
         } else {
-            dispatch({type:OnClonePanel, data: panel.id})
+            dispatch({ type: OnClonePanel, data: panel.id })
         }
     }, [])
 
@@ -426,7 +403,7 @@ const PanelHeader = ({ dashboardId, queryError, panel, onCopyPanel, onRemovePane
                             <MenuList p="1" zIndex={1500}>
                                 <MenuItem icon={<FaEdit />} onClick={() => addParamToUrl({ edit: panel.id })}>{t.edit}</MenuItem>
                                 <MenuItem icon={<FaRegCopy />} onClick={() => onCopyPanel(panel, "copy")}>{t.copy}</MenuItem>
-                                <MenuItem icon={<FaRegClone />} onClick={() => onCopyPanel(panel,"clone")}>{t.clone}</MenuItem>
+                                <MenuItem icon={<FaRegClone />} onClick={() => onCopyPanel(panel, "clone")}>{t.clone}</MenuItem>
                                 <MenuDivider my="1" />
                                 <MenuItem icon={<FaBug />} onClick={onOpen}>{t1.debugPanel}</MenuItem>
                                 <MenuItem icon={<FaRegEye />} onClick={() => addParamToUrl({ viewPanel: viewPanel ? null : panel.id })}>{viewPanel ? t1.exitlView : t1.viewPanel}</MenuItem>
@@ -493,35 +470,17 @@ export const queryAlerts = async (panel: Panel, timeRange: TimeRange, dsIds: num
     for (const dsID of dsIds) {
         const ds = datasources.find(ds => ds.id === dsID)
         let res
-        switch (ds.type) {
-            case DatasourceType.Prometheus:
-                res = await query_prometheus_alerts(panel, timeRange, ds)
-                break;
-            case DatasourceType.Loki:
-                res = await query_loki_alerts(panel, timeRange, ds)
-                break
-            case DatasourceType.TestData:
-                res = query_testdata_alerts(panel, timeRange, ds)
-                break
-            case DatasourceType.ExternalHttp:
-                res = await run_http_query(panel, httpQuery, timeRange, ds)
-                res.data.fromDs = ds.type
-                break
-            default:
-                const p = externalDatasourcePlugins[ds.type]
-                if (p && p.queryAlerts) {
-                    res = await p.queryAlerts(panel, timeRange, ds)
-                }
-                break;
+        const p = builtinDatasourcePlugins[ds.type] ?? externalDatasourcePlugins[ds.type]
+        if (p && p.queryAlerts) {
+            res = await p.queryAlerts(panel, timeRange, ds, httpQuery)
         }
-
 
         result.error = res.error
 
         result.data = result.data.concat(res.data)
     }
 
-    const data0: { "groups": AlertGroup[], "fromDs": DatasourceType }[] = result.data
+    const data0: { "groups": AlertGroup[], "fromDs": string }[] = result.data
     const data: AlertRule[] = []
     for (const d of data0) {
         for (const group of d.groups) {

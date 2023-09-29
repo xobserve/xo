@@ -151,3 +151,10 @@ export const queryHttpVariableValues = async (variable: Variable, useCurrentTime
 export const replaceHttpQueryWithVariables = (query: PanelQuery, interval: string) => {
 
 }
+
+
+export const query_http_alerts = async (panel:Panel, timeRange: TimeRange, ds:Datasource, query: PanelQuery ) => {
+    const res = await run_http_query(panel, query, timeRange, ds)
+    res.data.fromDs = ds.type
+    return res
+}

@@ -12,13 +12,12 @@
 // limitations under the License.
 
 import { parseVariableFormat } from "./format";
-import { DatasourceType, PanelQuery } from "types/dashboard";
-import { replacePrometheusQueryWithVariables } from "src/views/dashboard/plugins/built-in/datasource/prometheus/query_runner";
-import { replaceJaegerQueryWithVariables } from "src/views/dashboard/plugins/built-in/datasource/jaeger/query_runner";
+import {  PanelQuery } from "types/dashboard";
 import { VariableSplitChar, VarialbeAllOption } from "src/data/variable";
 import { $variables } from "src/views/variables/store";
 import { isEmpty } from "./validate";
 import { externalDatasourcePlugins } from "src/views/dashboard/plugins/external/plugins";
+import { builtinDatasourcePlugins } from "src/views/dashboard/plugins/built-in/plugins";
 
 export const hasVariableFormat = (s: string) => {
     return isEmpty(s) ? false : s.includes("${")
@@ -27,7 +26,7 @@ export const hasVariableFormat = (s: string) => {
 // replace ${xxx} format with corresponding variable
 // extraVars: datav preserved variables, such as __curentValue__
 export const replaceWithVariables = (s: string, extraVars?: {
-    [varName:string]: string | number, 
+    [varName: string]: string | number,
 }) => {
     const vars = $variables.get()
     const formats = parseVariableFormat(s);
@@ -36,65 +35,48 @@ export const replaceWithVariables = (s: string, extraVars?: {
         if (extrav) {
             s = s.replaceAll(`\${${f}}`, extrav.toString());
         } else {
-            const v = vars.find(v => v.name ==f)
+            const v = vars.find(v => v.name == f)
             if (v) {
                 s = s.replaceAll(`\${${f}}`, v.selected);
             }
         }
-       
+
     }
 
     return s
 }
 
 
-export const replaceQueryWithVariables = (q: PanelQuery, datasource: DatasourceType,interval: string) => {
-    //@needs-update-when-add-new-datasource
-    switch (datasource) {
-        case DatasourceType.Prometheus:
-            replacePrometheusQueryWithVariables(q,interval)
-            break;
-        case DatasourceType.Jaeger:
-            replaceJaegerQueryWithVariables(q)
-            break
-        case DatasourceType.ExternalHttp:
-            replacePrometheusQueryWithVariables(q,interval)
-            break
-        case DatasourceType.Loki:
-            replacePrometheusQueryWithVariables(q, interval)
-            break
-        default:
-            const p = externalDatasourcePlugins[datasource]
-            if (p && p.replaceQueryWithVariables) {
-                p.replaceQueryWithVariables(q, interval)
-            }
-            break;
-    } 
+export const replaceQueryWithVariables = (q: PanelQuery, dsType: string, interval: string) => {
+    const p = builtinDatasourcePlugins[dsType] ?? externalDatasourcePlugins[dsType]
+    if (p && p.replaceQueryWithVariables) {
+        p.replaceQueryWithVariables(q, interval)
+    }
 }
 
 // replace ${xxx} format in s with every possible value of the variable
 // if s doesn't contain any variable, return [s]
-export const  replaceWithVariablesHasMultiValues =  (s: string, replaceAllWith?): string[] => {
+export const replaceWithVariablesHasMultiValues = (s: string, replaceAllWith?): string[] => {
     const vars = $variables.get()
     let res = []
     const formats = parseVariableFormat(s);
     for (const f of formats) {
         // const v = (vars.length > 0 ? vars : gvariables).find(v => v.name ==f)
-         const v = vars.find(v => v.name ==f)
+        const v = vars.find(v => v.name == f)
         if (v) {
-          
+
             let selected = []
             if (v.selected == VarialbeAllOption) {
                 if (replaceAllWith) {
                     selected.push(replaceAllWith)
                 } else {
-                    selected = v.values?.filter(v1 => v1 != VarialbeAllOption )??[]
-                } 
+                    selected = v.values?.filter(v1 => v1 != VarialbeAllOption) ?? []
+                }
             } else {
                 selected = isEmpty(v.selected) ? [] : v.selected.split(VariableSplitChar)
             }
 
-       
+
             res = selected.map(v => s.replaceAll(`\${${f}}`, v))
         }
     }

@@ -29,7 +29,7 @@ import { replaceWithVariablesHasMultiValues } from "utils/variable"
 import { $variables } from "src/views/variables/store"
 import { getDatasource, roundDsTime } from "utils/datasource"
 
-export const run_prometheus_query = async (panel: Panel, q: PanelQuery, range: TimeRange, ds: Datasource) => {
+export const runPrometheusQuery = async (panel: Panel, q: PanelQuery, range: TimeRange, ds: Datasource) => {
     if (isEmpty(q.metrics)) {
         return {
             error: null,
@@ -68,7 +68,7 @@ export const run_prometheus_query = async (panel: Panel, q: PanelQuery, range: T
 }
 
 
-export const checkAndTestPrometheus = async (ds: Datasource) => {
+export const testPrometheusDatasource = async (ds: Datasource) => {
     // check datasource setting is valid
     const res = isPromethesDatasourceValid(ds)
     if (res != null) {
@@ -219,7 +219,7 @@ export const replacePrometheusQueryWithVariables = (query: PanelQuery,interval: 
     }   
 }
 
-export const query_prometheus_alerts = async (panel:Panel, timeRange: TimeRange, ds:Datasource) => {
+export const query_prometheus_alerts = async (panel:Panel, timeRange: TimeRange, ds:Datasource, httpQuery: PanelQuery) => {
     const res: any = await requestApi.get(`/proxy/${ds.id}/api/v1/rules?type=alert`)
     if (res.status !== "success") {
         console.log("Failed to fetch data from prometheus", res)

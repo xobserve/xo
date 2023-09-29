@@ -18,13 +18,11 @@ import RadionButtons from "src/components/RadioButtons"
 import DatasourceSelect from "src/components/datasource/Select"
 import { EditorInputItem, EditorNumberItem } from "src/components/editor/EditorItem"
 import { Form, FormSection } from "src/components/form/Form"
-import { isArray, isEmpty } from "lodash"
+import { concat, isArray, isEmpty } from "lodash"
 import { useEffect, useRef, useState } from "react"
 import { initVariable } from "src/data/variable"
 
-import HttpVariableEditor from "src/views/dashboard/plugins/built-in/datasource/http/VariableEditor"
-import PrometheusVariableEditor from "src/views/dashboard/plugins/built-in/datasource/prometheus/VariableEditor"
-import { DatasourceType } from "types/dashboard"
+
 import { Variable, VariableQueryType, VariableRefresh } from "types/variable"
 import { useImmer } from "use-immer"
 import { requestApi } from "utils/axios/request"
@@ -34,10 +32,8 @@ import { VariableManuallyChangedKey } from "src/data/storage-keys"
 import { dispatch } from "use-bus"
 import { VariableForceReload } from "src/data/bus-events"
 import FormItem from "src/components/form/Item"
-import JaegerVariableEditor from "src/views/dashboard/plugins/built-in/datasource/jaeger/VariableEditor"
 import { useStore } from "@nanostores/react"
 import { cfgVariablemsg, commonMsg } from "src/i18n/locales/en"
-import LokiVariableEditor from "src/views/dashboard/plugins/built-in/datasource/loki/VariableEdtiro"
 import { getDatasource } from "utils/datasource"
 import { addParamToUrl, removeParamFromUrl } from "utils/url"
 import { useSearchParam } from "react-use"
@@ -45,6 +41,7 @@ import { $datasources } from "src/views/datasource/store"
 import { Team } from "types/teams"
 import { externalDatasourcePlugins } from "src/views/dashboard/plugins/external/plugins"
 import Loading from "components/loading/Loading"
+import { builtinDatasourcePlugins } from "src/views/dashboard/plugins/built-in/plugins"
 
 
 
@@ -359,12 +356,14 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
 
 
     const externalDsList = Object.entries(externalDatasourcePlugins).filter(([k, v]) => v.variableEditor)
-    const allowTypes = []
-    externalDsList.forEach(([k, v]) => {
-        allowTypes.push(k)
+    const builtinDsList = Object.entries(builtinDatasourcePlugins).filter(([k, v]) => v.variableEditor)
+    const dsPluginList = concat(builtinDsList, externalDsList)
+    const dsList = []
+    dsPluginList.forEach(([k, v]) => {
+        dsList.push(k)
     })
 
-    const ExternalEditor = externalDsList.find(([k, v]) => k == currentDatasource?.type)?.[1]?.variableEditor
+    const PluginEditor = dsPluginList.find(([k, v]) => k == currentDatasource?.type)?.[1]?.variableEditor
 
     return (<>
         <Modal isOpen={isOpen} onClose={onClose} size="full">
@@ -426,23 +425,11 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
                             {variable.type == VariableQueryType.Query && <>
                                 <FormItem title={t1.selectDs}>
                                     <Box width="100%">
-                                        <DatasourceSelect value={variable.datasource} onChange={id => setVariable(v => { v.datasource = id; v.value = "" })} allowTypes={[DatasourceType.Prometheus, DatasourceType.ExternalHttp, DatasourceType.Jaeger, DatasourceType.Loki, ...allowTypes]} variant="outline" /></Box>
+                                        <DatasourceSelect value={variable.datasource} onChange={id => setVariable(v => { v.datasource = id; v.value = "" })} allowTypes={dsList} variant="outline" /></Box>
                                 </FormItem>
-                                {/* @needs-update-when-add-new-variable-datasource */}
+
                                 {
-                                    currentDatasource?.type == DatasourceType.Prometheus && <PrometheusVariableEditor variable={variable} onChange={setVariable} onQueryResult={onQueryResult} />
-                                }
-                                {
-                                    currentDatasource?.type == DatasourceType.ExternalHttp && <HttpVariableEditor variable={variable} onChange={setVariable} onQueryResult={onQueryResult} />
-                                }
-                                {
-                                    currentDatasource?.type == DatasourceType.Jaeger && <JaegerVariableEditor variable={variable} onChange={setVariable} onQueryResult={onQueryResult} />
-                                }
-                                {
-                                    currentDatasource?.type == DatasourceType.Loki && <LokiVariableEditor variable={variable} onChange={setVariable} onQueryResult={onQueryResult} />
-                                }
-                                {
-                                    ExternalEditor && <ExternalEditor variable={variable} onChange={setVariable} onQueryResult={onQueryResult}/>
+                                    PluginEditor && <PluginEditor variable={variable} onChange={setVariable} onQueryResult={onQueryResult}/>
                                 }
                             </>
                             }

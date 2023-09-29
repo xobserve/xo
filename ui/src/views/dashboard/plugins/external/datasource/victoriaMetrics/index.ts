@@ -11,6 +11,8 @@ import DemoVariableEditor from "./VariableEditor";
 import DemoQueryEditor from "./QueryEditor";
 import { queryAlerts, queryVariableValues, replaceQueryWithVariables, runQuery, testDatasource } from "./query_runner";
 import getDocs from "./docs";
+import { DatasourceTypeVM } from "./types";
+import icon from './icon.svg'
 
 const demoComponents: DatasourcePluginComponents = {
     datasourceEditor: DemoDatasourceEditor,
@@ -24,6 +26,11 @@ const demoComponents: DatasourcePluginComponents = {
     replaceQueryWithVariables: replaceQueryWithVariables,
     queryVariableValues: queryVariableValues,
     queryAlerts: queryAlerts,
+
+    settings:{
+        type: DatasourceTypeVM,
+        icon,
+    }
 }
 
 export default  demoComponents

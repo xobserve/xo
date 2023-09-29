@@ -19,14 +19,12 @@ import { isLokiDatasourceValid } from "./DatasourceEditor";
 import { requestApi } from "utils/axios/request";
 import { Variable } from "types/variable";
 import { isEmpty } from "utils/validate";
-import { round } from "lodash";
 import { prometheusToPanels } from "../prometheus/transformData";
-import { isJSON } from "utils/is";
 import { getNewestTimeRange } from "src/components/DatePicker/TimePicker";
-import { LokiDsQueryTypes } from "./VariableEdtiro";
-import { is } from "date-fns/locale";
+import { LokiDsQueryTypes } from "./VariableEdtitor";
 import { getDatasource, roundDsTime } from "utils/datasource";
 import { PanelTypeLog } from "../../panel/log/types";
+import { replacePrometheusQueryWithVariables } from "../prometheus/query_runner";
 
 export const run_loki_query = async (panel: Panel, q: PanelQuery, timeRange: TimeRange, ds: Datasource) => {
     if (isEmpty(q.metrics)) {
@@ -250,7 +248,7 @@ export const checkAndTestLoki = async (ds: Datasource) => {
 }
 
 
-export const query_loki_alerts = async (panel:Panel, timeRange: TimeRange, ds:Datasource) => {
+export const query_loki_alerts = async (panel:Panel, timeRange: TimeRange, ds:Datasource, query: PanelQuery) => {
     const res: any = await requestApi.get(`/proxy/${ds.id}/api/v1/rules?type=alert`)
     if (res.status !== "success") {
         console.log("Failed to fetch data from prometheus", res)
@@ -265,4 +263,10 @@ export const query_loki_alerts = async (panel:Panel, timeRange: TimeRange, ds:Da
         error: null,
         data: res.data,
     }
+}
+
+
+
+export const replaceLokiQueryWithVariables = (query: PanelQuery,interval: string) => {
+    replacePrometheusQueryWithVariables(query, interval)
 }

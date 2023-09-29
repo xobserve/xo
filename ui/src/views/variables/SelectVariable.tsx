@@ -10,25 +10,20 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { HStack, Text, Tooltip, useToast } from "@chakra-ui/react"
+import { HStack, Text, Tooltip } from "@chakra-ui/react"
 import { TimeChangedEvent, VariableForceReload } from "src/data/bus-events"
 import { Variable, VariableQueryType, VariableRefresh } from "types/variable"
 import useBus, { dispatch } from "use-bus"
 import storage from "utils/localStorage"
 import { memo, useEffect, useState } from "react"
-import { DatasourceType } from "types/dashboard"
 import { cloneDeep, isEqual } from "lodash"
-import { queryPromethuesVariableValues } from "../dashboard/plugins/built-in/datasource/prometheus/query_runner"
-import { queryHttpVariableValues } from "../dashboard/plugins/built-in/datasource/http/query_runner"
 import PopoverSelect from "src/components/select/PopoverSelect"
 import { VarialbeAllOption, VariableSplitChar } from "src/data/variable"
 import { VariableManuallyChangedKey } from "src/data/storage-keys"
-import { queryJaegerVariableValues } from "../dashboard/plugins/built-in/datasource/jaeger/query_runner"
 import React from "react";
 import { useStore } from "@nanostores/react"
 import { variableMsg } from "src/i18n/locales/en"
 import { addParamToUrl, getUrlParams } from "utils/url"
-import { queryLokiVariableValues } from "../dashboard/plugins/built-in/datasource/loki/query_runner"
 import { $variables } from "./store"
 import { parseVariableFormat } from "utils/format"
 import { getDatasource } from "utils/datasource"
@@ -40,6 +35,7 @@ import Loading from "components/loading/Loading"
 import { EditorInputItem } from "components/editor/EditorItem"
 import { $teams } from "../team/store"
 import { externalDatasourcePlugins } from "../dashboard/plugins/external/plugins"
+import { builtinDatasourcePlugins } from "../dashboard/plugins/built-in/plugins"
 
 interface Props {
     variables: Variable[]
@@ -354,27 +350,13 @@ export const queryVariableValues = async (v: Variable, datasources: Datasource[]
         result.data = datasources.map(ds => ds.name)
     } else if (v.type == VariableQueryType.Query) {
         const ds = getDatasource(v.datasource, datasources)
-        //@needs-update-when-add-new-variable-datasource
-        switch (ds?.type) {
-            case DatasourceType.Prometheus:
-                result = await queryPromethuesVariableValues(v)
-                break;
-            case DatasourceType.ExternalHttp:
-                result = await queryHttpVariableValues(v) as any
-                break;
-            case DatasourceType.Jaeger:
-                result = await queryJaegerVariableValues(v)
-                break
-            case DatasourceType.Loki:
-                result = await queryLokiVariableValues(v)
-                break
-            default:
-                const p = externalDatasourcePlugins[ds?.type]
-                if (p && p.queryVariableValues) {
-                    result = await p.queryVariableValues(v)
-                }
-                break;
+        if (ds) {
+            const p =  builtinDatasourcePlugins[ds.type] ??  externalDatasourcePlugins[ds.type]
+            if (p && p.queryVariableValues) {
+                result = await p.queryVariableValues(v)
+            }
         }
+           
     }
 
     if (result.error) {

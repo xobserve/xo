@@ -15,13 +15,11 @@ import { EditorInputItem, EditorNumberItem } from "src/components/editor/EditorI
 import RadionButtons from "src/components/RadioButtons"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
-import { DatasourceType } from "types/dashboard"
 import React, { memo } from "react";
 import { useStore } from "@nanostores/react"
 import { alertMsg, commonMsg } from "src/i18n/locales/en"
 import { Select } from "antd"
 
-import { datasourceSupportAlerts } from "src/data/alerts"
 import { dispatch } from "use-bus"
 import { PanelForceRebuildEvent } from "src/data/bus-events"
 import { AlertState } from "types/alert"
@@ -34,9 +32,11 @@ import HttpQueryEditor from "../../datasource/http/QueryEditor"
 import { AlertFilter } from "types/panel/plugins"
 import { $datasources } from "src/views/datasource/store"
 import { externalDatasourcePlugins } from "../../../external/plugins"
-import { cloneDeep } from "lodash"
+import { cloneDeep, concat } from "lodash"
 import { AlertEditorProps, PanelTypeAlert, AlertPanel as Panel } from "./types"
 import { PanelTypeGraph } from "../graph/types"
+import { DatasourceTypeHttp } from "../../datasource/http/types"
+import { builtinDatasourcePlugins } from "../../plugins"
 
 const AlertPanelEditor = memo((props: AlertEditorProps) => {
     const { panel, onChange } = props
@@ -168,10 +168,11 @@ export const AlertFilterEditor = ({ panel, filter, onChange }: AlertFilterProps)
     const t = useStore(commonMsg)
     const datasources = useStore($datasources)
 
-    const dsSupportAlerts = cloneDeep(datasourceSupportAlerts)
-    Object.entries(externalDatasourcePlugins).forEach(([dsType, ds]) => {
+    const plugins = concat(Object.entries(builtinDatasourcePlugins), Object.entries(externalDatasourcePlugins))
+    const dsSupportAlerts = []
+    plugins.forEach(([dsType, ds]) => {
         if (ds.queryAlerts) {
-            dsSupportAlerts.push(dsType as any)
+            dsSupportAlerts.push(dsType)
         }
     })
 
@@ -231,7 +232,7 @@ export const AlertFilterEditor = ({ panel, filter, onChange }: AlertFilterProps)
                     }
                 } />
         </PanelEditItem>
-        {filter.datasources.find(dsId => datasources.find(ds => ds.id == dsId).type == DatasourceType.ExternalHttp) && <HttpQueryEditor panel={panel} datasource={panel.datasource} onChange={v => onChange((panel: Panel) => {
+        {filter.datasources.find(dsId => datasources.find(ds => ds.id == dsId).type == DatasourceTypeHttp) && <HttpQueryEditor panel={panel} datasource={panel.datasource} onChange={v => onChange((panel: Panel) => {
             switch (panel.type) {
                 case PanelTypeAlert:
                     panel.plugins.alert.filter.httpQuery = v

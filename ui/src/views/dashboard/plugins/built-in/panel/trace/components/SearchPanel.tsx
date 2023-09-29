@@ -1,7 +1,7 @@
 import { Form, FormSection } from "src/components/form/Form"
 import InputSelect from "src/components/select/InputSelect"
 import { useEffect, useMemo, useState } from "react"
-import { DatasourceType, Panel } from "types/dashboard"
+import {  Panel } from "types/dashboard"
 import { queryJaegerOperations, queryJaegerServices } from "../../../datasource/jaeger/query_runner"
 import { isEqual, set, sortBy, uniq } from "lodash"
 import { EditorInputItem, EditorNumberItem } from "src/components/editor/EditorItem"
@@ -23,6 +23,7 @@ import { getDatasource } from "utils/datasource"
 import { MobileBreakpoint } from "src/data/constants"
 import { $datasources } from "src/views/datasource/store"
 import { addParamToUrl } from "utils/url"
+import { DatasourceTypeJaeger } from "../../../datasource/jaeger/types"
 interface Props {
     panel: Panel
     onSearch: any
@@ -160,7 +161,7 @@ const TraceSearchPanel = ({ timeRange, dashboardId, panel, onSearch, onSearchIds
 
     const loadServices = async () => {
         switch (ds.type) {
-            case DatasourceType.Jaeger:
+            case DatasourceTypeJaeger:
                 const res = await queryJaegerServices(panel.datasource.id)
                 const ss = sortBy(res)
                 setServices(ss)  
@@ -182,7 +183,7 @@ const TraceSearchPanel = ({ timeRange, dashboardId, panel, onSearch, onSearchIds
 
     const loadOperations = async (s?) => {
         switch (ds.type) {
-            case DatasourceType.Jaeger:
+            case DatasourceTypeJaeger:
                 const services = s ?? replaceWithVariablesHasMultiValues(service)
                 traceServicesCache[dashboardId + panel.id] = services
                 const res = await Promise.all(services.map(service => queryJaegerOperations(panel.datasource.id, service)))

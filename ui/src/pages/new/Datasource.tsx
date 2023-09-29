@@ -17,17 +17,17 @@ import Page from "layouts/page/Page"
 import { FaPlus } from "react-icons/fa"
 import { newLinks } from "src/data/nav-links"
 import DatasourceEditor from "src/views/datasource/Editor"
-import {  DatasourceType } from "types/dashboard"
 import { Datasource } from "types/datasource"
 import { commonMsg, newMsg } from "src/i18n/locales/en"
 import { useStore } from "@nanostores/react"
 import { globalTeamId } from "types/teams"
+import { DatasourceTypePrometheus } from "src/views/dashboard/plugins/built-in/datasource/prometheus/types"
 
 const initDatasource: Datasource = {
     id: 0,
     name: '',
     url: null,
-    type: DatasourceType.Prometheus,
+    type: DatasourceTypePrometheus,
     teamId: globalTeamId
 }
 

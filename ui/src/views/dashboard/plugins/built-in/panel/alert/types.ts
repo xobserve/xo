@@ -45,7 +45,6 @@ export interface AlerSettings extends DisableDatasource {
 
 
 import { AlertState } from "types/alert"
-import { DatasourceType } from "types/dashboard"
 
 // limitations under the License.
 export interface AlertToolbarOptions {
@@ -87,7 +86,7 @@ export interface AlertRule {
 
     groupName: string 
     groupNamespace: string 
-    fromDs: DatasourceType
+    fromDs: string
 }
 
 export interface Alert {

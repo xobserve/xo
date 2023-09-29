@@ -1,5 +1,18 @@
 import { getInitUnits } from "src/data/panel/initPlugins"
+import { Panel, PanelEditorProps } from "types/dashboard"
 import {  ValueSetting } from "types/panel/plugins"
+
+export const PanelTypeCandle = "candlestick"
+
+export interface CandlePanel extends Panel {
+    plugins: {
+        [PanelTypeCandle]: PluginSettings
+    }
+}
+
+export interface CandleEditorProps extends PanelEditorProps {
+    panel: CandlePanel
+}
 
 export interface PluginSettings  {
     animation: boolean

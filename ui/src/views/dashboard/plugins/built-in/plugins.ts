@@ -17,6 +17,11 @@ import tablePanel from './panel/table'
 import textPanel from './panel/text'
 import tracePanel from './panel/trace'
 
+import prometheusDs from './datasource/prometheus'
+import httpDs from './datasource/http'
+import jaegerDs from './datasource/jaeger'
+import lokiDs from './datasource/loki'
+import testdataDs from './datasource/testdata'
 
 export const builtinPanelPlugins: Record<string,PanelPluginComponents> = {
 	[graphPanel.settings.type]: graphPanel,
@@ -37,4 +42,9 @@ export const builtinPanelPlugins: Record<string,PanelPluginComponents> = {
 }
 
 export const builtinDatasourcePlugins: Record<string,DatasourcePluginComponents> = {
+    [prometheusDs.settings.type]: prometheusDs,
+    [httpDs.settings.type]: httpDs,
+    [jaegerDs.settings.type]: jaegerDs,
+    [lokiDs.settings.type]: lokiDs,
+    [testdataDs.settings.type]: testdataDs
 }

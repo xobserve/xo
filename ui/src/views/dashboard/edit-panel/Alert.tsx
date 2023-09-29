@@ -16,7 +16,7 @@ import React, { useEffect, useMemo, useState } from "react"
 import { Panel } from "types/dashboard"
 import { queryAlerts } from "../grid/PanelGrid/PanelGrid"
 import { filterAlerts } from "../plugins/built-in/panel/alert/Alert"
-import { AlertRule } from "types/plugins/alert"
+
 import { sortBy } from "lodash"
 import AlertRuleItem from "../plugins/built-in/panel/alert/components/AlertRuleItem"
 import useBus from "use-bus"
@@ -26,6 +26,7 @@ import { getPanelRealTime } from "../store/panelRealtime"
 import { $datasources } from "src/views/datasource/store"
 import { paletteMap } from "utils/colors"
 import { ColorGenerator } from "utils/colorGenerator"
+import { AlertRule } from "../plugins/built-in/panel/alert/types"
 
 interface Props {
     panel: Panel

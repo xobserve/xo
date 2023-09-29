@@ -12,7 +12,7 @@
 // limitations under the License.
 
 import { Box, Center, HStack, useMediaQuery } from "@chakra-ui/react"
-import { DatasourceType, PanelProps } from "types/dashboard"
+import {  PanelProps } from "types/dashboard"
 import TraceSearchPanel from "./components/SearchPanel"
 import logfmtParser from 'logfmt/lib/logfmt_parser';
 import { queryJaegerTrace, queryJaegerTraces } from "../../datasource/jaeger/query_runner"
@@ -31,6 +31,8 @@ import { isTraceData } from "./utils/trace";
 import { isEmpty } from "utils/validate";
 import { useStore } from "@nanostores/react";
 import { $datasources } from "src/views/datasource/store";
+import { DatasourceTypeTestData } from "../../datasource/testdata/types";
+import { DatasourceTypeJaeger } from "../../datasource/jaeger/types";
 
 
 
@@ -61,7 +63,7 @@ const TracePanel = (props: PanelProps) => {
     const datasources = useStore($datasources)
     const ds = getDatasource(props.panel.datasource.id, datasources)
     useEffect(() => {
-        if (ds.type == DatasourceType.TestData) {
+        if (ds.type == DatasourceTypeTestData) {
             onSearch(null, null, null, null, null, null, true)
         }
     }, [ds.type, props.data]
@@ -73,7 +75,7 @@ const TracePanel = (props: PanelProps) => {
             tr = props.timeRange
         }
         switch (ds.type) {
-            case DatasourceType.Jaeger:
+            case DatasourceTypeJaeger:
                 tags = replaceWithVariables(tags)
                 min = replaceWithVariables(min)
                 max = replaceWithVariables(max)
@@ -90,7 +92,7 @@ const TracePanel = (props: PanelProps) => {
                 const res = await Promise.all(promises)
                 setRawTraces(uniqBy(res.filter(r => r).flat(), t => t.traceID))
                 break;
-            case DatasourceType.TestData:
+            case DatasourceTypeTestData:
                 setRawTraces(uniqBy(cloneDeep(props.data).flat().filter(r => r).flat(), t => t.traceID))
                 break
             default:
@@ -103,7 +105,7 @@ const TracePanel = (props: PanelProps) => {
     const onSearchIds = (traceIds) => {
         const ids = traceIds.split(',')
         switch (ds.type) {
-            case DatasourceType.Jaeger:
+            case DatasourceTypeJaeger:
                 Promise.all(ids.map(id => queryJaegerTrace(props.panel.datasource.id, id))).then(res => {
                     setRawTraces(res.filter(r => r).flat())
                 })
@@ -122,7 +124,7 @@ const TracePanel = (props: PanelProps) => {
     const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
     const searchPanelWidth = isLargeScreen ? "400px" : "140px"
     return (<>
-        {(ds.type != DatasourceType.Jaeger && ds.type != DatasourceType.TestData) ? <Center height="100%">No data</Center> :
+        {(ds.type != DatasourceTypeJaeger && ds.type != DatasourceTypeTestData) ? <Center height="100%">No data</Center> :
             <HStack alignItems="top" px="2" py="1" spacing={isLargeScreen ? 6 : 2}>
                 <Box width={searchPanelWidth} pt="2" pl="1" maxH={props.height} px={isLargeScreen ? 4 : 0}>
                     <CustomScrollbar>

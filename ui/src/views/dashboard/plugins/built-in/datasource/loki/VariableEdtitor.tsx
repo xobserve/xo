@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box, Button, Switch } from "@chakra-ui/react"
+import { Switch } from "@chakra-ui/react"
 import { useEffect, useState } from "react"
 import { Variable } from "types/variable"
 import { isJSON } from "utils/is"

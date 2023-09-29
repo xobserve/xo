@@ -27,6 +27,7 @@ import { cfgDatasourceMsg, commonMsg } from "src/i18n/locales/en"
 import { Team } from "types/teams"
 import { externalDatasourcePlugins } from "src/views/dashboard/plugins/external/plugins"
 import Loading from "components/loading/Loading"
+import { builtinDatasourcePlugins } from "src/views/dashboard/plugins/built-in/plugins"
 
 const TeamDatasources = ({ team }: { team: Team }) => {
     const t = useStore(commonMsg)
@@ -87,6 +88,12 @@ const TeamDatasources = ({ team }: { team: Team }) => {
             builtInDatasources.push(ds)
         }
     })
+
+    const getDsIcon = (ds: Datasource) => {
+        const p =  builtinDatasourcePlugins[ds.type] ?? externalDatasourcePlugins[ds.type]
+        return p && p.settings.icon
+    }
+
     return <>
         <Box>
             <Flex justifyContent="space-between" alignItems="end">
@@ -97,13 +104,13 @@ const TeamDatasources = ({ team }: { team: Team }) => {
             {datasources ?<VStack alignItems="left" spacing={2} mt="3">
                 {
                     builtInDatasources?.map(ds => {
-                        return <DatasourceCard ds={ds} selectedDs={datasource} dsIcon={`/plugins/datasource/${ds.type}.svg`} t={t} onEdit={() => { setDatasource(ds); onOpen() }} onDelete={() => { onAlertOpen(); setDatasource(ds) }} />
+                        return <DatasourceCard ds={ds} selectedDs={datasource} dsIcon={getDsIcon(ds)} t={t} onEdit={() => { setDatasource(ds); onOpen() }} onDelete={() => { onAlertOpen(); setDatasource(ds) }} />
                     })
                 }
                 <Text>{t.external}</Text>
                 {
                     externalDatasources?.map(ds => {
-                        return <DatasourceCard ds={ds} selectedDs={datasource} dsIcon={`/plugins/external/datasource/${ds.type}.svg`} t={t} onEdit={() => { setDatasource(ds); onOpen() }} onDelete={() => { onAlertOpen(); setDatasource(ds) }} />
+                        return <DatasourceCard ds={ds} selectedDs={datasource} dsIcon={getDsIcon(ds)} t={t} onEdit={() => { setDatasource(ds); onOpen() }} onDelete={() => { onAlertOpen(); setDatasource(ds) }} />
                     })
                 }
             </VStack> : <Loading style={{marginTop: '50px'}}/>}

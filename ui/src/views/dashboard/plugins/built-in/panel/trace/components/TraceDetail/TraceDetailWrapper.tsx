@@ -14,7 +14,6 @@
 import { useEffect, useState } from "react"
 import { Trace } from "src/views/dashboard/plugins/built-in/panel/trace/types/trace"
 import { queryJaegerTrace } from "../../../../datasource/jaeger/query_runner"
-import { DatasourceType } from "types/dashboard"
 import TraceDetail from "./TraceDetail"
 import transformTraceData from "../../utils/transform-trace-data"
 import ScrollManager from "./scroll/scrollManager"
@@ -25,6 +24,8 @@ import { useStore } from "@nanostores/react"
 import { $datasources, $teamDatasources } from "src/views/datasource/store"
 import { useSearchParam } from "react-use"
 import traceData from '../../mocks/traces.json'
+import { DatasourceTypeJaeger } from "../../../../datasource/jaeger/types"
+import { DatasourceTypeTestData } from "../../../../datasource/testdata/types"
 
 const TraceDetailWrapper = ({id,dsId}) => {
     const [trace, setTrace] = useState<Trace>(null)
@@ -55,14 +56,14 @@ const TraceDetailWrapper = ({id,dsId}) => {
     const load = async () => {
         let data
         switch (datasource?.type) {
-            case DatasourceType.Jaeger:
+            case DatasourceTypeJaeger:
                 const res = await queryJaegerTrace(dsId, id)
              
                 if (res.length > 0) {
                     data = transformTraceData(res[0])
                 }
                 break
-            case DatasourceType.TestData:
+            case DatasourceTypeTestData:
                 const r = traceData.data.find(trace => trace.traceID == id)
                 if (r) {
                     data = transformTraceData(r as any)

@@ -12,27 +12,18 @@
 // limitations under the License.
 import { Box, Button, Divider, HStack, Image, Input, Select, Text, useToast } from "@chakra-ui/react"
 import { isEmpty, upperFirst } from "lodash"
-import { checkAndTestHttp } from "src/views/dashboard/plugins/built-in/datasource/http/query_runner"
-import { checkAndTestJaeger } from "src/views/dashboard/plugins/built-in/datasource/jaeger/query_runner"
-import { checkAndTestPrometheus } from "src/views/dashboard/plugins/built-in/datasource/prometheus/query_runner"
-import { DatasourceType } from "types/dashboard"
 import { Datasource } from "types/datasource"
 import { useImmer } from "use-immer"
 import { requestApi } from "utils/axios/request"
-import HttpDatasourceEditor from "../dashboard/plugins/built-in/datasource/http/DatasourceEditor"
-import PrometheusDatasourceEditor from "../dashboard/plugins/built-in/datasource/prometheus/DatasourceEditor"
-import TestDataDatasourceEditor from "../dashboard/plugins/built-in/datasource/testdata/DatasourceEditor"
-import JaegerDatasourceEditor from "../dashboard/plugins/built-in/datasource/jaeger/DatasourceEditor"
 import FormItem from "src/components/form/Item"
 import React, { useState } from "react";
 import { useStore } from "@nanostores/react"
 import { commonMsg, newMsg } from "src/i18n/locales/en"
-import { checkAndTestLoki } from "../dashboard/plugins/built-in/datasource/loki/query_runner"
-import LokiDatasourceEditor from "../dashboard/plugins/built-in/datasource/loki/DatasourceEditor"
 import { $teams } from "../team/store"
 import { useSearchParam } from "react-use"
 import { FormSection } from "components/form/Form"
 import { externalDatasourcePlugins } from "../dashboard/plugins/external/plugins"
+import { builtinDatasourcePlugins } from "../dashboard/plugins/built-in/plugins"
 
 interface Props {
     ds: Datasource
@@ -40,21 +31,21 @@ interface Props {
     teamEditable?: boolean
 }
 
-const DatasourceEditor = ({ ds, onChange = null, teamEditable=true }: Props) => {
+const DatasourceEditor = ({ ds, onChange = null, teamEditable = true }: Props) => {
     const t = useStore(commonMsg)
     const t1 = useStore(newMsg)
     const toast = useToast()
     const [datasource, setDatasource] = useImmer<Datasource>(ds)
-    const [teamId, setTeamId] = useState( useSearchParam('teamId')?? (ds.teamId))
+    const [teamId, setTeamId] = useState(useSearchParam('teamId') ?? (ds.teamId))
     const teams = useStore($teams)
 
 
-    const externalDs = externalDatasourcePlugins[datasource.type]
-    const dsIcon =  externalDs ? `/plugins/external/datasource/${datasource.type}.svg`  : `/plugins/datasource/${datasource.type}.svg`
-    const ExternalEditor = externalDs && externalDs.datasourceEditor
+    const plugin = builtinDatasourcePlugins[datasource.type] ?? externalDatasourcePlugins[datasource.type]
+    const isExternalPlugin = isEmpty(builtinDatasourcePlugins[datasource.type])
+    const EditorPlugin = plugin && plugin.datasourceEditor
 
     const saveDatasource = async () => {
-        await requestApi.post("/datasource/save", {...datasource,teamId: Number(teamId)})
+        await requestApi.post("/datasource/save", { ...datasource, teamId: Number(teamId) })
         toast({
             title: ds.id == 0 ? t1.dsToast : t.isUpdated({ name: t.datasource }),
             status: "success",
@@ -82,32 +73,12 @@ const DatasourceEditor = ({ ds, onChange = null, teamEditable=true }: Props) => 
             return
         }
 
-        //@needs-update-when-add-new-datasource
-        let passed;
-        switch (datasource.type) {
-            case DatasourceType.Prometheus:
-                passed = await checkAndTestPrometheus(datasource)
-                break
-            case DatasourceType.ExternalHttp:
-                passed = await checkAndTestHttp(datasource)
-                break
-            case DatasourceType.Jaeger:
-                passed = await checkAndTestJaeger(datasource)
-                break
-            case DatasourceType.Loki:
-                passed = await checkAndTestLoki(datasource)
-                break
-            case DatasourceType.TestData:
-                passed = true
-                break
-            default:
-                if (externalDs && externalDs.testDatasource) {
-                    passed = await externalDs.testDatasource(datasource)
-                    break
-                }
-                passed = false
-                break
+        let passed = false;
+
+        if (plugin && plugin.testDatasource) {
+            passed = await plugin.testDatasource(datasource)
         }
+
 
         if (passed === true) {
             saveDatasource()
@@ -140,18 +111,18 @@ const DatasourceEditor = ({ ds, onChange = null, teamEditable=true }: Props) => 
                 <HStack>
                     <Select width="fit-content" value={datasource.type} onChange={e => {
                         const v = e.currentTarget.value
-                        setDatasource((d: Datasource) => { d.type = v as any;d.url = null })
+                        setDatasource((d: Datasource) => { d.type = v as any; d.url = null })
                     }}>
-                        {Object.keys(DatasourceType).map((key, index) => {
-                            return <option key={index} value={DatasourceType[key]}>{key}</option>
+                        {Object.keys(builtinDatasourcePlugins).map(dsType => {
+                            return <option key={dsType} value={dsType}>{upperFirst(dsType)}</option>
                         })}
                         <Divider />
                         {Object.keys(externalDatasourcePlugins).map(dsType => {
                             return <option key={dsType} value={dsType}>{upperFirst(dsType)}</option>
                         })}
                     </Select>
-                    <Image width="30px" height="30px" src={dsIcon} />
-                    {externalDs && <Text textStyle="annotation">{t.external}</Text>}
+                    <Image width="30px" height="30px" src={plugin.settings.icon} />
+                    {isExternalPlugin && <Text textStyle="annotation">{t.external}</Text>}
                 </HStack>
             </FormItem>
             <FormItem title={t1.belongTeam}>
@@ -167,13 +138,7 @@ const DatasourceEditor = ({ ds, onChange = null, teamEditable=true }: Props) => 
                     </Select>
                 </Box>
             </FormItem>
-            {/* @needs-update-when-add-new-datasource */}
-            {datasource.type == DatasourceType.ExternalHttp && <HttpDatasourceEditor datasource={datasource} onChange={setDatasource} />}
-            {datasource.type == DatasourceType.Prometheus && <PrometheusDatasourceEditor datasource={datasource} onChange={setDatasource} />}
-            {datasource.type == DatasourceType.TestData && <TestDataDatasourceEditor datasource={datasource} onChange={setDatasource} />}
-            {datasource.type == DatasourceType.Jaeger && <JaegerDatasourceEditor datasource={datasource} onChange={setDatasource} />}
-            {datasource.type == DatasourceType.Loki && <LokiDatasourceEditor datasource={datasource} onChange={setDatasource} />}
-            {ExternalEditor && <ExternalEditor datasource={datasource} onChange={setDatasource} />}
+            {EditorPlugin && <EditorPlugin datasource={datasource} onChange={setDatasource} />}
             <Button onClick={testDatasource} size="sm" mt="4">{t.test} & {t.save}</Button>
         </FormSection>
     </Box>)

@@ -10,19 +10,15 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box, Button, Flex, HStack, Image, Select, Text, Tooltip, VStack, Drawer, DrawerCloseButton, DrawerContent, DrawerHeader, DrawerOverlay, useDisclosure, DrawerBody, Tabs, TabList, TabPanels, TabPanel, Tab, useColorMode, useColorModeValue, } from "@chakra-ui/react"
+import { Box, Button, Flex, HStack, Image, Text, Tooltip, VStack, Drawer, DrawerCloseButton, DrawerContent, DrawerHeader, DrawerOverlay, useDisclosure, DrawerBody, Tabs, TabList, TabPanels, TabPanel, Tab, useColorMode, useColorModeValue, } from "@chakra-ui/react"
 import { useState } from "react"
 import { FaAngleDown, FaAngleRight, FaBookOpen, FaEye, FaEyeSlash, FaPlus, FaTrashAlt } from "react-icons/fa"
-import { DatasourceType, Panel, PanelQuery } from "types/dashboard"
-import JaegerQueryEditor from "../plugins/built-in/datasource/jaeger/QueryEditor"
-import PrometheusQueryEditor from "../plugins/built-in/datasource/prometheus/QueryEditor"
-import TestDataQueryEditor from "../plugins/built-in/datasource/testdata/Editor"
+import {  Panel, PanelQuery } from "types/dashboard"
 import { initDatasource } from "src/data/panel/initPanel"
 import { EditorInputItem, EditorNumberItem } from "src/components/editor/EditorItem"
 import { calculateInterval } from "utils/datetime/range"
 import { getCurrentTimeRange } from "src/components/DatePicker/TimePicker"
 
-import HttpQueryEditor from "../plugins/built-in/datasource/http/QueryEditor"
 import FormItem from "src/components/form/Item"
 import { FormSection } from "src/components/form/Form"
 import React from "react";
@@ -30,7 +26,6 @@ import { commonMsg, panelMsg } from "src/i18n/locales/en"
 import { useStore } from "@nanostores/react"
 import { isEmpty } from "utils/validate"
 import { DatasourceMinInterval } from "src/data/constants"
-import LokiQueryEditor from "../plugins/built-in/datasource/loki/QueryEditor"
 import DatasourceSelect from "src/components/datasource/Select"
 import { getDatasource } from "utils/datasource"
 import { isNumber, upperFirst } from "lodash"
@@ -40,6 +35,8 @@ import getPrometheusDocs from "../plugins/built-in/datasource/prometheus/docs"
 import { MarkdownRender } from "components/markdown/MarkdownRender"
 import customColors from "theme/colors"
 import Toc from "components/Toc/Toc"
+import { builtinDatasourcePlugins } from "../plugins/built-in/plugins"
+import { DatasourceTypePrometheus } from "../plugins/built-in/datasource/prometheus/types"
 
 interface Props {
     panel: Panel
@@ -114,21 +111,12 @@ const EditPanelQuery = (props: Props) => {
         })
     }
     const currentDatasource = getDatasource(panel.datasource.id)
-    const externalDs = externalDatasourcePlugins[currentDatasource?.type]
-    const dsIcon = externalDs ? `/plugins/external/datasource/${currentDatasource?.type}.svg` : `/plugins/datasource/${currentDatasource?.type}.svg`
+    const plugin = builtinDatasourcePlugins[currentDatasource?.type] ?? externalDatasourcePlugins[currentDatasource?.type]
+    const dsIcon = plugin?.settings.icon
 
     let docs: { tab: string, content: string, toc: { level: string; content: string }[] }[] = [];;
-    if (externalDs && externalDs.getDocs) {
-        docs = externalDs.getDocs()
-    } else {
-        switch (currentDatasource?.type) {
-            case DatasourceType.Prometheus:
-                docs = getPrometheusDocs()
-                break;
-
-            default:
-                break;
-        }
+    if (plugin && plugin.getDocs) {
+        docs = plugin.getDocs()
     }
 
     return (<>
@@ -173,7 +161,7 @@ const EditPanelQuery = (props: Props) => {
                 <DrawerCloseButton />
                 {/* <DrawerHeader>{upperFirst(currentDatasource?.type)} Docs</DrawerHeader> */}
                 <DrawerBody width="100%" pl="0">
-                    <Tabs isLazy defaultIndex={docsTab} onChange={(index) => {setDocsTab(index)}} >
+                    <Tabs isLazy defaultIndex={docsTab} onChange={(index) => { setDocsTab(index) }} >
                         <TabList>
                             {
                                 docs.map((d, index) => {
@@ -185,10 +173,10 @@ const EditPanelQuery = (props: Props) => {
                             {
                                 docs.map((d, index) => {
                                     return <TabPanel pl="0">
-                                        {d.toc && <Box  position="fixed" top="0" ml="0px" transform='translateX(-100%)'>
-                                            <Toc toc={d.toc}/>
+                                        {d.toc && <Box position="fixed" top="0" ml="0px" transform='translateX(-100%)'>
+                                            <Toc toc={d.toc} />
                                         </Box>}
-                                      
+
                                         <Box pl="6">
                                             <MarkdownRender md={d.content} width="100%" />
                                         </Box>
@@ -256,24 +244,10 @@ const CustomQueryEditor = ({ panel, query, onChange, selected, dsType }) => {
         })
     }
 
-
-    //@needs-update-when-add-new-datasource
-    switch (dsType) {
-        case DatasourceType.Prometheus:
-            return <PrometheusQueryEditor datasource={selected} query={query} onChange={onQueryChange} panel={panel} />
-        case DatasourceType.TestData:
-            return <TestDataQueryEditor datasource={selected} query={query} onChange={onQueryChange} panel={panel} />
-        case DatasourceType.Jaeger:
-            return <JaegerQueryEditor datasource={selected} query={query} onChange={onQueryChange} panel={panel} />
-        case DatasourceType.ExternalHttp:
-            return <HttpQueryEditor datasource={selected} query={query} onChange={onQueryChange} panel={panel} />
-        case DatasourceType.Loki:
-            return <LokiQueryEditor datasource={selected} query={query} onChange={onQueryChange} panel={panel} />
-        default:
-            const p = externalDatasourcePlugins[dsType]
-            if (p && p.queryEditor) {
-                return <p.queryEditor datasource={selected} query={query} onChange={onQueryChange} panel={panel} />
-            }
-            return <></>
+    const p = builtinDatasourcePlugins[dsType] ?? externalDatasourcePlugins[dsType]
+    if (p && p.queryEditor) {
+        return <p.queryEditor datasource={selected} query={query} onChange={onQueryChange} panel={panel} />
     }
+    return <></>
+
 }

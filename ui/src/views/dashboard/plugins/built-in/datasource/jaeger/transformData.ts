@@ -10,9 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { isEmpty } from "lodash"
 import { Panel, PanelQuery } from "types/dashboard"
-import { NodeGraphPluginData } from "types/plugins/nodeGraph"
 import { TimeRange } from "types/time"
 import { nodeGraphDataToSeries } from "../../panel/nodeGraph/transformData"
 import { PanelTypeNodeGraph } from "../../panel/nodeGraph/types"
@@ -69,8 +67,8 @@ export const jaegerToPanels = (rawData: any[], panel: Panel, query: PanelQuery, 
 //     },
 //   })
 // }
-const jaegerToNodeGraphData = (rawData: any[], query: PanelQuery):NodeGraphPluginData => {
-    const data: NodeGraphPluginData = {
+const jaegerToNodeGraphData = (rawData: any[], query: PanelQuery) => {
+    const data = {
         nodes: [],
         edges: []
     }

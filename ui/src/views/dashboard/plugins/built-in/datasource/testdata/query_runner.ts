@@ -37,7 +37,7 @@ export const run_testdata_query = async (panel: Panel, q: PanelQuery, range: Tim
 }
 
 
-export const query_testdata_alerts = (panel: Panel, timeRange: TimeRange, ds: Datasource) => {
+export const query_testdata_alerts = (panel: Panel, timeRange: TimeRange, ds: Datasource, query: PanelQuery) => {
     const alertsData = getMockAlerts(timeRange)
     alertsData.data["fromDs"] = ds.type
     return {
@@ -74,4 +74,8 @@ export const transformSchemaDataToSeriesData = (schemaData) => {
     }
 
     return seriesList
+}
+
+export const testTestData = async (ds: Datasource) => {
+   return true
 }

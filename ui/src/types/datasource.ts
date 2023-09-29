@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { DatasourceType, Panel, PanelDatasource, PanelQuery } from "./dashboard"
+import {  Panel, PanelDatasource, PanelQuery } from "./dashboard"
 import { Variable } from "./variable"
 
 export const defaultDatasourceId = 1
@@ -18,7 +18,7 @@ export const defaultDatasourceId = 1
 export interface Datasource {
     id: number 
     name: string
-    type: DatasourceType
+    type: string
     url: string
     data?: {[key: string]: any}
     teamId?: number
