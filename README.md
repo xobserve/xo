@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  Extremely powerful data visualization platform for APM and Observability
+  An open-source observability platform for developers.
 </p>
 
 <p align="center">
