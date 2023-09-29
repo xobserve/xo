@@ -4,6 +4,7 @@ import { TimeRange } from "types/time"
 export interface PanelPluginComponents {
     panel: any,
     editor: any,
+    icon: string,
     overrideEditor?: any,
     overrideRules?: any,
     getOverrideTargets?: (panel, data) => any

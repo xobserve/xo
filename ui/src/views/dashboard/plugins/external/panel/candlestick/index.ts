@@ -8,6 +8,7 @@ import { PanelPluginComponents } from "types/plugins/plugin";
 import PanelComponent, { mockDataForTestDataDs } from "./Panel";
 import PanelEditor from "./Editor";
 import OverrideEditor, { OverrideRules, getOverrideTargets } from "./OverrideEditor";
+import icon from './candlestick.svg'
 
 const panelComponents: PanelPluginComponents = {
     panel: PanelComponent,
@@ -15,7 +16,8 @@ const panelComponents: PanelPluginComponents = {
     overrideEditor: OverrideEditor,
     overrideRules: OverrideRules,
     getOverrideTargets: getOverrideTargets,
-    mockDataForTestDataDs: mockDataForTestDataDs
+    mockDataForTestDataDs: mockDataForTestDataDs,
+    icon
 }
 
 export default  panelComponents

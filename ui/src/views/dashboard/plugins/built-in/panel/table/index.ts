@@ -4,6 +4,7 @@ import PanelEditor from "./Editor";
 import TablePanel from "./Table";
 import TableOverridesEditor, { TableRules, getTableOverrideTargets } from "./OverridesEditor";
 import { mockTableDataForTestDataDs } from "./mockData";
+import icon from './table.svg'
 
 
 const panelComponents: PanelPluginComponents = {
@@ -12,7 +13,8 @@ const panelComponents: PanelPluginComponents = {
     overrideEditor: TableOverridesEditor,
     overrideRules: TableRules,
     getOverrideTargets: getTableOverrideTargets,
-    mockDataForTestDataDs:  mockTableDataForTestDataDs
+    mockDataForTestDataDs:  mockTableDataForTestDataDs,
+    icon
 }
 
 export default  panelComponents

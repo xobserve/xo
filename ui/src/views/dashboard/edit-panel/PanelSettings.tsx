@@ -25,6 +25,8 @@ import { CodeEditorModal } from "src/components/CodeEditor/CodeEditorModal"
 import plugins from 'public/plugins/external/panel/plugins.json'
 import { $config } from "src/data/configs/config"
 import { isEmpty } from "utils/validate"
+import { builtinPanelPlugins } from "../plugins/built-in/plugins"
+import { externalPanelPlugins } from "../plugins/external/plugins"
 
 // in edit mode, we need to cache all the plugins we have edited, until we save the dashboard
 let pluginsCachedInEdit = {}
@@ -56,9 +58,10 @@ const PanelSettings = memo(({ panel, onChange }: PanelEditorProps) => {
     }, [])
 
     const disabledPanels = $config.get().plugins?.disablePanels
-    const externalPanelPlugins = plugins.filter(p => !disabledPanels?.includes(p.type))
-    const builtinPanelPlugins = Object.keys(PanelType).filter(k => !disabledPanels?.includes(k))
-    const isExternalPanel = !isEmpty(externalPanelPlugins.find(p => p.type == panel.type))
+    const externalPlugins = plugins.filter(p => !disabledPanels?.includes(p.type))
+    const builtinPlugins = Object.values(PanelType).filter(k => !disabledPanels?.includes(k))
+    const isExternalPanel = !isEmpty(externalPlugins.find(p => p.type == panel.type))
+
     return (
         <>
             <PanelAccordion title={t.basicSetting} spacing={2} defaultOpen={false}>
@@ -99,29 +102,31 @@ const PanelSettings = memo(({ panel, onChange }: PanelEditorProps) => {
             <PanelAccordion title={t1.visualization + (!isExternalPanel ? ` -> ${panel.type}` : "")} defaultOpen={false}>
                 <SimpleGrid columns={3} spacing="2">
                     {
-                        builtinPanelPlugins.map((key) => {
-                            if (PanelType[key] == PanelType.Row) {
+                        builtinPlugins.map((panelType) => {
+                            const plugin = builtinPanelPlugins[panelType]
+                            if (panelType== PanelType.Row) {
                                 return <></>
                             }
                             return <VisulizationItem
-                                selected={panel.type == PanelType[key]}
-                                title={upperFirst(PanelType[key])}
-                                imageUrl={`/plugins/panel/${PanelType[key].toLowerCase()}.svg`}
-                                onClick={() => onChangeVisualization(PanelType[key])}
+                                selected={panel.type == panelType}
+                                title={upperFirst(panelType)}
+                                imageUrl={plugin?.icon}
+                                onClick={() => onChangeVisualization(panelType)}
                             />
                         })
                     }
                 </SimpleGrid>
             </PanelAccordion>
             {
-                externalPanelPlugins.length > 0 && <PanelAccordion title={t1.externalPanels + (isExternalPanel ? ` -> ${panel.type}` : "")} defaultOpen={false}>
+                externalPlugins.length > 0 && <PanelAccordion title={t1.externalPanels + (isExternalPanel ? ` -> ${panel.type}` : "")} defaultOpen={false}>
                     <SimpleGrid columns={3} spacing="2">
                         {
-                            externalPanelPlugins.map((p) => {
+                            externalPlugins.map((p) => {
+                                const plugin = externalPanelPlugins[p.type]
                                 return <VisulizationItem
                                     selected={panel.type == p.type}
                                     title={upperFirst(p.type)}
-                                    imageUrl={`/plugins/external/panel/${p.type}.svg`}
+                                    imageUrl={plugin?.icon}
                                     onClick={() => onChangeVisualization(p.type)}
                                 />
                             })

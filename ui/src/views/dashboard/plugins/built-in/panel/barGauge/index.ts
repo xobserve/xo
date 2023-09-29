@@ -2,18 +2,18 @@
 import { PanelPluginComponents } from "types/plugins/plugin";
 import PanelEditor from "./Editor";
 import BarGaugePanel from "./BarGauge";
-import BarGaugeOverridesEditor, { getBarguageOverrideTargets } from "./OverrideEditor";
-import { BarRules } from "../bar/OverridesEditor";
+import BarGaugeOverridesEditor, { BarGaugeRules, getBarguageOverrideTargets } from "./OverrideEditor";
 import { mockBarGaugeDataForTestDataDs } from "./mockData";
-
+import icon from './bargauge.svg'
 
 const panelComponents: PanelPluginComponents = {
     panel: BarGaugePanel,
     editor: PanelEditor,
     overrideEditor: BarGaugeOverridesEditor,
-    overrideRules: BarRules,
+    overrideRules: BarGaugeRules,
     getOverrideTargets: getBarguageOverrideTargets,
-    mockDataForTestDataDs:  mockBarGaugeDataForTestDataDs
+    mockDataForTestDataDs:  mockBarGaugeDataForTestDataDs,
+    icon
 }
 
 export default  panelComponents

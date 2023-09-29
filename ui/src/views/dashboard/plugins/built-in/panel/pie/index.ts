@@ -4,6 +4,8 @@ import PanelEditor from "./Editor";
 import PiePanelWrapper from "./Pie";
 import PieOverridesEditor, { PieRules, getPieOverrideTargets } from "./OverridesEditor";
 import { mockPieDataForTestDataDs } from "./mockData";
+import icon from './pie.svg'
+
 
 const panelComponents: PanelPluginComponents = {
     panel: PiePanelWrapper,
@@ -11,7 +13,8 @@ const panelComponents: PanelPluginComponents = {
     overrideEditor: PieOverridesEditor,
     overrideRules: PieRules,
     getOverrideTargets: getPieOverrideTargets,
-    mockDataForTestDataDs:  mockPieDataForTestDataDs
+    mockDataForTestDataDs:  mockPieDataForTestDataDs,
+    icon
 }
 
 export default  panelComponents

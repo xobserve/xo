@@ -4,7 +4,7 @@ import PanelEditor from "./Editor";
 import GeoMapPanelWrapper from "./GeoMap";
 import GeomapOverridesEditor, { GeomapRules, getGeomapOverrideTargets } from "./OverridesEditor";
 import { mockGeomapDataForTestDataDs } from "./mocks/mockData";
-
+import icon from './geomap.svg'
 
 const panelComponents: PanelPluginComponents = {
     panel: GeoMapPanelWrapper,
@@ -12,7 +12,8 @@ const panelComponents: PanelPluginComponents = {
     overrideEditor: GeomapOverridesEditor,
     overrideRules: GeomapRules,
     getOverrideTargets: getGeomapOverrideTargets,
-    mockDataForTestDataDs:  mockGeomapDataForTestDataDs
+    mockDataForTestDataDs:  mockGeomapDataForTestDataDs,
+    icon
 }
 
 export default  panelComponents

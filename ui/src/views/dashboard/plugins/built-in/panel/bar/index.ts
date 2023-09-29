@@ -4,7 +4,7 @@ import PanelEditor from "./Editor";
 import BarPanelWrapper from "./Bar";
 import BarOverridesEditor, { BarRules, getBarOverrideTargets } from "./OverridesEditor";
 import { mockBarDataForTestDataDs } from "./mockData";
-
+import icon from './bar.svg'
 
 const panelComponents: PanelPluginComponents = {
     panel: BarPanelWrapper,
@@ -12,7 +12,8 @@ const panelComponents: PanelPluginComponents = {
     overrideEditor: BarOverridesEditor,
     overrideRules: BarRules,
     getOverrideTargets: getBarOverrideTargets,
-    mockDataForTestDataDs:  mockBarDataForTestDataDs
+    mockDataForTestDataDs:  mockBarDataForTestDataDs,
+    icon
 }
 
 export default  panelComponents
