@@ -3,7 +3,7 @@ import { PanelPluginComponents } from "types/plugin";
 import PanelEditor from "./Editor";
 import LogPanelWrapper from "./Log";
 import { mockLogDataForTestDataDs } from "./mocks/mockData";
-import icon from './log.svg'
+import icon from './icon.svg'
 import { LayoutOrientation } from "types/layout";
 import { palettes } from "utils/colors";
 import { PanelTypeLog } from "./types";

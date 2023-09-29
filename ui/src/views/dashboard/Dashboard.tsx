@@ -189,7 +189,9 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
             if (panel.type != PanelTypeRow) {
                 panel = defaultsDeep(panel, delete initPanel().plugins[initPanelType])
                 const plugin = builtinPanelPlugins[panel.type] ?? externalPanelPlugins[panel.type]
-                panel.plugins[panel.type] = defaultsDeep(panel.plugins[panel.type], plugin.settings.initOptions)
+                if (plugin) {
+                    panel.plugins[panel.type] = defaultsDeep(panel.plugins[panel.type], plugin.settings.initOptions)
+                }
                 panel.styles = defaultsDeep(panel.styles, initPanelStyles)
             }
             // console.log("33333 after",cloneDeep(panel.plugins[panel.type]),cloneDeep(panel.overrides))

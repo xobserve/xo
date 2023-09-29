@@ -4,7 +4,7 @@ import PanelEditor from "./Editor";
 import BarGaugePanel from "./BarGauge";
 import BarGaugeOverridesEditor, { BarGaugeRules, getBarguageOverrideTargets } from "./OverrideEditor";
 import { mockBarGaugeDataForTestDataDs } from "./mockData";
-import icon from './bargauge.svg'
+import icon from './icon.svg'
 import { initThresholds, onClickCommonEvent, getInitUnits } from "src/data/panel/initPlugins";
 import { ValueCalculationType } from "types/value";
 import { PanelTypeBarGauge } from "./types";

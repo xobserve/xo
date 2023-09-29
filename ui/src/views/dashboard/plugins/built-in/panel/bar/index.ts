@@ -4,7 +4,7 @@ import PanelEditor from "./Editor";
 import BarPanelWrapper from "./Bar";
 import BarOverridesEditor, { BarRules, getBarOverrideTargets } from "./OverridesEditor";
 import { mockBarDataForTestDataDs } from "./mockData";
-import icon from './bar.svg'
+import icon from './icon.svg'
 import { ValueCalculationType } from "types/value";
 import { initThresholds, onClickCommonEvent,getInitUnits } from "src/data/panel/initPlugins";
 import { ThresholdDisplay } from "types/panel/plugins";

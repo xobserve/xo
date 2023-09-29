@@ -142,7 +142,7 @@ export const prevQueryData = new Map()
 export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onHidePanel, width, height, sync, timeRange }: PanelComponentProps) => {
     const toast = useToast()
     const [panelData, setPanelData] = useState<any[]>(null)
-    const [queryError, setQueryError] = useState()
+    const [queryError, setQueryError] = useState<string>()
     const edit = useSearchParam('edit')
     const [loading, setLoading] = useState(false)
     const datasources = useStore($datasources)
@@ -190,6 +190,13 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
         let needUpdate = false
         const intervalObj = calculateInterval(timeRange, ds.queryOptions.maxDataPoints ?? DatasourceMaxDataPoints, isEmpty(ds.queryOptions.minInterval) ? DatasourceMinInterval : ds.queryOptions.minInterval)
         const interval = intervalObj.intervalMs / 1000
+
+        const plugin = builtinDatasourcePlugins[datasource.type] ?? externalDatasourcePlugins[datasource.type]
+        if (!plugin) {
+            setQueryError("Datasource plugin not found: " + datasource.type)
+            setPanelData([])
+            return 
+        }
 
         setLoading(true)
         if (panel.type == PanelTypeAlert) {
@@ -243,14 +250,16 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
                 res0.forEach((res0, i) => {
                     if (res0.status == "fulfilled") {
                         const res = res0.value
-                        const id = promises[i].id
-                        const currentQuery = promises[i].query
-                        setQueryError(res.error)
-                        // currently only cache not empty data
-                        if (!isEmpty(res.data)) {
-                            data.push(res.data)
-                            prevQueryData[id] = res.data
-                            prevQueries.set(id, currentQuery)
+                        if (res) {
+                            const id = promises[i].id
+                            const currentQuery = promises[i].query
+                            setQueryError(res.error)
+                            // currently only cache not empty data
+                            if (!isEmpty(res.data)) {
+                                data.push(res.data)
+                                prevQueryData[id] = res.data
+                                prevQueries.set(id, currentQuery)
+                            }
                         }
                     } else {
                         console.log("query data error:", res0.reason)
@@ -359,7 +368,7 @@ const CustomPanelRender = memo((props: PanelProps) => {
     if (PluginPanel) {
         return <PluginPanel {...props} />
     }
-    return <></>
+    return <Center height={props.height}>Panel plugin not found: {props.panel.type}</Center>
 })
 
 interface PanelHeaderProps {

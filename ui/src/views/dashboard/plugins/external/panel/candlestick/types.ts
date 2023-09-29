@@ -2,6 +2,8 @@ import { getInitUnits } from "src/data/panel/initPlugins"
 import { Panel, PanelEditorProps } from "types/dashboard"
 import {  ValueSetting } from "types/panel/plugins"
 
+
+// You should keep this type the same as the datasource directory name, but it's not required
 export const PanelTypeCandle = "candlestick"
 
 export interface CandlePanel extends Panel {

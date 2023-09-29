@@ -4,7 +4,7 @@ import PanelEditor from "./Editor";
 import PiePanelWrapper from "./Pie";
 import PieOverridesEditor, { PieRules, getPieOverrideTargets } from "./OverridesEditor";
 import { mockPieDataForTestDataDs } from "./mockData";
-import icon from './pie.svg'
+import icon from './icon.svg'
 import { initThresholds, onClickCommonEvent, getInitUnits } from "src/data/panel/initPlugins";
 import { ValueCalculationType } from "types/value";
 import { PanelTypePie, PieLegendPlacement } from "./types";

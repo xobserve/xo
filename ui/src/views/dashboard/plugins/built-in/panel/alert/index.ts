@@ -2,7 +2,7 @@
 import { PanelPluginComponents } from "types/plugin";
 import PanelEditor from "./Editor";
 import AlertPanel from "./Alert";
-import icon from './alert.svg'
+import icon from './icon.svg'
 import { LayoutOrientation } from "types/layout";
 import { initAlertFilter } from "src/data/panel/initPlugins";
 import { PanelTypeAlert } from "./types";

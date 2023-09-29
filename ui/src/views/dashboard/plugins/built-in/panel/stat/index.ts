@@ -4,7 +4,7 @@ import PanelEditor from "./Editor";
 import StatPanel from "./Stat";
 import StatOverridesEditor, { StatRules, getStatOverrideTargets } from "./OverridesEditor";
 import { mockStatDataForTestDataDs } from "./mockData";
-import icon from './stat.svg'
+import icon from './icon.svg'
 import { initThresholds, onClickCommonEvent, getInitUnits } from "src/data/panel/initPlugins";
 import { LayoutOrientation } from "types/layout";
 import { ValueCalculationType } from "types/value";

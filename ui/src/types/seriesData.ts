@@ -35,7 +35,7 @@ export enum FieldType {
     Geo = "geo"
 }
 
-export interface Field<T = any, V = Vector<T>> {
+export interface Field<T = any> {
     /**
      * Name of the field (column)
      */
@@ -48,42 +48,6 @@ export interface Field<T = any, V = Vector<T>> {
     labels?: {[key: string]: string};
 }
 
-
-export interface Vector<T = any> {
-    length: number;
-
-    /**
-     * Access the value by index (Like an array)
-     */
-    get(index: number): T;
-
-    /**
-     * Get the resutls as an array.
-     */
-    toArray(): T[];
-}
-
-/**
- * Apache arrow vectors are Read/Write
- */
-export interface ReadWriteVector<T = any> extends Vector<T> {
-    set: (index: number, value: T) => void;
-}
-
-/**
- * Vector with standard manipulation functions
- */
-export interface MutableVector<T = any> extends ReadWriteVector<T> {
-    /**
-     * Adds the value to the vector
-     */
-    add: (value: T) => void;
-
-    /**
-     * modifies the vector so it is now the opposite order
-     */
-    reverse: () => void;
-}
 
 
 

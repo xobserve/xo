@@ -4,7 +4,7 @@ import PanelEditor from "./Editor";
 import TablePanel from "./Table";
 import TableOverridesEditor, { TableRules, getTableOverrideTargets } from "./OverridesEditor";
 import { mockTableDataForTestDataDs } from "./mockData";
-import icon from './table.svg'
+import icon from './icon.svg'
 import { onClickCommonEvent } from "src/data/panel/initPlugins";
 import { getDefaultPanelColor } from "utils/colors";
 import { PanelTypeTable } from "./types";

@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box, Button, Switch, Textarea } from "@chakra-ui/react"
+import { Button, Switch } from "@chakra-ui/react"
 import { EditorInputItem, EditorNumberItem } from "src/components/editor/EditorItem"
 import RadionButtons from "src/components/RadioButtons"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"

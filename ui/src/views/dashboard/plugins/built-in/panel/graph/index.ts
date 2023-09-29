@@ -4,7 +4,7 @@ import PanelEditor from "./Editor";
 import GraphOverridesEditor, { GraphRules, getGraphOverrideTargets } from "./OverridesEditor";
 import GraphPanelWrapper from "./Graph";
 import { mockGraphDataForTestDataDs } from "./mockData";
-import icon from './graph.svg'
+import icon from './icon.svg'
 import { ValueCalculationType } from "types/value";
 import { ThresholdDisplay } from "types/panel/plugins";
 import { initAlertFilter, initThresholds, getInitUnits } from "src/data/panel/initPlugins";

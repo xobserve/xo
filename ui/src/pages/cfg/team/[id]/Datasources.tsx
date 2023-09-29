@@ -89,9 +89,9 @@ const TeamDatasources = ({ team }: { team: Team }) => {
         }
     })
 
-    const getDsIcon = (ds: Datasource) => {
+    const getPlugin = (ds: Datasource) => {
         const p =  builtinDatasourcePlugins[ds.type] ?? externalDatasourcePlugins[ds.type]
-        return p && p.settings.icon
+        return p 
     }
 
     return <>
@@ -104,13 +104,13 @@ const TeamDatasources = ({ team }: { team: Team }) => {
             {datasources ?<VStack alignItems="left" spacing={2} mt="3">
                 {
                     builtInDatasources?.map(ds => {
-                        return <DatasourceCard ds={ds} selectedDs={datasource} dsIcon={getDsIcon(ds)} t={t} onEdit={() => { setDatasource(ds); onOpen() }} onDelete={() => { onAlertOpen(); setDatasource(ds) }} />
+                        return <DatasourceCard ds={ds} selectedDs={datasource} plugin={getPlugin(ds)} t={t} onEdit={() => { setDatasource(ds); onOpen() }} onDelete={() => { onAlertOpen(); setDatasource(ds) }} />
                     })
                 }
                 <Text>{t.external}</Text>
                 {
                     externalDatasources?.map(ds => {
-                        return <DatasourceCard ds={ds} selectedDs={datasource} dsIcon={getDsIcon(ds)} t={t} onEdit={() => { setDatasource(ds); onOpen() }} onDelete={() => { onAlertOpen(); setDatasource(ds) }} />
+                        return <DatasourceCard ds={ds} selectedDs={datasource} plugin={getPlugin(ds)} t={t} onEdit={() => { setDatasource(ds); onOpen() }} onDelete={() => { onAlertOpen(); setDatasource(ds) }} />
                     })
                 }
             </VStack> : <Loading style={{marginTop: '50px'}}/>}
@@ -165,12 +165,15 @@ const TeamDatasources = ({ team }: { team: Team }) => {
 export default TeamDatasources
 
 
-const DatasourceCard = ({ ds, selectedDs, dsIcon, onEdit, onDelete, t }) => {
+const DatasourceCard = ({ ds, selectedDs, plugin, onEdit, onDelete, t }) => {
     return <Flex key={ds.id} className={`${selectedDs?.id == ds.id ? "tag-bg" : ""} label-bg`} p="4" alignItems="center" justifyContent="space-between">
         <HStack>
-            <Image width="50px" height="50px" src={dsIcon} />
+            <Image width="50px" height="50px" src={plugin?.settings.icon} />
             <Box>
-                <Text fontWeight="550">{ds.name}</Text>
+                <HStack>
+                    <Text fontWeight="550">{ds.name}</Text>
+                    {!plugin && <Tag colorScheme="red" size="sm">{ds.type} plugin not installed</Tag>}
+                </HStack>
                 <Text textStyle="annotation" mt="1">{ds.type}  {!isEmpty(ds.url) && ` · ` + ds.url} {ds.id == InitTestDataDatasourceId && <Tag size="sm" ml="1"> default</Tag>}</Text>
             </Box>
         </HStack>

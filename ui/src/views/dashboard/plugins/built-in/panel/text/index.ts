@@ -2,7 +2,7 @@
 import { PanelPluginComponents } from "types/plugin";
 import PanelEditor from "./Editor";
 import TextPanel from "./Text";
-import icon from './text.svg'
+import icon from './icon.svg'
 import { PanelTypeText } from "./types";
 
 

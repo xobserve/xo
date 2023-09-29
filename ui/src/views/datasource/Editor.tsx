@@ -121,7 +121,7 @@ const DatasourceEditor = ({ ds, onChange = null, teamEditable = true }: Props) =
                             return <option key={dsType} value={dsType}>{upperFirst(dsType)}</option>
                         })}
                     </Select>
-                    <Image width="30px" height="30px" src={plugin.settings.icon} />
+                    <Image width="30px" height="30px" src={plugin?.settings.icon} />
                     {isExternalPlugin && <Text textStyle="annotation">{t.external}</Text>}
                 </HStack>
             </FormItem>

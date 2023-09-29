@@ -3,7 +3,7 @@ import { PanelPluginComponents } from "types/plugin";
 import PanelEditor from "./Editor";
 import Panel from "./Gauge";
 import { mockGaugeDataForTestDataDs } from "./mockData"
-import icon from './gauge.svg'
+import icon from './icon.svg'
 import { ValueCalculationType } from "types/value";
 import { initThresholds, getInitUnits } from "src/data/panel/initPlugins";
 import { PanelTypeGauge } from "./types";

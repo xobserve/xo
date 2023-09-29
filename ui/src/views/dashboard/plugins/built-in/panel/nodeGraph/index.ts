@@ -3,7 +3,7 @@ import { PanelPluginComponents } from "types/plugin";
 import PanelEditor from "./Editor";
 import NodeGraphPanelWrapper from "./NodeGraph";
 import { mockNodeGraphDataForTestDataDs } from "./mocks/mockData";
-import icon from './nodegraph.svg'
+import icon from './icon.svg'
 import { colors1, getDefaultPanelColor, palettes } from "utils/colors";
 import { PanelTypeNodeGraph } from "./types";
 

@@ -4,7 +4,7 @@ import PanelEditor from "./Editor";
 import GeoMapPanelWrapper from "./GeoMap";
 import GeomapOverridesEditor, { GeomapRules, getGeomapOverrideTargets } from "./OverridesEditor";
 import { mockGeomapDataForTestDataDs } from "./mocks/mockData";
-import icon from './geomap.svg'
+import icon from './icon.svg'
 import { initThresholds, getInitUnits } from "src/data/panel/initPlugins";
 import { ValueCalculationType } from "types/value";
 import { PanelTypeGeomap,  ArcGisMapServer, BaseLayerType, DataLayerType } from "./types";

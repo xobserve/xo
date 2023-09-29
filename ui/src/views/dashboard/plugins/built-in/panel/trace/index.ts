@@ -3,7 +3,7 @@ import { PanelPluginComponents } from "types/plugin";
 import PanelEditor from "./Editor";
 import TracePanelWrapper from "./Trace";
 import { mockTraceDataForTestDataDs } from "./mocks/mockData";
-import icon from './trace.svg'
+import icon from './icon.svg'
 import { PanelTypeTrace } from "./types";
 
 

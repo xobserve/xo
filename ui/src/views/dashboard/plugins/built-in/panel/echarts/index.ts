@@ -3,7 +3,7 @@ import { PanelPluginComponents } from "types/plugin";
 import PanelEditor from "./Editor";
 import EchartsPanel from "./Echarts";
 import { mockEchartsDataForTestDataDs } from "./mockData";
-import icon from './echarts.svg'
+import icon from './icon.svg'
 import { initThresholds, getInitUnits, setEchartsOptions } from "src/data/panel/initPlugins";
 import { PanelTypeEcharts } from "./types";
 
