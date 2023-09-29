@@ -43,7 +43,7 @@ const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
     const overrides = panel.overrides
     const names: { label: string; value: string }[] = useMemo(() => {
         const p = builtinPanelPlugins[panel.type] ??  externalPanelPlugins[panel.type]
-        if (p) {
+        if (p && p.getOverrideTargets) {
             const d = p.getOverrideTargets(panel, data)
             return d ?? []
         }
