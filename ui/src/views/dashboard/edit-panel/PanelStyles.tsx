@@ -12,7 +12,7 @@
 // limitations under the License.
 import { Box, HStack, Select, Switch, VStack, useColorModeValue } from "@chakra-ui/react"
 import { ColorPicker } from "src/components/ColorPicker"
-import { Panel, PanelEditorProps, PanelType } from "types/dashboard"
+import { Panel, PanelEditorProps } from "types/dashboard"
 import { PanelBorderType, PanelTitleDecorationType } from "types/panel/styles"
 import PanelAccordion from "./Accordion"
 import { EditorInputItem, EditorNumberItem } from "../../../components/editor/EditorItem"

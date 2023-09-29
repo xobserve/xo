@@ -17,29 +17,30 @@ import { Box, HStack, Table, TableContainer, Tbody, Td, Text, Tr, useMediaQuery 
 import { formatUnit } from "src/views/dashboard/plugins/components/UnitPicker"
 import { orderBy, round } from "lodash"
 import { memo } from "react"
-import { OverrideItem, PanelProps, PanelType } from "types/dashboard"
+import { OverrideItem, PanelProps } from "types/dashboard"
 import { ValueSetting } from "types/panel/plugins"
 import { SeriesData } from "types/seriesData"
 import { findOverride, findRuleInOverride } from "utils/dashboard/panel";
 import { GraphRules } from "../OverridesEditor";
 import { StatRules } from "../../stat/OverridesEditor";
 import { MobileVerticalBreakpoint } from "src/data/constants";
+import { PanelTypeGraph } from "../types";
 
 interface Props {
     props: PanelProps
     data: SeriesData[]
     nearestSeries?: SeriesData
     filterIdx?: number
-    panelType: PanelType
+    panelType: string
     width?: number
     inactiveSeries?: string[]
 }
 
 
 const SeriesTable = memo(({ props, data, nearestSeries, filterIdx, panelType, width, inactiveSeries }: Props) => {
-    const tooltipMode = panelType == PanelType.Graph ? props.panel.plugins.graph.tooltip.mode : "single"
+    const tooltipMode = panelType == PanelTypeGraph ? props.panel.plugins.graph.tooltip.mode : "single"
     const valueSettings: ValueSetting = props.panel.plugins[panelType].value
-    const tooltipSort = panelType == PanelType.Graph ? props.panel.plugins.graph.tooltip.sort : "desc"
+    const tooltipSort = panelType == PanelTypeGraph ? props.panel.plugins.graph.tooltip.sort : "desc"
     const res = []
 
     if (tooltipMode != "single") {
@@ -61,7 +62,7 @@ const SeriesTable = memo(({ props, data, nearestSeries, filterIdx, panelType, wi
 
     for (const v of values) {
         const override: OverrideItem = findOverride(props.panel, v.rawName)
-        const unitsOverride = findRuleInOverride(override, panelType == PanelType.Graph ? GraphRules.SeriesUnit : StatRules.SeriesUnit)
+        const unitsOverride = findRuleInOverride(override, panelType == PanelTypeGraph ? GraphRules.SeriesUnit : StatRules.SeriesUnit)
         let units = valueSettings.units
         let unitsType = valueSettings.unitsType
         let decimal = valueSettings.decimal
@@ -69,7 +70,7 @@ const SeriesTable = memo(({ props, data, nearestSeries, filterIdx, panelType, wi
             units = unitsOverride.units
             unitsType = unitsOverride.unitsType
         }
-        const decimalOverride = findRuleInOverride(override, panelType == PanelType.Graph ? GraphRules.SeriesDecimal : StatRules.SeriesDecimal)
+        const decimalOverride = findRuleInOverride(override, panelType == PanelTypeGraph ? GraphRules.SeriesDecimal : StatRules.SeriesDecimal)
         if (decimalOverride) {
             decimal = decimalOverride
         }

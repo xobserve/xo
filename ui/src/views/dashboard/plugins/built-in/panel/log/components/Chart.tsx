@@ -16,7 +16,7 @@ import { getCurrentTimeRange } from "src/components/DatePicker/TimePicker"
 import ChartComponent from "src/components/charts/Chart"
 import { floor, last, round } from "lodash"
 import React, { memo, useEffect, useMemo, useState } from "react"
-import { Panel, PanelType } from "types/dashboard"
+import { Panel } from "types/dashboard"
 import { Log } from "types/plugins/log"
 import { dateTimeFormat } from "utils/datetime/formatter"
 import { formatLabelId, getLabelNameColor } from "../utils"
@@ -25,6 +25,8 @@ import { isEmpty } from "utils/validate"
 import { AlertToolbarOptions } from "types/plugins/alert"
 import { paletteColorNameToHex } from "utils/colors"
 import { getStringColorMapping } from "src/views/dashboard/plugins/components/StringColorMapping"
+import { PanelTypeLog } from "../types"
+import { PanelTypeAlert } from "../../alert/types"
 
 
 interface Props {
@@ -39,7 +41,7 @@ interface Props {
 
 const LogChart = memo((props: Props) => {
     const { panel, width, viewOptions, onSelectLabel, activeLabels, colorGenerator } = props
-    const options = panel.type == PanelType.Log ? panel.plugins.log.chart : panel.plugins.alert.chart
+    const options = panel.type == PanelTypeLog ? panel.plugins.log.chart : panel.plugins.alert.chart
     const [chart, setChart] = useState<echarts.ECharts>(null)
     const { colorMode } = useColorMode()
 
@@ -108,7 +110,7 @@ const LogChart = memo((props: Props) => {
                     const keys = Object.keys(log.labels)
                     keys.forEach((k,i) => {
                         let labelId
-                        if (panel.type == PanelType.Log && panel.plugins.log.chart.categorize != k ) {
+                        if (panel.type == PanelTypeLog && panel.plugins.log.chart.categorize != k ) {
                             if (i < keys.length -1) {
                                 return 
                             } 
@@ -184,7 +186,7 @@ const LogChart = memo((props: Props) => {
 
     const timeFontSize = 10
     const [interval, rotate] = getTimeInterval(width, timeline[0], timeFontSize, timeline.length)
-    const tooltipOptions = panel.type == PanelType.Alert ? panel.plugins.alert.chart.tooltip : panel.plugins.log.chart.tooltip
+    const tooltipOptions = panel.type == PanelTypeAlert ? panel.plugins.alert.chart.tooltip : panel.plugins.log.chart.tooltip
     let tooltipMode = "item"
         if (tooltipOptions == "none") {
             tooltipMode = "none" 
@@ -236,7 +238,7 @@ const LogChart = memo((props: Props) => {
             splitLine: {
                 show: false,
             },
-            show: stack != "total" || panel.type == PanelType.Alert,
+            show: stack != "total" || panel.type == PanelTypeAlert,
             splitNumber: 3,
             axisLabel: {
                 fontSize: 11

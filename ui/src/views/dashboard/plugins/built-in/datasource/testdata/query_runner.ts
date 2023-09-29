@@ -14,51 +14,21 @@
 // 1. Run the query to get the data from datasource
 // 2. Convert the data to the format which AiAPM expects
 
-import { Panel, PanelQuery, PanelType } from "types/dashboard"
+import { Panel, PanelQuery } from "types/dashboard"
 import { TimeRange } from "types/time"
-import { nodeGraphData } from "../../panel/nodeGraph/mocks/node_graph"
-import { prometheusToPanels } from "../prometheus/transformData"
 import { Datasource } from "types/datasource"
 import { Field, SeriesData } from "types/seriesData"
-import { getMockLogs } from "../../panel/log/mocks/logs"
 import { getMockAlerts } from "./mocks/alerts"
 import { externalPanelPlugins } from "../../../external/plugins"
 import { builtinPanelPlugins } from "../../plugins"
-import { genPrometheusMockData } from "src/views/dashboard/utils/prometheus"
 
 export const run_testdata_query = async (panel: Panel, q: PanelQuery, range: TimeRange, ds: Datasource) => {
     let data: any;
 
-    // switch (panel.type) {
-    //     //@needs-update-when-add-new-panel
-    //     case PanelType.Stat:
-    //     case PanelType.Gauge:
-    //     case PanelType.Pie:
-    //     case PanelType.Table:
-    //     case PanelType.BarGauge:
-    //     case PanelType.Echarts:
-    //     case PanelType.Bar:
-    //         data =  prometheusToPanels(genPrometheusMockData(range,panel.datasource,q), panel, q, range)
-    //         break;
-    //     case PanelType.NodeGraph:
-    //         data = nodeGraphData(6, 0.8)
-    //         break;
-    //     case PanelType.Trace:
-    //         data =  traceData.data
-    //         break
-    //     case PanelType.GeoMap:
-    //         data = geoData
-    //         break
-    //     case PanelType.Log:
-    //         data = getMockLogs(range)
-    //         break
-    //     default:
     const p = builtinPanelPlugins[panel.type] ?? externalPanelPlugins[panel.type]
     if (p && p.mockDataForTestDataDs) {
         data = p.mockDataForTestDataDs(panel, range, panel.datasource, q)
     }
-    //         break
-    // }
 
     return {
         error: null,

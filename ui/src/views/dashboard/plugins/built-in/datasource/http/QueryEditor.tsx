@@ -16,11 +16,12 @@ import { Form } from "src/components/form/Form"
 import FormItem from "src/components/form/Item"
 import { cloneDeep, isEmpty, set } from "lodash"
 import { useEffect, useState } from "react"
-import { PanelQuery, PanelType } from "types/dashboard"
+import { PanelQuery } from "types/dashboard"
 import { DatasourceEditorProps } from "types/datasource"
 import React from "react";
 import { useStore } from "@nanostores/react"
 import { httpDsMsg } from "src/i18n/locales/en"
+import { PanelTypeAlert } from "../../panel/alert/types"
 
 const HttpQueryEditor = ({panel, datasource, query, onChange }: DatasourceEditorProps) => {
     const t1 = useStore(httpDsMsg)
@@ -44,7 +45,7 @@ const HttpQueryEditor = ({panel, datasource, query, onChange }: DatasourceEditor
             onChange(cloneDeep(tempQuery))
         }
     }, [])
-    const size = panel?.type == PanelType.Alert ? "sm" : "md"
+    const size = panel?.type == PanelTypeAlert ? "sm" : "md"
     return (<>
         <Form spacing={1}>
             <FormItem title="URL" labelWidth={size == "md" ? "200px" : "60px"} size={size}>

@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { setPanelRealTime } from "src/views/dashboard/store/panelRealtime";
-import { Panel, PanelType } from "types/dashboard";
+import { Panel } from "types/dashboard";
 
 import { FieldType, SeriesData } from "types/seriesData";
 import { roundDsTime } from "utils/datasource";
@@ -23,6 +23,9 @@ import { replaceWithVariables } from "utils/variable";
 import { cloneDeep, random, round } from "lodash"
 import { PanelDatasource, PanelQuery } from "types/dashboard"
 import { TimeRange } from "types/time"
+import { PanelTypeGraph } from "../plugins/built-in/panel/graph/types";
+import { PanelTypeBar } from "../plugins/built-in/panel/bar/types";
+import { PanelTypeStat } from "../plugins/built-in/panel/stat/types";
 
 
 const defaultMockData = {
@@ -94,7 +97,7 @@ export const prometheusToPanels = (rawData: any, panel: Panel, query: PanelQuery
     const et = query.data["expandTimeline"]
 
     if (isEmpty(et) || et == "auto") {
-        expandTimeRange = panel.type == PanelType.Graph || panel.type == PanelType.Bar || panel.type == PanelType.Stat
+        expandTimeRange = panel.type == PanelTypeGraph || panel.type == PanelTypeBar || panel.type == PanelTypeStat
     } else {
         expandTimeRange = et == "always"
     }

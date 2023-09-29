@@ -33,7 +33,6 @@ import { $teams } from "../team/store"
 import { useSearchParam } from "react-use"
 import { FormSection } from "components/form/Form"
 import { externalDatasourcePlugins } from "../dashboard/plugins/external/plugins"
-import externalDsList  from 'public/plugins/external/datasource/plugins.json'
 
 interface Props {
     ds: Datasource
@@ -147,8 +146,8 @@ const DatasourceEditor = ({ ds, onChange = null, teamEditable=true }: Props) => 
                             return <option key={index} value={DatasourceType[key]}>{key}</option>
                         })}
                         <Divider />
-                        {externalDsList.map(ds => {
-                            return <option key={ds.type} value={ds.type}>{upperFirst(ds.type)}</option>
+                        {Object.keys(externalDatasourcePlugins).map(dsType => {
+                            return <option key={dsType} value={dsType}>{upperFirst(dsType)}</option>
                         })}
                     </Select>
                     <Image width="30px" height="30px" src={dsIcon} />

@@ -18,11 +18,9 @@ import { FieldType, SeriesData } from "types/seriesData";
 import React from "react";
 import { isEmpty } from "utils/validate";
 import NoData from "src/views/dashboard/components/PanelNoData";
-import { defaultsDeep } from "lodash";
-import { PluginSettings, initSettings } from "./types";
+import { PluginSettings } from "./types";
 import { buildOptions } from "./buildOptions";
 import mockData from './mockData.json'
-import { isSeriesData } from "utils/seriesData";
 import { TimeRange } from "types/time";
 interface Props extends PanelProps {
     data: SeriesData[][]
@@ -75,8 +73,6 @@ const PanelComponent = (props: Props) => {
     const { colorMode } = useColorMode()
 
 
-    // init panel plugin settings
-    props.panel.plugins[panel.type] = defaultsDeep(props.panel.plugins[panel.type], initSettings)
     // give plugin settings a name for easy access
     const options: PluginSettings = props.panel.plugins[panel.type]
 

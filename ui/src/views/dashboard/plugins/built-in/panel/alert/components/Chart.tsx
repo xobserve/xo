@@ -16,13 +16,14 @@ import { getCurrentTimeRange } from "src/components/DatePicker/TimePicker"
 import ChartComponent from "src/components/charts/Chart"
 import { floor, last, round } from "lodash"
 import React, { useEffect, useMemo, useState } from "react"
-import { Panel, PanelType } from "types/dashboard"
+import { Panel } from "types/dashboard"
 import { dateTimeFormat } from "utils/datetime/formatter"
 import moment from "moment"
 import { isEmpty } from "utils/validate"
 import { measureText } from "utils/measureText"
 import { AlertToolbarOptions } from "types/plugins/alert"
 import { getLabelNameColor } from "../../log/utils"
+import { PanelTypeLog } from "../../log/types"
 
 
 export interface AlertChartItem {
@@ -41,7 +42,7 @@ interface Props {
 
 const AlertChart = (props: Props) => {
     const { panel, width ,viewOptions, onSelectLabel,activeLabels} = props
-    const options = panel.type == PanelType.Log?  panel.plugins.log.chart : panel.plugins.alert.chart
+    const options = panel.type == PanelTypeLog?  panel.plugins.log.chart : panel.plugins.alert.chart
     const [chart, setChart] = useState<echarts.ECharts>(null)
     const { colorMode } = useColorMode()
     useEffect(() => {

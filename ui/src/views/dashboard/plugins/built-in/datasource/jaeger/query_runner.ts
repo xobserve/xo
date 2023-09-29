@@ -14,7 +14,7 @@
 // 1. Run the query to get the data from datasource
 // 2. Convert the data to the format which AiAPM expects
 
-import { Panel, PanelQuery, PanelType } from "types/dashboard"
+import { Panel, PanelQuery } from "types/dashboard"
 import { Datasource } from "types/datasource"
 import { TimeRange } from "types/time"
 import { isJaegerDatasourceValid } from "./DatasourceEditor"
@@ -26,12 +26,14 @@ import { JaegerDsQueryTypes } from "./VariableEditor"
 import { replaceWithVariablesHasMultiValues } from "utils/variable"
 import { getDatasource } from "utils/datasource"
 import { isEmpty } from "utils/validate"
+import { PanelTypeNodeGraph } from "../../panel/nodeGraph/types"
+import { PanelTypeTable } from "../../panel/table/types"
 
 export const run_jaeger_query = async (panel: Panel, q: PanelQuery, range: TimeRange, ds: Datasource) => {
     let res = []
     switch (panel.type) {
-        case PanelType.NodeGraph:
-        case PanelType.Table:
+        case PanelTypeNodeGraph:
+        case PanelTypeTable:
             res = await queryDependencies(ds.id, range)
             break
         default:

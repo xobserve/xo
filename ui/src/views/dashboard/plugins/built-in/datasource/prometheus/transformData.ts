@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { setPanelRealTime } from "src/views/dashboard/store/panelRealtime";
-import { Panel, PanelQuery, PanelType } from "types/dashboard";
+import { Panel, PanelQuery } from "types/dashboard";
 
 import { FieldType, SeriesData } from "types/seriesData";
 import { TimeRange } from "types/time";
@@ -20,6 +20,9 @@ import { parseLegendFormat } from "utils/format";
 import { calcSeriesStep } from "utils/seriesData";
 import { isEmpty } from "utils/validate";
 import { replaceWithVariables } from "utils/variable";
+import { PanelTypeGraph } from "../../panel/graph/types";
+import { PanelTypeBar } from "../../panel/bar/types";
+import { PanelTypeStat } from "../../panel/stat/types";
 
 
 export const prometheusToPanels = (rawData: any, panel: Panel, query: PanelQuery, range: TimeRange) => {
@@ -31,7 +34,7 @@ export const prometheusToPanels = (rawData: any, panel: Panel, query: PanelQuery
     const et = query.data["expandTimeline"]
 
     if (isEmpty(et) || et == "auto") {
-        expandTimeRange = panel.type == PanelType.Graph || panel.type == PanelType.Bar || panel.type == PanelType.Stat
+        expandTimeRange = panel.type == PanelTypeGraph || panel.type == PanelTypeBar || panel.type == PanelTypeStat
     } else {
         expandTimeRange = et == "always"
     }

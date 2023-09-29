@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Panel, PanelQuery, PanelType } from "types/dashboard";
+import { Panel, PanelQuery } from "types/dashboard";
 import { Datasource } from "types/datasource";
 import { TimeRange } from "types/time";
 import { replaceWithVariablesHasMultiValues } from "utils/variable";
@@ -26,6 +26,7 @@ import { getNewestTimeRange } from "src/components/DatePicker/TimePicker";
 import { LokiDsQueryTypes } from "./VariableEdtiro";
 import { is } from "date-fns/locale";
 import { getDatasource, roundDsTime } from "utils/datasource";
+import { PanelTypeLog } from "../../panel/log/types";
 
 export const run_loki_query = async (panel: Panel, q: PanelQuery, timeRange: TimeRange, ds: Datasource) => {
     if (isEmpty(q.metrics)) {
@@ -60,7 +61,7 @@ export const run_loki_query = async (panel: Panel, q: PanelQuery, timeRange: Tim
     const resultType = res.data.resultType
     if (resultType === "matrix") {
         data = prometheusToPanels(res.data, panel, q, timeRange);
-    } else if (resultType === "streams" && panel.type == PanelType.Log) {
+    } else if (resultType === "streams" && panel.type == PanelTypeLog) {
         data = res.data.result
         for (let i = 0; i < data.length; i++) {
             const labels = data[i].stream

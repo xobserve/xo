@@ -14,7 +14,7 @@ import { Menu, MenuButton, MenuItem, MenuList, useColorModeValue } from "@chakra
 import IconButton from "src/components/button/IconButton";
 import { PanelAdd } from "src/components/icons/PanelAdd";
 import { initPanel, initRowPanel } from "src/data/panel/initPanel";
-import { Dashboard, Panel, PanelType } from "types/dashboard";
+import { Dashboard, Panel } from "types/dashboard";
 import React from "react";
 import { useStore } from "@nanostores/react";
 import { dashboardMsg } from "src/i18n/locales/en";

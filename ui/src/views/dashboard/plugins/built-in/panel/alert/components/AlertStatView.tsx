@@ -13,19 +13,21 @@
 
 import { cloneDeep, round } from "lodash";
 import React, { useMemo } from "react";
-import { initPanelPlugins } from "src/data/panel/initPlugins";
-import { PanelProps, PanelType } from "types/dashboard";
+import { PanelProps } from "types/dashboard";
 import StatPanel from "../../stat/Stat";
 import {  SeriesData } from "types/seriesData";
 import { AlertRule } from "types/plugins/alert";
 import { ValueCalculationType } from "types/value";
 import { VarialbeAllOption } from "src/data/variable";
 import { prometheusToSeriesData } from "../../../datasource/prometheus/transformData";
+import { builtinPanelPlugins } from "../../../plugins";
+import { PanelTypeStat } from "../../stat/types";
 
 const AlertStatView = (props: PanelProps) => {
 
     const newProps = cloneDeep(props)
-    const statOptions = initPanelPlugins().stat
+    const statPlugin = builtinPanelPlugins.stat
+    const statOptions = statPlugin.settings.initOptions
     statOptions.value.calc = ValueCalculationType.Sum
     statOptions.value.decimal = 0
     statOptions.displaySeries = VarialbeAllOption
@@ -79,7 +81,7 @@ const AlertStatView = (props: PanelProps) => {
     }, [props.data])
     
     newProps.data = [data]
-    newProps.panel.type = PanelType.Stat
+    newProps.panel.type = PanelTypeStat
     newProps.panel.overrides = [  {
         "target": props.panel.plugins.alert.stat.statName,
         "overrides": [

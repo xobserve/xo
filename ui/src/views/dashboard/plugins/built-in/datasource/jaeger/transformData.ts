@@ -11,10 +11,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { isEmpty } from "lodash"
-import { Panel, PanelQuery, PanelType } from "types/dashboard"
+import { Panel, PanelQuery } from "types/dashboard"
 import { NodeGraphPluginData } from "types/plugins/nodeGraph"
 import { TimeRange } from "types/time"
 import { nodeGraphDataToSeries } from "../../panel/nodeGraph/transformData"
+import { PanelTypeNodeGraph } from "../../panel/nodeGraph/types"
+import { PanelTypeTable } from "../../panel/table/types"
 
 export const jaegerToPanels = (rawData: any[], panel: Panel, query: PanelQuery, range: TimeRange) => {
     if (rawData.length == 0) {
@@ -22,16 +24,12 @@ export const jaegerToPanels = (rawData: any[], panel: Panel, query: PanelQuery, 
     }
 
     switch (panel.type) {
-        case PanelType.NodeGraph:
+        case PanelTypeNodeGraph:
             return jaegerToNodeGraphData(rawData, query)
-        case PanelType.Table:
+        case PanelTypeTable:
             const data = jaegerToNodeGraphData(rawData, query)
             return nodeGraphDataToSeries(data)
-        case PanelType.Graph:
-        case PanelType.Stat:
-        case PanelType.Gauge:
-        case PanelType.Pie:
-        case PanelType.Echarts:
+        default:
             return null
     }
 }

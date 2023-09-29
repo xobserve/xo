@@ -12,32 +12,13 @@
 // limitations under the License.
 import { ClickAction } from "src/views/dashboard/edit-panel/components/ClickActionsEditor"
 import { AlertState } from "types/alert"
-import { PanelQuery, PanelType } from "types/dashboard"
+import { PanelQuery } from "types/dashboard"
 import { LayoutOrientation } from "types/layout"
 import { BarThresholdArrow } from "types/plugins/bar"
 import { ArcGisMapServer, BaseLayerType, DataLayerType } from "types/plugins/geoMap"
 import { LogThreshold } from "types/plugins/log"
 import { ThresholdsConfig } from "types/threshold"
 import { ValueCalculationType } from "types/value"
-
-//@needs-update-when-add-new-panel
-export interface PanelPlugins {
-    [PanelType.Text]?: TextPlugin
-
-    [PanelType.Graph]?: GraphSettings
-    [PanelType.Table]?: TableSettings
-    [PanelType.NodeGraph]?: NodeGraphSettings
-    [PanelType.Echarts]?: EchartsSettings
-    [PanelType.Pie]?: PieSettings
-    [PanelType.Gauge]?: GaugeSettings
-    [PanelType.Stat]?: StatSettings
-    [PanelType.Trace]?: TraceSettings
-    [PanelType.BarGauge]?: BarGaugeSettings
-    [PanelType.GeoMap]?: GeoMapSettings
-    [PanelType.Log]?: LogSettings
-    [PanelType.Bar]?: BarSettings
-    [PanelType.Alert]?: AlerSettings
-}
 
 /*-------------------- Plugins ----------------------- */
 

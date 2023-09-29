@@ -14,7 +14,7 @@
 import { Box, Button, Flex, HStack, Modal, ModalBody, ModalContent, ModalHeader, ModalOverlay, Tab, TabIndicator, TabList, TabPanel, TabPanels, Tabs, Text, useDisclosure, useMediaQuery, useToast } from "@chakra-ui/react"
 import { ColorModeSwitcher } from "src/components/ColorModeSwitcher"
 import { memo, useCallback, useEffect, useState } from "react"
-import { Dashboard, Panel, PanelType } from "types/dashboard"
+import { Dashboard, Panel } from "types/dashboard"
 import EditPanelQuery from "./DatasourceQuery"
 import { useImmer } from "use-immer";
 import { removeParamFromUrl } from "utils/url";
@@ -49,6 +49,8 @@ import SelectVariables from "src/views/variables/SelectVariable"
 import { externalPanelPlugins } from "../plugins/external/plugins"
 import ErrorBoundary from "components/ErrorBoudary"
 import { builtinPanelPlugins } from "../plugins/built-in/plugins"
+import { PanelTypeTable } from "../plugins/built-in/panel/table/types"
+import { PanelTypeGraph } from "../plugins/built-in/panel/graph/types"
 
 interface EditPanelProps {
     dashboard: Dashboard
@@ -220,7 +222,7 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
 
     let enableValueMapping = false
     switch (tempPanel?.type) {
-        case PanelType.Table:
+        case PanelTypeTable:
             enableValueMapping = true
             break
         default:
@@ -312,7 +314,7 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
                                                     <TabList pb="0">
                                                         <Tab>{t.query}</Tab>
                                                         <Tab>{t.transform}</Tab>
-                                                        {tempPanel.type == PanelType.Graph && tempPanel.plugins.graph.enableAlert && <Tab>{t.alert}</Tab>}
+                                                        {tempPanel.type == PanelTypeGraph && tempPanel.plugins.graph.enableAlert && <Tab>{t.alert}</Tab>}
                                                     </TabList>
                                                     <TabIndicator
                                                         mt="3px"
@@ -328,7 +330,7 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
                                                         <TabPanel px="0" pt="1" pb="0">
                                                             <EditPanelTransform panel={tempPanel} onChange={setTempPanel} />
                                                         </TabPanel>
-                                                        {tempPanel.type == PanelType.Graph && tempPanel.plugins.graph.enableAlert &&
+                                                        {tempPanel.type == PanelTypeGraph && tempPanel.plugins.graph.enableAlert &&
                                                             <TabPanel px="0" pt="1" pb="0">
                                                                 <EditPanelAlert panel={tempPanel} onChange={setTempPanel} />
                                                             </TabPanel>}

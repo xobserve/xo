@@ -1,5 +1,5 @@
 import { getInitUnits } from "src/data/panel/initPlugins"
-import { Unit, UnitsType, ValueSetting } from "types/panel/plugins"
+import {  ValueSetting } from "types/panel/plugins"
 
 export interface PluginSettings  {
     animation: boolean

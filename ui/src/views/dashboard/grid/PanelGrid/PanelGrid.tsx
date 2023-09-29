@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Dashboard, DatasourceType, Panel, PanelProps, PanelQuery, PanelType } from "types/dashboard"
+import { Dashboard, DatasourceType, Panel, PanelProps, PanelQuery } from "types/dashboard"
 import { Box, Center, HStack, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Portal, Text, Tooltip, useColorMode, useColorModeValue, useDisclosure, useToast } from "@chakra-ui/react";
 import { FaBook, FaBug, FaEdit, FaRegClone, FaRegCopy, FaRegEye, FaRegEyeSlash, FaTrashAlt } from "react-icons/fa";
 import { IoMdInformation } from "react-icons/io";
@@ -56,6 +56,8 @@ import { Datasource } from "types/datasource";
 import { externalDatasourcePlugins, externalPanelPlugins } from "../../plugins/external/plugins";
 import { $copiedPanel } from "../../store/dashboard";
 import { builtinPanelPlugins } from "../../plugins/built-in/plugins";
+import { PanelTypeAlert } from "../../plugins/built-in/panel/alert/types";
+import { PanelTypeGraph } from "../../plugins/built-in/panel/graph/types";
 
 interface PanelGridProps {
     dashboard: Dashboard
@@ -150,7 +152,7 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
     useEffect(() => {
         return () => {
             // delete data query cache when panel is unmounted
-            if (panel.type == PanelType.Alert) {
+            if (panel.type == PanelTypeAlert) {
                 for (const q of panel.datasource.queries) {
                     const id = formatQueryId(panel.datasource.id, dashboard.id, panel.id, q.id, panel.type)
                     prevQueries.delete(id)
@@ -193,7 +195,7 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
         const interval = intervalObj.intervalMs / 1000
 
         setLoading(true)
-        if (panel.type == PanelType.Alert) {
+        if (panel.type == PanelTypeAlert) {
             const res = await queryAlerts(panel, timeRange, panel.plugins.alert.filter.datasources, panel.plugins.alert.filter.httpQuery, datasources)
             setQueryError(res.error)
             data = res.data
@@ -360,7 +362,7 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
                 <Box
                     // panel={panel}
                     height={panelInnerHeight}
-                    marginLeft={panel.type == PanelType.Graph ? -10 + panel.styles.marginLeft + 'px' : panel.styles.marginLeft + 'px'}
+                    marginLeft={panel.type == PanelTypeGraph ? -10 + panel.styles.marginLeft + 'px' : panel.styles.marginLeft + 'px'}
                     marginTop={panel.styles.marginTop + 'px'}
                 >
                     <CustomPanelRender dashboardId={dashboard.id} teamId={dashboard.ownedBy} panel={panel} data={data} height={panelInnerHeight - panel.styles.heightReduction} width={panelInnerWidth - panel.styles.widthReduction} sync={sync} timeRange={timeRange} />
@@ -450,34 +452,36 @@ const PanelHeader = ({ dashboardId, queryError, panel, onCopyPanel, onRemovePane
 
 
 const formatQueryId = (datasourceId, dashboardId, panelId, queryId, panelType) => {
+
+    let tp = panelType
+
     // because some panels has their own data parser in datasource query runner
     // so we need to use panel type to make the cache working correctly
-    let tp;
-    switch (panelType) {
-        case PanelType.NodeGraph:
-            tp = PanelType.NodeGraph
-            break;
-        case PanelType.Trace:
-            tp = PanelType.Trace
-            break
-        case PanelType.GeoMap:
-            tp = PanelType.GeoMap
-            break
-        case PanelType.Log:
-            tp = PanelType.Log
-            break
-        case PanelType.Alert:
-            tp = PanelType.Alert
-            break
-        default:
-            const p = externalPanelPlugins[panelType]
-            if (p) {
-                tp = panelType
-            } else {
-                tp = "seriesData"
-            }
-            break;
-    }
+    // switch (panelType) {
+    //     case PanelType.NodeGraph:
+    //         tp = PanelType.NodeGraph
+    //         break;
+    //     case PanelType.Trace:
+    //         tp = PanelType.Trace
+    //         break
+    //     case PanelType.GeoMap:
+    //         tp = PanelType.GeoMap
+    //         break
+    //     case PanelType.Log:
+    //         tp = PanelType.Log
+    //         break
+    //     case PanelType.Alert:
+    //         tp = PanelType.Alert
+    //         break
+    //     default:
+    //         const p = externalPanelPlugins[panelType]
+    //         if (p) {
+    //             tp = panelType
+    //         } else {
+    //             tp = "seriesData"
+    //         }
+    //         break;
+    // }
     return `${datasourceId}-${dashboardId}-${panelId}-${queryId}-${tp}`
 }
 

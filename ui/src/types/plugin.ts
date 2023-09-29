@@ -4,11 +4,15 @@ import { TimeRange } from "types/time"
 export interface PanelPluginComponents {
     panel: any,
     editor: any,
-    icon: string,
     overrideEditor?: any,
     overrideRules?: any,
     getOverrideTargets?: (panel, data) => any
     mockDataForTestDataDs?: (panel: Panel, timeRange: TimeRange,ds: PanelDatasource,q: PanelQuery) => any // mock result data  when querying from TestData datasource
+    settings: {
+        type: string;
+        icon: string;
+        initOptions: Record<string,any>
+    },
 }
 
 export interface DatasourcePluginComponents {

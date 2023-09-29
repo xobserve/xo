@@ -10,20 +10,23 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Panel, PanelDatasource, PanelType } from "types/dashboard";
-import { initPanelPlugins } from "./initPlugins";
+import { Panel, PanelDatasource, PanelTypeRow } from "types/dashboard";
 import { initPanelStyles } from "./initStyles";
 import { DatasourceMaxDataPoints, DatasourceMinInterval, InitTestDataDatasourceId } from "../constants";
+import { builtinPanelPlugins } from "src/views/dashboard/plugins/built-in/plugins";
+import { externalPanelPlugins } from "src/views/dashboard/plugins/external/plugins";
+import { PanelTypeGraph } from "src/views/dashboard/plugins/built-in/panel/graph/types";
 
-export const initPanelType = PanelType.Graph
+export const initPanelType = PanelTypeGraph
 export const initPanel = (id?) => {
+    const plugin = builtinPanelPlugins[initPanelType] ?? externalPanelPlugins[initPanelType]
     const p: Panel = {
         desc: "",
         collapsed: false,
         type: initPanelType,
         gridPos: { x: 0, y: 0, w: 12, h: 20 },
         plugins: {
-            [initPanelType]: initPanelPlugins()[initPanelType]
+            [initPanelType]: plugin.settings.initOptions
         },
         datasource: initDatasource,
         styles: initPanelStyles,
@@ -57,7 +60,7 @@ export const initRowPanel = (id) => {
         title: "New row",
         desc: "",
         collapsed: false,
-        type: PanelType.Row,
+        type: PanelTypeRow,
         gridPos: { x: 0, y: 0, w: 24, h: 1.5 },
     }
 

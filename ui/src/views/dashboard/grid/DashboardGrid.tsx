@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Dashboard, GridPos, Panel, PanelType } from "types/dashboard"
+import { Dashboard, GridPos, Panel, PanelTypeRow } from "types/dashboard"
 import RGL, { WidthProvider } from "react-grid-layout";
 
 const ReactGridLayout = WidthProvider(RGL);
@@ -76,7 +76,7 @@ const DashboardGrid = memo((props: GridProps) => {
             };
 
 
-            if (panel.type === PanelType.Row) {
+            if (panel.type === PanelTypeRow) {
                 panelPos.w = GRID_COLUMN_COUNT; 
                 panelPos.h = 1.5;
                 panelPos.isResizable = false;
@@ -219,7 +219,7 @@ const DashboardGrid = memo((props: GridProps) => {
                                             windowWidth={windowWidth}
                                         >
                                             {(width: number, height: number) => {
-                                                if (panel.type === PanelType.Row) {
+                                                if (panel.type === PanelTypeRow) {
                                                     return <Box  key={panel.id} id={`panel-${panel.id}`} position="absolute" width={width} height={height + 'px'} left="0" top="0">
                                                         <RowPanel panel={panel} onChange={onChange}/>
                                                         </Box>
@@ -251,7 +251,7 @@ export default DashboardGrid
 
 
 interface GridItemProps extends Record<string, any> {
-    panelType: PanelType;
+    panelType: string;
     gridWidth?: number;
     gridPos?: GridPos;
     isViewing: string;
@@ -284,7 +284,7 @@ const GridItem = React.forwardRef<HTMLDivElement, GridItemProps>((props, ref) =>
     
     // props.children[0] is our main children. RGL adds the drag handle at props.children[1]
     return (
-        <Box {...divProps} ref={ref} className="react-grid-item" sx={(props.panelType != PanelType.Row && windowWidth > 769) ? {
+        <Box {...divProps} ref={ref} className="react-grid-item" sx={(props.panelType != PanelTypeRow && windowWidth > 769) ? {
             ".react-resizable-handle": {
                 position: "absolute",
                 width: "20px",

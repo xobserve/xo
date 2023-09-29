@@ -15,7 +15,7 @@ import { EditorInputItem, EditorNumberItem } from "src/components/editor/EditorI
 import RadionButtons from "src/components/RadioButtons"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
-import { DatasourceType, Panel, PanelEditorProps, PanelType } from "types/dashboard"
+import { DatasourceType, Panel, PanelEditorProps } from "types/dashboard"
 import React, { memo } from "react";
 import { useStore } from "@nanostores/react"
 import { alertMsg, commonMsg } from "src/i18n/locales/en"
@@ -35,6 +35,8 @@ import { AlertFilter } from "types/panel/plugins"
 import { $datasources } from "src/views/datasource/store"
 import { externalDatasourcePlugins } from "../../../external/plugins"
 import { cloneDeep } from "lodash"
+import { PanelTypeAlert } from "./types"
+import { PanelTypeGraph } from "../graph/types"
 
 const AlertPanelEditor = memo((props: PanelEditorProps) => {
     const { panel, onChange } = props
@@ -179,10 +181,10 @@ export const AlertFilterEditor = ({ panel, filter, onChange }: AlertFilterProps)
                 const v = e.currentTarget.checked
                 onChange((panel: Panel) => {
                     switch (panel.type) {
-                        case PanelType.Alert:
+                        case PanelTypeAlert:
                             panel.plugins.alert.filter.enableFilter = v
                             break;
-                        case PanelType.Graph:
+                        case PanelTypeGraph:
                             panel.plugins.graph.alertFilter.enableFilter = v
                             break
                         default:
@@ -194,10 +196,10 @@ export const AlertFilterEditor = ({ panel, filter, onChange }: AlertFilterProps)
         <PanelEditItem title={t1.alertState}>
             <MultiRadionButtons options={Object.keys(AlertState).map(k => ({ label: AlertState[k], value: AlertState[k] }))} value={filter.state} onChange={v => onChange((panel: Panel) => {
                 switch (panel.type) {
-                    case PanelType.Alert:
+                    case PanelTypeAlert:
                         panel.plugins.alert.filter.state = v
                         break;
-                    case PanelType.Graph:
+                    case PanelTypeGraph:
                         panel.plugins.graph.alertFilter.state = v
                         break
                     default:
@@ -212,10 +214,10 @@ export const AlertFilterEditor = ({ panel, filter, onChange }: AlertFilterProps)
                     (v) => {
                         onChange((panel: Panel) => {
                             switch (panel.type) {
-                                case PanelType.Alert:
+                                case PanelTypeAlert:
                                     panel.plugins.alert.filter.datasources = v
                                     break;
-                                case PanelType.Graph:
+                                case PanelTypeGraph:
                                     panel.plugins.graph.alertFilter.datasources = v
                                     break
                                 default:
@@ -228,10 +230,10 @@ export const AlertFilterEditor = ({ panel, filter, onChange }: AlertFilterProps)
         </PanelEditItem>
         {filter.datasources.find(dsId => datasources.find(ds => ds.id == dsId).type == DatasourceType.ExternalHttp) && <HttpQueryEditor panel={panel} datasource={panel.datasource} onChange={v => onChange((panel: Panel) => {
             switch (panel.type) {
-                case PanelType.Alert:
+                case PanelTypeAlert:
                     panel.plugins.alert.filter.httpQuery = v
                     break;
-                case PanelType.Graph:
+                case PanelTypeGraph:
                     panel.plugins.graph.alertFilter.httpQuery = v
                     break
                 default:
@@ -241,10 +243,10 @@ export const AlertFilterEditor = ({ panel, filter, onChange }: AlertFilterProps)
         <PanelEditItem title="Rule name" desc="Filter for alert rules containing this text">
             <EditorInputItem value={filter.ruleName} onChange={(v) => onChange((panel: Panel) => {
                 switch (panel.type) {
-                    case PanelType.Alert:
+                    case PanelTypeAlert:
                         panel.plugins.alert.filter.ruleName = v
                         break;
-                    case PanelType.Graph:
+                    case PanelTypeGraph:
                         panel.plugins.graph.alertFilter.ruleName = v
                         break
                     default:
@@ -255,10 +257,10 @@ export const AlertFilterEditor = ({ panel, filter, onChange }: AlertFilterProps)
         <PanelEditItem title="Rule labels" desc={`Filter rule labels using label querying, e.g: {severity="critical"}`}>
             <EditorInputItem value={filter.ruleLabel} onChange={(v) => onChange((panel: Panel) => {
                 switch (panel.type) {
-                    case PanelType.Alert:
+                    case PanelTypeAlert:
                         panel.plugins.alert.filter.ruleLabel = v
                         break;
-                    case PanelType.Graph:
+                    case PanelTypeGraph:
                         panel.plugins.graph.alertFilter.ruleLabel = v
                         break
                     default:
@@ -269,10 +271,10 @@ export const AlertFilterEditor = ({ panel, filter, onChange }: AlertFilterProps)
         <PanelEditItem title="Alert label" desc={`Filter alert labels using label querying, e.g: {service="api-gateway", instance=~"cluster-cn-.+"}`}>
             <EditorInputItem value={filter.alertLabel} onChange={(v) => onChange((panel: Panel) => {
                 switch (panel.type) {
-                    case PanelType.Alert:
+                    case PanelTypeAlert:
                         panel.plugins.alert.filter.alertLabel = v
                         break;
-                    case PanelType.Graph:
+                    case PanelTypeGraph:
                         panel.plugins.graph.alertFilter.alertLabel = v
                         break
                     default:

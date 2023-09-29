@@ -1,11 +1,9 @@
 import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Box, Button, Flex, HStack, Input, Text, useDisclosure } from "@chakra-ui/react"
-import { EditorInputItem } from "components/editor/EditorItem"
 import CollapseIcon from "components/icons/Collapse"
-import { set } from "lodash"
 import React, { useRef, useState } from "react"
 import { FaCog, FaRegEdit, FaTrash } from "react-icons/fa"
 import { MdDragIndicator } from "react-icons/md"
-import { Dashboard, Panel, PanelType } from "types/dashboard"
+import { Dashboard, Panel, PanelTypeRow } from "types/dashboard"
 import { $rowInDrag } from "../../store/dashboard"
 
 interface Props {
@@ -90,7 +88,7 @@ const RowPanel = (props: Props) => {
                     }
 
                     if (isChild) {
-                        if (p.type == PanelType.Row) {
+                        if (p.type == PanelTypeRow) {
                             visiblePanels.push(p)
                             isChild = false
                         } else {

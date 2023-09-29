@@ -10,18 +10,17 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Switch, Textarea } from "@chakra-ui/react"
+import { Switch } from "@chakra-ui/react"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
 import { Panel, PanelEditorProps } from "types/dashboard"
 import React, { memo } from "react";
 import { useStore } from "@nanostores/react"
-import { commonMsg, textPanelMsg } from "src/i18n/locales/en"
-import { PluginSettings, downColor, initSettings, upColor } from "./types"
+import { commonMsg } from "src/i18n/locales/en"
+import { PluginSettings, downColor, upColor } from "./types"
 import { EditorInputItem, EditorNumberItem } from "components/editor/EditorItem";
 import { dispatch } from "use-bus";
 import { PanelForceRebuildEvent } from "src/data/bus-events";
-import { defaultsDeep } from "lodash";
 import RadionButtons from "components/RadioButtons";
 import { Units } from "types/panel/plugins";
 import { ColorPicker } from "components/ColorPicker";
@@ -29,8 +28,8 @@ import { UnitPicker } from "../../../components/UnitPicker";
 
 const PanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
     const t = useStore(commonMsg)
-    panel.plugins[panel.type] = defaultsDeep(panel.plugins[panel.type], initSettings)
     const options: PluginSettings = panel.plugins[panel.type]
+
     return (<>
         <PanelAccordion title={t.basicSetting}>
             <PanelEditItem title={t.animation} desc={t.animationTips}>

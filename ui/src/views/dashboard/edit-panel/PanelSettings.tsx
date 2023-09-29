@@ -12,17 +12,15 @@
 // limitations under the License.
 import { Box, Center,  Image, SimpleGrid, Switch, Text } from "@chakra-ui/react"
 import { upperFirst } from "lodash"
-import { Panel, PanelEditorProps, PanelType } from "types/dashboard"
+import { Panel, PanelEditorProps, PanelTypeRow } from "types/dashboard"
 import PanelAccordion from "./Accordion"
 import { EditorInputItem } from "../../../components/editor/EditorItem"
 import PanelEditItem from "./PanelEditItem"
-import { initPanelPlugins } from "src/data/panel/initPlugins"
 import { memo, useEffect } from "react"
 import React from "react";
 import { useStore } from "@nanostores/react"
 import { commonMsg, panelMsg } from "src/i18n/locales/en"
 import { CodeEditorModal } from "src/components/CodeEditor/CodeEditorModal"
-import plugins from 'public/plugins/external/panel/plugins.json'
 import { $config } from "src/data/configs/config"
 import { isEmpty } from "utils/validate"
 import { builtinPanelPlugins } from "../plugins/built-in/plugins"
@@ -40,8 +38,9 @@ const PanelSettings = memo(({ panel, onChange }: PanelEditorProps) => {
         onChange((tempPanel: Panel) => {
             const oldPlugin = tempPanel.plugins[tempPanel.type]
             tempPanel.type = type
+            const plugin = builtinPanelPlugins[type] ?? externalPanelPlugins[type]
             tempPanel.plugins = {
-                [type]: pluginsCachedInEdit[type] ?? initPanelPlugins()[type] ?? {}
+                [type]: pluginsCachedInEdit[type] ?? plugin.settings.initOptions ?? {}
             }
             if (oldPlugin.value) {
                 tempPanel.plugins[type].value = oldPlugin.value
@@ -58,9 +57,9 @@ const PanelSettings = memo(({ panel, onChange }: PanelEditorProps) => {
     }, [])
 
     const disabledPanels = $config.get().plugins?.disablePanels
-    const externalPlugins = plugins.filter(p => !disabledPanels?.includes(p.type))
-    const builtinPlugins = Object.values(PanelType).filter(k => !disabledPanels?.includes(k))
-    const isExternalPanel = !isEmpty(externalPlugins.find(p => p.type == panel.type))
+    const externalPlugins = Object.keys(externalPanelPlugins).filter(panelType => !disabledPanels?.includes(panelType))
+    const builtinPlugins = Object.keys(builtinPanelPlugins).filter(panelType => !disabledPanels?.includes(panelType))
+    const isExternalPanel = !isEmpty(externalPlugins.find(panelType => panelType == panel.type))
 
     return (
         <>
@@ -104,13 +103,13 @@ const PanelSettings = memo(({ panel, onChange }: PanelEditorProps) => {
                     {
                         builtinPlugins.map((panelType) => {
                             const plugin = builtinPanelPlugins[panelType]
-                            if (panelType== PanelType.Row) {
+                            if (panelType== PanelTypeRow) {
                                 return <></>
                             }
                             return <VisulizationItem
                                 selected={panel.type == panelType}
                                 title={upperFirst(panelType)}
-                                imageUrl={plugin?.icon}
+                                imageUrl={plugin?.settings.icon}
                                 onClick={() => onChangeVisualization(panelType)}
                             />
                         })
@@ -121,13 +120,13 @@ const PanelSettings = memo(({ panel, onChange }: PanelEditorProps) => {
                 externalPlugins.length > 0 && <PanelAccordion title={t1.externalPanels + (isExternalPanel ? ` -> ${panel.type}` : "")} defaultOpen={false}>
                     <SimpleGrid columns={3} spacing="2">
                         {
-                            externalPlugins.map((p) => {
-                                const plugin = externalPanelPlugins[p.type]
+                            externalPlugins.map((panelType) => {
+                                const plugin = externalPanelPlugins[panelType]
                                 return <VisulizationItem
-                                    selected={panel.type == p.type}
-                                    title={upperFirst(p.type)}
-                                    imageUrl={plugin?.icon}
-                                    onClick={() => onChangeVisualization(p.type)}
+                                    selected={panel.type == panelType}
+                                    title={upperFirst(panelType)}
+                                    imageUrl={plugin?.settings.icon}
+                                    onClick={() => onChangeVisualization(panelType)}
                                 />
                             })
                         }

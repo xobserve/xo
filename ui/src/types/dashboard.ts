@@ -10,7 +10,6 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { PanelPlugins } from "./panel/plugins"
 import { PanelStyles } from "./panel/styles"
 import { Role } from "./role"
 import { TimeRange } from "./time"
@@ -65,13 +64,13 @@ export interface Panel {
     id?: number
     title?: string
     desc: string
-    type: PanelType
+    type: string
 
     gridPos: GridPos
     collapsed: boolean
 
     // for plugin settings
-    plugins?: PanelPlugins
+    plugins?: Record<string, any>
 
     styles?: PanelStyles
 
@@ -116,26 +115,7 @@ export interface PanelEditorProps {
     data?: any
 }
 
-
-
-
-export enum PanelType {
-    Table = "table",
-    Graph = "graph",
-    BarGauge = "barGauge",
-    Gauge = "gauge",
-    NodeGraph = "nodeGraph",
-    Stat = "stat",
-    Pie = "pie",
-    Trace = "trace",
-    Text = "text",
-    Echarts = "echarts",
-    GeoMap = "geomap",
-    Row = "row",
-    Log = "log",
-    Bar = "bar",
-    Alert = "alert",
-}
+export const PanelTypeRow = "row"
 
 export enum DatasourceType {
     Prometheus = "prometheus",
