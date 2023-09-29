@@ -12,6 +12,7 @@ import gaugePanel from './panel/gauge'
 import geomapPanel from './panel/geomap'
 import logPanel from './panel/log'
 import nodeGraphPanel from './panel/nodeGraph'
+import piePanel from './panel/pie'
 
 export const builtinPanelPlugins: Record<string,PanelPluginComponents> = {
 	[PanelType.Graph]: graphPanel,
@@ -23,6 +24,8 @@ export const builtinPanelPlugins: Record<string,PanelPluginComponents> = {
     [PanelType.GeoMap]: geomapPanel,
     [PanelType.Log]: logPanel,
     [PanelType.NodeGraph]: nodeGraphPanel,
+    [PanelType.Pie]: piePanel,
+
 }
 
 export const builtinDatasourcePlugins: Record<string,DatasourcePluginComponents> = {

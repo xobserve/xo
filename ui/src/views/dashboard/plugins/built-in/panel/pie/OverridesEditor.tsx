@@ -15,6 +15,7 @@ import { EditorInputItem} from "src/components/editor/EditorItem";
 import { OverrideRule } from "types/dashboard";
 import React from "react";
 import { palettes } from "utils/colors";
+import { getSeriesDataOverrideTargets } from "src/views/dashboard/utils/overrides";
 
 interface Props {
     override: OverrideRule
@@ -40,4 +41,8 @@ export default PieOverridesEditor
 export enum PieRules {
     SeriesName = 'Series.displayName',
     SeriesColor= 'Series.color',
+}
+
+export const getPieOverrideTargets = (panel, data) => {
+    return getSeriesDataOverrideTargets(data)    
 }
