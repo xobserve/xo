@@ -20,11 +20,11 @@ import transformTraceData from "../../utils/transform-trace-data"
 import ScrollManager from "./scroll/scrollManager"
 import {  scrollBy, scrollTo } from './scroll/scrollPage';
 import React from "react";
-import { queryTraceInTestData } from "src/views/dashboard/plugins/built-in/datasource/testdata/query_runner"
 import { getDatasource } from "utils/datasource"
 import { useStore } from "@nanostores/react"
 import { $datasources, $teamDatasources } from "src/views/datasource/store"
 import { useSearchParam } from "react-use"
+import traceData from '../../mocks/traces.json'
 
 const TraceDetailWrapper = ({id,dsId}) => {
     const [trace, setTrace] = useState<Trace>(null)
@@ -63,7 +63,7 @@ const TraceDetailWrapper = ({id,dsId}) => {
                 }
                 break
             case DatasourceType.TestData:
-                const r = queryTraceInTestData(id)
+                const r = traceData.data.find(trace => trace.traceID == id)
                 if (r) {
                     data = transformTraceData(r as any)
                 }

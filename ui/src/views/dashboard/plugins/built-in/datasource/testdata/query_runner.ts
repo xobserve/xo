@@ -16,12 +16,11 @@
 
 import { Panel, PanelQuery, PanelType } from "types/dashboard"
 import { TimeRange } from "types/time"
-import { nodeGraphData } from "./mocks/node_graph"
+import { nodeGraphData } from "../../panel/nodeGraph/mocks/node_graph"
 import { prometheusToPanels } from "../prometheus/transformData"
 import { Datasource } from "types/datasource"
-import traceData from './mocks/traces.json'
 import { Field, SeriesData } from "types/seriesData"
-import { getMockLogs } from "./mocks/logs"
+import { getMockLogs } from "../../panel/log/mocks/logs"
 import { getMockAlerts } from "./mocks/alerts"
 import { externalPanelPlugins } from "../../../external/plugins"
 import { builtinPanelPlugins } from "../../plugins"
@@ -75,10 +74,6 @@ export const query_testdata_alerts = (panel: Panel, timeRange: TimeRange, ds: Da
         error: null,
         data: alertsData.data
     }
-}
-
-export const queryTraceInTestData = (traceId) => {
-    return traceData.data.find(trace => trace.traceID == traceId)
 }
 
 export const transformSchemaDataToSeriesData = (schemaData) => {
