@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"strings"
 )
 
 /*
@@ -21,6 +22,7 @@ func main() {
 	args := os.Args
 	if len(args) != 2 {
 		log.Println("Usage: go run releasePlugins.go [panel|datasource].[pluginType]  e.g. go run releasePlugins.go panel.demo,datasource.demo")
+		log.Println("Usage: go run releasePlugins.go all")
 		return
 	}
 
@@ -61,7 +63,30 @@ func main() {
 			cmd := exec.Command("bash", "-c", cmdStr)
 			if _, err := cmd.CombinedOutput(); err != nil {
 				log.Println("copy datasource plugin codes error: ", err, ", datasource: ", dsType)
-				continue
+			}
+		}
+	} else {
+		list := strings.Split(args[1], ",")
+
+		for _, plugin := range list {
+			p := strings.Split(plugin, ".")
+			if len(p) != 2 {
+				log.Println("Plugin to be release must be [panel|datasource].[pluginType]  e.g. panel.demo,datasource.demo")
+				return
+			}
+
+			tp := p[0]
+			if tp != "panel" && tp != "datasource" {
+				log.Println(tp + "is not a valid plugin type, plugin type only support panel or datasource,  Usage: e.g. go run releasePlugin.go panel.demo,datasource.demo , this will release panel plugin demo and also release datasource plugin demo")
+				return
+			}
+
+			pluginType := p[1]
+
+			cmdStr := fmt.Sprintf("cp -r %s/%s/%s %s/%s", sourceDir, tp, pluginType, releaseDir, tp)
+			cmd := exec.Command("bash", "-c", cmdStr)
+			if _, err := cmd.CombinedOutput(); err != nil {
+				log.Println("copy datasource plugin codes error: ", err, ", type: ", plugin)
 			}
 		}
 	}

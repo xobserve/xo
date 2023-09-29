@@ -5,12 +5,14 @@ The origin plugin files is in https://github.com/data-observe/datav/tree/main/ui
 */
 
 // This demo datasource is just a copy of Promtheus datasource
-import { DatasourcePluginComponents } from "types/plugins/plugin";
+import { DatasourcePluginComponents } from "types/plugin";
 import DemoDatasourceEditor from "./DatasourceEditor";
 import DemoVariableEditor from "./VariableEditor";
 import DemoQueryEditor from "./QueryEditor";
 import { queryAlerts, queryVariableValues, replaceQueryWithVariables, runQuery, testDatasource } from "./query_runner";
 import getDocs from "./docs";
+import { DatasourceTypeVM } from "./types";
+import icon from './icon.svg'
 
 const demoComponents: DatasourcePluginComponents = {
     datasourceEditor: DemoDatasourceEditor,
@@ -24,6 +26,11 @@ const demoComponents: DatasourcePluginComponents = {
     replaceQueryWithVariables: replaceQueryWithVariables,
     queryVariableValues: queryVariableValues,
     queryAlerts: queryAlerts,
+
+    settings:{
+        type: DatasourceTypeVM,
+        icon,
+    }
 }
 
 export default  demoComponents
