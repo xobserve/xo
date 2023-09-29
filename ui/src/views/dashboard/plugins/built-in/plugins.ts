@@ -7,6 +7,7 @@ import alertComponents from './panel/alert'
 import barComponents from './panel/bar'
 import barGaugeComponents from './panel/barGauge'
 import echartsComponents from './panel/echarts'
+import gaugeComponents from './panel/gauge'
 
 export const builtinPanelPlugins: Record<string,PanelPluginComponents> = {
 	[PanelType.Graph]: graphComponents,
@@ -14,6 +15,8 @@ export const builtinPanelPlugins: Record<string,PanelPluginComponents> = {
     [PanelType.Bar]: barComponents,
     [PanelType.BarGauge]: barGaugeComponents,
     [PanelType.Echarts]: echartsComponents,
+    [PanelType.Gauge]: gaugeComponents,
+
 }
 
 export const builtinDatasourcePlugins: Record<string,DatasourcePluginComponents> = {

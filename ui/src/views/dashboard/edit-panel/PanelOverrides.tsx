@@ -10,31 +10,21 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box, Button, HStack, StackDivider, Select as ChakraSelect, Tooltip, VStack, useMediaQuery } from "@chakra-ui/react";
+import { Box, Button, StackDivider, Select as ChakraSelect, VStack, useMediaQuery } from "@chakra-ui/react";
 import { Form, FormSection } from "src/components/form/Form";
 import FormItem from "src/components/form/Item";
-import { flatten, isArray } from "lodash";
 import { useMemo } from "react";
 import { FaTimes } from "react-icons/fa";
-import { Panel, PanelEditorProps, PanelType } from "types/dashboard";
-import GraphOverridesEditor from "../plugins/built-in/panel/graph/OverridesEditor";
+import { Panel, PanelEditorProps } from "types/dashboard";
 import React from "react";
 import { useStore } from "@nanostores/react";
 import { panelMsg } from "src/i18n/locales/en";
-import TableOverridesEditor from "../plugins/built-in/panel/table/OverridesEditor";
-import BarGaugeOverridesEditor from "../plugins/built-in/panel/barGauge/OverrideEditor";
 import { getPanelOverridesRules } from "utils/dashboard/panel";
-import { SeriesData } from "types/seriesData";
-import StatOverridesEditor from "../plugins/built-in/panel/stat/OverridesEditor";
-import GeomapOverridesEditor from "../plugins/built-in/panel/geomap/OverridesEditor";
 import { Select } from "antd";
-import BarOverridesEditor from "../plugins/built-in/panel/bar/OverridesEditor";
 import { dispatch } from "use-bus";
 import { PanelForceRebuildEvent } from "src/data/bus-events";
 import { MobileBreakpoint } from "src/data/constants";
-import PieOverridesEditor from "../plugins/built-in/panel/pie/OverridesEditor";
 import { externalPanelPlugins } from "../plugins/external/plugins";
-import { isEmpty } from "utils/validate";
 import { builtinPanelPlugins } from "../plugins/built-in/plugins";
 
 const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
