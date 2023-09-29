@@ -14,6 +14,7 @@ import logPanel from './panel/log'
 import nodeGraphPanel from './panel/nodeGraph'
 import piePanel from './panel/pie'
 import statPanel from './panel/stat'
+import tablePanel from './panel/table'
 
 export const builtinPanelPlugins: Record<string,PanelPluginComponents> = {
 	[PanelType.Graph]: graphPanel,
@@ -27,7 +28,7 @@ export const builtinPanelPlugins: Record<string,PanelPluginComponents> = {
     [PanelType.NodeGraph]: nodeGraphPanel,
     [PanelType.Pie]: piePanel,
     [PanelType.Stat]: statPanel,
-
+    [PanelType.Table]: tablePanel
 }
 
 export const builtinDatasourcePlugins: Record<string,DatasourcePluginComponents> = {

@@ -1,18 +1,8 @@
-import { flatten, isArray } from "lodash"
-import { SeriesData } from "types/seriesData"
+import { genPrometheusMockData, prometheusToPanels } from "src/views/dashboard/utils/prometheus"
+import { Panel, PanelDatasource, PanelQuery } from "types/dashboard"
+import { TimeRange } from "types/time"
 
-export const mockTableDataForTestDataDs = (panel, data) => {
-    const res = []
-    const d: SeriesData[] = flatten(data)
-    if (d.length > 0) {
-        if (isArray(d[0].fields)) {
-            for (const f of d[0].fields) {
-                res.push({
-                    label: f.name,
-                    value: f.name
-                })
-            }
-        }
-    }
-    return res
+export const mockTableDataForTestDataDs = (panel: Panel, timeRange: TimeRange,ds: PanelDatasource,q: PanelQuery) => {
+    const data = prometheusToPanels(genPrometheusMockData(timeRange,ds,q), panel, q, timeRange)
+    return data
 }

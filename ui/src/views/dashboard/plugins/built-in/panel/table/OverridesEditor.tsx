@@ -22,10 +22,11 @@ import { Box, Checkbox, Text } from "@chakra-ui/react";
 import { isEmpty } from "utils/validate";
 import { CodeEditorModal } from "src/components/CodeEditor/CodeEditorModal";
 import ThresholdEditor from "src/views/dashboard/plugins/components/Threshold/ThresholdEditor";
-import { cloneDeep } from "lodash";
+import { cloneDeep, flatten, isArray } from "lodash";
 import ValueMapping from "src/views/dashboard/plugins/components/ValueMapping/ValueMapping";
 import { dispatch } from "use-bus";
 import { PanelForceRebuildEvent } from "src/data/bus-events";
+import { SeriesData } from "types/seriesData";
 
 
 interface Props {
@@ -134,4 +135,20 @@ const ClumnTypeEditor = ({ value, onChange }) => {
             </>}
         </>
     )
+}
+
+export const getTableOverrideTargets = (panel, data) => {
+    const res = []
+    const d: SeriesData[] = flatten(data)
+    if (d.length > 0) {
+        if (isArray(d[0].fields)) {
+            for (const f of d[0].fields) {
+                res.push({
+                    label: f.name,
+                    value: f.name
+                })
+            }
+        }
+    }
+    return res  
 }
