@@ -15,7 +15,6 @@ import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
 import RadionButtons from "src/components/RadioButtons"
 import { UnitPicker } from "src/views/dashboard/plugins/components/UnitPicker"
-import { Panel, PanelEditorProps } from "types/dashboard"
 import { EditorNumberItem, EditorSliderItem } from "src/components/editor/EditorItem"
 import { dispatch } from "use-bus"
 import { PanelForceRebuildEvent } from "src/data/bus-events"
@@ -30,8 +29,9 @@ import { VarialbeAllOption } from "src/data/variable"
 import { LayoutOrientation } from "types/layout"
 import { Units } from "types/panel/plugins"
 import { CodeEditorModal } from "src/components/CodeEditor/CodeEditorModal"
+import { StatEditorProps, StatPanel as Panel } from "./types"
 
-const StatPanelEditor = memo(({ panel, onChange, data }: PanelEditorProps) => {
+const StatPanelEditor = memo(({ panel, onChange, data }: StatEditorProps) => {
     const t = useStore(commonMsg)
     const t1 = useStore(graphPanelMsg)
     const t2 = useStore(statsPanelMsg)

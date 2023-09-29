@@ -10,12 +10,11 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Select, Switch, Textarea } from "@chakra-ui/react"
+import { Select, Switch } from "@chakra-ui/react"
 import { EditorInputItem, EditorNumberItem, EditorSliderItem } from "src/components/editor/EditorItem"
 import RadionButtons from "src/components/RadioButtons"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
-import { Panel, PanelEditorProps } from "types/dashboard"
 import React, { memo } from "react";
 import { useStore } from "@nanostores/react"
 import { commonMsg, graphPanelMsg } from "src/i18n/locales/en"
@@ -28,8 +27,9 @@ import { BarThresholdArrow } from "types/plugins/bar"
 import { CodeEditorModal } from "src/components/CodeEditor/CodeEditorModal"
 import { dispatch } from "use-bus"
 import { PanelForceRebuildEvent } from "src/data/bus-events"
+import { BarEditorProps, BarPanel as Panel } from "./types"
 
-const BarPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
+const BarPanelEditor = memo(({ panel, onChange }: BarEditorProps) => {
     const t = useStore(commonMsg)
     const t1 = useStore(graphPanelMsg)
     return (<>

@@ -15,7 +15,7 @@ import { EditorInputItem, EditorNumberItem } from "src/components/editor/EditorI
 import RadionButtons from "src/components/RadioButtons"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
-import { DatasourceType, Panel, PanelEditorProps } from "types/dashboard"
+import { DatasourceType } from "types/dashboard"
 import React, { memo } from "react";
 import { useStore } from "@nanostores/react"
 import { alertMsg, commonMsg } from "src/i18n/locales/en"
@@ -35,10 +35,10 @@ import { AlertFilter } from "types/panel/plugins"
 import { $datasources } from "src/views/datasource/store"
 import { externalDatasourcePlugins } from "../../../external/plugins"
 import { cloneDeep } from "lodash"
-import { PanelTypeAlert } from "./types"
+import { AlertEditorProps, PanelTypeAlert, AlertPanel as Panel } from "./types"
 import { PanelTypeGraph } from "../graph/types"
 
-const AlertPanelEditor = memo((props: PanelEditorProps) => {
+const AlertPanelEditor = memo((props: AlertEditorProps) => {
     const { panel, onChange } = props
     const t = useStore(commonMsg)
     return (<><PanelAccordion title={t.basic}>
@@ -185,6 +185,7 @@ export const AlertFilterEditor = ({ panel, filter, onChange }: AlertFilterProps)
                             panel.plugins.alert.filter.enableFilter = v
                             break;
                         case PanelTypeGraph:
+                            //@ts-ignore
                             panel.plugins.graph.alertFilter.enableFilter = v
                             break
                         default:
@@ -200,6 +201,7 @@ export const AlertFilterEditor = ({ panel, filter, onChange }: AlertFilterProps)
                         panel.plugins.alert.filter.state = v
                         break;
                     case PanelTypeGraph:
+                        //@ts-ignore
                         panel.plugins.graph.alertFilter.state = v
                         break
                     default:
@@ -218,6 +220,7 @@ export const AlertFilterEditor = ({ panel, filter, onChange }: AlertFilterProps)
                                     panel.plugins.alert.filter.datasources = v
                                     break;
                                 case PanelTypeGraph:
+                                    //@ts-ignore
                                     panel.plugins.graph.alertFilter.datasources = v
                                     break
                                 default:
@@ -234,6 +237,7 @@ export const AlertFilterEditor = ({ panel, filter, onChange }: AlertFilterProps)
                     panel.plugins.alert.filter.httpQuery = v
                     break;
                 case PanelTypeGraph:
+                    //@ts-ignore
                     panel.plugins.graph.alertFilter.httpQuery = v
                     break
                 default:
@@ -247,6 +251,7 @@ export const AlertFilterEditor = ({ panel, filter, onChange }: AlertFilterProps)
                         panel.plugins.alert.filter.ruleName = v
                         break;
                     case PanelTypeGraph:
+                        //@ts-ignore
                         panel.plugins.graph.alertFilter.ruleName = v
                         break
                     default:
@@ -261,6 +266,7 @@ export const AlertFilterEditor = ({ panel, filter, onChange }: AlertFilterProps)
                         panel.plugins.alert.filter.ruleLabel = v
                         break;
                     case PanelTypeGraph:
+                        //@ts-ignore
                         panel.plugins.graph.alertFilter.ruleLabel = v
                         break
                     default:
@@ -275,6 +281,7 @@ export const AlertFilterEditor = ({ panel, filter, onChange }: AlertFilterProps)
                         panel.plugins.alert.filter.alertLabel = v
                         break;
                     case PanelTypeGraph:
+                        //@ts-ignore
                         panel.plugins.graph.alertFilter.alertLabel = v
                         break
                     default:

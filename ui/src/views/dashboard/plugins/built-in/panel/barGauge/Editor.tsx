@@ -11,7 +11,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Panel, PanelEditorProps } from "types/dashboard"
 
 import React, { memo } from "react"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
@@ -26,8 +25,10 @@ import { Switch } from "@chakra-ui/react"
 import ThresholdEditor from "src/views/dashboard/plugins/components/Threshold/ThresholdEditor"
 import { Units } from "types/panel/plugins"
 import { CodeEditorModal } from "src/components/CodeEditor/CodeEditorModal"
+import { BarGaugeEditorProps, BarGaugePanel as Panel } from "./types"
 
-const BarGaugeEditor = memo(({ panel, onChange }: PanelEditorProps) => {
+
+const BarGaugeEditor = memo(({ panel, onChange }: BarGaugeEditorProps) => {
     const t = useStore(commonMsg)
     const t1 = useStore(barGaugePanelMsg)
 

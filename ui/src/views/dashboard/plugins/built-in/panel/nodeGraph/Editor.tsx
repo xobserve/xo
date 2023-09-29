@@ -13,7 +13,7 @@
 import { Alert, Box, Button, Divider, Flex, HStack, Image, Input, Modal, ModalBody, ModalContent, ModalOverlay, NumberInput, NumberInputField, Select, Slider, SliderFilledTrack, SliderThumb, SliderTrack, Switch, Text, Textarea, Tooltip, useDisclosure, useToast, VStack } from "@chakra-ui/react"
 import { ColorPicker } from "src/components/ColorPicker"
 import RadionButtons from "src/components/RadioButtons"
-import { cloneDeep, isArray, isEmpty } from "lodash"
+import { cloneDeep, isEmpty } from "lodash"
 import { memo, useMemo, useState } from "react"
 import * as Icons from 'react-icons/fa'
 import { MdEdit } from "react-icons/md"
@@ -21,8 +21,7 @@ import { onClickCommonEvent } from "src/data/panel/initPlugins"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import { EditorInputItem, EditorNumberItem, EditorSliderItem } from "src/components/editor/EditorItem"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
-import { Panel, PanelEditorProps } from "types/dashboard"
-import { NodeGraphIcon, NodeGraphMenuItem } from "types/panel/plugins"
+import { NodeGraphIcon, NodeGraphMenuItem, NodeGraphEditorProps, NodeGraphPanel as Panel } from "./types"
 import { useImmer } from "use-immer"
 import CodeEditor from "src/components/CodeEditor/CodeEditor"
 import React from "react";
@@ -36,7 +35,7 @@ import { CodeEditorModal } from "src/components/CodeEditor/CodeEditorModal"
 
 
 
-const NodeGraphPanelEditor = memo((props: PanelEditorProps) => {
+const NodeGraphPanelEditor = memo((props: NodeGraphEditorProps) => {
     const t = useStore(commonMsg)
     const t1 = useStore(nodeGraphPanelMsg)
     const { panel, onChange } = props
@@ -239,7 +238,7 @@ const NodeGraphPanelEditor = memo((props: PanelEditorProps) => {
 export default NodeGraphPanelEditor
 
 const initIcon: NodeGraphIcon = { key: '', value: '', icon: '', type: 'label' }
-const IconSetting = ({ panel, onChange }: PanelEditorProps) => {
+const IconSetting = ({ panel, onChange }: NodeGraphEditorProps) => {
     const t1 = useStore(nodeGraphPanelMsg)
     const toast = useToast()
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -352,7 +351,7 @@ const IconSetting = ({ panel, onChange }: PanelEditorProps) => {
     </>)
 }
 
-const RightClickMenus = ({ panel, onChange }: PanelEditorProps) => {
+const RightClickMenus = ({ panel, onChange }: NodeGraphEditorProps) => {
     const t = useStore(commonMsg)
     const t1 = useStore(nodeGraphPanelMsg)
 
@@ -487,7 +486,7 @@ const RightClickMenus = ({ panel, onChange }: PanelEditorProps) => {
 }
 
 
-const DonutColorsEditor = (props: PanelEditorProps) => {
+const DonutColorsEditor = (props: NodeGraphEditorProps) => {
     const { panel, onChange, data } = props
     if (!data || data.length == 0 || !data[0].nodes) {
         return null

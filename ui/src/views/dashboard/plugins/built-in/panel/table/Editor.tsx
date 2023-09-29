@@ -14,9 +14,8 @@ import { Box, Button, HStack, Modal, ModalBody, ModalContent, ModalOverlay,  Sel
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import { EditorInputItem, EditorNumberItem } from "src/components/editor/EditorItem"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
-import { Panel, PanelEditorProps } from "types/dashboard"
 import CodeEditor from "src/components/CodeEditor/CodeEditor"
-import { memo, useMemo, useState } from "react"
+import { memo, useState } from "react"
 import React from "react";
 import RadionButtons from "src/components/RadioButtons"
 import { dispatch } from "use-bus"
@@ -25,8 +24,9 @@ import { useStore } from "@nanostores/react"
 import { commonMsg, tablePanelMsg } from "src/i18n/locales/en"
 import { ClickActionsEditor } from "src/views/dashboard/edit-panel/components/ClickActionsEditor"
 import { ColorPicker } from "src/components/ColorPicker"
+import { TableEditorProps, TablePanel as Panel } from "./types"
 
-const TablePanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
+const TablePanelEditor = memo(({ panel, onChange }: TableEditorProps) => {
     const t = useStore(commonMsg)
     const t1 = useStore(tablePanelMsg)
     return (<>
@@ -142,7 +142,7 @@ export default TablePanelEditor
 
 
 
-const OnRowClickEditor = ({ panel, onChange }: PanelEditorProps) => {
+const OnRowClickEditor = ({ panel, onChange }: TableEditorProps) => {
     const t = useStore(commonMsg)
     const t1 = useStore(tablePanelMsg)
     const { isOpen, onOpen, onClose } = useDisclosure()

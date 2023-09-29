@@ -12,7 +12,6 @@
 // limitations under the License.
 
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
-import { Panel, PanelEditorProps } from "types/dashboard"
 import React from "react";
 import { useStore } from "@nanostores/react";
 import { commonMsg } from "src/i18n/locales/en";
@@ -22,8 +21,9 @@ import { EditorInputItem } from "src/components/editor/EditorItem";
 import { dispatch } from "use-bus";
 import { PanelForceRebuildEvent } from "src/data/bus-events";
 import { ClickActionsEditor } from "src/views/dashboard/edit-panel/components/ClickActionsEditor";
+import { TraceEditorProps, TracePanel as Panel } from "./types";
 
-const TracePanelEditor = ({ panel, onChange }: PanelEditorProps) => {
+const TracePanelEditor = ({ panel, onChange }: TraceEditorProps) => {
     const t = useStore(commonMsg)
     return (<>
         <PanelAccordion title={t.basic}>

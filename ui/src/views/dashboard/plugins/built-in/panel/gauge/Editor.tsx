@@ -16,7 +16,6 @@ import ValueCalculation from "src/views/dashboard/plugins/components/ValueCalcul
 import { EditorInputItem, EditorNumberItem } from "src/components/editor/EditorItem"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
-import { Panel, PanelEditorProps } from "types/dashboard"
 import React, { memo } from "react";
 import { useStore } from "@nanostores/react"
 import { commonMsg, gaugePanelMsg } from "src/i18n/locales/en"
@@ -25,7 +24,8 @@ import { SeriesData } from "types/seriesData"
 import { isEmpty } from "utils/validate"
 import { UnitPicker } from "src/views/dashboard/plugins/components/UnitPicker"
 import { Units } from "types/panel/plugins"
-const GaugePanelEditor = memo((props: PanelEditorProps) => {
+import { GaugeEditorProps, GaugePanel as Panel } from "./types"
+const GaugePanelEditor = memo((props: GaugeEditorProps) => {
     const t = useStore(commonMsg)
     const t1 = useStore(gaugePanelMsg)
     const { panel, onChange,data } = props

@@ -4,7 +4,7 @@ import PanelEditor from "./Editor";
 import TracePanelWrapper from "./Trace";
 import { mockTraceDataForTestDataDs } from "./mocks/mockData";
 import icon from './trace.svg'
-import { PanelTypeTrace } from "./types/types";
+import { PanelTypeTrace } from "./types";
 
 
 const panelComponents: PanelPluginComponents = {

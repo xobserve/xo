@@ -18,8 +18,7 @@ import { UnitPicker } from "src/views/dashboard/plugins/components/UnitPicker"
 import { memo } from "react"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
-import { Panel, PanelEditorProps } from "types/dashboard"
-import { PieLegendPlacement, Units } from "types/panel/plugins"
+import {  Units } from "types/panel/plugins"
 import React from "react";
 import { useStore } from "@nanostores/react"
 import { commonMsg, piePanelMsg } from "src/i18n/locales/en"
@@ -27,8 +26,9 @@ import ThresholdEditor from "src/views/dashboard/plugins/components/Threshold/Th
 import { CodeEditorModal } from "src/components/CodeEditor/CodeEditorModal"
 import { dispatch } from "use-bus"
 import { PanelForceRebuildEvent } from "src/data/bus-events"
+import { PieEditorProps, PiePanel as Panel, PieLegendPlacement } from "./types"
 
-const PiePanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
+const PiePanelEditor = memo(({ panel, onChange }: PieEditorProps) => {
     const t = useStore(commonMsg)
     const t1 = useStore(piePanelMsg)
     return (<>

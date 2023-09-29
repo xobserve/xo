@@ -17,7 +17,6 @@ import { memo, useState } from "react"
 import AutoSizer from "react-virtualized-auto-sizer"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
-import { Panel, PanelEditorProps } from "types/dashboard"
 import { genDynamicFunction } from "utils/dashboard/dynamicCall"
 import { EchartsComponent } from "./Echarts"
 import { ColorModeSwitcher } from "src/components/ColorModeSwitcher"
@@ -34,8 +33,9 @@ import { PanelForceRebuildEvent } from "src/data/bus-events"
 import { UnitPicker, formatUnit } from "src/views/dashboard/plugins/components/UnitPicker"
 import { Units } from "types/panel/plugins"
 import { EditorNumberItem } from "components/editor/EditorItem"
+import { EchartsEditorProps, EchartsPanel as Panel } from "./types"
 
-const EchartsPanelEditor = memo(({ panel, onChange, data }: PanelEditorProps) => {
+const EchartsPanelEditor = memo(({ panel, onChange, data }: EchartsEditorProps) => {
     const t = useStore(commonMsg)
     const t1 = useStore(echartsPanelMsg)
     return (
@@ -110,7 +110,7 @@ const EchartsPanelEditor = memo(({ panel, onChange, data }: PanelEditorProps) =>
 export default EchartsPanelEditor
 
 
-const SetOptions = ({ panel, onChange, data }: PanelEditorProps) => {
+const SetOptions = ({ panel, onChange, data }: EchartsEditorProps) => {
     const t = useStore(commonMsg)
     const t1 = useStore(echartsPanelMsg)
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -186,7 +186,7 @@ const SetOptions = ({ panel, onChange, data }: PanelEditorProps) => {
 
 
 
-const RegisterEvents = ({ panel, onChange }: PanelEditorProps) => {
+const RegisterEvents = ({ panel, onChange }: EchartsEditorProps) => {
     const t = useStore(commonMsg)
     const t1 = useStore(echartsPanelMsg)
 

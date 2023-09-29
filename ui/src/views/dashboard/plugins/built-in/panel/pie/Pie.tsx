@@ -15,7 +15,7 @@ import ChartComponent from "src/components/charts/Chart";
 import { formatUnit } from "src/views/dashboard/plugins/components/UnitPicker";
 import { memo, useMemo, useState } from "react";
 import { OverrideItem, Panel, PanelProps } from "types/dashboard"
-import { PieLegendPlacement } from "types/panel/plugins";
+
 import { PiePluginData } from "types/plugins/pie"
 import { SeriesData } from "types/seriesData";
 import { commonInteractionEvent, genDynamicFunction } from "utils/dashboard/dynamicCall";
@@ -31,6 +31,7 @@ import {  MobileVerticalBreakpointNum } from "src/data/constants";
 import { findOverride, findRuleInOverride } from "utils/dashboard/panel";
 import { PieRules } from "./OverridesEditor";
 import NoData from "src/views/dashboard/components/PanelNoData";
+import { PieLegendPlacement } from "./types";
 
 interface Props extends PanelProps {
     data: SeriesData[][]

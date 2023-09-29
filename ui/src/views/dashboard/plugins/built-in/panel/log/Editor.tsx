@@ -15,7 +15,6 @@ import { EditorInputItem, EditorNumberItem } from "src/components/editor/EditorI
 import RadionButtons from "src/components/RadioButtons"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
-import { Panel, PanelEditorProps } from "types/dashboard"
 import React, { memo, useMemo, useState } from "react";
 import { useStore } from "@nanostores/react"
 import { commonMsg, componentsMsg } from "src/i18n/locales/en"
@@ -32,8 +31,9 @@ import { PanelForceRebuildEvent } from "src/data/bus-events"
 import { CodeEditorModal } from "components/CodeEditor/CodeEditorModal"
 import { ClickActionsEditor } from "src/views/dashboard/edit-panel/components/ClickActionsEditor"
 import StringColorMappingEditor from "src/views/dashboard/plugins/components/StringColorMapping"
+import { LogEditorProps, LogPanel as Panel } from "./types"
 
-const LogPanelEditor = memo((props: PanelEditorProps) => {
+const LogPanelEditor = memo((props: LogEditorProps) => {
     const { panel, onChange } = props
 
     const t = useStore(commonMsg)

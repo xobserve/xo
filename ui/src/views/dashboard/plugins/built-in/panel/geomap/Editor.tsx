@@ -12,7 +12,6 @@
 // limitations under the License.
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
-import { Panel, PanelEditorProps } from "types/dashboard"
 import React, { memo } from "react";
 import { useStore } from "@nanostores/react"
 import { commonMsg } from "src/i18n/locales/en"
@@ -31,8 +30,9 @@ import ValueCalculation from "src/views/dashboard/plugins/components/ValueCalcul
 import { dispatch } from "use-bus";
 import { PanelForceRebuildEvent } from "src/data/bus-events";
 import { CodeEditorModal } from "src/components/CodeEditor/CodeEditorModal";
+import { GeomapEditorProps, GeomapPanel as Panel } from "./types";
 
-const GeoMapPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
+const GeoMapPanelEditor = memo(({ panel, onChange }: GeomapEditorProps) => {
     const t = useStore(commonMsg)
     const options = panel.plugins.geomap
     return (<>

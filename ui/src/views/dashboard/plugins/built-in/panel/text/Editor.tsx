@@ -15,12 +15,12 @@ import { EditorInputItem } from "src/components/editor/EditorItem"
 import RadionButtons from "src/components/RadioButtons"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
-import { Panel, PanelEditorProps } from "types/dashboard"
 import React, { memo } from "react";
 import { useStore } from "@nanostores/react"
 import { textPanelMsg } from "src/i18n/locales/en"
+import { TextEditorProps, TextPanel as Panel } from "./types"
 
-const TextPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
+const TextPanelEditor = memo(({ panel, onChange }: TextEditorProps) => {
     const t1 = useStore(textPanelMsg)
     return (<PanelAccordion title={t1.textSettings}>
         <PanelEditItem title={t1.content}>
