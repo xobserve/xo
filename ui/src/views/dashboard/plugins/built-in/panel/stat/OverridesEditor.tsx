@@ -18,6 +18,7 @@ import { OverrideRule } from "types/dashboard";
 import React from "react";
 import ValueCalculation from "src/views/dashboard/plugins/components/ValueCalculation";
 import ThresholdEditor from "src/views/dashboard/plugins/components/Threshold/ThresholdEditor";
+import { getSeriesDataOverrideTargets } from "src/views/dashboard/utils/overrides";
 
 interface Props {
     override: OverrideRule
@@ -68,4 +69,9 @@ export enum StatRules {
 
     // others
     SeriesThresholds = 'Series.thresholds',
+}
+
+
+export const getStatOverrideTargets = (panel, data) => {
+    return getSeriesDataOverrideTargets(data)    
 }
