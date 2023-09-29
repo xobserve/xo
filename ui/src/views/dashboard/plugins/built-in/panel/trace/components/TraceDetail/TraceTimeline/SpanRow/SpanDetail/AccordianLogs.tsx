@@ -18,7 +18,7 @@ import _sortBy from 'lodash/sortBy';
 import './AccordianLogs.css';
 import AccordianKeyValues from './AccordianKeyValues';
 import { TNil } from 'types/misc';
-import { SpanLog, KeyValuePair, SpanLink } from 'types/plugins/trace';
+import { SpanLog, KeyValuePair, SpanLink } from 'src/views/dashboard/plugins/built-in/panel/trace/types/trace';
 
 import { formatDuration } from 'utils/date';
 import { AiOutlineDown, AiOutlineRight } from 'react-icons/ai';

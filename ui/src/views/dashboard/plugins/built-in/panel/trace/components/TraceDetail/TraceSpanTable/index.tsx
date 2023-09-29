@@ -17,7 +17,7 @@ import { Table, Select } from 'antd';
 import moment from 'moment';
 import { ColumnProps } from 'antd/es/table';
 import { TNil } from 'types/misc';
-import { Trace, TraceSpan } from 'types/plugins/trace';
+import { Trace, TraceSpan } from 'src/views/dashboard/plugins/built-in/panel/trace/types/trace';
 import { timeConversion } from '../../../../../../../../../utils/date';
 import { getTargetEmptyOrBlank } from '../../../utils/get-target';
 import { Box, Button, Flex, HStack, Link, Text } from '@chakra-ui/react';

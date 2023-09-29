@@ -16,7 +16,6 @@ import React, { memo, useCallback, useMemo, useState } from "react";
 import { FieldType, SeriesData } from "types/seriesData";
 import { isEmpty } from "utils/validate";
 import { isSeriesData } from "utils/seriesData";
-import { BarSeries } from "types/plugins/bar";
 import BarChart from "./BarChart";
 import { GraphLayout } from "../graph/GraphLayout";
 import LegendTable from "../../../components/Legend";
@@ -27,7 +26,7 @@ import { PanelInactiveKey } from "src/data/storage-keys";
 import storage from "utils/localStorage";
 import { cloneDeep } from "lodash";
 import NoData from "src/views/dashboard/components/PanelNoData";
-
+import {BarSeries} from './types'
 
 interface BarPanelProps extends PanelProps {
     data: SeriesData[][]

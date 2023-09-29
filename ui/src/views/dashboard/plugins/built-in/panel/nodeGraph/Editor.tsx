@@ -29,7 +29,7 @@ import { useStore } from "@nanostores/react"
 import { commonMsg, nodeGraphPanelMsg } from "src/i18n/locales/en"
 import { dispatch } from "use-bus"
 import { PanelForceRebuildEvent } from "src/data/bus-events"
-import { Node } from "types/plugins/nodeGraph"
+import { Node } from "./types"
 import { palettes } from "utils/colors"
 import { CodeEditorModal } from "src/components/CodeEditor/CodeEditorModal"
 

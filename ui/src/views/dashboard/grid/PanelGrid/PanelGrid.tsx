@@ -49,7 +49,7 @@ import { jsonToEqualPairs, parseVariableFormat } from "utils/format";
 import { VariableInterval } from "src/data/variable";
 import Loading from "src/components/loading/Loading";
 import DebugPanel from "./DebugPanel";
-import { AlertGroup, AlertRule } from "types/plugins/alert";
+import { AlertGroup, AlertRule } from "src/views/dashboard/plugins/built-in/panel/alert/types";
 import ErrorBoundary from "src/components/ErrorBoudary";
 import { $datasources } from "src/views/datasource/store";
 import { Datasource } from "types/datasource";

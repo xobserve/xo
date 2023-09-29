@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import G6 from "@antv/g6";
-import { NodeGraphSettings } from "types/panel/plugins";
+import { NodeGraphSettings } from "../types";
 
 export const initTooltip = (settings: NodeGraphSettings) => {
     const tooltip = new G6.Tooltip({

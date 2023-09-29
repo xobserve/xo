@@ -1,7 +1,6 @@
 import { ClickAction } from "src/views/dashboard/edit-panel/components/ClickActionsEditor"
 import { Panel, PanelEditorProps } from "types/dashboard"
 import { LayoutOrientation } from "types/layout"
-import { LogThreshold } from "types/plugins/log"
 
 export const PanelTypeLog = "log"
 
@@ -66,4 +65,41 @@ export interface LogSettings {
         actions: ClickAction[]
     }
     thresholds: LogThreshold[]
+}
+
+
+export interface LogSeries  {
+    labels: {[key: string]: string};
+    values: [number,string][]
+}
+
+
+
+export interface LogThreshold {
+    type: "label" | "content"
+    key: string
+    value: string 
+    color: string
+}
+
+
+export interface Log {
+    labels: {[key: string]: string}
+    timestamp: number  // nanoseconds
+    content?: string 
+    highlight?: string[]
+    labelHighlight?: string[]
+}
+
+export interface LogLabel {
+    id: string
+    name: string
+    value: string
+    count?: number
+}
+
+
+export interface LogChartView {
+    maxBars: number
+    barType: "total" | "labels"
 }

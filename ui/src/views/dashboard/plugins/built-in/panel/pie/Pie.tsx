@@ -16,7 +16,7 @@ import { formatUnit } from "src/views/dashboard/plugins/components/UnitPicker";
 import { memo, useMemo, useState } from "react";
 import { OverrideItem, Panel, PanelProps } from "types/dashboard"
 
-import { PiePluginData } from "types/plugins/pie"
+import { PiePluginData } from "./types"
 import { SeriesData } from "types/seriesData";
 import { commonInteractionEvent, genDynamicFunction } from "utils/dashboard/dynamicCall";
 import { calcValueOnSeriesData, isSeriesData } from "utils/seriesData";

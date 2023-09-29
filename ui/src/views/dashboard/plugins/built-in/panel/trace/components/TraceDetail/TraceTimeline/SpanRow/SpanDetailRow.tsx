@@ -19,7 +19,7 @@ import DetailState from './SpanDetail/DetailState';
 import SpanTreeOffset from './SpanTreeOffset';
 import TimelineRow from '../TimelineRow';
 
-import { SpanLog, TraceSpan, KeyValuePair, SpanLink } from 'types/plugins/trace';
+import { SpanLog, TraceSpan, KeyValuePair, SpanLink } from 'src/views/dashboard/plugins/built-in/panel/trace/types/trace';
 import { Box, useColorMode, useColorModeValue } from '@chakra-ui/react';
 import customColors from 'src/theme/colors';
 

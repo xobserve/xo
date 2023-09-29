@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { NodeGraphSettings } from "types/panel/plugins"
+import { NodeGraphSettings } from "./types"
 import { paletteColorNameToHex } from "utils/colors"
 
 export const getDefaultNodeLabel = (colorMode) => {

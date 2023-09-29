@@ -16,7 +16,7 @@ import React, { Component } from 'react';
 import './index.css';
 import { Table } from 'antd';
 import { ColumnProps } from 'antd/es/table';
-import { Trace } from 'types/plugins/trace';
+import { Trace } from 'src/views/dashboard/plugins/built-in/panel/trace/types/trace';
 import TraceStatisticsHeader from './TraceStatsHeader';
 import { ITableSpan } from './types';
 import { TNil } from 'types/misc';

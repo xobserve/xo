@@ -1,5 +1,5 @@
 import { Box, Checkbox, Flex, HStack, Tag, TagLabel, TagLeftIcon, Text, Wrap, WrapItem, useColorModeValue, useMediaQuery } from "@chakra-ui/react"
-import { Trace } from "types/plugins/trace"
+import { Trace } from "src/views/dashboard/plugins/built-in/panel/trace/types/trace"
 import { formatDuration, formatRelativeDate } from "utils/date"
 import { sortBy } from "lodash"
 import colorGenerator from "utils/colorGenerator"

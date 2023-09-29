@@ -19,7 +19,7 @@ import CanvasSpanGraph from './CanvasSpanGraph';
 import TickLabels from './TickLabels';
 import ViewingLayer from './ViewingLayer';
 import { TUpdateViewRangeTimeFunction, IViewRange, ViewRangeTimeUpdate } from '../../../types/types';
-import { Trace, TraceSpan } from 'types/plugins/trace';
+import { Trace, TraceSpan } from 'src/views/dashboard/plugins/built-in/panel/trace/types/trace';
 import { useColorModeValue } from '@chakra-ui/react';
 import customColors from 'src/theme/colors';
 

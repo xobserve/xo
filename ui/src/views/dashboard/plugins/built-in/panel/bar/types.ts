@@ -1,6 +1,5 @@
 import {PanelEditorProps, Panel} from 'types/dashboard'
 import { ThresholdDisplay, ValueSetting } from 'types/panel/plugins'
-import { BarThresholdArrow } from 'types/plugins/bar'
 import { ThresholdsConfig } from 'types/threshold'
 import { ValueCalculationType } from 'types/value'
 
@@ -52,4 +51,25 @@ export interface BarSettings {
     thresholds: ThresholdsConfig
     thresholdsDisplay: ThresholdDisplay
     thresholdArrow: BarThresholdArrow
+}
+
+
+
+export interface BarSeries {
+    name: string
+    rawName: string
+    color?: string
+    timestamps?: number[]
+    values?: number[]
+}
+
+export enum BarThresholdArrow {
+    Circle = 'circle',
+    Rect = 'rect',
+    RoundRect =  'roundRect',
+    Triangle =  'triangle' ,
+    Diamond =  'diamond' ,
+    Pin =  'pin' ,
+    Arrow =  'arrow' ,
+    None =  'none'
 }

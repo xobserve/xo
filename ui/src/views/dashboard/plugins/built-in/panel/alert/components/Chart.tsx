@@ -21,7 +21,7 @@ import { dateTimeFormat } from "utils/datetime/formatter"
 import moment from "moment"
 import { isEmpty } from "utils/validate"
 import { measureText } from "utils/measureText"
-import { AlertToolbarOptions } from "types/plugins/alert"
+import { AlertToolbarOptions } from "../types"
 import { getLabelNameColor } from "../../log/utils"
 import { PanelTypeLog } from "../../log/types"
 

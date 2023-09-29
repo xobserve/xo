@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import * as _ from 'lodash';
-import { Trace, TraceSpan } from 'types/plugins/trace';
+import { Trace, TraceSpan } from 'src/views/dashboard/plugins/built-in/panel/trace/types/trace';
 import { ITableSpan } from './types';
 import colorGenerator from 'utils/colorGenerator';
 

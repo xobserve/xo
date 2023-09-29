@@ -42,3 +42,59 @@ export interface AlerSettings extends DisableDatasource {
     filter: AlertFilter
     clickActions: ClickAction[]
 }
+
+
+import { AlertState } from "types/alert"
+import { DatasourceType } from "types/dashboard"
+
+// limitations under the License.
+export interface AlertToolbarOptions {
+    maxBars?: number
+    barType?: "labels" | "total"
+    viewMode?: "list" | "stat"
+    persist?: boolean
+    stateFilter?: AlertState[]
+    ruleNameFilter?: string
+    ruleLabelsFilter?: string
+    labelNameFilter?: string
+}
+
+export interface AlertGroup {
+    name: string
+    file: string
+    rules: AlertRule[]
+    evaluationTime: number,
+    lastEvaluation: string
+    interval: number
+    limit: number
+}
+
+
+export interface AlertRule {
+    name: string
+    state: AlertState
+    type: "alerting" | "recording"
+    query: string 
+    duration: number
+    keepFiringFor: number
+    labels: Record<string, string>
+    annotations: Record<string, string>
+    alerts: Alert[]
+    health: "ok" | "error"
+    lastEvaluation: string
+    evaluationTime: number
+    activeAt: string
+
+    groupName: string 
+    groupNamespace: string 
+    fromDs: DatasourceType
+}
+
+export interface Alert {
+    name: string
+    labels: Record<string, string>
+    annotations: Record<string, string>
+    state: AlertState
+    activeAt: string
+    value: number
+}

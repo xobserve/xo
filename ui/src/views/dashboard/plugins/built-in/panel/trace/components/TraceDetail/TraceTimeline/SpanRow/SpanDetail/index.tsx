@@ -21,7 +21,7 @@ import AccordianText from './AccordianText';
 import DetailState from './DetailState';
 
 import { TNil } from 'types/misc';
-import { KeyValuePair, SpanLink, SpanLog, TraceSpan } from 'types/plugins/trace';
+import { KeyValuePair, SpanLink, SpanLog, TraceSpan } from 'src/views/dashboard/plugins/built-in/panel/trace/types/trace';
 
 import { formatDuration } from 'utils/date';
 import { Box, Divider, Flex, HStack, Text, useMediaQuery } from '@chakra-ui/react';

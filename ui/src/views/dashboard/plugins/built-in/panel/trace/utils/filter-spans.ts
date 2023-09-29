@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { KeyValuePair, TraceSpan } from 'types/plugins/trace';
+import { KeyValuePair, TraceSpan } from 'src/views/dashboard/plugins/built-in/panel/trace/types/trace';
 import { TNil } from '../types/misc';
 
 export default function filterSpans(textFilter: string, spans: TraceSpan[] | TNil) {

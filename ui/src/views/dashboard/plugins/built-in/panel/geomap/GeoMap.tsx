@@ -18,7 +18,6 @@ import { PanelProps } from "types/dashboard";
 import { SeriesData } from "types/seriesData";
 import getHeatmapLayer from "./layers/dataLayer/heatmap";
 import getBaseMap from "./layers/basemap/baseMap";
-import { DataLayerType } from "types/plugins/geoMap";
 import getMarkersLayer from "./layers/dataLayer/markers";
 import { fromLonLat } from "ol/proj";
 import { MouseWheelZoom, defaults as interactionDefaults } from "ol/interaction";
@@ -29,14 +28,13 @@ import { GeomapTooltip } from "./components/Tooltip";
 import 'ol/ol.css';
 import 'ol-ext/dist/ol-ext.css';
 import { isSeriesData } from "utils/seriesData";
-import { isEmpty } from "utils/validate";
 import { genDynamicFunction } from "utils/dashboard/dynamicCall";
 import { isFunction } from "lodash";
 import { gnavigate } from "layouts/PageContainer";
 import { setVariable } from "src/views/variables/SelectVariable";
 import { setDateTime } from "src/components/DatePicker/DatePicker";
 import { $variables } from "src/views/variables/store";
-import NoData from "src/views/dashboard/components/PanelNoData";
+import {DataLayerType} from './types'
 
 interface Props extends PanelProps {
     data: SeriesData[][]

@@ -19,7 +19,7 @@ import convPlexus from '../../../model/trace-dag/convPlexus';
 import TraceDag from '../../../model/trace-dag/TraceDag';
 import TDagNode from '../../../model/trace-dag/types/TDagNode';
 import { TDenseSpanMembers } from '../../../model/trace-dag/types';
-import { Trace, TraceSpan, KeyValuePair } from 'types/plugins/trace';
+import { Trace, TraceSpan, KeyValuePair } from 'src/views/dashboard/plugins/built-in/panel/trace/types/trace';
 import { TSumSpan, TEv } from './types';
 
 let parentChildOfMap: Record<string, TraceSpan[]>;

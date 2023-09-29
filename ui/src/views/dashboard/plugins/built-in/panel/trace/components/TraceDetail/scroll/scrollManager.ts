@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import { TNil } from '../../../types/misc';
-import { TraceSpan, SpanReference, Trace } from 'types/plugins/trace'
+import { TraceSpan, SpanReference, Trace } from 'src/views/dashboard/plugins/built-in/panel/trace/types/trace'
 
 /**
  * `Accessors` is necessary because `ScrollManager` needs to be created by

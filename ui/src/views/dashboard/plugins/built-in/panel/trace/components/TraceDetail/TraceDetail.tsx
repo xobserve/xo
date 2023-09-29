@@ -12,7 +12,7 @@
 // limitations under the License.
 
 import { Box, useColorModeValue, useMediaQuery } from "@chakra-ui/react"
-import { Trace } from "types/plugins/trace"
+import { Trace } from "src/views/dashboard/plugins/built-in/panel/trace/types/trace"
 import TraceDetailHeader from "./TraceHeader"
 
 import ScrollManager from './scroll/scrollManager';

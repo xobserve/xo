@@ -18,7 +18,7 @@ import './KeyValuesTable.css';
 
 
 import { TNil } from 'types/misc';
-import { KeyValuePair, SpanLink } from 'types/plugins/trace';
+import { KeyValuePair, SpanLink } from 'src/views/dashboard/plugins/built-in/panel/trace/types/trace';
 
 import CopyToClipboard from 'src/components/CopyToClipboard';
 import { FaLink } from 'react-icons/fa';

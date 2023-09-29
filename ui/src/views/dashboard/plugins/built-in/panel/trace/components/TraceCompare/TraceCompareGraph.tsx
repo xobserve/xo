@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Trace } from "types/plugins/trace"
+import { Trace } from "src/views/dashboard/plugins/built-in/panel/trace/types/trace"
 import { cacheAs, Digraph, LayoutManager } from '../plexus';
 import { useEffect, useState } from "react";
 import { getEdgesAndVertices, getUiFindVertexKeys } from "./utils";

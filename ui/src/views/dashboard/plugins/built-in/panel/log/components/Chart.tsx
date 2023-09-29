@@ -17,16 +17,15 @@ import ChartComponent from "src/components/charts/Chart"
 import { floor, last, round } from "lodash"
 import React, { memo, useEffect, useMemo, useState } from "react"
 import { Panel } from "types/dashboard"
-import { Log } from "types/plugins/log"
+
 import { dateTimeFormat } from "utils/datetime/formatter"
 import { formatLabelId, getLabelNameColor } from "../utils"
 import moment from "moment"
 import { isEmpty } from "utils/validate"
-import { AlertToolbarOptions } from "types/plugins/alert"
 import { paletteColorNameToHex } from "utils/colors"
 import { getStringColorMapping } from "src/views/dashboard/plugins/components/StringColorMapping"
-import { PanelTypeLog } from "../types"
-import { PanelTypeAlert } from "../../alert/types"
+import { PanelTypeLog, Log } from "../types"
+import { PanelTypeAlert,AlertToolbarOptions } from "../../alert/types"
 
 
 interface Props {

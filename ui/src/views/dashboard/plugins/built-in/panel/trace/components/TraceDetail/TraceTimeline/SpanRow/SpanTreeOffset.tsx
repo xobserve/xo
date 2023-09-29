@@ -17,7 +17,7 @@ import cx from 'classnames';
 import _get from 'lodash/get';
 import './SpanTreeOffset.css';
 
-import { TraceSpan } from 'types/plugins/trace';
+import { TraceSpan } from 'src/views/dashboard/plugins/built-in/panel/trace/types/trace';
 import spanAncestorIds from '../utils';
 import { BsChevronDown, BsChevronRight } from "react-icons/bs";
 import { chakra, useColorModeValue } from '@chakra-ui/react';

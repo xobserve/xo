@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import React from 'react';
-import { SpanReference } from 'types/plugins/trace';
+import { SpanReference } from 'src/views/dashboard/plugins/built-in/panel/trace/types/trace';
 import { getUrl } from './url';
 
 type ReferenceLinkProps = {

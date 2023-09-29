@@ -8,8 +8,7 @@ import icon from './bar.svg'
 import { ValueCalculationType } from "types/value";
 import { initThresholds, onClickCommonEvent,getInitUnits } from "src/data/panel/initPlugins";
 import { ThresholdDisplay } from "types/panel/plugins";
-import { BarThresholdArrow } from "types/plugins/bar";
-import { PanelTypeBar } from "./types";
+import { PanelTypeBar, BarThresholdArrow } from "./types";
 
 const panelComponents: PanelPluginComponents = {
     panel: BarPanelWrapper,

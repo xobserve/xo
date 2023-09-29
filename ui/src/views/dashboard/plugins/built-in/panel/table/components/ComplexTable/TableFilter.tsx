@@ -14,7 +14,7 @@
 import { HStack, Text } from "@chakra-ui/react"
 import { Button, Input } from "antd"
 import React, { useEffect, useState } from "react"
-import { TableColumn } from "types/plugins/table"
+import { TableColumn } from "../../types"
 
 export const setTableFilter = (column: TableColumn, data, filter?) => {
   if (data.length > 0) {

@@ -14,7 +14,7 @@
 
 import { Checkbox } from 'antd';
 import React, { Component } from 'react';
-import { Trace } from 'types/plugins/trace';
+import { Trace } from 'src/views/dashboard/plugins/built-in/panel/trace/types/trace';
 import { ITableSpan } from './types';
 import { generateDropdownValue, generateSecondDropdownValue } from './generateDropdownValue';
 import { getColumnValues, getColumnValuesSecondDropdown } from './tableValues';

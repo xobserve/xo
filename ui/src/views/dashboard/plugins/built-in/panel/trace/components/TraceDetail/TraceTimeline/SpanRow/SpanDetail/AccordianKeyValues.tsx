@@ -18,7 +18,7 @@ import './AccordianKeyValues.css'
 import * as markers from './AccordianKeyValues.markers';
 import KeyValuesTable from './KeyValuesTable';
 import { TNil } from 'types/misc';
-import { KeyValuePair, SpanLink } from 'types/plugins/trace';
+import { KeyValuePair, SpanLink } from 'src/views/dashboard/plugins/built-in/panel/trace/types/trace';
 
 import { AiOutlineArrowDown, AiOutlineArrowRight, AiOutlineDown, AiOutlineRight } from 'react-icons/ai';
 import { Box, Wrap, WrapItem, useColorModeValue } from '@chakra-ui/react';

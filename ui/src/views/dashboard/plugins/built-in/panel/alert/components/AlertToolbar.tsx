@@ -20,7 +20,7 @@ import { AiOutlineDoubleRight } from "react-icons/ai"
 import { MobileVerticalBreakpointNum } from "src/data/constants"
 import { AlertState } from "types/alert"
 import { Panel } from "types/dashboard"
-import { AlertToolbarOptions } from "types/plugins/alert"
+import { AlertToolbarOptions } from "../types"
 
 interface Props {
     active: string[]

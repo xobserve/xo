@@ -1,8 +1,6 @@
-import { GeoMapSettings } from "types/panel/plugins";
-import { ArcGisMapServer, BaseLayerType } from "types/plugins/geoMap";
+import { GeoMapSettings,  ArcGisMapServer, BaseLayerType } from "../../types";
 import TileLayer from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
-import Map from 'ol/Map';
 import XYZ from 'ol/source/XYZ';
 
 const arcGisbase = "https://services.arcgisonline.com/ArcGIS/rest/services/"

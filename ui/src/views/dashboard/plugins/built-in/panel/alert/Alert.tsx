@@ -20,7 +20,7 @@ import { cloneDeep, remove, sortBy } from "lodash";
 import { isEmpty } from "utils/validate";
 import LogChart from "../log/components/Chart";
 import AlertToolbar from "./components/AlertToolbar";
-import {  AlertRule, AlertToolbarOptions } from "types/plugins/alert";
+import {  AlertRule, AlertToolbarOptions } from "./types";
 import AlertRuleItem from "./components/AlertRuleItem";
 import { equalPairsToJson } from "utils/format";
 import AlertStatView from "./components/AlertStatView";

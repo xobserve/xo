@@ -1,6 +1,5 @@
 import { Panel, PanelEditorProps } from "types/dashboard"
 import { ValueSetting } from "types/panel/plugins"
-import { ArcGisMapServer, BaseLayerType, DataLayerType } from "types/plugins/geoMap"
 import { ThresholdsConfig } from "types/threshold"
 
 export const PanelTypeGeomap = "geomap"
@@ -49,4 +48,32 @@ export interface GeoMapSettings {
     enableClick: boolean
     onClickEvent: string
     thresholds: ThresholdsConfig
+}
+
+
+
+export enum BaseLayerType {
+    OpenStreet = "Open Street Map",
+    ArcGis = "ArcGIS Map Server",
+    Custom = "Custom"
+}
+
+export enum ArcGisMapServer {
+    WorldStreet = "World_Street_Map",
+    WorldImagery = "World_Imagery",
+    WorldPhysical = "World_Physical_Map",
+    Topographic = "Topographic",
+    UsaTopo = "USA_Topographic",
+    Ocean = "World_Ocean",
+    // Custom = "Custom MapServer"
+}
+
+export enum DataLayerType {
+    Heatmap = "Heatmap",
+    Markers = "Markers"
+}
+
+export interface GeoMapDataLayer {
+    type: DataLayerType
+
 }

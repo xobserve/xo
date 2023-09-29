@@ -15,7 +15,7 @@ import { Box, Button, HStack } from "@chakra-ui/react";
 import CodeEditor from "src/components/CodeEditor/CodeEditor";
 import { cloneDeep } from "lodash";
 import { useState } from "react";
-import { Trace } from "types/plugins/trace";
+import { Trace } from "src/views/dashboard/plugins/built-in/panel/trace/types/trace";
 import React from "react";
 
 const TraceJSON = ({ trace }: { trace: Trace }) => {

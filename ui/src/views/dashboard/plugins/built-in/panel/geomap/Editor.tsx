@@ -17,7 +17,6 @@ import { useStore } from "@nanostores/react"
 import { commonMsg } from "src/i18n/locales/en"
 import { Select } from "@chakra-ui/select";
 import { EditorInputItem, EditorNumberItem, EditorSliderItem } from "src/components/editor/EditorItem";
-import { ArcGisMapServer, BaseLayerType, DataLayerType } from "types/plugins/geoMap";
 import RadionButtons from "src/components/RadioButtons";
 import ThresholdEditor from "src/views/dashboard/plugins/components/Threshold/ThresholdEditor";
 import { Button, HStack, Switch, Text } from "@chakra-ui/react";
@@ -30,7 +29,7 @@ import ValueCalculation from "src/views/dashboard/plugins/components/ValueCalcul
 import { dispatch } from "use-bus";
 import { PanelForceRebuildEvent } from "src/data/bus-events";
 import { CodeEditorModal } from "src/components/CodeEditor/CodeEditorModal";
-import { GeomapEditorProps, GeomapPanel as Panel } from "./types";
+import { GeomapEditorProps, GeomapPanel as Panel, ArcGisMapServer, BaseLayerType, DataLayerType  } from "./types";
 
 const GeoMapPanelEditor = memo(({ panel, onChange }: GeomapEditorProps) => {
     const t = useStore(commonMsg)

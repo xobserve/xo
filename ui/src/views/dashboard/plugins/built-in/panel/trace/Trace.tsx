@@ -17,7 +17,7 @@ import TraceSearchPanel from "./components/SearchPanel"
 import logfmtParser from 'logfmt/lib/logfmt_parser';
 import { queryJaegerTrace, queryJaegerTraces } from "../../datasource/jaeger/query_runner"
 import { memo, useEffect, useMemo, useState } from "react"
-import { TraceData } from "types/plugins/trace"
+import { TraceData } from "src/views/dashboard/plugins/built-in/panel/trace/types/trace"
 import TraceSearchResult from "./components/SearchResult"
 import transformTraceData from "./utils/transform-trace-data"
 import { cloneDeep, uniqBy } from "lodash";

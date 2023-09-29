@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { SpanLog } from 'types/plugins/trace';
+import { SpanLog } from 'src/views/dashboard/plugins/built-in/panel/trace/types/trace';
 
 /**
  * Which items of a {@link SpanDetail} component are expanded.

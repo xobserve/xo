@@ -13,7 +13,7 @@
 import { Box, Center, Flex, Select, useColorMode } from "@chakra-ui/react"
 import React, { memo, useMemo } from "react"
 import { PanelProps } from "types/dashboard"
-import { TableSeries } from "types/plugins/table"
+import { TableSeries } from "./types"
 import ComplexTable from "./components/ComplexTable/ComplexTable"
 import { SeriesData } from "types/seriesData"
 import { isSeriesData } from "utils/seriesData"

@@ -14,7 +14,7 @@
 
 import denseTransforms from './denseTransforms';
 import { TDenseSpan } from './types';
-import { TraceSpan, Trace } from 'types/plugins/trace';
+import { TraceSpan, Trace } from 'src/views/dashboard/plugins/built-in/panel/trace/types/trace';
 
 function convSpans(spans: TraceSpan[]) {
   const map: Map<string, TDenseSpan> = new Map();

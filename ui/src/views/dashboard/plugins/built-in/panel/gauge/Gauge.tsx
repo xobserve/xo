@@ -15,7 +15,6 @@ import ChartComponent from "src/components/charts/Chart";
 
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { PanelProps } from "types/dashboard"
-import { GaugePluginData } from "types/plugins/gauge";
 import { SeriesData } from "types/seriesData";
 import { calcValueOnSeriesData } from "utils/seriesData";
 import React from "react";
@@ -27,6 +26,7 @@ import { replaceWithVariables } from "utils/variable";
 import { VariableCurrentValue } from "src/data/variable";
 import { formatUnit } from "src/views/dashboard/plugins/components/UnitPicker";
 import NoData from "src/views/dashboard/components/PanelNoData";
+import {GaugePluginData} from './types'
 
 interface Props extends PanelProps {
   data: SeriesData[][]

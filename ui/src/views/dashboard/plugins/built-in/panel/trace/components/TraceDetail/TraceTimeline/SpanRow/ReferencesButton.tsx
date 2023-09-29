@@ -14,7 +14,7 @@
 
 import React from 'react';
 
-import { SpanReference } from 'types/plugins/trace';
+import { SpanReference } from 'src/views/dashboard/plugins/built-in/panel/trace/types/trace';
 
 import ReferenceLink from '../../url/ReferenceLink';
 import { FaDoorOpen } from 'react-icons/fa';

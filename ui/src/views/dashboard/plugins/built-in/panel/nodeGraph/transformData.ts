@@ -11,11 +11,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import G6 from "@antv/g6";
-import { NodeGraphSettings } from "types/panel/plugins";
-import { NodeGraphPluginData } from "types/plugins/nodeGraph";
-import { colors, paletteColorNameToHex } from "utils/colors";
+import {  paletteColorNameToHex } from "utils/colors";
 import { getDefaultEdgeStyle } from "./default-styles";
 import { Field, FieldType, SeriesData } from "types/seriesData";
+import { NodeGraphPluginData, NodeGraphSettings } from "./types";
 
 export const setAttrsForData = (settings: NodeGraphSettings, data: NodeGraphPluginData, colorMode) => {
     const donutColors = {}

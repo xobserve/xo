@@ -17,7 +17,7 @@ import _isEqual from 'lodash/isEqual';
 import { getTraceSpanIdsAsTree } from './get-trace-spanid-tree';
 
 import { getTraceName } from './trace-viewer';
-import { KeyValuePair, TraceSpan, SpanData, Trace, TraceData } from 'types/plugins/trace';
+import { KeyValuePair, TraceSpan, SpanData, Trace, TraceData } from 'src/views/dashboard/plugins/built-in/panel/trace/types/trace';
 
 import { getConfigValue } from '../config/get-config';
 import TreeNode from 'utils/treeNode';

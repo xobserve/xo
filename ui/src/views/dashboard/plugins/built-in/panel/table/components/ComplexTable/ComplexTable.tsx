@@ -12,7 +12,7 @@
 // limitations under the License.
 import React, { memo } from 'react';
 import { Table } from 'antd';
-import { TableColumn, TableRow } from 'types/plugins/table';
+import { TableColumn, TableRow } from '../../types';
 import storage from 'utils/localStorage';
 import { cloneDeep, isFunction, isNumber, round } from 'lodash';
 import { setTableFilter } from './TableFilter';

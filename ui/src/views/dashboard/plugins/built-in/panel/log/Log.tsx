@@ -14,7 +14,7 @@
 import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { Box, Center, Flex, StackDivider, Text, VStack, useToast } from "@chakra-ui/react"
 import { PanelProps } from "types/dashboard"
-import { LogSeries, Log,  LogChartView } from "types/plugins/log";
+import { LogSeries, Log } from "./types";
 import { FaFilter } from "react-icons/fa";
 import LogToolbar from "./components/Toolbar";
 import storage from "utils/localStorage";

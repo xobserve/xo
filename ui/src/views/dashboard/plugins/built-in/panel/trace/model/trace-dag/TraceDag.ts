@@ -16,7 +16,7 @@ import DenseTrace from './DenseTrace';
 import { ancestralPathParentOrLeaf, TIdFactory } from './id-factories';
 import { TDenseSpan, TDiffCounts, NodeID, TDenseSpanMembers } from './types';
 import TDagNode from './types/TDagNode';
-import { Trace } from 'types/plugins/trace';
+import { Trace } from 'src/views/dashboard/plugins/built-in/panel/trace/types/trace';
 
 export default class TraceDag<TData extends { [k: string]: unknown } = {}> {
   static newFromTrace(trace: Trace, idFactory: TIdFactory = ancestralPathParentOrLeaf) {

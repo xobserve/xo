@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import _memoize from 'lodash/memoize';
-import { TraceSpan } from 'types/plugins/trace';
+import { TraceSpan } from 'src/views/dashboard/plugins/built-in/panel/trace/types/trace';
 
 
 

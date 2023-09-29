@@ -16,7 +16,7 @@ import { TVertexKey } from '../plexus/lib/types';
 import _get from 'lodash/get';
 import _map from 'lodash/map';
 import memoizeOne from 'memoize-one';
-import { Trace } from "types/plugins/trace"
+import { Trace } from "src/views/dashboard/plugins/built-in/panel/trace/types/trace"
 
 import convPlexus from '../../model/trace-dag/convPlexus';
 import TraceDag from '../../model/trace-dag/TraceDag';

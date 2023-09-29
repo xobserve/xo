@@ -51,3 +51,10 @@ export interface GaugeValueStyles {
     left: string
     top: string
 }
+
+export interface GaugePluginData  {
+    value: number,
+    name?: string
+    min: number,
+    max: number
+}

@@ -20,7 +20,7 @@ import { onlyUpdateForKeys, compose, withState, withProps } from 'recompose';
 
 import { ViewedBoundsFunctionType } from '../utils';
 import { TNil } from 'types/misc';
-import { TraceSpan } from 'types/plugins/trace';
+import { TraceSpan } from 'src/views/dashboard/plugins/built-in/panel/trace/types/trace';
 import AccordianLogs from './SpanDetail/AccordianLogs';
 import { Popover } from 'antd';
 import { Box, useColorModeValue } from '@chakra-ui/react';

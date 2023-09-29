@@ -2,7 +2,7 @@ import React, { memo, useState } from "react";
 import cx from 'classnames';
 import { TNil } from "types/misc";
 import { Accessors } from "../scroll/scrollManager";
-import { KeyValuePair, Trace, TraceSpan } from "types/plugins/trace";
+import { KeyValuePair, Trace, TraceSpan } from "src/views/dashboard/plugins/built-in/panel/trace/types/trace";
 import DetailState from "./SpanRow/SpanDetail/DetailState";
 import memoizeOne from 'memoize-one';
 import spanAncestorIds, { ViewedBoundsFunctionType, createViewedBoundsFunc, findServerChildSpan, isErrorSpan, isKindClient, spanContainsErredSpan } from "./utils";

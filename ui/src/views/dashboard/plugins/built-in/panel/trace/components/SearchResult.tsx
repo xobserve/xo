@@ -1,5 +1,5 @@
 import { Panel } from "types/dashboard"
-import { Trace } from "types/plugins/trace"
+import { Trace } from "src/views/dashboard/plugins/built-in/panel/trace/types/trace"
 import SearchResultPlot from "./SearchResultPlot"
 import { TimeRange } from "types/time"
 import { Box, Button, Flex, HStack, Popover, PopoverArrow, PopoverBody, PopoverContent, PopoverTrigger, Select, StackDivider, Text, VStack, chakra, useMediaQuery } from "@chakra-ui/react"

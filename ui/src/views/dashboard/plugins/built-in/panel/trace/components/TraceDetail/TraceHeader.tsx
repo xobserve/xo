@@ -14,7 +14,7 @@
 import { Button, Flex, HStack, Input, Text, useMediaQuery, useToast } from "@chakra-ui/react"
 import { ColorModeSwitcher } from "src/components/ColorModeSwitcher"
 import moment from "moment"
-import { Trace } from "types/plugins/trace"
+import { Trace } from "src/views/dashboard/plugins/built-in/panel/trace/types/trace"
 import { formatDuration } from "utils/date"
 import SpanGraph from "./SpanGraph"
 import { useEffect, useState } from "react"

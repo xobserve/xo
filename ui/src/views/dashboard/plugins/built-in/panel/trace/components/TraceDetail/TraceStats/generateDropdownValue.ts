@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import _ from 'lodash';
-import { Trace } from 'types/plugins/trace';
+import { Trace } from 'src/views/dashboard/plugins/built-in/panel/trace/types/trace';
 import { ITableSpan } from './types';
 
 const serviceName = 'Service Name';

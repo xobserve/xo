@@ -16,7 +16,7 @@ import React, { useMemo } from "react";
 import { PanelProps } from "types/dashboard";
 import StatPanel from "../../stat/Stat";
 import {  SeriesData } from "types/seriesData";
-import { AlertRule } from "types/plugins/alert";
+import { AlertRule } from "../types";
 import { ValueCalculationType } from "types/value";
 import { VarialbeAllOption } from "src/data/variable";
 import { prometheusToSeriesData } from "../../../datasource/prometheus/transformData";

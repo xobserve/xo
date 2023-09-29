@@ -23,11 +23,10 @@ import { ThresholdDisplay, Units } from "types/panel/plugins"
 import PopoverSelect from "src/components/select/PopoverSelect"
 import { ValueCalculationType } from "types/value"
 import ThresholdEditor from "src/views/dashboard/plugins/components/Threshold/ThresholdEditor"
-import { BarThresholdArrow } from "types/plugins/bar"
 import { CodeEditorModal } from "src/components/CodeEditor/CodeEditorModal"
 import { dispatch } from "use-bus"
 import { PanelForceRebuildEvent } from "src/data/bus-events"
-import { BarEditorProps, BarPanel as Panel } from "./types"
+import { BarEditorProps, BarPanel as Panel, BarThresholdArrow } from "./types"
 
 const BarPanelEditor = memo(({ panel, onChange }: BarEditorProps) => {
     const t = useStore(commonMsg)

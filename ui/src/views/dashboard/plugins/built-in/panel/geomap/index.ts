@@ -7,8 +7,7 @@ import { mockGeomapDataForTestDataDs } from "./mocks/mockData";
 import icon from './geomap.svg'
 import { initThresholds, getInitUnits } from "src/data/panel/initPlugins";
 import { ValueCalculationType } from "types/value";
-import { ArcGisMapServer, BaseLayerType, DataLayerType } from "types/plugins/geoMap";
-import { PanelTypeGeomap } from "./types";
+import { PanelTypeGeomap,  ArcGisMapServer, BaseLayerType, DataLayerType } from "./types";
 
 const panelComponents: PanelPluginComponents = {
     panel: GeoMapPanelWrapper,

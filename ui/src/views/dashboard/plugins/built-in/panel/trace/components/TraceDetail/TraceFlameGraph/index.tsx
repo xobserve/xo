@@ -13,7 +13,7 @@
 // limitations under the License.
 import React, { memo } from 'react';
 import { FlamegraphRenderer, convertJaegerTraceToProfile } from '@pyroscope/flamegraph';
-import { Trace } from 'types/plugins/trace';
+import { Trace } from 'src/views/dashboard/plugins/built-in/panel/trace/types/trace';
 import { Box, useColorMode } from '@chakra-ui/react';
 import { cloneDeep } from 'lodash';
 import '@pyroscope/flamegraph/dist/index.css';

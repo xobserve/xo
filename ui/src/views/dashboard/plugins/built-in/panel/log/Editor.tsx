@@ -18,7 +18,6 @@ import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
 import React, { memo, useMemo, useState } from "react";
 import { useStore } from "@nanostores/react"
 import { commonMsg, componentsMsg } from "src/i18n/locales/en"
-import { LogSeries, LogThreshold } from "types/plugins/log"
 import { Select } from "antd"
 import { LayoutOrientation } from "types/layout"
 import { ColorPicker } from "src/components/ColorPicker"
@@ -31,7 +30,7 @@ import { PanelForceRebuildEvent } from "src/data/bus-events"
 import { CodeEditorModal } from "components/CodeEditor/CodeEditorModal"
 import { ClickActionsEditor } from "src/views/dashboard/edit-panel/components/ClickActionsEditor"
 import StringColorMappingEditor from "src/views/dashboard/plugins/components/StringColorMapping"
-import { LogEditorProps, LogPanel as Panel } from "./types"
+import { LogEditorProps, LogPanel as Panel , LogThreshold} from "./types"
 
 const LogPanelEditor = memo((props: LogEditorProps) => {
     const { panel, onChange } = props

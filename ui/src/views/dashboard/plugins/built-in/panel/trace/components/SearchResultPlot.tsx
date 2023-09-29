@@ -4,7 +4,7 @@ import { alpha } from "src/components/uPlot/colorManipulator";
 import { max, round } from "lodash";
 import moment from "moment";
 import { memo, useEffect, useMemo, useState } from "react";
-import { Trace } from "types/plugins/trace"
+import { Trace } from "src/views/dashboard/plugins/built-in/panel/trace/types/trace"
 import { TimeRange } from "types/time";
 import { isErrorTrace } from "../utils/trace";
 import React from "react";

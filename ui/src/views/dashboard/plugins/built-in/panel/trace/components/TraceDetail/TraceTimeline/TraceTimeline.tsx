@@ -1,4 +1,4 @@
-import { Trace, TraceSpan } from "types/plugins/trace"
+import { Trace, TraceSpan } from "src/views/dashboard/plugins/built-in/panel/trace/types/trace"
 import { TNil } from "../../../types/misc";
 import { IViewRange, TUpdateViewRangeTimeFunction, ViewRangeTimeUpdate } from "../../../types/types";
 import { useCallback, useState } from "react";

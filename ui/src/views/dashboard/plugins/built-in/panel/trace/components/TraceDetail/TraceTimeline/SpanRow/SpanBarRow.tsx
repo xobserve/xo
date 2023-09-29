@@ -22,7 +22,7 @@ import SpanBar from './SpanBar';
 import Ticks from '../Ticks';
 
 import { TNil } from 'types/misc';
-import { TraceSpan } from 'types/plugins/trace';
+import { TraceSpan } from 'src/views/dashboard/plugins/built-in/panel/trace/types/trace';
 import { ViewedBoundsFunctionType } from '../utils';
 import { IoAlert } from 'react-icons/io5';
 import { AiOutlineArrowRight } from 'react-icons/ai';

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { TraceSpan } from 'types/plugins/trace';
+import { TraceSpan } from 'src/views/dashboard/plugins/built-in/panel/trace/types/trace';
 
 /**
  * Searches the span.references to find 'CHILD_OF' reference type or returns null.

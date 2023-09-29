@@ -12,7 +12,7 @@
 // limitations under the License.
 
 import { useEffect, useState } from "react"
-import { Trace } from "types/plugins/trace"
+import { Trace } from "src/views/dashboard/plugins/built-in/panel/trace/types/trace"
 import { queryJaegerTrace } from "../../../../datasource/jaeger/query_runner"
 import { DatasourceType } from "types/dashboard"
 import TraceDetail from "./TraceDetail"

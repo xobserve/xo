@@ -19,7 +19,7 @@ import memoize from 'lru-memoize';
 import { encodedStringSupplant, getParamNames } from '../utils/stringSupplant';
 import { getParent } from './span';
 import { TNil } from 'types/misc';
-import { TraceSpan, SpanLink, KeyValuePair, Trace } from 'types/plugins/trace';
+import { TraceSpan, SpanLink, KeyValuePair, Trace } from 'src/views/dashboard/plugins/built-in/panel/trace/types/trace';
 import { getConfigValue } from '../config/get-config';
 
 type ProcessedTemplate = {

@@ -15,11 +15,11 @@ import React, { memo, useEffect, useMemo, useState } from "react";
 import { Box, Button, Divider, Flex, HStack, Highlight, Text, Textarea, VStack, useColorMode, useColorModeValue, useMediaQuery, useToast } from "@chakra-ui/react"
 import { Panel } from "types/dashboard"
 import { dateTimeFormat } from "utils/datetime/formatter";
-import { isEmpty, isFunction, round, toNumber } from "lodash";
+import { isEmpty, isFunction} from "lodash";
 import CollapseIcon from "src/components/icons/Collapse";
 import { LayoutOrientation } from "types/layout";
 import { paletteColorNameToHex } from "utils/colors";
-import { Log } from "types/plugins/log";
+import { Log } from "../types";
 import { formatLabelId, getLabelNameColor } from "../utils";
 import { MobileVerticalBreakpointNum } from "src/data/constants";
 import { toJSON, toPrettyJSON } from "utils/is";
