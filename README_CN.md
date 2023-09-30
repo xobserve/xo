@@ -4,7 +4,7 @@
 
 
 <p align="center">
-   遥遥领先的可编程监控和可观测性平台
+   可编程的监控和可观测性平台，同时也是 Grafana 的数据可视化平替产品
 </p>
 
 <p align="center">
