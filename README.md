@@ -19,7 +19,7 @@
 <div>
   <img src="https://github.com/data-observe/assets/blob/main/datav-readme/home-example1.jpg?raw=true" />
   <p align="center">
-    English | <a href="./README-CN.md">简体中文</a>
+    English | <a href="./README_CN.md">简体中文</a>
   </p>
 </div>
   
