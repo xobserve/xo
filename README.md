@@ -34,21 +34,21 @@ It can help users quickly create online observability scenarios such as monitori
 
 ## Features
 
-1. Covers a extremely wide range of observability scenarios.
+1. **Observability**: covers an extremely wide range of observability scenarios, native support Opentelemetry
    
-2. Offers lots of chart components and data sources with rich customization options.
+2. **Charts and Datasources**: offers lots of chart components and data sources with rich customization options.
 
-3. Provides deep and customizable interactions between charts and pages.
+3. **Interactivity**: provides deep and customizable interactions between charts and pages.
 
-4. Enterprise features supported: multi-tenancy, permission management, navigation menus, and global state management.
+4. **Enterprise features supported**: multi-tenancy, permission management, navigation menus, and global state management.
 
-5. Delivers excellent performance and user experiences.
+5. **User experiences**: blazing fast performance and fully customizability gives great user experiences.
 
-6. Modern UI design, supports large data screens, and is perfectly compatible with mobile devices.
+6. **Modern UI design**: supports large data screens, and is perfectly compatible with mobile devices.
 
-7. Powerful programmability and developer-friendly for customizations
+7. **Programmability**: powerful programmability and developer-friendly for customizations, e.g Datav agent support use webassembly to develop your own plugins and data process pipleines.
 
-8. Comes with a permissive open-source license, extensive documentation, and rapid community support response.
+8. **Community**: comes with a permissive open-source license, extensive documentation, and rapid community support response.
 
 ## Quick start & Documentation
 
