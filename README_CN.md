@@ -24,7 +24,9 @@
   
 ## 关于 Datav
 
-Datav 是一个专为开发者打造的、可编程的可观测性平台，**同时它还是 Grafana 的数据可视化平替**。可以帮助用户快速在线构建监控、日志和链路跟踪等可观测性场景，可以不夸张的说，你想要的几乎任何监控可视化场景，Datav 都能帮你实现 ( 如果不行，大家可以提 issue ，合理的需求秒支持 )。
+Datav is a programmable observability platform designed specifically for developers, and it also serves as an alternative data visualization platform to Grafana. 
+
+It can help users quickly create online observability scenarios such as monitoring, logging, and tracing. Datav can help you built any observability scenario you want. If it doesn't, you can always file an issue, and reasonable requests will be quickly supported.
 
 
 ## 核心特性
