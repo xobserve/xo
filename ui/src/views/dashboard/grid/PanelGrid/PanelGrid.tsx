@@ -195,7 +195,7 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
         if (!plugin) {
             setQueryError("Datasource plugin not found: " + datasource.type)
             setPanelData([])
-            return 
+            return
         }
 
         setLoading(true)
@@ -206,6 +206,7 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
         } else {
             const promises = []
             for (const q0 of ds.queries) {
+                console.log('===>', ds.queries)
                 if (!q0.visible) {
                     continue
                 }

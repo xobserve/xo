@@ -10,7 +10,7 @@ import { PanelTypeEcharts } from "./types";
 const panelComponents: PanelPluginComponents = {
     panel: EchartsPanel,
     editor: PanelEditor,
-    mockDataForTestDataDs:  mockEchartsDataForTestDataDs,
+    mockDataForTestDataDs: mockEchartsDataForTestDataDs,
     settings: {
         type: PanelTypeEcharts,
         icon,
@@ -43,4 +43,4 @@ function registerEvents(options, chart, navigate, setVariable, setDateTime, $var
     }
 }
 
-export default  panelComponents
+export default panelComponents

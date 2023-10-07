@@ -13,10 +13,10 @@ export const buildOptions = (panel: Panel, data: SeriesData[], colorMode: "light
 
     const upColor = paletteColorNameToHex(options.kChart.upColor, colorMode)
     const downColor = paletteColorNameToHex(options.kChart.downColor, colorMode)
-    
+
     // Each item: open，close，lowest，highest
     const series = cloneDeep(data[0])
-    const kChartName = isEmpty(options.kChart.displayName) ?  (isEmpty(series.name) ? "K" : series.name) : options.kChart.displayName
+    const kChartName = isEmpty(options.kChart.displayName) ? (isEmpty(series.name) ? "K" : series.name) : options.kChart.displayName
     const data0 = splitData(transformSeriesDataToCandlestickFormat(series));
     function splitData(rawData) {
         let categoryData = [];
@@ -26,7 +26,7 @@ export const buildOptions = (panel: Panel, data: SeriesData[], colorMode: "light
             categoryData.push(rawData[i].splice(0, 1)[0]);
             values.push(rawData[i]);
             if (rawData[i][4]) {
-            volumes.push([i, rawData[i][4], rawData[i][0] > rawData[i][1] ? 1 : -1]);
+                volumes.push([i, rawData[i][4], rawData[i][0] > rawData[i][1] ? 1 : -1]);
 
             }
         }
@@ -95,7 +95,7 @@ export const buildOptions = (panel: Panel, data: SeriesData[], colorMode: "light
         left: '5%',
         top: '65%',
         height: '13%'
-    }]): []
+    }]) : []
 
     const volumeOverride = findOverride(panel, "Volume")
     const ma5verride = findOverride(panel, "MA5")
@@ -103,7 +103,7 @@ export const buildOptions = (panel: Panel, data: SeriesData[], colorMode: "light
     const ma20verride = findOverride(panel, "MA20")
     const ma30verride = findOverride(panel, "MA30")
 
-    return  {
+    return {
         animation: options.animation,
         tooltip: [{
             trigger: 'axis',
@@ -236,7 +236,7 @@ export const buildOptions = (panel: Panel, data: SeriesData[], colorMode: "light
             gridIndex: 1,
             splitNumber: 2,
             position: "right",
-            axisLabel: { 
+            axisLabel: {
                 show: options.volumeChart.showYAxisLabel,
                 formatter: (function (value) {
                     return formatUnit(value, options.volumeChart.value.units, options.volumeChart.value.decimal)
@@ -308,7 +308,7 @@ export const buildOptions = (panel: Panel, data: SeriesData[], colorMode: "light
                 data: data0.volumes,
                 itemStyle: {
                     opacity: options.chartOpacity,
-                    color: paletteColorNameToHex(findRuleInOverride(volumeOverride, OverrideRules.SeriesColor),colorMode) ?? null,
+                    color: paletteColorNameToHex(findRuleInOverride(volumeOverride, OverrideRules.SeriesColor), colorMode) ?? null,
                 },
                 tooltip: {
                     valueFormatter: (function (value) {
@@ -329,7 +329,7 @@ export const buildOptions = (panel: Panel, data: SeriesData[], colorMode: "light
                     width: options.maLine.lineWidth
                 },
                 itemStyle: {
-                    color: paletteColorNameToHex(findRuleInOverride(ma5verride, OverrideRules.SeriesColor),colorMode) ?? null,
+                    color: paletteColorNameToHex(findRuleInOverride(ma5verride, OverrideRules.SeriesColor), colorMode) ?? null,
                 },
                 symbol: options.maLine.lineSymbol
             },
@@ -343,7 +343,7 @@ export const buildOptions = (panel: Panel, data: SeriesData[], colorMode: "light
                     width: options.maLine.lineWidth
                 },
                 itemStyle: {
-                    color: paletteColorNameToHex(findRuleInOverride(ma10verride, OverrideRules.SeriesColor),colorMode) ?? null,
+                    color: paletteColorNameToHex(findRuleInOverride(ma10verride, OverrideRules.SeriesColor), colorMode) ?? null,
                 },
                 symbol: options.maLine.lineSymbol
             },
@@ -357,7 +357,7 @@ export const buildOptions = (panel: Panel, data: SeriesData[], colorMode: "light
                     width: options.maLine.lineWidth
                 },
                 itemStyle: {
-                    color: paletteColorNameToHex(findRuleInOverride(ma20verride, OverrideRules.SeriesColor),colorMode) ?? null,
+                    color: paletteColorNameToHex(findRuleInOverride(ma20verride, OverrideRules.SeriesColor), colorMode) ?? null,
                 },
                 symbol: options.maLine.lineSymbol
             },
@@ -371,7 +371,7 @@ export const buildOptions = (panel: Panel, data: SeriesData[], colorMode: "light
                     width: options.maLine.lineWidth
                 },
                 itemStyle: {
-                    color: paletteColorNameToHex(findRuleInOverride(ma30verride, OverrideRules.SeriesColor),colorMode) ?? null,
+                    color: paletteColorNameToHex(findRuleInOverride(ma30verride, OverrideRules.SeriesColor), colorMode) ?? null,
                 },
                 symbol: options.maLine.lineSymbol
             }
@@ -390,7 +390,7 @@ const transformSeriesDataToCandlestickFormat = (s: SeriesData) => {
     const volumeField = s.fields.find(f => f.name == "volume")
 
     // [time, open, close, lowest, highest, volume]
-    timeField.values.forEach((t,i) => {
+    timeField.values.forEach((t, i) => {
         const v = [
             t,
             openField.values[i],
@@ -404,7 +404,7 @@ const transformSeriesDataToCandlestickFormat = (s: SeriesData) => {
         }
 
         res.push(v)
-    }) 
+    })
 
     return res
 }

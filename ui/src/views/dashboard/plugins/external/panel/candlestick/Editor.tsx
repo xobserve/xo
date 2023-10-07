@@ -55,12 +55,12 @@ const PanelEditor = memo(({ panel, onChange }: CandleEditorProps) => {
                 })} />
             </PanelEditItem>
             <PanelEditItem title="Up color">
-                <ColorPicker color={options.kChart.upColor} presetColors={[{label: "default", value: upColor }]} onChange={(v) => onChange((panel: Panel) => {
+                <ColorPicker color={options.kChart.upColor} presetColors={[{ label: "default", value: upColor }]} onChange={(v) => onChange((panel: Panel) => {
                     panel.plugins[PanelTypeCandle].kChart.upColor = v
                 })} />
             </PanelEditItem>
             <PanelEditItem title="Down color">
-                <ColorPicker color={options.kChart.downColor} presetColors={[{label: "default", value: downColor }]} onChange={(v) => onChange((panel: Panel) => {
+                <ColorPicker color={options.kChart.downColor} presetColors={[{ label: "default", value: downColor }]} onChange={(v) => onChange((panel: Panel) => {
                     panel.plugins[PanelTypeCandle].kChart.downColor = v
                 })} />
             </PanelEditItem>
@@ -110,7 +110,7 @@ const PanelEditor = memo(({ panel, onChange }: CandleEditorProps) => {
                 } />
             </PanelEditItem>
             <PanelEditItem title={t.decimal}>
-                <EditorNumberItem value={options.volumeChart.value.decimal} min={0} max={5} step={1} onChange={v => onChange((panel: Panel) => {  panel.plugins[PanelTypeCandle].volumeChart.value.decimal = v })} />
+                <EditorNumberItem value={options.volumeChart.value.decimal} min={0} max={5} step={1} onChange={v => onChange((panel: Panel) => { panel.plugins[PanelTypeCandle].volumeChart.value.decimal = v })} />
             </PanelEditItem>
         </PanelAccordion>
         <PanelAccordion title={"Mark on chart"} >
@@ -145,7 +145,7 @@ const PanelEditor = memo(({ panel, onChange }: CandleEditorProps) => {
                 } />
             </PanelEditItem>
             <PanelEditItem title={t.decimal}>
-                <EditorNumberItem value={options.value.decimal} min={0} max={5} step={1} onChange={v => onChange((panel: Panel) => {  panel.plugins[PanelTypeCandle].value.decimal = v })} />
+                <EditorNumberItem value={options.value.decimal} min={0} max={5} step={1} onChange={v => onChange((panel: Panel) => { panel.plugins[PanelTypeCandle].value.decimal = v })} />
             </PanelEditItem>
             {/* <PanelEditItem title={t.calc} desc={t.calcTips}>
                 <ValueCalculation value={options.value.calc} onChange={v => {
@@ -160,7 +160,7 @@ const PanelEditor = memo(({ panel, onChange }: CandleEditorProps) => {
                 })} />
             </PanelEditItem>
             <PanelEditItem title="Line width">
-                <EditorNumberItem value={options.maLine.lineWidth} min={1} max={5} step={1} onChange={v => onChange((panel: Panel) => {  panel.plugins[PanelTypeCandle].maLine.lineWidth = v })} />
+                <EditorNumberItem value={options.maLine.lineWidth} min={1} max={5} step={1} onChange={v => onChange((panel: Panel) => { panel.plugins[PanelTypeCandle].maLine.lineWidth = v })} />
             </PanelEditItem>
             <PanelEditItem title={"MA5"} desc="Draw a line chart, the value of each point is the average of last 5 points (including current point)">
                 <Switch defaultChecked={options.maLine.ma5} onChange={e => onChange((panel: Panel) => {
