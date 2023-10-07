@@ -3,10 +3,12 @@
 import { DatasourcePluginComponents, PanelPluginComponents } from "types/plugin"
 
 import candlestickPanel from "./panel/candlestick"
+import radarPanel from "./panel/radar"
 import victoriaMetricsDatasrouce from "./datasource/victoriaMetrics"
-export const externalPanelPlugins: Record<string,PanelPluginComponents> = {
+export const externalPanelPlugins: Record<string, PanelPluginComponents> = {
 	[candlestickPanel.settings.type]: candlestickPanel,
+	[radarPanel.settings.type]: radarPanel,
 }
-export const externalDatasourcePlugins: Record<string,DatasourcePluginComponents> = {
+export const externalDatasourcePlugins: Record<string, DatasourcePluginComponents> = {
 	[victoriaMetricsDatasrouce.settings.type]: victoriaMetricsDatasrouce,
 }

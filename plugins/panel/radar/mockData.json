@@ -1,0 +1,125 @@
+[
+    {
+        "name": "Beijing",
+        "fields": [
+            {
+                "name": "PM2.5",
+                "type": "number",
+                "values": [
+                    10,
+                    20,
+                    30
+                ]
+            },
+            {
+                "name": "PM10",
+                "type": "number",
+                "values": [
+                    15,
+                    25,
+                    35
+                ]
+            },
+            {
+                "name": "CO",
+                "type": "number",
+                "values": [
+                    15,
+                    25,
+                    35
+                ]
+            },
+            {
+                "name": "NO2",
+                "type": "number",
+                "values": [
+                    25,
+                    27,
+                    30
+                ]
+            }
+        ]
+    },
+    {
+        "name": "Shanghai",
+        "fields": [
+            {
+                "name": "PM2.5",
+                "type": "number",
+                "values": [
+                    13,
+                    17,
+                    20
+                ]
+            },
+            {
+                "name": "PM10",
+                "type": "number",
+                "values": [
+                    15,
+                    27,
+                    40
+                ]
+            },
+            {
+                "name": "CO",
+                "type": "number",
+                "values": [
+                    35,
+                    47,
+                    60
+                ]
+            },
+            {
+                "name": "NO2",
+                "type": "number",
+                "values": [
+                    35,
+                    47,
+                    60
+                ]
+            }
+        ]
+    },
+    {
+        "name": "Shenzhen",
+        "fields": [
+            {
+                "name": "PM2.5",
+                "type": "number",
+                "values": [
+                    5,
+                    7,
+                    13
+                ]
+            },
+            {
+                "name": "PM10",
+                "type": "number",
+                "values": [
+                    19,
+                    26,
+                    50
+                ]
+            },
+            {
+                "name": "CO",
+                "type": "number",
+                "values": [
+                    15,
+                    27,
+                    30
+                ]
+            },
+            {
+                "name": "NO2",
+                "type": "number",
+                "values": [
+                    42,
+                    56,
+                    60
+                ]
+            }
+        ]
+    }
+]

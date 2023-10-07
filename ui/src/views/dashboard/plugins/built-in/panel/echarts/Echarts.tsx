@@ -20,7 +20,7 @@ import { cloneDeep, isEmpty, isFunction } from "lodash";
 import { useSearchParam } from "react-use";
 import React from "react";
 import moment from "moment";
-import {  paletteMap, palettes } from "utils/colors";
+import { paletteMap, palettes } from "utils/colors";
 import loadash from "lodash"
 import 'echarts/extension/bmap/bmap';
 import { genDynamicFunction } from "utils/dashboard/dynamicCall";
@@ -86,7 +86,7 @@ const EchartsPanel = memo((props: PanelProps) => {
         if (options) {
             options.animation = panel.plugins.echarts.animation
         }
-      
+
         return [options, onEvents]
     }, [panel.plugins.echarts, props.data, chart])
 
@@ -147,7 +147,7 @@ export const EchartsComponent = ({ options, theme, width, height, onChartCreated
     useEffect(() => {
         if (onChartEvents && chart) {
             onChartEvents(options, chart, gnavigate, (k, v) => setVariable(k, v), setDateTime, $variables)
-        } 
+        }
     }, [onChartEvents])
 
     useEffect(() => {
