@@ -84,8 +84,8 @@ const Container = (props: Props) => {
   const [miniMode, setMiniMode] = useState(storage.get(SidemenuMinimodeKey) ?? true)
   const fullscreen = useFullscreen()
   const [onHover, setOnHover] = useState(false)
-
-  sidemenu?.forEach(nav => {
+  
+    sidemenu?.forEach(nav => {
     try {
       const titleMap = JSON.parse(nav.title)
       const title = titleMap[code] ?? titleMap["en"]
@@ -111,11 +111,11 @@ const Container = (props: Props) => {
   const bottomNavs = [
     { title: t.new, icon: "FaPlus",baseUrl:ReserveUrls.New,  url: `${ReserveUrls.New}/dashboard`, isActive: asPath.startsWith(ReserveUrls.New) },
     { title: t.configuration, icon: "FaCog", baseUrl:ReserveUrls.Config, url: `${ReserveUrls.Config}/team/${storage.get(StorageTeamNavId) ?? globalTeamId}/datasources`, isActive: asPath.startsWith(ReserveUrls.Config) },
-  ] 
+  ]
   config.showAlertIcon && bottomNavs.push({ title: t.alert, icon: "FaBell",  baseUrl: ReserveUrls.Alerts, url: `${ReserveUrls.Alerts}`, isActive: asPath.startsWith(ReserveUrls.Alerts) })
   bottomNavs.push({ title: t1.search, icon: "FaSearch", baseUrl: ReserveUrls.Search, url: `${ReserveUrls.Search}`, isActive: asPath.startsWith(ReserveUrls.Search) })
 
-  const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
+const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
 
   const paddingLeft = 8
   const paddingRight = 8
@@ -157,7 +157,7 @@ const Container = (props: Props) => {
 
   const miniWidth = isLargeScreen ? 55 : 0
   const sideWidth = (fullscreen || !isLargeScreen) ? 0 : (miniMode ? miniWidth : navWidth + 13)
-  const textColor = useColorModeValue("gray.500", "whiteAlpha.800")
+const textColor = useColorModeValue("gray.500", "whiteAlpha.800")
 
 
   return (
@@ -180,7 +180,7 @@ const Container = (props: Props) => {
             height="100vh"
             className="bordered-right"
             borderWidth="0.5px"
-            // overflowY="auto" overflowX="hidden"
+          // overflowY="auto" overflowX="hidden"
           >
             <CustomScrollbar  hideHorizontalTrack>
               <Flex flexDir="column" height="100%" justifyContent="space-between" pl={miniMode ? null : paddingLeft + 'px'}
@@ -265,7 +265,7 @@ const Container = (props: Props) => {
                       const Icon = Icons[nav.icon]
                       if (Icon) {
                         if (nav.url == ReserveUrls.Search) {
-                          return <MenuItem  >
+                          return <MenuItem key={nav.url}  >
                             <Search key={nav.url} title={nav.title} miniMode={false} sideWidth={sideWidth} />
                           </MenuItem>
                         } else {

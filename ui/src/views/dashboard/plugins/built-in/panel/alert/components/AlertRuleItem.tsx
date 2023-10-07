@@ -13,9 +13,9 @@
 
 import { Box, Button, Divider, Flex, HStack, Image, StackDivider, Table, TableContainer, Tag, Tbody, Td, Text, Th, Thead, Tooltip, Tr, VStack, chakra, useColorMode, useToast } from "@chakra-ui/react"
 import moment from "moment"
-import React, { memo, useEffect, useState } from "react"
+import React, { memo, useEffect, useId, useState } from "react"
 import { Panel } from "types/dashboard"
-import { AlertRule } from "types/plugins/alert"
+import { AlertRule } from "../types"
 import { formatDuration } from 'utils/date'
 import { FiringIcon, PendingIcon } from "./Icons"
 import { paletteColorNameToHex } from "utils/colors"
@@ -41,7 +41,8 @@ interface Props {
 }
 
 const AlertRuleItem = memo((props: Props) => {
-    const { rule, panel, onSelectLabel, width,colorGenerator } = props
+    const { rule, panel, onSelectLabel, width, colorGenerator } = props
+    const alertId = useId()
     const toast = useToast()
     const [collapsed, setCollapsed] = useState(true)
     const { colorMode } = useColorMode()
@@ -72,9 +73,8 @@ const AlertRuleItem = memo((props: Props) => {
         }
 
     }
-    
-    const externalDs = externalDatasourcePlugins[rule.fromDs]
-    const dsIcon = externalDs ? `/plugins/external/datasource/${rule.fromDs}.svg`  : `/plugins/datasource/${rule.fromDs}.svg`
+
+    const dsIcon = externalDatasourcePlugins[rule.fromDs] ? `/plugins/external/datasource/${rule.fromDs}.svg` : `/plugins/datasource/${rule.fromDs}.svg`
     return (<Box fontSize={width > 600 ? "0.9rem" : "0.8rem"} py="1" pl={width < 400 ? 0 : 2} pr={width < 400 ? 1 : 2}>
         <Flex justifyContent="space-between" alignItems="center" cursor="pointer" onClick={() => setCollapsed(!collapsed)} >
             <HStack>
@@ -89,7 +89,7 @@ const AlertRuleItem = memo((props: Props) => {
                             <Text>|</Text></>}
                         {width > 400 && <HStack>
                             {Object.keys(rule.labels).map((k) => {
-                                return <Flex>
+                                return <Flex key={k}>
                                     <Text>{k}=</Text>
                                     <Text className="color-text">{rule.labels[k]}</Text>
                                 </Flex>
@@ -178,8 +178,8 @@ const AlertRuleItem = memo((props: Props) => {
                                 <Tbody>
                                     {
                                         rule.alerts.map((alert) => {
-                                            const color = getLabelNameColor(alert.name, colorMode,colorGenerator)
-                                            return <Tr>
+                                            const color = getLabelNameColor(alert.name, colorMode, colorGenerator)
+                                            return <Tr key={alertId}>
                                                 <Td>
                                                     <HStack>
                                                         <Text fontSize="0.8rem" py="2px" px="2" borderColor={color} className="bordered"  onClick={() => onSelectLabel(alert.name)} cursor="pointer">{alert.name}</Text>
@@ -247,14 +247,14 @@ const AlertRuleItem = memo((props: Props) => {
                             {
                                 rule.alerts.map((alert) => {
                                     const color = getLabelNameColor(alert.name, colorMode, colorGenerator)
-                                    return <Box fontSize="0.8rem">
+                                    return <Box fontSize="0.8rem" key={alert.name}>
                                         <Text size="sm" onClick={() => onSelectLabel(alert.name)} cursor="pointer" fontWeight={500}>{jsonToEqualPairs(alert.labels)}</Text>
                                         <HStack mt="2">
                                             <Text color={getStateColor(alert.state)}>{upperFirst(alert.state)}</Text>
                                             <Text>{dateTimeFormat(alert.activeAt)}</Text> <Text>{moment(alert.activeAt).fromNow()}</Text>
                                         </HStack>
                                         <Text mt="2">{alert.value}</Text>
-                                        {panel.plugins.alert?.clickActions && 
+                                        {panel.plugins.alert?.clickActions &&
                                             <HStack spacing={1}>
                                                 {
                                                     panel.plugins.alert.clickActions.map((action, i) =>

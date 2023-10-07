@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
+import React, { memo, useCallback, useEffect, useId, useMemo, useState } from "react";
 import { Box, Divider, Flex, StackDivider, VStack, useColorMode } from "@chakra-ui/react"
 import { PanelProps } from "types/dashboard"
 import { FaFilter } from "react-icons/fa";
@@ -20,7 +20,7 @@ import { cloneDeep, remove, sortBy } from "lodash";
 import { isEmpty } from "utils/validate";
 import LogChart from "../log/components/Chart";
 import AlertToolbar from "./components/AlertToolbar";
-import {  AlertRule, AlertToolbarOptions } from "./types";
+import { AlertRule, AlertToolbarOptions } from "./types";
 import AlertRuleItem from "./components/AlertRuleItem";
 import { equalPairsToJson } from "utils/format";
 import AlertStatView from "./components/AlertStatView";
@@ -63,11 +63,12 @@ const AlertPanel = memo((props: AlertPanelProps) => {
     const [search, setSearch] = useState("")
     const [active, setActive] = useState<string[]>([])
     const [viewOptions, setViewOptions] = useState<AlertToolbarOptions>(storage.get(viewStorageKey) ?? initViewOptions())
+    const ruleId = useId()
     const generator = useMemo(() => {
         const palette = paletteMap[panel.styles.palette]
         return new ColorGenerator(palette)
     }, [panel.styles.palette])
-    
+
     useBus(
         ResetPanelToolbalEvent + panel.id,
         () => {
@@ -90,16 +91,15 @@ const AlertPanel = memo((props: AlertPanelProps) => {
     }, [options.toolbar.show])
 
 
-    const onToobarOpen = () => {
+    const onToobarOpen = useCallback(() => {
         if (!toolbarOpen) {
             storage.set(storageKey, true)
         } else {
             storage.remove(storageKey)
         }
 
-        setToolbarOpen(!toolbarOpen)
-
-    }
+        setToolbarOpen((prev) => !prev);
+    }, [storageKey, toolbarOpen])
 
     const onCollapseAll = useCallback(v => {
         setCollapeAll(v)
@@ -190,19 +190,19 @@ const AlertPanel = memo((props: AlertPanelProps) => {
                 <CustomScrollbar>
                     <Box height={props.height} maxHeight={props.height} width={width > 400 ? props.width - (toolbarOpen ? options.toolbar.width : 1) : width} transition="all 0.3s">
                         {showChart && <Box className="alert-panel-chart" height={options.chart.height}>
-                            <LogChart data={chartData} panel={panel} width={props.width - (toolbarOpen ? options.toolbar.width : 1)} viewOptions={viewOptions} onSelectLabel={onSelectLabel} activeLabels={active} colorGenerator={generator}/>
+                            <LogChart data={chartData} panel={panel} width={props.width - (toolbarOpen ? options.toolbar.width : 1)} viewOptions={viewOptions} onSelectLabel={onSelectLabel} activeLabels={active} colorGenerator={generator} />
                             <Divider mt="3" />
                         </Box>}
                         <VStack alignItems="left" divider={<StackDivider />} mt={showChart ? 3 : 1} spacing={1}>
                             {
-                                sortedData.map(rule => <AlertRuleItem rule={rule} panel={panel} collapsed={collaseAll} onSelectLabel={onSelectLabel} width={width} colorGenerator={generator}/>)
+                                sortedData.map(rule => <AlertRuleItem key={ruleId} rule={rule} panel={panel} collapsed={collaseAll} onSelectLabel={onSelectLabel} width={width} colorGenerator={generator} />)
                             }
                         </VStack>
                     </Box>
                 </CustomScrollbar>
                 {<Box className={toolbarOpen ? "bordered-left" : null} height={props.height} maxHeight={props.height} width={toolbarOpen ? options.toolbar.width : 0} transition="all 0.3s" py="2">
                     <CustomScrollbar>
-                        {toolbarOpen && <AlertToolbar active={active} labels={[]} panel={panel} onCollapseAll={onCollapseAll} onSearchChange={onSearchChange} height={props.height} onActiveLabel={onActiveLabel} rulesCount={filterData.length} alertsCount={alertsCount} onViewLogChange={onViewOptionsChange} viewOptions={viewOptions} width={width}/>}
+                        {toolbarOpen && <AlertToolbar active={active} labels={[]} panel={panel} onCollapseAll={onCollapseAll} onSearchChange={onSearchChange} height={props.height} onActiveLabel={onActiveLabel} rulesCount={filterData.length} alertsCount={alertsCount} onViewLogChange={onViewOptionsChange} viewOptions={viewOptions} width={width} />}
                     </CustomScrollbar>
                 </Box>}
             </Flex>
