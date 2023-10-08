@@ -16,7 +16,7 @@ export const commonMsg = i18n("common", {
   "basic": "Basic",
   "variable": "Variable",
   "annotation": "Annotation",
-  "settings": "Settings", 
+  "settings": "Settings",
   "new": "New",
   "login": "Sign in",
   "logout": "Sign out",
@@ -98,7 +98,7 @@ export const commonMsg = i18n("common", {
   "animationTips": "Display chart animation",
   "display": "Display",
   "show": "Show",
-  "calc":"Calculation",
+  "calc": "Calculation",
   "calcTips": "calculate results from series data with this reducer function",
   "value": "Value",
   "pickColor": "Pick color",
@@ -134,7 +134,7 @@ export const commonMsg = i18n("common", {
   "height": "Height",
   "sortWeight": "Sort weight",
   "textinput": "Text input",
-  "landscapeModeTips":"Please turn your phone to landscape mode for better experience.",
+  "landscapeModeTips": "Please turn your phone to landscape mode for better experience.",
   "userStats": "User stats",
   "builtIn": "Built-in",
   "external": "External",
@@ -156,14 +156,15 @@ export const miscMsg = i18n("misc", {
 })
 
 export const sidebarMsg = i18n("sidebar", {
-    "search": "Search",
-    "selectSidemenu": "Select Sidemenu",
-    "selectSideMenuTips": "Select a team sidemenu",
-    "themeChange": "Change Theme",
-    "accountSetting": "User",
-    "adminPanel": "Admin Panel",
-    "currentLang": "Current Lang",
-    "newItem": "Add new item",
+  "dashboard": "Dashboards",
+  "search": "Search",
+  "selectSidemenu": "Select Sidemenu",
+  "selectSideMenuTips": "Select a team sidemenu",
+  "themeChange": "Change Theme",
+  "accountSetting": "User",
+  "adminPanel": "Admin Panel",
+  "currentLang": "Current Lang",
+  "newItem": "Add new item",
 })
 
 
@@ -244,23 +245,23 @@ export const cfgTeam = i18n("cfgTeam", {
   "sidemenuTip1": "Customize the top section of your team's side menu, you can add, edit, delete and reorder the menu items.",
   "sidemenuTip2": "Menu item format",
   "sidemenuTip3": "Url format",
-  "level": "Level", 
+  "level": "Level",
   "sidemenuTip4": "if level 1 is /x, level 2 must be /x/a or /x/b, obviously /y/a is invalid",
   "sidemenuTip5": "You can find icons in",
   "modifySidemenu": "Modify Side Menu",
   "addMenuItem": "Add Menu Item",
   "removeMenuItem": "Remove Menu Item",
   "sidemenuErrTitle": "title is required",
-  "sidemenuErrDashId":  "dashboard id is required",
+  "sidemenuErrDashId": "dashboard id is required",
   "sidemenuErrLevel1Icon": "Menu item of level 1 must have an icon",
   "sidemenuErrIcon": params("icon {name} is not exist"),
   "sidemenuErrUrl": params("{name} is not a valid url"),
   "sidemenuErrLevel1Url": "level 1 url must be /x, /x/y is invalid",
-   "sidemenuErrLevel2Url":"level 2 url must use level1 url as prefix",
-   'sidemenuErrLevel2Url1': "level 2 url must be /x/y, /x or /x/y/z is invalid",
-   "sidemenuErrChildTitle": "child title or dashboard id is required",
-   "sidemenuErrChildUrl": params("{name} is not a valid url"),
-   "sidemenuReload": "Side menu updated, reloading..."
+  "sidemenuErrLevel2Url": "level 2 url must use level1 url as prefix",
+  'sidemenuErrLevel2Url1': "level 2 url must be /x/y, /x or /x/y/z is invalid",
+  "sidemenuErrChildTitle": "child title or dashboard id is required",
+  "sidemenuErrChildUrl": params("{name} is not a valid url"),
+  "sidemenuReload": "Side menu updated, reloading..."
 })
 
 
@@ -274,7 +275,7 @@ export const newMsg = i18n("new", {
   "importToast": "Dashboard imported, redirecting...",
   "jsonInvalid": "Meta json is not valid",
   "dsToast": "Datasource added, redirecting...",
-  "testDsFailed":  "Test failed",
+  "testDsFailed": "Test failed",
 })
 
 
@@ -296,8 +297,8 @@ export const dashboardSaveMsg = i18n("dashboardSave", {
   "autoSaveNotAvail1": "Auto save is not available in history preview mode",
   "saveMsgRequired": "A save message must be provided when saving in history preview mode",
   "savedMsg": params("Dashboard {name} saved"),
-   "saveDueToChanges": "Current dashboard has changes, please save it before viewing history.",
-   "onPreviewMsg1": "Changed to history preview mode",
+  "saveDueToChanges": "Current dashboard has changes, please save it before viewing history.",
+  "onPreviewMsg1": "Changed to history preview mode",
   "onPreviewMsg2": "Changed to current dashboard",
   "onPreviewMsg3": "If you want to use preview version, please save it by click save button.",
   "viewHistory": "View History",
@@ -335,7 +336,7 @@ export const dashboardSettingMsg = i18n("dashboardSetting", {
   "autoSave": "Enable auto save",
   "autoSaveTips": "Dashboard will be auto saved at intervals, you can find old versions in save history list",
   "autoSaveInterval": "Auto save interval(seconds)",
-  "hiddenPanel":  "Hidden panels",
+  "hiddenPanel": "Hidden panels",
   "hiddenPanelTips": "You can hide a panel by clicking its header and select hide panel",
   "sortWeight": "Sort priority",
   "sortWeightTips": "Higher value means higher sort priority, this is used in Search dashboards",
@@ -346,7 +347,7 @@ export const dashboardSettingMsg = i18n("dashboardSetting", {
   "backgroundColorModeTips": "Change to this color mode when using background image",
   "enableBg": "Enable background",
   "enableBgTips": "Whether using the background image set above",
-  "dashBorder":  "Dashboard border",
+  "dashBorder": "Dashboard border",
   "dashBorderTips": "Select a cool border for your dashboard",
 
   "dashSaved": "Dashboard saved",
@@ -416,7 +417,7 @@ export const panelMsg = i18n("panel", {
 
   "transformTips": `Define a function to transform the panel data query from datasource into the format which the panel chart requires`,
   "enableTransform": "Whether enable transform",
-  "conditionRender": "Conditional render", 
+  "conditionRender": "Conditional render",
   "conditionRenderTips": "If the condition you set is satisfied, the panel will be rendered, otherwise it will be hidden",
   "condition": "Condition",
   "conditionTips": "Check a variable is set to a given value"
@@ -493,7 +494,7 @@ export const nodeGraphPanelMsg = i18n("nodeGraphPanel", {
   "highlightNodesInputTips": "support multiple regex, split with comma",
   "invalidHighlight": "Invalid highlight function",
   "highlightColor": "Highlight color",
-  "pickLightColor":  "Pick light color",
+  "pickLightColor": "Pick light color",
   "pickDarkColor": "Pick dark color",
   "tooltipTrigger": "Tooltip trigger",
   "layout": "Layout",
@@ -511,7 +512,7 @@ export const nodeGraphPanelMsg = i18n("nodeGraphPanel", {
   "quadratic": "Quadratic",
   "polyline": "Polyline",
   "edgeColor": "Edge color",
-  "noAttrsToSet" : "No attrs to set"
+  "noAttrsToSet": "No attrs to set"
 })
 
 export const echartsPanelMsg = i18n("echartsPanel", {
@@ -526,7 +527,7 @@ export const echartsPanelMsg = i18n("echartsPanel", {
   "liveEdit": params("Live Edit( fetch data from {name} datasource)"),
   "regEvents": "Register events function",
   "regEventsTips": "custom your chart events, e.g mouseclick, mouseover etc",
-  "editRegFunc":"Edit registerEvents function",
+  "editRegFunc": "Edit registerEvents function",
 })
 
 export const textPanelMsg = i18n("textPanel", {
@@ -537,19 +538,19 @@ export const textPanelMsg = i18n("textPanel", {
   "left": "Left",
   "center": "Center",
   "right": "Right",
-  "top":  "Top",
+  "top": "Top",
   "bottom": "Bottom",
 })
 
 export const piePanelMsg = i18n("piePanel", {
-    "showLabel": "Show label",
-    "showLabelTips": "When view in mobile screen, show label will automatically become show legend for better user experience",
-    "shape": "Shape",
-    "borderRadius": "Border radius",
-    "pieRadius": "Pie radius",
-    "innerRadius": "Inner radius",
-    "orient": "Orient",
-    "placement": "Placement"
+  "showLabel": "Show label",
+  "showLabelTips": "When view in mobile screen, show label will automatically become show legend for better user experience",
+  "shape": "Shape",
+  "borderRadius": "Border radius",
+  "pieRadius": "Pie radius",
+  "innerRadius": "Inner radius",
+  "orient": "Orient",
+  "placement": "Placement"
 })
 
 export const gaugePanelMsg = i18n("gaugePanel", {
@@ -574,24 +575,24 @@ export const statsPanelMsg = i18n("statsPanel", {
 })
 
 export const tracePanelMsg = i18n("tracePanel", {
-   "maxDuration": "Max duration",
-   "minDuration": "Min duration",
-   "limitResults": "Limit results",
-   "findTraces": "Find traces",
-   "useLatestTime": "Use latest time",
-   "tracesTotal": "Traces Total",
-   "tracesSelected": "Traces Selected",
-   "clearSelection": "Clear selection",
-   "recent": "Most Recent",
-   "mostErrors": "Most Errors",
-   "longest": "Longest Duration",
-    "shortest": "Shortest Duration",
-    "mostSpans": "Most Spans",
-    "leastSpans": "Least Spans",
-    "traceIdsTips": "Searching by trace ids has the highest priority, so if you want to search with options, leave this empty",
-    "traceIdsInputTips": "search with trace ids, separated with comma",
-    "selectForCompre": "selected for comparison",
-    "startTime": "Start time",
+  "maxDuration": "Max duration",
+  "minDuration": "Min duration",
+  "limitResults": "Limit results",
+  "findTraces": "Find traces",
+  "useLatestTime": "Use latest time",
+  "tracesTotal": "Traces Total",
+  "tracesSelected": "Traces Selected",
+  "clearSelection": "Clear selection",
+  "recent": "Most Recent",
+  "mostErrors": "Most Errors",
+  "longest": "Longest Duration",
+  "shortest": "Shortest Duration",
+  "mostSpans": "Most Spans",
+  "leastSpans": "Least Spans",
+  "traceIdsTips": "Searching by trace ids has the highest priority, so if you want to search with options, leave this empty",
+  "traceIdsInputTips": "search with trace ids, separated with comma",
+  "selectForCompre": "selected for comparison",
+  "startTime": "Start time",
 })
 
 
@@ -608,32 +609,32 @@ export const componentsMsg = i18n("components", {
 })
 
 export const tablePanelMsg = i18n("tablePanel", {
-   "tableSetting": "Table Setting",
-   "showHeader": "Show header",
-    "showHeaderTips": "whether display table's header",
-    "showBorder": "Show border",
-    "stickyHeader": "Sticky header",
-    "stickyHeaderTips": "fix header to top, useful for viewing many rows in one page",
-    "cellSize": "Cell size",
-    "tableWidth": "Table width",
-    "column": "Column",
-    "columnAlignment": "Column alignment",
-    "columnSort": "Column sort",
-    "columnSortTips": "click the column title to sort it by asc or desc",
-    "columnFilter": "Column filter",
-    "columnFilterTips": "filter the column values in table",
-    "onRowClick": "On row click",
-    "onRowClickTips": "when click on a row, this event will be executed",
-    "rowActions": "Click actions",
-    "rowActionsTips": "add some actions to panel, e.g edit, delete",
-    "addAction": "Add action",
-    "actionColumnName": "Action column name",
-    "actionColumnWidth": "Action column width",
-    "actionButtonSize": "Action button size",
-    "seriesName": "change column display name",
-    "seriesFilter1": "Number min/max",
-    "seriesFilter2": "String match",
-    "colorTitle": "Title color"
+  "tableSetting": "Table Setting",
+  "showHeader": "Show header",
+  "showHeaderTips": "whether display table's header",
+  "showBorder": "Show border",
+  "stickyHeader": "Sticky header",
+  "stickyHeaderTips": "fix header to top, useful for viewing many rows in one page",
+  "cellSize": "Cell size",
+  "tableWidth": "Table width",
+  "column": "Column",
+  "columnAlignment": "Column alignment",
+  "columnSort": "Column sort",
+  "columnSortTips": "click the column title to sort it by asc or desc",
+  "columnFilter": "Column filter",
+  "columnFilterTips": "filter the column values in table",
+  "onRowClick": "On row click",
+  "onRowClickTips": "when click on a row, this event will be executed",
+  "rowActions": "Click actions",
+  "rowActionsTips": "add some actions to panel, e.g edit, delete",
+  "addAction": "Add action",
+  "actionColumnName": "Action column name",
+  "actionColumnWidth": "Action column width",
+  "actionButtonSize": "Action button size",
+  "seriesName": "change column display name",
+  "seriesFilter1": "Number min/max",
+  "seriesFilter2": "String match",
+  "colorTitle": "Title color"
 })
 
 export const barGaugePanelMsg = i18n("barGaugePanel", {
@@ -651,15 +652,15 @@ export const barGaugePanelMsg = i18n("barGaugePanel", {
   "showUnfilledTips": "When enabled renders the unfilled region as gray",
   "titleSize": "Title font size",
   "valueSize": "Value font size",
-  "layoutDir" : "Layout direction",
+  "layoutDir": "Layout direction",
 })
 
 export const ValueMappingMsg = i18n("valueMapping", {
-  
+
 })
 
 export const alertMsg = i18n("alert", {
-   "alertFilter": "Alert filter",
-   "alertState": "Alert state",
-   "datasourceTips": "Query alerts from these datasources"
+  "alertFilter": "Alert filter",
+  "alertState": "Alert state",
+  "datasourceTips": "Query alerts from these datasources"
 })

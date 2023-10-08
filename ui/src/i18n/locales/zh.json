@@ -145,6 +145,7 @@
     "langChanged": "当前语言 - 简体中文"
   },
   "sidebar": {
+    "dashboard": "仪表盘",
     "search": "搜索",
     "selectSidemenu": "选择侧菜单",
     "selectSideMenuTips": "你想使用哪个团队的侧面菜单栏?",

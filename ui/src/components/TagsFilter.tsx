@@ -10,11 +10,13 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
+import CustomSelect from "src/components/select/AntdSelect"
 import { Select } from "antd";
 import ColorTag from "src/components/ColorTag";
 import type { CustomTagProps } from 'rc-select/lib/BaseSelect';
 import React from "react";
+import { FaTag } from "react-icons/fa";
+import { Box } from "@chakra-ui/react";
 const { Option } = Select;
 
 interface Props {
@@ -25,7 +27,7 @@ interface Props {
     minWidth?: string
 }
 
-const TagsFilter = ({ value, tags, onChange,tagCount={},minWidth="260px" }: Props) => {
+const TagsFilter = ({ value, tags, onChange, tagCount = {}, minWidth = "260px" }: Props) => {
     const tagRender = (props: CustomTagProps) => {
         const { value, onClose } = props;
         return (
@@ -39,24 +41,31 @@ const TagsFilter = ({ value, tags, onChange,tagCount={},minWidth="260px" }: Prop
 
     return (
         <>
-            <Select
-                placeholder="filter by tags, result = tag1 & tag2"
-                size="large"
+            <CustomSelect
+                prefixIcon={
+                    <Box color="gray.500">
+                        <FaTag />
+                    </Box>
+                }
+                placeholder="Filter by tags"
+                size="middle"
                 allowClear
                 mode="multiple"
-                style={{ width: 'fit-content', minWidth: minWidth}}
+                style={{ width: 'fit-content', minWidth: minWidth }}
                 value={value}
                 tagRender={tagRender}
                 onChange={onChange}
+
             >
                 {
                     tags.sort().map(tag => {
-                        return <Option value={tag} label={tag+ ` (${tagCount[tag]??0})`}>
-                            <ColorTag name={tag} label={tag+ ` (${tagCount[tag]??0})`} />
+                        return <Option value={tag} label={tag + ` (${tagCount[tag] ?? 0})`}>
+                            <ColorTag name={tag} label={tag + ` (${tagCount[tag] ?? 0})`} />
                         </Option>
                     })
                 }
-            </Select>
+            </CustomSelect>
+
         </>
     )
 }

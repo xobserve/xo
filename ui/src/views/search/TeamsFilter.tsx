@@ -11,9 +11,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Select } from "antd";
+import { AiOutlineTeam } from "react-icons/ai"
+import CustomSelect from "src/components/select/AntdSelect"
 import React from "react";
 import { Team } from "types/teams";
+import { Box } from "@chakra-ui/react";
 
 interface Props {
     teams: Team[]
@@ -22,21 +24,26 @@ interface Props {
     teamCount: Object
     minWidth?: string
 }
-const TeamsFilter = ({ value, teams, onChange,teamCount, minWidth }: Props) => {
+const TeamsFilter = ({ value, teams, onChange, teamCount, minWidth }: Props) => {
     return (
         <>
-            <Select
-                placeholder="filter by teams, result = t1 || t2"
-                size="large"
+            <CustomSelect
+                prefixIcon={
+                    <Box color="gray.500">
+                        <AiOutlineTeam />
+                    </Box>
+                }
+                placeholder="Filter by teams"
+                size="middle"
                 allowClear
                 mode="multiple"
                 style={{ width: 'fit-content', minWidth }}
                 defaultValue={value}
                 onChange={onChange}
-                options= {
+                options={
                     teams.map(t => {
                         return {
-                            label: t.name+` (${teamCount[t.id]??0})`,
+                            label: t.name + ` (${teamCount[t.id] ?? 0})`,
                             value: t.id
                         }
                     })
