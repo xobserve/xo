@@ -113,7 +113,7 @@ const Container = (props: Props) => {
     { title: t.configuration, icon: "FaCog", baseUrl: ReserveUrls.Config, url: `${ReserveUrls.Config}/team/${storage.get(StorageTeamNavId) ?? globalTeamId}/datasources`, isActive: asPath.startsWith(ReserveUrls.Config) },
   ]
   config.showAlertIcon && bottomNavs.push({ title: t.alert, icon: "FaBell", baseUrl: ReserveUrls.Alerts, url: `${ReserveUrls.Alerts}`, isActive: asPath.startsWith(ReserveUrls.Alerts) })
-  bottomNavs.push({ title: t1.dashboard, icon: "FaBuromobelexperte", baseUrl: ReserveUrls.Search, url: `${ReserveUrls.Search}`, isActive: asPath.startsWith(ReserveUrls.Search) })
+  bottomNavs.push({ title: t1.search, icon: "FaBuromobelexperte", baseUrl: ReserveUrls.Search, url: `${ReserveUrls.Search}`, isActive: asPath.startsWith(ReserveUrls.Search) })
 
   const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
 

@@ -33,6 +33,8 @@ import { MobileBreakpoint } from "src/data/constants"
 import Loading from "src/components/loading/Loading"
 import { $teams } from "../team/store"
 import { last } from "lodash"
+import { useStore } from "@nanostores/react"
+import { commonMsg, searchMsg } from "src/i18n/locales/en"
 
 interface Props {
     title: string
@@ -43,6 +45,8 @@ interface Props {
 }
 const Search = memo((props: Props) => {
     const { title, miniMode, fontSize = 15, fontWeight = 400, sideWidth = 0 } = props
+    const t = useStore(commonMsg)
+    const t1 = useStore(searchMsg)
     const location = useLocation()
     const [query, setQuery] = useState<string>(null)
     const [caseSensitive, setCaseSensitive] = useState<boolean>(false)
@@ -265,15 +269,15 @@ const Search = memo((props: Props) => {
                     }
                 }}>
                     <ModalContent maxH="100vh">
-                        <ModalHeader justifyContent="space-between">
+                        <ModalHeader justifyContent="space-between" pb="1">
                             <Flex justifyContent="space-between" alignItems="center">
-                                <Text>Dashboards</Text>
+                                <Text>{t1.searchDashboards}</Text>
                                 <FaTimes opacity="0.6" cursor="pointer" onClick={onClose} />
                             </Flex>
-                            <Text color='gray.500' fontSize='sm'>search dashboards to visualize your data</Text>
+                            <Text color='gray.500' fontSize='sm'>{t1.searchDashboardsTips}</Text>
                         </ModalHeader>
                         <ModalBody >
-                            <Box p="2">
+                            <HStack px="0">
                                 <InputGroup size="sm">
                                     <InputLeftElement
                                         pointerEvents='none'
@@ -283,10 +287,23 @@ const Search = memo((props: Props) => {
                                             </Box>
                                         }
                                     />
-                                    <Input value={query} onChange={e => onQueryChange(e.currentTarget.value)} placeholder="search dashboard by name or id" />
+                                    <Input value={query} onChange={e => onQueryChange(e.currentTarget.value)} placeholder={t1.searchInput} />
                                 </InputGroup>
-                            </Box>
-                            <Flex p="2" justifyContent="space-between">
+                                <Tooltip label={caseSensitive ? t.caseSensitive : t.caseInsensitive}>
+                                    <Box
+                                        cursor="pointer"
+                                        onClick={() => setCaseSensitive(!caseSensitive)}
+                                        color={caseSensitive ? "brand.500" : "inherit"}
+                                        fontWeight="600"
+                                        className={caseSensitive ? "highlight-bordered" : null}
+                                        fontSize="1.1rem"
+                                        p="1"
+                                    >
+                                        <RxLetterCaseCapitalize />
+                                    </Box>
+                                </Tooltip>
+                            </HStack>
+                            <Flex px="0" mt="2" justifyContent="space-between">
                                 <HStack>
                                     <TagsFilter value={selectedTags} tags={tags} onChange={(v: string[]) => {
                                         if (last(v) == "untagged") {
@@ -303,31 +320,14 @@ const Search = memo((props: Props) => {
                                         {filterStarred ? <AiFillStar /> : <AiOutlineStar />}
                                     </Box>
                                 </HStack>
-                                <Box>
-                                    <HStack>
-                                        {/* <Input value={query} onChange={e => onQueryChange(e.currentTarget.value)} w={isLargeScreen ? "320px" : "150px"} placeholder="enter dashboard name or id to search.." /> */}
-                                        <Tooltip label={caseSensitive ? "Case sensitive" : "Case insensitive"}>
-                                            <Box
-                                                cursor="pointer"
-                                                onClick={() => setCaseSensitive(!caseSensitive)}
-                                                color={caseSensitive ? "brand.500" : "inherit"}
-                                                fontWeight="600"
-                                                className={caseSensitive ? "highlight-bordered" : null}
-                                                p="1"
-                                                fontSize="1.1rem"
-                                            >
-                                                <RxLetterCaseCapitalize />
-                                            </Box>
-                                        </Tooltip>
-                                        <HStack spacing={4} fontSize="1.1rem">
-                                            <Tooltip label="Teams view"><Box cursor="pointer" className={layout == "teams" ? "color-text" : null} onClick={() => setLayout("teams")}><FaSitemap /></Box></Tooltip>
-                                            <Tooltip label="List view"><Box cursor="pointer" className={layout == "list" ? "color-text" : null} onClick={() => setLayout("list")}><FaAlignJustify /></Box></Tooltip>
-                                            <Tooltip label="Tags view"><Box cursor="pointer" className={layout == "tags" ? "color-text" : null} onClick={() => setLayout("tags")}><FaBuffer /></Box></Tooltip>
-                                        </HStack>
-                                    </HStack>
-                                </Box>
+                                {/* <Input value={query} onChange={e => onQueryChange(e.currentTarget.value)} w={isLargeScreen ? "320px" : "150px"} placeholder="enter dashboard name or id to search.." /> */}
+                                <HStack spacing={4} fontSize="1.1rem">
+                                    <Tooltip label={t1.teamsView}><Box cursor="pointer" className={layout == "teams" ? "color-text" : null} onClick={() => setLayout("teams")}><FaSitemap /></Box></Tooltip>
+                                    <Tooltip label={t1.listView}><Box cursor="pointer" className={layout == "list" ? "color-text" : null} onClick={() => setLayout("list")}><FaAlignJustify /></Box></Tooltip>
+                                    <Tooltip label={t1.tagsView}><Box cursor="pointer" className={layout == "tags" ? "color-text" : null} onClick={() => setLayout("tags")}><FaBuffer /></Box></Tooltip>
+                                </HStack>
                             </Flex>
-                            {(teams && dashboards) ? <VStack alignItems="left" maxH={`calc(100vh - ${isLargeScreen ? 130 : 215}px)`} overflowY="auto" spacing={3} pt="3">
+                            {(teams && dashboards) ? <VStack alignItems="left" maxH={`calc(100vh - ${isLargeScreen ? 170 : 215}px)`} overflowY="auto" spacing={2} pt="3">
                                 {
                                     layout == "list" && <ListView teams={teams} dashboards={dashboards as Dashboard[]} onItemClick={onClose} query={query} starredIds={starredDashIds} />
                                 }

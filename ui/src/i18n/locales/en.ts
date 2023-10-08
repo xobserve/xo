@@ -138,6 +138,8 @@ export const commonMsg = i18n("common", {
   "userStats": "User stats",
   "builtIn": "Built-in",
   "external": "External",
+  "caseSensitive": "Case sensitive",
+  "caseInsensitive": "Case insensitive",
   "inputTips": params("Enter {name}.."),
   "isReqiiured": params("{name} is required"),
   "isInvalid": params("{name} is invalid"),
@@ -606,6 +608,7 @@ export const componentsMsg = i18n("components", {
   "valueTransformTips": "Transform the value before comparing with the threshold",
   "valueTransformFunc": "Value transform function",
   "thresholdTips": "If the <raw> value in table cell is greater than the threshold, the color will be changed, ",
+  "filterTags": "Filter by tags",
 })
 
 export const tablePanelMsg = i18n("tablePanel", {
@@ -663,4 +666,14 @@ export const alertMsg = i18n("alert", {
   "alertFilter": "Alert filter",
   "alertState": "Alert state",
   "datasourceTips": "Query alerts from these datasources"
+})
+
+export const searchMsg = i18n("search", {
+  "searchDashboards": "Search dashboards",
+  "searchDashboardsTips": "Find the dashboards you are interested in",
+  "searchInput": "search dashboard by name or id",
+  "filterTeams": "Filter by teams",
+  "teamsView": "Teams view",
+  "listView": "List view",
+  "tagsView": "Tags view",
 })

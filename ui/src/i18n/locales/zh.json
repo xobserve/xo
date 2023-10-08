@@ -131,6 +131,8 @@
     "builtIn": "内置插件",
     "external": "外部插件",
     "public": "公开",
+    "caseSensitive": "大小写敏感",
+    "caseInsensitive": "大小写不敏感",
     "isAdded": "{name}添加成功!",
     "isUpdated": "{name}更新成功!",
     "isDeleted": "{name}删除成功!",
@@ -564,7 +566,8 @@
     "valueTransform": "启用值变换",
     "valueTransformTips": "对当前的值进行变换, 用变换结果跟阈值进行比较",
     "valueTransformFunc": "值变换函数",
-    "thresholdTips": "若表格单元格中的<原始>值比 threshold 大，那它的颜色将被改变"
+    "thresholdTips": "若表格单元格中的<原始>值比 threshold 大，那它的颜色将被改变",
+    "filterTags": "标签过滤"
   },
   "tablePanel": {
     "tableSetting": "表格设置",
@@ -616,5 +619,14 @@
     "alertFilter": "告警过滤",
     "alertState": "告警状态",
     "datasourceTips": "从下面的数据源中查询告警"
+  },
+  "search": {
+    "searchDashboards": "搜索仪表盘",
+    "searchDashboardsTips": "发现你感兴趣的仪表盘",
+    "searchInput": "通过名称或 id 搜索仪表盘",
+    "filterTeams": "过滤团队",
+    "teamsView": "团队视图",
+    "listView": "列表视图",
+    "tagsView": "标签视图"
   }
 }

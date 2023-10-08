@@ -17,6 +17,8 @@ import type { CustomTagProps } from 'rc-select/lib/BaseSelect';
 import React from "react";
 import { FaTag } from "react-icons/fa";
 import { Box } from "@chakra-ui/react";
+import { useStore } from "@nanostores/react";
+import { componentsMsg } from "src/i18n/locales/en";
 const { Option } = Select;
 
 interface Props {
@@ -28,6 +30,7 @@ interface Props {
 }
 
 const TagsFilter = ({ value, tags, onChange, tagCount = {}, minWidth = "260px" }: Props) => {
+    const t1 = useStore(componentsMsg)
     const tagRender = (props: CustomTagProps) => {
         const { value, onClose } = props;
         return (
@@ -47,7 +50,7 @@ const TagsFilter = ({ value, tags, onChange, tagCount = {}, minWidth = "260px" }
                         <FaTag />
                     </Box>
                 }
-                placeholder="Filter by tags"
+                placeholder={t1.filterTags}
                 size="middle"
                 allowClear
                 mode="multiple"

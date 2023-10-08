@@ -16,6 +16,8 @@ import CustomSelect from "src/components/select/AntdSelect"
 import React from "react";
 import { Team } from "types/teams";
 import { Box } from "@chakra-ui/react";
+import { useStore } from "@nanostores/react";
+import { searchMsg } from "src/i18n/locales/en";
 
 interface Props {
     teams: Team[]
@@ -25,6 +27,7 @@ interface Props {
     minWidth?: string
 }
 const TeamsFilter = ({ value, teams, onChange, teamCount, minWidth }: Props) => {
+    const t1 = useStore(searchMsg)
     return (
         <>
             <CustomSelect
@@ -33,7 +36,7 @@ const TeamsFilter = ({ value, teams, onChange, teamCount, minWidth }: Props) => 
                         <AiOutlineTeam />
                     </Box>
                 }
-                placeholder="Filter by teams"
+                placeholder={t1.filterTeams}
                 size="middle"
                 allowClear
                 mode="multiple"
