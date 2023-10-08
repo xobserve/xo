@@ -23,6 +23,7 @@ import { FaMoon, FaSun } from "react-icons/fa"
 import { useStore } from "@nanostores/react"
 import { sidebarMsg } from "src/i18n/locales/en"
 import PopoverTooltip from "./PopoverTooltip"
+import { upperFirst } from "lodash"
 
 type ColorModeSwitcherProps = Omit<IconButtonProps, "aria-label">
 
@@ -32,7 +33,7 @@ export const ColorModeSwitcher: React.FC<ColorModeSwitcherProps & { miniMode: bo
   const text = useColorModeValue("dark", "light")
   const { colorMode } = useColorMode()
 
-  const textComponent = <Text fontSize="1rem">{t1.themeChange}</Text>
+  const textComponent = <Text fontSize="1rem">{t1.themeChange + upperFirst(colorMode)}</Text>
   return (
     <PopoverTooltip
       trigger={disableTrigger ? null : (miniMode ? "hover" : null)}
@@ -43,10 +44,10 @@ export const ColorModeSwitcher: React.FC<ColorModeSwitcherProps & { miniMode: bo
           fontSize="lg"
           variant="ghost"
           color="current"
-          icon={colorMode == 'light' ? <FaMoon /> : <FaSun />}
+          icon={colorMode == 'light' ? <FaSun /> : <FaMoon />}
           aria-label={`Switch to ${text} mode`}
           {...props}
-        /> : (colorMode == 'light' ? <FaMoon /> : <FaSun />)}
+        /> : (colorMode == 'light' ? <FaSun /> : <FaMoon />)}
         {!miniMode && textComponent}
       </HStack>}
       headerComponent={textComponent}

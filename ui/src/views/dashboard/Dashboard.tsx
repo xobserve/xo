@@ -149,10 +149,11 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
 
                         bodyStyle.backgroundSize = "cover"
                         if (colorMode !== bg.colorMode) {
-                            if (!storage.get(PreviousColorModeKey)) {
-                                storage.set(PreviousColorModeKey, colorMode)
-                                toggleColorMode()
-                            }
+                            // if (!storage.get(PreviousColorModeKey)) {
+                            //     storage.set(PreviousColorModeKey, colorMode)
+                            //     toggleColorMode()
+                            // }
+                            bodyStyle.background = null
                         }
                     }
 
@@ -171,6 +172,18 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
     }, [dashboard])
 
 
+    useEffect(() => {
+        const bg = dashboard?.data.styles?.bg
+        if (dashboard?.data.styles?.bgEnabled && bg) {
+            let bodyStyle = document.body.style
+            if (colorMode !== bg.colorMode) {
+                bodyStyle.background = null
+            } else {
+                bodyStyle.background = `url(${bg.url})`
+                bodyStyle.backgroundSize = "cover"
+            }
+        }
+    },[colorMode])
 
     const load = async () => {
         const res = await requestApi.get(`/dashboard/byId/${dashboardId}`)
