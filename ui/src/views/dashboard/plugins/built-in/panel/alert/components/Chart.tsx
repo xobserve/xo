@@ -57,7 +57,7 @@ const AlertChart = (props: Props) => {
             chart?.off('click')
         }
     },[chart])
-    let [timeline, names, data] = useMemo(() => {
+    const [timeline, names, data] = useMemo(() => {
         const names = []
         const data = []
         if (isEmpty(props.data)) {
