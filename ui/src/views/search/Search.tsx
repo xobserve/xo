@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Box, Button, Flex, HStack, IconButton, Input, Modal, ModalBody, ModalContent, ModalHeader, Text, Tooltip, VStack, useColorModeValue, useDisclosure, useMediaQuery } from "@chakra-ui/react"
+import { Box, Button, Flex, HStack, IconButton, Input, InputGroup, InputLeftElement, Modal, ModalBody, ModalContent, ModalHeader, Text, Tooltip, VStack, useColorModeValue, useDisclosure, useMediaQuery } from "@chakra-ui/react"
 import React, { memo, useEffect, useMemo, useState } from "react"
 import { FaAlignJustify, FaBuffer, FaSearch, FaSitemap, FaTimes } from "react-icons/fa"
 import { Dashboard } from "types/dashboard"
@@ -21,7 +21,7 @@ import TagsFilter from "src/components/TagsFilter"
 import { isEmpty } from "utils/validate"
 import { Team } from "types/teams"
 import TeamsFilter from "./TeamsFilter"
-import { AiFillStar, AiOutlineStar } from "react-icons/ai"
+import { AiFillStar, AiOutlineStar, AiOutlineSearch } from "react-icons/ai"
 import ListView from "./ListView"
 import TeamsView from "./TeamsView"
 import TagsView from "./TagsView"
@@ -82,10 +82,10 @@ const Search = memo((props: Props) => {
             const r1 = requestApi.get(`/dashboard/simpleList`)
             const r2 = requestApi.get(`/dashboard/starred`)
             const res = await Promise.all([r1, r2])
-            
+
             const visibleTeams = $teams.get()
-            const dashboards: Dashboard[] = res[0].data.filter((dash: Dashboard) => dash.visibleTo == "all" ||  visibleTeams.find(team => team.id == dash.ownedBy))
-   
+            const dashboards: Dashboard[] = res[0].data.filter((dash: Dashboard) => dash.visibleTo == "all" || visibleTeams.find(team => team.id == dash.ownedBy))
+
             setRawDashboards(dashboards)
             const starred = new Set<string>()
             for (const id of res[1].data) {
@@ -101,7 +101,7 @@ const Search = memo((props: Props) => {
                 }
             }
             setTeams(Object.values(dashTeamsMap))
-        }   
+        }
     }
 
 
@@ -183,7 +183,7 @@ const Search = memo((props: Props) => {
             if (isEmpty(dash.tags)) {
                 tagCount["untagged"] = (tagCount["untagged"] ?? 0) + 1
                 continue
-            } 
+            }
             for (const t of dash.tags) {
                 tagCount[t] = (tagCount[t] ?? 0) + 1
             }
@@ -191,7 +191,7 @@ const Search = memo((props: Props) => {
 
         return [result, tagCount, teamCount]
     }, [query, rawDashboards, caseSensitive, selectedTags, selectedTeams, filterStarred, starredDashIds])
-    
+
     const dashboards: Dashboard[] | Map<string, Dashboard[]> = useMemo(() => {
         if (layout == "list") {
             return dashboards1
@@ -246,7 +246,7 @@ const Search = memo((props: Props) => {
                         <Box>
                             {miniMode ?
                                 <IconButton fontSize={isLargeScreen ? "1rem" : "1rem"} aria-label="" variant="ghost" color="current" _focus={{ border: null }} icon={<FaSearch />} />
-                                : <FaSearch fontSize="14px"/>
+                                : <FaSearch fontSize="14px" />
                             }
                         </Box>
                         {!miniMode && <Text fontSize={`${fontSize}px`} fontWeight={fontWeight} >{title}</Text>}
@@ -267,40 +267,28 @@ const Search = memo((props: Props) => {
                     <ModalContent maxH="100vh">
                         <ModalHeader justifyContent="space-between">
                             <Flex justifyContent="space-between" alignItems="center">
-                                <Text>Search dashboard</Text>
+                                <Text>Dashboards</Text>
                                 <FaTimes opacity="0.6" cursor="pointer" onClick={onClose} />
                             </Flex>
+                            <Text color='gray.500' fontSize='sm'>search dashboards to visualize your data</Text>
                         </ModalHeader>
                         <ModalBody >
-                            <Flex justifyContent="space-between" flexDir={isLargeScreen ? "row" : "column"} alignItems={isLargeScreen ? "center" : "start"} mb="2" gap={isLargeScreen ? 0 : 2}>
+                            <Box p="2">
+                                <InputGroup size="sm">
+                                    <InputLeftElement
+                                        pointerEvents='none'
+                                        children={
+                                            <Box color="gray.500">
+                                                <FaSearch />
+                                            </Box>
+                                        }
+                                    />
+                                    <Input value={query} onChange={e => onQueryChange(e.currentTarget.value)} placeholder="search dashboard by name or id" />
+                                </InputGroup>
+                            </Box>
+                            <Flex p="2" justifyContent="space-between">
                                 <HStack>
-                                    <Input value={query} onChange={e => onQueryChange(e.currentTarget.value)} w={isLargeScreen ? "320px" : "150px"} placeholder="enter dashboard name or id to search.." />
-                                    <Tooltip label={caseSensitive ? "Case sensitive" : "Case insensitive"}>
-                                        <Box
-                                            cursor="pointer"
-                                            onClick={() => setCaseSensitive(!caseSensitive)}
-                                            color={caseSensitive ? "brand.500" : "inherit"}
-                                            fontWeight="600"
-                                            className={caseSensitive ? "highlight-bordered" : null}
-                                            p="1"
-                                            fontSize="1.1rem"
-                                        >
-                                            <RxLetterCaseCapitalize />
-                                        </Box>
-                                    </Tooltip>
-                                    <HStack spacing={4} fontSize="1.1rem">
-                                        <Tooltip label="Teams view"><Box cursor="pointer" className={layout == "teams" ? "color-text" : null} onClick={() => setLayout("teams")}><FaSitemap /></Box></Tooltip>
-                                        <Tooltip label="List view"><Box cursor="pointer" className={layout == "list" ? "color-text" : null} onClick={() => setLayout("list")}><FaAlignJustify /></Box></Tooltip>
-                                        <Tooltip label="Tags view"><Box cursor="pointer" className={layout == "tags" ? "color-text" : null} onClick={() => setLayout("tags")}><FaBuffer /></Box></Tooltip>
-                                    </HStack>
-                                </HStack>
-
-                                <Flex alignItems={"center"} width={isLargeScreen ? null : "100%"}>
-                                    <Box cursor="pointer" onClick={() => setFilterStarred(!filterStarred)} fontSize="1.3rem" color={useColorModeValue("orange.300", "orange.200")}>
-                                        {filterStarred ? <AiFillStar /> : <AiOutlineStar />}
-                                    </Box>
-
-                                    <TagsFilter value={selectedTags} tags={tags} onChange={(v:string[]) => {
+                                    <TagsFilter value={selectedTags} tags={tags} onChange={(v: string[]) => {
                                         if (last(v) == "untagged") {
                                             setSelectedTags(["untagged"])
                                         } else if (v.includes("untagged")) {
@@ -309,9 +297,35 @@ const Search = memo((props: Props) => {
                                         else {
                                             setSelectedTags(v)
                                         }
-                                    }} tagCount={tagCount} minWidth={isLargeScreen ? "260px" : "48%" }/>
-                                    {teams && <TeamsFilter value={selectedTeams} teams={teams} onChange={setSelectedTeams} teamCount={teamCount} minWidth={isLargeScreen ? "260px" : "48%"}/>}
-                                </Flex>
+                                    }} tagCount={tagCount} minWidth={isLargeScreen ? "260px" : "48%"} />
+                                    {teams && <TeamsFilter value={selectedTeams} teams={teams} onChange={setSelectedTeams} teamCount={teamCount} minWidth={isLargeScreen ? "260px" : "48%"} />}
+                                    <Box cursor="pointer" onClick={() => setFilterStarred(!filterStarred)} fontSize="1.3rem" color={useColorModeValue("orange.300", "orange.200")}>
+                                        {filterStarred ? <AiFillStar /> : <AiOutlineStar />}
+                                    </Box>
+                                </HStack>
+                                <Box>
+                                    <HStack>
+                                        {/* <Input value={query} onChange={e => onQueryChange(e.currentTarget.value)} w={isLargeScreen ? "320px" : "150px"} placeholder="enter dashboard name or id to search.." /> */}
+                                        <Tooltip label={caseSensitive ? "Case sensitive" : "Case insensitive"}>
+                                            <Box
+                                                cursor="pointer"
+                                                onClick={() => setCaseSensitive(!caseSensitive)}
+                                                color={caseSensitive ? "brand.500" : "inherit"}
+                                                fontWeight="600"
+                                                className={caseSensitive ? "highlight-bordered" : null}
+                                                p="1"
+                                                fontSize="1.1rem"
+                                            >
+                                                <RxLetterCaseCapitalize />
+                                            </Box>
+                                        </Tooltip>
+                                        <HStack spacing={4} fontSize="1.1rem">
+                                            <Tooltip label="Teams view"><Box cursor="pointer" className={layout == "teams" ? "color-text" : null} onClick={() => setLayout("teams")}><FaSitemap /></Box></Tooltip>
+                                            <Tooltip label="List view"><Box cursor="pointer" className={layout == "list" ? "color-text" : null} onClick={() => setLayout("list")}><FaAlignJustify /></Box></Tooltip>
+                                            <Tooltip label="Tags view"><Box cursor="pointer" className={layout == "tags" ? "color-text" : null} onClick={() => setLayout("tags")}><FaBuffer /></Box></Tooltip>
+                                        </HStack>
+                                    </HStack>
+                                </Box>
                             </Flex>
                             {(teams && dashboards) ? <VStack alignItems="left" maxH={`calc(100vh - ${isLargeScreen ? 130 : 215}px)`} overflowY="auto" spacing={3} pt="3">
                                 {
@@ -324,7 +338,7 @@ const Search = memo((props: Props) => {
                                     layout == "tags" && <TagsView selectedTags={selectedTags} teams={teams} dashboards={dashboards as Map<string, Dashboard[]>} onItemClick={onClose} query={query} starredIds={starredDashIds} />
                                 }
                             </VStack> : <Loading />}
-                            {!isLargeScreen && <Button mt="2" onClick={onClose}>Close</Button>}  
+                            {!isLargeScreen && <Button mt="2" onClick={onClose}>Close</Button>}
                         </ModalBody>
                     </ModalContent>
                 </Box>
