@@ -47,6 +47,9 @@ export const externalDatasourcePlugins: Record<string,DatasourcePluginComponents
 
 		cmd = exec.Command("bash", "-c", "rm -rf ../ui/src/views/dashboard/plugins/external/*/*")
 		cmd.CombinedOutput()
+
+		cmd = exec.Command("bash", "-c", "rm -rf ../query/internal/plugins/external/*")
+		cmd.CombinedOutput()
 	} else {
 		removeList := strings.Split(args[1], ",")
 
@@ -58,20 +61,26 @@ export const externalDatasourcePlugins: Record<string,DatasourcePluginComponents
 			}
 
 			tp := p[0]
-			if tp != "panel" && tp != "datasource" {
-				log.Println(tp + "is not a valid plugin type, plugin type only support panel or datasource,  Usage: e.g. go run removePlugin.go panel.demo,datasource.demo , this will remove panel plugin demo and also remove datasource plugin demo")
+			if tp != "panel" && tp != "datasource" && tp != "query" {
+				log.Println(tp + "is not a valid plugin type, plugin type only support panel, datasource or query,  Usage: e.g. go run removePlugin.go panel.demo,datasource.demo , this will remove panel plugin demo and also remove datasource plugin demo")
 				return
 			}
 
 			pluginType := p[1]
 
-			// remove svg
-			cmd := exec.Command("bash", "-c", fmt.Sprintf("rm -f ../ui/public/plugins/external/%s/%s.svg", tp, pluginType))
-			cmd.CombinedOutput()
+			if tp == "query" {
+				cmd := exec.Command("bash", "-c", fmt.Sprintf("rm -rf ../query/internal/plugins/external/%s", pluginType))
+				cmd.CombinedOutput()
+				continue
+			} else {
+				// remove svg
+				cmd := exec.Command("bash", "-c", fmt.Sprintf("rm -f ../ui/public/plugins/external/%s/%s.svg", tp, pluginType))
+				cmd.CombinedOutput()
 
-			// remove plugin code
-			cmd1 := exec.Command("bash", "-c", fmt.Sprintf("rm -rf ../ui/src/views/dashboard/plugins/external/%s/%s", tp, pluginType))
-			cmd1.CombinedOutput()
+				// remove plugin code
+				cmd1 := exec.Command("bash", "-c", fmt.Sprintf("rm -rf ../ui/src/views/dashboard/plugins/external/%s/%s", tp, pluginType))
+				cmd1.CombinedOutput()
+			}
 		}
 
 		// rebuild the plugins

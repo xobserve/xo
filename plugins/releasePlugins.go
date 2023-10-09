@@ -17,6 +17,7 @@ release directory: DATAV_ROOT/plugins
 
 const sourceDir = "../ui/src/views/dashboard/plugins/external"
 const releaseDir = "."
+const querySourceDir = "../query/internal/plugins/external"
 
 func main() {
 	args := os.Args
@@ -65,6 +66,22 @@ func main() {
 				log.Println("copy datasource plugin codes error: ", err, ", datasource: ", dsType)
 			}
 		}
+
+		queryPlugins, err := os.ReadDir(querySourceDir)
+		if err != nil {
+			log.Fatal("read query plugins dir error", err)
+		}
+
+		for _, ds := range queryPlugins {
+			dsType := ds.Name()
+
+			// cp panel dir to public/plugins/external/panel
+			cmdStr := fmt.Sprintf("cp -r %s/%s %s/query", querySourceDir, dsType, releaseDir)
+			cmd := exec.Command("bash", "-c", cmdStr)
+			if _, err := cmd.CombinedOutput(); err != nil {
+				log.Println("copy query plugin codes error: ", err, ", query plugin: ", dsType)
+			}
+		}
 	} else {
 		list := strings.Split(args[1], ",")
 
@@ -76,17 +93,22 @@ func main() {
 			}
 
 			tp := p[0]
-			if tp != "panel" && tp != "datasource" {
-				log.Println(tp + "is not a valid plugin type, plugin type only support panel or datasource,  Usage: e.g. go run releasePlugin.go panel.demo,datasource.demo , this will release panel plugin demo and also release datasource plugin demo")
+			if tp != "panel" && tp != "datasource" && tp != "query" {
+				log.Println(tp + "is not a valid plugin type, plugin type only support panel , datasource or query,  Usage: e.g. go run releasePlugin.go panel.demo,datasource.demo , this will release panel plugin demo and also release datasource plugin demo")
 				return
 			}
 
 			pluginType := p[1]
 
-			cmdStr := fmt.Sprintf("cp -r %s/%s/%s %s/%s", sourceDir, tp, pluginType, releaseDir, tp)
+			var cmdStr string
+			if tp == "query" {
+				cmdStr = fmt.Sprintf("cp -r %s/%s %s/query", querySourceDir, pluginType, releaseDir)
+			} else {
+				cmdStr = fmt.Sprintf("cp -r %s/%s/%s %s/%s", sourceDir, tp, pluginType, releaseDir, tp)
+			}
 			cmd := exec.Command("bash", "-c", cmdStr)
 			if _, err := cmd.CombinedOutput(); err != nil {
-				log.Println("copy datasource plugin codes error: ", err, ", type: ", plugin)
+				log.Println("copy plugin codes error: ", err, ", type: ", plugin)
 			}
 		}
 	}

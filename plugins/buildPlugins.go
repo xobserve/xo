@@ -168,5 +168,35 @@ export const externalDatasourcePlugins: Record<string,DatasourcePluginComponents
 		log.Fatal("write plugin.json error", err)
 	}
 
+	// install query plugins
+	cmd = exec.Command("bash", "-c", "mkdir -p ../query/internal/plugins/external")
+	cmd.CombinedOutput()
+
+	queryPlugins, err := os.ReadDir("./query")
+	if err != nil {
+		log.Fatal("read query plugin dir error", err)
+	}
+
+	for _, q := range queryPlugins {
+		queryType := q.Name()
+		n := strings.Join([]string{"query", queryType}, ".")
+		if skipMap[n] {
+			log.Println("skip query plugin: ", queryType)
+			continue
+		}
+
+		if queryType == ".DS_Store" {
+			continue
+		}
+
+		cmdStr := fmt.Sprintf("cp -r ./query/%s ../query/internal/plugins/external", queryType)
+		cmd = exec.Command("bash", "-c", cmdStr)
+		if _, err := cmd.CombinedOutput(); err != nil {
+			log.Println("copy plugin code dir  error: ", err, ", query plugin: ", queryType)
+			continue
+		}
+
+	}
+
 	log.Println("Generate panel plugins file successfully!")
 }
