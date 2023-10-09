@@ -3,10 +3,10 @@
 import { DatasourcePluginComponents, PanelPluginComponents } from "types/plugin"
 
 import candlestickPanel from "./panel/candlestick"
-import victoriaMetricsDatasrouce from "./datasource/victoriaMetrics"
+import clickhouseDatasrouce from "./datasource/clickhouse"
 export const externalPanelPlugins: Record<string,PanelPluginComponents> = {
 	[candlestickPanel.settings.type]: candlestickPanel,
 }
 export const externalDatasourcePlugins: Record<string,DatasourcePluginComponents> = {
-	[victoriaMetricsDatasrouce.settings.type]: victoriaMetricsDatasrouce,
+	[clickhouseDatasrouce.settings.type]: clickhouseDatasrouce,
 }

@@ -22,6 +22,7 @@ import httpDs from './datasource/http'
 import jaegerDs from './datasource/jaeger'
 import lokiDs from './datasource/loki'
 import testdataDs from './datasource/testdata'
+import vmDs from './datasource/victoriaMetrics'
 
 export const builtinPanelPlugins: Record<string,PanelPluginComponents> = {
 	[graphPanel.settings.type]: graphPanel,
@@ -46,5 +47,6 @@ export const builtinDatasourcePlugins: Record<string,DatasourcePluginComponents>
     [httpDs.settings.type]: httpDs,
     [jaegerDs.settings.type]: jaegerDs,
     [lokiDs.settings.type]: lokiDs,
-    [testdataDs.settings.type]: testdataDs
+    [testdataDs.settings.type]: testdataDs,
+    [vmDs.settings.type]: vmDs,
 }

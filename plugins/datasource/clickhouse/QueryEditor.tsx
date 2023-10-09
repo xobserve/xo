@@ -28,7 +28,6 @@ import CodeEditor, { LogqlLang } from "src/components/CodeEditor/CodeEditor";
 import RadionButtons from "src/components/RadioButtons";
 import { IsSmallScreen } from "src/data/constants";
 import Loading from "components/loading/Loading";
-import TraceQuery from "./TraceQuery/TraceQuery";
 import useBus from "use-bus";
 import { SeriesData } from "types/seriesData";
 import { PanelDataEvent } from "src/data/bus-events";
