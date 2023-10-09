@@ -6,8 +6,8 @@ rm -rf ./release
 mkdir release
 mkdir release/darwin release/linux release/windows
 
-## build backend 
-cd backend
+## build query 
+cd query
 GOOS=darwin GOARCH=amd64 go build -o ../release/darwin/datav
 GOOS=linux GOARCH=amd64 go build -o ../release/linux/datav
 GOOS=windows GOARCH=amd64 go build -o ../release/windows/datav.exe

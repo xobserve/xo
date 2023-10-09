@@ -1,0 +1,10 @@
+query
+datav
+datav.db
+commit.sh
+testConfig.yaml
+start.sh
+ui
+*.log
+*.mmdb
+
