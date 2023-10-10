@@ -22,6 +22,7 @@ import (
 	"github.com/DataObserve/datav/query/internal/admin"
 	"github.com/DataObserve/datav/query/internal/annotation"
 	"github.com/DataObserve/datav/query/internal/api"
+	"github.com/DataObserve/datav/query/internal/cache"
 	"github.com/DataObserve/datav/query/internal/dashboard"
 	"github.com/DataObserve/datav/query/internal/datasource"
 	ot "github.com/DataObserve/datav/query/internal/opentelemetry"
@@ -78,8 +79,9 @@ func (s *Server) Start() error {
 	go dashboard.InitHistory()
 
 	go task.Init()
-
+	go cache.Init()
 	go overrideApiServerAddrInLocalUI()
+
 	go func() {
 		router := gin.New()
 		router.Use(Cors())

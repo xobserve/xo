@@ -18,6 +18,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/DataObserve/datav/query/internal/user"
@@ -31,6 +32,43 @@ import (
 
 var logger = colorlog.RootLogger.New("logger", "datasource")
 
+var datasources = make(map[int64]*models.Datasource)
+var datasourcesLock = &sync.Mutex{}
+
+func InitDatasources() {
+	for {
+		dss := make([]*models.Datasource, 0)
+
+		var rows *sql.Rows
+		var err error
+		rows, err = db.Conn.QueryContext(context.Background(), "SELECT id,name,type,url,team_id, created FROM datasource")
+
+		if err != nil {
+			logger.Warn("get datasource error", "error", err)
+			time.Sleep(time.Second * 10)
+			return
+		}
+
+		defer rows.Close()
+		for rows.Next() {
+			ds := &models.Datasource{}
+			err := rows.Scan(&ds.Id, &ds.Name, &ds.Type, &ds.URL, &ds.TeamId, &ds.Created)
+			if err != nil {
+				logger.Warn("scan datasource error", "error", err)
+				continue
+			}
+			dss = append(dss, ds)
+		}
+
+		datasourcesLock.Lock()
+		for _, ds := range dss {
+			datasources[ds.Id] = ds
+		}
+		datasourcesLock.Unlock()
+
+		time.Sleep(time.Second * 10)
+	}
+}
 func SaveDatasource(c *gin.Context) {
 	ds := &models.Datasource{}
 	err := c.Bind(&ds)
@@ -171,7 +209,12 @@ func DeleteDatasource(c *gin.Context) {
 }
 
 func GetDatasource(ctx context.Context, id int64) (*models.Datasource, error) {
-	ds := &models.Datasource{}
-	err := db.Conn.QueryRowContext(ctx, "SELECT name,type,url, created FROM datasource WHERE id=?", id).Scan(&ds.Name, &ds.Type, &ds.URL, &ds.Created)
-	return ds, err
+	ds, ok := datasources[id]
+	if !ok {
+		ds := &models.Datasource{}
+		err := db.Conn.QueryRowContext(ctx, "SELECT name,type,url, created FROM datasource WHERE id=?", id).Scan(&ds.Name, &ds.Type, &ds.URL, &ds.Created)
+		return ds, err
+	}
+
+	return ds, nil
 }
