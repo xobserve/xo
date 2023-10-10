@@ -26,6 +26,8 @@ import (
 	"github.com/DataObserve/datav/query/internal/dashboard"
 	"github.com/DataObserve/datav/query/internal/datasource"
 	ot "github.com/DataObserve/datav/query/internal/opentelemetry"
+	_ "github.com/DataObserve/datav/query/internal/plugins/builtin"
+	_ "github.com/DataObserve/datav/query/internal/plugins/external"
 	"github.com/DataObserve/datav/query/internal/proxy"
 	"github.com/DataObserve/datav/query/internal/storage"
 	"github.com/DataObserve/datav/query/internal/task"

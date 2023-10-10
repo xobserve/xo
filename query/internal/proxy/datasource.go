@@ -23,6 +23,7 @@ import (
 
 	"github.com/DataObserve/datav/query/internal/datasource"
 	"github.com/DataObserve/datav/query/pkg/common"
+	"github.com/DataObserve/datav/query/pkg/models"
 	"github.com/gin-gonic/gin"
 )
 
@@ -42,6 +43,12 @@ func ProxyDatasource(c *gin.Context) {
 	if err != nil {
 		logger.Warn("query datasource error", "error", err)
 		c.JSON(500, common.RespError(err.Error()))
+		return
+	}
+
+	queryPlugin := models.GetPlugin(ds.Type)
+	if queryPlugin != nil {
+		queryPlugin.Query("")
 		return
 	}
 
@@ -71,7 +78,6 @@ func ProxyDatasource(c *gin.Context) {
 	// step 3
 	for key, value := range c.Request.Header {
 		for _, v := range value {
-			// 这个暂时不能加，会乱码，后面看看怎么解决
 			if key == "Accept-Encoding" {
 				continue
 			}
