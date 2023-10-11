@@ -31,7 +31,7 @@ interface Props {
 }
 
 const Page = (props: Props) => {
-    const t = useStore(commonMsg)  
+    const t = useStore(commonMsg)
     const t1 = useStore(navigateMsg)
     const { title, subTitle, icon, children, tabs, isLoading = false } = props
 
@@ -42,35 +42,35 @@ const Page = (props: Props) => {
     const [isMobileScreen] = useMediaQuery(MobileVerticalBreakpoint)
     return (<>
         <Box width="100%">
-            <HStack spacing="4" px={!isMobileScreen ? 12 : 6} pt="10" pb="10">
-                <Box fontSize="40px">{icon}</Box>
+            <HStack spacing="4" px={!isMobileScreen ? 12 : 6} pt="6" pb="6">
+                <Box fontSize="3rem">{icon}</Box>
                 <Box width="100%">
                     <Box textStyle="mainTitle">{title}</Box>
-                    {typeof subTitle == "string" ?  <Text mt="1" ml="1">{subTitle}</Text> : subTitle}
+                    {typeof subTitle == "string" ? <Text mt="1" ml="1" textStyle={"subTitle"}>{subTitle}</Text> : subTitle}
                 </Box>
 
 
             </HStack>
             <HStack px={!isMobileScreen ? 12 : 2} spacing={!isMobileScreen ? 8 : 0} borderBottom={border} >
                 {tabs?.map((tab, index) => {
-                    return <Link to={tab.url} key={index} > 
-                    <HStack spacing="2" borderLeft={tab.url == activeTab.url ? border: null} borderRight={tab.url == activeTab.url ? border: null} cursor="pointer">
-                        <Box className={ tab.url == activeTab.url ? "top-gradient-border" : null} >
-                            <HStack py="2" px={!isMobileScreen ? 4 : 3} >
-                                {!isMobileScreen &&  tab.icon}
-                                <Text>{t[tab.title] ?? t1[tab.title]}</Text>
-                            </HStack>
-                        </Box>
-                    </HStack>
+                    return <Link to={tab.url} key={index}>
+                        <HStack spacing="2" borderLeft={tab.url == activeTab.url ? border : null} borderRight={tab.url == activeTab.url ? border : null} cursor="pointer">
+                            <Box className={tab.url == activeTab.url ? "top-gradient-border" : null} >
+                                <HStack py="2" px={!isMobileScreen ? 3 : 2} >
+                                    {!isMobileScreen && tab.icon}
+                                    <Text fontSize={"sm"}>{t[tab.title] ?? t1[tab.title]}</Text>
+                                </HStack>
+                            </Box>
+                        </HStack>
                     </Link>
                 })}
             </HStack>
 
             <Box mt="8" px={!isMobileScreen ? 12 : 2}>
-                {isLoading ? <Loading style={{marginTop: "50px"}}/>  :children}
+                {isLoading ? <Loading style={{ marginTop: "50px" }} /> : children}
             </Box>
         </Box>
-        </>)
+    </>)
 }
 
 export default Page

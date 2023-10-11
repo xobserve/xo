@@ -1,11 +1,11 @@
 export default function textStyles() {
     return {
         mainTitle: {
-            fontSize: "1.8rem",
+            fontSize: "1.5rem",
             fontWeight: "500",
         },
         subTitle: {
-            fontSize: "1.15rem",
+            fontSize: "1rem",
             fontWeight: "500",
         },
         title: {

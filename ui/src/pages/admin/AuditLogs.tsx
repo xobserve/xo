@@ -17,7 +17,7 @@ import React, { memo, useEffect, useState } from "react"
 import { adminLinks } from "src/data/nav-links"
 import { commonMsg } from "src/i18n/locales/en"
 import { MdOutlineAdminPanelSettings } from "react-icons/md"
-import { Box,  Popover, PopoverArrow, PopoverBody, PopoverContent, PopoverTrigger, Table, TableContainer, Tbody, Td, Th, Thead, Tooltip, Tr, VStack } from "@chakra-ui/react"
+import { Box, Popover, PopoverArrow, PopoverBody, PopoverContent, PopoverTrigger, Table, TableContainer, Tbody, Td, Th, Thead, Tooltip, Tr, VStack } from "@chakra-ui/react"
 
 
 import { requestApi } from "utils/axios/request"
@@ -43,9 +43,9 @@ export const AdminAuditLogs = memo(() => {
     }
 
 
-    return <Page title={t.Admin} subTitle={"Manage datav settings"} icon={<MdOutlineAdminPanelSettings />} tabs={adminLinks}>
+    return <Page title={t.Admin} subTitle={t.manageItem({ name: t.auditLog })} icon={<MdOutlineAdminPanelSettings />} tabs={adminLinks}>
         <TableContainer>
-            <Table variant='simple'>
+            <Table variant='simple' size={"sm"}>
                 <Thead>
                     <Tr>
                         <Th>Type</Th>
@@ -67,7 +67,7 @@ export const AdminAuditLogs = memo(() => {
                                 </PopoverTrigger>
                                 <PopoverContent width="500px">
                                     <PopoverArrow />
-                                    <PopoverBody height="400px" width="500px"><CodeEditor value={prettyJson(log.data)} readonly/></PopoverBody>
+                                    <PopoverBody height="400px" width="500px"><CodeEditor value={prettyJson(log.data)} readonly /></PopoverBody>
                                 </PopoverContent>
                             </Popover>
                             </Td>

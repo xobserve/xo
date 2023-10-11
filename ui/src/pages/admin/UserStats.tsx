@@ -16,7 +16,7 @@ import Page from "layouts/page/Page"
 import React, { memo, useEffect, useState } from "react"
 import { adminLinks } from "src/data/nav-links"
 import { commonMsg } from "src/i18n/locales/en"
-import { Table, TableContainer, Tag, Tbody, Td, Th, Thead, Tooltip, Tr, VStack } from "@chakra-ui/react"
+import { HStack, Table, TableContainer, Tag, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react"
 
 import { requestApi } from "utils/axios/request"
 import { FaEye, FaUser } from "react-icons/fa"
@@ -25,7 +25,7 @@ import moment from "moment"
 import useSession from "hooks/use-session"
 
 export const AdminUserStats = memo(() => {
-    const {session} = useSession()
+    const { session } = useSession()
     const t = useStore(commonMsg)
     const [users, setUsers] = useState<User[]>([])
     useEffect(() => {
@@ -38,9 +38,9 @@ export const AdminUserStats = memo(() => {
     }
 
 
-    return <Page title={t.Admin} subTitle={"Manage datav settings"} icon={<FaUser />} tabs={adminLinks}>
+    return <Page title={t.Admin} subTitle={t.manageItem({ name: t.userStats })} icon={<FaUser />} tabs={adminLinks}>
         <TableContainer mt="2">
-            <Table variant="simple">
+            <Table variant="simple" size="sm">
                 <Thead>
                     <Tr>
                         <Th>{t.userName}</Th>
@@ -53,11 +53,17 @@ export const AdminUserStats = memo(() => {
                 <Tbody>
                     {users.map(user => {
                         return <Tr key={user.id}>
-                            <Td>{user.username} {session?.user?.id == user.id && <Tag>You</Tag>}</Td>
+                            <Td>
+                                <HStack>
+                                    <span>
+                                        {user.username}
+                                    </span>  {session?.user?.id == user.id && <Tag size={"sm"}>You</Tag>}
+                                </HStack>
+                            </Td>
                             <Td>{user.name}</Td>
                             <Td>{moment(user.created).fromNow()}</Td>
                             <Td>{user.lastSeenAt && moment(user.lastSeenAt).fromNow()}</Td>
-                            <Th>{user.visits??0}</Th>
+                            <Th>{user.visits ?? 0}</Th>
                         </Tr>
                     })}
                 </Tbody>
