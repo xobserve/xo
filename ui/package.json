@@ -51,12 +51,14 @@
     "framer-motion": "9.0.2",
     "front-matter": "^4.0.0",
     "highlight.js": "^9.16.2",
+    "htmlparser2": "^6.0.0",
     "immer": "^10.0.2",
     "json-bigint": "^1.0.0",
     "keyboardjs": "^2.7.0",
     "lodash": "^4.17.15",
     "logfmt": "^1.2.0",
     "lru-memoize": "^1.1.0",
+    "markdown-it": "^12.0.0",
     "markdown-to-jsx": "^7.1.9",
     "match-sorter": "^4.0.0",
     "memoize-one": "6.0.0",
@@ -78,7 +80,6 @@
     "react-remove-scroll": "^2.5.5",
     "react-router-dom": "^6.14.1",
     "react-sizeme": "2.6.12",
-    "react-table": "latest",
     "react-use": "17.3.2",
     "react-virtualized-auto-sizer": "1.0.20",
     "react-window": "1.8.6",
@@ -96,9 +97,7 @@
     "use-deep-compare-effect": "^1.8.1",
     "use-immer": "^0.9.0",
     "validator": "^13.5.2",
-    "viz.js": "1.8.1",
-    "markdown-it": "^12.0.0",
-    "htmlparser2": "^6.0.0"
+    "viz.js": "1.8.1"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.123",
