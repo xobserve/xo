@@ -232,13 +232,16 @@ const TeamSidemenu = ({team}:{team:Team}) => {
             <Flex justifyContent="space-between" my="4" maxWidth="700px">
                 <Box textStyle="subTitle">{t1.modifySidemenu}</Box>
                 <HStack>
-                    <Button onClick={addMenuItem} variant="outline" leftIcon={<Icons.FaPlus />}>{t1.addMenuItem}</Button>
-                    <Button onClick={updateSidemenu}>{t.submit}</Button>
+                    <Button onClick={addMenuItem} variant="outline" leftIcon={<Icons.FaPlus />} size="sm">{t1.addMenuItem}</Button>
+                    <Button onClick={updateSidemenu} size="sm">{t.submit}</Button>
                 </HStack>
                 
             </Flex>
 
             <Box height="600px" sx={{
+                '.rst__row': {
+                    alignItems: 'center'
+                },
                 '.rst__rowContents': {
                     backgroundColor: 'var(--chakra-colors-chakra-body-bg)',
                     border: 'unset',
@@ -246,11 +249,13 @@ const TeamSidemenu = ({team}:{team:Team}) => {
                 },
                 '.rst__moveHandle': {
                     backgroundColor: useColorModeValue('gray.200', 'var(--chakra-colors-chakra-body-bg)'),
-                    border: 'unset'
+                    border: 'unset',
+                    width: '30px',
+                    height: '30px'
                 },
                 ".rst__lineHalfHorizontalRight::before, .rst__lineFullVertical::after, .rst__lineHalfVerticalTop::after, .rst__lineHalfVerticalBottom::after": {
                     backgroundColor: useColorModeValue("brand.500", "brand.200")
-                }
+                },
             }}>
                 <SortableTree
                     treeData={sidemenu.data}
@@ -261,9 +266,10 @@ const TeamSidemenu = ({team}:{team:Team}) => {
                             const Icon = Icons[node.icon]
                             return (
                                 <HStack width="100%">
-                                    <Box width="30px" fontSize="25px">{Icon && <Icon />}</Box>
+                                    <Box width="30px" fontSize="18px" opacity="0.7">{Icon && <Icon />}</Box>
                                     <Input
                                         width="200px"
+                                        size="sm"
                                         value={node.title}
                                         onChange={(event) => {
                                             const title = event.target.value
@@ -278,6 +284,7 @@ const TeamSidemenu = ({team}:{team:Team}) => {
                                     />
                                     <Input
                                         width="150px"
+                                        size="sm"
                                         value={node.url}
                                         onChange={(event) => {
                                             const newTreeData = changeNodeAtPath({
@@ -292,6 +299,7 @@ const TeamSidemenu = ({team}:{team:Team}) => {
                                     />
                                     <Input
                                         width="120px"
+                                        size="sm"
                                         value={node.icon}
                                         onChange={(event) => {
                                             const icon = event.target.value
@@ -307,6 +315,7 @@ const TeamSidemenu = ({team}:{team:Team}) => {
                                     />
                                     {!node.children?.length  && <Input
                                         width="200px"
+                                        size="sm"
                                         value={node.dashboardId}
                                         onChange={(event) => {
                                             const dashboardId = event.target.value
@@ -321,7 +330,7 @@ const TeamSidemenu = ({team}:{team:Team}) => {
                                         placeholder="dash id, e.g d-home"
                                     />}
                                     <Tooltip label={t1.removeMenuItem}>
-                                        <Box onClick={() => removeMenuItem(node)}><Icons.FaTimes /></Box>
+                                        <Box onClick={() => removeMenuItem(node)} opacity="0.7"><Icons.FaTimes /></Box>
                                     </Tooltip>
                                 </HStack>
                             )
