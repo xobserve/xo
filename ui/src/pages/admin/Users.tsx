@@ -12,7 +12,7 @@
 // limitations under the License.
 
 import React from "react"
-import { Button, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useDisclosure, AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, RadioGroup, Stack, Radio, useToast, VStack, Box, Input, Flex, Tag } from "@chakra-ui/react"
+import { Button, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useDisclosure, AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Modal, ModalBody, ModalCloseButton, ModalContent, HStack, ModalHeader, ModalOverlay, Text, RadioGroup, Stack, Radio, useToast, VStack, Box, Input, Flex, Tag } from "@chakra-ui/react"
 import { Form, FormSection } from "src/components/form/Form"
 import FormItem from "src/components/form/Item"
 import useSession from "hooks/use-session"
@@ -33,7 +33,7 @@ import { isEmpty } from "utils/validate"
 const AdminUsers = () => {
     const t = useStore(commonMsg)
     const t1 = useStore(cfgUsers)
-    const {session} = useSession()
+    const { session } = useSession()
     const toast = useToast()
     const [users, setUsers] = useState<User[]>(null)
     useEffect(() => {
@@ -64,9 +64,9 @@ const AdminUsers = () => {
     }
 
     const updateUser = async () => {
-        if (!isEmpty(userInEdit.email) && !isEmail(userInEdit.email)){
+        if (!isEmpty(userInEdit.email) && !isEmail(userInEdit.email)) {
             toast({
-                description: t.isInvalid({name: t.email}),
+                description: t.isInvalid({ name: t.email }),
                 status: "warning",
                 duration: 2000,
                 isClosable: true,
@@ -86,7 +86,7 @@ const AdminUsers = () => {
 
         await requestApi.post(`/admin/user`, userInEdit)
         toast({
-            title: t.isUpdated({name: t.user}),
+            title: t.isUpdated({ name: t.user }),
             status: "success",
             duration: 3000,
             isClosable: true,
@@ -104,9 +104,9 @@ const AdminUsers = () => {
             });
             return
         }
-        await requestApi.post(`/admin/user/password`, {id: userInEdit.id, password })
+        await requestApi.post(`/admin/user/password`, { id: userInEdit.id, password })
         toast({
-            title: t.isUpdated({name: t.user}),
+            title: t.isUpdated({ name: t.user }),
             status: "success",
             duration: 3000,
             isClosable: true,
@@ -116,7 +116,7 @@ const AdminUsers = () => {
     const deleteUser = async () => {
         await requestApi.delete(`/admin/user/${userInEdit.id}`)
         toast({
-            title: t.isDeleted({name: t.user}),
+            title: t.isDeleted({ name: t.user }),
             status: "success",
             duration: 3000,
             isClosable: true,
@@ -142,7 +142,7 @@ const AdminUsers = () => {
 
         const res = await requestApi.post(`/admin/user/new`, userInEdit)
         toast({
-            title: t.isAdded({name: t.user}),
+            title: t.isAdded({ name: t.user }),
             status: "success",
             duration: 3000,
             isClosable: true,
@@ -154,17 +154,17 @@ const AdminUsers = () => {
     }
 
     const onAddUser = () => {
-        setUserInEdit({role: Role.Viewer} as any)
+        setUserInEdit({ role: Role.Viewer } as any)
         onAddOpen()
     }
 
     const updateUserRole = async (v) => {
-        userInEdit.role = v as Role; 
+        userInEdit.role = v as Role;
         setUserInEdit(cloneDeep(userInEdit))
 
         await requestApi.post(`/admin/user/role`, { id: userInEdit.id, role: v })
         toast({
-            title: t.isUpdated({name: t1.userRole}),
+            title: t.isUpdated({ name: t1.userRole }),
             status: "success",
             duration: 3000,
             isClosable: true,
@@ -173,14 +173,14 @@ const AdminUsers = () => {
     }
 
     return <>
-        <Page title={t.configuration} subTitle={t.manageItem({name: t.user})} icon={<FaCog />} tabs={adminLinks} isLoading={users === null}>
+        <Page title={t.configuration} subTitle={t.manageItem({ name: t.user })} icon={<FaCog />} tabs={adminLinks} isLoading={users === null}>
             <Flex justifyContent="space-between">
                 <Box></Box>
-                <Button size="sm" onClick={onAddUser}>{t.newItem({name: t.user})}</Button>
+                <Button size="sm" onClick={onAddUser}>{t.newItem({ name: t.user })}</Button>
             </Flex>
-           
+
             <TableContainer mt="2">
-                <Table variant="simple">
+                <Table variant="simple" size="sm">
                     <Thead>
                         <Tr>
                             <Th>{t.userName}</Th>
@@ -194,7 +194,13 @@ const AdminUsers = () => {
                     <Tbody>
                         {users?.map(user => {
                             return <Tr key={user.id}>
-                                <Td>{user.username} {session?.user?.id == user.id && <Tag>You</Tag>}</Td>
+                                <Td>
+                                    <HStack>
+                                        <span>
+                                            {user.username}
+                                        </span>  {session?.user?.id == user.id && <Tag size={"sm"}>You</Tag>}
+                                    </HStack>
+                                </Td>
                                 <Td>{user.name}</Td>
                                 <Td>{user.email}</Td>
                                 <Td>{moment(user.created).fromNow()}</Td>
@@ -211,23 +217,23 @@ const AdminUsers = () => {
         <Modal isOpen={isOpen} onClose={() => { setUserInEdit(null); onClose() }}>
             <ModalOverlay />
             {userInEdit && <ModalContent>
-                <ModalHeader>{t.editItem({name: t.user})} - {userInEdit.username}</ModalHeader>
+                <ModalHeader>{t.editItem({ name: t.user })} - {userInEdit.username}</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
-                    <Form  pb="5">
+                    <Form pb="5">
                         <FormSection title={t.basicSetting}>
                             <FormItem title={t.email}>
-                                <Input type='email' placeholder={t.inputTips({name: t.email})} value={userInEdit.email} onChange={e => { userInEdit.email = e.currentTarget.value.trim(); setUserInEdit(cloneDeep(userInEdit)) }} />
+                                <Input type='email' placeholder={t.inputTips({ name: t.email })} value={userInEdit.email} onChange={e => { userInEdit.email = e.currentTarget.value.trim(); setUserInEdit(cloneDeep(userInEdit)) }} />
                             </FormItem>
                             <FormItem title={t.nickname}>
-                                <Input placeholder={t.inputTips({name: t.nickname})} value={userInEdit.name} onChange={e => { userInEdit.name = e.currentTarget.value; setUserInEdit(cloneDeep(userInEdit)) }} />
+                                <Input placeholder={t.inputTips({ name: t.nickname })} value={userInEdit.name} onChange={e => { userInEdit.name = e.currentTarget.value; setUserInEdit(cloneDeep(userInEdit)) }} />
                             </FormItem>
 
                             <Button width="fit-content" onClick={updateUser}>{t.submit}</Button>
                         </FormSection>
                         <FormSection title={t1.changePw}>
-                            <FormItem  title={t.password}>
-                                <Input placeholder={t.inputTips({name: t.password})} value={password} onChange={e => setPassword(e.currentTarget.value.trim())} />
+                            <FormItem title={t.password}>
+                                <Input placeholder={t.inputTips({ name: t.password })} value={password} onChange={e => setPassword(e.currentTarget.value.trim())} />
                             </FormItem>
                             <Button width="fit-content" onClick={updatePassword}>{t.submit}</Button>
                         </FormSection>
@@ -242,17 +248,17 @@ const AdminUsers = () => {
                         </FormSection>
 
                         <FormSection title={t.dangeSection}>
-                            <Button width="fit-content" onClick={onDeleteUser} colorScheme="red">{t.deleteItem({name: t.user})}</Button>
+                            <Button width="fit-content" onClick={onDeleteUser} colorScheme="red">{t.deleteItem({ name: t.user })}</Button>
                         </FormSection>
                     </Form>
 
                 </ModalBody>
             </ModalContent>}
         </Modal>
-        <Modal isOpen={isAddOpen} onClose={() => {setUserInEdit(null);onAddClose()}}>
+        <Modal isOpen={isAddOpen} onClose={() => { setUserInEdit(null); onAddClose() }}>
             <ModalOverlay />
             {userInEdit && <ModalContent>
-                <ModalHeader>{t.newItem({name: t.user})}</ModalHeader>
+                <ModalHeader>{t.newItem({ name: t.user })}</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
                     <VStack alignItems="left" spacing="6" pb="5">
@@ -265,11 +271,11 @@ const AdminUsers = () => {
                                 <Input placeholder={t1.userNameInput} value={userInEdit.username} onChange={e => { userInEdit.username = e.currentTarget.value.trim(); setUserInEdit(cloneDeep(userInEdit)) }} />
                             </FormItem>
                             <FormItem title={t.email}>
-                                <Input type='email' placeholder={t.inputTips({name: t.email})} value={userInEdit.email} onChange={e => { userInEdit.email = e.currentTarget.value.trim(); setUserInEdit(cloneDeep(userInEdit)) }} />
+                                <Input type='email' placeholder={t.inputTips({ name: t.email })} value={userInEdit.email} onChange={e => { userInEdit.email = e.currentTarget.value.trim(); setUserInEdit(cloneDeep(userInEdit)) }} />
                             </FormItem>
 
                             <FormItem title={t.password} >
-                                <Input placeholder={t.inputTips({name: t.password})} value={userInEdit.password} onChange={e => { userInEdit.password = e.currentTarget.value.trim(); setUserInEdit(cloneDeep(userInEdit)) }} />
+                                <Input placeholder={t.inputTips({ name: t.password })} value={userInEdit.password} onChange={e => { userInEdit.password = e.currentTarget.value.trim(); setUserInEdit(cloneDeep(userInEdit)) }} />
                             </FormItem>
 
                             <FormItem title={t1.globalRole}>
@@ -294,7 +300,7 @@ const AdminUsers = () => {
             <AlertDialogOverlay>
                 <AlertDialogContent>
                     <AlertDialogHeader fontSize='lg' fontWeight='bold'>
-                        {t.deleteItem({name: t.user})} - {userInEdit?.username}
+                        {t.deleteItem({ name: t.user })} - {userInEdit?.username}
                     </AlertDialogHeader>
 
                     <AlertDialogBody>

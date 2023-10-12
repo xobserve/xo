@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box, HStack,  StyleProps, Text, Tooltip, VStack } from "@chakra-ui/react"
+import { Box, HStack, StyleProps, Text, Tooltip, VStack } from "@chakra-ui/react"
 import React from "react"
 import { IoMdInformationCircleOutline } from "react-icons/io"
 
@@ -39,7 +39,7 @@ export const FormSection = ({ children, title = null, spacing = 1, bordered = fa
     return <>
 
         <VStack alignItems="left" spacing={spacing} className={`${bordered ? "bordered" : ""}`} {...rest}>
-            {title && <HStack  mb={1} spacing={1}>
+            {title && <HStack mb={1} spacing={1}>
                 <Text textStyle="title" fontSize={titleSize}>{title}</Text>
                 {desc && <Tooltip label={desc}><Box><IoMdInformationCircleOutline /></Box></Tooltip>}
             </HStack>}
