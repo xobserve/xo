@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Box, Heading, HStack, Text, useColorModeValue, useMediaQuery } from "@chakra-ui/react"
+import { Box, HStack, Text, useColorModeValue, useMediaQuery } from "@chakra-ui/react"
 import customColors from "src/theme/colors"
 import { Route } from "types/route"
 import React from "react"
@@ -42,8 +42,8 @@ const Page = (props: Props) => {
     const [isMobileScreen] = useMediaQuery(MobileVerticalBreakpoint)
     return (<>
         <Box width="100%">
-            <HStack spacing="4" px={!isMobileScreen ? 12 : 6} pt="6" pb="6">
-                <Box fontSize="3rem">{icon}</Box>
+            <HStack spacing="4" px={!isMobileScreen ? 12 : 6} py="8">
+                <Box fontSize="2.5rem">{icon}</Box>
                 <Box width="100%">
                     <Box textStyle="mainTitle">{title}</Box>
                     {typeof subTitle == "string" ? <Text mt="1" ml="1" textStyle={"subTitle"}>{subTitle}</Text> : subTitle}
@@ -58,7 +58,7 @@ const Page = (props: Props) => {
                             <Box className={tab.url == activeTab.url ? "top-gradient-border" : null} >
                                 <HStack py="2" px={!isMobileScreen ? 3 : 2} >
                                     {!isMobileScreen && tab.icon}
-                                    <Text fontSize={"sm"}>{t[tab.title] ?? t1[tab.title]}</Text>
+                                    <Text fontSize="0.95rem">{t[tab.title] ?? t1[tab.title]}</Text>
                                 </HStack>
                             </Box>
                         </HStack>

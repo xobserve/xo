@@ -39,10 +39,8 @@ export const runQuery = async (panel: Panel, q: PanelQuery, range: TimeRange, ds
     const start = roundDsTime(range.start.getTime() / 1000)
     const end = roundDsTime(range.end.getTime() / 1000)
 
-    const alignedStart = start - start % q.interval
-    const alignedEnd = end - end % q.interval
 
-    const res: any = await requestApi.get(`/proxy/${ds.id}/api/v1/query_range?query=${q.metrics}&start=${alignedStart}&end=${end}&step=${q.interval}&trace=${q.data.traceQuery ? 1 : 0}`)
+    const res: any = await requestApi.get(`/proxy/${ds.id}?query=${q.metrics}`)
     if (res.status !== "success") {
         console.log("Failed to fetch data from demo datasource", res)
         return {
