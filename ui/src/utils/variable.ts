@@ -12,12 +12,13 @@
 // limitations under the License.
 
 import { parseVariableFormat } from "./format";
-import {  PanelQuery } from "types/dashboard";
-import { VariableSplitChar, VarialbeAllOption } from "src/data/variable";
+import { PanelQuery } from "types/dashboard";
+import { VariableSplitChar, VariableTimerangeFrom, VariableTimerangeTo, VarialbeAllOption } from "src/data/variable";
 import { $variables } from "src/views/variables/store";
 import { isEmpty } from "./validate";
 import { externalDatasourcePlugins } from "src/views/dashboard/plugins/external/plugins";
 import { builtinDatasourcePlugins } from "src/views/dashboard/plugins/built-in/plugins";
+import { getCurrentTimeRange } from "components/DatePicker/TimePicker";
 
 export const hasVariableFormat = (s: string) => {
     return isEmpty(s) ? false : s.includes("${")
@@ -31,16 +32,26 @@ export const replaceWithVariables = (s: string, extraVars?: {
     const vars = $variables.get()
     const formats = parseVariableFormat(s);
     for (const f of formats) {
+        if (f == VariableTimerangeFrom || f == VariableTimerangeTo) {
+            const range = getCurrentTimeRange()
+            if (f == VariableTimerangeFrom) {
+                s = s.replaceAll(`\${${f}}`, (range.start.getTime() / 1000).toString())
+            } else {
+                s = s.replaceAll(`\${${f}}`, (range.end.getTime() / 1000).toString())
+            }
+            continue
+        }
+
         const extrav = extraVars && extraVars[f]
         if (extrav) {
             s = s.replaceAll(`\${${f}}`, extrav.toString());
-        } else {
-            const v = vars.find(v => v.name == f)
-            if (v) {
-                s = s.replaceAll(`\${${f}}`, v.selected);
-            }
+            continue
         }
 
+        const v = vars.find(v => v.name == f)
+        if (v) {
+            s = s.replaceAll(`\${${f}}`, v.selected);
+        }
     }
 
     return s

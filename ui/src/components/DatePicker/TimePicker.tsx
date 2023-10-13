@@ -34,6 +34,8 @@ import { timePickerMsg } from 'src/i18n/locales/en'
 import { systemDateFormats, TimeRange } from 'types/time'
 import { dateTimeFormat } from 'utils/datetime/formatter'
 import storage from 'utils/localStorage'
+import { storeTimerange } from './DatePicker'
+import { $time } from './store'
 
 
 interface Props {
@@ -65,22 +67,32 @@ export const getNewestTimeRange = () => {
 }
 
 // get current time range from local storage, this time range will change when select a new time or refresh page
-export const getCurrentTimeRange = (): TimeRange => {
-    const rawT = storage.get(TimePickerKey)
-    let time;
-    if (rawT) {
-        const t = JSON.parse(rawT)
-        if (t) {
-            time = t
-            time.start = new Date(time.start)
-            time.end = new Date(time.end)
+export const getCurrentTimeRange = (fromStorage = false): TimeRange => {
+    if (fromStorage) {
+        const rawT = storage.get(TimePickerKey)
+        let time;
+        if (rawT) {
+            const t = JSON.parse(rawT)
+            if (t) {
+                time = t
+                time.start = new Date(time.start)
+                time.end = new Date(time.end)
+            }
+
+        } else {
+            time = initTimeRange
         }
 
-    } else {
-        time = initTimeRange
+        return time
+    }
+    
+    const tr = $time.get()
+    if (tr) {
+        return tr
     }
 
-    return time
+    return initTimeRange
+
 }
 
 const TimePicker = ({ onClose, onTimeChange }: Props) => {
@@ -142,11 +154,11 @@ const TimePicker = ({ onClose, onTimeChange }: Props) => {
         }
 
         if (from.startsWith('now') && to.startsWith('now')) {
-            tempRange.sub =  r.to.diff(r.from) / 60000
-        }   else { 
+            tempRange.sub = r.to.diff(r.from) / 60000
+        } else {
             tempRange.sub = 0
         }
-       
+
         setTempRange(cloneDeep(tempRange))
 
 
@@ -164,9 +176,9 @@ const TimePicker = ({ onClose, onTimeChange }: Props) => {
         setError(err)
     }
 
-    const applyTimeRange = (r: TimeRange) => {
-        storage.set(TimePickerKey, JSON.stringify(r))
-        onTimeChange(r)
+    const applyTimeRange = (tr: TimeRange) => {
+        storeTimerange(tr)
+        onTimeChange(tr)
         onClose()
     }
 
@@ -192,7 +204,7 @@ const TimePicker = ({ onClose, onTimeChange }: Props) => {
         value: 3 * 60,
         raw: 'now-3h'
 
-    },{
+    }, {
         label: t1.lastHours({ name: "6" }),
         value: 6 * 60,
         raw: 'now-6h'
@@ -257,7 +269,7 @@ const TimePicker = ({ onClose, onTimeChange }: Props) => {
                                 key={tempRange.startRaw}
                                 value={tempRange.startRaw.toString().startsWith('now-') ? tempRange.startRaw : dateTimeFormat(tempRange.start)}
                                 onChange={v => onRangeChange(v, tempRange.endRaw)}
-                                // disabled={tempRange.startRaw.toString().startsWith('now')}
+                            // disabled={tempRange.startRaw.toString().startsWith('now')}
                             />
                             <FaCalendarAlt cursor="pointer" onClick={() => setDisplayCalender(!displayCalender)} />
                         </HStack>
@@ -270,7 +282,7 @@ const TimePicker = ({ onClose, onTimeChange }: Props) => {
                                 key={tempRange.endRaw}
                                 value={tempRange.endRaw.toString().startsWith('now') ? tempRange.endRaw : dateTimeFormat(tempRange.end)}
                                 onChange={v => onRangeChange(tempRange.startRaw, v)}
-                                // disabled={tempRange.endRaw.toString().startsWith('now')}
+                            // disabled={tempRange.endRaw.toString().startsWith('now')}
                             />
                             <FaCalendarAlt cursor="pointer" onClick={() => setDisplayCalender(!displayCalender)} />
                         </HStack>

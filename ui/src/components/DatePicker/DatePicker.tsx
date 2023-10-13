@@ -25,6 +25,7 @@ import { Moment } from "moment"
 import { useSearchParam } from "react-use"
 import { dateTimeFormat } from "utils/datetime/formatter"
 import { MobileBreakpoint, MobileVerticalBreakpoint } from "src/data/constants"
+import { $time } from "./store"
 
 interface Props {
     showTime?: boolean
@@ -81,7 +82,7 @@ const DatePicker = ({ showTime = true, showRealTime = false }: Props) => {
             }
 
             if (tr) {
-                storage.set(TimePickerKey, JSON.stringify(tr))
+                storeTimerange(tr)
                 setValue(tr)
                 dispatch({ type: TimeChangedEvent, data: tr })
                 return
@@ -130,7 +131,7 @@ const DatePicker = ({ showTime = true, showRealTime = false }: Props) => {
                 sub: 0
             }
 
-            storage.set(TimePickerKey, JSON.stringify(tr))
+            storeTimerange(tr)
             onTimeChange(tr)
         }
     )
@@ -194,7 +195,7 @@ export const updateTimeToNewest = () => {
         const now = new Date()
         tr.start = subMinutes(now, tr.sub)
         tr.end = now
-        storage.set(TimePickerKey, JSON.stringify(tr))
+        storeTimerange(tr)
         dispatch({ type: TimeChangedEvent, data: tr })
     }
 
@@ -203,4 +204,9 @@ export const updateTimeToNewest = () => {
 
 export const syncTimeToUrl = (from, to) => {
     addParamToUrl({ from, to })
+}
+
+export const storeTimerange = (tr: TimeRange) => {
+    storage.set(TimePickerKey, JSON.stringify(tr))
+    $time.set(tr)
 }
