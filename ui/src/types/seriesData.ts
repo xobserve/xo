@@ -43,8 +43,8 @@ export interface Field<T = any> {
     /**
      *  Field value type (string, number, etc)
      */
-    type: FieldType;
-    values: T[]; // The raw field values
+    type?: FieldType;
+    values?: T[]; // The raw field values
     labels?: {[key: string]: string};
 }
 

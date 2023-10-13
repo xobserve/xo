@@ -35,3 +35,9 @@ export interface DatasourcePluginComponents {
         icon: string;
     },
 }
+
+export interface QueryPluginResult {
+    status: "success" | "error"
+    error: string 
+    data: any
+}

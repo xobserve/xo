@@ -15,7 +15,7 @@
 import { isEmpty } from "lodash"
 import { Panel, PanelQuery } from "types/dashboard"
 import { TimeRange } from "types/time"
-import { demoDataToPanelData } from "./utils"
+import { clickhouseToSeriesData } from "./utils"
 import { Datasource } from "types/datasource"
 import { Variable } from "types/variable"
 import { getNewestTimeRange } from "src/components/DatePicker/TimePicker"
@@ -25,6 +25,7 @@ import { requestApi } from "utils/axios/request"
 import { replaceWithVariablesHasMultiValues } from "utils/variable"
 import { getDatasource, roundDsTime } from "utils/datasource"
 import { replacePrometheusQueryWithVariables } from "../../../built-in/datasource/prometheus/query_runner"
+import { QueryPluginResult } from "types/plugin"
 
 
 export const runQuery = async (panel: Panel, q: PanelQuery, range: TimeRange, ds: Datasource) => {
@@ -40,24 +41,18 @@ export const runQuery = async (panel: Panel, q: PanelQuery, range: TimeRange, ds
 
 
 
-    const res: any = await requestApi.get(`/proxy/${ds.id}?query=${q.metrics.replaceAll("\n", " ")}`)
+    const res: QueryPluginResult = await requestApi.get(`/proxy/${ds.id}?query=${q.metrics.replaceAll("\n", " ")}`)
+    
     if (res.status !== "success") {
-        console.log("Failed to fetch data from demo datasource", res)
+        console.log("Failed to fetch data from target datasource", res)
         return {
-            error: `${res.errorType}: ${res.error}`,
+            error: res.error,
             data: []
         }
     }
-
-
-    if (res.data.result.length == 0 || res.data.result[0].values.length == 0) {
-        return {
-            error: null,
-            data: []
-        }
-    }
-
-    let data = demoDataToPanelData(res, panel, q, range);
+    
+    let data = clickhouseToSeriesData(res.data, panel, q, range)
+    console.log("here33333:",res.data)
     return {
         error: null,
         data: data,

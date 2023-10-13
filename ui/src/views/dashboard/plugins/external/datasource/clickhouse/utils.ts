@@ -23,10 +23,11 @@ import { replaceWithVariables } from "utils/variable";
 import { PanelTypeGraph } from "../../../built-in/panel/graph/types";
 import { PanelTypeBar } from "../../../built-in/panel/bar/types";
 import { PanelTypeStat } from "../../../built-in/panel/stat/types";
+import { ChPluginData } from "./types";
 
 
-export const demoDataToPanelData= (rawData: any, panel: Panel, query: PanelQuery, range: TimeRange) => {
-    if (isEmpty(rawData)) {
+export const clickhouseToSeriesData= (data: ChPluginData, panel: Panel, query: PanelQuery, range: TimeRange) => {
+    if (isEmpty(data) || data.columns.length == 0 || data.data.length == 0) {
         return null
     }
 
@@ -39,7 +40,30 @@ export const demoDataToPanelData= (rawData: any, panel: Panel, query: PanelQuery
         expandTimeRange = et == "always"
     }
 
-    return vmToSeriesData(panel, rawData, query, range, expandTimeRange)
+    const series: SeriesData = {
+        queryId: query.id,
+        name: isEmpty(query.legend) ?  query.id.toString()  : query.legend,
+        fields: []
+    }
+
+    data.columns.forEach((c,i) => {
+        series.fields.push({
+            name: c,
+            values: []
+        })
+    })
+
+    data.data.forEach((row,i) => {
+        row.forEach((v,i) => {
+            const f = series.fields[i]
+            if (!f.type) {
+                f.type = typeof v as any
+            }
+            f.values.push(v)
+        })
+    })
+    
+    return [series]
 }
 
 const vmToSeriesData = (panel: Panel, data0: any, query: PanelQuery, range: TimeRange, expandTimeRange = false): SeriesData[] => {
