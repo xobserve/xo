@@ -72,10 +72,10 @@ export const setEchartsOptions = `
 // thresholds: ThresholdsConfig[] | null
 // colors: color palettes using in Datav
 // echarts: imported echarts.js module 
-// loadash: imported loadash.js module
+// lodash: imported lodash.js module
 // moment: imported momen.jst module
 // colorMode: "light" | "dark"
-function setOptions(data, thresholds, colors, echarts, loadash, moment, colorMode, units) {
+function setOptions(data, thresholds, colors, echarts, lodash, moment, colorMode, units) {
     const colorList = [
         ['rgb(128, 255, 165)', 'rgb(1, 191, 236)'],
         ['rgb(0, 221, 255)', 'rgb(77, 119, 255)'],
@@ -118,13 +118,10 @@ function setOptions(data, thresholds, colors, echarts, loadash, moment, colorMod
             emphasis: {
                 focus: 'series'
             },
-            data: loadash.zip(...s.fields.map(f => {
-                if (f.type == "time") {
-                    return f.values.map(v => v * 1000)
-                } else {
-                    return f.values
-                }
-            }))
+            data: lodash.zip( 
+                s.fields.find(f => f.type =="time").values.map(v => v * 1000), 
+                s.fields.find(f => f.type == "number").values
+            )
         })
     }
 

@@ -179,6 +179,7 @@ const GraphPanel = memo((props: GraphPanelProps) => {
 
                             let plotOpts = options
                             let plotData = transformDataToUplot(data, props.panel)
+                            console.log("here33333:",plotData)
                             if (props.panel.plugins.graph.styles.enableStack) {
                                 const r = getStackedOpts(plotOpts, plotData, null);
                                 plotData = r.data

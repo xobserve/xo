@@ -8,7 +8,7 @@ import { initAlertFilter } from "src/data/panel/initPlugins";
 import { PanelTypeAlert } from "./types";
 
 
-const panelComponents: PanelPluginComponents = {
+const panelComponents: PanelPluginComponents = { 
     panel: AlertPanel,
     editor: PanelEditor,
     settings: {

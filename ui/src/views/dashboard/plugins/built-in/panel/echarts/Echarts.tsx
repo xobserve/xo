@@ -21,7 +21,7 @@ import { useSearchParam } from "react-use";
 import React from "react";
 import moment from "moment";
 import {  paletteMap, palettes } from "utils/colors";
-import loadash from "lodash"
+import lodash from "lodash"
 import 'echarts/extension/bmap/bmap';
 import { genDynamicFunction } from "utils/dashboard/dynamicCall";
 import { gnavigate } from "layouts/PageContainer";
@@ -49,7 +49,7 @@ const EchartsPanel = memo((props: PanelProps) => {
         const setOptions = genDynamicFunction(panel.plugins.echarts.setOptionsFunc);
         if (isFunction(setOptions)) {
             try {
-                const o = setOptions(cloneDeep(data), panel.plugins.echarts.enableThresholds && panel.plugins.echarts.thresholds, colors, echarts, loadash, moment, colorMode, {
+                const o = setOptions(cloneDeep(data), panel.plugins.echarts.enableThresholds && panel.plugins.echarts.thresholds, colors, echarts, lodash, moment, colorMode, {
                     units: props.panel.plugins.echarts.value.units,
                     decimal: props.panel.plugins.echarts.value.decimal,
                     formatUnit: formatUnit

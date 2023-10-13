@@ -25,7 +25,7 @@ import { useStore } from "@nanostores/react"
 import { commonMsg, echartsPanelMsg } from "src/i18n/locales/en"
 import { colors } from "utils/colors"
 import moment from "moment"
-import loadash from 'lodash'
+import lodash from 'lodash'
 import ThresholdEditor from "src/views/dashboard/plugins/components/Threshold/ThresholdEditor"
 import * as echarts from 'echarts';
 import { dispatch } from "use-bus"
@@ -128,7 +128,7 @@ const SetOptions = ({ panel, onChange, data }: EchartsEditorProps) => {
 
     if (isFunction(setOptions)) {
         try {
-            let o = setOptions(cloneDeep(data.flat()), panel.plugins.echarts.thresholds, colors, echarts, loadash, moment, colorMode, {
+            let o = setOptions(cloneDeep(data.flat()), panel.plugins.echarts.thresholds, colors, echarts, lodash, moment, colorMode, {
                 units: panel.plugins.echarts.value.units,
                 decimal: panel.plugins.echarts.value.decimal,
                 formatUnit: formatUnit
