@@ -48,25 +48,3 @@ const rawData = {
         ]
     }
 }
-
-export const genPrometheusData = (timeRange: TimeRange,ds: PanelDatasource,q: PanelQuery) => {
-    const data = cloneDeep(rawData)
-    const start = round(timeRange.start.getTime() / 1000 )
-    const end = round(timeRange.end.getTime() / 1000) 
-    const alignedStart = start - start % q.interval
-    const timeBucks = []
-    let current = alignedStart;
-    while (current <= end) {
-        timeBucks.push(current)
-        current += q.interval        
-    }
-
-   for (const r of data.data.result) {
-        const max = random(0, 2, true)
-        for (const t of timeBucks) {
-            r.values.push([round(t), random(0, max, true)])
-        }
-   }
-
-   return data.data
-}   

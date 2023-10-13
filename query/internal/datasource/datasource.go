@@ -218,3 +218,7 @@ func GetDatasource(ctx context.Context, id int64) (*models.Datasource, error) {
 
 	return ds, nil
 }
+
+func GetDatasourcesFromCache() map[int64]*models.Datasource {
+	return datasources
+}

@@ -20,7 +20,7 @@ interface Props {
     onChange: any
 }
 
-const defaultUrl = "http://localhost:8428"
+const defaultUrl = "localhost:9000"
 const DatasourceEditor = ({ datasource, onChange }: Props) => {
     if (datasource.url === null) {
         onChange(d => {d.url = defaultUrl})

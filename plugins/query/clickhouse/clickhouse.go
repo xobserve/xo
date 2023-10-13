@@ -3,7 +3,7 @@ package clickhouse
 import (
 	"fmt"
 
-	"github.com/DataObserve/datav/query/internal/plugins"
+	"github.com/DataObserve/datav/query/pkg/models"
 )
 
 /* Query plugin for clickhouse database */
@@ -18,5 +18,5 @@ func (ds *ClickHousePlugin) Query(query string) interface{} {
 
 func init() {
 	// register datasource
-	plugins.Register("clickhouse", &ClickHousePlugin{})
+	models.RegisterPlugin("clickhouse", &ClickHousePlugin{})
 }

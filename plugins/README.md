@@ -1,4 +1,4 @@
-## External plugins
+## Datav external plugins
 
 This directory contains the source code of external plugins which are developed by community. The external plugins are not included in the default plugins, you need to [build them manually](https://datav.io/docs/external-panel-install) to use them.
 

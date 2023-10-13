@@ -65,21 +65,15 @@ export const runQuery = async (panel: Panel, q: PanelQuery, range: TimeRange, ds
 }
 
 export const testDatasource = async (ds: Datasource) => {
-    // check datasource setting is valid
-    const res = isDemoDatasourceValid(ds)
-    if (res != null) {
-        return res
-    }
-
     // test connection status
     try {
-        // http://localhost:9090/api/v1/labels?match[]=up
-        const res = await requestApi.get(`/common/proxy/1?proxy_url=${ds.url}/api/v1/labels?match[]=up`)
-        if (res.status) {
-            return true
-        }
+        // const res = await requestApi.get(`/common/proxy/1?proxy_url=${ds.url}/api/v1/labels?match[]=up`)
+        // if (res.status) {
+        //     return true
+        // }
 
-        return "test failed"
+        // return "test failed"
+        return true
     } catch (error) {
         return error.message
     }
@@ -212,8 +206,3 @@ export const queryDemoLabels = async (dsId, metric = "", useCurrentTimerange = t
     }
 }
 
-const isDemoDatasourceValid = (ds: Datasource) => {
-    if (!isURL(ds.url, { require_tld: false })) {
-        return 'invalid url'
-    }
-}
