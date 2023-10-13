@@ -7,10 +7,6 @@
 </p>
 
 <p align="center">
-  Alternative to Grafana in observability scenario
-</p>
-
-<p align="center">
     <img alt="License" src="https://img.shields.io/badge/license-Apache2.0-brightgreen"> 
     <a href="https://datav.io"><img alt="Website" src="https://img.shields.io/badge/Website-datav.io-blue"></a>
     <a href="https://play.datav.io"><img alt="Online demo" src="https://img.shields.io/badge/Online-demo-blue"></a>
@@ -31,6 +27,12 @@
 Datav is a programmable observability platform designed specifically for developers, and it also serves as an alternative data visualization platform to Grafana. 
 
 It can help users quickly create online observability scenarios such as monitoring, logging, and tracing. Datav can help you built any observability scenario you want. If it doesn't, you can always file an issue, and reasonable requests will be quickly supported.
+
+## Roadmap to V1.0
+
+Till now, we have implemented the UI part of Datav, which can aslo be used as an alternative to Grafana.
+
+We are now still working on the observability part, and it will be released in [V1.0](https://github.com/data-observe/datav/milestone/7).
 
 ## Features
 
