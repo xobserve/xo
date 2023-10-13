@@ -57,6 +57,22 @@ const QueryEditor = ({ datasource, query, onChange }: DatasourceEditorProps) => 
                     </Box>
                 </Stack>
             </FormItem>
+            <Stack alignItems={isLargeScreen ? "center" : "start"} spacing={isLargeScreen ? 4 : 1}>
+                <FormItem labelWidth={"150px"} size="sm" title="Legend">
+                    <Input
+                        value={tempQuery.legend}
+                        onChange={(e) => {
+                            setTempQuery({ ...tempQuery, legend: e.currentTarget.value })
+                        }}
+                        onBlur={() => onChange(tempQuery)}
+                        width="150px"
+                        placeholder={t1.legendFormat}
+                        size="sm"
+                    />
+                </FormItem>
+                
+                {/* {isLargeScreen && <ExpandTimeline t1={t1} tempQuery={tempQuery} setTempQuery={setTempQuery} onChange={onChange}/>} */}
+            </Stack>
         </Form>
     )
 }

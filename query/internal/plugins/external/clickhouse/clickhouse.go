@@ -48,13 +48,18 @@ func (p *ClickHousePlugin) Query(c *gin.Context, ds *models.Datasource) models.P
 
 	columns := rows.Columns()
 	columnTypes := rows.ColumnTypes()
-
+	types := make(map[string]string)
 	data := make([][]interface{}, 0)
 	for rows.Next() {
 		v := make([]interface{}, len(columns))
 		for i := range v {
 			t := columnTypes[i].ScanType()
 			v[i] = reflect.New(t).Interface()
+
+			tp := t.String()
+			if tp == "time.Time" {
+				types[columns[i]] = "time"
+			}
 		}
 
 		err = rows.Scan(v...)
@@ -63,6 +68,12 @@ func (p *ClickHousePlugin) Query(c *gin.Context, ds *models.Datasource) models.P
 			continue
 		}
 
+		for i, v0 := range v {
+			v1, ok := v0.(*time.Time)
+			if ok {
+				v[i] = v1.Unix()
+			}
+		}
 		data = append(data, v)
 	}
 
@@ -72,6 +83,7 @@ func (p *ClickHousePlugin) Query(c *gin.Context, ds *models.Datasource) models.P
 		Data: map[string]interface{}{
 			"columns": columns,
 			"data":    data,
+			"types":   types,
 		}}
 }
 
