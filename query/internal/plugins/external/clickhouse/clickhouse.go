@@ -23,7 +23,7 @@ type ClickHousePlugin struct{}
 var conns = make(map[int64]ch.Conn)
 var connsLock = &sync.Mutex{}
 
-func (p *ClickHousePlugin) Query(c *gin.Context, ds *models.Datasource) interface{} {
+func (p *ClickHousePlugin) Query(c *gin.Context, ds *models.Datasource) (interface{}, error) {
 	query := c.Query("query")
 
 	conn, ok := conns[ds.Id]
@@ -32,7 +32,7 @@ func (p *ClickHousePlugin) Query(c *gin.Context, ds *models.Datasource) interfac
 		conn, err = connectToClickhouse(ds)
 		if err != nil {
 			colorlog.RootLogger.Warn("connect to clickhouse error:", err, "ds_id", ds.Id, "url", ds.URL)
-			return err
+			return nil, err
 		}
 		connsLock.Lock()
 		conns[ds.Id] = conn
@@ -42,13 +42,14 @@ func (p *ClickHousePlugin) Query(c *gin.Context, ds *models.Datasource) interfac
 	rows, err := conn.Query(c.Request.Context(), query)
 	if err != nil {
 		colorlog.RootLogger.Info("Error query clickhouse :", "error", err, "ds_id", ds.Id, "query:", query)
-		return err
+		return nil, err
 	}
 	defer rows.Close()
 
 	columns := rows.Columns()
 	columnTypes := rows.ColumnTypes()
 
+	data := make([][]interface{}, 0)
 	for rows.Next() {
 		v := make([]interface{}, len(columns))
 		for i := range v {
@@ -59,10 +60,16 @@ func (p *ClickHousePlugin) Query(c *gin.Context, ds *models.Datasource) interfac
 		err = rows.Scan(v...)
 		if err != nil {
 			colorlog.RootLogger.Info("Error scan clickhouse :", "error", err, "ds_id", ds.Id)
-			return err
+			continue
 		}
+
+		data = append(data, v)
 	}
-	return nil
+
+	return map[string]interface{}{
+		"columns": columns,
+		"data":    data,
+	}, nil
 }
 
 func init() {

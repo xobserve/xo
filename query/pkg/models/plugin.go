@@ -3,7 +3,7 @@ package models
 import "github.com/gin-gonic/gin"
 
 type Plugin interface {
-	Query(c *gin.Context, ds *Datasource) interface{}
+	Query(c *gin.Context, ds *Datasource) (interface{}, error)
 }
 
 var plugins = make(map[string]Plugin)

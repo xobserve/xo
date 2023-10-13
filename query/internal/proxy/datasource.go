@@ -48,7 +48,13 @@ func ProxyDatasource(c *gin.Context) {
 
 	queryPlugin := models.GetPlugin(ds.Type)
 	if queryPlugin != nil {
-		queryPlugin.Query(c, ds)
+		result, err := queryPlugin.Query(c, ds)
+		if err != nil {
+			c.JSON(500, common.RespError(err.Error()))
+			return
+		}
+
+		c.JSON(200, common.RespSuccess(result))
 		return
 	}
 
