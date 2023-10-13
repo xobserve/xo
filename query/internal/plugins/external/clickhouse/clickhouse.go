@@ -23,8 +23,8 @@ var conns = make(map[int64]ch.Conn)
 var connsLock = &sync.Mutex{}
 
 func (p *ClickHousePlugin) Query(c *gin.Context, ds *models.Datasource) interface{} {
-	// query := c.Query("query")
-	// fmt.Println("query clickhouse database:", query)
+	query := c.Query("query")
+	fmt.Println("query clickhouse database:", query)
 
 	conn, ok := conns[ds.Id]
 	if !ok {
@@ -39,20 +39,20 @@ func (p *ClickHousePlugin) Query(c *gin.Context, ds *models.Datasource) interfac
 		connsLock.Unlock()
 	}
 
-	rows, err := conn.Query(c.Request.Context(), "SELECT name,toString(uuid) as uuid_str FROM system.tables LIMIT 5")
+	rows, err := conn.Query(c.Request.Context(), query)
 	if err != nil {
-		colorlog.RootLogger.Info("query clickhouse error:", err, "ds_id", ds.Id)
+		colorlog.RootLogger.Info("Error query clickhouse :", "error", err, "ds_id", ds.Id, "query:", query)
 		return err
 	}
 
 	for rows.Next() {
-		var v interface{}
-		err := rows.Scan(&v)
-		if err != nil {
-			colorlog.RootLogger.Info("scan clickhouse error:", err, "ds_id", ds.Id)
-			return err
-		}
-		fmt.Println("v:", v)
+		// var v interface{}
+		// err := rows.Scan(&v)
+		// if err != nil {
+		// 	colorlog.RootLogger.Info("scan clickhouse error:", err, "ds_id", ds.Id)
+		// 	return err
+		// }
+		// fmt.Println("v:", v)
 	}
 	return nil
 }

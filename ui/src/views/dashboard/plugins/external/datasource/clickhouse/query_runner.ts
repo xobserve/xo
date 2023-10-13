@@ -24,7 +24,6 @@ import { PromDsQueryTypes } from "./VariableEditor"
 import { requestApi } from "utils/axios/request"
 import { replaceWithVariablesHasMultiValues } from "utils/variable"
 import { getDatasource, roundDsTime } from "utils/datasource"
-import isURL from "validator/lib/isURL"
 import { replacePrometheusQueryWithVariables } from "../../../built-in/datasource/prometheus/query_runner"
 
 
@@ -40,7 +39,8 @@ export const runQuery = async (panel: Panel, q: PanelQuery, range: TimeRange, ds
     const end = roundDsTime(range.end.getTime() / 1000)
 
 
-    const res: any = await requestApi.get(`/proxy/${ds.id}?query=${q.metrics}`)
+
+    const res: any = await requestApi.get(`/proxy/${ds.id}?query=${q.metrics.replaceAll("\n", " ")}`)
     if (res.status !== "success") {
         console.log("Failed to fetch data from demo datasource", res)
         return {
