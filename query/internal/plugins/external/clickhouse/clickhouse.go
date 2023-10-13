@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net"
+	"strings"
 	"sync"
 	"time"
 
@@ -64,7 +65,7 @@ func init() {
 
 func connectToClickhouse(ds *models.Datasource) (ch.Conn, error) {
 	conn, err := ch.Open(&ch.Options{
-		Addr: []string{ds.URL},
+		Addr: strings.Split(ds.URL, ","),
 		Auth: ch.Auth{
 			Database: "default",
 			Username: "default",
