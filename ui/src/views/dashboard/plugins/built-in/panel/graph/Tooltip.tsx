@@ -21,7 +21,7 @@ import { useMountedState } from "react-use";
 import { PanelProps } from "types/dashboard";
 import uPlot from "uplot";
 import { dateTimeFormat } from "utils/datetime/formatter";
-import { SeriesData } from "types/seriesData";
+import { FieldType, SeriesData } from "types/seriesData";
 import React from "react";
 import { findOverride,  findRuleInOverride } from "utils/dashboard/panel";
 import { GraphRules } from "./OverridesEditor";
@@ -256,7 +256,7 @@ export const findNearestSeriesAndDataPoint = (uplot, bbox, data,panel) => {
             const negativeY = findRuleInOverride(override, GraphRules.SeriesNegativeY)
             const separateY = findRuleInOverride(override, GraphRules.SeriesYAxis)
             const op = separateY ? 1 : (negativeY ? -1 : 1)
-            const newGap = Math.abs(d.fields[1].values[idx] - (op * yval))
+            const newGap = Math.abs(d.fields.find(f => f.type != FieldType.Time).values[idx] - (op * yval))
             if (!gap) {
                 gap = newGap
                 fs = d

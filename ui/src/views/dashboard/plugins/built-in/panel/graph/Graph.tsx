@@ -23,7 +23,7 @@ import Tooltip from "./Tooltip";
 import { GraphLayout } from "src/views/dashboard/plugins/built-in/panel/graph/GraphLayout";
 import { Box, Center, Text, useColorMode } from "@chakra-ui/react";
 import { paletteColorNameToHex, paletteMap, palettes } from "utils/colors";
-import { SeriesData } from "types/seriesData";
+import { FieldType, SeriesData } from "types/seriesData";
 import storage from "utils/localStorage";
 import { PanelInactiveKey } from "src/data/storage-keys";
 import { ZoomPlugin } from "./uplot-plugins/ZoomPlugin";
@@ -221,14 +221,19 @@ const transformDataToUplot = (data: SeriesData[], panel: Panel) => {
         return []
     }
 
-    const xField = data[0].fields[0]
+    const xField = data[0].fields.find(f => f.type == FieldType.Time)
+    if (!xField) {
+        return []
+    }
+    
     transformed.push(xField.values)
 
     // push y-axes series data
     for (const d of data) {
         const negativeY = findOverrideRule(panel, d.rawName, GraphRules.SeriesNegativeY)
+        const values = d.fields.find(f => f.type != FieldType.Time).values
         if (negativeY) {
-            const vals = cloneDeep(d.fields[1].values)
+            const vals = cloneDeep(values)
             for (let i = 0; i < vals.length; i++) {
                 if (vals[i] != null) {
                     vals[i] *= -1;
@@ -236,7 +241,7 @@ const transformDataToUplot = (data: SeriesData[], panel: Panel) => {
             }
             transformed.push(vals)
         } else {
-            transformed.push(d.fields[1].values)
+            transformed.push(values)
         }
     }
 

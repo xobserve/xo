@@ -57,7 +57,7 @@ export const clickhouseToSeriesData= (data: ChPluginData, panel: Panel, query: P
         row.forEach((v,i) => {
             const f = series.fields[i]
             if (!f.type) {
-                f.type = typeof v as any
+                f.type = data.types[f.name] ?? typeof v as any
             }
             f.values.push(v)
         })

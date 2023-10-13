@@ -52,7 +52,7 @@ export const runQuery = async (panel: Panel, q: PanelQuery, range: TimeRange, ds
     }
     
     let data = clickhouseToSeriesData(res.data, panel, q, range)
-    console.log("here33333:",res.data)
+    console.log("here33333:",res.data, data)
     return {
         error: null,
         data: data,

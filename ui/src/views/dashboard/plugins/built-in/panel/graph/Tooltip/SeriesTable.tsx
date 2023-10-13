@@ -19,7 +19,7 @@ import { orderBy, round } from "lodash"
 import { memo } from "react"
 import { OverrideItem, PanelProps } from "types/dashboard"
 import { ValueSetting } from "types/panel/plugins"
-import { SeriesData } from "types/seriesData"
+import { FieldType, SeriesData } from "types/seriesData"
 import { findOverride, findRuleInOverride } from "utils/dashboard/panel";
 import { GraphRules } from "../OverridesEditor";
 import { StatRules } from "../../stat/OverridesEditor";
@@ -45,10 +45,10 @@ const SeriesTable = memo(({ props, data, nearestSeries, filterIdx, panelType, wi
 
     if (tooltipMode != "single") {
         for (const d of data) {
-            res.push({ name: d.name, value: [["", d.fields[1].values[filterIdx]]], color: d.color, rawName: d.rawName })
+            res.push({ name: d.name, value: [["", d.fields.find(f => f.type != FieldType.Time).values[filterIdx]]], color: d.color, rawName: d.rawName })
         }
     } else {
-        res.push({ name: nearestSeries.name, color: nearestSeries.color, value: [["", nearestSeries.fields[1].values[filterIdx]]], rawName: nearestSeries.rawName })
+        res.push({ name: nearestSeries.name, color: nearestSeries.color, value: [["", nearestSeries.fields.find(f => f.type != FieldType.Time).values[filterIdx]]], rawName: nearestSeries.rawName })
     }
 
 

@@ -22,7 +22,7 @@ import { useKeyPress } from "react-use"
 import { UpdatePanelEvent } from "src/data/bus-events"
 import { OverrideItem, Panel } from "types/dashboard"
 import { ValueSetting } from "types/panel/plugins"
-import { SeriesData } from "types/seriesData"
+import { FieldType, SeriesData } from "types/seriesData"
 import { dispatch } from "use-bus"
 
 import { calcValueOnArray } from "utils/seriesData"
@@ -74,7 +74,7 @@ const LegendTable = memo(({dashboardId,panelWidth, options, panel, data, width, 
     for (const d of data) {
         let v = []
         for (const calc of options.legend.valueCalcs) {
-            v.push([calc, calcValueOnArray(d.fields[1].values, calc)])
+            v.push([calc, calcValueOnArray(d.fields.find(f => f.type != FieldType.Time).values, calc)])
         }
         res.push({ name: d.name, value: v, color: d.color, rawName: d.rawName })
     }

@@ -325,11 +325,13 @@ export function formatTime(
     splits: number[],
     axisIdx: number,
     foundSpace: number,
-    foundIncr: number
+    foundIncr0: number
 ) {
+
+    const foundIncr = foundIncr0 * 1000
     const timeZone = (self.axes[axisIdx] as any).timeZone;
     const scale = self.scales.x;
-    const range = (scale?.max ?? 0) - (scale?.min ?? 0);
+    const range = ((scale?.max ?? 0) - (scale?.min ?? 0)) * 1000;
     const yearRoundedToDay = Math.round(timeUnitSize.year / timeUnitSize.day) * timeUnitSize.day;
     const incrementRoundedToDay = Math.round(foundIncr / timeUnitSize.day) * timeUnitSize.day;
 
@@ -372,6 +374,7 @@ function calculateAxisSize(self: uPlot, values: string[], axisIdx: number) {
     }
 
     return Math.ceil(axisSize + 15);
+    
 }
 
 
@@ -398,6 +401,7 @@ function calculateSpace(self: uPlot, axisIdx: number, scaleMin: number, scaleMax
     }
 
     return defaultSpacing;
+    
 }
 
 
@@ -405,7 +409,7 @@ export const pointsFilter = (u, seriesIdx, show, gaps) => {
     let filtered = [];
 
     let series = u.series[seriesIdx];
-
+    
     if (!show && gaps && gaps.length) {
         const [firstIdx, lastIdx] = series.idxs!;
         const xData = u.data[0];

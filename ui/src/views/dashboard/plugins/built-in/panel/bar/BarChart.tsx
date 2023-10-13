@@ -14,14 +14,13 @@
 import { useColorMode, useColorModeValue } from "@chakra-ui/react"
 import { getCurrentTimeRange } from "src/components/DatePicker/TimePicker"
 import ChartComponent from "src/components/charts/Chart"
-import { cloneDeep, floor, round } from "lodash"
+import {  floor, round } from "lodash"
 import React, { memo, useEffect, useMemo, useState } from "react"
 import { Panel } from "types/dashboard"
 import { dateTimeFormat } from "utils/datetime/formatter"
 import moment from "moment"
 import { isEmpty } from "utils/validate"
 import { measureText } from "utils/measureText"
-import { BarSeries } from "src/views/dashboard/plugins/built-in/panel/bar/bar"
 import { formatUnit } from "src/views/dashboard/plugins/components/UnitPicker"
 import { calculateInterval } from "utils/datetime/range"
 import { DatasourceMaxDataPoints, DatasourceMinInterval } from "src/data/constants"
@@ -36,7 +35,7 @@ import { useNavigate } from "react-router-dom"
 
 
 interface Props {
-    data: BarSeries[]
+    data: any[]
     panel: Panel
     width: number
     height: number
@@ -409,14 +408,26 @@ export default BarChart
 const getTimeFormat = (start, end, step) => {
     const mstart = moment(start)
     const mend = moment(end)
+    const now = moment()
     let format;
-    if (mstart.isSame(mend, "month")) {
+    
+    const isSameYear = now.isSame(mend, "year") && now.isSame(mstart, "year")
+    const isSameMonth = now.isSame(mend, "month") && now.isSame(mstart, "month")
+    const isSameDay = now.isSame(mend, "day") && now.isSame(mstart, "day")
+
+    if (isSameYear) {
         format = ""
     } else {
-        format = "M-"
+        format = "YYYY-"
     }
 
-    if (mstart.isSame(mend, 'day')) {
+    if (isSameYear && isSameMonth) {
+        format += ""
+    } else {
+        format += "M-"
+    }
+
+    if (isSameYear && isSameMonth && isSameDay) {
         format += "HH:mm"
     } else {
         format += "DD HH:mm"
