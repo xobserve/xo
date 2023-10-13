@@ -39,9 +39,9 @@ import { $time } from './store'
 
 
 interface Props {
+    initTimeRange: TimeRange
     onClose?: any
     onTimeChange: any
-
 }
 
 export const TimePickerKey = "time-picker"
@@ -85,7 +85,7 @@ export const getCurrentTimeRange = (fromStorage = false): TimeRange => {
 
         return time
     }
-    
+
     const tr = $time.get()
     if (tr) {
         return tr
@@ -95,10 +95,10 @@ export const getCurrentTimeRange = (fromStorage = false): TimeRange => {
 
 }
 
-const TimePicker = ({ onClose, onTimeChange }: Props) => {
+const TimePicker = ({initTimeRange, onClose, onTimeChange }: Props) => {
     const t1 = useStore(timePickerMsg)
-    const [range, setRange] = useState<TimeRange>(getNewestTimeRange())
-    const [tempRange, setTempRange] = useState<TimeRange>(getNewestTimeRange())
+    const [range, setRange] = useState<TimeRange>(initTimeRange)
+    const [tempRange, setTempRange] = useState<TimeRange>(initTimeRange)
     const [error, setError] = useState({ start: null, end: null })
     const [displayCalender, setDisplayCalender] = useState(false)
 
@@ -177,7 +177,6 @@ const TimePicker = ({ onClose, onTimeChange }: Props) => {
     }
 
     const applyTimeRange = (tr: TimeRange) => {
-        storeTimerange(tr)
         onTimeChange(tr)
         onClose()
     }
