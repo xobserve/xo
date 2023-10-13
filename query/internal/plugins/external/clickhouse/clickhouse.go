@@ -2,8 +2,8 @@ package clickhouse
 
 import (
 	"context"
-	"fmt"
 	"net"
+	"reflect"
 	"strings"
 	"sync"
 	"time"
@@ -25,7 +25,6 @@ var connsLock = &sync.Mutex{}
 
 func (p *ClickHousePlugin) Query(c *gin.Context, ds *models.Datasource) interface{} {
 	query := c.Query("query")
-	fmt.Println("query clickhouse database:", query)
 
 	conn, ok := conns[ds.Id]
 	if !ok {
@@ -45,15 +44,23 @@ func (p *ClickHousePlugin) Query(c *gin.Context, ds *models.Datasource) interfac
 		colorlog.RootLogger.Info("Error query clickhouse :", "error", err, "ds_id", ds.Id, "query:", query)
 		return err
 	}
+	defer rows.Close()
+
+	columns := rows.Columns()
+	columnTypes := rows.ColumnTypes()
 
 	for rows.Next() {
-		// var v interface{}
-		// err := rows.Scan(&v)
-		// if err != nil {
-		// 	colorlog.RootLogger.Info("scan clickhouse error:", err, "ds_id", ds.Id)
-		// 	return err
-		// }
-		// fmt.Println("v:", v)
+		v := make([]interface{}, len(columns))
+		for i := range v {
+			t := columnTypes[i].ScanType()
+			v[i] = reflect.New(t).Interface()
+		}
+
+		err = rows.Scan(v...)
+		if err != nil {
+			colorlog.RootLogger.Info("Error scan clickhouse :", "error", err, "ds_id", ds.Id)
+			return err
+		}
 	}
 	return nil
 }
@@ -75,10 +82,10 @@ func connectToClickhouse(ds *models.Datasource) (ch.Conn, error) {
 			var d net.Dialer
 			return d.DialContext(ctx, "tcp", addr)
 		},
-		Debug: true,
-		Debugf: func(format string, v ...any) {
-			fmt.Printf(format, v)
-		},
+		Debug: false,
+		// Debugf: func(format string, v ...any) {
+		// 	fmt.Printf(format, v)
+		// },
 		Settings: ch.Settings{
 			"max_execution_time": 60,
 		},
