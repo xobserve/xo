@@ -37,7 +37,7 @@ const PanelEditItem = (props: Props) => {
             </Popover>}
         </HStack>
         <Text fontSize="sm" layerStyle="textSecondary" mt="0">{props.desc}</Text>
-        <Box mt="2">
+        <Box mt="1">
             {props.children}
         </Box>
     </Box>)

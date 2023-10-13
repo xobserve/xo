@@ -13,12 +13,12 @@
 
 import { parseVariableFormat } from "./format";
 import { PanelQuery } from "types/dashboard";
-import { VariableSplitChar, VariableTimerangeFrom, VariableTimerangeTo, VarialbeAllOption } from "src/data/variable";
+import { VariableInterval, VariableSplitChar, VariableTimerangeFrom, VariableTimerangeTo, VarialbeAllOption } from "src/data/variable";
 import { $variables } from "src/views/variables/store";
 import { isEmpty } from "./validate";
 import { externalDatasourcePlugins } from "src/views/dashboard/plugins/external/plugins";
 import { builtinDatasourcePlugins } from "src/views/dashboard/plugins/built-in/plugins";
-import { getCurrentTimeRange } from "components/DatePicker/TimePicker";
+import { TimeRange } from "types/time";
 
 export const hasVariableFormat = (s: string) => {
     return isEmpty(s) ? false : s.includes("${")
@@ -32,16 +32,6 @@ export const replaceWithVariables = (s: string, extraVars?: {
     const vars = $variables.get()
     const formats = parseVariableFormat(s);
     for (const f of formats) {
-        if (f == VariableTimerangeFrom || f == VariableTimerangeTo) {
-            const range = getCurrentTimeRange()
-            if (f == VariableTimerangeFrom) {
-                s = s.replaceAll(`\${${f}}`, (range.start.getTime() / 1000).toString())
-            } else {
-                s = s.replaceAll(`\${${f}}`, (range.end.getTime() / 1000).toString())
-            }
-            continue
-        }
-
         const extrav = extraVars && extraVars[f]
         if (extrav) {
             s = s.replaceAll(`\${${f}}`, extrav.toString());
@@ -58,10 +48,27 @@ export const replaceWithVariables = (s: string, extraVars?: {
 }
 
 
-export const replaceQueryWithVariables = (q: PanelQuery, dsType: string, interval: string) => {
+export const replaceQueryWithVariables = (q: PanelQuery, dsType: string, interval: string, timeRange: TimeRange) => {
     const p = builtinDatasourcePlugins[dsType] ?? externalDatasourcePlugins[dsType]
     if (p && p.replaceQueryWithVariables) {
         p.replaceQueryWithVariables(q, interval)
+    }
+
+    const formats = parseVariableFormat(q.metrics);
+    for (const f of formats) {
+        if (f == VariableInterval) {
+            q.metrics = q.metrics.replaceAll(`\${${f}}`, interval);
+            continue;
+        }
+
+        if (f == VariableTimerangeFrom) {
+            q.metrics = q.metrics.replaceAll(`\${${f}}`, (timeRange.start.getTime() / 1000).toString())
+            continue
+        }
+
+        if (f == VariableTimerangeTo) {
+            q.metrics = q.metrics.replaceAll(`\${${f}}`, (timeRange.end.getTime() / 1000).toString())
+        }
     }
 }
 

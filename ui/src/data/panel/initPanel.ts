@@ -16,6 +16,7 @@ import { DatasourceMaxDataPoints, DatasourceMinInterval, InitTestDataDatasourceI
 import { builtinPanelPlugins } from "src/views/dashboard/plugins/built-in/plugins";
 import { externalPanelPlugins } from "src/views/dashboard/plugins/external/plugins";
 import { PanelTypeGraph } from "src/views/dashboard/plugins/built-in/panel/graph/types";
+import { initTimeRange } from "components/DatePicker/TimePicker";
 
 export const initPanelType = PanelTypeGraph
 export const initPanel = (id?) => {
@@ -42,7 +43,9 @@ export const initPanel = (id?) => {
         conditionRender: {
             type: "variable",
             value: ""
-        }
+        },
+        enableScopeTime: false, 
+        scopeTime: null
     }
 
     if (id) {

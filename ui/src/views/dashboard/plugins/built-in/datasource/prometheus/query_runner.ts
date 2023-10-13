@@ -23,7 +23,7 @@ import { getNewestTimeRange } from "src/components/DatePicker/TimePicker"
 
 import { PromDsQueryTypes } from "./VariableEditor"
 import { parseVariableFormat } from "utils/format"
-import { VariableInterval, VariableSplitChar, VarialbeAllOption } from "src/data/variable"
+import { VariableSplitChar, VarialbeAllOption } from "src/data/variable"
 import { requestApi } from "utils/axios/request"
 import { replaceWithVariablesHasMultiValues } from "utils/variable"
 import { $variables } from "src/views/variables/store"
@@ -198,11 +198,6 @@ export const replacePrometheusQueryWithVariables = (query: PanelQuery,interval: 
     const vars = $variables.get()
     const formats = parseVariableFormat(query.metrics);
     for (const f of formats) {
-        if (f == VariableInterval) {
-            query.metrics = query.metrics.replaceAll(`\${${f}}`, interval);
-            continue;
-        }
-        
         const v = vars.find(v => v.name == f)
         if (v) {
             let selected = []

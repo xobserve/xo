@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box, Center,  Image, SimpleGrid, Switch, Text } from "@chakra-ui/react"
+import { Box, Center, Image, SimpleGrid, Switch, Text } from "@chakra-ui/react"
 import { upperFirst } from "lodash"
 import { Panel, PanelEditorProps, PanelTypeRow } from "types/dashboard"
 import PanelAccordion from "./Accordion"
@@ -25,6 +25,8 @@ import { $config } from "src/data/configs/config"
 import { isEmpty } from "utils/validate"
 import { builtinPanelPlugins } from "../plugins/built-in/plugins"
 import { externalPanelPlugins } from "../plugins/external/plugins"
+import { initTimeRange } from "components/DatePicker/TimePicker"
+import DatePicker from "../components/PanelDatePicker"
 
 // in edit mode, we need to cache all the plugins we have edited, until we save the dashboard
 let pluginsCachedInEdit = {}
@@ -68,7 +70,7 @@ const PanelSettings = memo(({ panel, onChange }: PanelEditorProps) => {
                     <EditorInputItem value={panel.title} onChange={v => onChange((tempPanel: Panel) => { tempPanel.title = v })} />
                 </PanelEditItem>
                 <PanelEditItem title={t.description} desc={t1.panelDesc}>
-                    <EditorInputItem type="textarea" value={panel.desc} onChange={v => onChange((tempPanel: Panel) => { tempPanel.desc = v })} />
+                    <EditorInputItem type="textarea" size="sm" value={panel.desc} onChange={v => onChange((tempPanel: Panel) => { tempPanel.desc = v })} />
                 </PanelEditItem>
                 <PanelEditItem title={t.transform} desc={t1.enableTransform}>
                     <Switch isChecked={panel.enableTransform} onChange={e => onChange((tempPanel: Panel) => { tempPanel.enableTransform = e.currentTarget.checked })} />
@@ -95,6 +97,24 @@ const PanelSettings = memo(({ panel, onChange }: PanelEditorProps) => {
                         </PanelEditItem>
                     </>
                 }
+                <PanelEditItem title="Enable scope timerange" desc="panel scope timerange will override the global timerange which shows in dashboard header">
+                    <Switch isChecked={panel.enableScopeTime} onChange={e => onChange((tempPanel: Panel) => {
+                        const v = e.currentTarget.checked
+                        tempPanel.enableScopeTime = v
+                        if (v && tempPanel.scopeTime == null) {
+                            tempPanel.scopeTime = initTimeRange
+                        }
+                    })} />
+                </PanelEditItem>
+                {
+                    panel.enableScopeTime && <>
+                        <PanelEditItem title="Panel timerange">
+                            <DatePicker id={panel.id.toString()} timeRange={panel.scopeTime} onChange={tr => onChange((tempPanel: Panel) => {
+                                tempPanel.scopeTime = tr
+                            })} />
+                        </PanelEditItem>
+                    </>
+                }
             </PanelAccordion>
 
             {/* panel visulization choosing */}
@@ -103,7 +123,7 @@ const PanelSettings = memo(({ panel, onChange }: PanelEditorProps) => {
                     {
                         builtinPlugins.map((panelType) => {
                             const plugin = builtinPanelPlugins[panelType]
-                            if (panelType== PanelTypeRow) {
+                            if (panelType == PanelTypeRow) {
                                 return <></>
                             }
                             return <VisulizationItem

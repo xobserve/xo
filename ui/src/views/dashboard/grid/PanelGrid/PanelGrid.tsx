@@ -38,7 +38,6 @@ import lodash from 'lodash'
 import moment from "moment";
 import { paletteColorNameToHex } from "utils/colors";
 import { isEmpty } from "utils/validate";
-import { query_loki_alerts, run_loki_query } from "../../plugins/built-in/datasource/loki/query_runner";
 import { $variables } from "src/views/variables/store";
 import { getDatasource } from "utils/datasource";
 import { jsonToEqualPairs, parseVariableFormat } from "utils/format";
@@ -139,13 +138,19 @@ interface PanelComponentProps extends PanelGridProps {
 
 export const prevQueries = new Map()
 export const prevQueryData = new Map()
-export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onHidePanel, width, height, sync, timeRange }: PanelComponentProps) => {
+export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onHidePanel, width, height, sync, timeRange : timeRange0 }: PanelComponentProps) => {
     const toast = useToast()
     const [panelData, setPanelData] = useState<any[]>(null)
     const [queryError, setQueryError] = useState<string>()
     const edit = useSearchParam('edit')
     const [loading, setLoading] = useState(false)
     const datasources = useStore($datasources)
+    const timeRange = cloneDeep(panel.enableScopeTime && panel.scopeTime ? panel.scopeTime : timeRange0)
+    if (typeof timeRange.start == "string") {
+        timeRange.start = new Date(timeRange.start)
+        timeRange.end = new Date(timeRange.end)
+    }
+
     useEffect(() => {
         return () => {
             // delete data query cache when panel is unmounted
@@ -166,7 +171,7 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
         queryH.current = setTimeout(() => {
             queryData(panel, dashboard.id)
         }, 200)
-    }, [panel.datasource, timeRange, variables, datasources])
+    }, [panel.datasource, timeRange0, variables, datasources, panel.enableScopeTime, panel.scopeTime])
 
 
 
@@ -185,6 +190,7 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
             return
         }
 
+    
 
         let data = []
         let needUpdate = false
@@ -210,7 +216,7 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
                     continue
                 }
                 const q: PanelQuery = { ...cloneDeep(q0), interval }
-                replaceQueryWithVariables(q, datasource.type, intervalObj.interval)
+                replaceQueryWithVariables(q, datasource.type, intervalObj.interval, timeRange)
                 if (datasource.type != DatasourceTypeTestData && hasVariableFormat(q.metrics)) {
                     // there are variables still not replaced, maybe because variable's loadValues has not completed
                     continue
@@ -351,7 +357,7 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
                     marginLeft={panel.type == PanelTypeGraph ? -10 + panel.styles.marginLeft + 'px' : panel.styles.marginLeft + 'px'}
                     marginTop={panel.styles.marginTop + 'px'}
                 >
-                    <CustomPanelRender dashboardId={dashboard.id} teamId={dashboard.ownedBy} panel={panel} data={data} height={panelInnerHeight - panel.styles.heightReduction} width={panelInnerWidth - panel.styles.widthReduction} sync={sync} timeRange={timeRange} />
+                    <CustomPanelRender dashboardId={dashboard.id} teamId={dashboard.ownedBy} panel={panel} data={data} height={panelInnerHeight - panel.styles.heightReduction} width={panelInnerWidth - panel.styles.widthReduction} sync={sync} timeRange={panel.enableScopeTime && panel.scopeTime ? panel.scopeTime : timeRange0} />
                 </Box>
             </ErrorBoundary>
 

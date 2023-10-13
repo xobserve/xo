@@ -86,6 +86,8 @@ export interface Panel {
         type: "variable" | "custom",
         value: ""
     }
+    enableScopeTime?: boolean
+    scopeTime?: TimeRange
     panels?: Panel[]
 }
 

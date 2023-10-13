@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box, Button, Center, ChakraProvider, Flex, HStack, Input, Text, VStack } from '@chakra-ui/react'
+import { Box, Button, Center, ChakraProvider, Flex, HStack, Text, VStack } from '@chakra-ui/react'
 import { useStore } from '@nanostores/react'
 import {
     Calendar,
@@ -34,7 +34,6 @@ import { timePickerMsg } from 'src/i18n/locales/en'
 import { systemDateFormats, TimeRange } from 'types/time'
 import { dateTimeFormat } from 'utils/datetime/formatter'
 import storage from 'utils/localStorage'
-import { storeTimerange } from './DatePicker'
 import { $time } from './store'
 
 
@@ -42,6 +41,7 @@ interface Props {
     initTimeRange: TimeRange
     onClose?: any
     onTimeChange: any
+    showCanlendar?: boolean
 }
 
 export const TimePickerKey = "time-picker"
@@ -95,7 +95,7 @@ export const getCurrentTimeRange = (fromStorage = false): TimeRange => {
 
 }
 
-const TimePicker = ({initTimeRange, onClose, onTimeChange }: Props) => {
+const TimePicker = ({initTimeRange, onClose, onTimeChange,showCanlendar=true }: Props) => {
     const t1 = useStore(timePickerMsg)
     const [range, setRange] = useState<TimeRange>(initTimeRange)
     const [tempRange, setTempRange] = useState<TimeRange>(initTimeRange)
@@ -230,6 +230,7 @@ const TimePicker = ({initTimeRange, onClose, onTimeChange }: Props) => {
         raw: 'now-30d'
     }], [t1])
 
+    console.log("here333333:",range)
     return (
         <>
             {tempRange && <HStack alignItems="top" spacing="6">
@@ -239,7 +240,7 @@ const TimePicker = ({initTimeRange, onClose, onTimeChange }: Props) => {
                             <Text>{t1.selectTime}</Text>
                             <FaTimes cursor="pointer" onClick={() => setDisplayCalender(false)} />
                         </Flex>
-                        <ChakraProvider theme={CalendarDefaultTheme}>
+                        {<ChakraProvider theme={CalendarDefaultTheme}>
                             <Calendar value={range} onSelectDate={handleSelectDate}>
                                 <Box position="relative">
                                     <CalendarControls>
@@ -256,7 +257,7 @@ const TimePicker = ({initTimeRange, onClose, onTimeChange }: Props) => {
                                     </CalendarMonths>
                                 </Box>
                             </Calendar>
-                        </ChakraProvider>
+                        </ChakraProvider>}
                     </Box>
                 }
                 <VStack alignItems="left" spacing={4}>
@@ -270,7 +271,7 @@ const TimePicker = ({initTimeRange, onClose, onTimeChange }: Props) => {
                                 onChange={v => onRangeChange(v, tempRange.endRaw)}
                             // disabled={tempRange.startRaw.toString().startsWith('now')}
                             />
-                            <FaCalendarAlt cursor="pointer" onClick={() => setDisplayCalender(!displayCalender)} />
+                            {showCanlendar && <FaCalendarAlt cursor="pointer" onClick={() => setDisplayCalender(!displayCalender)} />}
                         </HStack>
                         {error.start && <Text mt="1" fontSize="sm" color="red">{error.start}</Text>}
                     </Box>
@@ -283,7 +284,7 @@ const TimePicker = ({initTimeRange, onClose, onTimeChange }: Props) => {
                                 onChange={v => onRangeChange(tempRange.startRaw, v)}
                             // disabled={tempRange.endRaw.toString().startsWith('now')}
                             />
-                            <FaCalendarAlt cursor="pointer" onClick={() => setDisplayCalender(!displayCalender)} />
+                            {showCanlendar && <FaCalendarAlt cursor="pointer" onClick={() => setDisplayCalender(!displayCalender)} />}
                         </HStack>
                         {error.end && <Text mt="1" fontSize="sm" color="red">{error.end}</Text>}
                     </Box>

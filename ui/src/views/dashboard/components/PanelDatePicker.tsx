@@ -32,9 +32,9 @@ interface Props {
 }
 
 
-const DatePicker = ({id, timeRange, showTime = true, showRealTime = false, onChange }: Props) => {
+const PanelDatePicker = ({id, timeRange, showTime = true, showRealTime = false, onChange }: Props) => {
     const { isOpen, onOpen, onClose } = useDisclosure()
-    const [value, setValue] = useState<TimeRange>(getNewestTimeRange())
+    const [value, setValue] = useState<TimeRange>(timeRange)
 
     const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
     const [isMobileScreen] = useMediaQuery(MobileVerticalBreakpoint)
@@ -42,6 +42,7 @@ const DatePicker = ({id, timeRange, showTime = true, showRealTime = false, onCha
 
     const onTimeChange = (t: TimeRange) => {
         setValue(t)
+        onChange(t)
         onClose()
     }
 
@@ -88,9 +89,9 @@ const DatePicker = ({id, timeRange, showTime = true, showRealTime = false, onCha
             <Box>
                 <Tooltip label={`${value && dateTimeFormat(value.start)} - ${value && dateTimeFormat(value.end)}`}>
                     <HStack spacing={0} onClick={onOpen} cursor="pointer">
-                        <IconButton variant="ghost" _hover={{ bg: null }}>
+                        {/* <IconButton variant="ghost" _hover={{ bg: null }}>
                             <FaRegClock />
-                        </IconButton>
+                        </IconButton> */}
                         {
                             showTime && <>
                                 {
@@ -113,7 +114,7 @@ const DatePicker = ({id, timeRange, showTime = true, showRealTime = false, onCha
                 <ModalOverlay />
                 <ModalContent minW="fit-content">
                     <ModalBody>
-                        <TimePicker onClose={onClose} onTimeChange={onTimeChange} initTimeRange={timeRange}/>
+                        <TimePicker onClose={onClose} onTimeChange={onTimeChange} initTimeRange={timeRange} showCanlendar={false}/>
                     </ModalBody>
 
                 </ModalContent>
@@ -122,5 +123,5 @@ const DatePicker = ({id, timeRange, showTime = true, showRealTime = false, onCha
     )
 }
 
-export default DatePicker
+export default PanelDatePicker
 

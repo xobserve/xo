@@ -18,17 +18,16 @@ import { TimeRange } from "types/time"
 import { clickhouseToSeriesData } from "./utils"
 import { Datasource } from "types/datasource"
 import { Variable } from "types/variable"
-import { getCurrentTimeRange, getNewestTimeRange } from "src/components/DatePicker/TimePicker"
+import { getNewestTimeRange } from "src/components/DatePicker/TimePicker"
 
 import { PromDsQueryTypes } from "./VariableEditor"
 import { requestApi } from "utils/axios/request"
 import { replaceWithVariablesHasMultiValues } from "utils/variable"
 import { getDatasource, roundDsTime } from "utils/datasource"
-import { replacePrometheusQueryWithVariables } from "../../../built-in/datasource/prometheus/query_runner"
 import { QueryPluginResult } from "types/plugin"
 import { $variables } from "src/views/variables/store"
 import { parseVariableFormat } from "utils/format"
-import { VariableInterval, VariableSplitChar, VariableTimerangeFrom, VariableTimerangeTo, VarialbeAllOption } from "src/data/variable"
+import { VariableSplitChar,  VarialbeAllOption } from "src/data/variable"
 
 
 export const runQuery = async (panel: Panel, q: PanelQuery, range: TimeRange, ds: Datasource) => {
@@ -138,22 +137,6 @@ export const replaceQueryWithVariables = (query: PanelQuery,interval: string) =>
     const vars = $variables.get()
     const formats = parseVariableFormat(query.metrics);
     for (const f of formats) {
-        if (f == VariableInterval) {
-            query.metrics = query.metrics.replaceAll(`\${${f}}`, interval);
-            continue;
-        }
-        
-        if (f == VariableTimerangeFrom || f == VariableTimerangeTo) {
-            const range = getCurrentTimeRange()
-            if (f == VariableTimerangeFrom) {
-                query.metrics = query.metrics.replaceAll(`\${${f}}`, roundDsTime(range.start.getTime() / 1000).toString())
-            } else {
-                query.metrics = query.metrics.replaceAll(`\${${f}}`, roundDsTime(range.end.getTime() / 1000).toString())
-            }
-            continue
-        }
-
-
         const v = vars.find(v => v.name == f)
         if (v) {
             let selected = []
