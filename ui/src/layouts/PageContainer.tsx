@@ -166,7 +166,7 @@ const Container = (props: Props) => {
         isLargeScreen
           ?
           <Flex
-            display={fullscreen ? "none" : "flex"}
+            visibility={fullscreen ? "hidden" : "visible"} 
             flexDir="column"
             justifyContent="space-between"
             id="sidemenu"

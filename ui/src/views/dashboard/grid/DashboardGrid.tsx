@@ -26,6 +26,7 @@ import { useKey, useSearchParam } from "react-use";
 import { addParamToUrl } from "utils/url";
 import { LazyLoader } from "../../../components/LazyLoader";
 import RowPanel from "./PanelGrid/RowPanel";
+import useFullscreen from "hooks/useFullscreen";
 
 
 
@@ -44,7 +45,8 @@ const DashboardGrid = memo((props: GridProps) => {
     console.log("dashboard grid rendered:", props.panels)
     const inEdit = useSearchParam('edit')
     const viewPanel = useSearchParam("viewPanel")
-
+    const fullscreen = useFullscreen()
+    
     const { dashboard, panels, onChange } = props
 
     useKey(
@@ -141,12 +143,13 @@ const DashboardGrid = memo((props: GridProps) => {
     const viewPanelHeight = useMemo(() => {
         let height = 0
         if (viewPanel) {
-            const ele = document.getElementById("sidemenu")
-            height = ele?.offsetHeight - DashboardHeaderHeight - 15 ?? 600
+            const ele = document.getElementById("sidemenu") 
+            height = ele?.offsetHeight - (fullscreen ? 0 :DashboardHeaderHeight) - 15 ?? 600
         }
 
         return height
     }, [viewPanel])
+
 
     return (<Box style={{ flex: '1 1 auto' }} id="dashboard-grid" position="relative">
         <AutoSizer disableHeight>

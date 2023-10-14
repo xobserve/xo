@@ -151,7 +151,6 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
         timeRange.start = new Date(timeRange.start)
         timeRange.end = new Date(timeRange.end)
     }
-
     useEffect(() => {
         return () => {
             // delete data query cache when panel is unmounted

@@ -12,7 +12,7 @@
 // limitations under the License.
 
 import { Box, Button, Modal, ModalBody, ModalContent, Text, ModalHeader, ModalOverlay, StyleProps, useClipboard, useDisclosure, Switch, HStack, Input, VStack, Tabs, TabList, Tab, TabPanels, TabPanel, ModalCloseButton, ModalFooter } from "@chakra-ui/react"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { BsShare } from "react-icons/bs"
 import { Dashboard } from "types/dashboard"
 import { parseVariableFormat } from "utils/format"
@@ -28,6 +28,7 @@ import { Form } from "components/form/Form"
 import FormItem from "components/form/Item"
 import CodeEditor from "src/components/CodeEditor/CodeEditor"
 import saveFile from 'save-as-file';
+import { isEmpty } from "utils/validate"
 
 interface Props extends StyleProps {
     dashboard: Dashboard
@@ -40,11 +41,16 @@ const DashboardShare = ({ dashboard, ...rest }: Props) => {
     const t = useStore(commonMsg)
 
     const { isOpen, onOpen, onClose } = useDisclosure()
+    
     const [shareUrl, setShareUrl] = useState(null)
+    const [embededUrl, setEmbededUrl] = useState(null)
+
     const { onCopy, setValue, hasCopied } = useClipboard("", 5000);
     const [enableCurrentTimeRange, setEnableCurrentTimeRange] = useState(true)
-    const onShare = () => {
-        let url = window.origin + location.pathname + '?'
+    const [useRawTime, setUseRawTime] = useState(false)
+
+    useEffect(() => {
+        let url = window.origin + location.pathname
         const dashData = JSON.stringify(dashboard.data)
         const usingVariables = parseVariableFormat(dashData)
         for (const k of Object.keys(shareUrlParams)) {
@@ -52,13 +58,11 @@ const DashboardShare = ({ dashboard, ...rest }: Props) => {
         }
 
         const timeRange = getCurrentTimeRange()
-        setEnableCurrentTimeRange(s => {
-            if (s) {
-                shareUrlParams['from'] = timeRange.start.getTime()
-                shareUrlParams['to'] = timeRange.end.getTime()
-            }
-            return s
-        })
+        if (enableCurrentTimeRange) {
+            shareUrlParams['from'] = useRawTime ? timeRange.startRaw : timeRange.start.getTime()
+            shareUrlParams['to'] = useRawTime ? timeRange.endRaw : timeRange.end.getTime()
+        }
+ 
 
         for (const v of variables) {
             if (usingVariables.includes(v.name)) {
@@ -78,16 +82,16 @@ const DashboardShare = ({ dashboard, ...rest }: Props) => {
         }
         dispatch(ShareUrlEvent)
         setTimeout(() => {
-            url += queryString.stringify(shareUrlParams, { sort: false })
+            if (!isEmpty(shareUrlParams)) {
+                url =  url + "?" + queryString.stringify(shareUrlParams, { sort: false })
+            }
             setShareUrl(url)
             setValue(url)
-            onOpen()
         }, 150)
-    }
-
+    },[enableCurrentTimeRange, useRawTime, variables])
 
     return (<>
-        <Box onClick={onShare} {...rest}><BsShare /></Box>
+        <Box onClick={onOpen} {...rest}><BsShare /></Box>
         
         <Modal isOpen={isOpen} onClose={onClose} autoFocus={false}>
             <ModalOverlay />
@@ -115,13 +119,18 @@ const DashboardShare = ({ dashboard, ...rest }: Props) => {
                                     <Form>
                                         <FormItem title={t.currentTimeRange} size="sm" alignItems={'center'}>
                                             <Switch
-                                                defaultChecked={enableCurrentTimeRange}
-                                                checked={enableCurrentTimeRange}
+                                                isChecked={enableCurrentTimeRange}
                                                 onChange={(e) => {
                                                     setEnableCurrentTimeRange(e.currentTarget.checked)
-                                                    onShare()
                                                 }} />
                                         </FormItem>
+                                        {enableCurrentTimeRange && <FormItem title="Use raw time" size="sm" alignItems={'center'}>
+                                            <Switch
+                                                isChecked={useRawTime}
+                                                onChange={(e) => {
+                                                    setUseRawTime(e.currentTarget.checked)
+                                                }} />
+                                        </FormItem>}
                                     </Form>
                                     <HStack spacing={1}>
                                         <Input fontSize='xs' mr='1.5' wordBreak='break-all' p='1' className="code-bg" bgColor='#09090b' overflow='hidden' textOverflow='ellipsis' value={shareUrl} readOnly />
