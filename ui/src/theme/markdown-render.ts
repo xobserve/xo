@@ -24,21 +24,25 @@ export default function markdownRender(props) {
                 marginBottom: '0.8rem'
             },
             'h2': {
-                fontSize: '1.8em',
+                fontSize: '1.6em',
                 fontWeight: 'bold',
                 marginBottom: '0.6rem'
             },
             'h3': {
-                fontSize: '1.6em',
+                fontSize: '1.4em',
                 fontWeight: '600',
                 marginBottom: '0.4rem'
             },
             'h4': {
-                fontSize: '1.4em',
+                fontSize: '1.3em',
                 fontWeight: '600'
             },
-            'h5,h6': {
+            'h5': {
                 fontSize: '1.2em',
+                fontWeight: 'normal'
+            },
+            'h6': {
+                fontSize: '1.1em',
                 fontWeight: 'normal'
             },
             p: {
