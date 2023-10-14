@@ -41,7 +41,7 @@ import { isEmpty } from "utils/validate";
 import { $variables } from "src/views/variables/store";
 import { getDatasource } from "utils/datasource";
 import { jsonToEqualPairs, parseVariableFormat } from "utils/format";
-import { VariableInterval } from "src/data/variable";
+import { builtinVariables, VariableInterval } from "src/data/variable";
 import Loading from "src/components/loading/Loading";
 import DebugPanel from "./DebugPanel";
 import { AlertGroup, AlertRule } from "src/views/dashboard/plugins/built-in/panel/alert/types";
@@ -89,7 +89,7 @@ export const PanelGrid = memo((props: PanelGridProps) => {
             for (const q of props.panel.datasource.queries) {
                 const f = parseVariableFormat(q.metrics)
                 for (const v of f) {
-                    if (v == VariableInterval) {
+                    if (builtinVariables.includes(v)) {
                         continue
                     }
                     const variable = vars.find(v1 => v1.name == v)
