@@ -25,6 +25,7 @@ import { SeriesData } from "types/seriesData";
 import { GraphRules } from "./OverridesEditor";
 import { findOverride, findRuleInOverride } from "utils/dashboard/panel";
 import { isEmpty } from "utils/validate";
+import moment from "moment";
 
 
 
@@ -337,6 +338,7 @@ export function formatTime(
 
     let format = systemDateFormats.interval.year;
 
+ 
     if (foundIncr <= timeUnitSize.minute) {
         format = systemDateFormats.interval.second;
     } else if (range <= timeUnitSize.day) {
@@ -344,7 +346,16 @@ export function formatTime(
     } else if (foundIncr <= timeUnitSize.day) {
         format = systemDateFormats.interval.hour;
     } else if (range < timeUnitSize.year) {
-        format = systemDateFormats.interval.day;
+        const start = moment(splits[0] * 1000)
+        const now = moment()
+        
+        const isSameYear = now.isSame(start, "year") && now.isSame(now, "year")
+
+        if (!isSameYear) {
+            format = 'YY-MM-DD'
+        } else {
+            format = systemDateFormats.interval.day;
+        }
     } else if (incrementRoundedToDay === yearRoundedToDay) {
         format = systemDateFormats.interval.year;
     } else if (foundIncr <= timeUnitSize.year) {
