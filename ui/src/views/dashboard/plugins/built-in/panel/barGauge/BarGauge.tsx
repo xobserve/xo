@@ -24,6 +24,8 @@ import { BarGaugeRules } from "./OverrideEditor";
 import { isEmpty } from "utils/validate";
 import { Center } from "@chakra-ui/react";
 import NoData from "src/views/dashboard/components/PanelNoData";
+import { replaceWithVariables } from "utils/variable";
+import { VariableCurrentValue } from "src/data/variable";
 
 interface Props extends PanelProps {
     data: SeriesData[][]
@@ -92,10 +94,11 @@ const transformData = (data: SeriesData[], panel: Panel): [BarGaugeValue[], numb
                 if (width > textWidth) textWidth = width
                 let title; 
                 if (nameOverride?.name) {
+                    const v = replaceWithVariables(nameOverride.name, { [VariableCurrentValue]: s.name})
                     if (nameOverride.overrideField) {
-                        title = nameOverride.name
+                        title = v
                     } else {
-                        title =  nameOverride.name + "-" + field.name
+                        title =  v + "-" + field.name
                     }
                 } else {
                     title =  s.name + "-" + field.name
