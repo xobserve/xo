@@ -19,17 +19,17 @@ import React, { memo } from "react";
 import { useStore } from "@nanostores/react"
 import { textPanelMsg } from "src/i18n/locales/en"
 import { TextEditorProps, TextPanel as Panel } from "./types"
+import CodeEditor from "components/CodeEditor/CodeEditor"
 
 const TextPanelEditor = memo(({ panel, onChange }: TextEditorProps) => {
     const t1 = useStore(textPanelMsg)
     return (<PanelAccordion title={t1.textSettings}>
         <PanelEditItem title={t1.content}>
-            <Textarea value={panel.plugins.text.md} onChange={(e) => {
-                const v = e.currentTarget.value
+            <CodeEditor value={panel.plugins.text.md} onChange={(v) => {
                 onChange((panel: Panel) => {
                     panel.plugins.text.md = v
                 })
-            }} />
+            }} language="markdown" height="240px" />
         </PanelEditItem>
 
         <PanelEditItem title={t1.horizontalPos}>

@@ -24,21 +24,21 @@ export default function markdownRender(props) {
                 marginBottom: '0.8rem'
             },
             'h2': {
-                fontSize: '1.8rem',
+                fontSize: '1.8em',
                 fontWeight: 'bold',
                 marginBottom: '0.6rem'
             },
             'h3': {
-                fontSize: '1.6rem',
+                fontSize: '1.6em',
                 fontWeight: '600',
                 marginBottom: '0.4rem'
             },
             'h4': {
-                fontSize: '1.4rem',
+                fontSize: '1.4em',
                 fontWeight: '600'
             },
             'h5,h6': {
-                fontSize: '1.2rem',
+                fontSize: '1.2em',
                 fontWeight: 'normal'
             },
             p: {
@@ -62,7 +62,8 @@ export default function markdownRender(props) {
                 fontSize: '.95rem'
             },
             a: {
-                textDecoration: 'underline !important'
+                textDecoration: 'none',
+                color: mode('twitter.500', 'twitter.500')(props),
             },
             'p code': {
                 bg: mode('rgba(175, 184, 193, 0.2)', 'rgba(110, 118, 129, 0.3)')(props),
