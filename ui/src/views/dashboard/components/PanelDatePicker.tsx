@@ -29,10 +29,11 @@ interface Props {
     showTime?: boolean
     showRealTime?: boolean
     onChange: any
+    showIcon?: boolean
 }
 
 
-const PanelDatePicker = ({id, timeRange, showTime = true, showRealTime = false, onChange }: Props) => {
+const PanelDatePicker = ({id, timeRange, showTime = true, showRealTime = false, onChange, showIcon=false }: Props) => {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [value, setValue] = useState<TimeRange>(timeRange)
 
@@ -87,14 +88,13 @@ const PanelDatePicker = ({id, timeRange, showTime = true, showRealTime = false, 
     return (
         <>
             <Box>
-                <Tooltip label={`${value && dateTimeFormat(value.start)} - ${value && dateTimeFormat(value.end)}`}>
-                    <HStack spacing={0} onClick={onOpen} cursor="pointer">
-                        {/* <IconButton variant="ghost" _hover={{ bg: null }}>
+                {/* <Tooltip label={`${value && dateTimeFormat(value.start)} - ${value && dateTimeFormat(value.end)}`}> */}
+                    <HStack spacing={0} onClick={onOpen} cursor="pointer" className="hover-text">
+                        {showIcon && <IconButton variant="ghost"  _hover={{ bg: null }}>
                             <FaRegClock />
-                        </IconButton> */}
+                        </IconButton>}
                         {
                             showTime && <>
-                                {
                                    <Box>
                                         {!isMobileScreen && <Text layerStyle="textSecondary" fontSize="0.9rem" fontWeight="500">
                                             {value.startRaw.toString().startsWith('now') ? value.startRaw : dateTimeFormat(value.start)} to {value.endRaw.toString().startsWith('now') ? value.endRaw : dateTimeFormat(value.end)}
@@ -104,11 +104,10 @@ const PanelDatePicker = ({id, timeRange, showTime = true, showRealTime = false, 
                                                 {dateTimeFormat(value.start)} - {dateTimeFormat(value.end)}
                                             </Text>}
                                     </Box>
-                                }
                             </>
                         }
                     </HStack>
-                </Tooltip>
+                {/* </Tooltip> */}
             </Box>
             <Modal isOpen={isOpen} onClose={onClose} initialFocusRef={null} autoFocus={false}>
                 <ModalOverlay />

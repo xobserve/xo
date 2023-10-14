@@ -11,8 +11,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Dashboard, Panel, PanelProps, PanelQuery } from "types/dashboard"
-import { Box, Center, HStack, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Portal, Text, Tooltip, useColorMode, useColorModeValue, useDisclosure, useToast } from "@chakra-ui/react";
-import { FaBook, FaBug, FaEdit, FaRegClone, FaRegCopy, FaRegEye, FaRegEyeSlash, FaTrashAlt } from "react-icons/fa";
+import { Box, Center, HStack, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Popover, PopoverArrow, PopoverBody, PopoverContent, PopoverTrigger, Portal, Text, Tooltip, useColorMode, useColorModeValue, useDisclosure, useToast } from "@chakra-ui/react";
+import { FaBook, FaBug, FaEdit, FaRegClock, FaRegClone, FaRegCopy, FaRegEye, FaRegEyeSlash, FaTrashAlt } from "react-icons/fa";
 import { IoMdInformation } from "react-icons/io";
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { DatasourceMaxDataPoints, DatasourceMinInterval, PANEL_HEADER_HEIGHT } from "src/data/constants";
@@ -22,7 +22,7 @@ import { Variable } from "types/variable";
 import { hasVariableFormat, replaceQueryWithVariables, replaceWithVariables } from "utils/variable";
 import useBus, { dispatch } from 'use-bus'
 import { getCurrentTimeRange } from "src/components/DatePicker/TimePicker";
-import { OnClonePanel, PanelDataEvent, PanelForceRebuildEvent, TimeChangedEvent } from "src/data/bus-events";
+import { OnClonePanel, PanelDataEvent, PanelForceRebuildEvent, TimeChangedEvent, UpdatePanelEvent } from "src/data/bus-events";
 import { addParamToUrl } from "utils/url";
 import PanelBorder from "src/components/largescreen/components/Border";
 import TitleDecoration from "src/components/largescreen/components/TitleDecoration";
@@ -54,6 +54,7 @@ import { builtinDatasourcePlugins, builtinPanelPlugins } from "../../plugins/bui
 import { PanelTypeAlert } from "../../plugins/built-in/panel/alert/types";
 import { PanelTypeGraph } from "../../plugins/built-in/panel/graph/types";
 import { DatasourceTypeTestData } from "../../plugins/built-in/datasource/testdata/types";
+import PanelDatePicker from "../../components/PanelDatePicker";
 
 interface PanelGridProps {
     dashboard: Dashboard
@@ -138,7 +139,7 @@ interface PanelComponentProps extends PanelGridProps {
 
 export const prevQueries = new Map()
 export const prevQueryData = new Map()
-export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onHidePanel, width, height, sync, timeRange : timeRange0 }: PanelComponentProps) => {
+export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onHidePanel, width, height, sync, timeRange: timeRange0 }: PanelComponentProps) => {
     const toast = useToast()
     const [panelData, setPanelData] = useState<any[]>(null)
     const [queryError, setQueryError] = useState<string>()
@@ -190,7 +191,7 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
             return
         }
 
-    
+
 
         let data = []
         let needUpdate = false
@@ -201,7 +202,7 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
         if (!plugin) {
             setQueryError("Datasource plugin not found: " + datasource.type)
             setPanelData([])
-            return 
+            return
         }
 
         setLoading(true)
@@ -363,6 +364,24 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
 
         </Box>}
         {loading && <Box position="absolute" top="0" right="0"><Loading size="sm" /></Box>}
+        {!loading && panel.enableScopeTime && <Popover trigger="hover"> 
+            <PopoverTrigger>
+                <Box position="absolute" top="5px" right="5px" opacity="0.5" fontSize="0.8rem" zIndex={1000} cursor="pointer"><FaRegClock /></Box>
+            </PopoverTrigger>
+            <PopoverContent>
+                <PopoverArrow /> 
+                <PopoverBody>
+                    <PanelDatePicker id={panel.id.toString()} timeRange={panel.scopeTime} onChange={tr => {
+                        panel.scopeTime = tr
+                        dispatch({
+                            type: UpdatePanelEvent,
+                            data: cloneDeep(panel)
+                        })
+                    }}  showIcon/>
+                    <Text opacity={0.7} mt="2" ml="3" fontSize="0.9rem">Panel time range</Text>
+                </PopoverBody>
+            </PopoverContent>
+        </Popover>}
         <Box position="absolute" top="0" left="0" right="0" bottom="0" zIndex={-1} overflow="hidden"><PanelBorder width={width} height={height} border={panel.styles?.border} > <Box></Box></PanelBorder></Box>
     </Box>
 }

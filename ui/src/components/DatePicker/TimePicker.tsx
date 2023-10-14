@@ -290,7 +290,7 @@ const TimePicker = ({initTimeRange, onClose, onTimeChange,showCanlendar=true }: 
                     </Box>
                     <Button onClick={() => applyTimeRange(tempRange)}>{t1.apply}</Button>
                 </VStack>
-                <Box p="2">
+                <Box p="2" pt="0">
                     <Center><Text>{t1.quickSelect}</Text></Center>
                     <VStack
                         spacing={4}
