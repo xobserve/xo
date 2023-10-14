@@ -1,44 +1,44 @@
 import { mode } from "@chakra-ui/theme-tools"
 
 export default function markdownRender(props) {
-    return  {
+    return {
         '.markdown-render': {
-           wordBreak: 'break-word',
-           'img': {
+            wordBreak: 'break-word',
+            'img': {
                 display: 'inline-block'
-           },
-           '.hljs' : {
-               padding: '1rem',
-               borderRadius: '8px'
-           },
-           'ul,ol' : {
-               paddingLeft: '1rem',
-               margin: '0.7rem 0',
-               li: {
-                   margin: '.4rem 0'
-               }
-           },
-           'h1': {
-               fontSize: '1.8em',
-               fontWeight: 'bold',
-               marginBottom: '0.8rem'
-           },
-           'h2': {
-            fontSize: '1.8rem',
-            fontWeight: 'bold',
-            marginBottom: '0.6rem'
+            },
+            '.hljs': {
+                padding: '1rem',
+                borderRadius: '8px'
+            },
+            'ul,ol': {
+                paddingLeft: '1rem',
+                margin: '0.7rem 0',
+                li: {
+                    margin: '.4rem 0'
+                }
+            },
+            'h1': {
+                fontSize: '1.8em',
+                fontWeight: 'bold',
+                marginBottom: '0.8rem'
+            },
+            'h2': {
+                fontSize: '1.8rem',
+                fontWeight: 'bold',
+                marginBottom: '0.6rem'
             },
             'h3': {
-                fontSize: '1.6em',
+                fontSize: '1.6rem',
                 fontWeight: '600',
                 marginBottom: '0.4rem'
             },
             'h4': {
-                fontSize: '1.4em',
+                fontSize: '1.4rem',
                 fontWeight: '600'
             },
             'h5,h6': {
-                fontSize: '1.2em',
+                fontSize: '1.2rem',
                 fontWeight: 'normal'
             },
             p: {
@@ -47,7 +47,7 @@ export default function markdownRender(props) {
             blockquote: {
                 lineHeight: '2rem',
                 margin: '1.5rem 0',
-                p :{
+                p: {
                     paddingLeft: '1rem',
                     fontWeight: '500',
                     fontStyle: 'italic',
@@ -73,11 +73,11 @@ export default function markdownRender(props) {
             '.at-user-link': {
                 textDecoration: 'none !important',
                 borderBottom: '2px dashed rgb(158, 158, 158)',
-                margin:'0 3px',
+                margin: '0 3px',
                 color: mode(props.theme.colors.teal[600], props.theme.colors.teal[200])(props),
                 fontWeight: '550',
                 paddingBottom: '2px'
-            }       
+            }
         }
     }
 }
