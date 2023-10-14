@@ -44,7 +44,7 @@ export function MarkdownRender({ md, fontSize,fontWeight="500",enableToc = false
       <ChakraMarkdown
         children={renderMd}
         {...rest}
-        style={{ height: '100%', fontSize: fontSize ?? '1.05rem', fontWeight: fontWeight, lineHeight: '1.7' }}
+        style={{ height: '100%', fontSize: fontSize ?? '1.05rem', fontWeight: fontWeight, lineHeight: '1.4' }}
         className="markdown-render"
         options={{
           overrides: {
