@@ -13,9 +13,9 @@ export default function markdownRender(props) {
             },
             'ul,ol': {
                 paddingLeft: '1rem',
-                margin: '0.7rem 0',
+                margin: '0rem 0',
                 li: {
-                    margin: '.4rem 0'
+                    margin: '.3rem 0'
                 }
             },
             'h1': {
