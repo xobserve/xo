@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import React from "react"
+import React, { useEffect } from "react"
 import {
   useColorMode,
   useColorModeValue,
@@ -24,15 +24,23 @@ import { useStore } from "@nanostores/react"
 import { sidebarMsg } from "src/i18n/locales/en"
 import PopoverTooltip from "./PopoverTooltip"
 import { upperFirst } from "lodash"
+import { useSearchParam } from "react-use"
 
 type ColorModeSwitcherProps = Omit<IconButtonProps, "aria-label">
 
 export const ColorModeSwitcher: React.FC<ColorModeSwitcherProps & { miniMode: boolean, disableTrigger?: boolean }> = ({ miniMode,disableTrigger=false, ...props }) => {
   const t1 = useStore(sidebarMsg)
-  const { toggleColorMode } = useColorMode()
+  const { toggleColorMode, setColorMode  } = useColorMode()
   const text = useColorModeValue("dark", "light")
   const { colorMode } = useColorMode()
 
+  const cm = useSearchParam("colorMode")
+  useEffect(() => {
+    if (cm == "light" || cm == "dark") {
+      setColorMode(cm)
+    }
+  },[cm])
+  
   const textComponent = <Text fontSize="1rem">{t1.themeChange + upperFirst(colorMode)}</Text>
   return (
     <PopoverTooltip

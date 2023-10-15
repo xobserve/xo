@@ -11,11 +11,11 @@
     <style>
         .svgLoader {
             animation: spin 2s linear infinite;
-            margin: auto;        
+            margin: auto;
         }
 
         #first-page-loading {
-            position:fixed;
+            position: fixed;
             top: 0;
             left: 0;
             right: 0;
@@ -66,7 +66,7 @@
 
 <body>
     <div id="first-page-loading">
-        <div><img class="svgLoader" src="/logo.png" width="60px" height="60px"/></div>
+        <div><img class="svgLoader" src="/logo.png" width="60px" height="60px" /></div>
         <div style="color: rgb(0, 181, 216);">Loading JS/CSS and website Configs...</div>
     </div>
     <div id="root"></div>
@@ -77,6 +77,14 @@
             document.body.style.backgroundColor = "#1A202C"
         } else {
             document.body.style.backgroundColor = "#fff"
+        }
+
+        const url = window.location.href
+        if (url.indexOf("embed=true") >= 0) {
+            const firstPageLoading = document.getElementById('first-page-loading');
+            if (firstPageLoading) {
+                firstPageLoading.style.display = "none"
+            }
         }
     </script>
 </body>

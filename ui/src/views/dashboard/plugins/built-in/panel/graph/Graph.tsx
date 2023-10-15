@@ -77,8 +77,6 @@ const GraphPanel = memo((props: GraphPanelProps) => {
         return (<Center height="100%">Data format not support!</Center>)
     }
 
-
-
     const data = useMemo(() => {
         const res = []
         props.data.forEach(d => {
@@ -200,9 +198,12 @@ const GraphPanel = memo((props: GraphPanelProps) => {
                                 onCreate={onChartCreate}
                             >
                                 {props.panel.plugins.graph.tooltip.mode != 'hidden' && <Tooltip props={props} options={options} data={data} inactiveSeries={inactiveSeries} />}
-                                {!embed && <ContextMenu props={props} options={options} data={data} container={containerRef} />}
-                                {!embed && <ZoomPlugin options={options} onZoom={onZoom} />}
-                                {!embed && <AnnotationsPlugin dashboardId={props.dashboardId} options={options} timeRange={props.timeRange} panel={props.panel} />}
+
+                                {!embed && <>
+                                    <ContextMenu props={props} options={options} data={data} container={containerRef} />
+                                    <ZoomPlugin options={options} onZoom={onZoom} />
+                                    <AnnotationsPlugin dashboardId={props.dashboardId} options={options} timeRange={props.timeRange} panel={props.panel} />
+                                </>}
                                 {props.panel.plugins.graph.thresholdsDisplay != ThresholdDisplay.None && <ThresholdsPlugin options={options} thresholdsConfig={props.panel.plugins.graph.thresholds} display={props.panel.plugins.graph.thresholdsDisplay} />}
                                 {v && props.panel.plugins.graph.thresholdsDisplay != ThresholdDisplay.None && <ThresholdsPlugin options={options} thresholdsConfig={v} display={props.panel.plugins.graph.thresholdsDisplay} />}
                             </UplotReact>
