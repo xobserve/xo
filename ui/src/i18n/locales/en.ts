@@ -286,14 +286,17 @@ export const dashboardMsg = i18n("dashboard", {
   "headerTeamTips": "the team which current dashboard belongs to",
   "refreshOnce": "refresh just once",
   "refreshInterval": "refresh with interval",
-  "fullscreenTips": "enter fullscreen mode",
+  "fullscreenTips": "View in fullscreen mode",
   "exitFullscreenTips": "Press ESC to exit fullscreen mode",
   "addPanel": "Add panel",
   "addRow": "Add row",
   "pastePanel": "Paste panel",
   "shareHelp": "Create a direct link to this dashboard, customized with the options below.",
   "exportHelp": "Export dashbaord for sharing.",
-  "embedHelp": "Create an embedding url, you can iframe it in other website"
+  "embedHelp": "Create an embedding url, you can iframe it in other website",
+  "starTips": "Mark as favourite",
+  "unstarTips": "Unmark as favourite",
+  "shareDashboard": "Share dashboard",
 })
 
 export const dashboardSaveMsg = i18n("dashboardSave", {
@@ -320,6 +323,7 @@ export const dashboardSaveMsg = i18n("dashboardSave", {
 })
 
 export const dashboardSettingMsg = i18n("dashboardSetting", {
+  "dashSettings": "Dashboard settings",
   "metaData": "Meta data",
   "tootip": "Shared tooltip",
   "visibleTo": "Visible to",

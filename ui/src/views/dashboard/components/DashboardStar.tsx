@@ -11,11 +11,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Box, useColorMode, useColorModeValue } from "@chakra-ui/react"
+import { Box, Tooltip, useColorMode, useColorModeValue } from "@chakra-ui/react"
+import { useStore } from "@nanostores/react"
 import { use } from "echarts"
 import React, { useEffect, useState } from "react"
 import { AiFillStar, AiOutlineStar } from "react-icons/ai"
 import { FaStar } from "react-icons/fa"
+import { dashboardMsg } from "src/i18n/locales/en"
 import { requestApi } from "utils/axios/request"
 
 interface Props {
@@ -27,6 +29,7 @@ interface Props {
 }
 
 const DashboardStar = (props: Props) => {
+    const t1 = useStore(dashboardMsg)
     const {dashboardId,fontSize="1rem", colorScheme="orange", enableClick=true} = props
     const [starred, setStarred] = useState(props.starred)
 
@@ -48,9 +51,11 @@ const DashboardStar = (props: Props) => {
        
         setStarred(!starred)
     }
-    return (<Box cursor="pointer" onClick={enableClick ? onStar : null} fontSize={fontSize} color={colorScheme == "orange" ? useColorModeValue("orange.300","orange.200" ): 'inherit'}>
+    return (<Tooltip label={starred ? t1.starTips : t1.unstarTips}> 
+        <Box cursor="pointer" onClick={enableClick ? onStar : null} fontSize={fontSize} color={colorScheme == "orange" ? useColorModeValue("orange.300","orange.200" ): 'inherit'}>
         {starred ? <AiFillStar /> : <AiOutlineStar />}
-        </Box>)
+        </Box>
+        </Tooltip>)
 }
 
 export default DashboardStar

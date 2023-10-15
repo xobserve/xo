@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box, useToast } from "@chakra-ui/react";
+import { Box, Tooltip, useToast } from "@chakra-ui/react";
 import {  useState } from "react";
 import { FaTv } from "react-icons/fa";
 import { useKey, useSearchParam } from "react-use";
@@ -51,7 +51,9 @@ const Fullscreen = () => {
     }
 
     return (
-        <Box onClick={() =>onFullscreenChange(false)} cursor="pointer" title={t1.fullscreenTips}><FaTv /></Box>
+        <Tooltip label={t1.fullscreenTips} placement="left-end">
+            <Box onClick={() =>onFullscreenChange(false)} cursor="pointer" ><FaTv /></Box>
+        </Tooltip>
     )
 }
 

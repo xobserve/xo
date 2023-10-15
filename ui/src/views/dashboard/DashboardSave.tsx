@@ -50,13 +50,13 @@ const DashboardSave = ({ dashboard }: Props) => {
     useLeavePageConfirm(embed ? false : (dashboard.data.enableUnsavePrompt ? pageChanged : false))
 
     useBus(
-        SaveDashboardEvent, 
+        SaveDashboardEvent,
         () => {
-           onSave(false)
+            onSave(false)
         },
         [dashboard]
     )
- 
+
 
     useEffect(() => {
         if (!embed && pressed && !isOpen) {
@@ -179,21 +179,26 @@ const DashboardSave = ({ dashboard }: Props) => {
     return (
         <>
             <Box>
+
                 <Menu placement="left">
-                    <MenuButton as={IconButton} variant="ghost" sx={{
-                        span: {
-                            display: "flex",
-                            justifyContent: "center",
-                        }
-                    }}>
-                        <FaRegSave />
-                    </MenuButton>
+                    <Tooltip label={t1.saveDash}>
+                        <MenuButton as={IconButton} variant="ghost" sx={{
+                            span: {
+                                display: "flex",
+                                justifyContent: "center",
+                            }
+                        }}>
+                            <FaRegSave />
+                        </MenuButton>
+                    </Tooltip>
                     <MenuList>
                         <MenuItem onClick={onSaveOpen}>{t.save}</MenuItem>
                         <MenuItem onClick={onViewHistory}>{t1.viewHistory}</MenuItem>
                     </MenuList>
                 </Menu>
+
             </Box>
+
             <Drawer
                 key={dashboard.id}
                 isOpen={isOpen}
