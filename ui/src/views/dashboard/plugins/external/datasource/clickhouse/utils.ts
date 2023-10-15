@@ -16,7 +16,7 @@ import { Panel, PanelQuery } from "types/dashboard";
 import { FieldType, SeriesData } from "types/seriesData";
 import { TimeRange } from "types/time";
 import { roundDsTime } from "utils/datasource";
-import { jsonToEqualPairs, parseLegendFormat } from "utils/format";
+import { jsonToEqualPairs, jsonToEqualPairs1, parseLegendFormat } from "utils/format";
 import { calcSeriesStep } from "utils/seriesData";
 import { isEmpty } from "utils/validate";
 import { replaceWithVariables } from "utils/variable";
@@ -41,7 +41,8 @@ export const clickhouseToSeriesData = (data: ChPluginData, panel: Panel, query: 
     }
 
     const seriesMap: Record<string,SeriesData> = {}
-
+    const formats = parseLegendFormat(query.legend)
+    
     data.data.forEach((row, i) => {
         const labels = {}
         let timeValue;
@@ -70,7 +71,7 @@ export const clickhouseToSeriesData = (data: ChPluginData, panel: Panel, query: 
         if (isEmpty(labels)) {
             seriesName = query.id
         } else {
-            seriesName = jsonToEqualPairs(labels)
+            seriesName = jsonToEqualPairs1(labels)
         }
 
         const series = seriesMap[seriesName]
@@ -78,6 +79,7 @@ export const clickhouseToSeriesData = (data: ChPluginData, panel: Panel, query: 
             seriesMap[seriesName] = {
                 queryId: query.id,
                 name: seriesName,
+                labels: labels,
                 fields: [
                     {
                         name: timeFieldName,
@@ -97,174 +99,24 @@ export const clickhouseToSeriesData = (data: ChPluginData, panel: Panel, query: 
         }
     })
 
+    const res = Object.values(seriesMap)
+    for (const s of res) {
+        if (!isEmpty(query.legend)) {
+            s.name = query.legend
+            if (!isEmpty(formats)) {
+                for (const format of formats) {
+                    const l = s.labels[format]
+                    if (l) {
+                        s.name= s.name.replaceAll(`{{${format}}}`, l)
+                    }
+                }
+            }
+            // replace ${xxx} format with corresponding variables
+            s.name= replaceWithVariables(s.name)
+        }
+
+    }
     console.log("here33333:",Object.values(seriesMap))
    
     return  Object.values(seriesMap)
 }
-
-const vmToSeriesData = (panel: Panel, data0: any, query: PanelQuery, range: TimeRange, expandTimeRange = false): SeriesData[] => {
-    const formats = parseLegendFormat(query.legend)
-    const data = data0.data
-    let res: SeriesData[] = []
-    if (data.resultType === "matrix") {
-        for (const m of data.result) {
-            // delete m.metric.__name__
-            const metric = JSON.stringify(m.metric).replace(/":"/g, '"="')
-
-            let timeValues = []
-            let valueValues = []
-
-            if (expandTimeRange) {
-                if (!isEmpty(m.values)) {
-                    let start = roundDsTime(range.start.getTime() / 1000)
-                    if (m.values[0][0] < start) {
-                        start = roundDsTime(m.values[0][0])
-                    }
-
-                    let end = roundDsTime(range.end.getTime() / 1000)
-
-                    if (!query.interval) {
-                        const r = calcSeriesStep(start, end, 10, 30)
-                        query.interval = r[1]
-                    }
-
-                    const timeline = []
-                    const alignedStart = start - start % query.interval
-                    // console.log("here344443:", start,query.interval, alignedStart)
-                    for (var i = alignedStart; i <= end; i = i + query.interval) {
-                        timeline.push(i)
-                    }
-
-                    // if (timeline[timeline.length-1] != end) {
-                    //     timeline.push(end)
-                    // }
-
-                    timeValues = timeline
-                    valueValues = new Array(timeline.length).fill(null)
-                    let currentIndex = 0
-                    for (const v of m.values) {
-                        const timestamp = roundDsTime(v[0])
-                        const value = parseFloat(v[1])
-                        const index = timeline.slice(currentIndex).findIndex(t => timestamp <= t)
-                        if (index < 0) {
-                            continue
-                        }
-                        const realIndex = index + currentIndex
-                        valueValues[realIndex] = value
-
-
-                        currentIndex = realIndex + 1
-                    }
-                }
-            } else {
-                for (const v of m.values) {
-                    timeValues.push(v[0])
-                    valueValues.push(parseFloat(v[1]))
-                }
-            }
-
-
-
-            const series: SeriesData = {
-                queryId: query.id,
-                name: metric,
-                // length: m.values.length,
-                fields: [
-                    {
-                        name: "Time",
-                        type: FieldType.Time,
-                        values: timeValues,
-                    },
-                    {
-                        name: "Value",
-                        type: FieldType.Number,
-                        values: valueValues,
-                        labels: m.metric
-                    }
-                ],
-                //@ts-ignore
-                trace: data0.trace
-            }
-
-            // replace legend format of promethues datasource with corresponding labels
-            if (!isEmpty(query.legend)) {
-                series.name = query.legend
-                if (!isEmpty(formats)) {
-                    for (const format of formats) {
-                        const l = series.fields[1].labels[format]
-                        if (l) {
-                            series.name = series.name.replaceAll(`{{${format}}}`, l)
-                        }
-                    }
-                }
-                // replace ${xxx} format with corresponding variables
-                series.name = replaceWithVariables(series.name)
-            }
-
-            res.push(series)
-        }
-
-        let timeLength
-        let timeLenNotEqual = false
-        for (const r of res) {
-
-            for (const f of r.fields) {
-                if (f.type == FieldType.Time) {
-                    if (timeLength === undefined) {
-                        timeLength = f.values.length
-                    } else {
-                        if (timeLength != f.values.length) {
-                            timeLenNotEqual = true
-                            break
-                        }
-                    }
-                }
-            }
-            if (timeLenNotEqual) {
-                break
-            }
-        }
-
-        if (timeLenNotEqual) {
-            const timelineBucks = new Set()
-            const valueMap = new Map()
-            for (const r of res) {
-                const timeField = r.fields.find(f => f.type == FieldType.Time)
-                const valueField = r.fields.find(f => f.type == FieldType.Number)
-                if (timeField) {
-                    timeField.values.forEach((t, i) => {
-                        timelineBucks.add(t)
-                        const v = valueMap.get(t) ?? {}
-                        v[r.name] = valueField.values[i]
-                        valueMap.set(t, v)
-                    })
-                }
-            }
-
-
-            const timeline = Array.from(timelineBucks).sort()
-            for (const r of res) {
-                const valueField = r.fields.find(f => f.type == FieldType.Number)
-                const newValues = []
-                timeline.forEach(t => {
-                    const v = valueMap.get(t)
-                    if (v) {
-                        newValues.push(v[r.name] ?? null)
-                    } else {
-                        newValues.push(null)
-                    }
-                })
-                valueField.values = newValues
-                const timeField = r.fields.find(f => f.type == FieldType.Time)
-                timeField.values = timeline
-            }
-        }
-        if (res.length > 0) {
-            const timeline = res[0].fields.find(f => f.type == FieldType.Time).values
-            setPanelRealTime(panel.id, timeline)
-        }
-        return res
-    }
-    return []
-}
-
