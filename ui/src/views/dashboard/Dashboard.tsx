@@ -10,14 +10,14 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box, useColorMode, useMediaQuery } from "@chakra-ui/react"
+import { Box, Divider, Flex, useColorMode, useMediaQuery } from "@chakra-ui/react"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { Dashboard, Panel, PanelTypeRow } from "types/dashboard"
 import { requestApi } from "utils/axios/request"
 import DashboardHeader from "src/views/dashboard/DashboardHeader"
 import DashboardGrid from "src/views/dashboard/grid/DashboardGrid"
-import { clone, cloneDeep, concat, defaultsDeep, find, findIndex } from "lodash"
-import { setVariableSelected } from "src/views/variables/SelectVariable"
+import { clone, cloneDeep, concat, defaultsDeep, find, findIndex, orderBy } from "lodash"
+import SelectVariables, { setVariableSelected } from "src/views/variables/SelectVariable"
 import { prevQueries, prevQueryData } from "src/views/dashboard/grid/PanelGrid/PanelGrid"
 import { unstable_batchedUpdates } from "react-dom"
 import useBus from 'use-bus'
@@ -31,7 +31,7 @@ import useFullscreen from "hooks/useFullscreen"
 import { initDashboard } from "src/data/dashboard"
 import { initPanel, initPanelType } from "src/data/panel/initPanel"
 import { DashboardHeaderHeight, GRID_COLUMN_COUNT } from "src/data/constants"
-import { updateTimeToNewest } from "src/components/DatePicker/DatePicker"
+import DatePicker, { updateTimeToNewest } from "src/components/DatePicker/DatePicker"
 import { $teamVariables, $variables } from "../variables/store"
 import { useStore } from "@nanostores/react"
 import { VarialbeAllOption } from "src/data/variable"
@@ -50,6 +50,9 @@ import { $teams } from "../team/store"
 import { getNextPanelId } from "./AddPanel"
 import { builtinPanelPlugins } from "./plugins/built-in/plugins"
 import { externalPanelPlugins } from "./plugins/external/plugins"
+import { useSearchParam } from "react-use"
+import CustomScrollbar from "components/CustomScrollbar/CustomScrollbar"
+import { catelogVariables } from "../variables/utils"
 
 
 
@@ -66,7 +69,7 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
     const { setColorMode, colorMode, toggleColorMode } = useColorMode()
     // const [gVariables, setGVariables] = useState<Variable[]>([])
     const fullscreen = useFullscreen()
-
+    const toolbar = useSearchParam("toolbar")
     useEffect(() => {
         updateTimeToNewest()
         if (!dashboard) {
@@ -290,7 +293,8 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
 
 
     const [isLargeScreen] = useMediaQuery('(min-width: 600px)')
-
+    const [dvars, gvars] = catelogVariables(vars, dashboard)
+  
     return (<>
         {dashboard ? <Box className="dashboard-container" px={fullscreen ? 0 : (isLargeScreen ? 2 : 3)} width="100%" minHeight="100vh" maxHeight="100vh" overflowY="auto" position="relative">
             {/* <Decoration decoration={dashboard.data.styles.decoration}/> */}
@@ -304,6 +308,15 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
             >
                 <DashboardBorder key={fullscreen.toString()} border={dashboard.data.styles.border} />
                 <Box id="dashboard-scroll-top"></Box>
+                {fullscreen && toolbar == "on" && <Flex maxW={`calc(100% - ${10}px)`} id="fullscreen-toolbar" alignItems="center" gap="3">
+                    <Box minWidth="fit-content"><DatePicker showTime showIcon={false}/></Box>
+                    <CustomScrollbar hideVerticalTrack>
+                        <Flex justifyContent="space-between" >
+                            <SelectVariables variables={dvars} />
+                            <SelectVariables variables={gvars} />
+                        </Flex>
+                    </CustomScrollbar>
+                </Flex>}
                 {dashboard.data.panels?.length > 0 && <DashboardGrid dashboard={dashboard} panels={panels} onChange={onDashbardChange} />}
             </Box>
             <EditPanel dashboard={dashboard} onChange={onDashbardChange} />

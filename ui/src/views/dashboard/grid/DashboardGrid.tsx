@@ -46,7 +46,8 @@ const DashboardGrid = memo((props: GridProps) => {
     const inEdit = useSearchParam('edit')
     const viewPanel = useSearchParam("viewPanel")
     const fullscreen = useFullscreen()
-    
+    const toolbar = useSearchParam("toolbar")
+
     const { dashboard, panels, onChange } = props
 
     useKey(
@@ -138,13 +139,11 @@ const DashboardGrid = memo((props: GridProps) => {
         onLayoutChange(layout)
     };
 
-    const h = useRef(null)
-
     const viewPanelHeight = useMemo(() => {
         let height = 0
         if (viewPanel) {
             const ele = document.getElementById("sidemenu") 
-            height = ele?.offsetHeight - (fullscreen ? 0 :DashboardHeaderHeight) - 15 ?? 600
+            height = ele?.offsetHeight - (fullscreen ? (toolbar == "on" ? 35 : 5) :DashboardHeaderHeight) - 15 ?? 600
         }
 
         return height

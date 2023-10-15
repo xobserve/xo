@@ -30,10 +30,11 @@ import { $time } from "./store"
 interface Props {
     showTime?: boolean
     showRealTime?: boolean
+    showIcon?: boolean
 }
 
 
-const DatePicker = ({ showTime = true, showRealTime = false }: Props) => {
+const DatePicker = ({ showTime = true, showRealTime = false,showIcon=true }: Props) => {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [value, setValue] = useState<TimeRange>(getNewestTimeRange())
 
@@ -147,9 +148,9 @@ const DatePicker = ({ showTime = true, showRealTime = false }: Props) => {
             <Box>
                 <Tooltip label={`${value && dateTimeFormat(value.start)} - ${value && dateTimeFormat(value.end)}`}>
                     <HStack spacing={0} onClick={onOpen} cursor="pointer">
-                        <IconButton variant="ghost" _hover={{ bg: null }}>
+                        {showIcon && <IconButton variant="ghost" _hover={{ bg: null }}>
                             <FaRegClock />
-                        </IconButton>
+                        </IconButton>}
                         {
                             showTime && <>
                                 {

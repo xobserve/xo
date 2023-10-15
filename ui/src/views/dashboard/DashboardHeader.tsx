@@ -35,6 +35,9 @@ import DashboardStar from "./components/DashboardStar";
 import { $variables } from "../variables/store";
 import { MobileBreakpoint } from "src/data/constants";
 import CustomScrollbar from "src/components/CustomScrollbar/CustomScrollbar";
+import DashboardRefresh from "./DashboardRefresh";
+import { Variable } from "types/variable";
+import { catelogVariables } from "../variables/utils";
 
 interface HeaderProps {
     dashboard: Dashboard
@@ -45,38 +48,14 @@ const DashboardHeader = memo(({ dashboard, onChange, sideWidth }: HeaderProps) =
     const vars = useStore($variables)
     const t1 = useStore(dashboardMsg)
     const navigate = useNavigate()
-    const [refresh, setRefresh] = useState(0)
     const fullscreen = useFullscreen()
 
 
-    const refreshH = useRef(null)
-
-    useEffect(() => {
-        if (refresh > 0) {
-            refreshH.current = setInterval(() => {
-                refreshOnce()
-            }, 1000 * refresh)
-        } else {
-            clearInterval(refreshH.current)
-        }
-
-        return () => {
-            clearInterval(refreshH.current)
-        }
-    }, [refresh])
-
-    const refreshOnce = () => {
-        dispatch(TimeRefreshEvent)
-    }
-
     const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
-
-    const dvars = orderBy(vars.filter((v) => v.id.toString().startsWith("d-")),['sortWeight','name'], ['desc','asc'])
-    const gvars = orderBy(vars.filter((v) => !v.id.toString().startsWith("d-") && !find(dashboard.data.hidingVars?.split(','), v1 => v.name.toLowerCase().match(v1))),['sortWeight','name'], ['desc','asc'])
-
+    const [dvars, gvars] = catelogVariables(vars, dashboard)
+  
     return (
         <Box
-
             id="dashboard-header"
             display={fullscreen ? "none" : "block"}
             pt="1"
@@ -112,16 +91,7 @@ const DashboardHeader = memo(({ dashboard, onChange, sideWidth }: HeaderProps) =
                                 {dashboard && <DashboardSettings dashboard={dashboard} onChange={onChange} />}
                                 <DatePicker showTime />
                                 {isLargeScreen && <HStack spacing={0}>
-                                    <Tooltip label={t1.refreshOnce}><Box onClick={refreshOnce}><IconButton variant="ghost"><MdSync /></IconButton></Box></Tooltip>
-                                    <Tooltip label={t1.refreshInterval}>
-                                        <Select variant="unstyled" value={refresh} onChange={(e) => setRefresh(Number(e.target.value))}>
-                                            <option value={0}>off</option>
-                                            <option value={5}>5s</option>
-                                            <option value={10}>10s</option>
-                                            <option value={30}>30s</option>
-                                            <option value={60}>1m</option>
-                                        </Select>
-                                    </Tooltip>
+                                    <DashboardRefresh />
                                     <Fullscreen />
                                 </HStack>}
 
