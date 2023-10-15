@@ -234,9 +234,9 @@ const transformDataToUplot = (data: SeriesData[], panel: Panel) => {
     // push y-axes series data
     for (const d of data) {
         const negativeY = findOverrideRule(panel, d.rawName, GraphRules.SeriesNegativeY)
-        const values = d.fields.find(f => f.type != FieldType.Time).values
+        const values = d.fields.find(f => f.type == FieldType.Number).values
         if (negativeY) {
-            const vals = cloneDeep(values)
+            const vals = cloneDeep(values) 
             for (let i = 0; i < vals.length; i++) {
                 if (vals[i] != null) {
                     vals[i] *= -1;

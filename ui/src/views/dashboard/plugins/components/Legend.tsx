@@ -74,7 +74,7 @@ const LegendTable = memo(({dashboardId,panelWidth, options, panel, data, width, 
     for (const d of data) {
         let v = []
         for (const calc of options.legend.valueCalcs) {
-            v.push([calc, calcValueOnArray(d.fields.find(f => f.type != FieldType.Time).values, calc)])
+            v.push([calc, calcValueOnArray(d.fields.find(f => f.type == FieldType.Number).values, calc)])
         }
         res.push({ name: d.name, value: v, color: d.color, rawName: d.rawName })
     }

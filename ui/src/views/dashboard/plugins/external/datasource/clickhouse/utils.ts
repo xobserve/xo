@@ -16,7 +16,7 @@ import { Panel, PanelQuery } from "types/dashboard";
 import { FieldType, SeriesData } from "types/seriesData";
 import { TimeRange } from "types/time";
 import { roundDsTime } from "utils/datasource";
-import { parseLegendFormat } from "utils/format";
+import { jsonToEqualPairs, parseLegendFormat } from "utils/format";
 import { calcSeriesStep } from "utils/seriesData";
 import { isEmpty } from "utils/validate";
 import { replaceWithVariables } from "utils/variable";
@@ -26,7 +26,7 @@ import { PanelTypeStat } from "../../../built-in/panel/stat/types";
 import { ChPluginData } from "./types";
 
 
-export const clickhouseToSeriesData= (data: ChPluginData, panel: Panel, query: PanelQuery, range: TimeRange) => {
+export const clickhouseToSeriesData = (data: ChPluginData, panel: Panel, query: PanelQuery, range: TimeRange) => {
     if (isEmpty(data) || data.columns.length == 0 || data.data.length == 0) {
         return null
     }
@@ -35,35 +35,71 @@ export const clickhouseToSeriesData= (data: ChPluginData, panel: Panel, query: P
     const et = query.data["expandTimeline"]
 
     if (isEmpty(et) || et == "auto") {
-        expandTimeRange = panel.type == PanelTypeGraph|| panel.type == PanelTypeBar || panel.type == PanelTypeStat
+        expandTimeRange = panel.type == PanelTypeGraph || panel.type == PanelTypeBar || panel.type == PanelTypeStat
     } else {
         expandTimeRange = et == "always"
     }
 
-    const series: SeriesData = {
-        queryId: query.id,
-        name: isEmpty(query.legend) ?  query.id.toString()  : query.legend,
-        fields: []
-    }
+    const seriesMap: Record<string,SeriesData> = {}
 
-    data.columns.forEach((c,i) => {
-        series.fields.push({
-            name: c,
-            values: []
-        })
-    })
-
-    data.data.forEach((row,i) => {
-        row.forEach((v,i) => {
-            const f = series.fields[i]
-            if (!f.type) {
-                f.type = data.types[f.name] ?? typeof v as any
+    data.data.forEach((row, i) => {
+        const labels = {}
+        let timeValue;
+        let timeFieldName;
+        let value;
+        let valueFieldName;
+        row.forEach((v, i) => {
+            const labelName = data.columns[i]
+            const valueType = data.types[labelName] ?? typeof v as any
+            if (valueType == FieldType.Time) {
+                if (!timeValue) {
+                    timeValue = v
+                    timeFieldName = labelName
+                }
+            } else if (valueType == FieldType.Number) {
+                if (!value) {
+                    value = v
+                    valueFieldName = labelName
+                }
+            } else {
+                labels[labelName] = v
             }
-            f.values.push(v)
         })
+        
+        let seriesName;
+        if (isEmpty(labels)) {
+            seriesName = query.id
+        } else {
+            seriesName = jsonToEqualPairs(labels)
+        }
+
+        const series = seriesMap[seriesName]
+        if (!series) {
+            seriesMap[seriesName] = {
+                queryId: query.id,
+                name: seriesName,
+                fields: [
+                    {
+                        name: timeFieldName,
+                        type: FieldType.Time,
+                        values: [timeValue]
+                    },
+                    {
+                        name: valueFieldName,
+                        type: FieldType.Number,
+                        values: [value]
+                    },
+                ]
+            }
+        } else {
+            series.fields[0].values.push(timeValue)
+            series.fields[1].values.push(value)
+        }
     })
-    
-    return [series]
+
+    console.log("here33333:",Object.values(seriesMap))
+   
+    return  Object.values(seriesMap)
 }
 
 const vmToSeriesData = (panel: Panel, data0: any, query: PanelQuery, range: TimeRange, expandTimeRange = false): SeriesData[] => {
@@ -77,7 +113,7 @@ const vmToSeriesData = (panel: Panel, data0: any, query: PanelQuery, range: Time
 
             let timeValues = []
             let valueValues = []
-            
+
             if (expandTimeRange) {
                 if (!isEmpty(m.values)) {
                     let start = roundDsTime(range.start.getTime() / 1000)
