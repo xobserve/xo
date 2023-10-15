@@ -37,6 +37,7 @@ export const commonMsg = i18n("common", {
   "viewJson": "View JSON",
   "link": "Link",
   "export": "Export",
+  "embedding": "Embedding",
   "manage": "Manage",
   "team": "Team",
   "user": "User",
@@ -72,8 +73,6 @@ export const commonMsg = i18n("common", {
   "clone": "Clone",
   "copied": "Copied",
   "share": "Share",
-  "shareHelp": "Create a direct link to this dashboard, customized with the options below.",
-  "exportHelp": "Export dashbaord for sharing.",
   "currentTimeRange": "Current time range",
   "remove": "Remove",
   "mode": "Mode",
@@ -291,7 +290,10 @@ export const dashboardMsg = i18n("dashboard", {
   "exitFullscreenTips": "Press ESC to exit fullscreen mode",
   "addPanel": "Add panel",
   "addRow": "Add row",
-  "pastePanel": "Paste panel"
+  "pastePanel": "Paste panel",
+  "shareHelp": "Create a direct link to this dashboard, customized with the options below.",
+  "exportHelp": "Export dashbaord for sharing.",
+  "embedHelp": "Create an embedding url, you can iframe it in other website"
 })
 
 export const dashboardSaveMsg = i18n("dashboardSave", {

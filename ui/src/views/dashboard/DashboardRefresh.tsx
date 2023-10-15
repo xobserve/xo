@@ -24,7 +24,7 @@ import { addParamToUrl, removeParamFromUrl } from "utils/url"
 import { Select } from "antd"
 import { durationToSeconds } from "utils/date"
 
-const REFRESH_OFF = "OFF" 
+export const REFRESH_OFF = "OFF" 
 const DashboardRefresh = () => {
     const t1 = useStore(dashboardMsg)
     

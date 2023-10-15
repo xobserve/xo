@@ -27,6 +27,7 @@
     "viewJson": "查看JSON",
     "link": "链接",
     "export": "导出",
+    "embedding": "嵌入 Embed",
     "manage": "管理",
     "team": "团队",
     "user": "用户",
@@ -62,8 +63,6 @@
     "clone": "克隆",
     "copied": "已复制",
     "share": "分享",
-    "shareHelp": "创建指向此仪表板的链接，使用下面的选项进行自定义",
-    "exportHelp": "导出此仪表板的元数据信息",
     "currentTimeRange": "使用当前时间段",
     "remove": "移除",
     "mode": "模式",
@@ -272,7 +271,10 @@
     "exitFullscreenTips": "按下 ESC 退出全屏模式",
     "addPanel": "新建图表",
     "addRow": "新建行",
-    "pastePanel": "粘贴已拷贝的图表"
+    "pastePanel": "粘贴已拷贝的图表",
+    "shareHelp": "创建指向此仪表板的链接，使用下面的选项进行自定义",
+    "exportHelp": "导出此仪表板的元数据信息",
+    "embedHelp": "创建一个嵌入 Embedding url 链接，你可以用 iframe 的方式将其嵌入到其它网页代码"
   },
   "dashboardSave": {
     "autoSaveNotAvail": "在编辑图表模式下，自动保存不可用",

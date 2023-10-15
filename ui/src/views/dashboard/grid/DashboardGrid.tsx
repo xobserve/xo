@@ -194,7 +194,7 @@ const DashboardGrid = memo((props: GridProps) => {
                                 isBounded
                                 isDraggable={draggable}
                                 isResizable={draggable}
-                                containerPadding={[0, 13]}
+                                containerPadding={[0, fullscreen && toolbar == "on" ? 2 : 13]}
                                 useCSSTransforms={false}
                                 margin={[GRID_CELL_VMARGIN, GRID_CELL_VMARGIN]}
                                 cols={GRID_COLUMN_COUNT}
