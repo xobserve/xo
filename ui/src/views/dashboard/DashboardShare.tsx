@@ -31,6 +31,7 @@ import saveFile from 'save-as-file';
 import { isEmpty } from "utils/validate"
 import { REFRESH_OFF } from "./DashboardRefresh"
 import { Select } from "antd"
+import { concat } from "lodash"
 
 interface Props extends StyleProps {
     dashboard: Dashboard
@@ -54,7 +55,7 @@ const DashboardShare = ({ dashboard, ...rest }: Props) => {
     const [useRawTime, setUseRawTime] = useState(false)
     const [useToolbar, setUserToolbar] = useState(true)
     const [refresh, setRefresh] = useState(REFRESH_OFF)
-    const [embeddingPanel, setEmbeddingPanel] = useState<number>(1)
+    const [embeddingPanel, setEmbeddingPanel] = useState<number>(0)
 
     useEffect(() => {
         let url = window.origin + location.pathname + "?"
@@ -113,7 +114,10 @@ const DashboardShare = ({ dashboard, ...rest }: Props) => {
             setValue(url)
             setEmbedValue(embedding)
         }, 150)
-    }, [enableCurrentTimeRange, useRawTime, variables, useToolbar, refresh])
+    }, [enableCurrentTimeRange, useRawTime, variables, useToolbar, refresh, embeddingPanel])
+
+    const filterPanels = (input: string, option?: { label: string; value: number }) =>
+    (option?.label ?? '').toLowerCase().includes(input.toLowerCase());
 
     return (<>
         <Box onClick={onOpen} {...rest}><BsShare /></Box>
@@ -200,6 +204,10 @@ const DashboardShare = ({ dashboard, ...rest }: Props) => {
                                         </FormItem>
                                         <FormItem title={"Use refresh"} size="sm" alignItems={'center'}>
                                             <Select popupMatchSelectWidth={false} bordered={false} value={refresh} onChange={(v) => setRefresh(v)} options={[REFRESH_OFF, '5s', '10s', '30s', '1m', '5m', '10m'].map(v => ({ value: v, label: v }))} />
+                                        </FormItem>
+
+                                        <FormItem title={"Embedding panel"} size="sm" alignItems={'center'}>
+                                            <Select popupMatchSelectWidth={false} bordered={false} value={embeddingPanel} onChange={(v) => setEmbeddingPanel(v)} options={concat([{value: 0, label: "OFF"}], dashboard.data.panels.map(p => ({label: p.title, value: p.id})))} showSearch filterOption={filterPanels} style={{width: "200px"}}/>
                                         </FormItem>
                                     </Form>
                                     <HStack spacing={1}>
