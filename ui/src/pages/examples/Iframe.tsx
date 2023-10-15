@@ -1,11 +1,9 @@
-import { Box, Text } from "@chakra-ui/react"
+import { Text } from "@chakra-ui/react"
 import React from "react"
-import countries from 'public/plugins/panel/geomap/countries.json'
 import { Divider } from "antd"
 
 
-const TestPage = () => {
- 
+const IframeExamplesPage = () => {
   return (
     <>
     <Text fontWeight={600}>Iframe "Requests to Datav" </Text>
@@ -16,9 +14,13 @@ const TestPage = () => {
     <Divider />
     <Text mt="3" fontWeight={600}>Iframe "Heap objects" with top toolbar</Text>
     <iframe src="https://play.datav.io/runtime?&embed=true&fullscreen=on&from=now-6h&to=now&var-host=web-datav-1&toolbar=on&viewPanel=10&colorMode=dark" height={500} width={800}/>
+    <Divider />
+    <Text mt="3" fontWeight={600}>Iframe "Go runtime" dashboard</Text>
+    <iframe src="https://play.datav.io/runtime?&embed=true&fullscreen=on&from=now-6h&to=now&var-host=web-datav-1&toolbar=on&colorMode=dark" height={500} width="100%"/>
+
     </>
   )
 }
-export default TestPage
+export default IframeExamplesPage
 
 
