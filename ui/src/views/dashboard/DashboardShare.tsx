@@ -90,13 +90,12 @@ const DashboardShare = ({ dashboard, ...rest }: Props) => {
         }
         dispatch(ShareUrlEvent)
         setTimeout(() => {
-            let embedding
+            let embedding = url + "&embed=true&fullscreen=on"
             if (!isEmpty(shareUrlParams)) {
-                url = url + queryString.stringify(shareUrlParams, { sort: false })
-                embedding = url + "&fullscreen=on"
-            } else {
-                embedding = url + "&fullscreen=on"
-            }
+                const params = queryString.stringify(shareUrlParams, { sort: false })
+                url = url + params
+                embedding = embedding + "&" + params
+            } 
 
             if (useToolbar) {
                 embedding = embedding + "&toolbar=on"

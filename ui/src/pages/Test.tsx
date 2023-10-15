@@ -4,24 +4,9 @@ import countries from 'public/plugins/panel/geomap/countries.json'
 
 
 const TestPage = () => {
-  const cnames = {}
-//   "ad": [
-//     "Andorra",
-//     [
-//         1.601554,
-//         42.546245
-//     ]
-// ],
-  for (const code of Object.keys(countries)) {
-    const v = countries[code]
-    const name: string = v[0]
-    const coords = v[1]
-    cnames[name.toLowerCase()] = [code, coords]
-  }
-
-  console.log("here33333:", cnames)
+ 
   return (
-    <Box></Box>
+    <iframe src="http://localhost:5173/home?&embed=true&fullscreen=on&from=now-12h&to=now&toolbar=on&viewPanel=8" height={500} width={800}/>
   )
 }
 export default TestPage

@@ -142,8 +142,8 @@ const DashboardGrid = memo((props: GridProps) => {
     const viewPanelHeight = useMemo(() => {
         let height = 0
         if (viewPanel) {
-            const ele = document.getElementById("sidemenu") 
-            height = ele?.offsetHeight - (fullscreen ? (toolbar == "on" ? 35 : 5) :DashboardHeaderHeight) - 15 ?? 600
+            const screenHeight = window.innerHeight
+            height = screenHeight - (fullscreen ? (toolbar == "on" ? 35 : 5) :DashboardHeaderHeight) - 15 ?? 600
         }
 
         return height

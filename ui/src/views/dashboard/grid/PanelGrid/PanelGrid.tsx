@@ -55,6 +55,7 @@ import { PanelTypeAlert } from "../../plugins/built-in/panel/alert/types";
 import { PanelTypeGraph } from "../../plugins/built-in/panel/graph/types";
 import { DatasourceTypeTestData } from "../../plugins/built-in/datasource/testdata/types";
 import PanelDatePicker from "../../components/PanelDatePicker";
+import useEmbed from "hooks/useEmbed";
 
 interface PanelGridProps {
     dashboard: Dashboard
@@ -412,7 +413,7 @@ const PanelHeader = ({ dashboardId, queryError, panel, onCopyPanel, onRemovePane
     const title = replaceWithVariables(panel.title)
     const { isOpen, onOpen, onClose } = useDisclosure()
     const { colorMode } = useColorMode()
-
+    const embed = useEmbed()
     return (
         <>
             <HStack className="grid-drag-handle hover-bg" height={`${PANEL_HEADER_HEIGHT - (isEmpty(title) ? 15 : 0)}px`} cursor="move" spacing="0" position={isEmpty(title) ? "absolute" : "relative"} width="100%" zIndex={1000}>
@@ -429,6 +430,7 @@ const PanelHeader = ({ dashboardId, queryError, panel, onCopyPanel, onRemovePane
                             transition='all 0.2s'
                             _focus={{ border: null }}
                             onClick={e => e.stopPropagation()}
+                            disabled={embed}
                         >
                             <Center width="100%">{!isEmpty(title) ? <Box cursor="pointer" className="hover-bordered" paddingTop={panel.styles.title.paddingTop} paddingBottom={panel.styles.title.paddingBottom} paddingLeft={panel.styles.title.paddingLeft} paddingRight={panel.styles.title.paddingRight} width="100%" fontSize={panel.styles.title.fontSize} fontWeight={panel.styles.title.fontWeight} color={paletteColorNameToHex(panel.styles.title.color, colorMode)}><TitleDecoration styles={panel.styles}><Text noOfLines={1}>{title}</Text></TitleDecoration></Box> : <Box width="100px">&nbsp;</Box>}</Center>
                         </MenuButton>

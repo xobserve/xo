@@ -39,6 +39,7 @@ import ContextMenu from "./ContextMenu/ContextMenu";
 import { AnnotationsPlugin } from "../../../../../Annotation/Annotations";
 import NoData from "src/views/dashboard/components/PanelNoData";
 import LegendTable from "../../../components/Legend";
+import useEmbed from "hooks/useEmbed";
 
 interface GraphPanelProps extends PanelProps {
     data: SeriesData[][]
@@ -65,6 +66,8 @@ export default GraphPanelWrapper
 
 const GraphPanel = memo((props: GraphPanelProps) => {
     const inactiveKey = PanelInactiveKey + props.dashboardId + '-' + props.panel.id
+    const embed = useEmbed()
+
     const [inactiveSeries, setInactiveSeries] = useState(storage.get(inactiveKey) ?? [])
 
     const [uplot, setUplot] = useState<uPlot>(null)
@@ -137,7 +140,9 @@ const GraphPanel = memo((props: GraphPanelProps) => {
     }, [props.sync])
 
     const onZoom = (tr) => {
-        setDateTime(tr.from, tr.to)
+        if (!embed) {
+            setDateTime(tr.from, tr.to)
+        }
     }
 
 
@@ -195,17 +200,14 @@ const GraphPanel = memo((props: GraphPanelProps) => {
                                 onCreate={onChartCreate}
                             >
                                 {props.panel.plugins.graph.tooltip.mode != 'hidden' && <Tooltip props={props} options={options} data={data} inactiveSeries={inactiveSeries} />}
-                                <ContextMenu props={props} options={options} data={data} container={containerRef} />
-                                <ZoomPlugin options={options} onZoom={onZoom} />
-                                <AnnotationsPlugin dashboardId={props.dashboardId} options={options} timeRange={props.timeRange} panel={props.panel} />
+                                {!embed && <ContextMenu props={props} options={options} data={data} container={containerRef} />}
+                                {!embed && <ZoomPlugin options={options} onZoom={onZoom} />}
+                                {!embed && <AnnotationsPlugin dashboardId={props.dashboardId} options={options} timeRange={props.timeRange} panel={props.panel} />}
                                 {props.panel.plugins.graph.thresholdsDisplay != ThresholdDisplay.None && <ThresholdsPlugin options={options} thresholdsConfig={props.panel.plugins.graph.thresholds} display={props.panel.plugins.graph.thresholdsDisplay} />}
                                 {v && props.panel.plugins.graph.thresholdsDisplay != ThresholdDisplay.None && <ThresholdsPlugin options={options} thresholdsConfig={v} display={props.panel.plugins.graph.thresholdsDisplay} />}
                             </UplotReact>
                             )
                         }}
-
-
-
                     </GraphLayout>}
                 </Box>}
         </>
@@ -225,7 +227,7 @@ const transformDataToUplot = (data: SeriesData[], panel: Panel) => {
     if (!xField) {
         return []
     }
-    
+
     transformed.push(xField.values)
 
     // push y-axes series data

@@ -232,7 +232,7 @@ const Container = (props: Props) => {
 
           </Flex>
           :
-          <Box position="absolute" zIndex={1} top="10px">
+          <Box position="absolute" zIndex={1} top="10px" visibility={fullscreen ? "hidden" : "visible"} > 
             <Menu>
               <MenuButton
                 as={IconButton}
