@@ -27,6 +27,7 @@ import { addParamToUrl } from "utils/url";
 import { LazyLoader } from "../../../components/LazyLoader";
 import RowPanel from "./PanelGrid/RowPanel";
 import useFullscreen from "hooks/useFullscreen";
+import useEmbed from "hooks/useEmbed";
 
 
 
@@ -47,13 +48,13 @@ const DashboardGrid = memo((props: GridProps) => {
     const viewPanel = useSearchParam("viewPanel")
     const fullscreen = useFullscreen()
     const toolbar = useSearchParam("toolbar")
-
+    const embed = useEmbed()
     const { dashboard, panels, onChange } = props
 
     useKey(
         "Escape",
         () => {
-            if (viewPanel) {
+            if (!embed && viewPanel) {
                 addParamToUrl({ viewPanel: null })
             }
         },
