@@ -28,7 +28,8 @@ const initDatasource: Datasource = {
     name: '',
     url: null,
     type: DatasourceTypePrometheus,
-    teamId: globalTeamId
+    teamId: globalTeamId,
+    data: {}
 }
 
 const NewDatasourcePage = () => {
