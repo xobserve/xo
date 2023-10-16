@@ -10,23 +10,21 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { setPanelRealTime } from "src/views/dashboard/store/panelRealtime";
 import { Panel, PanelQuery } from "types/dashboard";
 
 import { FieldType, SeriesData } from "types/seriesData";
 import { TimeRange } from "types/time";
-import { roundDsTime } from "utils/datasource";
-import { jsonToEqualPairs, jsonToEqualPairs1, parseLegendFormat } from "utils/format";
-import { calcSeriesStep } from "utils/seriesData";
+import {  jsonToEqualPairs1, parseLegendFormat } from "utils/format";
 import { isEmpty } from "utils/validate";
 import { replaceWithVariables } from "utils/variable";
 import { PanelTypeGraph } from "../../../built-in/panel/graph/types";
 import { PanelTypeBar } from "../../../built-in/panel/bar/types";
 import { PanelTypeStat } from "../../../built-in/panel/stat/types";
 import { ChPluginData } from "./types";
+import { DataFormat } from "types/format";
 
 
-export const clickhouseToSeriesData = (data: ChPluginData, panel: Panel, query: PanelQuery, range: TimeRange) => {
+export const clickhouseToPanelData = (data: ChPluginData, panel: Panel, query: PanelQuery, range: TimeRange) => {
     if (isEmpty(data) || data.columns.length == 0 || data.data.length == 0) {
         return null
     }
@@ -40,6 +38,18 @@ export const clickhouseToSeriesData = (data: ChPluginData, panel: Panel, query: 
         expandTimeRange = et == "always"
     }
 
+    switch (query.data["format"]) {
+        case DataFormat.TimeSeries:
+            return toTimeSeries(data, query)
+        case DataFormat.Table:
+            return toTable(data, query)
+        default:
+            return toTimeSeries(data, query)
+    }
+}
+
+
+const toTimeSeries = (data: ChPluginData,  query: PanelQuery) => {
     const seriesMap: Record<string,SeriesData> = {}
     const formats = parseLegendFormat(query.legend)
     
@@ -120,3 +130,32 @@ export const clickhouseToSeriesData = (data: ChPluginData, panel: Panel, query: 
    
     return  Object.values(seriesMap)
 }
+
+
+const toTable= (data: ChPluginData,  query: PanelQuery) => {
+    const series: SeriesData = {
+        queryId: query.id,
+        name: isEmpty(query.legend) ?  query.id.toString()  : query.legend,
+        fields: []
+    }
+
+    data.columns.forEach((c,i) => {
+        series.fields.push({
+            name: c,
+            values: []
+        })
+    })
+
+    data.data.forEach((row,i) => {
+        row.forEach((v,i) => {
+            const f = series.fields[i]
+            if (!f.type) {
+                f.type = data.types[f.name] ?? typeof v as any
+            }
+            f.values.push(v)
+        })
+    })
+
+    return [series]
+}
+
