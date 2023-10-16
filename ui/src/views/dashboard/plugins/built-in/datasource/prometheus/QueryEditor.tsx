@@ -28,6 +28,7 @@ import CodeEditor, { LogqlLang } from "src/components/CodeEditor/CodeEditor";
 import RadionButtons from "src/components/RadioButtons";
 import { IsSmallScreen } from "src/data/constants";
 import Loading from "components/loading/Loading";
+import { ExpandTimeline } from "../../../components/query-edtitor/ExpandTimeline";
 
 
 
@@ -91,16 +92,7 @@ const PrometheusQueryEditor = ({ datasource, query, onChange }: DatasourceEditor
 export default PrometheusQueryEditor
 
 
-const ExpandTimeline = ({t1, tempQuery,setTempQuery,onChange}) => {
-    return <FormItem labelWidth="150px" size="sm" title={t1.expandTimeline} desc={t1.expandTimelineDesc}>
-    <RadionButtons size="sm" options={[{ label: "Auto", value: "auto" }, { label: "Always", value: 'always' }, { label: "None", value: 'none' }]} value={tempQuery.data['expandTimeline']} onChange={(v) => {
-        tempQuery.data['expandTimeline'] = v
-        const q = { ...tempQuery, data: cloneDeep(tempQuery.data) }
-        setTempQuery(q)
-        onChange(q)
-    }} />
-</FormItem>
-}
+
 interface MetricSelectProps {
     dsId: number
     value: string

@@ -22,6 +22,7 @@ import { PanelTypeBar } from "../../../built-in/panel/bar/types";
 import { PanelTypeStat } from "../../../built-in/panel/stat/types";
 import { ChPluginData } from "./types";
 import { DataFormat } from "types/format";
+import { alignTimeSeriesData } from "utils/seriesData";
 
 
 export const clickhouseToPanelData = (data: ChPluginData, panel: Panel, query: PanelQuery, range: TimeRange) => {
@@ -127,8 +128,10 @@ const toTimeSeries = (data: ChPluginData,  query: PanelQuery) => {
 
     }
     console.log("here33333:",Object.values(seriesMap))
-   
-    return  Object.values(seriesMap)
+    
+    const seriesList = Object.values(seriesMap)
+    alignTimeSeriesData(seriesList)
+    return  seriesList
 }
 
 
