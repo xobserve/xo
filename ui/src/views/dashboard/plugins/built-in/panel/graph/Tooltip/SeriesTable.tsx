@@ -45,7 +45,7 @@ const SeriesTable = memo(({ props, data, nearestSeries, filterIdx, panelType, wi
 
     if (tooltipMode != "single") {
         for (const d of data) {
-            res.push({ name: d.name, value: [["", d.fields.find(f => f.type != FieldType.Time).values[filterIdx]]], color: d.color, rawName: d.rawName })
+            res.push({ name: d.name, value: [["", d.fields.find(f => f.type == FieldType.Number).values[filterIdx]]], color: d.color, rawName: d.rawName })
         }
     } else {
         res.push({ name: nearestSeries.name, color: nearestSeries.color, value: [["", nearestSeries.fields.find(f => f.type != FieldType.Time).values[filterIdx]]], rawName: nearestSeries.rawName })

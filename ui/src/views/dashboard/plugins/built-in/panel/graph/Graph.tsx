@@ -39,6 +39,7 @@ import ContextMenu from "./ContextMenu/ContextMenu";
 import { AnnotationsPlugin } from "../../../../../Annotation/Annotations";
 import NoData from "src/views/dashboard/components/PanelNoData";
 import LegendTable from "../../../components/Legend";
+import useEmbed from "hooks/useEmbed";
 
 interface GraphPanelProps extends PanelProps {
     data: SeriesData[][]
@@ -65,6 +66,8 @@ export default GraphPanelWrapper
 
 const GraphPanel = memo((props: GraphPanelProps) => {
     const inactiveKey = PanelInactiveKey + props.dashboardId + '-' + props.panel.id
+    const embed = useEmbed()
+
     const [inactiveSeries, setInactiveSeries] = useState(storage.get(inactiveKey) ?? [])
 
     const [uplot, setUplot] = useState<uPlot>(null)
@@ -73,8 +76,6 @@ const GraphPanel = memo((props: GraphPanelProps) => {
     if (!isSeriesData(props.data)) {
         return (<Center height="100%">Data format not support!</Center>)
     }
-
-
 
     const data = useMemo(() => {
         const res = []
@@ -137,7 +138,9 @@ const GraphPanel = memo((props: GraphPanelProps) => {
     }, [props.sync])
 
     const onZoom = (tr) => {
-        setDateTime(tr.from, tr.to)
+        if (!embed) {
+            setDateTime(tr.from, tr.to)
+        }
     }
 
 
@@ -195,17 +198,17 @@ const GraphPanel = memo((props: GraphPanelProps) => {
                                 onCreate={onChartCreate}
                             >
                                 {props.panel.plugins.graph.tooltip.mode != 'hidden' && <Tooltip props={props} options={options} data={data} inactiveSeries={inactiveSeries} />}
-                                <ContextMenu props={props} options={options} data={data} container={containerRef} />
-                                <ZoomPlugin options={options} onZoom={onZoom} />
-                                <AnnotationsPlugin dashboardId={props.dashboardId} options={options} timeRange={props.timeRange} panel={props.panel} />
+
+                                {!embed && <>
+                                    <ContextMenu props={props} options={options} data={data} container={containerRef} />
+                                    <ZoomPlugin options={options} onZoom={onZoom} />
+                                    <AnnotationsPlugin dashboardId={props.dashboardId} options={options} timeRange={props.timeRange} panel={props.panel} />
+                                </>}
                                 {props.panel.plugins.graph.thresholdsDisplay != ThresholdDisplay.None && <ThresholdsPlugin options={options} thresholdsConfig={props.panel.plugins.graph.thresholds} display={props.panel.plugins.graph.thresholdsDisplay} />}
                                 {v && props.panel.plugins.graph.thresholdsDisplay != ThresholdDisplay.None && <ThresholdsPlugin options={options} thresholdsConfig={v} display={props.panel.plugins.graph.thresholdsDisplay} />}
                             </UplotReact>
                             )
                         }}
-
-
-
                     </GraphLayout>}
                 </Box>}
         </>
@@ -225,15 +228,15 @@ const transformDataToUplot = (data: SeriesData[], panel: Panel) => {
     if (!xField) {
         return []
     }
-    
+
     transformed.push(xField.values)
 
     // push y-axes series data
     for (const d of data) {
         const negativeY = findOverrideRule(panel, d.rawName, GraphRules.SeriesNegativeY)
-        const values = d.fields.find(f => f.type != FieldType.Time).values
+        const values = d.fields.find(f => f.type == FieldType.Number).values
         if (negativeY) {
-            const vals = cloneDeep(values)
+            const vals = cloneDeep(values) 
             for (let i = 0; i < vals.length; i++) {
                 if (vals[i] != null) {
                     vals[i] *= -1;

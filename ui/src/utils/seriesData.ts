@@ -98,3 +98,63 @@ export const calcSeriesStep = (start, end, minSteps, maxSteps): [number[], numbe
 
     return [timeline, step]
 }
+
+// align time series data by timeline
+// all series must have the same timeline (time field values)
+export const alignTimeSeriesData = (data: SeriesData[]) => {
+    let timeLength
+    let timeLenNotEqual = false
+    for (const r of data) {
+
+        for (const f of r.fields) {
+            if (f.type == FieldType.Time) {
+                if (timeLength === undefined) {
+                    timeLength = f.values.length
+                } else {
+                    if (timeLength != f.values.length) {
+                        timeLenNotEqual = true
+                        break
+                    }
+                }
+            }
+        }
+        if (timeLenNotEqual) {
+            break
+        }
+    }
+
+    if (timeLenNotEqual) {
+        const timelineBucks = new Set()
+        const valueMap = new Map()
+        for (const r of data) {
+            const timeField = r.fields.find(f => f.type == FieldType.Time)
+            const valueField = r.fields.find(f => f.type == FieldType.Number)
+            if (timeField) {
+                timeField.values.forEach((t, i) => {
+                    timelineBucks.add(t)
+                    const v = valueMap.get(t) ?? {}
+                    v[r.name] = valueField.values[i]
+                    valueMap.set(t, v)
+                })
+            }
+        }
+
+
+        const timeline = Array.from(timelineBucks).sort()
+        for (const r of data) {
+            const valueField = r.fields.find(f => f.type == FieldType.Number)
+            const newValues = []
+            timeline.forEach(t => {
+                const v = valueMap.get(t)
+                if (v) {
+                    newValues.push(v[r.name] ?? null)
+                } else {
+                    newValues.push(null)
+                }
+            })
+            valueField.values = newValues
+            const timeField = r.fields.find(f => f.type == FieldType.Time)
+            timeField.values = timeline
+        }
+    }
+}

@@ -11,19 +11,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App'
-import 'src/i18n/i18n'
-import { ChakraProvider,createLocalStorageManager } from '@chakra-ui/react'
-import theme from 'theme'
-
-const embed = window.location.href.includes('embed=true')
-ReactDOM.createRoot(document.getElementById('root')!).render(
-    <ChakraProvider theme={theme} colorModeManager={createLocalStorageManager(embed ? "datav-embed-theme" : "datav-theme")}> 
-        <App />
-    </ChakraProvider>
-
-)
-
-
+export const isPluginDisabled = (p) => {
+    if (p && p.settings?.disabled) {
+        return p.settings.disabled()
+    }
+}

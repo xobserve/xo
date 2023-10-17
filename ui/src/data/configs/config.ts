@@ -30,7 +30,10 @@ const config: UIConfig = {
     showAlertIcon: false,
     githubOAuthToken: '',
     enableGithubLogin: false,
-    sidemenu: null
+    sidemenu: null,
+    observability: {
+        enable: false
+    }
 };
 
 export const $config = atom<UIConfig>(config)
@@ -51,5 +54,8 @@ export interface UIConfig {
     plugins?: {
         disablePanels   : string[]   
         disableDatasources: string[]  
+    }
+    observability?: {
+        enable: boolean
     }
 }

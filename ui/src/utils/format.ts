@@ -80,3 +80,22 @@ export const equalPairsToJson = (s0):Record<string,string> => {
     }
   
 }
+
+
+// json to {"a"="b","c"="d"}
+export const jsonToEqualPairs1 = v => {
+    let s = "{"
+    const keys = Object.keys(v)
+    keys.forEach((k, i) => {
+        if (i == keys.length - 1) {
+            s = s + `"${k}"="${v[k]}"`
+        } else {
+            s = s + `"${k}"="${v[k]}",`
+        }
+
+    })
+
+    s += "}"
+
+    return s
+}

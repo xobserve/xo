@@ -18,9 +18,7 @@ import AccountSetting from "src/pages/account/Setting";
 import NewDashboardPage from "pages/new/Dashboard";
 import NewDatasourcePage from "src/pages/new/Datasource";
 import ImportDashboardPage from "src/pages/new/Import";
-import DatasourcesPage from "pages/cfg/team/[id]/Datasources";
 import TeamsPage from "pages/cfg/Teams";
-import GlobalVariablesPage from "pages/cfg/team/[id]/Variables";
 import TeamDashboardsPage from "src/pages/cfg/team/[id]/Dashboards";
 import TeamMembersPage from "src/pages/cfg/team/[id]/Members";
 import TeamSettingPage from "src/pages/cfg/team/[id]/Setting";
@@ -35,6 +33,7 @@ import TeamLayout from "src/pages/cfg/team/[id]/components/Layout";
 import AdminUsers from "pages/admin/Users";
 import TeamDatasources from "pages/cfg/team/[id]/Datasources";
 import TeamVariablesPage from "pages/cfg/team/[id]/Variables";
+import IframeExamplesPage from "pages/examples/Iframe";
 
 
 const DashboardPage = loadable(() => import('src/pages/dashboard/index'));
@@ -144,6 +143,10 @@ export const routes = [
   {
     path: "/test",
     element: <TestPage />
+  },
+  {
+    path: "/examples/iframe",
+    element: <IframeExamplesPage />
   },
   {
     path: "/login",

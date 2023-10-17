@@ -22,6 +22,7 @@ export interface SeriesData {
     color?: string 
 
     rawName?: string // used for name override
+    labels?: Record<string,string>
 }
 
 export enum FieldType {

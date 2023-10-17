@@ -42,9 +42,10 @@ interface SelectProps {
     matchWidth?: boolean
     enableInput?: boolean
     width?: string
+    annotationDir?: "horizontal" | "vertical"
 }
 
-const InputSelect = ({ value,label, options, onChange, variant = "outline", customOption = null, placeholder = "...", size = "sm", isClearable = false, placement="bottom", showArrow = true,closeOnBlur=true ,matchWidth=true,enableInput=true,width="200px"}: SelectProps) => {
+const InputSelect = ({ value,label, options, onChange, variant = "outline", customOption = null, placeholder = "...", size = "sm", isClearable = false, placement="bottom", showArrow = true,closeOnBlur=true ,matchWidth=true,enableInput=true,width="200px",annotationDir="horizontal"}: SelectProps) => {
     const { isOpen, onToggle, onClose } = useDisclosure()
     const [entered, setEntered] = useState(false)
     const [query, setQuery] = useState('')
@@ -109,7 +110,7 @@ const InputSelect = ({ value,label, options, onChange, variant = "outline", cust
                             {
                                 searchedResult.map(option => <HStack key={option.label} className="hover-bg" py="1" px="2" cursor="pointer" onClick={() => onOptionClick(option)} fontSize="0.9rem">
                                     <Box color="brand.500" fontSize="0.6rem" width="12px">{value == option.value && <FaCheck />}</Box>
-                                    {customOption ? customOption(option) : <Flex justifyContent="space-between" width="100%">
+                                    {customOption ? customOption(option) : <Flex flexDirection={annotationDir == "horizontal" ? "row" : "column"} justifyContent="space-between" width="100%">
                                         <HStack alignItems="end">
                                             <Text>{option.label}</Text>
                                             {!isEmpty(option.subLabel) && <Text textStyle="annotation">{option.subLabel}</Text>}

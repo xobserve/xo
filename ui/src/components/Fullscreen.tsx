@@ -18,14 +18,17 @@ import React from "react"
 import { useStore } from "@nanostores/react";
 import { dashboardMsg } from "src/i18n/locales/en";
 import { addParamToUrl, removeParamFromUrl } from "utils/url";
+import useEmbed from "hooks/useEmbed";
 
 const Fullscreen = () => {
     const t1 = useStore(dashboardMsg)
     const toast = useToast()
     const fullscreenParam = useSearchParam("fullscreen")
     const [fullscreen, setFullscreen] = useState(fullscreenParam == "on" ? true : false)
-
-    useKey("Escape", () => onFullscreenChange(true))
+    const embed = useEmbed()
+    useKey("Escape", () => {
+        !embed && onFullscreenChange(true)
+    })
 
     const onFullscreenChange = (isExit?) => {
         setFullscreen(f => {
@@ -48,7 +51,9 @@ const Fullscreen = () => {
     }
 
     return (
-        <Box onClick={() =>onFullscreenChange(false)} cursor="pointer" title={t1.fullscreenTips}><FaTv /></Box>
+        <Tooltip label={t1.fullscreenTips} placement="left-end">
+            <Box onClick={() =>onFullscreenChange(false)} cursor="pointer" ><FaTv /></Box>
+        </Tooltip>
     )
 }
 

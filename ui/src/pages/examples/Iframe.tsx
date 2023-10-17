@@ -1,24 +1,26 @@
-import { Box, Text } from "@chakra-ui/react"
+import { Text } from "@chakra-ui/react"
 import React from "react"
-import countries from 'public/plugins/panel/geomap/countries.json'
 import { Divider } from "antd"
 
 
-const TestPage = () => {
- 
+const IframeExamplesPage = () => {
   return (
     <>
     <Text fontWeight={600}>Iframe "Requests to Datav" </Text>
     <iframe src="https://play.datav.io/home?&embed=true&fullscreen=on&from=now-6h&to=now&toolbar=off&viewPanel=4&colorMode=dark" height={500} width={800}/>
     <Divider />
     <Text mt="3" fontWeight={600}>Iframe "Tcp stats" with light theme</Text>
-    <iframe src="http://localhost:5173/home?&embed=true&fullscreen=on&from=now-12h&to=now&viewPanel=4&colorMode=light" height={500} width={800}/>
+    <iframe src="https://play.datav.io/host?&embed=true&fullscreen=on&from=now-6h&to=now&var-host=web-datav-1&viewPanel=12&colorMode=light" height={500} width={800}/>
     <Divider />
     <Text mt="3" fontWeight={600}>Iframe "Heap objects" with top toolbar</Text>
     <iframe src="https://play.datav.io/runtime?&embed=true&fullscreen=on&from=now-6h&to=now&var-host=web-datav-1&toolbar=on&viewPanel=10&colorMode=dark" height={500} width={800}/>
+    <Divider />
+    <Text mt="3" fontWeight={600}>Iframe "Go runtime" dashboard</Text>
+    <iframe src="https://play.datav.io/runtime?&embed=true&fullscreen=on&from=now-6h&to=now&var-host=web-datav-1&colorMode=dark" height={500} width="100%"/>
+
     </>
   )
 }
-export default TestPage
+export default IframeExamplesPage
 
 

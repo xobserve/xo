@@ -46,6 +46,8 @@ type UIConfig struct {
 	Sidemenu *models.SideMenu `json:"sidemenu"`
 
 	Plugins *Plugins `json:"plugins"`
+
+	Observability *config.Observability `json:"observability"`
 }
 
 type Plugins struct {
@@ -78,6 +80,7 @@ func getUIConfig(c *gin.Context) {
 		EnableGithubLogin: config.Data.User.EnableGithubLogin,
 		GithubOAuthToken:  config.Data.User.GithubOAuthToken,
 		Plugins:           (*Plugins)(&config.Data.Plugins),
+		Observability:     &config.Data.Observability,
 	}
 
 	// query sidemenu

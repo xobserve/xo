@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import {  Modal, ModalBody, ModalCloseButton, ModalContent, ModalOverlay, Tab, TabList, TabPanel, TabPanels, Tabs, Text, useDisclosure, useMediaQuery } from "@chakra-ui/react"
+import {  Box, Modal, ModalBody, ModalCloseButton, ModalContent, ModalOverlay, Tab, TabList, TabPanel, TabPanels, Tabs, Text, Tooltip, useDisclosure, useMediaQuery } from "@chakra-ui/react"
 import IconButton from "src/components/button/IconButton"
 import { toNumber } from "lodash"
 import { useEffect } from "react"
@@ -63,7 +63,11 @@ const DashboardSettings = ({ dashboard,onChange }: Props) => {
 
     const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
     return (<>
-        <IconButton onClick={() => addParamToUrl({ settings: DashboardSettingType.General })} variant="ghost"><FaCog /></IconButton>
+        <Tooltip label={t1.dashSettings}>
+            <Box>
+                <IconButton onClick={() => addParamToUrl({ settings: DashboardSettingType.General })} variant="ghost"><FaCog /></IconButton>
+            </Box>
+        </Tooltip>
         <Modal isOpen={isOpen} onClose={onSettingClose} size="full">
             <ModalOverlay />
             <ModalContent >

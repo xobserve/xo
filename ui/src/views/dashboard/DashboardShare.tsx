@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Box, Button, Modal, ModalBody, ModalContent, Text, ModalHeader, ModalOverlay, StyleProps, useClipboard, useDisclosure, Switch, HStack, Input, VStack, Tabs, TabList, Tab, TabPanels, TabPanel, ModalCloseButton, ModalFooter, Textarea } from "@chakra-ui/react"
+import { Box, Button, Modal, ModalBody, ModalContent, Text, ModalHeader, ModalOverlay, StyleProps, useClipboard, useDisclosure, Switch, HStack, Input, VStack, Tabs, TabList, Tab, TabPanels, TabPanel, ModalCloseButton, ModalFooter, Textarea, Tooltip } from "@chakra-ui/react"
 import React, { useEffect, useState } from "react"
 import { BsShare } from "react-icons/bs"
 import { Dashboard } from "types/dashboard"
@@ -31,6 +31,8 @@ import saveFile from 'save-as-file';
 import { isEmpty } from "utils/validate"
 import { REFRESH_OFF } from "./DashboardRefresh"
 import { Select } from "antd"
+import { concat } from "lodash"
+import RadionButtons from "components/RadioButtons"
 
 interface Props extends StyleProps {
     dashboard: Dashboard
@@ -54,7 +56,8 @@ const DashboardShare = ({ dashboard, ...rest }: Props) => {
     const [useRawTime, setUseRawTime] = useState(false)
     const [useToolbar, setUserToolbar] = useState(true)
     const [refresh, setRefresh] = useState(REFRESH_OFF)
-    const [embeddingPanel, setEmbeddingPanel] = useState<number>(1)
+    const [embeddingPanel, setEmbeddingPanel] = useState<number>(0)
+    const [colorMode, setColorMode] = useState('light')
 
     useEffect(() => {
         let url = window.origin + location.pathname + "?"
@@ -89,13 +92,12 @@ const DashboardShare = ({ dashboard, ...rest }: Props) => {
         }
         dispatch(ShareUrlEvent)
         setTimeout(() => {
-            let embedding
+            let embedding = url + "&embed=true&fullscreen=on"
             if (!isEmpty(shareUrlParams)) {
-                url = url + queryString.stringify(shareUrlParams, { sort: false })
-                embedding = url + "&fullscreen=on"
-            } else {
-                embedding = url + "&fullscreen=on"
-            }
+                const params = queryString.stringify(shareUrlParams, { sort: false })
+                url = url + params
+                embedding = embedding + "&" + params
+            } 
 
             if (useToolbar) {
                 embedding = embedding + "&toolbar=on"
@@ -108,15 +110,21 @@ const DashboardShare = ({ dashboard, ...rest }: Props) => {
             if (embeddingPanel > 0) {
                 embedding = embedding + "&viewPanel=" + embeddingPanel
             }
+
+            embedding = embedding + "&colorMode=" + colorMode
+
             setShareUrl(url)
             setEmbededUrl(embedding)
             setValue(url)
             setEmbedValue(embedding)
         }, 150)
-    }, [enableCurrentTimeRange, useRawTime, variables, useToolbar, refresh])
+    }, [enableCurrentTimeRange, useRawTime, variables, useToolbar, refresh, embeddingPanel, colorMode])
+
+    const filterPanels = (input: string, option?: { label: string; value: number }) =>
+    (option?.label ?? '').toLowerCase().includes(input.toLowerCase());
 
     return (<>
-        <Box onClick={onOpen} {...rest}><BsShare /></Box>
+        <Tooltip label={t1.shareDashboard}><Box onClick={onOpen} {...rest}><BsShare /></Box></Tooltip>
 
         <Modal isOpen={isOpen} onClose={onClose} autoFocus={false}>
             <ModalOverlay />
@@ -159,7 +167,7 @@ const DashboardShare = ({ dashboard, ...rest }: Props) => {
                                         </FormItem>}
                                     </Form>
                                     <HStack spacing={1}>
-                                        <Input fontSize='xs' mr='1.5' wordBreak='break-all' p='1' className="code-bg" bgColor='#09090b' overflow='hidden' textOverflow='ellipsis' value={shareUrl} readOnly />
+                                        <Textarea fontSize='xs' mr='1.5' wordBreak='break-all' p='1' className="code-bg" bgColor='#09090b' overflow='hidden' textOverflow='ellipsis' value={shareUrl} readOnly />
                                         <Button size="sm" leftIcon={<FaRegCopy />} onClick={onCopy} variant={hasCopied ? "solid" : "outline"}>
                                             {hasCopied ? t.copied : t.copy}
                                         </Button>
@@ -200,6 +208,12 @@ const DashboardShare = ({ dashboard, ...rest }: Props) => {
                                         </FormItem>
                                         <FormItem title={"Use refresh"} size="sm" alignItems={'center'}>
                                             <Select popupMatchSelectWidth={false} bordered={false} value={refresh} onChange={(v) => setRefresh(v)} options={[REFRESH_OFF, '5s', '10s', '30s', '1m', '5m', '10m'].map(v => ({ value: v, label: v }))} />
+                                        </FormItem>
+                                        <FormItem title={"Color mode"} size="sm" alignItems={'center'}>
+                                            <RadionButtons size="sm" value={colorMode} options={[{label: "Light", value: "light"}, {label:"Dark", value: "dark"}]} onChange={v => setColorMode(v)} />
+                                        </FormItem>
+                                        <FormItem title={"Embedding panel"} size="sm" alignItems={'center'}>
+                                            <Select popupMatchSelectWidth={false} bordered={false} value={embeddingPanel} onChange={(v) => setEmbeddingPanel(v)} options={concat([{value: 0, label: "OFF"}], dashboard.data.panels.map(p => ({label: p.title, value: p.id})))} showSearch filterOption={filterPanels} style={{width: "200px"}}/>
                                         </FormItem>
                                     </Form>
                                     <HStack spacing={1}>
