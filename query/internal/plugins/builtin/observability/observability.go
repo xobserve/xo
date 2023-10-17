@@ -1,9 +1,7 @@
 package clickhouse
 
 import (
-	"reflect"
 	"sync"
-	"time"
 
 	ch "github.com/ClickHouse/clickhouse-go/v2"
 	"github.com/DataObserve/datav/query/internal/plugins/builtin/observability/api"
@@ -41,54 +39,17 @@ func (p *ObservabilityPlugin) Query(c *gin.Context, ds *models.Datasource) model
 		conns[ds.Id] = conn
 		connsLock.Unlock()
 	}
-
-	rows, err := conn.Query(c.Request.Context(), query)
-	if err != nil {
-		colorlog.RootLogger.Info("Error query clickhouse :", "error", err, "ds_id", ds.Id, "query:", query)
-		return models.GenPluginResult(models.PluginStatusError, err.Error(), nil)
+	route, ok := api.APIRoutes[query]
+	if ok {
+		res := route(c, ds, conn)
+		return models.PluginResult{
+			Status: models.PluginStatusSuccess,
+			Error:  "",
+			Data:   res,
+		}
+	} else {
+		return models.GenPluginResult(models.PluginStatusError, "api not found", nil)
 	}
-	defer rows.Close()
-
-	columns := rows.Columns()
-	columnTypes := rows.ColumnTypes()
-	types := make(map[string]string)
-	data := make([][]interface{}, 0)
-	for rows.Next() {
-		v := make([]interface{}, len(columns))
-		for i := range v {
-			t := columnTypes[i].ScanType()
-			v[i] = reflect.New(t).Interface()
-
-			tp := t.String()
-			if tp == "time.Time" {
-				types[columns[i]] = "time"
-			}
-		}
-
-		err = rows.Scan(v...)
-		if err != nil {
-			colorlog.RootLogger.Info("Error scan clickhouse :", "error", err, "ds_id", ds.Id)
-			continue
-		}
-
-		for i, v0 := range v {
-			v1, ok := v0.(*time.Time)
-			if ok {
-				v[i] = v1.Unix()
-			}
-		}
-
-		data = append(data, v)
-	}
-
-	return models.PluginResult{
-		Status: models.PluginStatusSuccess,
-		Error:  "",
-		Data: map[string]interface{}{
-			"columns": columns,
-			"data":    data,
-			"types":   types,
-		}}
 }
 
 func init() {

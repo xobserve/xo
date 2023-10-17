@@ -13,6 +13,19 @@ type PluginResult struct {
 	Data   interface{} `json:"data,omitempty"`
 }
 
+const (
+	PluginResultFormatTable   = "table"
+	PluginResultFormatMetrics = "metrics"
+	PluginResultFormatTrace   = "traces"
+	PluginResultFormatLog     = "logs"
+)
+
+type PluginResultData struct {
+	Columns     []string          `json:"columns"`
+	Data        [][]interface{}   `json:"data"`
+	ColumnTypes map[string]string `json:"types,omitempty"`
+}
+
 type Plugin interface {
 	Query(c *gin.Context, ds *Datasource) PluginResult
 }

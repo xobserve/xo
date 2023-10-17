@@ -23,6 +23,8 @@ import { locale } from "src/i18n/i18n"
 import InputSelect from "components/select/InputSelect"
 import { MobileVerticalBreakpoint } from "src/data/constants"
 import CodeEditor from "components/CodeEditor/CodeEditor"
+import SelectDataFormat from "../../../components/query-edtitor/SelectDataFormat"
+import { DataFormat } from "types/format"
 
 const HttpQueryEditor = ({ panel, datasource, query, onChange }: DatasourceEditorProps) => {
     const code = useStore(locale)
@@ -39,6 +41,14 @@ const HttpQueryEditor = ({ panel, datasource, query, onChange }: DatasourceEdito
             onChange(q)
         }
     }
+
+    if (!tempQuery.data['format']) {
+        tempQuery.data['format'] = api?.format ??  DataFormat.Table
+        const q = cloneDeep(tempQuery)
+        setTempQuery(q)
+        onChange(q)
+    }
+    
     const [isMobileScreen] = useMediaQuery(MobileVerticalBreakpoint)
     return (<>
         <Form spacing={1}>
@@ -92,6 +102,8 @@ const HttpQueryEditor = ({ panel, datasource, query, onChange }: DatasourceEdito
                     />
                 </Box>
             </FormItem>}
+
+            <SelectDataFormat tempQuery={tempQuery} setTempQuery={setTempQuery} onChange={onChange} labelWidth="100px"/>
         </Form>
     </>)
 }
@@ -114,6 +126,7 @@ const apiList = [{
     params: `{
     "env": "test"
 }`,
-    paramsDesc: [["env", "environment name, such as dev, test, prod etc"]]
+    paramsDesc: [["env", "environment name, such as dev, test, prod etc"]],
+    format: DataFormat.Table
 }
 ]

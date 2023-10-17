@@ -24,7 +24,9 @@ import { requestApi } from "utils/axios/request"
 import { isEmpty } from "utils/validate"
 import { roundDsTime } from "utils/datasource"
 import { $variables } from "src/views/variables/store"
-import { QueryPluginResult } from "types/plugin"
+import { QueryPluginData, QueryPluginResult } from "types/plugin"
+import { queryPluginDataToTable, queryPluginDataToTimeSeries } from "utils/plugins"
+import { DataFormat } from "types/format"
 
 export const runQuery = async (panel: Panel, q: PanelQuery, range: TimeRange, ds: Datasource) => {
     if (isEmpty(q.metrics)) {
@@ -39,7 +41,11 @@ export const runQuery = async (panel: Panel, q: PanelQuery, range: TimeRange, ds
 
 
 
-    const res: QueryPluginResult = await requestApi.get(`/proxy/${ds.id}?query=${replaceWithVariables(q.metrics)}&params=${q.data.params}&start=${start}&end=${end}&step=${q.interval}`)
+    const res: {
+        status: string,
+        error: string,
+        data: QueryPluginResult
+    } = await requestApi.get(`/proxy/${ds.id}?query=${replaceWithVariables(q.metrics)}&params=${q.data.params}&start=${start}&end=${end}&step=${q.interval}`)
     
     if (res.status !== "success") {
         console.log("Failed to fetch data from target datasource", res)
@@ -48,10 +54,21 @@ export const runQuery = async (panel: Panel, q: PanelQuery, range: TimeRange, ds
             data: []
         }
     }
-    
+    let data;
+    switch (q.data["format"]) {
+        case DataFormat.TimeSeries:
+            data = queryPluginDataToTimeSeries(res.data.data, q)
+            break
+        case DataFormat.Table:
+            data =  queryPluginDataToTable(res.data.data, q)
+            break
+        default:
+            data =  queryPluginDataToTable(res.data.data, q)
+    }
+
     return {
         error: null,
-        data: res.data,
+        data
     }
 }
 

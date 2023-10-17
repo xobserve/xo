@@ -26,6 +26,7 @@ import { $datasources } from "src/views/datasource/store";
 import { DataFormat } from "types/format";
 import { locale } from "src/i18n/i18n";
 import ExpandTimeline from "../../../components/query-edtitor/ExpandTimeline";
+import SelectDataFormat from "../../../components/query-edtitor/SelectDataFormat";
 
 
 
@@ -77,17 +78,7 @@ const QueryEditor = ({ datasource, query, onChange }: DatasourceEditorProps) => 
                         size="sm"
                     />
                 </FormItem>
-                <FormItem labelWidth={"150px"} size="sm" title={lang == "en" ? "Format as" : "数据格式"} desc={lang == "en" ? "Timeseries format will aggregate fields that are neither of time nor number type into series label and name, Table format will keep all the fields from the query response, making it very suitable for Table panel." : "Timeseries 格式会将既不是时间也不是数值的字段聚合成 Series 名称和标签，而 Table 格式会保留所有字段，因此它特别适用于 Table 图表。"}>
-                    <Select size="sm" value={tempQuery.data['format']} onChange={(e) => {
-                        tempQuery.data['format'] = e.currentTarget.value
-                        const q = { ...tempQuery, data: cloneDeep(tempQuery.data) }
-                        setTempQuery(q)
-                        onChange(q)
-                    }} >
-                        <option value={DataFormat.TimeSeries}>Time series</option>
-                        <option value={DataFormat.Table}>Table</option>
-                    </Select>
-                </FormItem> 
+                <SelectDataFormat tempQuery={tempQuery} setTempQuery={setTempQuery} onChange={onChange}/>
             </Stack>
             {/* <ExpandTimeline t1={t1} tempQuery={tempQuery} setTempQuery={setTempQuery} onChange={onChange}/> */}
 

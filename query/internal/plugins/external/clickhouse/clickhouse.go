@@ -82,10 +82,10 @@ func (p *ClickHousePlugin) Query(c *gin.Context, ds *models.Datasource) models.P
 	return models.PluginResult{
 		Status: models.PluginStatusSuccess,
 		Error:  "",
-		Data: map[string]interface{}{
-			"columns": columns,
-			"data":    data,
-			"types":   types,
+		Data: models.PluginResultData{
+			Columns:     columns,
+			Data:        data,
+			ColumnTypes: types,
 		}}
 }
 
