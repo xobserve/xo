@@ -11,8 +11,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Dashboard, Panel, PanelProps, PanelQuery } from "types/dashboard"
-import { Box, Center, HStack, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Popover, PopoverArrow, PopoverBody, PopoverContent, PopoverTrigger, Portal, Text, Tooltip, useColorMode, useColorModeValue, useDisclosure, useToast } from "@chakra-ui/react";
-import { FaBook, FaBug, FaEdit, FaRegClock, FaRegClone, FaRegCopy, FaRegEye, FaRegEyeSlash, FaTrashAlt } from "react-icons/fa";
+import { Box, Center, HStack, IconButton, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Popover, PopoverArrow, PopoverBody, PopoverContent, PopoverTrigger, Portal, Text, Tooltip, useColorMode, useColorModeValue, useDisclosure, useToast } from "@chakra-ui/react";
+import { FaEllipsisV, FaBug, FaEdit, FaRegClock, FaRegClone, FaRegCopy, FaRegEye, FaRegEyeSlash, FaTrashAlt } from "react-icons/fa";
 import { IoMdInformation } from "react-icons/io";
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { DatasourceMaxDataPoints, DatasourceMinInterval, PANEL_HEADER_HEIGHT } from "src/data/constants";
@@ -56,6 +56,8 @@ import { PanelTypeGraph } from "../../plugins/built-in/panel/graph/types";
 import { DatasourceTypeTestData } from "../../plugins/built-in/datasource/testdata/types";
 import PanelDatePicker from "../../components/PanelDatePicker";
 import useEmbed from "hooks/useEmbed";
+import customColors from "src/theme/colors";
+import { css } from "@emotion/react";
 
 interface PanelGridProps {
     dashboard: Dashboard
@@ -347,7 +349,13 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
         return res
     }, [panel.transform, panel.enableTransform, panelData])
 
-    return <Box height={height} width={width} className={(panel.styles.border == "Normal" && "bordered") + (dashboard.data.styles.bgEnabled ? " panel-bg-alpha" : " panel-bg")} position="relative">
+    return <Box height={height} width={width} className={(panel.styles.border == "Normal" && "bordered") + (dashboard.data.styles.bgEnabled ? " panel-bg-alpha" : " panel-bg")} position="relative"
+        css={css`
+        &: hover .show-on-hover {
+            visibility: visible
+        }
+    `}
+    >
 
         {data && <Box overflow="hidden">
             <PanelHeader dashboardId={dashboard.id} panel={panel} data={panelData} queryError={queryError} onCopyPanel={onCopyPanel} onRemovePanel={onRemovePanel} onHidePanel={onHidePanel} />
@@ -364,12 +372,12 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
 
         </Box>}
         {loading && <Box position="absolute" top="0" right="0"><Loading size="sm" /></Box>}
-        {!loading && panel.enableScopeTime && <Popover trigger="hover"> 
+        {!loading && panel.enableScopeTime && <Popover trigger="hover">
             <PopoverTrigger>
                 <Box position="absolute" top="5px" right="5px" opacity="0.5" fontSize="0.8rem" zIndex={1000} cursor="pointer"><FaRegClock /></Box>
             </PopoverTrigger>
             <PopoverContent>
-                <PopoverArrow /> 
+                <PopoverArrow />
                 <PopoverBody>
                     <PanelDatePicker id={panel.id.toString()} timeRange={panel.scopeTime} onChange={tr => {
                         panel.scopeTime = tr
@@ -377,7 +385,7 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
                             type: UpdatePanelEvent,
                             data: cloneDeep(panel)
                         })
-                    }}  showIcon/>
+                    }} showIcon />
                     <Text opacity={0.7} mt="2" ml="3" fontSize="0.9rem">Panel time range</Text>
                 </PopoverBody>
             </PopoverContent>
@@ -416,7 +424,15 @@ const PanelHeader = ({ dashboardId, queryError, panel, onCopyPanel, onRemovePane
     const embed = useEmbed()
     return (
         <>
-            <HStack className="grid-drag-handle hover-bg" height={`${PANEL_HEADER_HEIGHT - (isEmpty(title) ? 15 : 0)}px`} cursor="move" spacing="0" position={isEmpty(title) ? "absolute" : "relative"} width="100%" zIndex={1000}>
+            <HStack
+                className="grid-drag-handle hover-bg"
+                height={`${PANEL_HEADER_HEIGHT - (isEmpty(title) ? 15 : 0)}px`}
+                cursor="move"
+                spacing="0"
+                position={isEmpty(title) ? "absolute" : "relative"}
+                width="100%"
+                zIndex={1000}
+            >
                 {(queryError || panel.desc) && <Box color={useColorModeValue(queryError ? "red" : "brand.500", queryError ? "red" : "brand.200")} position="absolute">
                     <Tooltip label={toString(queryError) ?? replaceWithVariables(panel.desc)}>
                         <Box>
@@ -425,17 +441,59 @@ const PanelHeader = ({ dashboardId, queryError, panel, onCopyPanel, onRemovePane
                     </Tooltip>
                 </Box>}
                 <Center width="100%">
-                    <Menu placement="bottom">
-                        <MenuButton
-                            transition='all 0.2s'
-                            _focus={{ border: null }}
-                            onClick={e => e.stopPropagation()}
-                            disabled={embed}
-                        >
-                            <Center width="100%">{!isEmpty(title) ? <Box cursor="pointer" className="hover-bordered" paddingTop={panel.styles.title.paddingTop} paddingBottom={panel.styles.title.paddingBottom} paddingLeft={panel.styles.title.paddingLeft} paddingRight={panel.styles.title.paddingRight} width="100%" fontSize={panel.styles.title.fontSize} fontWeight={panel.styles.title.fontWeight} color={paletteColorNameToHex(panel.styles.title.color, colorMode)}><TitleDecoration styles={panel.styles}><Text noOfLines={1}>{title}</Text></TitleDecoration></Box> : <Box width="100px">&nbsp;</Box>}</Center>
-                        </MenuButton>
-                        <Portal>
-                            <MenuList p="1" zIndex={1500}>
+                    <Center width="100%">
+                        {!isEmpty(title) ?
+                            <Box
+                                display={'flex'}
+                                justifyContent={'center'}
+                                // cursor="pointer"
+                                paddingTop={panel.styles.title.paddingTop}
+                                paddingBottom={panel.styles.title.paddingBottom}
+                                paddingLeft={panel.styles.title.paddingLeft}
+                                paddingRight={panel.styles.title.paddingRight}
+                                width="100%"
+                                fontSize={panel.styles.title.fontSize}
+                                fontWeight={panel.styles.title.fontWeight}
+                                color={paletteColorNameToHex(panel.styles.title.color, colorMode)}>
+                                <TitleDecoration styles={panel.styles}>
+                                    <Text noOfLines={1}>
+                                        {title}
+                                    </Text>
+                                </TitleDecoration>
+                            </Box> : <Box width="100px">&nbsp;</Box>}
+                    </Center>
+                    <Box visibility={'hidden'} className="show-on-hover">
+                        <Menu placement="bottom" isLazy={true}>
+                            <MenuButton
+                                background={useColorModeValue(customColors.bodyBg.light, customColors.bodyBg.dark)}
+                                transition='all 0.2s'
+                                _focus={{ border: null }}
+                                onClick={e => e.stopPropagation()}
+                                disabled={embed}
+                                cursor={'pointer'}
+                                as={IconButton}
+                                aria-label='Options'
+                                icon={
+                                    <Box
+                                        fontSize={panel.styles.title.fontSize}
+                                        fontWeight={panel.styles.title.fontWeight}
+                                        color={paletteColorNameToHex(panel.styles.title.color, colorMode)}
+                                    >
+                                        <FaEllipsisV />
+                                    </Box>}
+                                size={'sm'}
+                                variant={'none'}
+                            />
+                            <MenuList
+                                p="1"
+                                zIndex={1500}
+                                minWidth={"3"}
+                                rootProps={
+                                    {
+                                        'width': 2,
+                                    }
+                                }
+                            >
                                 <MenuItem icon={<FaEdit />} onClick={() => addParamToUrl({ edit: panel.id })}>{t.edit}</MenuItem>
                                 <MenuItem icon={<FaRegCopy />} onClick={() => onCopyPanel(panel, "copy")}>{t.copy}</MenuItem>
                                 <MenuItem icon={<FaRegClone />} onClick={() => onCopyPanel(panel, "clone")}>{t.clone}</MenuItem>
@@ -451,8 +509,8 @@ const PanelHeader = ({ dashboardId, queryError, panel, onCopyPanel, onRemovePane
 
                                 </>}
                             </MenuList>
-                        </Portal>
-                    </Menu>
+                        </Menu>
+                    </Box>
                 </Center>
                 {/* <Box display="none"><FaBook className="grid-drag-handle" /></Box> */}
             </HStack>
