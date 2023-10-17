@@ -24,6 +24,7 @@ import { useSearchParam } from "react-use"
 import { FormSection } from "components/form/Form"
 import { externalDatasourcePlugins } from "../dashboard/plugins/external/plugins"
 import { builtinDatasourcePlugins } from "../dashboard/plugins/built-in/plugins"
+import { isPluginDisabled } from "utils/plugins"
 
 interface Props {
     ds: Datasource
@@ -114,10 +115,20 @@ const DatasourceEditor = ({ ds, onChange = null, teamEditable = true }: Props) =
                         setDatasource((d: Datasource) => { d.type = v as any; d.url = null })
                     }}>
                         {Object.keys(builtinDatasourcePlugins).map(dsType => {
+                            const p = builtinDatasourcePlugins[dsType]
+                            if (isPluginDisabled(p)) {
+                                return <></>
+                            }
+                    
                             return <option key={dsType} value={dsType}>{upperFirst(dsType)}</option>
                         })}
                         <Divider />
                         {Object.keys(externalDatasourcePlugins).map(dsType => {
+                             const p = externalDatasourcePlugins[dsType]
+                             if (isPluginDisabled(p)) {
+                                return <></>
+                            }
+                            
                             return <option key={dsType} value={dsType}>{upperFirst(dsType)}</option>
                         })}
                     </Select>

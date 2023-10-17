@@ -27,15 +27,15 @@ interface Props {
     onLabelClick?: any 
 }
 
-const FormItem = ({ title, children, labelWidth = "fit-content", desc = null, px = 3,  colorSchema="gray" ,size="md",spacing=2,alignItems="top",onLabelClick,...rest }:Props & StyleProps) => {
+const FormItem = ({ title, children, labelWidth = "fit-content", desc = null, px = 3,  colorSchema="gray" ,size="md",spacing=2,alignItems="top",onLabelClick,flexDirection="row",...rest }:Props & StyleProps) => {
     return (
-        <HStack alignItems={alignItems}  spacing={spacing} {...rest}>
+        <Flex alignItems={alignItems}  gap={spacing} flexDirection={flexDirection} {...rest}>
             <HStack pos="relative"  alignItems="center" height={`${size=="md" ? 'var(--chakra-sizes-10)' : (size=="sm" ? 'var(--chakra-sizes-8)' : 'var(--chakra-sizes-12)')}`} px={px}  minWidth="fit-content" className={colorSchema == "gray" ? "label-bg" : "tag-bg"} fontSize={size=="lg" ? "1rem" : "0.9rem"} borderRadius="1px">
                 {typeof title == "string" ?  <Text width={labelWidth} className="form-item-label" onClick={onLabelClick} cursor={onLabelClick && "pointer"}>{title}</Text> :<Box  width={labelWidth} className="form-item-label">{title}</Box>}
                 {desc && <Tooltip label={desc}><Box position={"absolute" } right="2"><IoMdInformationCircleOutline /></Box></Tooltip>}
             </HStack>
             {children}
-        </HStack>
+        </Flex>
     )
 }
 

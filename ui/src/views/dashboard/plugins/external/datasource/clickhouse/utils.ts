@@ -54,7 +54,8 @@ const toTimeSeries = (data: ChPluginData,  query: PanelQuery) => {
     const seriesMap: Record<string,SeriesData> = {}
     const formats = parseLegendFormat(query.legend)
     
-    data.data.forEach((row, i) => {
+    for (var i=0;i<data.data.length;i++) {
+        const row = data.data[i]
         const labels = {}
         let timeValue;
         let timeFieldName;
@@ -78,6 +79,10 @@ const toTimeSeries = (data: ChPluginData,  query: PanelQuery) => {
             }
         })
         
+        if (!timeFieldName) {
+            return []
+        }
+
         let seriesName;
         if (isEmpty(labels)) {
             seriesName = query.id
@@ -108,7 +113,8 @@ const toTimeSeries = (data: ChPluginData,  query: PanelQuery) => {
             series.fields[0].values.push(timeValue)
             series.fields[1].values.push(value)
         }
-    })
+    }
+
 
     const res = Object.values(seriesMap)
     for (const s of res) {
@@ -127,10 +133,11 @@ const toTimeSeries = (data: ChPluginData,  query: PanelQuery) => {
         }
 
     }
-    console.log("here33333:",Object.values(seriesMap))
+
     
     const seriesList = Object.values(seriesMap)
     alignTimeSeriesData(seriesList)
+
     return  seriesList
 }
 

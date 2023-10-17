@@ -25,6 +25,8 @@ import { IsSmallScreen } from "src/data/constants";
 import { $datasources } from "src/views/datasource/store";
 import { DataFormat } from "types/format";
 import { locale } from "src/i18n/i18n";
+import ExpandTimeline from "../../../components/query-edtitor/ExpandTimeline";
+
 
 
 
@@ -36,8 +38,9 @@ const QueryEditor = ({ datasource, query, onChange }: DatasourceEditorProps) => 
     const [isSmallScreen] = useMediaQuery(IsSmallScreen)
     const isLargeScreen = !isSmallScreen
     const Stack = isLargeScreen ? HStack : VStack
-
-
+    if (tempQuery.data['expandTimeline'] == undefined) {
+        tempQuery.data['expandTimeline'] = 'auto'
+    }
 
     const ds = $datasources.get().find(d => d.id == datasource.id)
 
@@ -84,9 +87,10 @@ const QueryEditor = ({ datasource, query, onChange }: DatasourceEditorProps) => 
                         <option value={DataFormat.TimeSeries}>Time series</option>
                         <option value={DataFormat.Table}>Table</option>
                     </Select>
-                </FormItem>
-                {/* {isLargeScreen && <ExpandTimeline t1={t1} tempQuery={tempQuery} setTempQuery={setTempQuery} onChange={onChange}/>} */}
+                </FormItem> 
             </Stack>
+            {/* <ExpandTimeline t1={t1} tempQuery={tempQuery} setTempQuery={setTempQuery} onChange={onChange}/> */}
+
         </Form>
     )
 }

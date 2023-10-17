@@ -19,6 +19,7 @@ import tracePanel from './panel/trace'
 
 import prometheusDs from './datasource/prometheus'
 import httpDs from './datasource/http'
+import observabilityDs from './datasource/observability'
 import jaegerDs from './datasource/jaeger'
 import lokiDs from './datasource/loki'
 import testdataDs from './datasource/testdata'
@@ -49,4 +50,5 @@ export const builtinDatasourcePlugins: Record<string,DatasourcePluginComponents>
     [lokiDs.settings.type]: lokiDs,
     [testdataDs.settings.type]: testdataDs,
     [vmDs.settings.type]: vmDs,
+    [observabilityDs.settings.type]: observabilityDs,
 }

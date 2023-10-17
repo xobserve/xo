@@ -33,6 +33,7 @@ export interface DatasourcePluginComponents {
     settings: {
         type: string;
         icon: string;
+        disabled?: () => boolean
     },
 }
 

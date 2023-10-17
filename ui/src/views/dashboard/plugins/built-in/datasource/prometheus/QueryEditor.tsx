@@ -25,10 +25,9 @@ import InputSelect from "src/components/select/InputSelect"
 import { prometheusDsMsg } from "src/i18n/locales/en";
 import { useStore } from "@nanostores/react";
 import CodeEditor, { LogqlLang } from "src/components/CodeEditor/CodeEditor";
-import RadionButtons from "src/components/RadioButtons";
 import { IsSmallScreen } from "src/data/constants";
 import Loading from "components/loading/Loading";
-import { ExpandTimeline } from "../../../components/query-edtitor/ExpandTimeline";
+import ExpandTimeline from "../../../components/query-edtitor/ExpandTimeline";
 
 
 

@@ -410,7 +410,7 @@
     "legendFormat": "支持变量",
     "selecMetrics": "选择 metrics...",
     "expandTimeline": "显示完整时间轴",
-    "expandTimelineDesc": "当开启后，所有的时间点都将显示，即时该时间点没有任何数据，对于观察图表在哪里缺失了数据很有帮助"
+    "expandTimelineDesc": "当开启后，所有的时间点都将显示，即使该时间点没有任何数据，对于观察图表在哪里缺失了数据很有帮助"
   },
   "httpDs": {
     "remoteHttp": "远程 HTTP 地址",
