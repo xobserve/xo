@@ -27,6 +27,7 @@ import FormItem from "src/components/form/Item"
 import { useStore } from "@nanostores/react";
 import { commonMsg, dashboardSaveMsg } from "src/i18n/locales/en";
 import { dateTimeFormat } from "utils/datetime/formatter";
+import useEmbed from "hooks/useEmbed";
 
 interface Props {
     dashboard: Dashboard
@@ -45,20 +46,20 @@ const DashboardSave = ({ dashboard }: Props) => {
     const [inPreview, setInPreview] = useState(false)
     const [updateChanges, setUpdateChanges] = useState("")
     const [pressed] = useKeyboardJs("ctrl+s")
-    
-    useLeavePageConfirm(dashboard.data.enableUnsavePrompt ? pageChanged : false)
+    const embed = useEmbed()
+    useLeavePageConfirm(embed ? false : (dashboard.data.enableUnsavePrompt ? pageChanged : false))
 
     useBus(
-        SaveDashboardEvent, 
+        SaveDashboardEvent,
         () => {
-           onSave(false)
+            onSave(false)
         },
         [dashboard]
     )
- 
+
 
     useEffect(() => {
-        if (pressed && !isOpen) {
+        if (!embed && pressed && !isOpen) {
             onSaveOpen()
         }
 
@@ -178,21 +179,26 @@ const DashboardSave = ({ dashboard }: Props) => {
     return (
         <>
             <Box>
+
                 <Menu placement="left">
-                    <MenuButton as={IconButton} variant="ghost" sx={{
-                        span: {
-                            display: "flex",
-                            justifyContent: "center",
-                        }
-                    }}>
-                        <FaRegSave />
-                    </MenuButton>
+                    <Tooltip label={t1.saveDash}>
+                        <MenuButton as={IconButton} variant="ghost" sx={{
+                            span: {
+                                display: "flex",
+                                justifyContent: "center",
+                            }
+                        }}>
+                            <FaRegSave />
+                        </MenuButton>
+                    </Tooltip>
                     <MenuList>
                         <MenuItem onClick={onSaveOpen}>{t.save}</MenuItem>
                         <MenuItem onClick={onViewHistory}>{t1.viewHistory}</MenuItem>
                     </MenuList>
                 </Menu>
+
             </Box>
+
             <Drawer
                 key={dashboard.id}
                 isOpen={isOpen}

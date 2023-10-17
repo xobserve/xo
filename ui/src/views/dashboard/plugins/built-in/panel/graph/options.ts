@@ -48,7 +48,6 @@ export const parseOptions = (config: PanelProps, rawData: SeriesData[], colorMod
     // push time series option
     series.push({
         label: "Time",
-
     })
 
     // show its own units for negative-y series

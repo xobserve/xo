@@ -103,3 +103,11 @@ plugins:
     ## but it is no use to you, so we default disable it here
     disable_panels: ["demo"]
     disable_datasources: []
+
+
+#################################### Observability ##############################
+observability:
+    ## when enabled, datav-observability features will be toggle on
+    ## you can collect metrics, traces and logs into Datav, and view them through observability plugins
+    ## please visit https://datav.io/docs/observability for more info
+    enable: true

@@ -74,6 +74,7 @@ func (p *ClickHousePlugin) Query(c *gin.Context, ds *models.Datasource) models.P
 				v[i] = v1.Unix()
 			}
 		}
+
 		data = append(data, v)
 	}
 

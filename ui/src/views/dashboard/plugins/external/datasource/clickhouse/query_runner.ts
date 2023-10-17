@@ -15,7 +15,7 @@
 import { isEmpty } from "lodash"
 import { Panel, PanelQuery } from "types/dashboard"
 import { TimeRange } from "types/time"
-import { clickhouseToSeriesData } from "./utils"
+import { clickhouseToPanelData } from "./utils"
 import { Datasource } from "types/datasource"
 import { Variable } from "types/variable"
 import { getNewestTimeRange } from "src/components/DatePicker/TimePicker"
@@ -53,8 +53,7 @@ export const runQuery = async (panel: Panel, q: PanelQuery, range: TimeRange, ds
         }
     }
     
-    let data = clickhouseToSeriesData(res.data, panel, q, range)
-    console.log("here33333:",res.data, data)
+    let data = clickhouseToPanelData(res.data, panel, q, range)
     return {
         error: null,
         data: data,

@@ -274,7 +274,10 @@
     "pastePanel": "粘贴已拷贝的图表",
     "shareHelp": "创建指向此仪表板的链接，使用下面的选项进行自定义",
     "exportHelp": "导出此仪表板的元数据信息",
-    "embedHelp": "创建一个嵌入 Embedding url 链接，你可以用 iframe 的方式将其嵌入到其它网页代码"
+    "embedHelp": "创建一个嵌入 Embedding url 链接，你可以用 iframe 的方式将其嵌入到其它网页代码",
+    "starTips": "收藏仪表盘",
+    "unstarTips": "取消收藏仪表盘",
+    "shareDashboard": "分享仪表盘"
   },
   "dashboardSave": {
     "autoSaveNotAvail": "在编辑图表模式下，自动保存不可用",
@@ -299,6 +302,7 @@
     "preview": "预览"
   },
   "dashboardSetting": {
+  "dashSettings": "设置仪表盘",
     "metaData": "元数据",
     "tootip": "共享 Tooltip",
     "visibleTo": "对谁可见",
@@ -406,7 +410,7 @@
     "legendFormat": "支持变量",
     "selecMetrics": "选择 metrics...",
     "expandTimeline": "显示完整时间轴",
-    "expandTimelineDesc": "当开启后，所有的时间点都将显示，即时该时间点没有任何数据，对于观察图表在哪里缺失了数据很有帮助"
+    "expandTimelineDesc": "当开启后，所有的时间点都将显示，即使该时间点没有任何数据，对于观察图表在哪里缺失了数据很有帮助"
   },
   "httpDs": {
     "remoteHttp": "远程 HTTP 地址",
