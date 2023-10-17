@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { HStack, Input, Text, useMediaQuery, VStack } from "@chakra-ui/react"
+import { Box, HStack, Input, Table, TableContainer, Tbody, Td, Text, Textarea, Th, Thead, Tr, useMediaQuery, VStack } from "@chakra-ui/react"
 import { Form } from "src/components/form/Form"
 import FormItem from "src/components/form/Item"
 import { cloneDeep } from "lodash"
@@ -23,11 +23,13 @@ import { PanelTypeAlert } from "../../panel/alert/types"
 import { locale } from "src/i18n/i18n"
 import InputSelect from "components/select/InputSelect"
 import { MobileVerticalBreakpoint } from "src/data/constants"
+import CodeEditor from "components/CodeEditor/CodeEditor"
+import { params } from "@nanostores/i18n"
 
 const HttpQueryEditor = ({ panel, datasource, query, onChange }: DatasourceEditorProps) => {
     const code = useStore(locale)
     const [tempQuery, setTempQuery] = useState<PanelQuery>(cloneDeep(query))
-    const apiDesc = apiList.find(api => api.name == tempQuery.metrics)?.desc
+    const api = apiList.find(api => api.name == tempQuery.metrics)
     const [isMobileScreen] = useMediaQuery(MobileVerticalBreakpoint)
     return (<>
         <Form spacing={1}>
@@ -37,8 +39,42 @@ const HttpQueryEditor = ({ panel, datasource, query, onChange }: DatasourceEdito
                     setTempQuery(q)
                     onChange(q)
                 }} />
-                {!isMobileScreen && apiDesc && <Text textStyle="annotation">{apiDesc}</Text>}
+                {!isMobileScreen && api?.desc && <Text textStyle="annotation">{api.desc}</Text>}
             </FormItem>
+            {api?.params && <FormItem title="Params" labelWidth="100px" size="sm" flexDirection={isMobileScreen ? "column" : "row"} desc={<TableContainer>
+                <Table variant='simple' size="sm">
+                    <Thead>
+                        <Tr>
+                            <Th>Param</Th>
+                            <Th>Desc</Th>
+                        </Tr>
+                    </Thead>
+                    <Tbody>
+                        {
+                            api?.paramsDesc?.map(desc => <Tr>
+                                <Td>{desc[0]}</Td>
+                                <Td>{desc[1]}</Td>
+                            </Tr>)
+                        }
+                    </Tbody>
+                </Table>
+            </TableContainer>}>
+                <Box width={!isMobileScreen ? "calc(100% - 200px)" : "calc(100% - 180px)"}>
+                    <CodeEditor
+                        language="json"
+                        value={tempQuery.data.params ?? api.params}
+                        onChange={(v) => {
+                            tempQuery.data['params'] = v
+                            const q = { ...tempQuery, data: cloneDeep(tempQuery.data) }
+                            setTempQuery(q)
+                        }}
+                        onBlur={() => {
+                            onChange(tempQuery)
+                        }}
+                        isSingleLine
+                    />
+                </Box>
+            </FormItem>}
         </Form>
     </>)
 }
@@ -50,5 +86,9 @@ export default HttpQueryEditor
 const apiList = [{
     name: "getServiceInfoList",
     desc: "get service infos, such as p99 latency, errors, qps, render as a table",
+    params: `{
+    "env": "prod"
+}`,
+    paramsDesc: [["env", "environment name, such as dev, test, prod etc"]]
 }
 ]
