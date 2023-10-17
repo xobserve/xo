@@ -10,32 +10,49 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box, HStack, Input, Table, TableContainer, Tbody, Td, Text, Textarea, Th, Thead, Tr, useMediaQuery, VStack } from "@chakra-ui/react"
+import { Box, HStack, Input, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr, useMediaQuery, VStack } from "@chakra-ui/react"
 import { Form } from "src/components/form/Form"
 import FormItem from "src/components/form/Item"
 import { cloneDeep } from "lodash"
-import { useEffect, useState } from "react"
+import {  useState } from "react"
 import { PanelQuery } from "types/dashboard"
 import { DatasourceEditorProps } from "types/datasource"
 import React from "react";
 import { useStore } from "@nanostores/react"
-import { PanelTypeAlert } from "../../panel/alert/types"
 import { locale } from "src/i18n/i18n"
 import InputSelect from "components/select/InputSelect"
 import { MobileVerticalBreakpoint } from "src/data/constants"
 import CodeEditor from "components/CodeEditor/CodeEditor"
-import { params } from "@nanostores/i18n"
 
 const HttpQueryEditor = ({ panel, datasource, query, onChange }: DatasourceEditorProps) => {
     const code = useStore(locale)
     const [tempQuery, setTempQuery] = useState<PanelQuery>(cloneDeep(query))
     const api = apiList.find(api => api.name == tempQuery.metrics)
+    if (api && api.params) {
+        if (!tempQuery.data[api.name]) {
+            tempQuery.data[api.name] = {}
+        }
+        if (!tempQuery.data[api.name]['params']) {
+            tempQuery.data[api.name]['params'] = api.params
+            const q = cloneDeep(tempQuery)
+            setTempQuery(q)
+            onChange(q)
+        }
+    }
     const [isMobileScreen] = useMediaQuery(MobileVerticalBreakpoint)
     return (<>
         <Form spacing={1}>
             <FormItem title="API" labelWidth="100px" size="sm" alignItems={isMobileScreen ? "start" : "center"} flexDirection={isMobileScreen ? "column" : "row"}>
                 <InputSelect value={tempQuery.metrics} options={apiList.map(api => ({ label: api.name, value: api.name, annotation: api.desc }))} annotationDir="vertical" onChange={v => {
-                    const q = { ...tempQuery, metrics: v }
+                    tempQuery.metrics = v 
+                    const api1 = apiList.find(api => api.name == v)
+                    if (!tempQuery.data[v]) {
+                        tempQuery.data[v] = {}
+                    }
+                    if (!tempQuery.data[v]['params'] ) {
+                        tempQuery.data[v]['params'] = api1.params
+                    }
+                    const q = cloneDeep(tempQuery)
                     setTempQuery(q)
                     onChange(q)
                 }} />
@@ -62,9 +79,9 @@ const HttpQueryEditor = ({ panel, datasource, query, onChange }: DatasourceEdito
                 <Box width={!isMobileScreen ? "calc(100% - 200px)" : "calc(100% - 180px)"}>
                     <CodeEditor
                         language="json"
-                        value={tempQuery.data.params ?? api.params}
+                        value={tempQuery.data[tempQuery.metrics].params}
                         onChange={(v) => {
-                            tempQuery.data['params'] = v
+                            tempQuery.data[tempQuery.metrics]['params'] = v
                             const q = { ...tempQuery, data: cloneDeep(tempQuery.data) }
                             setTempQuery(q)
                         }}
@@ -88,6 +105,14 @@ const apiList = [{
     desc: "get service infos, such as p99 latency, errors, qps, render as a table",
     params: `{
     "env": "prod"
+}`,
+    paramsDesc: [["env", "environment name, such as dev, test, prod etc"]]
+},
+{
+    name: "getServiceNames",
+    desc: "get service names, can be used in variable values",
+    params: `{
+    "env": "test"
 }`,
     paramsDesc: [["env", "environment name, such as dev, test, prod etc"]]
 }

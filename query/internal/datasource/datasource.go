@@ -15,6 +15,7 @@ package datasource
 import (
 	"context"
 	"database/sql"
+	"encoding/json"
 	"net/http"
 	"strconv"
 	"strings"
@@ -94,9 +95,16 @@ func SaveDatasource(c *gin.Context) {
 	}
 
 	now := time.Now()
+	data, err := json.Marshal(ds.Data)
+	if err != nil {
+		logger.Warn("Error encode datasource data", "error", err)
+		c.JSON(500, common.RespError(e.Internal))
+		return
+	}
+
 	if ds.Id == 0 {
 		// create
-		res, err := db.Conn.ExecContext(c.Request.Context(), "INSERT INTO datasource (name,type,url,team_id,created,updated) VALUES (?,?,?,?,?,?)", ds.Name, ds.Type, ds.URL, ds.TeamId, now, now)
+		res, err := db.Conn.ExecContext(c.Request.Context(), "INSERT INTO datasource (name,type,url,team_id,data,created,updated) VALUES (?,?,?,?,?,?,?)", ds.Name, ds.Type, ds.URL, ds.TeamId, data, now, now)
 		if err != nil {
 			if e.IsErrUniqueConstraint(err) {
 				c.JSON(http.StatusBadRequest, common.RespError("name alread exist"))
@@ -116,7 +124,7 @@ func SaveDatasource(c *gin.Context) {
 			return
 		}
 		// update
-		_, err = db.Conn.ExecContext(c.Request.Context(), "UPDATE datasource SET name=?,type=?,url=?,updated=? WHERE id=?", ds.Name, ds.Type, ds.URL, now, ds.Id)
+		_, err = db.Conn.ExecContext(c.Request.Context(), "UPDATE datasource SET name=?,type=?,url=?,data=?,updated=? WHERE id=?", ds.Name, ds.Type, ds.URL, data, now, ds.Id)
 		if err != nil {
 			if e.IsErrUniqueConstraint(err) {
 				c.JSON(http.StatusBadRequest, common.RespError("name alread exist"))
@@ -139,9 +147,9 @@ func GetDatasources(c *gin.Context) {
 	var err error
 
 	if strings.TrimSpace(teamId) != "" {
-		rows, err = db.Conn.QueryContext(c.Request.Context(), "SELECT id,name,type,url,team_id, created FROM datasource WHERE team_id=?", teamId)
+		rows, err = db.Conn.QueryContext(c.Request.Context(), "SELECT id,name,type,url,team_id,data, created FROM datasource WHERE team_id=?", teamId)
 	} else {
-		rows, err = db.Conn.QueryContext(c.Request.Context(), "SELECT id,name,type,url,team_id, created FROM datasource")
+		rows, err = db.Conn.QueryContext(c.Request.Context(), "SELECT id,name,type,url,team_id,data, created FROM datasource")
 	}
 
 	if err != nil {
@@ -152,12 +160,22 @@ func GetDatasources(c *gin.Context) {
 	defer rows.Close()
 	for rows.Next() {
 		ds := &models.Datasource{}
-		err := rows.Scan(&ds.Id, &ds.Name, &ds.Type, &ds.URL, &ds.TeamId, &ds.Created)
+		var rawdata []byte
+		err := rows.Scan(&ds.Id, &ds.Name, &ds.Type, &ds.URL, &ds.TeamId, &rawdata, &ds.Created)
 		if err != nil {
 			logger.Warn("get datasource error", "error", err)
 			c.JSON(http.StatusInternalServerError, common.RespInternalError())
 			return
 		}
+		if rawdata != nil {
+			err = json.Unmarshal(rawdata, &ds.Data)
+			if err != nil {
+				logger.Warn("Error decode datasource data", "error", err, "data", rawdata)
+				c.JSON(http.StatusInternalServerError, common.RespInternalError())
+				continue
+			}
+		}
+
 		dss = append(dss, ds)
 	}
 
@@ -212,7 +230,14 @@ func GetDatasource(ctx context.Context, id int64) (*models.Datasource, error) {
 	ds, ok := datasources[id]
 	if !ok {
 		ds := &models.Datasource{}
-		err := db.Conn.QueryRowContext(ctx, "SELECT name,type,url, created FROM datasource WHERE id=?", id).Scan(&ds.Name, &ds.Type, &ds.URL, &ds.Created)
+		var rawdata []byte
+		err := db.Conn.QueryRowContext(ctx, "SELECT name,type,url,data, created FROM datasource WHERE id=?", id).Scan(&ds.Name, &ds.Type, &ds.URL, &rawdata, &ds.Created)
+		if err != nil {
+			return nil, err
+		}
+		if rawdata != nil {
+			err = json.Unmarshal(rawdata, &ds.Data)
+		}
 		return ds, err
 	}
 

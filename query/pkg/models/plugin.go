@@ -26,3 +26,11 @@ func GetPlugin(name string) Plugin {
 func RegisterPlugin(name string, p Plugin) {
 	plugins[name] = p
 }
+
+func GenPluginResult(status, err string, data interface{}) PluginResult {
+	return PluginResult{
+		Status: status,
+		Error:  err,
+		Data:   data,
+	}
+}

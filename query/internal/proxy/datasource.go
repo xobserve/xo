@@ -14,6 +14,7 @@ package proxy
 
 import (
 	"bytes"
+	"fmt"
 	"io"
 	"net"
 	"net/http"
@@ -47,6 +48,7 @@ func ProxyDatasource(c *gin.Context) {
 	}
 
 	queryPlugin := models.GetPlugin(ds.Type)
+	fmt.Println(ds.Type, queryPlugin)
 	if queryPlugin != nil {
 		result := queryPlugin.Query(c, ds)
 		c.JSON(http.StatusOK, result)
