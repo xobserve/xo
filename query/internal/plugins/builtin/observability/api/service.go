@@ -2,9 +2,12 @@ package api
 
 import (
 	"fmt"
+	"strconv"
 
 	ch "github.com/ClickHouse/clickhouse-go/v2"
+	obmodels "github.com/DataObserve/datav/query/internal/plugins/builtin/observability/models"
 	"github.com/DataObserve/datav/query/pkg/colorlog"
+	"github.com/DataObserve/datav/query/pkg/config"
 	"github.com/DataObserve/datav/query/pkg/models"
 	"github.com/gin-gonic/gin"
 )
@@ -16,7 +19,7 @@ type ServiceNameRes struct {
 }
 
 func GetServiceNames(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[string]interface{}) models.PluginResult {
-	query := "SELECT DISTINCT serviceName FROM signoz_traces.distributed_top_level_operations"
+	query := fmt.Sprintf("SELECT DISTINCT serviceName FROM %s.%s", config.Data.Observability.DefaultTraceDB, obmodels.DefaultTopLevelOperationsTable)
 
 	rows, err := conn.Query(c.Request.Context(), query)
 	if err != nil {
@@ -36,14 +39,13 @@ func GetServiceNames(c *gin.Context, ds *models.Datasource, conn ch.Conn, params
 
 func GetServiceOperations(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[string]interface{}) models.PluginResult {
 	serviceI := params["service"]
-	fmt.Println("ere33333:", serviceI)
 	if serviceI == nil {
 		return models.GenPluginResult(models.PluginStatusError, "service is required", nil)
 	}
 
 	service := serviceI.(string)
 
-	query := fmt.Sprintf("SELECT DISTINCT name FROM signoz_traces.distributed_top_level_operations WHERE serviceName='%s'", service)
+	query := fmt.Sprintf("SELECT DISTINCT name FROM %s.%s WHERE serviceName='%s'", config.Data.Observability.DefaultTraceDB, obmodels.DefaultTopLevelOperationsTable, service)
 	rows, err := conn.Query(c.Request.Context(), query)
 	if err != nil {
 		logger.Warn("Error Query service operations", "query", query, "error", err)
@@ -61,45 +63,103 @@ func GetServiceOperations(c *gin.Context, ds *models.Datasource, conn ch.Conn, p
 	return models.GenPluginResult(models.PluginStatusSuccess, "", res)
 }
 
+type ServiceInfo struct {
+	ServiceName   string
+	P99           float64
+	AvgDuration   float64
+	NumCalls      uint64
+	NumOperations uint64
+	NumErrors     uint64
+}
+
 func GetServiceInfoList(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[string]interface{}) models.PluginResult {
-	fmt.Println("here33333")
-	// rows, err := conn.Query(c.Request.Context(), query)
-	// if err != nil {
-	// 	colorlog.RootLogger.Info("Error query clickhouse :", "error", err, "ds_id", ds.Id, "query:", query)
-	// 	return models.GenPluginResult(models.PluginStatusError, err.Error(), nil)
-	// }
-	// defer rows.Close()
+	start, _ := strconv.ParseInt(c.Query("start"), 10, 64)
+	end, _ := strconv.ParseInt(c.Query("end"), 10, 64)
+	if start == 0 || end == 0 {
+		return models.GenPluginResult(models.PluginStatusError, "start and end is required", nil)
+	}
 
-	// columns := rows.Columns()
-	// columnTypes := rows.ColumnTypes()
-	// types := make(map[string]string)
-	// data := make([][]interface{}, 0)
-	// for rows.Next() {
-	// 	v := make([]interface{}, len(columns))
-	// 	for i := range v {
-	// 		t := columnTypes[i].ScanType()
-	// 		v[i] = reflect.New(t).Interface()
+	serviceMap := make(map[string]*ServiceInfo)
+	query := fmt.Sprintf(
+		`SELECT
+			serviceName,
+			quantile(0.99)(durationNano) / 1e6 as p99,
+			avg(durationNano) / 1e6  as avgDuration,
+			count(DISTINCT traceID) as numCalls,
+			count(*) as numOperations
+		FROM %s.%s
+		WHERE timestamp>= %d AND timestamp<= %d
+		GROUP BY serviceName`,
+		config.Data.Observability.DefaultTraceDB, obmodels.DefaultIndexTable, start, end)
 
-	// 		tp := t.String()
-	// 		if tp == "time.Time" {
-	// 			types[columns[i]] = "time"
-	// 		}
-	// 	}
+	rows, err := conn.Query(c.Request.Context(), query)
+	if err != nil {
+		logger.Warn("Error Query service operations", "query", query, "error", err)
+		return models.GenPluginResult(models.PluginStatusError, err.Error(), nil)
+	}
+	defer rows.Close()
 
-	// 	err = rows.Scan(v...)
-	// 	if err != nil {
-	// 		colorlog.RootLogger.Info("Error scan clickhouse :", "error", err, "ds_id", ds.Id)
-	// 		continue
-	// 	}
+	for rows.Next() {
+		var name string
+		info := &ServiceInfo{}
+		err := rows.Scan(&name, &info.P99, &info.AvgDuration, &info.NumCalls, &info.NumOperations)
+		if err != nil {
+			logger.Warn("Error scan service info", "error", err)
+			continue
+		}
+		info.ServiceName = name
+		serviceMap[name] = info
+	}
 
-	// 	for i, v0 := range v {
-	// 		v1, ok := v0.(*time.Time)
-	// 		if ok {
-	// 			v[i] = v1.Unix()
-	// 		}
-	// 	}
+	logger.Info("Query service operations", "query", query)
 
-	// 	data = append(data, v)
-	// }
-	return models.GenPluginResult(models.PluginStatusSuccess, "", nil)
+	query = fmt.Sprintf(
+		`SELECT
+			serviceName,
+			count(DISTINCT traceID)  as numErrors
+		FROM %s.%s
+		WHERE timestamp>= %d AND timestamp<= %d AND statusCode=2
+		GROUP BY serviceName`,
+		config.Data.Observability.DefaultTraceDB, obmodels.DefaultIndexTable, start, end)
+
+	rows, err = conn.Query(c.Request.Context(), query)
+	if err != nil {
+		logger.Warn("Error Query service operations", "query", query, "error", err)
+		return models.GenPluginResult(models.PluginStatusError, err.Error(), nil)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var serviceName string
+		var numErrors uint64
+
+		err := rows.Scan(&serviceName, &numErrors)
+		if err != nil {
+			logger.Warn("Error scan service error", "error", err)
+			continue
+		}
+
+		info, ok := serviceMap[serviceName]
+		if ok {
+			info.NumErrors = numErrors
+		}
+	}
+
+	columns := []string{"serviceName", "p99", "avgDuration", "numCalls", "numOperations", "numErrors"}
+	data := make([][]interface{}, 0, len(serviceMap))
+
+	for name, info := range serviceMap {
+		data = append(data, []interface{}{
+			name,
+			info.P99,
+			info.AvgDuration,
+			info.NumCalls,
+			info.NumOperations,
+			info.NumErrors,
+		})
+	}
+	return models.GenPluginResult(models.PluginStatusSuccess, "", models.PluginResultData{
+		Columns: columns,
+		Data:    data,
+	})
 }

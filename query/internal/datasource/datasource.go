@@ -42,7 +42,7 @@ func InitDatasources() {
 
 		var rows *sql.Rows
 		var err error
-		rows, err = db.Conn.QueryContext(context.Background(), "SELECT id,name,type,url,team_id, created FROM datasource")
+		rows, err = db.Conn.QueryContext(context.Background(), "SELECT id,name,type,url,team_id,data, created FROM datasource")
 
 		if err != nil {
 			logger.Warn("get datasource error", "error", err)
@@ -53,10 +53,18 @@ func InitDatasources() {
 		defer rows.Close()
 		for rows.Next() {
 			ds := &models.Datasource{}
-			err := rows.Scan(&ds.Id, &ds.Name, &ds.Type, &ds.URL, &ds.TeamId, &ds.Created)
+			var rawdata []byte
+			err := rows.Scan(&ds.Id, &ds.Name, &ds.Type, &ds.URL, &ds.TeamId, &rawdata, &ds.Created)
 			if err != nil {
 				logger.Warn("scan datasource error", "error", err)
 				continue
+			}
+			if rawdata != nil {
+				err = json.Unmarshal(rawdata, &ds.Data)
+				if err != nil {
+					logger.Warn("Error decode datasource data", "error", err, "data", rawdata)
+					continue
+				}
 			}
 			dss = append(dss, ds)
 		}
@@ -235,6 +243,7 @@ func GetDatasource(ctx context.Context, id int64) (*models.Datasource, error) {
 		if err != nil {
 			return nil, err
 		}
+
 		if rawdata != nil {
 			err = json.Unmarshal(rawdata, &ds.Data)
 		}
