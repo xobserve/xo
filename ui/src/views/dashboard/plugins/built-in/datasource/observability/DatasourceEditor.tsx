@@ -20,6 +20,7 @@ interface Props {
 }
 
 const defaultUrl = "localhost:9000"
+const defaultData = {database: "default", username: "default", password: "" } 
 const DatasourceEditor = ({ datasource, onChange }: Props) => {
     if (datasource.url === null) {
         onChange(d => { d.url = defaultUrl })
@@ -27,7 +28,7 @@ const DatasourceEditor = ({ datasource, onChange }: Props) => {
     }
 
     if (!datasource.data) {
-        onChange(d => { d.data = {database: "default", username: "default", password: "" } })
+        onChange(d => { d.data = defaultData})
         return 
     }
     return (<>

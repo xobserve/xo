@@ -6,5 +6,5 @@ import (
 )
 
 func TestDatasource(c *gin.Context, ds *models.Datasource) models.PluginResult {
-	return models.PluginResult{models.PluginStatusSuccess, "", nil}
+	return models.GenPluginResult(models.PluginStatusSuccess, "", nil)
 }
