@@ -1,6 +1,12 @@
 package models
 
-import "github.com/gin-gonic/gin"
+import (
+	"reflect"
+	"time"
+
+	"github.com/ClickHouse/clickhouse-go/v2/lib/driver"
+	"github.com/gin-gonic/gin"
+)
 
 const (
 	PluginStatusSuccess = "success"
@@ -46,4 +52,43 @@ func GenPluginResult(status, err string, data interface{}) PluginResult {
 		Error:  err,
 		Data:   data,
 	}
+}
+
+func ConvertDbRowsToPluginData(rows driver.Rows) (*PluginResultData, error) {
+	columns := rows.Columns()
+	columnTypes := rows.ColumnTypes()
+	types := make(map[string]string)
+	data := make([][]interface{}, 0)
+	for rows.Next() {
+		v := make([]interface{}, len(columns))
+		for i := range v {
+			t := columnTypes[i].ScanType()
+			v[i] = reflect.New(t).Interface()
+
+			tp := t.String()
+			if tp == "time.Time" {
+				types[columns[i]] = "time"
+			}
+		}
+
+		err := rows.Scan(v...)
+		if err != nil {
+			return nil, err
+		}
+
+		for i, v0 := range v {
+			v1, ok := v0.(*time.Time)
+			if ok {
+				v[i] = v1.Unix()
+			}
+		}
+
+		data = append(data, v)
+	}
+
+	return &PluginResultData{
+		Columns:     columns,
+		Data:        data,
+		ColumnTypes: types,
+	}, nil
 }

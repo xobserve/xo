@@ -1,7 +1,10 @@
 package clickhouse
 
 import (
+	"encoding/json"
+	"fmt"
 	"sync"
+	"time"
 
 	ch "github.com/ClickHouse/clickhouse-go/v2"
 	"github.com/DataObserve/datav/query/internal/plugins/builtin/observability/api"
@@ -41,7 +44,17 @@ func (p *ObservabilityPlugin) Query(c *gin.Context, ds *models.Datasource) model
 	}
 	route, ok := api.APIRoutes[query]
 	if ok {
-		res := route(c, ds, conn)
+		paramStr := c.Query("params")
+		params := make(map[string]interface{})
+		err := json.Unmarshal([]byte(paramStr), &params)
+		if err != nil {
+			return models.GenPluginResult(models.PluginStatusError, fmt.Sprintf("decode params error: %s", err.Error()), nil)
+		}
+
+		start := time.Now()
+		res := route(c, ds, conn, params)
+
+		colorlog.RootLogger.Info("Excecute observability query api", "query", query, "time", time.Since(start).String())
 		return models.PluginResult{
 			Status: models.PluginStatusSuccess,
 			Error:  "",

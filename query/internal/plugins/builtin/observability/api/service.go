@@ -15,32 +15,53 @@ type ServiceNameRes struct {
 	ServiceName string `ch:"serviceName"`
 }
 
-func GetServiceNames(c *gin.Context, ds *models.Datasource, conn ch.Conn) models.PluginResult {
-	start := c.Query("start")
-	end := c.Query("end")
-	query := fmt.Sprintf("SELECT serviceName FROM signoz_traces.distributed_signoz_index_v2 WHERE timestamp >= %s AND timestamp <= %s GROUP BY serviceName", start, end)
+func GetServiceNames(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[string]interface{}) models.PluginResult {
+	query := "SELECT DISTINCT serviceName FROM signoz_traces.distributed_top_level_operations"
 
-	var res []ServiceNameRes
-	err := conn.Select(c.Request.Context(), &res, query)
+	rows, err := conn.Query(c.Request.Context(), query)
+	if err != nil {
+		return models.GenPluginResult(models.PluginStatusError, err.Error(), nil)
+	}
+	defer rows.Close()
+
+	logger.Info("Query service names", "query", query)
+
+	res, err := models.ConvertDbRowsToPluginData(rows)
 	if err != nil {
 		return models.GenPluginResult(models.PluginStatusError, err.Error(), nil)
 	}
 
-	logger.Info("Query service names", "query", query)
-
-	columns := []string{"service"}
-	data := make([][]interface{}, 0)
-	for _, v := range res {
-		data = append(data, []interface{}{v.ServiceName})
-	}
-
-	return models.GenPluginResult(models.PluginStatusSuccess, "", models.PluginResultData{
-		Columns: columns,
-		Data:    data,
-	})
+	return models.GenPluginResult(models.PluginStatusSuccess, "", res)
 }
 
-func GetServiceInfoList(c *gin.Context, ds *models.Datasource, conn ch.Conn) models.PluginResult {
+func GetServiceOperations(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[string]interface{}) models.PluginResult {
+	serviceI := params["service"]
+	fmt.Println("ere33333:", serviceI)
+	if serviceI == nil {
+		return models.GenPluginResult(models.PluginStatusError, "service is required", nil)
+	}
+
+	service := serviceI.(string)
+
+	query := fmt.Sprintf("SELECT DISTINCT name FROM signoz_traces.distributed_top_level_operations WHERE serviceName='%s'", service)
+	rows, err := conn.Query(c.Request.Context(), query)
+	if err != nil {
+		logger.Warn("Error Query service operations", "query", query, "error", err)
+		return models.GenPluginResult(models.PluginStatusError, err.Error(), nil)
+	}
+	defer rows.Close()
+
+	logger.Info("Query service operations", "query", query)
+
+	res, err := models.ConvertDbRowsToPluginData(rows)
+	if err != nil {
+		return models.GenPluginResult(models.PluginStatusError, err.Error(), nil)
+	}
+
+	return models.GenPluginResult(models.PluginStatusSuccess, "", res)
+}
+
+func GetServiceInfoList(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[string]interface{}) models.PluginResult {
 	fmt.Println("here33333")
 	// rows, err := conn.Query(c.Request.Context(), query)
 	// if err != nil {

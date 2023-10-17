@@ -128,5 +128,15 @@ const apiList = [{
 }`,
     paramsDesc: [["env", "environment name, such as dev, test, prod etc"]],
     format: DataFormat.Table
+},
+{
+    name: "getServiceOperations",
+    desc: "get service operations",
+    params: `{
+    "env": "test",
+    "service": "datav"
+}`,
+    paramsDesc: [["env", "environment name, such as dev, test, prod etc"]],
+    format: DataFormat.Table
 }
 ]

@@ -45,15 +45,23 @@ export const runQuery = async (panel: Panel, q: PanelQuery, range: TimeRange, ds
         status: string,
         error: string,
         data: QueryPluginResult
-    } = await requestApi.get(`/proxy/${ds.id}?query=${replaceWithVariables(q.metrics)}&params=${q.data.params}&start=${start}&end=${end}&step=${q.interval}`)
+    } = await requestApi.get(`/proxy/${ds.id}?query=${replaceWithVariables(q.metrics)}&params=${q.data[q.metrics].params}&start=${start}&end=${end}&step=${q.interval}`)
     
-    if (res.status !== "success") {
+    if (res.status !== "success" ) {
         console.log("Failed to fetch data from target datasource", res)
         return {
             error: res.error,
             data: []
         }
     }
+    
+    if (res.data && res.data.status != "success") {
+        return {
+            error: res.data.error,
+            data: []
+        }
+    }
+    
     let data;
     switch (q.data["format"]) {
         case DataFormat.TimeSeries:
