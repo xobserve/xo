@@ -98,3 +98,15 @@ func ProxyDatasource(c *gin.Context) {
 	io.Copy(buffer, res.Body)
 	c.String(res.StatusCode, buffer.String())
 }
+
+func TestDatasource(c *gin.Context) {
+	dsType := c.Query("type")
+	queryPlugin := models.GetPlugin(dsType)
+	if queryPlugin != nil {
+		result := queryPlugin.TestDatasource(c)
+		c.JSON(http.StatusOK, result)
+		return
+	}
+
+	c.JSON(http.StatusOK, models.GenPluginResult(models.PluginStatusSuccess, "query plugin not exist", nil))
+}

@@ -23,10 +23,6 @@ var connsLock = &sync.Mutex{}
 
 func (p *ClickHousePlugin) Query(c *gin.Context, ds *models.Datasource) models.PluginResult {
 	query := c.Query("query")
-	if query == "testDatasource" {
-		return pluginUtils.TestClickhouseDatasource(c)
-	}
-
 	conn, ok := conns[ds.Id]
 	if !ok {
 		var err error
@@ -87,6 +83,10 @@ func (p *ClickHousePlugin) Query(c *gin.Context, ds *models.Datasource) models.P
 			Data:        data,
 			ColumnTypes: types,
 		}}
+}
+
+func (p *ClickHousePlugin) TestDatasource(c *gin.Context) models.PluginResult {
+	return pluginUtils.TestClickhouseDatasource(c)
 }
 
 func init() {

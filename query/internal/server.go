@@ -161,9 +161,11 @@ func (s *Server) Start() error {
 		r.GET("/datasource/all", otelPlugin, datasource.GetDatasources)
 		r.DELETE("/datasource/:id", MustLogin(), datasource.DeleteDatasource)
 
+		r.GET("/datasource/test", proxy.TestDatasource)
 		// proxy apis
 		r.Any("/proxy/:id/*path", proxy.ProxyDatasource)
 		r.Any("/proxy/:id", proxy.ProxyDatasource)
+
 		r.GET("/common/proxy/:panelId", proxy.Proxy)
 
 		// server a directory called static
