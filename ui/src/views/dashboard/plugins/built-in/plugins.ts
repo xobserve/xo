@@ -24,6 +24,8 @@ import jaegerDs from './datasource/jaeger'
 import lokiDs from './datasource/loki'
 import testdataDs from './datasource/testdata'
 import vmDs from './datasource/victoriaMetrics'
+import mysqlDs from './datasource/mysql'
+import postgresqlDs from './datasource/postgresql'
 
 export const builtinPanelPlugins: Record<string,PanelPluginComponents> = {
 	[graphPanel.settings.type]: graphPanel,
@@ -51,4 +53,6 @@ export const builtinDatasourcePlugins: Record<string,DatasourcePluginComponents>
     [testdataDs.settings.type]: testdataDs,
     [vmDs.settings.type]: vmDs,
     [datavDs.settings.type]: datavDs,
+    [mysqlDs.settings.type]: mysqlDs,
+    [postgresqlDs.settings.type]: postgresqlDs,
 }

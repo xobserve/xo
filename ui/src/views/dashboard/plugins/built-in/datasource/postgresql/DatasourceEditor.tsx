@@ -17,7 +17,7 @@ import { Datasource } from "types/datasource"
 import React from "react";
 import { FormSection } from "components/form/Form";
 import { Updater } from "use-immer";
-import { isEmpty } from "lodash";
+
 
 interface Props {
     datasource: Datasource

@@ -5,12 +5,15 @@ import { Variable } from "types/variable"
 import { requestApi } from "utils/axios/request"
 import { isEmpty } from "lodash"
 import { QueryPluginResult } from "types/plugin"
-import { mysqlToSeriesData } from "./utils"
+import { postgresqlToSeriesData } from "./utils"
 import { getDatasource, roundDsTime } from "utils/datasource"
 import { getNewestTimeRange } from "components/DatePicker/TimePicker"
 import { replaceWithVariablesHasMultiValues } from "utils/variable"
 import { PromDsQueryTypes } from "./VariableEditor"
 import isURL from "validator/lib/isURL"
+import { $variables } from "src/views/variables/store"
+import { parseVariableFormat } from "utils/format"
+import { VariableSplitChar, VarialbeAllOption } from "src/data/variable"
 
 export const runQuery = async (panel: Panel, q: PanelQuery, range: TimeRange, ds: Datasource) => {
     if (isEmpty(q.metrics)) {
@@ -28,7 +31,7 @@ export const runQuery = async (panel: Panel, q: PanelQuery, range: TimeRange, ds
         }
     }
 
-    const data = mysqlToSeriesData(res.data, panel, q, range)
+    const data = postgresqlToSeriesData(res.data, panel, q, range)
     return {
         error: null,
         data: data,
@@ -37,21 +40,14 @@ export const runQuery = async (panel: Panel, q: PanelQuery, range: TimeRange, ds
 
 export const testDatasource = async (ds: Datasource) => {
     // check datasource setting is valid
-    const res = isDemoDatasourceValid(ds)
-    if (res != null) {
-        return res
+    const error = isDemoDatasourceValid(ds)
+    if (error != null) {
+        return error
     }
-    // TODO when create dashboard how to test connect
-    if (!ds.id) {
-        return true
-    }
-    // connect to database ping check
-    try {
-        await requestApi.get<any>(`/proxy/${ds.id}`)
-    } catch (error) {
-        return error.message
-    }
-    return true
+    // when create dashboard how to test connect
+    const res: QueryPluginResult = await requestApi.get(`/datasource/test?type=${ds.type}&url=${ds.url}&database=${ds.data.database}&username=${ds.data.username}&password=${ds.data.password}`)
+    console.log('====>res:', res)
+    return res.status == "success" ? true : res.error
 }
 
 export const queryVariableValues = async (variable: Variable) => {
@@ -110,7 +106,23 @@ export const queryVariableValues = async (variable: Variable) => {
 }
 
 export const replaceQueryWithVariables = (query: PanelQuery, interval: string) => {
-
+    const vars = $variables.get()
+    const formats = parseVariableFormat(query.metrics);
+    for (const f of formats) {
+        const v = vars.find(v => v.name == f)
+        if (v) {
+            let selected = []
+            if (v.selected == VarialbeAllOption) {
+                selected = v.values?.filter(v1 => v1 != VarialbeAllOption) ?? []
+            } else {
+                selected = v.selected?.split(VariableSplitChar) ?? []
+            }
+            const joined = selected.join(',')
+            if (joined) {
+                query.metrics = query.metrics.replaceAll(`\${${f}}`, joined);
+            }
+        }
+    }
 }
 
 export const queryAlerts = async (panel: Panel, timeRange: TimeRange, ds: Datasource) => {
@@ -182,8 +194,7 @@ export const queryDemoLabels = async (dsId, metric = "", useCurrentTimerange = t
 const isDemoDatasourceValid = (ds: Datasource) => {
     if (!isURL(ds.url, {
         require_protocol: false,
-        // allow_protocol_relative_urls: true,
-        require_tld:false,
+        require_tld: false,
         require_host: true,
         require_port: true,
     })) {

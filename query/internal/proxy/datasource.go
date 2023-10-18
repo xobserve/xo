@@ -113,5 +113,5 @@ func TestDatasource(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, models.GenPluginResult(models.PluginStatusSuccess, "query plugin not exist", nil))
+	c.JSON(http.StatusOK, models.GenPluginResult(models.PluginStatusError, "query plugin not exist", nil))
 }

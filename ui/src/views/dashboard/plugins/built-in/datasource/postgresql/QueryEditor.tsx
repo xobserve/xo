@@ -9,6 +9,7 @@ import { cloneDeep } from 'lodash'
 import { PanelQuery } from "types/dashboard"
 import { useStore } from "@nanostores/react";
 import { prometheusDsMsg } from "src/i18n/locales/en";
+import SelectDataFormat from "../../../components/query-edtitor/SelectDataFormat";
 
 const QueryEditor = ({ datasource, query, onChange }: DatasourceEditorProps) => {
     const t1 = useStore(prometheusDsMsg)
@@ -44,11 +45,12 @@ const QueryEditor = ({ datasource, query, onChange }: DatasourceEditorProps) => 
                             setTempQuery({ ...tempQuery, legend: e.currentTarget.value })
                         }}
                         onBlur={() => onChange(tempQuery)}
-                        width="150px"
+                        width="100px"
                         placeholder={t1.legendFormat}
                         size="sm"
                     />
                 </FormItem>
+                <SelectDataFormat tempQuery={tempQuery} setTempQuery={setTempQuery} onChange={onChange}/>
             </Stack>
         </Form>
     )

@@ -1,35 +1,20 @@
 package mysql
 
 import (
-	"context"
 	"database/sql"
 	"database/sql/driver"
-	"encoding/json"
-	"errors"
-	"fmt"
 	"reflect"
 	"sync"
 
+	pluginUtils "github.com/DataObserve/datav/query/internal/plugins/utils"
 	"github.com/DataObserve/datav/query/pkg/colorlog"
 	"github.com/DataObserve/datav/query/pkg/models"
 	"github.com/gin-gonic/gin"
-	_ "github.com/go-sql-driver/mysql"
 )
 
 var datasourceName = "mysql"
 
 type MysqlPlugin struct {
-}
-
-type dataSourceData struct {
-	Database string `json:"database"`
-	Username string `json:"username"`
-	Password string `json:"password"`
-}
-
-func init() {
-	// register datasource
-	models.RegisterPlugin(datasourceName, &MysqlPlugin{})
 }
 
 var (
@@ -41,7 +26,7 @@ func (*MysqlPlugin) Query(c *gin.Context, ds *models.Datasource) models.PluginRe
 	query := c.Query("query")
 	conn, ok := conns[ds.Id]
 	if !ok {
-		conn, err := connectToMysql(ds)
+		conn, err := pluginUtils.ConnectToMysql(ds.URL, ds.Data["database"], ds.Data["username"], ds.Data["password"])
 		if err != nil {
 			colorlog.RootLogger.Warn("connect to mysql error:", err, "ds_id", ds.Id, "url", ds.URL)
 			return models.PluginResult{
@@ -52,11 +37,6 @@ func (*MysqlPlugin) Query(c *gin.Context, ds *models.Datasource) models.PluginRe
 		connsLock.Lock()
 		conns[ds.Id] = conn
 		connsLock.Unlock()
-	}
-	if query == "" {
-		return models.PluginResult{
-			Status: models.PluginStatusSuccess,
-		}
 	}
 	rows, err := conn.Query(query)
 	if err != nil {
@@ -130,24 +110,11 @@ func (*MysqlPlugin) Query(c *gin.Context, ds *models.Datasource) models.PluginRe
 		}}
 }
 
-func connectToMysql(ds *models.Datasource) (*sql.DB, error) {
-	var data dataSourceData
-	dataStr, ok := ds.Data.(string)
-	if !ok {
-		return nil, errors.New("data source data missing error")
-	}
-	if err := json.Unmarshal([]byte(dataStr), &data); err != nil {
-		return nil, err
-	}
-	dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=true", data.Username, data.Password, ds.URL, data.Database)
-	colorlog.RootLogger.Debug("connect to mysql dsn: ", dsn)
+func (*MysqlPlugin) TestDatasource(c *gin.Context) models.PluginResult {
+	return pluginUtils.TestMysqlDatasource(c)
+}
 
-	db, err := sql.Open("mysql", dsn)
-	if err != nil {
-		return nil, err
-	}
-	if err = db.PingContext(context.Background()); err != nil {
-		return nil, err
-	}
-	return db, nil
+func init() {
+	// register datasource
+	models.RegisterPlugin(datasourceName, &MysqlPlugin{})
 }

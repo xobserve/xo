@@ -5,4 +5,5 @@ package external
 import (
 	_ "github.com/DataObserve/datav/query/internal/plugins/external/clickhouse"
 	_ "github.com/DataObserve/datav/query/internal/plugins/external/mysql"
+	_ "github.com/DataObserve/datav/query/internal/plugins/external/postgresql"
 )
