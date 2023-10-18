@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box, Button, Flex, HStack, Image, Text, Tooltip, VStack, Drawer, DrawerCloseButton, DrawerContent, DrawerHeader, DrawerOverlay, useDisclosure, DrawerBody, Tabs, TabList, TabPanels, TabPanel, Tab, useColorMode, useColorModeValue, } from "@chakra-ui/react"
+import { Box, Button, Flex, HStack, Image, Text, Tooltip, VStack, Drawer, DrawerCloseButton, DrawerContent, DrawerHeader, DrawerOverlay, useDisclosure, DrawerBody, Tabs, TabList, TabPanels, TabPanel, Tab, useColorMode } from "@chakra-ui/react"
 import { useState } from "react"
 import { FaAngleDown, FaAngleRight, FaBookOpen, FaEye, FaEyeSlash, FaPlus, FaTrashAlt } from "react-icons/fa"
 import {  Panel, PanelQuery } from "types/dashboard"
@@ -28,15 +28,12 @@ import { isEmpty } from "utils/validate"
 import { DatasourceMinInterval } from "src/data/constants"
 import DatasourceSelect from "src/components/datasource/Select"
 import { getDatasource } from "utils/datasource"
-import { isNumber, upperFirst } from "lodash"
+import { isNumber } from "lodash"
 import { $datasources } from "src/views/datasource/store"
 import { externalDatasourcePlugins } from "../plugins/external/plugins"
-import getPrometheusDocs from "../plugins/built-in/datasource/prometheus/docs"
 import { MarkdownRender } from "components/markdown/MarkdownRender"
-import customColors from "theme/colors"
 import Toc from "components/Toc/Toc"
 import { builtinDatasourcePlugins } from "../plugins/built-in/plugins"
-import { DatasourceTypePrometheus } from "../plugins/built-in/datasource/prometheus/types"
 
 interface Props {
     panel: Panel
@@ -54,7 +51,7 @@ const EditPanelQuery = (props: Props) => {
         onChange((panel: Panel) => {
             const panelDs = datasources.find(ds => ds.id == panel.datasource.id)
             const newDs = datasources.find(ds => ds.id == id)
-            if (panelDs.type == newDs.type) {
+            if (panelDs?.type == newDs.type) {
                 panel.datasource = { ...panel.datasource, id: id }
             } else {
                 panel.datasource = { ...initDatasource, id: id }
