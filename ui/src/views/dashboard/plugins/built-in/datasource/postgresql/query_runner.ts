@@ -22,7 +22,12 @@ export const runQuery = async (panel: Panel, q: PanelQuery, range: TimeRange, ds
             data: []
         }
     }
-    const res: QueryPluginResult = await requestApi.get(`/proxy/${ds.id}?query=${q.metrics.replaceAll("\n", " ")}`)
+    const res: QueryPluginResult = await requestApi.get(`/proxy/${ds.id}`,{
+        params: {
+            query: q.metrics.replaceAll("\n", " ")
+        }
+    })
+    
     if (res.status !== "success") {
         console.log("Failed to fetch data from target datasource", res)
         return {
@@ -46,7 +51,6 @@ export const testDatasource = async (ds: Datasource) => {
     }
     // when create dashboard how to test connect
     const res: QueryPluginResult = await requestApi.get(`/datasource/test?type=${ds.type}&url=${ds.url}&database=${ds.data.database}&username=${ds.data.username}&password=${ds.data.password}`)
-    console.log('====>res:', res)
     return res.status == "success" ? true : res.error
 }
 

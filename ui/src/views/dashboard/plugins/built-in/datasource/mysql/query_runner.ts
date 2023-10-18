@@ -22,7 +22,11 @@ export const runQuery = async (panel: Panel, q: PanelQuery, range: TimeRange, ds
             data: []
         }
     }
-    const res: QueryPluginResult = await requestApi.get(`/proxy/${ds.id}?query=${q.metrics.replaceAll("\n", " ")}`)
+    const res: QueryPluginResult = await requestApi.get(`/proxy/${ds.id}`,{
+        params: {
+            query: q.metrics.replaceAll("\n", " ")
+        }
+    })
     if (res.status !== "success") {
         console.log("Failed to fetch data from target datasource", res)
         return {

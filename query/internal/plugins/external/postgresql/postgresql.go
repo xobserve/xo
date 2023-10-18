@@ -3,7 +3,6 @@ package postgresql
 import (
 	"database/sql"
 	"database/sql/driver"
-	"fmt"
 	"reflect"
 	"sync"
 	"time"
@@ -76,7 +75,6 @@ func (*PostgreSQLPlugin) Query(c *gin.Context, ds *models.Datasource) models.Plu
 			v[i] = reflect.New(t).Interface()
 
 			tp := t.String()
-			fmt.Println("=====>", tp)
 			if tp == reflect.TypeOf(time.Time{}).String() {
 				types[columns[i]] = "time"
 			}
