@@ -118,7 +118,10 @@ const apiList = [{
     params: `{
     "env": "prod"
 }`,
-    paramsDesc: [["env", "environment name, such as dev, test, prod etc"]]
+    paramsDesc: [
+        ["env", "environment name, such as dev, test, prod etc"],
+        ["service", "filter by service names, e.g datav|driver"]
+]
 },
 {
     name: "getServiceNames",

@@ -3,6 +3,7 @@ package api
 import (
 	"fmt"
 	"strconv"
+	"strings"
 
 	ch "github.com/ClickHouse/clickhouse-go/v2"
 	obmodels "github.com/DataObserve/datav/query/internal/plugins/builtin/observability/models"
@@ -79,6 +80,15 @@ func GetServiceInfoList(c *gin.Context, ds *models.Datasource, conn ch.Conn, par
 		return models.GenPluginResult(models.PluginStatusError, "start and end is required", nil)
 	}
 
+	serviceFilter := ""
+	serviceI := params["service"]
+	serviceNames := make([]string, 0)
+	if serviceI != nil {
+		service := serviceI.(string)
+		serviceFilter = " serviceName IN @serviceNames AND"
+		serviceNames = strings.Split(service, "|")
+	}
+
 	serviceMap := make(map[string]*ServiceInfo)
 	query := fmt.Sprintf(
 		`SELECT
@@ -88,11 +98,15 @@ func GetServiceInfoList(c *gin.Context, ds *models.Datasource, conn ch.Conn, par
 			count(DISTINCT traceID) as numCalls,
 			count(*) as numOperations
 		FROM %s.%s
-		WHERE timestamp>= %d AND timestamp<= %d
+		WHERE %s timestamp>= %d AND timestamp<= %d
 		GROUP BY serviceName`,
-		config.Data.Observability.DefaultTraceDB, obmodels.DefaultIndexTable, start, end)
+		config.Data.Observability.DefaultTraceDB, obmodels.DefaultIndexTable, serviceFilter, start, end)
+	args := []interface{}{}
+	args = append(args,
+		ch.Named("serviceNames", serviceNames),
+	)
 
-	rows, err := conn.Query(c.Request.Context(), query)
+	rows, err := conn.Query(c.Request.Context(), query, args...)
 	if err != nil {
 		logger.Warn("Error Query service operations", "query", query, "error", err)
 		return models.GenPluginResult(models.PluginStatusError, err.Error(), nil)
