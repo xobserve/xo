@@ -113,7 +113,7 @@ const DatasourceEditor = ({ ds, onChange = null, teamEditable = true }: Props) =
                     <Select width="fit-content" value={datasource.type} onChange={e => {
                         const v = e.currentTarget.value
                         setDatasource((d: Datasource) => { d.type = v as any; d.url = null })
-                    }}>
+                    }} disabled={!teamEditable}>
                         {Object.keys(builtinDatasourcePlugins).map(dsType => {
                             const p = builtinDatasourcePlugins[dsType]
                             if (isPluginDisabled(p)) {
@@ -128,7 +128,7 @@ const DatasourceEditor = ({ ds, onChange = null, teamEditable = true }: Props) =
                              if (isPluginDisabled(p)) {
                                 return <></>
                             }
-                            
+
                             return <option key={dsType} value={dsType}>{upperFirst(dsType)}</option>
                         })}
                     </Select>

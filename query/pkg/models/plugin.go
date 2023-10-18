@@ -34,6 +34,7 @@ type PluginResultData struct {
 
 type Plugin interface {
 	Query(c *gin.Context, ds *Datasource) PluginResult
+	TestDatasource(c *gin.Context) PluginResult
 }
 
 var plugins = make(map[string]Plugin)

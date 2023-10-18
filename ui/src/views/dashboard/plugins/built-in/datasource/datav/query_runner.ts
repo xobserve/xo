@@ -82,7 +82,7 @@ export const runQuery = async (panel: Panel, q: PanelQuery, range: TimeRange, ds
 
 export const checkAndTestDatasource = async (ds: Datasource) => {
     // check datasource setting is valid
-    const res: QueryPluginResult = await requestApi.get(`/proxy/${ds.id}?query=testDatasource&url=${ds.url}&database=${ds.data.database}&username=${ds.data.username}&password=${ds.data.password}`)
+    const res: QueryPluginResult = await requestApi.get(`/datasource/test?type=${ds.type}&url=${ds.url}&database=${ds.data.database}&username=${ds.data.username}&password=${ds.data.password}`)
     return res.status == "success" ? true : res.error
 }
 

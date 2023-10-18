@@ -30,3 +30,5 @@ type Variable struct {
 	SortWeight  int       `json:"sortWeight"`
 	TeamId      int64     `json:"teamId"`
 }
+
+const VarialbeAllOption = "__all__"
