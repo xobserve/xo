@@ -15,14 +15,14 @@ package models
 import "time"
 
 type Datasource struct {
-	Id      int64       `json:"id"`
-	Name    string      `json:"name"`
-	Type    string      `json:"type"`
-	URL     string      `json:"url"`
-	Data    interface{} `json:"data,omitempty"`
-	TeamId  int64       `json:"teamId"`
-	Created *time.Time  `json:"created,omitempty"`
-	Updated *time.Time  `json:"updated,omitempty"`
+	Id      int64             `json:"id"`
+	Name    string            `json:"name"`
+	Type    string            `json:"type"`
+	URL     string            `json:"url"`
+	Data    map[string]string `json:"data,omitempty"`
+	TeamId  int64             `json:"teamId"`
+	Created *time.Time        `json:"created,omitempty"`
+	Updated *time.Time        `json:"updated,omitempty"`
 }
 
 const (

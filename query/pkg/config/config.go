@@ -103,7 +103,10 @@ type Config struct {
 }
 
 type Observability struct {
-	Enable bool `yaml:"enable" json:"enable"`
+	Enable           bool   `yaml:"enable" json:"enable"`
+	DefaultTraceDB   string `yaml:"default_trace_db" json:"-"`
+	DefaultMetricsDB string `yaml:"default_metrics_db" json:"-"`
+	DefaultLogDB     string `yaml:"default_log_db" json:"-"`
 }
 
 // Data ...

@@ -12,20 +12,17 @@
 // limitations under the License.
 import { Panel, PanelQuery } from "types/dashboard";
 
-import { FieldType, SeriesData } from "types/seriesData";
 import { TimeRange } from "types/time";
-import {  jsonToEqualPairs1, parseLegendFormat } from "utils/format";
 import { isEmpty } from "utils/validate";
-import { replaceWithVariables } from "utils/variable";
 import { PanelTypeGraph } from "../../../built-in/panel/graph/types";
 import { PanelTypeBar } from "../../../built-in/panel/bar/types";
 import { PanelTypeStat } from "../../../built-in/panel/stat/types";
-import { ChPluginData } from "./types";
 import { DataFormat } from "types/format";
-import { alignTimeSeriesData } from "utils/seriesData";
+import { queryPluginDataToTable, queryPluginDataToTimeSeries } from "utils/plugins";
+import { QueryPluginData } from "types/plugin";
 
 
-export const clickhouseToPanelData = (data: ChPluginData, panel: Panel, query: PanelQuery, range: TimeRange) => {
+export const clickhouseToPanelData = (data: QueryPluginData, panel: Panel, query: PanelQuery, range: TimeRange) => {
     if (isEmpty(data) || data.columns.length == 0 || data.data.length == 0) {
         return null
     }
@@ -41,131 +38,11 @@ export const clickhouseToPanelData = (data: ChPluginData, panel: Panel, query: P
 
     switch (query.data["format"]) {
         case DataFormat.TimeSeries:
-            return toTimeSeries(data, query)
+            return queryPluginDataToTimeSeries(data, query)
         case DataFormat.Table:
-            return toTable(data, query)
+            return queryPluginDataToTable(data, query)
         default:
-            return toTimeSeries(data, query)
+            return queryPluginDataToTimeSeries(data, query)
     }
-}
-
-
-const toTimeSeries = (data: ChPluginData,  query: PanelQuery) => {
-    const seriesMap: Record<string,SeriesData> = {}
-    const formats = parseLegendFormat(query.legend)
-    
-    for (var i=0;i<data.data.length;i++) {
-        const row = data.data[i]
-        const labels = {}
-        let timeValue;
-        let timeFieldName;
-        let value;
-        let valueFieldName;
-        row.forEach((v, i) => {
-            const labelName = data.columns[i]
-            const valueType = data.types[labelName] ?? typeof v as any
-            if (valueType == FieldType.Time) {
-                if (!timeValue) {
-                    timeValue = v
-                    timeFieldName = labelName
-                }
-            } else if (valueType == FieldType.Number) {
-                if (!value) {
-                    value = v
-                    valueFieldName = labelName
-                }
-            } else {
-                labels[labelName] = v
-            }
-        })
-        
-        if (!timeFieldName) {
-            return []
-        }
-
-        let seriesName;
-        if (isEmpty(labels)) {
-            seriesName = query.id
-        } else {
-            seriesName = jsonToEqualPairs1(labels)
-        }
-
-        const series = seriesMap[seriesName]
-        if (!series) {
-            seriesMap[seriesName] = {
-                queryId: query.id,
-                name: seriesName,
-                labels: labels,
-                fields: [
-                    {
-                        name: timeFieldName,
-                        type: FieldType.Time,
-                        values: [timeValue]
-                    },
-                    {
-                        name: valueFieldName,
-                        type: FieldType.Number,
-                        values: [value]
-                    },
-                ]
-            }
-        } else {
-            series.fields[0].values.push(timeValue)
-            series.fields[1].values.push(value)
-        }
-    }
-
-
-    const res = Object.values(seriesMap)
-    for (const s of res) {
-        if (!isEmpty(query.legend)) {
-            s.name = query.legend
-            if (!isEmpty(formats)) {
-                for (const format of formats) {
-                    const l = s.labels[format]
-                    if (l) {
-                        s.name= s.name.replaceAll(`{{${format}}}`, l)
-                    }
-                }
-            }
-            // replace ${xxx} format with corresponding variables
-            s.name= replaceWithVariables(s.name)
-        }
-
-    }
-
-    
-    const seriesList = Object.values(seriesMap)
-    alignTimeSeriesData(seriesList)
-
-    return  seriesList
-}
-
-
-const toTable= (data: ChPluginData,  query: PanelQuery) => {
-    const series: SeriesData = {
-        queryId: query.id,
-        name: isEmpty(query.legend) ?  query.id.toString()  : query.legend,
-        fields: []
-    }
-
-    data.columns.forEach((c,i) => {
-        series.fields.push({
-            name: c,
-            values: []
-        })
-    })
-
-    data.data.forEach((row,i) => {
-        row.forEach((v,i) => {
-            const f = series.fields[i]
-            if (!f.type) {
-                f.type = data.types[f.name] ?? typeof v as any
-            }
-            f.values.push(v)
-        })
-    })
-
-    return [series]
 }
 

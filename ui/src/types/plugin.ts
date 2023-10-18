@@ -40,5 +40,11 @@ export interface DatasourcePluginComponents {
 export interface QueryPluginResult {
     status: "success" | "error"
     error: string 
-    data: any
+    data: QueryPluginData
+}
+
+export interface QueryPluginData  {
+    columns: string[] 
+    data: any[][]
+    types: Record<string,string>
 }

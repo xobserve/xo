@@ -11,7 +11,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Datasource } from "types/datasource"
-import { isHttpDatasourceValid } from "./DatasourceEditor"
 import { Variable } from "types/variable"
 import { Panel, PanelQuery } from "types/dashboard"
 import { TimeRange } from "types/time"
@@ -25,80 +24,66 @@ import { requestApi } from "utils/axios/request"
 import { isEmpty } from "utils/validate"
 import { roundDsTime } from "utils/datasource"
 import { $variables } from "src/views/variables/store"
+import { QueryPluginData, QueryPluginResult } from "types/plugin"
+import { queryPluginDataToTable, queryPluginDataToTimeSeries } from "utils/plugins"
+import { DataFormat } from "types/format"
 
-export const run_http_query = async (panel: Panel, q: PanelQuery, range: TimeRange, ds: Datasource) => {
-    if (isEmpty(q.metrics.trim())) {
+export const runQuery = async (panel: Panel, q: PanelQuery, range: TimeRange, ds: Datasource) => {
+    if (isEmpty(q.metrics)) {
         return {
             error: null,
             data: []
         }
     }
-    //@todo: 
-    // 1. rather than query directyly to prometheus, we should query to our own backend servie
-    // 2. using `axios` instead of `fetch`
+
     const start = roundDsTime(range.start.getTime() / 1000)
     const end = roundDsTime(range.end.getTime() / 1000)
-    let url = replaceWithVariables(q.metrics)
-    const headers = {}
-    if (!isEmpty(q.data.transformRequest)) {
-        const transformRequest = genDynamicFunction(q.data.transformRequest);
-        if (isFunction(transformRequest)) {
-            url = transformRequest(url, headers, start, end, panel, $variables.get())
-        } else {
-            return {
-                error: 'transformRequest is not a valid function',
-                data: []
-            }
+
+
+
+    const res: {
+        status: string,
+        error: string,
+        data: QueryPluginResult
+    } = await requestApi.get(`/proxy/${ds.id}?query=${replaceWithVariables(q.metrics)}&params=${q.data[q.metrics].params}&start=${start}&end=${end}&step=${q.interval}`)
+    
+    if (res.status !== "success" ) {
+        console.log("Failed to fetch data from target datasource", res)
+        return {
+            error: res.error,
+            data: []
         }
     }
-
-
-
-    const res: any = await requestApi.get(`/common/proxy/${panel.id}?proxy_url=${encodeURIComponent(url)}`, {headers})
-    let result
-    if (!isEmpty(q.data.transformResult)) {
-        const transformResult = genDynamicFunction(q.data.transformResult);
-        if (isFunction(transformResult)) {
-            // return {error: string, data: any} format
-            return transformResult(res, q, start, end)        
-        } else {
-            return {
-                error: 'transformResult is not a valid function',
-                data: []
-            }
+    
+    if (res.data && res.data.status != "success") {
+        return {
+            error: res.data.error,
+            data: []
         }
-    } else {
-        // default return format:
-        // {
-        //     "status": "success",
-        //     "error": "error message",
-        //     "errorType": "error type",
-        //     "data": []
-        // }
-        if (res.status !== "success") {
-            console.log("Failed to fetch data from prometheus", res)
-            return {
-                error: `${res.errorType}: ${res.error}`,
-                data: []
-            }
-        }
-        result = res.data
+    }
+    
+    let data;
+    switch (q.data["format"]) {
+        case DataFormat.TimeSeries:
+            data = queryPluginDataToTimeSeries(res.data.data, q)
+            break
+        case DataFormat.Table:
+            data =  queryPluginDataToTable(res.data.data, q)
+            break
+        default:
+            data =  queryPluginDataToTable(res.data.data, q)
     }
 
     return {
         error: null,
-        data: result
+        data
     }
 }
 
-export const checkAndTestHttp = async (ds: Datasource) => {
+export const checkAndTestDatasource = async (ds: Datasource) => {
     // check datasource setting is valid
-    const res = isHttpDatasourceValid(ds)
-    if (res != null) {
-        return res
-    }
-
-    return true
+    const res: QueryPluginResult = await requestApi.get(`/proxy/${ds.id}?query=testDatasource&url=${ds.url}&database=${ds.data.database}&username=${ds.data.username}&password=${ds.data.password}`)
+    return res.status == "success" ? true : res.error
 }
 
 
@@ -154,7 +139,8 @@ export const replaceHttpQueryWithVariables = (query: PanelQuery, interval: strin
 
 
 export const query_http_alerts = async (panel:Panel, timeRange: TimeRange, ds:Datasource, query: PanelQuery ) => {
-    const res = await run_http_query(panel, query, timeRange, ds)
-    res.data.fromDs = ds.type
-    return res
+    // const res = await run_http_query(panel, query, timeRange, ds)
+    // res.data.fromDs = ds.type
+    // return res
+    return []
 }

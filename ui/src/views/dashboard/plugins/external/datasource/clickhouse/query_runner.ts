@@ -61,18 +61,9 @@ export const runQuery = async (panel: Panel, q: PanelQuery, range: TimeRange, ds
 }
 
 export const testDatasource = async (ds: Datasource) => {
-    // test connection status
-    try {
-        // const res = await requestApi.get(`/common/proxy/1?proxy_url=${ds.url}/api/v1/labels?match[]=up`)
-        // if (res.status) {
-        //     return true
-        // }
-
-        // return "test failed"
-        return true
-    } catch (error) {
-        return error.message
-    }
+    // check datasource setting is valid
+    const res: QueryPluginResult = await requestApi.get(`/proxy/${ds.id}?query=testDatasource&url=${ds.url}&database=${ds.data.database}&username=${ds.data.username}&password=${ds.data.password}`)
+    return res.status == "success" ? true : res.error
 }
 
 export const queryVariableValues = async (variable: Variable) => {
