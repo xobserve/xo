@@ -21,6 +21,7 @@ import moment from "moment";
 import { isEmpty } from "utils/validate";
 import NoData from "src/views/dashboard/components/PanelNoData";
 import DatavLogChart from "./Chart";
+import Search from "./Search";
 
 interface Props extends PanelProps {
     panel: DatavLogPanel
@@ -109,7 +110,8 @@ const Panel = (props: Props) => {
     }, [isMobileScreen, data])
 
     return (<Box px="2" height="100%" id="datav-log-panel" >
-        <Box height="100px" mb="2">
+        <Search />
+        <Box height="120px" mb="2">
         <DatavLogChart panel={panel} width={props.width} data={data.chart} />
         </Box>
         <ColumnResizableTable columns={defaultColumns} data={logs} wrapLine={wrapLine} fontSize={13} allowOverflow={false} height={props.height + 'px'} />

@@ -11,10 +11,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { Box, Input, useMediaQuery } from "@chakra-ui/react"
 import React from "react"
+import { MobileBreakpoint } from "src/data/constants"
 
 const Search = () => {
-    return (<></>)
+    const [isLargeScreen] = useMediaQuery('(min-width: 1200px)')
+    return (<Box position={isLargeScreen ? "fixed" : null} left={isLargeScreen ? "-50px" : null} top="5px" display="flex" alignItems="center" justifyContent="center" zIndex={10000} width="100%">
+        <Input  width="500px" variant="flushed" placeholder="Search your logs..."/>
+        </Box>)
 }
 
 export default Search

@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { useColorMode } from "@chakra-ui/react"
+import { Text, useColorMode, useColorModeValue } from "@chakra-ui/react"
 import ChartComponent from "src/components/charts/Chart"
 import React, { memo, useEffect, useMemo, useState } from "react"
 import { Panel } from "types/dashboard"
@@ -20,7 +20,7 @@ import { QueryPluginData } from "types/plugin"
 import { dateTimeFormat } from "utils/datetime/formatter"
 import { getTimeFormatForChart } from "utils/format"
 import customColors from "theme/colors"
-
+import {colors1} from 'utils/colors'
 
 interface Props {
     data: QueryPluginData
@@ -48,13 +48,19 @@ const DatavLogChart = memo((props: Props) => {
     }, [chart])
    
 
-    const [timeline, names, data] = useMemo(() =>{
+    const [timeline, names, data, total] = useMemo(() =>{
         const names = props.data.columns.slice(1)
        
         
         const data = []
+        let total = 0; 
         props.data.columns.forEach((name, i) => {
-            data.push(props.data.data.map(d => d[i]))
+            data.push(props.data.data.map(d => {
+                if (i > 0) {
+                    total += d[i]
+                }
+                return d[i]
+            }))
         })
 
         const timeBucks = data[0]
@@ -64,7 +70,9 @@ const DatavLogChart = memo((props: Props) => {
         const timeFormat = getTimeFormatForChart(start * 1000, end * 1000, step - start )
         const timeline = timeBucks.map(t => dateTimeFormat(t * 1000, { format: timeFormat }))
 
-        return [timeline, names, data.slice(1)]
+        
+
+        return [timeline, names, data.slice(1), total]
     },[props.data])
 
 
@@ -85,8 +93,8 @@ const DatavLogChart = memo((props: Props) => {
             left: "1%",
             right: "3%",
             top: "6%",
-            bottom: '0%',
-            padding: 0,
+            bottom: '20%',
+            // padding: 0,
             containLabel: true
         },
         xAxis: {
@@ -103,7 +111,7 @@ const DatavLogChart = memo((props: Props) => {
                     // baseline: 'end',
                 },
                 fontSize:  10,
-                interval: 5
+                // interval: 5
             },
          
         },
@@ -131,12 +139,13 @@ const DatavLogChart = memo((props: Props) => {
                 },
                 fontSize: 11,
             },
-            color: name == "others" ? 'rgb(80,250,123)' : customColors.error.light
+            color: name == "others" ? useColorModeValue(colors1[0], 'rgb(80,250,123)') : customColors.error.light
             // barWidth: '90%'
         })})
     };
 
     return (<>
+        <Text textStyle="annotation" mb="2" fontSize="0.8rem">{total} Results</Text>
         <ChartComponent key={colorMode} options={chartOptions} clearWhenSetOption theme={colorMode} onChartCreated={c => setChart(c)} width={width} />
     </>)
 })
