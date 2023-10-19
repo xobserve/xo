@@ -90,17 +90,17 @@ const PanelDatePicker = ({id, timeRange, showTime = true, showRealTime = false, 
             <Box>
                 {/* <Tooltip label={`${value && dateTimeFormat(value.start)} - ${value && dateTimeFormat(value.end)}`}> */}
                     <HStack spacing={0} onClick={onOpen} cursor="pointer" className="hover-text">
-                        {showIcon && <IconButton variant="ghost"  _hover={{ bg: null }}>
+                        {showIcon && <IconButton variant="ghost"  _hover={{ bg: null }} fontSize={"sm"}>
                             <FaRegClock />
                         </IconButton>}
                         {
                             showTime && <>
                                    <Box>
-                                        {!isMobileScreen && <Text layerStyle="textSecondary" fontSize="0.9rem" fontWeight="500">
+                                        {!isMobileScreen && <Text layerStyle="textSecondary" fontSize="sm" fontWeight="500">
                                             {value.startRaw.toString().startsWith('now') ? value.startRaw : dateTimeFormat(value.start)} to {value.endRaw.toString().startsWith('now') ? value.endRaw : dateTimeFormat(value.end)}
                                         </Text>}
                                         { isLargeScreen && showRealTime && value.startRaw.toString().startsWith('now') &&
-                                            <Text layerStyle="textSecondary" fontSize="0.9rem" fontWeight="500">
+                                            <Text layerStyle="textSecondary" fontSize="sm" fontWeight="500">
                                                 {dateTimeFormat(value.start)} - {dateTimeFormat(value.end)}
                                             </Text>}
                                     </Box>
