@@ -43,7 +43,7 @@ func (p *ClickHousePlugin) Query(c *gin.Context, ds *models.Datasource) models.P
 
 	colorlog.RootLogger.Info("Query from clickhouse", "query", query)
 
-	res, err := models.ConvertDbRowsToPluginData(rows)
+	res, err := pluginUtils.ConvertDbRowsToPluginData(rows)
 	if err != nil {
 		return models.GenPluginResult(models.PluginStatusError, err.Error(), nil)
 	}
