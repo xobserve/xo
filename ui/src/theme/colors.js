@@ -52,6 +52,10 @@ const  customColors = {
     scrollBg: {
         light: 'rgba(36,41,46,0.07)',
         dark: 'rgba(204,204,220,0.16)'
+    },
+    error: {
+        light : 'rgb(255,93,91)',
+        dark: 'rgb(255,93,91)'
     }  
 }
 

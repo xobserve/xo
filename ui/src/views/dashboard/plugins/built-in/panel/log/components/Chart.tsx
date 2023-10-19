@@ -26,6 +26,7 @@ import { paletteColorNameToHex } from "utils/colors"
 import { getStringColorMapping } from "src/views/dashboard/plugins/components/StringColorMapping"
 import { PanelTypeLog, Log } from "../types"
 import { PanelTypeAlert,AlertToolbarOptions } from "../../alert/types"
+import { getTimeFormatForChart } from "utils/format"
 
 
 interface Props {
@@ -82,7 +83,7 @@ const LogChart = memo((props: Props) => {
         const timeline = timeline0.map(t => t * 1000)
         const now = new Date()
 
-        const timeFormat = getTimeFormat(start, now, step)
+        const timeFormat = getTimeFormatForChart(start, now, step)
 
 
         if (viewOptions.barType == "labels") {
@@ -334,29 +335,6 @@ const getTimelineBucket = (log, timeline) => {
     return ts
 }
 
-// start, end : ms
-// step: second
-const getTimeFormat = (start, end, step) => {
-    const mstart = moment(start)
-    let format;
-    if (mstart.isSame(end, "month")) {
-        format = ""
-    } else {
-        format = "M-"
-    }
-
-    if (mstart.isSame(end, 'day')) {
-        format += "HH:mm"
-    } else {
-        format += "DD HH:mm"
-    }
-
-    if (step < 60) {
-        format += ":ss"
-    }
- 
-    return format
-}
 
 const getTimeInterval = (width, format, fontSize, ticks) => {
     // const formatWidth = (measureText(format, fontSize).width + 10)

@@ -403,42 +403,8 @@ export default BarChart
 
 
 
-// start, end : ms
-// step: second
-const getTimeFormat = (start, end, step) => {
-    const mstart = moment(start)
-    const mend = moment(end)
-    const now = moment()
-    let format;
-    
-    const isSameYear = now.isSame(mend, "year") && now.isSame(mstart, "year")
-    const isSameMonth = now.isSame(mend, "month") && now.isSame(mstart, "month")
-    const isSameDay = now.isSame(mend, "day") && now.isSame(mstart, "day")
 
-    if (isSameYear) {
-        format = ""
-    } else {
-        format = "YYYY-"
-    }
 
-    if (isSameYear && isSameMonth) {
-        format += ""
-    } else {
-        format += "M-"
-    }
-
-    if (isSameYear && isSameMonth && isSameDay) {
-        format += "HH:mm"
-    } else {
-        format += "DD HH:mm"
-    }
-
-    if (step < 60) {
-        format += ":ss"
-    }
-
-    return format
-}
 
 const getTimeInterval = (width, format, fontSize, ticks) => {
     const formatWidth = (measureText(format, fontSize).width + 10)

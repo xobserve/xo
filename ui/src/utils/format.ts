@@ -12,6 +12,7 @@
 // limitations under the License.
 
 import { uniq } from "lodash";
+import moment from "moment";
 import { isEmpty } from "./validate";
 
 // parse all the {{xxx}} to [xxx]
@@ -98,4 +99,42 @@ export const jsonToEqualPairs1 = v => {
     s += "}"
 
     return s
+}
+
+
+// start, end : ms
+// step: second
+export const getTimeFormatForChart = (start, end, step?) => {
+    const mstart = moment(start)
+    const mend = moment(end)
+    const now = moment()
+    let format;
+    
+    const isSameYear = now.isSame(mend, "year") && now.isSame(mstart, "year")
+    const isSameMonth = now.isSame(mend, "month") && now.isSame(mstart, "month")
+    const isSameDay = now.isSame(mend, "day") && now.isSame(mstart, "day")
+
+    if (isSameYear) {
+        format = ""
+    } else {
+        format = "YYYY-"
+    }
+
+    if (isSameYear && isSameMonth) {
+        format += ""
+    } else {
+        format += "M-"
+    }
+
+    if (isSameYear && isSameMonth && isSameDay) {
+        format += "HH:mm"
+    } else {
+        format += "DD HH:mm"
+    }
+
+    if (step && step < 60) {
+        format += ":ss"
+    }
+
+    return format
 }

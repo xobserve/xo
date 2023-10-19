@@ -133,7 +133,7 @@ export function customClasses(props) {
             whiteSpace: 'nowrap'
         },
         '.error-text': {
-            color: 'rgb(255,93,91)'
+            color: customColors.error.light
         }
     }
 }

@@ -10,26 +10,53 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box, Text, useMediaQuery } from "@chakra-ui/react"
-import { MarkdownRender } from "src/components/markdown/MarkdownRender"
+import { Box, Center, Text, useMediaQuery, VStack } from "@chakra-ui/react"
 import { PanelProps } from "types/dashboard"
-import { replaceWithVariables } from "utils/variable"
-import React, { useMemo } from "react";
-import { PanelType, DatavLogPanel } from "./types";
+import React, { memo, useMemo } from "react";
+import {  DatavLogPanel } from "./types";
 import ColumnResizableTable from "components/table/ColumnResizableTable";
 import { ColumnDef } from "@tanstack/react-table";
-import { IsSmallScreen, MobileVerticalBreakpoint } from "src/data/constants";
+import { IsSmallScreen } from "src/data/constants";
 import moment from "moment";
+import { isEmpty } from "utils/validate";
+import NoData from "src/views/dashboard/components/PanelNoData";
+import DatavLogChart from "./Chart";
 
 interface Props extends PanelProps {
     panel: DatavLogPanel
 }
 
+const PanelWrapper = memo((props: Props) => {
+    const data = props.data.flat()
+
+    if (isEmpty(data)) {
+        return <Center height="100%"><NoData /></Center>
+    }
+
+    return (<>
+        {
+            !isLogData(data[0])
+                ?
+                <Center height="100%">
+                    <VStack>
+                        <Text fontWeight={500} fontSize="1.1rem">Data format not support!</Text>
+                        <Text className='color-text'>Try to change to Datav datasource to use this panel</Text>
+                    </VStack>
+                </Center>
+                :
+                <Panel {...props} data={data[0]} />
+        }
+    </>
+    )
+})
+
+
+
+export default PanelWrapper
 
 
 const Panel = (props: Props) => {
-    const { panel } = props
-    const data = props.data.flat()
+    const { panel, data } = props
 
     const [isMobileScreen] = useMediaQuery(IsSmallScreen)
 
@@ -72,7 +99,7 @@ const Panel = (props: Props) => {
 
     const logs = useMemo(() => {
         const logs = []
-        for (const log of data) {
+        for (const log of data.logs) {
             logs.push({
                 ...log,
                 timestamp: isMobileScreen ? moment(log.timestamp).format("MM-DD hh:mm:ss") : new Date(log.timestamp).toLocaleString()
@@ -82,8 +109,18 @@ const Panel = (props: Props) => {
     }, [isMobileScreen, data])
 
     return (<Box px="2" height="100%" id="datav-log-panel" >
+        <Box height="100px" mb="2">
+        <DatavLogChart panel={panel} width={props.width} data={data.chart} />
+        </Box>
         <ColumnResizableTable columns={defaultColumns} data={logs} wrapLine={wrapLine} fontSize={13} allowOverflow={false} height={props.height + 'px'} />
     </Box>)
 }
 
-export default Panel
+
+const isLogData = (data: any)  => {
+    if (!data.logs) {
+        return false 
+    }
+
+    return true
+}
