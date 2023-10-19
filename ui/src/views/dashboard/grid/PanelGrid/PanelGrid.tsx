@@ -357,10 +357,11 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
 `}
     >
 
-        {data && <Box overflow="hidden">
+        {data && <Box>
             <PanelHeader dashboardId={dashboard.id} panel={panel} data={panelData} queryError={queryError} onCopyPanel={onCopyPanel} onRemovePanel={onRemovePanel} onHidePanel={onHidePanel} />
             <ErrorBoundary>
                 <Box
+                    overflow="hidden"
                     // panel={panel}
                     height={panelInnerHeight}
                     marginLeft={panel.type == PanelTypeGraph ? -10 + panel.styles.marginLeft + 'px' : panel.styles.marginLeft + 'px'}
@@ -482,7 +483,7 @@ const PanelHeader = ({ dashboardId, queryError, panel, onCopyPanel, onRemovePane
                                 </TitleDecoration>
                             </Box> : <Box width="100px">&nbsp;</Box>}
                     </Center>
-                    <Box visibility={'hidden'} className="show-on-hover">
+                    <Center visibility={'hidden'} className="show-on-hover">
                         <Menu placement="bottom" isLazy>
                             <MenuButton
                                 background={useColorModeValue(customColors.bodyBg.light, customColors.bodyBg.dark)}
@@ -545,7 +546,7 @@ const PanelHeader = ({ dashboardId, queryError, panel, onCopyPanel, onRemovePane
                                 </>}
                             </MenuList>
                         </Menu>
-                    </Box>
+                    </Center>
                 </Center>
                 {/* <Box display="none"><FaBook className="grid-drag-handle" /></Box> */}
             </HStack>
