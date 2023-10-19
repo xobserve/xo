@@ -49,8 +49,13 @@ func ProxyDatasource(c *gin.Context) {
 	queryPlugin := models.GetPlugin(ds.Type)
 	if queryPlugin != nil {
 		result := queryPlugin.Query(c, ds)
-		c.JSON(http.StatusOK, result)
-		return
+		if result.Status == models.PluginStatusSuccess {
+			c.JSON(http.StatusOK, result)
+			return
+		} else {
+			c.JSON(http.StatusInternalServerError, common.RespError(result.Error))
+			return
+		}
 	}
 
 	targetURL := c.Param("path")
@@ -108,5 +113,5 @@ func TestDatasource(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, models.GenPluginResult(models.PluginStatusSuccess, "query plugin not exist", nil))
+	c.JSON(http.StatusOK, models.GenPluginResult(models.PluginStatusError, "query plugin not exist", nil))
 }
