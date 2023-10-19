@@ -30,7 +30,7 @@ It can help users quickly create online observability scenarios such as monitori
 
 ## Roadmap to V1.0
 
-Till now, we have implemented the UI part of Datav, which can aslo be used as an alternative to Grafana.
+Till now, we have implemented the UI part of Datav, which can also be used as an alternative to Grafana.
 
 We are now still working on the observability part, and it will be released in [V1.0](https://github.com/data-observe/datav/milestone/7).
 
@@ -48,7 +48,7 @@ We are now still working on the observability part, and it will be released in [
 
 6. **Modern UI design**: supports large data screens, and is perfectly compatible with mobile devices.
 
-7. **Programmability**: powerful programmability and developer-friendly for customizations, e.g Datav agent support use webassembly to develop your own plugins and data process pipleines.
+7. **Programmability**: powerful programmability and developer-friendly for customizations, e.g Datav agent support use webassembly to develop your own plugins and data process pipelines.
 
 8. **Community**: comes with a permissive open-source license, extensive documentation, and rapid community support response.
 
