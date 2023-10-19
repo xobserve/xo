@@ -4,10 +4,10 @@ import customColors from "./colors";
 export function customClasses(props) {
     return {
         ".panel-bg": {
-            bg: mode('rgba(251,253,254,1)','rgba(255,255,255,0.03)')(props)
+            bg: mode('rgba(252,254,255,1)', 'rgba(255,255,255,0.03)')(props)
         },
         ".panel-bg-alpha": {
-            bg: mode('rgba(251,253,254,0.3)','rgba(255,255,255,0.03)')(props)
+            bg: mode('rgba(251,253,254,0.3)', 'rgba(255,255,255,0.03)')(props)
         },
         ".highlight-bg": {
             background: 'brand.50',
@@ -15,22 +15,22 @@ export function customClasses(props) {
             color: 'black'
         },
         ".hover-bg:hover": {
-            background:  mode('brand.50','rgba(30,39,50,0.5)')(props),
+            background: mode('brand.50', 'rgba(30,39,50,0.5)')(props),
             borderRadius: "6px",
-            color:  mode('black','white')(props)
+            color: mode('black', 'white')(props)
         },
         ".hover-text:hover": {
-            color:  mode('brand.500','brand.500')(props),
+            color: mode('brand.500', 'brand.500')(props),
             opacity: 1
         },
         ".label-bg": {
-            bg: mode('#f7f9fb','rgba(255,255,255,0.05)')(props)
+            bg: mode('#f7f9fb', 'rgba(255,255,255,0.05)')(props)
         },
         '.code-bg': {
-            bg: mode('rgba(0,0,0,0.8)','rgba(0,0,0,0.2)')(props),
-            color : '#eee',
+            bg: mode('rgba(0,0,0,0.8)', 'rgba(0,0,0,0.2)')(props),
+            color: '#eee',
             borderWidth: '1px',
-            borderColor:  mode('whatsapp.500','whatsapp.100')(props),
+            borderColor: mode('whatsapp.500', 'whatsapp.100')(props),
             letterSpacing: '1.5px'
         },
         ".hover-bordered:hover": {
@@ -114,12 +114,12 @@ export function customClasses(props) {
         ".side-card": {
             borderRadius: "16px !important",
             // borderWidth: "0 !important",
-            bg: mode(customColors.sideCardBg.light+ '!important',customColors.sideCardBg.dark+ '!important')(props)
+            bg: mode(customColors.sideCardBg.light + '!important', customColors.sideCardBg.dark + '!important')(props)
         },
         ".card-opaque": {
             borderRadius: "16px !important",
             // borderWidth: "0 !important",
-            bg: mode(customColors.cardOpaqueBg.light+ '!important',customColors.cardOpaqueBg.dark+ '!important')(props)
+            bg: mode(customColors.cardOpaqueBg.light + '!important', customColors.cardOpaqueBg.dark + '!important')(props)
         },
         '.action-icon': {
             fontSize: "0.8rem",
@@ -127,6 +127,13 @@ export function customClasses(props) {
         },
         '.cursor-pointer': {
             cursor: 'pointer'
-          }
+        },
+        '.text-truncate': {
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap'
+        },
+        '.error-text': {
+            color: 'rgb(255,93,91)'
+        }
     }
 }

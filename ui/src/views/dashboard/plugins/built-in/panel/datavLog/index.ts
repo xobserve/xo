@@ -4,11 +4,13 @@ import PanelEditor from "./Editor";
 import DatavLogPanel from "./Panel";
 import icon from './icon.svg'
 import { PanelType } from "./types";
+import { mockLogDataForTestDataDs } from "./mocks/mockData";
 
 
 const panelComponents: PanelPluginComponents = {
     panel: DatavLogPanel,
     editor: PanelEditor,
+    mockDataForTestDataDs: mockLogDataForTestDataDs,
     settings: {
         type: PanelType,
         icon,
