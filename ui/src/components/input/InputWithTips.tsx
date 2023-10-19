@@ -11,14 +11,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Box, Input, Popover, PopoverArrow, PopoverBody, PopoverContent, PopoverTrigger, useDisclosure, useMediaQuery } from "@chakra-ui/react"
+import { Box, Input, Popover, PopoverBody, PopoverContent, PopoverTrigger, useDisclosure } from "@chakra-ui/react"
 import React from "react"
 
-const Search = () => {
-    const [isLargeScreen] = useMediaQuery('(min-width: 1200px)')
+const InputWithTips = ({width,children,placeholder="Enter....", variant="flushed", size="md" }) => {
     const { isOpen, onToggle, onClose } = useDisclosure()
-    return (<Box position={isLargeScreen ? "fixed" : null} left={isLargeScreen ? "-50px" : null} top="5px" display="flex" alignItems="center" justifyContent="center" zIndex={10000} width="100%">
-        <Input width="500px" variant="flushed" placeholder="Search your logs..." onFocus={onToggle} onBlur={onToggle}/>
+    return (<>
+        <Input width={width} size={size} variant={variant} placeholder={placeholder} onFocus={onToggle} onBlur={onToggle}/>
         <Popover
             returnFocusOnClose={false}
             isOpen={isOpen}
@@ -30,13 +29,13 @@ const Search = () => {
             <PopoverTrigger>
                 <Box position="absolute" top="40px"></Box>
             </PopoverTrigger>
-            <PopoverContent width={500}>
+            <PopoverContent width={width}>
                 <PopoverBody>
-                    Are you sure you want to continue with your action?
+                   {children}
                 </PopoverBody>
             </PopoverContent>
         </Popover>
-    </Box>)
+    </>)
 }
 
-export default Search
+export default InputWithTips
