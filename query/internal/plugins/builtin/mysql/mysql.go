@@ -1,15 +1,19 @@
 package mysql
 
 import (
+	"context"
 	"database/sql"
 	"database/sql/driver"
+	"fmt"
 	"reflect"
 	"sync"
+	"time"
 
-	pluginUtils "github.com/DataObserve/datav/query/internal/plugins/utils"
 	"github.com/DataObserve/datav/query/pkg/colorlog"
 	"github.com/DataObserve/datav/query/pkg/models"
 	"github.com/gin-gonic/gin"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
 var datasourceName = "mysql"
@@ -26,7 +30,7 @@ func (*MysqlPlugin) Query(c *gin.Context, ds *models.Datasource) models.PluginRe
 	query := c.Query("query")
 	conn, ok := conns[ds.Id]
 	if !ok {
-		conn, err := pluginUtils.ConnectToMysql(ds.URL, ds.Data["database"], ds.Data["username"], ds.Data["password"])
+		conn, err := connectToMysql(ds.URL, ds.Data["database"], ds.Data["username"], ds.Data["password"])
 		if err != nil {
 			colorlog.RootLogger.Warn("connect to mysql error:", err, "ds_id", ds.Id, "url", ds.URL)
 			return models.PluginResult{
@@ -111,10 +115,45 @@ func (*MysqlPlugin) Query(c *gin.Context, ds *models.Datasource) models.PluginRe
 }
 
 func (*MysqlPlugin) TestDatasource(c *gin.Context) models.PluginResult {
-	return pluginUtils.TestMysqlDatasource(c)
+	return TestMysqlDatasource(c)
 }
 
 func init() {
 	// register datasource
 	models.RegisterPlugin(datasourceName, &MysqlPlugin{})
+}
+
+func TestMysqlDatasource(c *gin.Context) models.PluginResult {
+	url := c.Query("url")
+	database := c.Query("database")
+	username := c.Query("username")
+	password := c.Query("password")
+	db, err := connectToMysql(url, database, username, password)
+	if err != nil {
+		return models.GenPluginResult(models.PluginStatusError, err.Error(), nil)
+	}
+	if err = db.PingContext(context.Background()); err != nil {
+		return models.GenPluginResult(models.PluginStatusError, err.Error(), nil)
+	}
+	return models.GenPluginResult(models.PluginStatusSuccess, "", nil)
+}
+
+func connectToMysql(url, database, username, password string) (*sql.DB, error) {
+	dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=true", username, password, url, database)
+	colorlog.RootLogger.Debug("connect to mysql dsn: ", dsn)
+
+	db, err := sql.Open("mysql", dsn)
+	if err != nil {
+		return nil, err
+	}
+	db.SetMaxIdleConns(5)
+	db.SetMaxOpenConns(5)
+	db.SetConnMaxLifetime(time.Duration(10) * time.Minute)
+	db.SetConnMaxIdleTime(time.Duration(10) * time.Minute)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*30)
+	defer cancel()
+	if err = db.PingContext(ctx); err != nil {
+		return nil, err
+	}
+	return db, nil
 }
