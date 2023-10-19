@@ -24,11 +24,13 @@ const Search = () => {
     const onSearch = () => {
         console.log("here333333:", query)
     }
-    return (<Box position={(isLargeScreen && !edit) ? "fixed" : null} left={(isLargeScreen&&!edit) ? "-50px" : null} top="5px" display="flex" alignItems="center" justifyContent="center" zIndex={1400} width="100%">
-        <InputWithTips placeholder="Search your logs, press Enter to submit..." width={500} value={query} onChange={setQuery} onConfirm={onSearch}>
+
+    const inputWidth = 500
+    return (<Box position={(isLargeScreen && !edit) ? "fixed" : null} left={(isLargeScreen&&!edit) ? `calc(50% - ${inputWidth / 2}px)` : null} top="5px" display="flex" alignItems="center" justifyContent="center" zIndex={1400} width={500}>
+        <InputWithTips placeholder="Search your logs, press Enter to submit..." width={isLargeScreen ? inputWidth: "100%"} value={query} onChange={setQuery} onConfirm={onSearch}>
             <Text>aaaa</Text>
         </InputWithTips>
-        {!isLargeScreen && <Button size="sm" variant="outline">Submit</Button>}
+        {/* {!isLargeScreen && <Button size="sm" variant="outline">Submit</Button>} */}
     </Box>)
 }
 

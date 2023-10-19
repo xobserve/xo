@@ -14,7 +14,7 @@ import React, { memo } from 'react';
 import { Table } from 'antd';
 import { TableColumn, TableRow } from '../../types';
 import storage from 'utils/localStorage';
-import { cloneDeep, isFunction, isNumber, round } from 'lodash';
+import { cloneDeep, isFunction, isNumber, isObject, round } from 'lodash';
 import { setTableFilter } from './TableFilter';
 import { Box, Button, HStack, Text, Tooltip, useColorMode, useToast } from '@chakra-ui/react';
 import { findOverride, findOverrideRule, findRuleInOverride } from 'utils/dashboard/panel';
@@ -256,7 +256,7 @@ const ComplexTable = memo((props: Props) => {
         </AutoSizer>
 
       } else {
-        return <Box padding={cellPadding} bg={bg}><Tooltip label={ellipsis ? text : null} openDelay={300}><Text color={color ?? "inherit"} wordBreak="break-all" noOfLines={ellipsis ? 1 : null}>{text}</Text></Tooltip></Box>
+        return <Box padding={cellPadding} bg={bg}><Tooltip label={ellipsis ? text : null} openDelay={300}><Text color={color ?? "inherit"} wordBreak="break-all" noOfLines={ellipsis ? 1 : null}>{isObject(text) ? JSON.stringify(text) : text}</Text></Tooltip></Box>
       }
 
     }

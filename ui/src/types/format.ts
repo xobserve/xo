@@ -1,5 +1,6 @@
 export enum DataFormat {
     TimeSeries = "timeseries",
     Table = "table",
-    Logs = "logs"
+    Logs = "logs",
+    Traces = "traces"
 }

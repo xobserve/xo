@@ -27,11 +27,11 @@ export const isPluginDisabled = (p) => {
 
 
 
-export const queryPluginDataToTimeSeries = (data: QueryPluginData,  query: PanelQuery) => {
-    const seriesMap: Record<string,SeriesData> = {}
+export const queryPluginDataToTimeSeries = (data: QueryPluginData, query: PanelQuery) => {
+    const seriesMap: Record<string, SeriesData> = {}
     const formats = parseLegendFormat(query.legend)
-    
-    for (var i=0;i<data.data.length;i++) {
+
+    for (var i = 0; i < data.data.length; i++) {
         const row = data.data[i]
         const labels = {}
         let timeValue;
@@ -55,7 +55,7 @@ export const queryPluginDataToTimeSeries = (data: QueryPluginData,  query: Panel
                 labels[labelName] = v
             }
         })
-        
+
         if (!timeFieldName) {
             return []
         }
@@ -101,40 +101,40 @@ export const queryPluginDataToTimeSeries = (data: QueryPluginData,  query: Panel
                 for (const format of formats) {
                     const l = s.labels[format]
                     if (l) {
-                        s.name= s.name.replaceAll(`{{${format}}}`, l)
+                        s.name = s.name.replaceAll(`{{${format}}}`, l)
                     }
                 }
             }
             // replace ${xxx} format with corresponding variables
-            s.name= replaceWithVariables(s.name)
+            s.name = replaceWithVariables(s.name)
         }
 
     }
 
-    
+
     const seriesList = Object.values(seriesMap)
     alignTimeSeriesData(seriesList)
 
-    return  seriesList
+    return seriesList
 }
 
 
-export const queryPluginDataToTable= (data: QueryPluginData,  query: PanelQuery) => {
+export const queryPluginDataToTable = (data: QueryPluginData, query: PanelQuery) => {
     const series: SeriesData = {
         queryId: query.id,
-        name: isEmpty(query.legend) ?  query.id.toString()  : query.legend,
+        name: isEmpty(query.legend) ? query.id.toString() : query.legend,
         fields: []
     }
 
-    data.columns.forEach((c,i) => {
+    data.columns.forEach((c, i) => {
         series.fields.push({
             name: c,
             values: []
         })
     })
 
-    data.data.forEach((row,i) => {
-        row.forEach((v,i) => {
+    data.data.forEach((row, i) => {
+        row.forEach((v, i) => {
             const f = series.fields[i]
             if (!f.type && data.types) {
                 f.type = data.types[f.name] ?? typeof v as any
@@ -146,3 +146,52 @@ export const queryPluginDataToTable= (data: QueryPluginData,  query: PanelQuery)
     return [series]
 }
 
+
+export const queryPluginDataToLogs = (data: {
+    logs: QueryPluginData;
+    chart: QueryPluginData;
+}, query: PanelQuery) => {
+    const logs = []
+    for (const row of data.logs.data) {
+        const log = {}
+        row.forEach((v, i) => {
+            const name = data.logs.columns[i]
+            if (name == "severity_text") {
+                log[name] = isEmpty(v) ? "ok" : v
+            } else {
+                log[name] = v
+            }
+        })
+        logs.push(log)
+    }
+
+
+    
+    const chartColumns = ["ts_bucket", "others", "errors"]
+    const chartData = []
+    const chartDataMap = {}
+
+    for (const row of data.chart.data) {
+        const ts = row[0]
+        const v = chartDataMap[ts]
+        if (!v) {
+            chartDataMap[ts] = {
+                [row[1]]: row[2]
+            }
+        } else {
+            v[row[1]] = row[2]
+        }
+    }
+    Object.keys(chartDataMap).forEach(ts => {
+        const v = chartDataMap[ts]
+        chartData.push([ts, v["others"]??null, v["errors"]??null])
+    })
+
+    return [{
+        logs,
+        chart: {
+            columns: chartColumns,
+            data: chartData
+        }
+    }]
+}

@@ -13,7 +13,7 @@
 
 import { Text, useColorMode, useColorModeValue } from "@chakra-ui/react"
 import ChartComponent from "src/components/charts/Chart"
-import React, { memo, useEffect, useMemo, useState } from "react"
+import React, { memo, useEffect, useMemo, useRef, useState } from "react"
 import { Panel } from "types/dashboard"
 
 import { QueryPluginData } from "types/plugin"
@@ -26,20 +26,22 @@ interface Props {
     data: QueryPluginData
     panel: Panel
     width: number
-    onSelectLabel?: any
+    onClick: any
 }
 
 const DatavLogChart = memo((props: Props) => {
-    const { panel, width, onSelectLabel } = props
+    const { panel, width, onClick } = props
     const [chart, setChart] = useState<echarts.ECharts>(null)
     const { colorMode } = useColorMode()
-
+    const timelineCache = useRef<string[]>(null)
+    const timeBucksCache = useRef<string[]>(null)
+    const stepCache = useRef(null)
     useEffect(() => {
         if (chart) {
             chart.on('click', function (event) {
-                if (event.seriesName != "total") {
-                    onSelectLabel(event.seriesName)
-                }
+                const index = timelineCache.current.findIndex(t => t == event.name)
+                const ts = timeBucksCache.current[index]
+                onClick(ts, event.seriesName, stepCache.current, stepCache.current)
             })
         }
         return () => {
@@ -64,12 +66,14 @@ const DatavLogChart = memo((props: Props) => {
         })
 
         const timeBucks = data[0]
+        timeBucksCache.current = timeBucks
         const start = Number(timeBucks[0])
         const step = Number(timeBucks[1]) - start
+        stepCache.current = step
         const end = Number(timeBucks[timeBucks.length - 1])
         const timeFormat = getTimeFormatForChart(start * 1000, end * 1000, step - start )
         const timeline = timeBucks.map(t => dateTimeFormat(t * 1000, { format: timeFormat }))
-
+        timelineCache.current = timeline
         
 
         return [timeline, names, data.slice(1), total]
@@ -138,6 +142,9 @@ const DatavLogChart = memo((props: Props) => {
                     v.data + " lines"
                 },
                 fontSize: 11,
+            },
+            emphasis: {
+                focus: 'series'
             },
             color: name == "others" ? useColorModeValue(colors1[0], 'rgb(80,250,123)') : customColors.error.light
             // barWidth: '90%'

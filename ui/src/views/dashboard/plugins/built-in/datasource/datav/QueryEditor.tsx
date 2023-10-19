@@ -62,6 +62,8 @@ const HttpQueryEditor = ({ panel, datasource, query, onChange }: DatasourceEdito
                     if (!tempQuery.data[v]['params']) {
                         tempQuery.data[v]['params'] = api1.params
                     }
+
+                    tempQuery.data['format'] = api1.format
                     const q = cloneDeep(tempQuery)
                     setTempQuery(q)
                     onChange(q)

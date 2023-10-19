@@ -39,6 +39,9 @@ const SelectDataFormat = ({ tempQuery, setTempQuery, onChange, labelWidth = "150
         }} width="150px">
             <option value={DataFormat.TimeSeries}>Time series</option>
             <option value={DataFormat.Table}>Table</option>
+            <option value={DataFormat.Logs}>Logs</option>
+            <option value={DataFormat.Traces}>Traces</option>
+
         </Select>
     </FormItem>
 }

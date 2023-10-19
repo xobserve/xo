@@ -13,7 +13,7 @@
 import { Box, Center, Text, useMediaQuery, VStack } from "@chakra-ui/react"
 import { PanelProps } from "types/dashboard"
 import React, { memo, useMemo } from "react";
-import {  DatavLogPanel } from "./types";
+import { DatavLogPanel } from "./types";
 import ColumnResizableTable from "components/table/ColumnResizableTable";
 import { ColumnDef } from "@tanstack/react-table";
 import { IsSmallScreen } from "src/data/constants";
@@ -22,6 +22,8 @@ import { isEmpty } from "utils/validate";
 import NoData from "src/views/dashboard/components/PanelNoData";
 import DatavLogChart from "./Chart";
 import Search from "./Search";
+import { dateTimeFormat } from "utils/datetime/formatter";
+import { setDateTime } from "components/DatePicker/DatePicker";
 
 interface Props extends PanelProps {
     panel: DatavLogPanel
@@ -68,7 +70,7 @@ const Panel = (props: Props) => {
             accessorKey: 'timestamp',
             header: 'Timestamp',
             size: isMobileScreen ? 100 : 170,
-            cell: info => <Text opacity={0.7} fontWeight={550} fontSize={12}>{info.getValue() as any}</Text> ,
+            cell: info => <Text opacity={0.7} fontWeight={550} fontSize={12}>{info.getValue() as any}</Text>,
         },
         // {
         //     accessorFn: row => row.lastName,
@@ -82,8 +84,8 @@ const Panel = (props: Props) => {
             header: "Level",
             cell: info => {
                 const severity = info.getValue() as any
-            return <Text className={severity == "error" && "error-text"}>{severity}</Text>
-            } ,
+                return <Text className={severity == "error" && "error-text"}>{severity}</Text>
+            },
             size: isMobileScreen ? 50 : 90
         },
         {
@@ -103,25 +105,30 @@ const Panel = (props: Props) => {
         for (const log of data.logs) {
             logs.push({
                 ...log,
-                timestamp: isMobileScreen ? moment(log.timestamp).format("MM-DD hh:mm:ss") : new Date(log.timestamp).toLocaleString()
+                timestamp: isMobileScreen ? moment(log.timestamp / 1e6).format("MM-DD hh:mm:ss") : dateTimeFormat(log.timestamp / 1e6, {format: "YY-MM-DD HH:mm:ss.SSS"})
             })
         }
         return logs
     }, [isMobileScreen, data])
 
+    const onClickChart = (ts, level, step) => {
+        const from = Number(ts) 
+        const to = Number(ts) + Number(step)
+        setDateTime(from, to)
+    }
     return (<Box px="2" height="100%" id="datav-log-panel" >
         <Search />
-        <Box height="120px" mb="2">
-        <DatavLogChart panel={panel} width={props.width} data={data.chart} />
-        </Box>
+        {data.chart && <Box height="120px" mb="2">
+            <DatavLogChart panel={panel} width={props.width} data={data.chart} onClick={onClickChart}/>
+        </Box>}
         <ColumnResizableTable columns={defaultColumns} data={logs} wrapLine={wrapLine} fontSize={13} allowOverflow={false} height={props.height + 'px'} />
     </Box>)
 }
 
 
-const isLogData = (data: any)  => {
+const isLogData = (data: any) => {
     if (!data.logs) {
-        return false 
+        return false
     }
 
     return true

@@ -40,7 +40,7 @@ const ColumnResizableTable = (props: Props) => {
             <div style={{
                  height: height,
                  maxWidth: "100%",
-                 overflowX: allowOverflow ? null : "hidden",
+                //  overflowX: allowOverflow ? null : "hidden",
             }}>
                 <table
                     style={{

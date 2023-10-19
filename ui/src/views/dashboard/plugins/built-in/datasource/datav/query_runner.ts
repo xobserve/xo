@@ -25,7 +25,7 @@ import { isEmpty } from "utils/validate"
 import { roundDsTime } from "utils/datasource"
 import { $variables } from "src/views/variables/store"
 import { QueryPluginData, QueryPluginResult } from "types/plugin"
-import { queryPluginDataToTable, queryPluginDataToTimeSeries } from "utils/plugins"
+import { queryPluginDataToLogs, queryPluginDataToTable, queryPluginDataToTimeSeries } from "utils/plugins"
 import { DataFormat } from "types/format"
 
 export const runQuery = async (panel: Panel, q: PanelQuery, range: TimeRange, ds: Datasource) => {
@@ -69,6 +69,9 @@ export const runQuery = async (panel: Panel, q: PanelQuery, range: TimeRange, ds
             break
         case DataFormat.Table:
             data =  queryPluginDataToTable(res.data.data, q)
+            break
+        case DataFormat.Logs:
+            data =  queryPluginDataToLogs(res.data.data as any, q)
             break
         default:
             data =  queryPluginDataToTable(res.data.data, q)
