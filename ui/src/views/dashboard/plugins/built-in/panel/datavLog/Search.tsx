@@ -11,31 +11,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Box, Input, Popover, PopoverArrow, PopoverBody, PopoverContent, PopoverTrigger, useDisclosure, useMediaQuery } from "@chakra-ui/react"
-import React from "react"
+import { Box, Button,  Text, useMediaQuery } from "@chakra-ui/react"
+import InputWithTips from "components/input/InputWithTips"
+import React, { useState } from "react"
+import { useSearchParam } from "react-use"
 
 const Search = () => {
-    const [isLargeScreen] = useMediaQuery('(min-width: 1200px)')
-    const { isOpen, onToggle, onClose } = useDisclosure()
-    return (<Box position={isLargeScreen ? "fixed" : null} left={isLargeScreen ? "-50px" : null} top="5px" display="flex" alignItems="center" justifyContent="center" zIndex={10000} width="100%">
-        <Input width="500px" variant="flushed" placeholder="Search your logs..." onFocus={onToggle} onBlur={onToggle}/>
-        <Popover
-            returnFocusOnClose={false}
-            isOpen={isOpen}
-            onClose={onClose}
-            placement='bottom'
-            closeOnBlur={false}
-            autoFocus={false}
-        >
-            <PopoverTrigger>
-                <Box position="absolute" top="40px"></Box>
-            </PopoverTrigger>
-            <PopoverContent width={500}>
-                <PopoverBody>
-                    Are you sure you want to continue with your action?
-                </PopoverBody>
-            </PopoverContent>
-        </Popover>
+    const [isSmallScreen] = useMediaQuery('(max-width: 1200px)')
+    const isLargeScreen = !isSmallScreen
+    const [query, setQuery] = useState('')
+    const edit = useSearchParam("edit")
+    const onSearch = () => {
+        console.log("here333333:", query)
+    }
+    return (<Box position={(isLargeScreen && !edit) ? "fixed" : null} left={(isLargeScreen&&!edit) ? "-50px" : null} top="5px" display="flex" alignItems="center" justifyContent="center" zIndex={1400} width="100%">
+        <InputWithTips placeholder="Search your logs, press Enter to submit..." width={500} value={query} onChange={setQuery} onConfirm={onSearch}>
+            <Text>aaaa</Text>
+        </InputWithTips>
+        {!isLargeScreen && <Button size="sm" variant="outline">Submit</Button>}
     </Box>)
 }
 

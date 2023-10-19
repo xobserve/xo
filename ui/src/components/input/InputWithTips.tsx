@@ -14,10 +14,14 @@
 import { Box, Input, Popover, PopoverBody, PopoverContent, PopoverTrigger, useDisclosure } from "@chakra-ui/react"
 import React from "react"
 
-const InputWithTips = ({width,children,placeholder="Enter....", variant="flushed", size="md" }) => {
+const InputWithTips = ({ value, onChange, onConfirm=null, width, children, placeholder = "Enter....", variant = "flushed", size = "md" }) => {
     const { isOpen, onToggle, onClose } = useDisclosure()
     return (<>
-        <Input width={width} size={size} variant={variant} placeholder={placeholder} onFocus={onToggle} onBlur={onToggle}/>
+        <Input value={value} onChange={e => onChange(e.currentTarget.value)} width={width} size={size} variant={variant} placeholder={placeholder} onFocus={onToggle} onBlur={onToggle} onKeyDown={e => {
+            if (onConfirm && e.key === 'Enter') {
+                onConfirm()
+            }
+        }} />
         <Popover
             returnFocusOnClose={false}
             isOpen={isOpen}
@@ -31,7 +35,7 @@ const InputWithTips = ({width,children,placeholder="Enter....", variant="flushed
             </PopoverTrigger>
             <PopoverContent width={width}>
                 <PopoverBody>
-                   {children}
+                    {children}
                 </PopoverBody>
             </PopoverContent>
         </Popover>

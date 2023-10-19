@@ -99,7 +99,7 @@ type Config struct {
 		DisablePanels      []string `yaml:"disable_panels"`
 		DisableDatasources []string `yaml:"disable_datasources"`
 	}
-	Observability
+	Observability Observability
 }
 
 type Observability struct {

@@ -1,9 +1,7 @@
 package clickhouse
 
 import (
-	"reflect"
 	"sync"
-	"time"
 
 	ch "github.com/ClickHouse/clickhouse-go/v2"
 	pluginUtils "github.com/DataObserve/datav/query/internal/plugins/utils"
@@ -43,46 +41,14 @@ func (p *ClickHousePlugin) Query(c *gin.Context, ds *models.Datasource) models.P
 	}
 	defer rows.Close()
 
-	columns := rows.Columns()
-	columnTypes := rows.ColumnTypes()
-	types := make(map[string]string)
-	data := make([][]interface{}, 0)
-	for rows.Next() {
-		v := make([]interface{}, len(columns))
-		for i := range v {
-			t := columnTypes[i].ScanType()
-			v[i] = reflect.New(t).Interface()
+	colorlog.RootLogger.Info("Query from clickhouse", "query", query)
 
-			tp := t.String()
-			if tp == "time.Time" {
-				types[columns[i]] = "time"
-			}
-		}
-
-		err = rows.Scan(v...)
-		if err != nil {
-			colorlog.RootLogger.Info("Error scan clickhouse :", "error", err, "ds_id", ds.Id)
-			continue
-		}
-
-		for i, v0 := range v {
-			v1, ok := v0.(*time.Time)
-			if ok {
-				v[i] = v1.Unix()
-			}
-		}
-
-		data = append(data, v)
+	res, err := models.ConvertDbRowsToPluginData(rows)
+	if err != nil {
+		return models.GenPluginResult(models.PluginStatusError, err.Error(), nil)
 	}
 
-	return models.PluginResult{
-		Status: models.PluginStatusSuccess,
-		Error:  "",
-		Data: models.PluginResultData{
-			Columns:     columns,
-			Data:        data,
-			ColumnTypes: types,
-		}}
+	return models.GenPluginResult(models.PluginStatusSuccess, "", res)
 }
 
 func (p *ClickHousePlugin) TestDatasource(c *gin.Context) models.PluginResult {

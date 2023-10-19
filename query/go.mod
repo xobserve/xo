@@ -12,6 +12,7 @@ require (
 	github.com/golang/snappy v0.0.4
 	github.com/gosimple/slug v1.9.0
 	github.com/inconshreveable/log15 v0.0.0-20201112154412-8562bdadbbac
+	github.com/lib/pq v1.10.9
 	github.com/lithammer/shortuuid/v3 v3.0.5
 	github.com/mattn/go-sqlite3 v1.14.17
 	github.com/spf13/cobra v1.6.1
@@ -58,7 +59,6 @@ require (
 	github.com/klauspost/compress v1.16.7 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.4 // indirect
 	github.com/leodido/go-urn v1.2.4 // indirect
-	github.com/lib/pq v1.10.9 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.19 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect

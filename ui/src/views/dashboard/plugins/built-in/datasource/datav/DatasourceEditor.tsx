@@ -14,6 +14,7 @@ import { Datasource } from "types/datasource"
 import React from "react";
 import FormItem from "components/form/Item";
 import { Input, Text } from "@chakra-ui/react";
+import { isEmpty } from "utils/validate";
 interface Props {
     datasource: Datasource
     onChange: any
@@ -27,7 +28,7 @@ const DatasourceEditor = ({ datasource, onChange }: Props) => {
         return
     }
 
-    if (!datasource.data) {
+    if (isEmpty(datasource.data)) {
         onChange(d => { d.data = defaultData})
         return 
     }

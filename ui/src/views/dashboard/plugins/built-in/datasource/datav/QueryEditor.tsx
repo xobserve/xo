@@ -14,7 +14,7 @@ import { Box, HStack, Input, Table, TableContainer, Tbody, Td, Text, Th, Thead, 
 import { Form } from "src/components/form/Form"
 import FormItem from "src/components/form/Item"
 import { cloneDeep } from "lodash"
-import {  useState } from "react"
+import { useState } from "react"
 import { PanelQuery } from "types/dashboard"
 import { DatasourceEditorProps } from "types/datasource"
 import React from "react";
@@ -43,23 +43,23 @@ const HttpQueryEditor = ({ panel, datasource, query, onChange }: DatasourceEdito
     }
 
     if (!tempQuery.data['format']) {
-        tempQuery.data['format'] = api?.format ??  DataFormat.Table
+        tempQuery.data['format'] = api?.format ?? DataFormat.Table
         const q = cloneDeep(tempQuery)
         setTempQuery(q)
         onChange(q)
     }
-    
+
     const [isMobileScreen] = useMediaQuery(MobileVerticalBreakpoint)
     return (<>
         <Form spacing={1}>
             <FormItem title="API" labelWidth="100px" size="sm" alignItems={isMobileScreen ? "start" : "center"} flexDirection={isMobileScreen ? "column" : "row"}>
                 <InputSelect value={tempQuery.metrics} options={apiList.map(api => ({ label: api.name, value: api.name, annotation: api.desc }))} annotationDir="vertical" onChange={v => {
-                    tempQuery.metrics = v 
+                    tempQuery.metrics = v
                     const api1 = apiList.find(api => api.name == v)
                     if (!tempQuery.data[v]) {
                         tempQuery.data[v] = {}
                     }
-                    if (!tempQuery.data[v]['params'] ) {
+                    if (!tempQuery.data[v]['params']) {
                         tempQuery.data[v]['params'] = api1.params
                     }
                     const q = cloneDeep(tempQuery)
@@ -103,7 +103,7 @@ const HttpQueryEditor = ({ panel, datasource, query, onChange }: DatasourceEdito
                 </Box>
             </FormItem>}
 
-            <SelectDataFormat tempQuery={tempQuery} setTempQuery={setTempQuery} onChange={onChange} labelWidth="100px"/>
+            <SelectDataFormat tempQuery={tempQuery} setTempQuery={setTempQuery} onChange={onChange} labelWidth="100px" />
         </Form>
     </>)
 }
@@ -121,7 +121,7 @@ const apiList = [{
     paramsDesc: [
         ["env", "environment name, such as dev, test, prod etc"],
         ["service", "filter by service names, e.g datav|driver"]
-]
+    ]
 },
 {
     name: "getServiceNames",
@@ -141,5 +141,18 @@ const apiList = [{
 }`,
     paramsDesc: [["env", "environment name, such as dev, test, prod etc"]],
     format: DataFormat.Table
+},
+{
+    name: "getLogs",
+    desc: "search logs with conditions",
+    params: `{
+    "env": "test",
+    "service": "datav"
+}`,
+    paramsDesc: [
+        ["env", "environment name, such as dev, test, prod etc"],
+        ["service", "filter by service names, e.g datav|driver"]
+    ],
+    format: DataFormat.Logs
 }
 ]
