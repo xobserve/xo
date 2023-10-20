@@ -16,7 +16,7 @@ import React, { memo, useMemo } from "react";
 import { DatavLogPanel } from "./types";
 import ColumnResizableTable from "components/table/ColumnResizableTable";
 import { ColumnDef } from "@tanstack/react-table";
-import { IsSmallScreen } from "src/data/constants";
+import { DatasourceMaxDataPoints, DatasourceMinInterval, IsSmallScreen } from "src/data/constants";
 import moment from "moment";
 import { isEmpty } from "utils/validate";
 import NoData from "src/views/dashboard/components/PanelNoData";
@@ -24,6 +24,12 @@ import DatavLogChart from "./Chart";
 import Search from "./Search";
 import { dateTimeFormat } from "utils/datetime/formatter";
 import { setDateTime } from "components/DatePicker/DatePicker";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { builtinDatasourcePlugins } from "../../plugins";
+import { $datasources } from "src/views/datasource/store";
+import { externalDatasourcePlugins } from "../../../external/plugins";
+import { cloneDeep } from "lodash";
+import { calculateInterval } from "utils/datetime/range";
 
 interface Props extends PanelProps {
     panel: DatavLogPanel
@@ -57,7 +63,7 @@ const PanelWrapper = memo((props: Props) => {
 
 export default PanelWrapper
 
-
+const queryClient = new QueryClient()
 const Panel = (props: Props) => {
     const { panel, data } = props
 
@@ -101,27 +107,53 @@ const Panel = (props: Props) => {
     ]), [isMobileScreen, wrapLine])
 
     const logs = useMemo(() => {
-        const logs = []
-        for (const log of data.logs) {
-            logs.push({
-                ...log,
-                timestamp: isMobileScreen ? moment(log.timestamp / 1e6).format("MM-DD hh:mm:ss") : dateTimeFormat(log.timestamp / 1e6, {format: "YY-MM-DD HH:mm:ss.SSS"})
-            })
-        }
-        return logs
+        return parseLogs(data, isMobileScreen)
     }, [isMobileScreen, data])
 
+    
+    const totalLogs = useMemo(() => {
+        const d: any[] = data.chart.data
+        return d.reduce((total, b) =>  {
+            return total + b[1]
+        }, 0)
+    },[data.chart])
+
     const onClickChart = (ts, level, step) => {
-        const from = Number(ts) 
+        const from = Number(ts)
         const to = Number(ts) + Number(step)
         setDateTime(from, to)
     }
+
+    const onLoadLogsPage = async (page) => {
+        const ds = $datasources.get().find(ds => ds.id == panel.datasource.id)
+        const plugin = builtinDatasourcePlugins[ds.type] ?? externalDatasourcePlugins[ds.type]
+        if (plugin) {
+            const query = cloneDeep(panel.datasource.queries[0])
+            const intervalObj = calculateInterval(props.timeRange, panel.datasource.queryOptions.maxDataPoints ?? DatasourceMaxDataPoints, isEmpty(panel.datasource.queryOptions.minInterval) ? DatasourceMinInterval : panel.datasource.queryOptions.minInterval)
+            query.interval = intervalObj.intervalMs / 1000
+     
+            const res = await plugin.runQuery(panel, query, props.timeRange, ds, {
+                page: page
+            })
+
+        
+            if (res.data.length > 0) {
+                const logs = parseLogs(res.data[0], isMobileScreen)
+                return logs
+            } else {
+                return []
+            }
+        }
+    }
+
     return (<Box px="2" height="100%" id="datav-log-panel" >
         <Search />
         {data.chart && <Box height="120px" mb="2">
-            <DatavLogChart panel={panel} width={props.width} data={data.chart} onClick={onClickChart}/>
+            <DatavLogChart panel={panel} width={props.width} data={data.chart} onClick={onClickChart} totalLogs={totalLogs} />
         </Box>}
-        <ColumnResizableTable columns={defaultColumns} data={logs} wrapLine={wrapLine} fontSize={13} allowOverflow={false} height={props.height + 'px'} />
+        <QueryClientProvider client={queryClient}>
+            <ColumnResizableTable columns={defaultColumns} data={logs} wrapLine={wrapLine} fontSize={13} allowOverflow={false} height={props.height + 'px'} totalRowCount={totalLogs} onLoadPage={onLoadLogsPage}/>
+        </QueryClientProvider>
     </Box>)
 }
 
@@ -132,4 +164,16 @@ const isLogData = (data: any) => {
     }
 
     return true
+}
+
+const parseLogs = (data, isMobileScreen) => {
+    const logs = []
+    for (const log of data.logs) {
+        logs.push({
+            ...log,
+            timestamp: isMobileScreen ? moment(log.timestamp / 1e6).format("MM-DD hh:mm:ss") : dateTimeFormat(log.timestamp / 1e6, { format: "YY-MM-DD HH:mm:ss.SSS" })
+        })
+    }
+
+    return logs
 }

@@ -27,10 +27,11 @@ interface Props {
     panel: Panel
     width: number
     onClick: any
+    totalLogs: number
 }
 
 const DatavLogChart = memo((props: Props) => {
-    const { panel, width, onClick } = props
+    const { panel, width, onClick, totalLogs } = props
     const [chart, setChart] = useState<echarts.ECharts>(null)
     const { colorMode } = useColorMode()
     const timelineCache = useRef<string[]>(null)
@@ -50,20 +51,15 @@ const DatavLogChart = memo((props: Props) => {
     }, [chart])
    
 
-    const [timeline, names, data, total] = useMemo(() =>{
+    const [timeline, names, data] = useMemo(() =>{
         const names = props.data.columns.slice(1)
        
         
         const data = []
-        let total = 0; 
-        props.data.columns.forEach((name, i) => {
-            data.push(props.data.data.map(d => {
-                if (i > 0) {
-                    total += d[i]
-                }
-                return d[i]
-            }))
+        props.data.columns.forEach((_, i) => {
+            data.push(props.data.data.map(d => d[i]))
         })
+
 
         const timeBucks = data[0]
         timeBucksCache.current = timeBucks
@@ -76,7 +72,7 @@ const DatavLogChart = memo((props: Props) => {
         timelineCache.current = timeline
         
 
-        return [timeline, names, data.slice(1), total]
+        return [timeline, names, data.slice(1)]
     },[props.data])
 
 
@@ -152,7 +148,7 @@ const DatavLogChart = memo((props: Props) => {
     };
 
     return (<>
-        <Text textStyle="annotation" mb="2" fontSize="0.8rem">{total} Results</Text>
+        <Text textStyle="annotation" mb="2" fontSize="0.8rem">{totalLogs} Results</Text>
         <ChartComponent key={colorMode} options={chartOptions} clearWhenSetOption theme={colorMode} onChartCreated={c => setChart(c)} width={width} />
     </>)
 })

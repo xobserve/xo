@@ -28,7 +28,7 @@ import { QueryPluginData, QueryPluginResult } from "types/plugin"
 import { queryPluginDataToLogs, queryPluginDataToTable, queryPluginDataToTimeSeries } from "utils/plugins"
 import { DataFormat } from "types/format"
 
-export const runQuery = async (panel: Panel, q: PanelQuery, range: TimeRange, ds: Datasource) => {
+export const runQuery = async (panel: Panel, q: PanelQuery, range: TimeRange, ds: Datasource, extraParams?: Record<string,any>) => {
     if (isEmpty(q.metrics)) {
         return {
             error: null,
@@ -40,12 +40,19 @@ export const runQuery = async (panel: Panel, q: PanelQuery, range: TimeRange, ds
     const end = roundDsTime(range.end.getTime() / 1000)
 
 
+    // clickhouse data has writing lacency, so we need to fetch data from 2 seconds before
+    let url = `/proxy/${ds.id}?query=${replaceWithVariables(q.metrics)}&params=${q.data[q.metrics].params}&start=${start}&end=${end-5}&step=${q.interval}`
+    if (!isEmpty(extraParams)) {
+        Object.entries(extraParams).forEach(v => {
+            url += `&${v[0]}=${v[1]}`
+        })
+    }
 
     const res: {
         status: string,
         error: string,
         data: QueryPluginResult
-    } = await requestApi.get(`/proxy/${ds.id}?query=${replaceWithVariables(q.metrics)}&params=${q.data[q.metrics].params}&start=${start}&end=${end}&step=${q.interval}`)
+    } = await requestApi.get(url)
     
     if (res.status !== "success" ) {
         console.log("Failed to fetch data from target datasource", res)

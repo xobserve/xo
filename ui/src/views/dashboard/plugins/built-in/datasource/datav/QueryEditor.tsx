@@ -118,7 +118,6 @@ const apiList = [{
     name: "getServiceInfoList",
     desc: "get service infos, such as p99 latency, errors, qps, render as a table",
     params: `{
-    "env": "prod"
 }`,
     paramsDesc: [
         ["env", "environment name, such as dev, test, prod etc"],
@@ -129,7 +128,6 @@ const apiList = [{
     name: "getServiceNames",
     desc: "get service names, can be used in variable values",
     params: `{
-    "env": "test"
 }`,
     paramsDesc: [["env", "environment name, such as dev, test, prod etc"]],
     format: DataFormat.Table
@@ -138,7 +136,6 @@ const apiList = [{
     name: "getServiceOperations",
     desc: "get service operations",
     params: `{
-    "env": "test",
     "service": "datav"
 }`,
     paramsDesc: [["env", "environment name, such as dev, test, prod etc"]],
@@ -148,12 +145,11 @@ const apiList = [{
     name: "getLogs",
     desc: "search logs with conditions",
     params: `{
-    "env": "test",
-    "service": "datav"
 }`,
     paramsDesc: [
         ["env", "environment name, such as dev, test, prod etc"],
-        ["service", "filter by service names, e.g datav|driver"]
+        ["service", "filter by service names, e.g datav|driver"],
+        ["perPage", "page size of logs when query from datasource, default is 100"]
     ],
     format: DataFormat.Logs
 }

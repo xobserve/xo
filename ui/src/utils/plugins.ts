@@ -170,23 +170,25 @@ export const queryPluginDataToLogs = (data: {
     const chartColumns = ["ts_bucket", "others", "errors"]
     const chartData = []
     const chartDataMap = {}
-
-    for (const row of data.chart.data) {
-        const ts = row[0]
-        const v = chartDataMap[ts]
-        if (!v) {
-            chartDataMap[ts] = {
-                [row[1]]: row[2]
+    
+    if (data.chart) {
+        for (const row of data.chart.data) {
+            const ts = row[0]
+            const v = chartDataMap[ts]
+            if (!v) {
+                chartDataMap[ts] = {
+                    [row[1]]: row[2]
+                }
+            } else {
+                v[row[1]] = row[2]
             }
-        } else {
-            v[row[1]] = row[2]
         }
+        Object.keys(chartDataMap).forEach(ts => {
+            const v = chartDataMap[ts]
+            chartData.push([ts, v["others"]??null, v["errors"]??null])
+        })    
     }
-    Object.keys(chartDataMap).forEach(ts => {
-        const v = chartDataMap[ts]
-        chartData.push([ts, v["others"]??null, v["errors"]??null])
-    })
-
+  
     return [{
         logs,
         chart: {

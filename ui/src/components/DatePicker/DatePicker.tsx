@@ -139,7 +139,6 @@ const DatePicker = ({ showTime = true, showRealTime = false,showIcon=true }: Pro
 
     const refresh = () => {
         const tr: TimeRange = updateTimeToNewest()
-        console.log("here333333:", tr)
         setValue(tr)
     }
 
