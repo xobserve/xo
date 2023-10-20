@@ -24,9 +24,10 @@ import { requestApi } from "utils/axios/request"
 import { isEmpty } from "utils/validate"
 import { roundDsTime } from "utils/datasource"
 import { $variables } from "src/views/variables/store"
-import { QueryPluginData, QueryPluginResult } from "types/plugin"
+import { QueryPluginResult } from "types/plugin"
 import { queryPluginDataToLogs, queryPluginDataToTable, queryPluginDataToTimeSeries } from "utils/plugins"
 import { DataFormat } from "types/format"
+import { $datavQueryParams } from "./store"
 
 export const runQuery = async (panel: Panel, q: PanelQuery, range: TimeRange, ds: Datasource, extraParams?: Record<string,any>) => {
     if (isEmpty(q.metrics)) {
@@ -47,6 +48,14 @@ export const runQuery = async (panel: Panel, q: PanelQuery, range: TimeRange, ds
             url += `&${v[0]}=${v[1]}`
         })
     }
+
+    const queryParams = $datavQueryParams.get()
+    if (!isEmpty(queryParams)) {
+        Object.entries(queryParams).forEach(v => {
+            url += `&${v[0]}=${v[1]}`
+        })
+    }
+
 
     const res: {
         status: string,

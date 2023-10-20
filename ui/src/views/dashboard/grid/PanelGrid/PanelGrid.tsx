@@ -22,7 +22,7 @@ import { Variable } from "types/variable";
 import { hasVariableFormat, replaceQueryWithVariables, replaceWithVariables } from "utils/variable";
 import useBus, { dispatch } from 'use-bus'
 import { getCurrentTimeRange } from "src/components/DatePicker/TimePicker";
-import { OnClonePanel, PanelDataEvent, PanelForceRebuildEvent, TimeChangedEvent, UpdatePanelEvent } from "src/data/bus-events";
+import { OnClonePanel, PanelDataEvent, PanelForceRebuildEvent, PanelForceRequeryEvent, TimeChangedEvent, UpdatePanelEvent } from "src/data/bus-events";
 import { addParamToUrl } from "utils/url";
 import PanelBorder from "src/components/largescreen/components/Border";
 import TitleDecoration from "src/components/largescreen/components/TitleDecoration";
@@ -71,6 +71,7 @@ interface PanelGridProps {
 
 export const PanelGrid = memo((props: PanelGridProps) => {
     const [forceRenderCount, setForceRenderCount] = useState(0)
+    const [forceQueryCount, setForceQueryCount] = useState(0)
     const [depsInited, setDepsInited] = useState(false)
     const [tr, setTr] = useState<TimeRange>(getCurrentTimeRange())
     const depsCheck = useRef(null)
@@ -117,16 +118,28 @@ export const PanelGrid = memo((props: PanelGridProps) => {
         }
     )
 
-
+    // rebuild pane ui
     useDedupEvent(PanelForceRebuildEvent + props.panel.id, () => {
         console.log("panel is forced to rebuild!", props.panel.id)
         setForceRenderCount(f => f + 1)
     })
 
+    // re-query panel data
+    useDedupEvent(PanelForceRequeryEvent + props.panel.id, () => {
+        console.log("panel is forced to rebuild!", props.panel.id)
+        for (const q of props.panel.datasource.queries) {
+            const id = formatQueryId(props.panel.datasource.id, props.dashboard.id, props.panel.id, q.id, props.panel.type)
+            prevQueries.delete(id)
+            prevQueryData.delete(id)
+        }
+
+        setForceQueryCount(f => f + 1)
+    })
+
 
     return (
         <>
-            {depsInited && <PanelComponent key={props.panel.id + forceRenderCount} {...props} timeRange={tr} variables={variables} />}
+            {depsInited && <PanelComponent key={props.panel.id + forceRenderCount} {...props} timeRange={tr} variables={variables} forceQuery={forceQueryCount} />}
         </>
     )
 })
@@ -136,11 +149,12 @@ interface PanelComponentProps extends PanelGridProps {
     height: number
     timeRange: TimeRange
     variables: Variable[]
+    forceQuery: number
 }
 
 export const prevQueries = new Map()
 export const prevQueryData = new Map()
-export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onHidePanel, width, height, sync, timeRange: timeRange0 }: PanelComponentProps) => {
+export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onHidePanel, width, height, sync, timeRange: timeRange0 ,forceQuery}: PanelComponentProps) => {
     const toast = useToast()
     const [panelData, setPanelData] = useState<any[]>(null)
     const [queryError, setQueryError] = useState<string>()
@@ -172,8 +186,7 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
         queryH.current = setTimeout(() => {
             queryData(panel, dashboard.id)
         }, 200)
-    }, [panel.datasource, timeRange0, variables, datasources, panel.enableScopeTime, panel.scopeTime])
-
+    }, [panel.datasource, timeRange0, variables, datasources, panel.enableScopeTime, panel.scopeTime, forceQuery])
 
 
     const queryData = async (panel: Panel, dashboardId: string) => {

@@ -15,7 +15,6 @@ import {
 } from '@tanstack/react-query'
 import { isEmpty } from 'utils/validate'
 import { cloneDeep } from 'lodash'
-import { on } from 'events'
 
 interface Props {
     totalRowCount: number
@@ -217,11 +216,11 @@ const getStyles = () => {
             position: 'relative',
             fontWeight: 'bold',
             textAlign: 'left',
-            height: '26px',
+            height: '23px',
         },
 
         'td,.td': {
-            height: '24px'
+            height: '22px'
         },
 
         '.resizer': {

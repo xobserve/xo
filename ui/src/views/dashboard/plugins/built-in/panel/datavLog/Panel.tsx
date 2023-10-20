@@ -146,14 +146,14 @@ const Panel = (props: Props) => {
         }
     }
 
-    const chartHeight = 120
+    const chartHeight = 100
     return (<Box px="2" height="100%" id="datav-log-panel" >
-        <Search />
-        {data.chart && <Box height={120} mb="2">
+        <Search panel={panel} />
+        {data.chart && <Box height={chartHeight} mb="2">
             <DatavLogChart panel={panel} width={props.width} data={data.chart} onClick={onClickChart} totalLogs={totalLogs} displayLogs={displayLogCount} />
         </Box>}
         <QueryClientProvider client={queryClient}>
-            <ColumnResizableTable columns={defaultColumns} data={logs} wrapLine={wrapLine} fontSize={13} allowOverflow={false} height={props.height - 120} totalRowCount={totalLogs} onLoadPage={onLoadLogsPage} onRowsCountChange={setDisplayLogs}/>
+            <ColumnResizableTable columns={defaultColumns} data={logs} wrapLine={wrapLine} fontSize={12} allowOverflow={false} height={props.height - chartHeight} totalRowCount={totalLogs} onLoadPage={onLoadLogsPage} onRowsCountChange={setDisplayLogs}/>
       
         </QueryClientProvider>
      

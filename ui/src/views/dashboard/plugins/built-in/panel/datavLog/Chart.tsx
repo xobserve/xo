@@ -94,7 +94,7 @@ const DatavLogChart = memo((props: Props) => {
             left: "1%",
             right: "3%",
             top: "6%",
-            bottom: '20%',
+            bottom: '35%',
             // padding: 0,
             containLabel: true
         },
@@ -122,7 +122,7 @@ const DatavLogChart = memo((props: Props) => {
                 show: false,
             },
             show: 'true',
-            splitNumber: 2,
+            splitNumber: 1,
             axisLabel: {
                 fontSize: 11
             }

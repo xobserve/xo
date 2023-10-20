@@ -11,23 +11,37 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Box, Button,  Text, useMediaQuery } from "@chakra-ui/react"
+import { Box, Text, useMediaQuery } from "@chakra-ui/react"
 import InputWithTips from "components/input/InputWithTips"
 import React, { useState } from "react"
 import { useSearchParam } from "react-use"
+import { PanelForceRequeryEvent } from "src/data/bus-events"
+import { Panel } from "types/dashboard"
+import { dispatch } from "use-bus"
+import { $datavQueryParams } from "../../datasource/datav/store"
 
-const Search = () => {
+interface Props {
+    panel: Panel
+}
+const Search = ({ panel }: Props) => {
     const [isSmallScreen] = useMediaQuery('(max-width: 1200px)')
     const isLargeScreen = !isSmallScreen
     const [query, setQuery] = useState('')
     const edit = useSearchParam("edit")
+
     const onSearch = () => {
-        console.log("here333333:", query)
+        const params = $datavQueryParams.get()
+        $datavQueryParams.set({
+            ...params,
+            search: query
+        })
+
+        dispatch(PanelForceRequeryEvent + panel.id)
     }
 
     const inputWidth = 500
-    return (<Box position={(isLargeScreen && !edit) ? "fixed" : null} left={(isLargeScreen&&!edit) ? `calc(50% - ${inputWidth / 2}px)` : null} top="5px" display="flex" alignItems="center" justifyContent="center" zIndex={1400} width={500}>
-        <InputWithTips placeholder="Search your logs, press Enter to submit..." width={isLargeScreen ? inputWidth: "100%"} value={query} onChange={setQuery} onConfirm={onSearch}>
+    return (<Box position={(isLargeScreen && !edit) ? "fixed" : null} left={(isLargeScreen && !edit) ? `calc(50% - ${inputWidth / 2}px)` : null} top="5px" display="flex" alignItems="center" justifyContent="center" zIndex={1400} width={500}>
+        <InputWithTips placeholder="Search your logs, press Enter to submit..." width={isLargeScreen ? inputWidth : "100%"} value={query} onChange={setQuery} onConfirm={onSearch}>
             <Text>aaaa</Text>
         </InputWithTips>
         {/* {!isLargeScreen && <Button size="sm" variant="outline">Submit</Button>} */}
