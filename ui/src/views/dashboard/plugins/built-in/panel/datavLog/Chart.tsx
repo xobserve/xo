@@ -28,10 +28,11 @@ interface Props {
     width: number
     onClick: any
     totalLogs: number
+    displayLogs: number
 }
 
 const DatavLogChart = memo((props: Props) => {
-    const { panel, width, onClick, totalLogs } = props
+    const { panel, width, onClick, totalLogs, displayLogs } = props
     const [chart, setChart] = useState<echarts.ECharts>(null)
     const { colorMode } = useColorMode()
     const timelineCache = useRef<string[]>(null)
@@ -148,7 +149,7 @@ const DatavLogChart = memo((props: Props) => {
     };
 
     return (<>
-        <Text textStyle="annotation" mb="2" fontSize="0.8rem">{totalLogs} Results</Text>
+        <Text textStyle="annotation" mb="2" fontSize="0.7rem" fontWeight={500}>{displayLogs} / {totalLogs} Results </Text>
         <ChartComponent key={colorMode} options={chartOptions} clearWhenSetOption theme={colorMode} onChartCreated={c => setChart(c)} width={width} />
     </>)
 })

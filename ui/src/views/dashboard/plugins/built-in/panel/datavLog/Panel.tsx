@@ -12,7 +12,7 @@
 // limitations under the License.
 import { Box, Center, Text, useMediaQuery, VStack } from "@chakra-ui/react"
 import { PanelProps } from "types/dashboard"
-import React, { memo, useMemo } from "react";
+import React, { memo, useMemo, useState } from "react";
 import { DatavLogPanel } from "./types";
 import ColumnResizableTable from "components/table/ColumnResizableTable";
 import { ColumnDef } from "@tanstack/react-table";
@@ -68,7 +68,7 @@ const Panel = (props: Props) => {
     const { panel, data } = props
 
     const [isMobileScreen] = useMediaQuery(IsSmallScreen)
-
+    const [displayLogCount, setDisplayLogs] = useState<number>(0)
     const wrapLine = false
 
     const defaultColumns: ColumnDef<any>[] = useMemo(() => ([
@@ -146,14 +146,17 @@ const Panel = (props: Props) => {
         }
     }
 
+    const chartHeight = 120
     return (<Box px="2" height="100%" id="datav-log-panel" >
         <Search />
-        {data.chart && <Box height="120px" mb="2">
-            <DatavLogChart panel={panel} width={props.width} data={data.chart} onClick={onClickChart} totalLogs={totalLogs} />
+        {data.chart && <Box height={120} mb="2">
+            <DatavLogChart panel={panel} width={props.width} data={data.chart} onClick={onClickChart} totalLogs={totalLogs} displayLogs={displayLogCount} />
         </Box>}
         <QueryClientProvider client={queryClient}>
-            <ColumnResizableTable columns={defaultColumns} data={logs} wrapLine={wrapLine} fontSize={13} allowOverflow={false} height={props.height + 'px'} totalRowCount={totalLogs} onLoadPage={onLoadLogsPage}/>
+            <ColumnResizableTable columns={defaultColumns} data={logs} wrapLine={wrapLine} fontSize={13} allowOverflow={false} height={props.height - 120} totalRowCount={totalLogs} onLoadPage={onLoadLogsPage} onRowsCountChange={setDisplayLogs}/>
+      
         </QueryClientProvider>
+     
     </Box>)
 }
 

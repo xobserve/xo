@@ -7,13 +7,15 @@ import {
     ColumnDef,
     flexRender,
 } from '@tanstack/react-table'
-import { Box, useColorModeValue } from '@chakra-ui/react'
+import { Box, Center, HStack, Spinner, Text, useColorModeValue } from '@chakra-ui/react'
 import { BsThreeDotsVertical } from 'react-icons/bs'
 import CustomScrollbar from 'components/CustomScrollbar/CustomScrollbar'
 import {
     useInfiniteQuery,
 } from '@tanstack/react-query'
 import { isEmpty } from 'utils/validate'
+import { cloneDeep } from 'lodash'
+import { on } from 'events'
 
 interface Props {
     totalRowCount: number
@@ -23,34 +25,42 @@ interface Props {
     wrapLine?: boolean
     stickyHeader?: boolean
     allowOverflow?: boolean
-    height: string
+    height: number
     onLoadPage?: any
+    onRowsCountChange?: any
 }
 
 const ColumnResizableTable = (props: Props) => {
 
-    const { columns, fontSize = 13, wrapLine = true, stickyHeader = true, allowOverflow = false, height = "100%", totalRowCount, onLoadPage } = props
+    const { columns, fontSize = 13, wrapLine = true, stickyHeader = true, allowOverflow = false, height = "100%", totalRowCount, onLoadPage, onRowsCountChange } = props
     const [initData, setInitData] = useState<Record<string, any>[]>([])
     const currentPage = useRef(1)
+    const tableContainerRef = React.useRef<HTMLDivElement>(null)
     useEffect(() => {
-        setInitData(props.data)
-        currentPage.current = 1
+        const dashGrid = document.getElementById("resizable-table-top")
+        dashGrid.scrollIntoView({ block: "center" })
+        setTimeout(() => {
+            setInitData(cloneDeep(props.data))
+            currentPage.current = 1
+            onRowsCountChange && onRowsCountChange(props.data.length)
+        }, 500)
+
         // refetch()
     }, [props.data])
 
     //we need a reference to the scrolling element for logic down below
-    const tableContainerRef = React.useRef<HTMLDivElement>(null)
+
     const totalFetched = initData.length
 
-    const { fetchNextPage, isFetching, isLoading, refetch } =
+    const { fetchNextPage, isFetching, isLoading } =
         useInfiniteQuery(
             ['table-data', []], //adding sorting state as key causes table to reset and fetch from new beginning upon sort
             async ({ pageParam = 0 }) => {
                 // const start = pageParam * fetchSize
                 // console.log("here333333:",start, totalFetched, fetchSize)
                 // if (start - totalFetched <= fetchSize) {
-                    const fetchedData = await fetchData() //pretend api call
-                    return fetchedData
+                const fetchedData = await fetchData() //pretend api call
+                return fetchedData
                 // }
             },
             {
@@ -65,12 +75,10 @@ const ColumnResizableTable = (props: Props) => {
             return
         }
 
-        console.log('here33333 on load page', currentPage.current)
-
-
-        const newPageData  = await onLoadPage(currentPage.current)
-        const d = [...initData,...newPageData]
+        const newPageData = await onLoadPage(currentPage.current)
+        const d = [...initData, ...newPageData]
         setInitData(d)
+        onRowsCountChange && onRowsCountChange(d.length)
         currentPage.current += 1
         return {
             data: d,
@@ -88,7 +96,7 @@ const ColumnResizableTable = (props: Props) => {
 
                 //once the user has scrolled within 300px of the bottom of the table, fetch more data if there is any
                 if (
-                    scrollHeight - scrollTop - clientHeight < 300 &&
+                    scrollHeight - scrollTop - clientHeight < 400 &&
                     !isFetching &&
                     totalFetched < totalRowCount
                 ) {
@@ -116,12 +124,13 @@ const ColumnResizableTable = (props: Props) => {
             >
                 <div
                     style={{
-                        height: height,
+                        height: height as number - (isFetching ? 40 : 0),
                         maxWidth: "100%",
                         //  overflowX: allowOverflow ? null : "hidden",
                     }}
                     ref={tableContainerRef}
                 >
+                    <div id="resizable-table-top" />
                     <table
                         style={{
                             width: "100%",
@@ -177,8 +186,22 @@ const ColumnResizableTable = (props: Props) => {
                             ))}
                         </tbody>
                     </table>
+
                 </div>
+
             </CustomScrollbar>
+            {isFetching && <Center> <HStack>
+                <Spinner
+                    speed='0.65s'
+                    emptyColor='gray.200'
+                    color='brand.500'
+                    size='sm'
+                />
+                <Text className="color-text">Loading logs...</Text>
+
+            </HStack>
+            </Center>}
+
         </Box >
     )
 }
