@@ -18,7 +18,7 @@ import IconButton from "../button/IconButton"
 import React, { useEffect, useState } from "react"
 import useBus, { dispatch } from "use-bus"
 import { SetTimeEvent, TimeChangedEvent, TimeRefreshEvent } from "src/data/bus-events"
-import { subMinutes } from "date-fns"
+import { subMinutes, subSeconds } from "date-fns"
 import storage from "utils/localStorage"
 import { addParamToUrl, getUrlParams } from "utils/url"
 import { Moment } from "moment"
@@ -139,6 +139,7 @@ const DatePicker = ({ showTime = true, showRealTime = false,showIcon=true }: Pro
 
     const refresh = () => {
         const tr: TimeRange = updateTimeToNewest()
+        console.log("here333333:", tr)
         setValue(tr)
     }
 
@@ -194,7 +195,12 @@ export const updateTimeToNewest = () => {
     const tr: TimeRange = getNewestTimeRange()
     if (tr.sub > 0) {
         const now = new Date()
-        tr.start = subMinutes(now, tr.sub)
+        if (tr.sub < 1) {
+            tr.start = subSeconds(now, tr.sub * 60)
+        } else {
+            tr.start = subMinutes(now, tr.sub)
+        }
+       
         tr.end = now
         storeTimerange(tr)
         dispatch({ type: TimeChangedEvent, data: tr })
