@@ -13,6 +13,10 @@ import (
 func GetConfigProvider(flagSet *flag.FlagSet) otelcol.ConfigProvider {
 	configFilePath, _ := flagSet.GetString("config")
 
+	if configFilePath == "" {
+		configFilePath = "./config/config.yaml"
+	}
+
 	providers := []confmap.Provider{
 		fileprovider.New(),
 	}

@@ -1,0 +1,12 @@
+httpreceiver:
+httpreceiver/endpoint:
+  # endpoint specifies the network interface and port which will receive data
+  endpoint: localhost:54321
+httpreceiver/withtls:
+  tls:
+    cert_file: /test.crt
+    key_file: /test.key
+httpreceiver/heroku:
+  source: heroku
+httpreceiver/google:
+  source: google

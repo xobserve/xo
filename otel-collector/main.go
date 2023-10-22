@@ -12,6 +12,7 @@ import (
 	"github.com/spf13/cobra"
 	flag "github.com/spf13/pflag"
 	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
 
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/featuregate"
@@ -85,4 +86,13 @@ func newCommand(params otelcol.CollectorSettings, flagSet *flag.FlagSet) *cobra.
 	}
 	rootCmd.Flags().AddFlagSet(flagSet)
 	return rootCmd
+}
+
+func initZapLog() (*zap.Logger, error) {
+	config := zap.NewProductionConfig()
+	config.EncoderConfig.EncodeLevel = zapcore.LowercaseLevelEncoder
+	config.EncoderConfig.TimeKey = "timestamp"
+	config.EncoderConfig.EncodeTime = zapcore.ISO8601TimeEncoder
+	logger, err := config.Build()
+	return logger, err
 }
