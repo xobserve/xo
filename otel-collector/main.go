@@ -1,91 +1,109 @@
 package main
 
 import (
+	"context"
 	"fmt"
-	"os"
-
 	"log"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
-	"github.com/DataObserve/datav/otel-collector/components"
-	"github.com/DataObserve/datav/otel-collector/pkg/config"
-	"github.com/DataObserve/datav/otel-collector/pkg/logger"
-	"github.com/spf13/cobra"
+	datavFeatureGate "github.com/DataObserve/datav/otel-collector/featuregate"
+	"github.com/DataObserve/datav/otel-collector/internal/collector"
+	"github.com/DataObserve/datav/otel-collector/internal/service"
+	"github.com/DataObserve/datav/otel-collector/pkg/constants"
 	flag "github.com/spf13/pflag"
+	otelcolFeatureGate "go.opentelemetry.io/collector/featuregate"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
-
-	"go.opentelemetry.io/collector/component"
-	"go.opentelemetry.io/collector/featuregate"
-	"go.opentelemetry.io/collector/otelcol"
 )
 
 func main() {
+
 	// Command line flags
-	flagSet, err := buildAndParseFlagSet(featuregate.GlobalRegistry())
+	f := flag.NewFlagSet("Collector CLI Options", flag.ExitOnError)
+
+	f.Usage = func() {
+		fmt.Println(f.FlagUsages())
+		os.Exit(0)
+	}
+
+	f.String("config", "", "File path for the collector configuration")
+	f.String("manager-config", "", "File path for the agent manager configuration")
+	f.String("copy-path", "/etc/otel/signozcol-config.yaml", "File path for the copied collector configuration")
+	f.Var(datavFeatureGate.NewFlag(otelcolFeatureGate.GlobalRegistry()), "feature-gates",
+		"Comma-delimited list of feature gate identifiers. Prefix with '-' to disable the feature. '+' or no prefix will enable the feature.")
+	err := f.Parse(os.Args[1:])
 	if err != nil {
 		log.Fatalf("Failed to parse args %v", err)
 	}
 
-	logger.SetupErrorLogger(flagSet)
-
-	info := component.BuildInfo{
-		Command:     "datav-otel-collector",
-		Description: "Datav OTel Collector",
-		Version:     "latest",
-	}
-	factories, err := components.Components()
+	logger, err := initZapLog()
 	if err != nil {
-		log.Fatalf("failed to build components %v", err)
-	}
-	params := otelcol.CollectorSettings{
-		Factories:      factories,
-		BuildInfo:      info,
-		LoggingOptions: []zap.Option{logger.WrapCoreOpt(flagSet)},
-		ConfigProvider: config.GetConfigProvider(flagSet),
+		log.Fatalf("failed to initialize zap logger: %v", err)
 	}
 
-	if err = run(params, flagSet); err != nil {
-		log.Fatal(err)
+	collectorConfig, _ := f.GetString("config")
+	if collectorConfig == "" {
+		collectorConfig = "./config/config.yaml"
 	}
-}
 
-func run(params otelcol.CollectorSettings, flagSet *flag.FlagSet) error {
-	return runInteractive(params, flagSet)
-}
-
-func buildAndParseFlagSet(featuregate *featuregate.Registry) (*flag.FlagSet, error) {
-	flagSet := config.Flags(featuregate)
-	if err := flagSet.Parse(os.Args[1:]); err != nil {
-		return nil, err
+	managerConfig, _ := f.GetString("manager-config")
+	copyPath, _ := f.GetString("copy-path")
+	if managerConfig != "" {
+		if err := copyConfigFile(collectorConfig, copyPath); err != nil {
+			logger.Fatal("Failed to copy config file %v", zap.Error(err))
+		}
+		collectorConfig = copyPath
 	}
-	return flagSet, nil
-}
 
-func runInteractive(params otelcol.CollectorSettings, flagSet *flag.FlagSet) error {
-	cmd := newCommand(params, flagSet)
-	err := cmd.Execute()
-	if err != nil {
-		return fmt.Errorf("application run finished with error: %w", err)
-	}
-	return nil
-}
+	ctx := context.Background()
 
-// newCommand constructs a new cobra.Command using the given settings.
-func newCommand(params otelcol.CollectorSettings, flagSet *flag.FlagSet) *cobra.Command {
-	rootCmd := &cobra.Command{
-		Use:          params.BuildInfo.Command,
-		Version:      params.BuildInfo.Version,
-		SilenceUsage: true,
-		RunE: func(cmd *cobra.Command, args []string) error {
-			col, err := otelcol.NewCollector(params)
-			if err != nil {
-				return fmt.Errorf("failed to construct the application: %w", err)
-			}
-			return col.Run(cmd.Context())
+	coll := collector.New(
+		collector.WrappedCollectorSettings{
+			ConfigPaths:  []string{collectorConfig},
+			Version:      constants.Version,
+			Desc:         constants.Desc,
+			LoggingOpts:  []zap.Option{zap.WithCaller(true)},
+			PollInterval: 200 * time.Millisecond,
 		},
+	)
+
+	svc, err := service.New(coll, logger, managerConfig, collectorConfig)
+	if err != nil {
+		logger.Fatal("failed to create collector service:", zap.Error(err))
 	}
-	rootCmd.Flags().AddFlagSet(flagSet)
-	return rootCmd
+
+	ctx, cancel := signal.NotifyContext(ctx, syscall.SIGINT, syscall.SIGTERM)
+	defer cancel()
+
+	if err := runInteractive(ctx, logger, svc); err != nil {
+		logger.Fatal("failed to run service:", zap.Error(err))
+	}
+}
+
+func runInteractive(ctx context.Context, logger *zap.Logger, svc service.Service) error {
+	if err := svc.Start(ctx); err != nil {
+		return fmt.Errorf("failed to start collector service: %w", err)
+	}
+
+	// Wait for context done or service error
+	select {
+	case <-ctx.Done():
+		logger.Info("Context done, shutting down...")
+	case err := <-svc.Error():
+		logger.Error("Service error, shutting down...", zap.Error(err))
+	}
+
+	stopTimeoutCtx, stopCancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer stopCancel()
+
+	if err := svc.Shutdown(stopTimeoutCtx); err != nil {
+		return fmt.Errorf("failed to stop service: %w", err)
+	}
+
+	return nil
 }
 
 func initZapLog() (*zap.Logger, error) {
@@ -95,4 +113,27 @@ func initZapLog() (*zap.Logger, error) {
 	config.EncoderConfig.EncodeTime = zapcore.ISO8601TimeEncoder
 	logger, err := config.Build()
 	return logger, err
+}
+
+func copyConfigFile(configPath string, copyPath string) error {
+	// Check if file exists
+	if _, err := os.Stat(configPath); os.IsNotExist(err) {
+		return fmt.Errorf("config file %s does not exist", configPath)
+	}
+
+	return copy(configPath, copyPath)
+}
+
+func copy(src, dest string) error {
+	data, err := os.ReadFile(src)
+	if err != nil {
+		return fmt.Errorf("failed to read source file %s: %w", src, err)
+	}
+
+	err = os.WriteFile(dest, data, 0600)
+	if err != nil {
+		return fmt.Errorf("failed to write to dest file %s: %w", dest, err)
+	}
+
+	return nil
 }
