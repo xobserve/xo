@@ -28,11 +28,11 @@ func GetLogs(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[str
 	}
 
 	logId := c.Query("logId")
-	ts := c.Query("ts")
+	logTs := c.Query("logTs")
 
 	if logId != "" {
 		// query logs
-		logsQuery := fmt.Sprintf(datavmodels.LogSelectSQL+" FROM %s.%s  where timestamp = '%s' AND id = '%s'", config.Data.Observability.DefaultLogDB, datavmodels.DefaultLogsTable, ts, logId)
+		logsQuery := fmt.Sprintf(datavmodels.LogSelectSQL+" FROM %s.%s  where timestamp = '%s' AND id = '%s'", config.Data.Observability.DefaultLogDB, datavmodels.DefaultLogsTable, logTs, logId)
 
 		rows, err := conn.Query(c.Request.Context(), logsQuery)
 		if err != nil {
