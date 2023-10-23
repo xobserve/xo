@@ -1,4 +1,4 @@
-query
+./query
 ./datav
 datav.db
 commit.sh
