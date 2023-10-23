@@ -166,10 +166,11 @@ export const PromLabelSelect = ({ dsId, metric, value, onChange, width = "220px"
         setLoading(true)
         const res = await queryPrometheusLabels(dsId, metric)
         setLoading(false)
-        if (res.error) {
+        if (res.error || !res.data) {
             setLabels([])
             return
         }
+
         setLabels(res.data)
     }
 
