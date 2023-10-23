@@ -1,5 +1,5 @@
 query
-datav
+./datav
 datav.db
 commit.sh
 testConfig.yaml
