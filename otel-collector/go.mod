@@ -21,7 +21,6 @@ require (
 	github.com/open-telemetry/opentelemetry-collector-contrib/exporter/kafkaexporter v0.87.0
 	github.com/open-telemetry/opentelemetry-collector-contrib/exporter/loadbalancingexporter v0.87.0
 	github.com/open-telemetry/opentelemetry-collector-contrib/exporter/opencensusexporter v0.87.0
-	github.com/open-telemetry/opentelemetry-collector-contrib/exporter/parquetexporter v0.87.0
 	github.com/open-telemetry/opentelemetry-collector-contrib/exporter/prometheusexporter v0.87.0
 	github.com/open-telemetry/opentelemetry-collector-contrib/exporter/prometheusremotewriteexporter v0.87.0
 	github.com/open-telemetry/opentelemetry-collector-contrib/exporter/pulsarexporter v0.87.0

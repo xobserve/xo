@@ -16,6 +16,7 @@ package clickhouselogsexporter
 
 import (
 	"context"
+
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -150,7 +151,6 @@ func (e *clickhouseLogsExporter) pushLogsData(ctx context.Context, ld plog.Logs)
 			resBytes, _ := json.Marshal(res.Attributes().AsRaw())
 
 			resources := attributesToSlice(res.Attributes(), true)
-
 			err := addAttrsToTagStatement(tagStatement, "resource", resources)
 			if err != nil {
 				return err
@@ -181,6 +181,9 @@ func (e *clickhouseLogsExporter) pushLogsData(ctx context.Context, ld plog.Logs)
 					if err != nil {
 						return err
 					}
+					namespace, _ := res.Attributes().Get("namespace")
+					service, _ := res.Attributes().Get("service_name")
+					host, _ := res.Attributes().Get("host_name")
 					err = statement.Append(
 						ts,
 						ots,
@@ -199,6 +202,9 @@ func (e *clickhouseLogsExporter) pushLogsData(ctx context.Context, ld plog.Logs)
 						attributes.IntValues,
 						attributes.FloatKeys,
 						attributes.FloatValues,
+						namespace.AsString(),
+						service.AsString(),
+						host.AsString(),
 					)
 					if err != nil {
 						return fmt.Errorf("StatementAppend:%w", err)
@@ -376,8 +382,14 @@ const (
 							attributes_int64_key,
 							attributes_int64_value,
 							attributes_float64_key,
-							attributes_float64_value
+							attributes_float64_value,
+							_namespace,
+							_service,
+							_host
 							) VALUES (
+								?,
+								?,
+								?,
 								?,
 								?,
 								?,
