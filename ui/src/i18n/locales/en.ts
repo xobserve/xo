@@ -70,6 +70,7 @@ export const commonMsg = i18n("common", {
   "styles": "Styles",
   "tags": "Tags",
   "copy": "Copy",
+  "more": "More...",
   "clone": "Clone",
   "copied": "Copied",
   "share": "Share",
@@ -157,15 +158,15 @@ export const miscMsg = i18n("misc", {
 })
 
 export const sidebarMsg = i18n("sidebar", {
-    "dashboard": "Dashboards",
-    "search": "Search",
-    "selectSidemenu": "Select Sidemenu",
-    "selectSideMenuTips": "Select a team sidemenu",
-    "themeChange": "Current theme - ",
-    "accountSetting": "User",
-    "adminPanel": "Admin Panel",
-    "currentLang": "Current Lang",
-    "newItem": "Add new item",
+  "dashboard": "Dashboards",
+  "search": "Search",
+  "selectSidemenu": "Select Sidemenu",
+  "selectSideMenuTips": "Select a team sidemenu",
+  "themeChange": "Current theme - ",
+  "accountSetting": "User",
+  "adminPanel": "Admin Panel",
+  "currentLang": "Current Lang",
+  "newItem": "Add new item",
 })
 
 
