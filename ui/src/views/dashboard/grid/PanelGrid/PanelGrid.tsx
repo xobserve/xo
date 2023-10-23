@@ -495,8 +495,25 @@ const PanelHeader = ({ dashboardId, queryError, panel, onCopyPanel, onRemovePane
                             variant='ghost'
                             disabled={embed}
                             _hover={{ background: null }}
+                            color={paletteColorNameToHex(panel.styles.title.color, colorMode)}
                         >
-                            <Center width="100%">{!isEmpty(title) ? <Box cursor="pointer" className="hover-bordered" paddingTop={panel.styles.title.paddingTop} paddingBottom={panel.styles.title.paddingBottom} paddingLeft={panel.styles.title.paddingLeft} paddingRight={panel.styles.title.paddingRight} width="100%" fontSize={panel.styles.title.fontSize} fontWeight={panel.styles.title.fontWeight} color={paletteColorNameToHex(panel.styles.title.color, colorMode)}><TitleDecoration styles={panel.styles}><Text noOfLines={1}>{title}</Text></TitleDecoration></Box> : <Box width="100px">&nbsp;</Box>}</Center>
+                            <Center width="100%">
+                                {!isEmpty(title) ?
+                                    <Box cursor="pointer" className="hover-bordered"
+                                        paddingTop={panel.styles.title.paddingTop} paddingBottom={panel.styles.title.paddingBottom}
+                                        paddingLeft={panel.styles.title.paddingLeft} paddingRight={panel.styles.title.paddingRight}
+                                        width="100%" fontSize={panel.styles.title.fontSize}
+                                        fontWeight={panel.styles.title.fontWeight}
+                                        color={paletteColorNameToHex(panel.styles.title.color, colorMode)}>
+                                        <TitleDecoration styles={panel.styles}>
+                                            <Text noOfLines={1}>
+                                                {title}
+                                            </Text>
+                                        </TitleDecoration>
+                                    </Box>
+                                    :
+                                    <Box width="100px">&nbsp;</Box>}
+                            </Center>
                         </Button>
                     </Dropdown>
                 </Center>
