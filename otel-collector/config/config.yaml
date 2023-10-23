@@ -19,8 +19,15 @@ receivers:
         to: body
       - type: regex_parser
         parse_from: body
-        regex: '.*(?P<severity_text>DEBUG|INFO|WARN|ERROR|FATAL).*$'
+        regex: '.*(?P<severity_text>(?i:DEBUG)|(?i:INFO)|(?i:ERROR)|(?i:FATAL)|(?i:ERR)).*$'
         if: body matches '.*DEBUG|INFO|WARN|ERROR|FATAL.*$'
+      - type: add
+        field: attributes.severity_text
+        value: DEFAULT
+        if: attributes.severity_text == nil
+      - type: severity_parser
+        parse_from: attributes.severity_text
+        if: attributes.severity_text != nil
       - type: copy
         from: attributes.container_name
         to: resource.service_name
@@ -30,6 +37,8 @@ receivers:
       - type: add
         field: resource.namespace
         value: default
+      - type: remove
+        field: attributes.severity_text
       - type: remove
         field: attributes.timestamp
       - type: move

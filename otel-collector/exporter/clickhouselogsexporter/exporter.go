@@ -176,7 +176,6 @@ func (e *clickhouseLogsExporter) pushLogsData(ctx context.Context, ld plog.Logs)
 					}
 
 					attributes := attributesToSlice(r.Attributes(), false)
-
 					err := addAttrsToTagStatement(tagStatement, "tag", attributes)
 					if err != nil {
 						return err
@@ -184,6 +183,7 @@ func (e *clickhouseLogsExporter) pushLogsData(ctx context.Context, ld plog.Logs)
 					namespace, _ := res.Attributes().Get("namespace")
 					service, _ := res.Attributes().Get("service_name")
 					host, _ := res.Attributes().Get("host_name")
+
 					err = statement.Append(
 						ts,
 						ots,
@@ -191,7 +191,7 @@ func (e *clickhouseLogsExporter) pushLogsData(ctx context.Context, ld plog.Logs)
 						utils.TraceIDToHexOrEmptyString(r.TraceID()),
 						utils.SpanIDToHexOrEmptyString(r.SpanID()),
 						uint32(r.Flags()),
-						r.SeverityText(),
+						strings.ToLower(r.SeverityText()),
 						uint8(r.SeverityNumber()),
 						getStringifiedBody(r.Body()),
 						resources.StringKeys,
