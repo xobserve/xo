@@ -417,40 +417,43 @@ const PanelHeader = ({ dashboardId, queryError, panel, onCopyPanel, onRemovePane
     const embed = useEmbed()
     const menuItems: MenuProps['items'] = [
         {
-            key: 'view',
-            icon: <FaRegEye />,
-            label: viewPanel ? t1.exitlView : t1.viewPanel,
-            onClick: () => addParamToUrl({ viewPanel: viewPanel ? null : panel.id }),
-        },
-        {
             key: 'edit',
             icon: <FaEdit />,
             label: t.edit,
             onClick: () => addParamToUrl({ edit: panel.id })
         },
         {
+            key: 'copy',
+            icon: <FaRegCopy />,
+            label: t.copy,
+            onClick: () => onCopyPanel(panel, "copy"),
+        },
+        {
+            key: 'clone',
+            icon: <FaRegClone />,
+            label: t.clone,
+            onClick: () => onCopyPanel(panel, "clone")
+        },
+        {
+            type: 'divider',
+        },
+        {
+            key: 'debug',
+            icon: <FaBug />,
+            label: t1.debugPanel,
+            onClick: onOpen,
+        },
+        {
+            key: 'view',
+            icon: <FaRegEye />,
+            label: viewPanel ? t1.exitlView : t1.viewPanel,
+            onClick: () => addParamToUrl({ viewPanel: viewPanel ? null : panel.id }),
+        },
+        {
             key: 'more',
             label: t.more,
             icon: <FaLayerGroup style={{ display: 'inline-block' }} />,
             children: [
-                {
-                    key: 'debug',
-                    icon: <FaBug />,
-                    label: t1.debugPanel,
-                    onClick: onOpen,
-                },
-                {
-                    key: 'copy',
-                    icon: <FaRegCopy />,
-                    label: t.copy,
-                    onClick: () => onCopyPanel(panel, "copy"),
-                },
-                {
-                    key: 'clone',
-                    icon: <FaRegClone />,
-                    label: t.clone,
-                    onClick: () => onCopyPanel(panel, "clone")
-                },
                 !viewPanel && {
                     key: 'hidden',
                     label: t1.hidePanel,
@@ -486,20 +489,22 @@ const PanelHeader = ({ dashboardId, queryError, panel, onCopyPanel, onRemovePane
                             mode: 'inline',
                             items: menuItems
                         }}
+                        trigger={['click']}
                         overlayStyle={{}}
                     >
                         <Button
                             transition='all 0.2s'
-                            _focus={{ border: null }}
+                            _focus={{ border: null, background: null }}
+                            _active={{ background: null, border: null, }}
                             onClick={e => e.preventDefault()}
                             variant='ghost'
                             disabled={embed}
-                            _hover={{ background: null }}
+                            _hover={{ background: null, border: null, }}
                             color={paletteColorNameToHex(panel.styles.title.color, colorMode)}
                         >
                             <Center width="100%">
                                 {!isEmpty(title) ?
-                                    <Box cursor="pointer" className="hover-bordered"
+                                    <Box cursor="pointer"
                                         paddingTop={panel.styles.title.paddingTop} paddingBottom={panel.styles.title.paddingBottom}
                                         paddingLeft={panel.styles.title.paddingLeft} paddingRight={panel.styles.title.paddingRight}
                                         width="100%" fontSize={panel.styles.title.fontSize}
