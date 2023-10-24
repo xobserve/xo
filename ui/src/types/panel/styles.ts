@@ -29,6 +29,7 @@ export interface PanelStyles {
         fontSize: string
         fontWeight: string
         color: string
+        align: "left" | "center"
         paddingTop:string
         paddingBottom:string 
         paddingLeft:string

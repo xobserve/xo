@@ -19,6 +19,7 @@ import { EditorInputItem, EditorNumberItem } from "../../../components/editor/Ed
 import PanelEditItem from "./PanelEditItem"
 import DecorationSelect from "src/components/largescreen/components/DecorationSelect"
 import BorderSelect from "src/components/largescreen/components/BorderSelect"
+import RadionButtons from "src/components/RadioButtons"
 import React from "react";
 import { useStore } from "@nanostores/react"
 import { commonMsg, panelMsg } from "src/i18n/locales/en"
@@ -43,21 +44,21 @@ const PanelStyles = ({ panel, onChange }: PanelEditorProps) => {
             {<PanelAccordion title={t.basic} defaultOpen>
                 <PanelEditItem title={t.palette} desc={t1.paletteTips}>
                     <VStack spacing={1} alignItems="left">
-                    {
-                        Object.keys(paletteMap).map(name => <HStack width="fit-content" spacing={0}  borderRadius={4} borderWidth={"2px"} borderColor={name != panel.styles.palette ? "transparent" : useColorModeValue("brand.300","brand.500")}  cursor="pointer" onClick={e => {
-                            onChange((panel:Panel) => {
-                                panel.styles.palette = name
-                            })
-                        }} >
-                            {
-                                paletteMap[name].map(color => <Box   width="15px" height="15px" borderRadius="50%"   style={{ backgroundColor: paletteColorNameToHex(color) }} />)
-                            }
-                        </HStack>)
-                    }
+                        {
+                            Object.keys(paletteMap).map(name => <HStack width="fit-content" spacing={0} borderRadius={4} borderWidth={"2px"} borderColor={name != panel.styles.palette ? "transparent" : useColorModeValue("brand.300", "brand.500")} cursor="pointer" onClick={e => {
+                                onChange((panel: Panel) => {
+                                    panel.styles.palette = name
+                                })
+                            }} >
+                                {
+                                    paletteMap[name].map(color => <Box width="15px" height="15px" borderRadius="50%" style={{ backgroundColor: paletteColorNameToHex(color) }} />)
+                                }
+                            </HStack>)
+                        }
                     </VStack>
                 </PanelEditItem>
                 <PanelEditItem title="width" desc="panel width in dashboard, value range is [1,24], 24 is the same as 100%">
-                    <EditorNumberItem min={1} max={24} step={1}  value={panel.gridPos.w} onChange={v => onChange(panel => {
+                    <EditorNumberItem min={1} max={24} step={1} value={panel.gridPos.w} onChange={v => onChange(panel => {
                         panel.gridPos.w = v
                     })} />
                 </PanelEditItem>
@@ -69,8 +70,8 @@ const PanelStyles = ({ panel, onChange }: PanelEditorProps) => {
                             panel.styles.border = v
                         })
                     }} />
-                    </PanelEditItem>
-                {panel.styles.border == PanelBorderType.None &&<PanelEditItem title={t1.borderOnHover}>
+                </PanelEditItem>
+                {panel.styles.border == PanelBorderType.None && <PanelEditItem title={t1.borderOnHover}>
                     <Switch defaultChecked={panel.styles.borderOnHover} onChange={e => {
                         const checked = e.currentTarget.checked
                         onChange(panel => {
@@ -80,23 +81,23 @@ const PanelStyles = ({ panel, onChange }: PanelEditorProps) => {
                 </PanelEditItem>}
 
                 <PanelEditItem title="Width reduction" desc="reduce panel width">
-                    <EditorNumberItem min={0} max={1000} step={1}  value={panel.styles.widthReduction} onChange={v => onChange(panel => {
-                        panel.styles.widthReduction= v
+                    <EditorNumberItem min={0} max={1000} step={1} value={panel.styles.widthReduction} onChange={v => onChange(panel => {
+                        panel.styles.widthReduction = v
                     })} />
                 </PanelEditItem>
                 <PanelEditItem title="Height reduction" desc="reduce panel height">
-                    <EditorNumberItem min={0} max={1000} step={1}  value={panel.styles.heightReduction} onChange={v => onChange(panel => {
-                        panel.styles.heightReduction= v
+                    <EditorNumberItem min={0} max={1000} step={1} value={panel.styles.heightReduction} onChange={v => onChange(panel => {
+                        panel.styles.heightReduction = v
                     })} />
                 </PanelEditItem>
                 <PanelEditItem title="Margin left">
-                    <EditorNumberItem min={0} max={1000} step={1}  value={panel.styles.marginLeft} onChange={v => onChange(panel => {
-                        panel.styles.marginLeft= v
+                    <EditorNumberItem min={0} max={1000} step={1} value={panel.styles.marginLeft} onChange={v => onChange(panel => {
+                        panel.styles.marginLeft = v
                     })} />
                 </PanelEditItem>
                 <PanelEditItem title="Margin top">
-                    <EditorNumberItem min={0} max={1000} step={1}  value={panel.styles.marginTop} onChange={v => onChange(panel => {
-                        panel.styles.marginTop= v
+                    <EditorNumberItem min={0} max={1000} step={1} value={panel.styles.marginTop} onChange={v => onChange(panel => {
+                        panel.styles.marginTop = v
                     })} />
                 </PanelEditItem>
             </PanelAccordion>
@@ -145,6 +146,11 @@ const PanelStyles = ({ panel, onChange }: PanelEditorProps) => {
                 <PanelEditItem title="color">
                     <ColorPicker color={panel.styles.title.color} onChange={c => onChange((panel: Panel) => {
                         panel.styles.title.color = c
+                    })} />
+                </PanelEditItem>
+                <PanelEditItem title="align">
+                    <RadionButtons options={[{ label: "left", value: "left" }, { label: "center", value: "center" }]} value={panel.styles.title.align} onChange={v => onChange((panel: Panel) => {
+                        panel.styles.title.align = v
                     })} />
                 </PanelEditItem>
                 <PanelEditItem title="padding top">

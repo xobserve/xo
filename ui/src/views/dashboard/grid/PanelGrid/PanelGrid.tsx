@@ -12,7 +12,7 @@
 // limitations under the License.
 import { Dashboard, Panel, PanelProps, PanelQuery } from "types/dashboard"
 import { Box, Center, HStack, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Popover, PopoverArrow, PopoverBody, PopoverContent, PopoverTrigger, Portal, Text, Tooltip, useColorMode, useColorModeValue, useDisclosure, useToast } from "@chakra-ui/react";
-import { FaBook, FaBug, FaEdit, FaRegClock, FaRegClone, FaRegCopy, FaRegEye, FaRegEyeSlash, FaTrashAlt } from "react-icons/fa";
+import { FaBug, FaEdit, FaRegClock, FaEllipsisV, FaRegClone, FaRegCopy, FaRegEye, FaRegEyeSlash, FaTrashAlt } from "react-icons/fa";
 import { IoMdInformation } from "react-icons/io";
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { DatasourceMaxDataPoints, DatasourceMinInterval, PANEL_HEADER_HEIGHT } from "src/data/constants";
@@ -56,6 +56,7 @@ import { PanelTypeGraph } from "../../plugins/built-in/panel/graph/types";
 import { DatasourceTypeTestData } from "../../plugins/built-in/datasource/testdata/types";
 import PanelDatePicker from "../../components/PanelDatePicker";
 import useEmbed from "hooks/useEmbed";
+import { css } from "@emotion/react";
 
 interface PanelGridProps {
     dashboard: Dashboard
@@ -154,7 +155,7 @@ interface PanelComponentProps extends PanelGridProps {
 
 export const prevQueries = new Map()
 export const prevQueryData = new Map()
-export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onHidePanel, width, height, sync, timeRange: timeRange0 ,forceQuery}: PanelComponentProps) => {
+export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onHidePanel, width, height, sync, timeRange: timeRange0, forceQuery }: PanelComponentProps) => {
     const toast = useToast()
     const [panelData, setPanelData] = useState<any[]>(null)
     const [queryError, setQueryError] = useState<string>()
@@ -360,7 +361,14 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
         return res
     }, [panel.transform, panel.enableTransform, panelData])
 
-    return <Box height={height} width={width} className={(panel.styles.border == "Normal" && "bordered") + (dashboard.data.styles.bgEnabled ? " panel-bg-alpha" : " panel-bg")} position="relative">
+    return <Box height={height}
+        width={width}
+        className={(panel.styles.border == "Normal" && "bordered") + (dashboard.data.styles.bgEnabled ? " panel-bg-alpha" : " panel-bg")}
+        css={css`
+    &: hover .show-on-hover {
+        visibility: visible
+    }`}
+        position="relative">
 
         {data && <Box overflow="hidden">
             <PanelHeader dashboardId={dashboard.id} panel={panel} data={panelData} queryError={queryError} onCopyPanel={onCopyPanel} onRemovePanel={onRemovePanel} onHidePanel={onHidePanel} />
@@ -377,24 +385,6 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
 
         </Box>}
         {loading && <Box position="absolute" top="0" right="0"><Loading size="sm" /></Box>}
-        {!loading && panel.enableScopeTime && <Popover trigger="hover"> 
-            <PopoverTrigger>
-                <Box position="absolute" top="5px" right="5px" opacity="0.5" fontSize="0.8rem" zIndex={1000} cursor="pointer"><FaRegClock /></Box>
-            </PopoverTrigger>
-            <PopoverContent>
-                <PopoverArrow /> 
-                <PopoverBody>
-                    <PanelDatePicker id={panel.id.toString()} timeRange={panel.scopeTime} onChange={tr => {
-                        panel.scopeTime = tr
-                        dispatch({
-                            type: UpdatePanelEvent,
-                            data: cloneDeep(panel)
-                        })
-                    }}  showIcon/>
-                    <Text opacity={0.7} mt="2" ml="3" fontSize="0.9rem">Panel time range</Text>
-                </PopoverBody>
-            </PopoverContent>
-        </Popover>}
         <Box position="absolute" top="0" left="0" right="0" bottom="0" zIndex={-1} overflow="hidden"><PanelBorder width={width} height={height} border={panel.styles?.border} > <Box></Box></PanelBorder></Box>
     </Box>
 }
@@ -437,15 +427,51 @@ const PanelHeader = ({ dashboardId, queryError, panel, onCopyPanel, onRemovePane
                         </Box>
                     </Tooltip>
                 </Box>}
-                <Center width="100%">
-                    <Menu placement="bottom">
+                <Box width={'100%'}>{!isEmpty(title) ?
+                    <Box
+                        paddingTop={panel.styles.title.paddingTop}
+                        paddingBottom={panel.styles.title.paddingBottom}
+                        paddingLeft={panel.styles.title.paddingLeft}
+                        paddingRight={panel.styles.title.paddingRight}
+                        fontSize={panel.styles.title.fontSize}
+                        fontWeight={panel.styles.title.fontWeight}
+                        color={paletteColorNameToHex(panel.styles.title.color, colorMode)}>
+                        <TitleDecoration styles={panel.styles}>
+                            <Text noOfLines={1}>{title}</Text>
+                        </TitleDecoration>
+                    </Box> : <Box width="100px">&nbsp;</Box>}</Box>
+
+                <HStack position="absolute" right={2} visibility={'hidden'} className="show-on-hover">
+                    {panel.enableScopeTime && <Popover trigger="hover">
+                        <PopoverTrigger>
+                            <Box opacity="0.5" padding={1} fontSize="0.8rem" zIndex={1000} cursor="pointer">
+                                <FaRegClock />
+                            </Box>
+                        </PopoverTrigger>
+                        <PopoverContent>
+                            <PopoverArrow />
+                            <PopoverBody>
+                                <PanelDatePicker id={panel.id.toString()} timeRange={panel.scopeTime} onChange={tr => {
+                                    panel.scopeTime = tr
+                                    dispatch({
+                                        type: UpdatePanelEvent,
+                                        data: cloneDeep(panel)
+                                    })
+                                }} showIcon />
+                                <Text opacity={0.7} mt="2" ml="3" fontSize="0.9rem">Panel time range</Text>
+                            </PopoverBody>
+                        </PopoverContent>
+                    </Popover>}
+                    <Menu placement="bottom" isLazy>
                         <MenuButton
                             transition='all 0.2s'
                             _focus={{ border: null }}
                             onClick={e => e.stopPropagation()}
                             disabled={embed}
                         >
-                            <Center width="100%">{!isEmpty(title) ? <Box cursor="pointer" className="hover-bordered" paddingTop={panel.styles.title.paddingTop} paddingBottom={panel.styles.title.paddingBottom} paddingLeft={panel.styles.title.paddingLeft} paddingRight={panel.styles.title.paddingRight} width="100%" fontSize={panel.styles.title.fontSize} fontWeight={panel.styles.title.fontWeight} color={paletteColorNameToHex(panel.styles.title.color, colorMode)}><TitleDecoration styles={panel.styles}><Text noOfLines={1}>{title}</Text></TitleDecoration></Box> : <Box width="100px">&nbsp;</Box>}</Center>
+                            <Box opacity="0.5" padding={1} fontSize="0.8rem" zIndex={1000} cursor="pointer">
+                                <FaEllipsisV />
+                            </Box>
                         </MenuButton>
                         <Portal>
                             <MenuList p="1" zIndex={1500}>
@@ -466,8 +492,8 @@ const PanelHeader = ({ dashboardId, queryError, panel, onCopyPanel, onRemovePane
                             </MenuList>
                         </Portal>
                     </Menu>
-                </Center>
-                {/* <Box display="none"><FaBook className="grid-drag-handle" /></Box> */}
+                </HStack>
+
             </HStack>
             <PanelDecoration decoration={panel.styles.decoration} />
             {isOpen && <DebugPanel dashboardId={dashboardId} panel={panel} isOpen={isOpen} onClose={onClose} data={data} />}

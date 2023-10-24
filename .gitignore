@@ -3,3 +3,4 @@ build
 release
 .vscode
 .vite
+ui/package-lock.json
