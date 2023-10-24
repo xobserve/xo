@@ -72,9 +72,9 @@ const AddPanel = ({ dashboard, onChange }: Props) => {
                 <IconButton variant="ghost"><PanelAdd size={28} fill={useColorModeValue("var(--chakra-colors-brand-500)", "var(--chakra-colors-brand-200)")} /></IconButton>
             </MenuButton>
             <MenuList>
-                <MenuItem onClick={() => onAddPanel(false)}>{t1.addPanel}</MenuItem>
-                <MenuItem onClick={() => onAddPanel(true)}>Add Row</MenuItem>
-                <MenuItem onClick={() => { onPastePanel() }} isDisabled={isEmpty(copiedPanel)}>{t1.pastePanel}</MenuItem>
+                <MenuItem fontSize="0.9rem" onClick={() => onAddPanel(false)}>{t1.addPanel}</MenuItem>
+                <MenuItem fontSize="0.9rem"  onClick={() => onAddPanel(true)}>Add Row</MenuItem>
+                <MenuItem  fontSize="0.9rem"  onClick={() => { onPastePanel() }} isDisabled={isEmpty(copiedPanel)}>{t1.pastePanel}</MenuItem>
             </MenuList>
         </Menu>
     </>)

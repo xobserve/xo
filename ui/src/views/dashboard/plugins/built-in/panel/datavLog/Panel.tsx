@@ -17,12 +17,10 @@ import { DatavLogPanel } from "./types";
 import ColumnResizableTable from "components/table/ColumnResizableTable";
 import { ColumnDef } from "@tanstack/react-table";
 import { DatasourceMaxDataPoints, DatasourceMinInterval, IsSmallScreen } from "src/data/constants";
-import moment from "moment";
 import { isEmpty } from "utils/validate";
 import NoData from "src/views/dashboard/components/PanelNoData";
 import DatavLogChart from "./Chart";
 import Search from "./Search";
-import { dateTimeFormat } from "utils/datetime/formatter";
 import { setDateTime } from "components/DatePicker/DatePicker";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { builtinDatasourcePlugins } from "../../plugins";
@@ -33,6 +31,7 @@ import { calculateInterval } from "utils/datetime/range";
 import { DataFormat } from "types/format";
 import LogDetail from "./LogDetail";
 import { Field } from "types/seriesData";
+import { formatLogTimestamp } from "./utils";
 
 interface Props extends PanelProps {
     panel: DatavLogPanel
@@ -183,12 +182,15 @@ const Panel = (props: Props) => {
                 <DatavLogChart panel={panel} width={props.width} data={data.chart} onClick={onClickChart} totalLogs={totalLogs} displayLogs={displayLogCount} />
             </Box>}
             <QueryClientProvider client={queryClient}>
-                <ColumnResizableTable columns={defaultColumns} data={logs} wrapLine={wrapLine} fontSize={12} allowOverflow={false} height={props.height - chartHeight} totalRowCount={totalLogs} onLoadPage={onLoadLogsPage} onRowsCountChange={setDisplayLogs} onRowClick={onLogRowClick} />
+                <ColumnResizableTable highlightRow={selectedLog?.find(f=> f.name == "id").values[0]} columns={defaultColumns} data={logs} wrapLine={wrapLine} fontSize={12} allowOverflow={false} height={props.height - chartHeight} totalRowCount={totalLogs} onLoadPage={onLoadLogsPage} onRowsCountChange={setDisplayLogs} onRowClick={onLogRowClick} />
 
             </QueryClientProvider>
 
         </Box>
-        {selectedLog && <LogDetail log={selectedLog} isOpen={isOpen} onClose={onClose} />}
+        {selectedLog && <LogDetail log={selectedLog} isOpen={isOpen} onClose={() => {
+            // setSelectedLog(null)
+            onClose()
+        }} />}
     </>)
 }
 
@@ -206,7 +208,7 @@ const parseLogs = (data, isMobileScreen) => {
     for (const log of data.logs) {
         logs.push({
             ...log,
-            timestamp: isMobileScreen ? moment(log.timestamp / 1e6).format("MM-DD hh:mm:ss") : dateTimeFormat(log.timestamp / 1e6, { format: "YY-MM-DD HH:mm:ss.SSS" })
+            timestamp: formatLogTimestamp(log.timestamp, isMobileScreen)
         })
     }
 

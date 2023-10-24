@@ -28,11 +28,12 @@ interface Props {
     onLoadPage?: any
     onRowsCountChange?: any
     onRowClick?: any
+    highlightRow?: string
 }
 
 const ColumnResizableTable = (props: Props) => {
 
-    const { columns, fontSize = 13, wrapLine = true, stickyHeader = true, allowOverflow = false, height = "100%", totalRowCount, onLoadPage, onRowsCountChange, onRowClick } = props
+    const { columns, fontSize = 13, wrapLine = true, stickyHeader = true, allowOverflow = false, height = "100%", totalRowCount, onLoadPage, onRowsCountChange, onRowClick ,highlightRow} = props
     const [initData, setInitData] = useState<Record<string, any>[]>([])
     const currentPage = useRef(1)
     const tableContainerRef = React.useRef<HTMLDivElement>(null)
@@ -169,7 +170,7 @@ const ColumnResizableTable = (props: Props) => {
                         </thead>
                         <tbody>
                             {table.getRowModel().rows.map(row => (
-                                <tr key={row.id} className="hover-text" style={{ cursor: "pointer" }} onClick={() => onRowClick(row.original)}>
+                                <tr key={row.id} className={highlightRow == row.original.id ? "hover-text color-text" : "hover-text"} style={{ cursor: "pointer" }} onClick={() => onRowClick(row.original)}>
                                     {row.getVisibleCells().map(cell => (
                                         <td
                                             className={wrapLine ? "" : "text-truncate"}

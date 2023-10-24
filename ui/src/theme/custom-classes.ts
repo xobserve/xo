@@ -20,7 +20,7 @@ export function customClasses(props) {
             color: mode('black', 'white')(props)
         },
         ".hover-text:hover": {
-            color: mode('brand.500', 'brand.500')(props),
+            color: mode('brand.500', 'brand.300')(props),
             opacity: 1
         },
         ".label-bg": {
@@ -96,8 +96,8 @@ export function customClasses(props) {
         },
         ".color-text": {
             color: mode(
-                'var(--chakra-colors-brand-600)',
-                'var(--chakra-colors-brand-200)'
+                'var(--chakra-colors-brand-500)',
+                'var(--chakra-colors-brand-300)'
             )(props)
         },
         ".annotation-text": {
