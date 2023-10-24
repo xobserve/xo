@@ -53,11 +53,11 @@ const Search = ({ panel }: Props) => {
         [query]
     )
 
-    const onSearch = (q?) => {
+    const onSearch = (q?:string) => {
         const params = $datavQueryParams.get()
         $datavQueryParams.set({
             ...params,
-            search: q??query
+            search: (q??query).toLowerCase()
         })
 
         dispatch(PanelForceRequeryEvent + panel.id)

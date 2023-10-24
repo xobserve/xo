@@ -85,7 +85,7 @@ export function customClasses(props) {
         },
         ".tag-bg": {
             background: mode(
-                'var(--chakra-colors-brand-500)',
+                'var(--chakra-colors-brand-50)',
                 "rgba(157, 236, 249, 0.16)"
             )(props),
             color: mode(

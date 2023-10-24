@@ -80,7 +80,7 @@ const Panel = (props: Props) => {
     const defaultColumns: ColumnDef<any>[] = useMemo(() => ([
         {
             accessorKey: 'timestamp',
-            header: 'Timestamp',
+            header: 'timestamp',
             size: isMobileScreen ? 100 : 170,
             cell: info => <Text opacity={0.7} fontWeight={550} fontSize={12}>{info.getValue() as any}</Text>,
         },
@@ -93,7 +93,7 @@ const Panel = (props: Props) => {
 
         {
             accessorKey: 'severity',
-            header: "Severity",
+            header: "severity",
             cell: info => {
                 const severity = info.getValue() as any
                 return <Text className={severity == "error" && "error-text"}>{severity}</Text>
@@ -102,12 +102,12 @@ const Panel = (props: Props) => {
         },
         {
             accessorKey: 'service',
-            header: "Service",
+            header: "service",
             size: isMobileScreen ? 150 : 120
         },
         {
             accessorKey: 'body',
-            header: 'Body',
+            header: 'body',
             size: wrapLine ? 500 : 800
         }
     ]), [isMobileScreen, wrapLine])
