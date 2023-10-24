@@ -24,25 +24,29 @@ import React from "react";
 import { useStore } from "@nanostores/react"
 import { commonMsg, panelMsg } from "src/i18n/locales/en"
 import { paletteColorNameToHex, paletteMap } from "utils/colors"
+import { PanelTypeBar } from "../plugins/built-in/panel/bar/types"
+import { PanelTypeGraph } from "../plugins/built-in/panel/graph/types"
+import { PanelTypeEcharts } from "../plugins/built-in/panel/echarts/types"
+import { PanelTypePie } from "../plugins/built-in/panel/pie/types"
 
 const PanelStyles = ({ panel, onChange }: PanelEditorProps) => {
     const t = useStore(commonMsg)
     const t1 = useStore(panelMsg)
-    // let usePalette = false 
-    // switch (panel.type) {
-    //     case PanelType.Bar:
-    //     case PanelType.Graph:
-    //     case PanelType.Echarts:
-    //     case PanelType.Pie:
-    //         usePalette =true
-    //         break;
-    //     default:
-    //         break;
-    // }
+    let usePalette = false
+    switch (panel.type) {
+        case PanelTypeBar:
+        case PanelTypeGraph:
+        case PanelTypeEcharts:
+        case PanelTypePie:
+            usePalette = true
+            break;
+        default:
+            break;
+    }
     return (
         <>
             {<PanelAccordion title={t.basic} defaultOpen>
-                <PanelEditItem title={t.palette} desc={t1.paletteTips}>
+                {usePalette && <PanelEditItem title={t.palette} desc={t1.paletteTips}>
                     <VStack spacing={1} alignItems="left">
                         {
                             Object.keys(paletteMap).map(name => <HStack width="fit-content" spacing={0} borderRadius={4} borderWidth={"2px"} borderColor={name != panel.styles.palette ? "transparent" : useColorModeValue("brand.300", "brand.500")} cursor="pointer" onClick={e => {
@@ -57,82 +61,15 @@ const PanelStyles = ({ panel, onChange }: PanelEditorProps) => {
                         }
                     </VStack>
                 </PanelEditItem>
+                }
                 <PanelEditItem title="width" desc="panel width in dashboard, value range is [1,24], 24 is the same as 100%">
                     <EditorNumberItem min={1} max={24} step={1} value={panel.gridPos.w} onChange={v => onChange(panel => {
                         panel.gridPos.w = v
                     })} />
                 </PanelEditItem>
             </PanelAccordion>}
-            <PanelAccordion title={t1.panelBorder} defaultOpen>
-                <PanelEditItem title={t1.borderType}>
-                    <BorderSelect value={panel.styles?.border} onChange={v => {
-                        onChange(panel => {
-                            panel.styles.border = v
-                        })
-                    }} />
-                </PanelEditItem>
-                {panel.styles.border == PanelBorderType.None && <PanelEditItem title={t1.borderOnHover}>
-                    <Switch defaultChecked={panel.styles.borderOnHover} onChange={e => {
-                        const checked = e.currentTarget.checked
-                        onChange(panel => {
-                            panel.styles.borderOnHover = checked
-                        })
-                    }} />
-                </PanelEditItem>}
 
-                <PanelEditItem title="Width reduction" desc="reduce panel width">
-                    <EditorNumberItem min={0} max={1000} step={1} value={panel.styles.widthReduction} onChange={v => onChange(panel => {
-                        panel.styles.widthReduction = v
-                    })} />
-                </PanelEditItem>
-                <PanelEditItem title="Height reduction" desc="reduce panel height">
-                    <EditorNumberItem min={0} max={1000} step={1} value={panel.styles.heightReduction} onChange={v => onChange(panel => {
-                        panel.styles.heightReduction = v
-                    })} />
-                </PanelEditItem>
-                <PanelEditItem title="Margin left">
-                    <EditorNumberItem min={0} max={1000} step={1} value={panel.styles.marginLeft} onChange={v => onChange(panel => {
-                        panel.styles.marginLeft = v
-                    })} />
-                </PanelEditItem>
-                <PanelEditItem title="Margin top">
-                    <EditorNumberItem min={0} max={1000} step={1} value={panel.styles.marginTop} onChange={v => onChange(panel => {
-                        panel.styles.marginTop = v
-                    })} />
-                </PanelEditItem>
-            </PanelAccordion>
-            <PanelAccordion title={t1.titleDecoration}>
-                <PanelEditItem title="type">
-                    <Select size="sm" value={panel.styles?.title?.decoration.type} onChange={e => {
-                        const v = e.currentTarget.value
-                        onChange(panel => {
-                            panel.styles.title.decoration.type = v
-                        })
-                    }}>
-                        {
-                            Object.keys(PanelTitleDecorationType).map(key => <option value={PanelTitleDecorationType[key]}>{key}</option>)
-                        }
-                    </Select>
-                </PanelEditItem>
-                <PanelEditItem title="width">
-                    <EditorInputItem type="input" value={panel.styles.title?.decoration.width} onChange={v => onChange(panel => {
-                        panel.styles.title.decoration.width = v
-                    })} />
-                </PanelEditItem>
-                <PanelEditItem title="height">
-                    <EditorInputItem type="input" value={panel.styles.title?.decoration.height} onChange={v => onChange(panel => {
-                        panel.styles.title.decoration.height = v
-                    })} />
-                </PanelEditItem>
-                <PanelEditItem title="margin">
-                    <EditorInputItem type="input" value={panel.styles.title?.decoration.margin} onChange={v => onChange(panel => {
-                        panel.styles.title.decoration.margin = v
-                    })} />
-                </PanelEditItem>
-                {/* <NumberInputItem target={panel.styles.title?.decoration} attr="width" onChange={onChange} title="width" min={0} max={100} /> */}
-            </PanelAccordion>
-
-            <PanelAccordion title={t1.titleStyles}>
+            <PanelAccordion title={t1.titleStyles} defaultOpen={false}>
                 <PanelEditItem title="font size">
                     <EditorInputItem type="input" value={panel.styles.title?.fontSize} onChange={v => onChange(panel => {
                         panel.styles.title.fontSize = v
@@ -175,7 +112,77 @@ const PanelStyles = ({ panel, onChange }: PanelEditorProps) => {
                 </PanelEditItem>
             </PanelAccordion>
 
-            <PanelAccordion title={t1.panelDecoration}>
+            <PanelAccordion title={t1.titleDecoration} defaultOpen={false}>
+                <PanelEditItem title="type">
+                    <Select size="sm" value={panel.styles?.title?.decoration.type} onChange={e => {
+                        const v = e.currentTarget.value
+                        onChange(panel => {
+                            panel.styles.title.decoration.type = v
+                        })
+                    }}>
+                        {
+                            Object.keys(PanelTitleDecorationType).map(key => <option value={PanelTitleDecorationType[key]}>{key}</option>)
+                        }
+                    </Select>
+                </PanelEditItem>
+                <PanelEditItem title="width">
+                    <EditorInputItem type="input" value={panel.styles.title?.decoration.width} onChange={v => onChange(panel => {
+                        panel.styles.title.decoration.width = v
+                    })} />
+                </PanelEditItem>
+                <PanelEditItem title="height">
+                    <EditorInputItem type="input" value={panel.styles.title?.decoration.height} onChange={v => onChange(panel => {
+                        panel.styles.title.decoration.height = v
+                    })} />
+                </PanelEditItem>
+                <PanelEditItem title="margin">
+                    <EditorInputItem type="input" value={panel.styles.title?.decoration.margin} onChange={v => onChange(panel => {
+                        panel.styles.title.decoration.margin = v
+                    })} />
+                </PanelEditItem>
+                {/* <NumberInputItem target={panel.styles.title?.decoration} attr="width" onChange={onChange} title="width" min={0} max={100} /> */}
+            </PanelAccordion>
+
+            <PanelAccordion title={t1.panelBorder} defaultOpen={false}>
+                <PanelEditItem title={t1.borderType}>
+                    <BorderSelect value={panel.styles?.border} onChange={v => {
+                        onChange(panel => {
+                            panel.styles.border = v
+                        })
+                    }} />
+                </PanelEditItem>
+                {panel.styles.border == PanelBorderType.None && <PanelEditItem title={t1.borderOnHover}>
+                    <Switch defaultChecked={panel.styles.borderOnHover} onChange={e => {
+                        const checked = e.currentTarget.checked
+                        onChange(panel => {
+                            panel.styles.borderOnHover = checked
+                        })
+                    }} />
+                </PanelEditItem>}
+
+                <PanelEditItem title="Width reduction" desc="reduce panel width">
+                    <EditorNumberItem min={0} max={1000} step={1} value={panel.styles.widthReduction} onChange={v => onChange(panel => {
+                        panel.styles.widthReduction = v
+                    })} />
+                </PanelEditItem>
+                <PanelEditItem title="Height reduction" desc="reduce panel height">
+                    <EditorNumberItem min={0} max={1000} step={1} value={panel.styles.heightReduction} onChange={v => onChange(panel => {
+                        panel.styles.heightReduction = v
+                    })} />
+                </PanelEditItem>
+                <PanelEditItem title="Margin left">
+                    <EditorNumberItem min={0} max={1000} step={1} value={panel.styles.marginLeft} onChange={v => onChange(panel => {
+                        panel.styles.marginLeft = v
+                    })} />
+                </PanelEditItem>
+                <PanelEditItem title="Margin top">
+                    <EditorNumberItem min={0} max={1000} step={1} value={panel.styles.marginTop} onChange={v => onChange(panel => {
+                        panel.styles.marginTop = v
+                    })} />
+                </PanelEditItem>
+            </PanelAccordion>
+
+            <PanelAccordion title={t1.panelDecoration} defaultOpen={false}>
                 <PanelEditItem title="type">
                     <DecorationSelect value={panel.styles?.decoration.type} onChange={v => {
                         onChange(panel => {
