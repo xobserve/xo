@@ -20,7 +20,7 @@ import { DatasourceMaxDataPoints, DatasourceMinInterval, IsSmallScreen } from "s
 import { isEmpty } from "utils/validate";
 import NoData from "src/views/dashboard/components/PanelNoData";
 import DatavLogChart from "./Chart";
-import Search from "./Search";
+import Search, { OnLogSearchChangeEvent } from "./Search";
 import { setDateTime } from "components/DatePicker/DatePicker";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { builtinDatasourcePlugins } from "../../plugins";
@@ -32,6 +32,7 @@ import { DataFormat } from "types/format";
 import LogDetail from "./LogDetail";
 import { Field } from "types/seriesData";
 import { formatLogTimestamp } from "./utils";
+import { dispatch } from "use-bus";
 
 interface Props extends PanelProps {
     panel: DatavLogPanel
@@ -91,8 +92,8 @@ const Panel = (props: Props) => {
         // },
 
         {
-            accessorKey: 'severity_text',
-            header: "Level",
+            accessorKey: 'severity',
+            header: "Severity",
             cell: info => {
                 const severity = info.getValue() as any
                 return <Text className={severity == "error" && "error-text"}>{severity}</Text>
@@ -100,13 +101,13 @@ const Panel = (props: Props) => {
             size: isMobileScreen ? 50 : 90
         },
         {
-            accessorKey: '_service',
+            accessorKey: 'service',
             header: "Service",
             size: isMobileScreen ? 150 : 120
         },
         {
             accessorKey: 'body',
-            header: 'Message',
+            header: 'Body',
             size: wrapLine ? 500 : 800
         }
     ]), [isMobileScreen, wrapLine])
@@ -190,7 +191,13 @@ const Panel = (props: Props) => {
         {selectedLog && <LogDetail log={selectedLog} isOpen={isOpen} onClose={() => {
             // setSelectedLog(null)
             onClose()
-        }} />}
+        }} onSearch={(v, isNew) => dispatch({
+            type: OnLogSearchChangeEvent + panel.id,
+            data: {
+                query: v,
+                isNew
+            }
+        })} />}
     </>)
 }
 

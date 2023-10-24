@@ -140,9 +140,9 @@ const DatavLogChart = memo((props: Props) => {
                 },
                 fontSize: 11,
             },
-            emphasis: {
-                focus: 'series'
-            },
+            // emphasis: {
+            //     focus: 'series'
+            // },
             color: name == "others" ? useColorModeValue(colors1[0], 'rgb(80,250,123)') : customColors.error.light
             // barWidth: '90%'
         })})

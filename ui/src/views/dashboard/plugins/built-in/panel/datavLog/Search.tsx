@@ -17,31 +17,55 @@ import React, { useState } from "react"
 import { useSearchParam } from "react-use"
 import { PanelForceRequeryEvent } from "src/data/bus-events"
 import { Panel } from "types/dashboard"
-import { dispatch } from "use-bus"
+import useBus, { dispatch } from "use-bus"
+import { isEmpty } from "utils/validate"
 import { $datavQueryParams } from "../../datasource/datav/store"
 
 interface Props {
     panel: Panel
 }
+
+export const OnLogSearchChangeEvent = "on-log-search-change"
 const Search = ({ panel }: Props) => {
     const [isSmallScreen] = useMediaQuery('(max-width: 1200px)')
     const isLargeScreen = !isSmallScreen
     const [query, setQuery] = useState('')
     const edit = useSearchParam("edit")
 
-    const onSearch = () => {
+    useBus(
+        (e) => { return e.type == OnLogSearchChangeEvent + panel.id },
+        (e) => {
+            const { query: q, isNew } = e.data
+            console.log("here333333:", e.data)
+            let newQuery;
+            if (isNew) {
+                newQuery = q
+            } else {
+                if (isEmpty(query)) {
+                    newQuery = q
+                } else {
+                    newQuery = (query + ' AND ' + q)
+                }
+            }
+            setQuery(newQuery)
+            onSearch(newQuery)
+        },
+        [query]
+    )
+
+    const onSearch = (q?) => {
         const params = $datavQueryParams.get()
         $datavQueryParams.set({
             ...params,
-            search: query
+            search: q??query
         })
 
         dispatch(PanelForceRequeryEvent + panel.id)
     }
 
-    const inputWidth = 400
-    return (<Box position={(isLargeScreen && !edit) ? "fixed" : null} left={(isLargeScreen && !edit) ? `calc(50% - ${inputWidth}px)` : null} top="5px" display="flex" alignItems="center" justifyContent="center" zIndex={1002} width={500}>
-        <InputWithTips placeholder="Search your logs, press Enter to submit..." width={isLargeScreen ? inputWidth : "100%"} value={query} onChange={setQuery} onConfirm={onSearch}>
+    const inputWidth = 500
+    return (<Box position={(isLargeScreen && !edit) ? "fixed" : null} left={(isLargeScreen && !edit) ? `calc(50% - ${inputWidth/2}px)` : null} top="5px" display="flex" alignItems="center" justifyContent="center" zIndex={1002} width={500}>
+        <InputWithTips placeholder="Search your logs, press Enter to submit..." width={isLargeScreen ? inputWidth : "100%"} value={query} onChange={setQuery} onConfirm={onSearch} size="sm">
             <Text>aaaa</Text>
         </InputWithTips>
         {/* {!isLargeScreen && <Button size="sm" variant="outline">Submit</Button>} */}

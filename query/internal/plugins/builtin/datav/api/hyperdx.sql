@@ -5,13 +5,13 @@ CREATE TABLE IF NOT EXISTS signoz_logs.logs ON CLUSTER cluster  (
 	trace_id String CODEC(ZSTD(1)),
 	span_id String CODEC(ZSTD(1)),
 	trace_flags UInt32,
-	severity_text LowCardinality(String) CODEC(ZSTD(1)),
+	severity LowCardinality(String) CODEC(ZSTD(1)),
 	severity_number UInt8,
 	body String CODEC(ZSTD(2)),
 
-  _namespace LowCardinality(String) CODEC(ZSTD(1)),
-  _service LowCardinality(String) CODEC(ZSTD(1)),
-  _host String CODEC(ZSTD(1)),
+  namespace LowCardinality(String) CODEC(ZSTD(1)),
+  service LowCardinality(String) CODEC(ZSTD(1)),
+  host String CODEC(ZSTD(1)),
 
 	resources_string_key Array(String) CODEC(ZSTD(1)),
 	resources_string_value Array(String) CODEC(ZSTD(1)),
@@ -29,11 +29,11 @@ CREATE TABLE IF NOT EXISTS signoz_logs.logs ON CLUSTER cluster  (
 
   INDEX idx_trace_id  trace_id  TYPE bloom_filter(0.001) GRANULARITY 1,
   INDEX idx_id        id        TYPE bloom_filter(0.001) GRANULARITY 1,
-  INDEX idx_host      _host      TYPE bloom_filter(0.01) GRANULARITY 1,
+  INDEX idx_host      host      TYPE bloom_filter(0.01) GRANULARITY 1,
 	INDEX body_idx      body      TYPE tokenbf_v1(10240, 3, 0) GRANULARITY 4
 ) ENGINE MergeTree
 PARTITION BY toDate(timestamp / 1000000000)
-ORDER BY (timestamp, _namespace, _service)
+ORDER BY (timestamp, namespace, service)
 TTL toDateTime(timestamp / 1000000000) + INTERVAL 1296000 SECOND DELETE
 SETTINGS index_granularity = 8192, ttl_only_drop_parts = 1
 

@@ -21,26 +21,25 @@ export const seriesFieldsToOpenTelemetryLog = (fields: Field[]): Partial<OpenTel
             case "span_id":
                 log.spanId = f.values[0]
                 break
-            case "severity_text":
+            case "severity":
                 log.severityText= f.values[0]
                 break
             case "body":
                 log.body = f.values[0]
                 break
-            case "_namespace":
+            case "namespace":
                 log.namespace = f.values[0]
                 break
-            case "_service":
+            case "service":
                 log.service= f.values[0]
                 break
-            case "_host":
+            case "host":
                 log.host = f.values[0]
                 break
             case "resources_string": 
                 Object.entries(f.values[0]).map(v => {
                     log.resources.push(v)
                 })
-                
                 break
             case "attributes_string":
             case "attributes_float64":

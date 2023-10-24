@@ -372,7 +372,7 @@ const (
 							trace_id,
 							span_id,
 							trace_flags,
-							severity_text,
+							severity,
 							severity_number,
 							body,
 							resources_string_key,
@@ -383,9 +383,9 @@ const (
 							attributes_int64_value,
 							attributes_float64_key,
 							attributes_float64_value,
-							_namespace,
-							_service,
-							_host
+							namespace,
+							service,
+							host
 							) VALUES (
 								?,
 								?,

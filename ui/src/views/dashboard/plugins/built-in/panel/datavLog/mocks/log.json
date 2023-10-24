@@ -41,7 +41,7 @@
             "type": "UInt8"
         },
         {
-            "name": "severity_text",
+            "name": "severity",
             "type": "String"
         },
         {

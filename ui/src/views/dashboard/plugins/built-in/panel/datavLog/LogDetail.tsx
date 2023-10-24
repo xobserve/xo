@@ -10,9 +10,11 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box, Divider, Drawer, DrawerBody, DrawerContent, DrawerOverlay, Flex, HStack, Tab, TabList, TabPanel, TabPanels, Tabs, Text, useColorModeValue, useMediaQuery, VStack } from "@chakra-ui/react"
+import { Box, Divider, Drawer, DrawerBody, DrawerContent, DrawerOverlay, Flex, HStack, Tab, TabList, TabPanel, TabPanels, Tabs, Text, Tooltip, useColorModeValue, useMediaQuery, VStack } from "@chakra-ui/react"
+import CopyToClipboard from "components/CopyToClipboard"
 import moment from "moment"
-import React, { useMemo } from "react"
+import React, { useMemo, useState } from "react"
+import { FaSearch, FaSearchPlus } from "react-icons/fa"
 import { IsSmallScreen } from "src/data/constants"
 import { Field } from "types/seriesData"
 import { seriesFieldsToOpenTelemetryLog } from "../../../utils/opentelemetry"
@@ -23,16 +25,27 @@ interface Props {
     log: Field[]
     isOpen: boolean
     onClose: any
+    onSearch: any 
 }
-const LogDetail = ({ log: rawlog, isOpen, onClose }: Props) => {
+const LogDetail = ({ log: rawlog, isOpen, onClose, onSearch }: Props) => {
     const [isMobileScreen] = useMediaQuery(IsSmallScreen)
 
     const log = useMemo(() => {
         return seriesFieldsToOpenTelemetryLog(rawlog)
     }, [rawlog])
 
-    console.log("here333333:", log)
     const isError = log.severityText == "error"
+    const basicKV = [
+        ["id", log.id],
+        ["severity", log.severityText],
+        ["namespace", log.namespace],
+        ["service", log.service],
+        ["host", log.host],
+        ["trace_id", log.traceId],
+        ["span_id", log.spanId],
+        ["timestamp", log.timestamp],
+        ["body", log.body],
+    ]
     return (<Drawer
         isOpen={isOpen}
         placement='right'
@@ -60,21 +73,15 @@ const LogDetail = ({ log: rawlog, isOpen, onClose }: Props) => {
                     <TabPanels>
                         <TabPanel>
                             <VStack alignItems="left" fontSize="0.85rem">
-                                <LogKV k="id" v={log.id} />
-                                <LogKV k="severity_text" v={log.severityText} />
-                                <LogKV k="namespace" v={log.namespace} />
-                                <LogKV k="service" v={log.service} />
-                                <LogKV k="host" v={log.host} />
-                                <LogKV k="trace_id" v={log.traceId} />
-                                <LogKV k="span_id" v={log.spanId} />
-                                <LogKV k="timestamp" v={log.timestamp} />
-                                <LogKV k="body" v={log.body} />
+                                {
+                                    basicKV.map(r => <LogKV k={r[0]} v={r[1]} onSearch={(isNew) => onSearch(`{{${r[0]}:${typeof r[1] == "string" ? `"${r[1]}"`: r[1]}}}`,isNew)}/>)
+                                }
                             </VStack>
                             <Text fontWeight={550} mt="4" fontSize="0.85rem">Resources</Text>
                             <Divider mt="2" />
                             <VStack alignItems="left" fontSize="0.85rem" mt="2">
                                 {
-                                    log.resources.map(r => <LogKV k={r[0]} v={r[1]} />)
+                                    log.resources.map(r => <LogKV k={r[0]} v={r[1]} onSearch={(isNew) => onSearch(`{{resources.${r[0]}:${typeof r[1] == "string" ? `"${r[1]}"`: r[1]}}}}}`,isNew)}/>)
                                 }
                             </VStack>
 
@@ -82,7 +89,7 @@ const LogDetail = ({ log: rawlog, isOpen, onClose }: Props) => {
                             <Divider mt="2" />
                             <VStack alignItems="left" fontSize="0.85rem" mt="2">
                                 {
-                                    log.attributes.map(r => <LogKV k={r[0]} v={r[1]} />)
+                                    log.attributes.map(r => <LogKV k={r[0]} v={r[1]} onSearch={(isNew) => onSearch(`{{attributes.${r[0]}:${typeof r[1] == "string" ? `"${r[1]}"`: r[1]}}}}}`,isNew)}/>)
                                 }
                             </VStack>
                         </TabPanel>
@@ -98,9 +105,17 @@ const LogDetail = ({ log: rawlog, isOpen, onClose }: Props) => {
 
 export default LogDetail
 
-const LogKV = ({ k, v }) => {
-    return <Flex gap="2">
+const LogKV = ({ k, v, onSearch}) => {
+    const [onHover, setOnHover] = useState(false)
+    const isString = typeof v == "string"
+    return <Flex gap="2" onMouseEnter={() => setOnHover(true)} onMouseLeave={() => setOnHover(false)} >
         <Text color="rgb(131, 120, 255)" minW="fit-content">{k}</Text>
-        <Text color={useColorModeValue("rgb(0, 166, 0)", "rgb(166, 226, 46)")} >{v}</Text>
+        <Text color={isString ? useColorModeValue("rgb(0, 166, 0)", "rgb(166, 226, 46)") : useColorModeValue("rgb(253, 130, 31)", "rgb(253, 151, 31)")} >{isString ? `"${v}"` : v}</Text>
+
+        <HStack opacity={0.6} fontSize="0.7rem" position="relative" visibility={onHover ? "visible" : "hidden"}>
+            <Tooltip label="Add to current search"><Box cursor="pointer"><FaSearchPlus onClick={() => onSearch(false)} /></Box></Tooltip>
+            <Tooltip label="Search with this value"><Box cursor="pointer"><FaSearch onClick={() => onSearch(true)}/></Box></Tooltip>
+            <CopyToClipboard copyText={v} tooltipTitle="copy this value" fontSize="0.7rem"/>
+        </HStack>
     </Flex>
 }

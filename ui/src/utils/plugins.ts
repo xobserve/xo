@@ -156,7 +156,7 @@ export const queryPluginDataToLogs = (data: {
         const log = {}
         row.forEach((v, i) => {
             const name = data.logs.columns[i]
-            if (name == "severity_text") {
+            if (name == "severity") {
                 log[name] = isEmpty(v) ? "ok" : v
             } else {
                 log[name] = v

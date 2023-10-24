@@ -73,7 +73,7 @@ func GetLogs(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[str
 	var res1 *models.PluginResultData
 	if page == 0 {
 		// query metrics
-		metricsQuery := fmt.Sprintf("SELECT toStartOfInterval(fromUnixTimestamp64Nano(timestamp), INTERVAL %d SECOND) AS ts_bucket, if(multiSearchAny(severity_text, ['error', 'err', 'emerg', 'alert', 'crit', 'fatal']), 'errors', 'others') as severity_group, count(*) as count from %s.%s where (timestamp >= %d AND timestamp <= %d) group by ts_bucket,severity_group order by ts_bucket", step, config.Data.Observability.DefaultLogDB, datavmodels.DefaultLogsTable, start*1e9, (end)*1e9)
+		metricsQuery := fmt.Sprintf("SELECT toStartOfInterval(fromUnixTimestamp64Nano(timestamp), INTERVAL %d SECOND) AS ts_bucket, if(multiSearchAny(severity, ['error', 'err', 'emerg', 'alert', 'crit', 'fatal']), 'errors', 'others') as severity_group, count(*) as count from %s.%s where (timestamp >= %d AND timestamp <= %d) group by ts_bucket,severity_group order by ts_bucket", step, config.Data.Observability.DefaultLogDB, datavmodels.DefaultLogsTable, start*1e9, (end)*1e9)
 
 		rows, err = conn.Query(c.Request.Context(), metricsQuery)
 		if err != nil {
