@@ -10,17 +10,13 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box, Flex, HStack, Select, Tooltip, useMediaQuery } from "@chakra-ui/react"
-import IconButton from "src/components/button/IconButton"
+import { Box, Flex, HStack, Tooltip, useMediaQuery } from "@chakra-ui/react"
 import SelectVariables from "src/views/variables/SelectVariable"
-import { find, isEmpty, orderBy } from "lodash"
+import {  isEmpty } from "lodash"
 import React from "react";
-import { memo, useEffect, useRef, useState } from "react"
-import { MdSync } from "react-icons/md"
-import { TimeRefreshEvent } from "src/data/bus-events"
+import { memo } from "react"
 import ReserveUrls from "src/data/reserve-urls"
 import { Dashboard } from "types/dashboard"
-import  { dispatch } from "use-bus"
 import AddPanel from "./AddPanel"
 import DashboardSave from "./DashboardSave"
 import DashboardSettings from "./settings/DashboardSettings"
@@ -36,7 +32,6 @@ import { $variables } from "../variables/store";
 import { MobileBreakpoint } from "src/data/constants";
 import CustomScrollbar from "src/components/CustomScrollbar/CustomScrollbar";
 import DashboardRefresh from "./DashboardRefresh";
-import { Variable } from "types/variable";
 import { catelogVariables } from "../variables/utils";
 
 interface HeaderProps {

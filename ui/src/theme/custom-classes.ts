@@ -85,19 +85,19 @@ export function customClasses(props) {
         },
         ".tag-bg": {
             background: mode(
-                props.theme.colors.cyan["50"],
+                'var(--chakra-colors-brand-500)',
                 "rgba(157, 236, 249, 0.16)"
             )(props),
             color: mode(
-                props.theme.colors.cyan["800"],
-                props.theme.colors.cyan["200"]
+                'var(--chakra-colors-brand-800)',
+                'var(--chakra-colors-brand-200)'
             )(props),
             borderRadius: "6px",
         },
         ".color-text": {
             color: mode(
-                props.theme.colors.cyan["600"],
-                props.theme.colors.cyan["200"]
+                'var(--chakra-colors-brand-600)',
+                'var(--chakra-colors-brand-200)'
             )(props)
         },
         ".annotation-text": {

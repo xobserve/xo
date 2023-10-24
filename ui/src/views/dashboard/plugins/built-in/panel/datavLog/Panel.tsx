@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box, Center, Text, useMediaQuery, VStack } from "@chakra-ui/react"
+import { Box, Center, Text, useDisclosure, useMediaQuery, VStack } from "@chakra-ui/react"
 import { PanelProps } from "types/dashboard"
 import React, { memo, useMemo, useState } from "react";
 import { DatavLogPanel } from "./types";
@@ -31,6 +31,8 @@ import { externalDatasourcePlugins } from "../../../external/plugins";
 import { cloneDeep } from "lodash";
 import { calculateInterval } from "utils/datetime/range";
 import { DataFormat } from "types/format";
+import LogDetail from "./LogDetail";
+import { Field } from "types/seriesData";
 
 interface Props extends PanelProps {
     panel: DatavLogPanel
@@ -71,6 +73,7 @@ const Panel = (props: Props) => {
     const [isMobileScreen] = useMediaQuery(IsSmallScreen)
     const [displayLogCount, setDisplayLogs] = useState<number>(0)
     const [selectedLog, setSelectedLog] = useState<Field[]>(null)
+    const { isOpen, onOpen, onClose } = useDisclosure()
 
     const wrapLine = false
 
@@ -113,13 +116,13 @@ const Panel = (props: Props) => {
         return parseLogs(data, isMobileScreen)
     }, [isMobileScreen, data])
 
-    
+
     const totalLogs = useMemo(() => {
         const d: any[] = data.chart.data
-        return d.reduce((total, b) =>  {
+        return d.reduce((total, b) => {
             return total + b[1]
         }, 0)
-    },[data.chart])
+    }, [data.chart])
 
     const onClickChart = (ts, level, step) => {
         const from = Number(ts)
@@ -134,12 +137,12 @@ const Panel = (props: Props) => {
             const query = cloneDeep(panel.datasource.queries[0])
             const intervalObj = calculateInterval(props.timeRange, panel.datasource.queryOptions.maxDataPoints ?? DatasourceMaxDataPoints, isEmpty(panel.datasource.queryOptions.minInterval) ? DatasourceMinInterval : panel.datasource.queryOptions.minInterval)
             query.interval = intervalObj.intervalMs / 1000
-     
+
             const res = await plugin.runQuery(panel, query, props.timeRange, ds, {
                 page: page
             })
 
-        
+
             if (res.data.length > 0) {
                 const logs = parseLogs(res.data[0], isMobileScreen)
                 return logs
@@ -150,7 +153,7 @@ const Panel = (props: Props) => {
     }
 
     const onLogRowClick = async log => {
-     
+
         const rawlog = data.logs.find(l => l.id == log.id)
         const ds = $datasources.get().find(ds => ds.id == panel.datasource.id)
         const plugin = builtinDatasourcePlugins[ds.type] ?? externalDatasourcePlugins[ds.type]
@@ -159,7 +162,7 @@ const Panel = (props: Props) => {
             const intervalObj = calculateInterval(props.timeRange, panel.datasource.queryOptions.maxDataPoints ?? DatasourceMaxDataPoints, isEmpty(panel.datasource.queryOptions.minInterval) ? DatasourceMinInterval : panel.datasource.queryOptions.minInterval)
             query.interval = intervalObj.intervalMs / 1000
             query.data['format'] = DataFormat.Table
-            const res = await plugin.runQuery(panel,query , props.timeRange, ds, {
+            const res = await plugin.runQuery(panel, query, props.timeRange, ds, {
                 logTs: rawlog.timestamp,
                 logId: rawlog.id
             })
@@ -167,24 +170,26 @@ const Panel = (props: Props) => {
             if (res.data.length > 0) {
                 const logRawDetail = res.data[0].fields
                 setSelectedLog(logRawDetail)
+                onOpen()
             }
         }
-    }   
-
-    console.log("here333333:", selectedLog)
+    }
 
     const chartHeight = 100
-    return (<Box px="2" height="100%" id="datav-log-panel" >
-        <Search panel={panel} />
-        {data.chart && <Box height={chartHeight} mb="2">
-            <DatavLogChart panel={panel} width={props.width} data={data.chart} onClick={onClickChart} totalLogs={totalLogs} displayLogs={displayLogCount} />
-        </Box>}
-        <QueryClientProvider client={queryClient}>
-            <ColumnResizableTable columns={defaultColumns} data={logs} wrapLine={wrapLine} fontSize={12} allowOverflow={false} height={props.height - chartHeight} totalRowCount={totalLogs} onLoadPage={onLoadLogsPage} onRowsCountChange={setDisplayLogs} onRowClick={onLogRowClick}/>
-      
-        </QueryClientProvider>
+    return (<>
+        <Box px="2" height="100%" id="datav-log-panel" >
+            <Search panel={panel} />
+            {data.chart && <Box height={chartHeight} mb="2">
+                <DatavLogChart panel={panel} width={props.width} data={data.chart} onClick={onClickChart} totalLogs={totalLogs} displayLogs={displayLogCount} />
+            </Box>}
+            <QueryClientProvider client={queryClient}>
+                <ColumnResizableTable columns={defaultColumns} data={logs} wrapLine={wrapLine} fontSize={12} allowOverflow={false} height={props.height - chartHeight} totalRowCount={totalLogs} onLoadPage={onLoadLogsPage} onRowsCountChange={setDisplayLogs} onRowClick={onLogRowClick} />
 
-    </Box>)
+            </QueryClientProvider>
+
+        </Box>
+        {selectedLog && <LogDetail log={selectedLog} isOpen={isOpen} onClose={onClose} />}
+    </>)
 }
 
 

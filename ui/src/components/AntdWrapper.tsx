@@ -43,6 +43,12 @@ const AntdWrapper = ({ children }) => {
                     zIndexPopupBase: 1500,
                     colorBorder: "var(--chakra-colors-chakra-border-color)"
                 },
+                components: {
+                    Select: {
+                        optionSelectedColor: customColors.primaryColor.light,
+                        optionSelectedBg: "transparent"
+                    }
+                }
             }}>
             {children}
         </ConfigProvider>

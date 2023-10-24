@@ -39,8 +39,8 @@ const Search = ({ panel }: Props) => {
         dispatch(PanelForceRequeryEvent + panel.id)
     }
 
-    const inputWidth = 500
-    return (<Box position={(isLargeScreen && !edit) ? "fixed" : null} left={(isLargeScreen && !edit) ? `calc(50% - ${inputWidth / 2}px)` : null} top="5px" display="flex" alignItems="center" justifyContent="center" zIndex={1400} width={500}>
+    const inputWidth = 400
+    return (<Box position={(isLargeScreen && !edit) ? "fixed" : null} left={(isLargeScreen && !edit) ? `calc(50% - ${inputWidth}px)` : null} top="5px" display="flex" alignItems="center" justifyContent="center" zIndex={1002} width={500}>
         <InputWithTips placeholder="Search your logs, press Enter to submit..." width={isLargeScreen ? inputWidth : "100%"} value={query} onChange={setQuery} onConfirm={onSearch}>
             <Text>aaaa</Text>
         </InputWithTips>

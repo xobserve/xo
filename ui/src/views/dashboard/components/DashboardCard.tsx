@@ -69,11 +69,11 @@ const DashboardCard = ({ dashboard, owner, query, onClick, starred, session }: P
                         navigate(getDashboardLink(dashboard.id))
                         onClick && onClick()
                     }}>
-                    <Text><Highlight query={query ?? ""} styles={{ bg: 'cyan.100' }} >{dashboard.title}</Highlight></Text>
+                    <Text><Highlight query={query ?? ""} styles={{ bg: 'var(--chakra-colors-brand-100)' }} >{dashboard.title}</Highlight></Text>
                     {location.pathname == '/' + dashboard.id && <Tag ml="1">current</Tag>}
                     {(query || active) &&
                         <Flex alignItems="center" ml="2">
-                            <Text textStyle="annotation" mb="-2px"><Highlight query={query ?? ""} styles={{ bg: 'cyan.100' }}>{dashboard.id}</Highlight></Text>
+                            <Text textStyle="annotation" mb="-2px"><Highlight query={query ?? ""} styles={{ bg: 'var(--chakra-colors-brand-100)' }}>{dashboard.id}</Highlight></Text>
                             <Box ml="1" mb="-3px"><CopyToClipboard copyText={dashboard.id} tooltipTitle="copy dashboard id" fontSize="0.8rem" /></Box>
                         </Flex>}
                 </Flex>

@@ -25,29 +25,29 @@ const  customColors = {
     },
     // used in where var() is not supported
     textColorRGB: {
-        light: `#1A202C`,
+        light: theme.colors.gray['800'],
         dark: `rgba(255,255,255,0.92)`,
     },
     bodyBg: {
         light: '#fff',
-        dark: '#1A202C'
+        dark: theme.colors.gray['800']
     },
     // primary text color
     primaryColor: {
-        light: theme.colors.cyan['600'], 
-        dark: theme.colors.cyan['600']
+        light: 'var(--chakra-colors-brand-500)', 
+        dark: 'var(--chakra-colors-brand-500)'
     },
     popperBg: {
         light: '#fff',
-        dark: theme.colors.gray['700']
+        dark: theme.colors.gray['800']
     },
     tooltipBg: {
         light: theme.colors.gray['600'],
-        dark: theme.colors.gray['700']
+        dark: theme.colors.gray['800']
     },
     modalBg: {
         light: "#fff",
-        dark: "#2D3748"
+        dark: theme.colors.gray['800']
     },
     scrollBg: {
         light: 'rgba(36,41,46,0.07)',

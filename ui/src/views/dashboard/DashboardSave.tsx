@@ -180,7 +180,7 @@ const DashboardSave = ({ dashboard }: Props) => {
         <>
             <Box>
 
-                <Menu placement="left">
+                <Menu placement="bottom">
                     <Tooltip label={t1.saveDash}>
                         <MenuButton as={IconButton} variant="ghost" sx={{
                             span: {

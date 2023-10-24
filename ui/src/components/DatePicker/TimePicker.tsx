@@ -230,10 +230,9 @@ const TimePicker = ({initTimeRange, onClose, onTimeChange,showCanlendar=true }: 
         raw: 'now-30d'
     }], [t1])
 
-    console.log("here333333:",range)
     return (
         <>
-            {tempRange && <HStack alignItems="top" spacing="6">
+            {tempRange && <Flex alignItems="top" justifyContent="space-between">
                 {displayCalender &&
                     <Box>
                         <Flex justifyContent="space-between" alignItems="center" fontSize="lg" mb="2">
@@ -288,19 +287,20 @@ const TimePicker = ({initTimeRange, onClose, onTimeChange,showCanlendar=true }: 
                         </HStack>
                         {error.end && <Text mt="1" fontSize="sm" color="red">{error.end}</Text>}
                     </Box>
-                    <Button onClick={() => applyTimeRange(tempRange)}>{t1.apply}</Button>
+                    <Button size="sm" onClick={() => applyTimeRange(tempRange)}>{t1.apply}</Button>
                 </VStack>
                 <Box p="2" pt="0">
                     <Center><Text>{t1.quickSelect}</Text></Center>
                     <VStack
-                        spacing={4}
-                        p={4}
+                        spacing={3}
+                        pt={4}
+                        pb={2}
                         alignItems="stretch"
                         borderEndRadius="md"
                         flex={1}
                     >
                         {
-                            quickOptions.map(o => <Button key={o.value} onClick={() => setQuickTime(o)} colorScheme="gray" variant={range.startRaw == o.raw && range.endRaw == "now" ? "solid" : "ghost"} borderRadius="0">
+                            quickOptions.map(o => <Button size="sm" key={o.value} onClick={() => setQuickTime(o)} colorScheme="gray" variant={range.startRaw == o.raw && range.endRaw == "now" ? "solid" : "ghost"} borderRadius="0">
                                 {o.label}
                             </Button>)
                         }
@@ -310,7 +310,7 @@ const TimePicker = ({initTimeRange, onClose, onTimeChange,showCanlendar=true }: 
 
 
 
-            </HStack>}
+            </Flex>}
         </>
     )
 }
