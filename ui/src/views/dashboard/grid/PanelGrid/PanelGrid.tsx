@@ -12,7 +12,7 @@
 // limitations under the License.
 import { Dashboard, Panel, PanelProps, PanelQuery } from "types/dashboard"
 import { Box, Center, HStack, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Popover, PopoverArrow, PopoverBody, PopoverContent, PopoverTrigger, Portal, Text, Tooltip, useColorMode, useColorModeValue, useDisclosure, useToast } from "@chakra-ui/react";
-import { FaBug, FaEdit, FaRegClock, FaEllipsisV, FaRegClone, FaRegCopy, FaRegEye, FaRegEyeSlash, FaTrashAlt } from "react-icons/fa";
+import { FaBug, FaEdit, FaRegClock, FaEllipsisV, FaInfo, FaQuestion, FaRegClone, FaRegCopy, FaRegEye, FaRegEyeSlash, FaTrashAlt } from "react-icons/fa";
 import { IoMdInformation } from "react-icons/io";
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { DatasourceMaxDataPoints, DatasourceMinInterval, PANEL_HEADER_HEIGHT } from "src/data/constants";
@@ -420,13 +420,6 @@ const PanelHeader = ({ dashboardId, queryError, panel, onCopyPanel, onRemovePane
     return (
         <>
             <HStack className="grid-drag-handle hover-bg" height={`${PANEL_HEADER_HEIGHT - (isEmpty(title) ? 15 : 0)}px`} cursor="move" spacing="0" position={isEmpty(title) ? "absolute" : "relative"} width="100%" zIndex={1000}>
-                {(queryError || panel.desc) && <Box color={useColorModeValue(queryError ? "red" : "brand.500", queryError ? "red" : "brand.200")} position="absolute">
-                    <Tooltip label={toString(queryError) ?? replaceWithVariables(panel.desc)}>
-                        <Box>
-                            <IoMdInformation fontSize="20px" cursor="pointer" />
-                        </Box>
-                    </Tooltip>
-                </Box>}
                 <Box width={'100%'}>{!isEmpty(title) ?
                     <Box
                         paddingTop={panel.styles.title.paddingTop}
@@ -442,9 +435,16 @@ const PanelHeader = ({ dashboardId, queryError, panel, onCopyPanel, onRemovePane
                     </Box> : <Box width="100px">&nbsp;</Box>}</Box>
 
                 <HStack position="absolute" right={2} visibility={'hidden'} className="show-on-hover">
+                    {queryError && <Box color={useColorModeValue("red", "red")}>
+                        <Tooltip label={toString(queryError)}>
+                            <Box opacity="0.6" fontSize="0.8rem" padding={1}>
+                                <FaInfo cursor="pointer" />
+                            </Box>
+                        </Tooltip>
+                    </Box>}
                     {panel.enableScopeTime && <Popover trigger="hover">
                         <PopoverTrigger>
-                            <Box opacity="0.5" padding={1} fontSize="0.8rem" zIndex={1000} cursor="pointer">
+                            <Box opacity="0.6" padding={1} cursor="pointer">
                                 <FaRegClock />
                             </Box>
                         </PopoverTrigger>
@@ -462,6 +462,13 @@ const PanelHeader = ({ dashboardId, queryError, panel, onCopyPanel, onRemovePane
                             </PopoverBody>
                         </PopoverContent>
                     </Popover>}
+                    {panel.desc && <Box>
+                        <Tooltip label={replaceWithVariables(panel.desc)}>
+                            <Box opacity="0.6" fontSize="0.8rem" padding={1}>
+                                <FaQuestion cursor="pointer" />
+                            </Box>
+                        </Tooltip>
+                    </Box>}
                     <Menu placement="bottom" isLazy>
                         <MenuButton
                             transition='all 0.2s'
@@ -469,7 +476,7 @@ const PanelHeader = ({ dashboardId, queryError, panel, onCopyPanel, onRemovePane
                             onClick={e => e.stopPropagation()}
                             disabled={embed}
                         >
-                            <Box opacity="0.5" padding={1} fontSize="0.8rem" zIndex={1000} cursor="pointer">
+                            <Box padding={1} opacity="0.6" fontSize="0.8rem" zIndex={1000} cursor="pointer">
                                 <FaEllipsisV />
                             </Box>
                         </MenuButton>
