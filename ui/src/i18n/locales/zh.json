@@ -112,6 +112,7 @@
     "descend": "降序",
     "ascend": "升序",
     "palette": "调色板",
+    "transparent_background": "透明背景",
     "classic": "经典",
     "series": "数据序列 series",
     "seriesTips": "一个数据序列 series 可以绘制一条曲线",
@@ -302,7 +303,7 @@
     "preview": "预览"
   },
   "dashboardSetting": {
-  "dashSettings": "设置仪表盘",
+    "dashSettings": "设置仪表盘",
     "metaData": "元数据",
     "tootip": "共享 Tooltip",
     "visibleTo": "对谁可见",

@@ -82,6 +82,7 @@ export interface Panel {
     transform?: string
     enableTransform?: boolean
     enableConditionRender?: boolean
+    enableTransparentBackground?: boolean
     conditionRender?: {
         type: "variable" | "custom",
         value: ""

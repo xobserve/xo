@@ -154,7 +154,7 @@ interface PanelComponentProps extends PanelGridProps {
 
 export const prevQueries = new Map()
 export const prevQueryData = new Map()
-export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onHidePanel, width, height, sync, timeRange: timeRange0 ,forceQuery}: PanelComponentProps) => {
+export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onHidePanel, width, height, sync, timeRange: timeRange0, forceQuery }: PanelComponentProps) => {
     const toast = useToast()
     const [panelData, setPanelData] = useState<any[]>(null)
     const [queryError, setQueryError] = useState<string>()
@@ -360,7 +360,7 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
         return res
     }, [panel.transform, panel.enableTransform, panelData])
 
-    return <Box height={height} width={width} className={(panel.styles.border == "Normal" && "bordered") + (dashboard.data.styles.bgEnabled ? " panel-bg-alpha" : " panel-bg")} position="relative">
+    return <Box height={height} width={width} className={(panel.styles.border == "Normal" && "bordered") + (panel.enableTransparentBackground ? " panel-bg-transparent" : " panel-bg")} position="relative">
 
         {data && <Box overflow="hidden">
             <PanelHeader dashboardId={dashboard.id} panel={panel} data={panelData} queryError={queryError} onCopyPanel={onCopyPanel} onRemovePanel={onRemovePanel} onHidePanel={onHidePanel} />
@@ -377,12 +377,12 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
 
         </Box>}
         {loading && <Box position="absolute" top="0" right="0"><Loading size="sm" /></Box>}
-        {!loading && panel.enableScopeTime && <Popover trigger="hover"> 
+        {!loading && panel.enableScopeTime && <Popover trigger="hover">
             <PopoverTrigger>
                 <Box position="absolute" top="5px" right="5px" opacity="0.5" fontSize="0.8rem" zIndex={1000} cursor="pointer"><FaRegClock /></Box>
             </PopoverTrigger>
             <PopoverContent>
-                <PopoverArrow /> 
+                <PopoverArrow />
                 <PopoverBody>
                     <PanelDatePicker id={panel.id.toString()} timeRange={panel.scopeTime} onChange={tr => {
                         panel.scopeTime = tr
@@ -390,7 +390,7 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
                             type: UpdatePanelEvent,
                             data: cloneDeep(panel)
                         })
-                    }}  showIcon/>
+                    }} showIcon />
                     <Text opacity={0.7} mt="2" ml="3" fontSize="0.9rem">Panel time range</Text>
                 </PopoverBody>
             </PopoverContent>
