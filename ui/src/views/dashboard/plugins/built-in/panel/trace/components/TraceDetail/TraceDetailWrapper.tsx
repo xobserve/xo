@@ -31,10 +31,13 @@ const TraceDetailWrapper = ({id,dsId}) => {
     const [trace, setTrace] = useState<Trace>(null)
     const [scrollManager, setScrollManager] = useState(null)
     const teamId = useSearchParam("teamId")
+    const teams = useStore($teamDatasources)
     useEffect(() => {
-        const dss = $teamDatasources.get()[teamId] ?? [] 
-        $datasources.set(dss)
-    },[teamId])
+        if (teams) {
+            const dss = teams[teamId] ?? [] 
+            $datasources.set(dss)
+        }
+    },[teamId,teams])
 
     const datasources = useStore($datasources)
     const datasource = getDatasource(dsId, datasources)
