@@ -76,6 +76,7 @@ const HttpQueryEditor = ({ panel, datasource, query, onChange }: DatasourceEdito
                         <Tr>
                             <Th>Param</Th>
                             <Th>Desc</Th>
+                            <Th>Default value</Th>
                         </Tr>
                     </Thead>
                     <Tbody>
@@ -83,6 +84,7 @@ const HttpQueryEditor = ({ panel, datasource, query, onChange }: DatasourceEdito
                             api?.paramsDesc?.map(desc => <Tr>
                                 <Td>{desc[0]}</Td>
                                 <Td>{desc[1]}</Td>
+                                <Td>{desc[2]}</Td>
                             </Tr>)
                         }
                     </Tbody>
@@ -147,9 +149,10 @@ const apiList = [{
     params: `{
 }`,
     paramsDesc: [
-        ["env", "environment name, such as dev, test, prod etc"],
-        ["service", "filter by service names, e.g datav|driver"],
-        ["perPage", "page size of logs when query from datasource, default is 100"]
+        ["env", "environment name, such as dev, test, prod etc", ""],
+        ["service", "filter by service names, e.g datav|driver", ""],
+        ["perPage", "page size of logs when query from datasource", "100"],
+        ["orderByTimestamp", "order by timestamp, default is desc", "asc | desc"],
     ],
     format: DataFormat.Logs
 }

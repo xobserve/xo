@@ -7,6 +7,7 @@ import (
 
 	ch "github.com/ClickHouse/clickhouse-go/v2"
 	datavmodels "github.com/DataObserve/datav/query/internal/plugins/builtin/datav/models"
+	datavutils "github.com/DataObserve/datav/query/internal/plugins/builtin/datav/utils"
 	pluginUtils "github.com/DataObserve/datav/query/internal/plugins/utils"
 	"github.com/DataObserve/datav/query/pkg/config"
 	"github.com/DataObserve/datav/query/pkg/models"
@@ -67,10 +68,34 @@ func GetLogs(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[str
 			return models.GenPluginResult(models.PluginStatusError, "Parse search query error: "+err.Error(), nil)
 		}
 	}
-	// query logs
-	logsQuery := fmt.Sprintf(datavmodels.LogsSelectSQL+" FROM %s.%s  where (timestamp >= ? AND timestamp <= ? %s) order by timestamp desc LIMIT %d OFFSET %d", config.Data.Observability.DefaultLogDB, datavmodels.DefaultLogsTable, searchQuery, perPageLogs, page*int64(perPageLogs))
 
-	args := append([]interface{}{start * 1e9, (end) * 1e9}, searchArgs...)
+	orderI := params["orderByTimestamp"]
+	order := "desc"
+	if orderI != nil {
+		order = orderI.(string)
+	}
+
+	namespace, service, host := datavutils.GetNamespaceServiceHostFromParams(params)
+
+	var domainQuery string
+	var domainArgs []interface{}
+	if namespace != "" {
+		domainQuery += " AND namespace = ?"
+		domainArgs = append(domainArgs, namespace)
+	}
+	if service != "" {
+		domainQuery += " AND service = ?"
+		domainArgs = append(domainArgs, service)
+	}
+	if host != "" {
+		domainQuery += " AND host = ?"
+		domainArgs = append(domainArgs, host)
+	}
+
+	// query logs
+	logsQuery := fmt.Sprintf(datavmodels.LogsSelectSQL+" FROM %s.%s  where (timestamp >= ? AND timestamp <= ? %s %s) order by timestamp %s LIMIT %d OFFSET %d", config.Data.Observability.DefaultLogDB, datavmodels.DefaultLogsTable, domainQuery, searchQuery, order, perPageLogs, page*int64(perPageLogs))
+
+	args := append([]interface{}{start * 1e9, (end) * 1e9}, append(domainArgs, searchArgs...)...)
 	rows, err := conn.Query(c.Request.Context(), logsQuery, args...)
 	if err != nil {
 		logger.Warn("Error Query logs", "query", logsQuery, "error", err)
@@ -89,7 +114,7 @@ func GetLogs(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[str
 	var res1 *models.PluginResultData
 	if page == 0 {
 		// query metrics
-		metricsQuery := fmt.Sprintf("SELECT toStartOfInterval(fromUnixTimestamp64Nano(timestamp), INTERVAL %d SECOND) AS ts_bucket, if(multiSearchAny(severity, ['error', 'err', 'emerg', 'alert', 'crit', 'fatal']), 'errors', 'others') as severity_group, count(*) as count from %s.%s where (timestamp >= ? AND timestamp <= ? %s) group by ts_bucket,severity_group order by ts_bucket", step, config.Data.Observability.DefaultLogDB, datavmodels.DefaultLogsTable, searchQuery)
+		metricsQuery := fmt.Sprintf("SELECT toStartOfInterval(fromUnixTimestamp64Nano(timestamp), INTERVAL %d SECOND) AS ts_bucket, if(multiSearchAny(severity, ['error', 'err', 'emerg', 'alert', 'crit', 'fatal']), 'errors', 'others') as severity_group, count(*) as count from %s.%s where (timestamp >= ? AND timestamp <= ? %s %s) group by ts_bucket,severity_group order by ts_bucket", step, config.Data.Observability.DefaultLogDB, datavmodels.DefaultLogsTable, domainQuery, searchQuery)
 
 		rows, err = conn.Query(c.Request.Context(), metricsQuery, args...)
 		if err != nil {
