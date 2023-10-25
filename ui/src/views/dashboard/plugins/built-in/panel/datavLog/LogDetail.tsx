@@ -81,7 +81,7 @@ const LogDetail = ({ log: rawlog, isOpen, onClose, onSearch }: Props) => {
                             <Divider mt="2" />
                             <VStack alignItems="left" fontSize="0.85rem" mt="2">
                                 {
-                                    log.resources.map(r => <LogKV k={r[0]} v={r[1]} onSearch={(isNew) => onSearch(`resources.${r[0]}=${typeof r[1] == "string" ? `"${r[1]}"`: r[1]}}}`,isNew)}/>)
+                                    log.resources.map(r => <LogKV k={r[0]} v={r[1]} onSearch={(isNew) => onSearch(`resources.${r[0]}=${typeof r[1] == "string" ? `"${r[1]}"`: r[1]}`,isNew)}/>)
                                 }
                             </VStack>
 
@@ -89,7 +89,7 @@ const LogDetail = ({ log: rawlog, isOpen, onClose, onSearch }: Props) => {
                             <Divider mt="2" />
                             <VStack alignItems="left" fontSize="0.85rem" mt="2">
                                 {
-                                    log.attributes.map(r => <LogKV k={r[0]} v={r[1]} onSearch={(isNew) => onSearch(`attributes.${r[0]}=${typeof r[1] == "string" ? `"${r[1]}"`: r[1]}}}`,isNew)}/>)
+                                    log.attributes.map(r => <LogKV k={r[0]} v={r[1]} onSearch={(isNew) => onSearch(`attributes.${r[0]}=${typeof r[1] == "string" ? `"${r[1]}"`: r[1]}`,isNew)}/>)
                                 }
                             </VStack>
                         </TabPanel>
