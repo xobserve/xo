@@ -19,12 +19,11 @@ export interface Dashboard {
     id: string
     title: string
     ownedBy: number
-    visibleTo: "team" | "all"
+    visibleTo: "anonymous" | "team" | "all"
     ownerName?:string
     data: DashboardData
     weight: number
-    tags?: string[]
-    editable?: boolean
+    tags?: string[]    
     createdBy?: string
     created?: string
     updated?: string

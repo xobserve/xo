@@ -186,7 +186,7 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
                 bodyStyle.backgroundSize = "cover"
             }
         }
-    },[colorMode])
+    }, [colorMode])
 
     const load = async () => {
         const res = await requestApi.get(`/dashboard/byId/${dashboardId}`)
@@ -294,11 +294,13 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
 
     const [isLargeScreen] = useMediaQuery('(min-width: 600px)')
     const [dvars, gvars] = catelogVariables(vars, dashboard)
-  
+
     return (<>
         {dashboard ? <Box className="dashboard-container" px={fullscreen ? 0 : (isLargeScreen ? 2 : 3)} width="100%" minHeight="100vh" maxHeight="100vh" overflowY="auto" position="relative">
             {/* <Decoration decoration={dashboard.data.styles.decoration}/> */}
-            <DashboardHeader dashboard={dashboard} onChange={onDashbardChange} sideWidth={sideWidth} />
+            {dashboard.data.editable &&
+                <DashboardHeader dashboard={dashboard} onChange={onDashbardChange} sideWidth={sideWidth} />
+            }
             <Box
                 // key={dashboard.id + fullscreen} 
                 id="dashboard-wrapper"
@@ -309,7 +311,7 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
                 <DashboardBorder key={fullscreen.toString()} border={dashboard.data.styles.border} />
                 <Box id="dashboard-scroll-top"></Box>
                 {fullscreen && toolbar == "on" && <Flex maxW={`calc(100% - ${10}px)`} id="fullscreen-toolbar" alignItems="center" gap="3">
-                    <Box minWidth="fit-content"><DatePicker showTime showIcon={false}/></Box>
+                    <Box minWidth="fit-content"><DatePicker showTime showIcon={false} /></Box>
                     <CustomScrollbar hideVerticalTrack>
                         <Flex justifyContent="space-between" >
                             <SelectVariables variables={dvars} />
@@ -317,10 +319,16 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
                         </Flex>
                     </CustomScrollbar>
                 </Flex>}
-                {dashboard.data.panels?.length > 0 && <DashboardGrid dashboard={dashboard} panels={panels} onChange={onDashbardChange} />}
+                {dashboard.data.panels?.length > 0 &&
+                    <DashboardGrid dashboard={dashboard} panels={panels} onChange={onDashbardChange} />}
             </Box>
-            <EditPanel dashboard={dashboard} onChange={onDashbardChange} />
-            <DashboardAnnotations dashboard={dashboard} />
+            {
+                dashboard.data.editable && <>
+                    <EditPanel dashboard={dashboard} onChange={onDashbardChange} />
+                    <DashboardAnnotations dashboard={dashboard} />
+                </>
+            }
+
         </Box> : <Box position="fixed" top="50vh" left="50vw"><Loading /></Box>}
     </>)
 }

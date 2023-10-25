@@ -130,7 +130,7 @@ func (s *Server) Start() error {
 		r.DELETE("/variable/:id", MustLogin(), variables.DeleteVariable)
 
 		// dashboard apis
-		r.GET("/dashboard/byId/:id", CheckLogin(), otelPlugin, dashboard.GetDashboard)
+		r.GET("/dashboard/byId/:id", otelPlugin, dashboard.GetDashboard)
 		r.POST("/dashboard/save", MustLogin(), otelPlugin, dashboard.SaveDashboard)
 		r.GET("/dashboard/team/:id", CheckLogin(), dashboard.GetTeamDashboards)
 		r.GET("/dashboard/history/:id", CheckLogin(), otelPlugin, dashboard.GetHistory)

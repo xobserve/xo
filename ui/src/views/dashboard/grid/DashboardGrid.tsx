@@ -81,7 +81,7 @@ const DashboardGrid = memo((props: GridProps) => {
 
 
             if (panel.type === PanelTypeRow) {
-                panelPos.w = GRID_COLUMN_COUNT; 
+                panelPos.w = GRID_COLUMN_COUNT;
                 panelPos.h = 1.5;
                 panelPos.isResizable = false;
                 panelPos.isDraggable = true;
@@ -144,7 +144,7 @@ const DashboardGrid = memo((props: GridProps) => {
         let height = 0
         if (viewPanel) {
             const screenHeight = window.innerHeight
-            height = screenHeight - (fullscreen ? (toolbar == "on" ? 35 : 5) :DashboardHeaderHeight) - 15 ?? 600
+            height = screenHeight - (fullscreen ? (toolbar == "on" ? 35 : 5) : DashboardHeaderHeight) - 15 ?? 600
         }
 
         return height
@@ -158,7 +158,7 @@ const DashboardGrid = memo((props: GridProps) => {
                     return null;
                 }
 
-                const draggable = width <= 769 ? false : dashboard.editable;
+                const draggable = width <= 769 ? false : !embed && !fullscreen;
 
                 // for some weird reason, the width is not always the same, it sometimes experiences slight jitter.
                 // so we need to use a threshold to avoid unnecessary re-renders
@@ -177,7 +177,7 @@ const DashboardGrid = memo((props: GridProps) => {
 
                 // we need a finalWidth key to force refreshing the grid layout
                 // it solves the issues when resizing browser window
-                
+
                 return <>{
                     // finalWidth > 0
                     // &&
@@ -223,9 +223,9 @@ const DashboardGrid = memo((props: GridProps) => {
                                         >
                                             {(width: number, height: number) => {
                                                 if (panel.type === PanelTypeRow) {
-                                                    return <Box  key={panel.id} id={`panel-${panel.id}`} position="absolute" width={width} height={height + 'px'} left="0" top="0">
-                                                        <RowPanel panel={panel} onChange={onChange}/>
-                                                        </Box>
+                                                    return <Box key={panel.id} id={`panel-${panel.id}`} position="absolute" width={width} height={height + 'px'} left="0" top="0">
+                                                        <RowPanel panel={panel} onChange={onChange} />
+                                                    </Box>
                                                 }
 
                                                 const Wrapper = dashboard.data.lazyLoading ? LazyLoader : Box
@@ -284,7 +284,7 @@ const GridItem = React.forwardRef<HTMLDivElement, GridItemProps>((props, ref) =>
         width = parseFloat(props.style.width);
         height = parseFloat(props.style.height);
     }
-    
+
     // props.children[0] is our main children. RGL adds the drag handle at props.children[1]
     return (
         <Box {...divProps} ref={ref} className="react-grid-item" sx={(props.panelType != PanelTypeRow && windowWidth > 769) ? {

@@ -166,7 +166,11 @@ func GetDashboard(c *gin.Context) {
 
 	}
 
-	if dash.OwnedBy != models.GlobalTeamId {
+	if u == nil && dash.VisibleTo != "anonymous" {
+		log.WithTrace(traceCtx).Warn("Error check VisibleTo=public", zap.String("user", getVisitInfo(c, u)), zap.Error(err))
+		c.JSON(401, common.RespError(e.Internal))
+		return
+	} else if dash.OwnedBy != models.GlobalTeamId {
 		isTeamPublic, err := models.IsTeamPublic(c.Request.Context(), dash.OwnedBy)
 
 		if err != nil {
@@ -175,7 +179,7 @@ func GetDashboard(c *gin.Context) {
 			return
 		}
 
-		if !isTeamPublic && dash.VisibleTo != "all" {
+		if !isTeamPublic && dash.VisibleTo == "team" {
 			if u == nil {
 				c.JSON(http.StatusForbidden, common.RespError("you are not the team menber to view this dashboard"))
 				return
@@ -201,7 +205,7 @@ func GetDashboard(c *gin.Context) {
 	if teamName == "" {
 		teamName = "not_found"
 	}
-	dash.Editable = true
+	dash.Data.Set("editable", u != nil)
 	dash.OwnerName = teamName
 
 	log.WithTrace(traceCtx).Info("Get dashboard", zap.String("id", dash.Id), zap.String("title", dash.Title), zap.String("user", getVisitInfo(c, u)), zap.String("ip", c.ClientIP()))
