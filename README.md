@@ -26,7 +26,7 @@
 
 Datav is a programmable observability platform designed specifically for developers, and it also serves as an alternative data visualization platform to Grafana. 
 
-It can help users quickly create online observability scenarios such as monitoring, logging, and tracing. Datav can help you built any observability scenario you want. If it doesn't, you can always file an issue, and reasonable requests will be quickly supported.
+It can help users quickly create online observability scenarios such as monitoring, logging, and tracing. Datav can help you build any observability scenario you want. If it doesn't, you can always file an issue, and reasonable requests will be quickly supported.
 
 ## Roadmap to V1.0
 
@@ -44,7 +44,7 @@ We are now still working on the observability part, and it will be released in [
 
 4. **Enterprise features supported**: multi-tenancy, permission management, navigation menus, and global state management.
 
-5. **User experiences**: blazing fast performance and fully customizability gives great user experiences.
+5. **User experiences**: blazing fast performance and full customizability providing great user experience.
 
 6. **Modern UI design**: supports large data screens, and is perfectly compatible with mobile devices.
 
