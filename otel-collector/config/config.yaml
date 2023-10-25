@@ -39,6 +39,12 @@ receivers:
       - type: add
         field: resource.namespace
         value: default
+      # - type: add
+      #   field: attributes.test1
+      #   value: 1
+      # - type: add
+      #   field: attributes.test2
+      #   value: 1.1
       - type: remove
         field: attributes.severity_text
       - type: remove

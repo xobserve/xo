@@ -14,38 +14,71 @@ import { EditorInputItem } from "src/components/editor/EditorItem"
 import RadionButtons from "src/components/RadioButtons"  
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
-import React, { memo } from "react";
+import React, { memo, useState } from "react";
 import { useStore } from "@nanostores/react"
 import { textPanelMsg } from "src/i18n/locales/en"
 import { PanelType, DatavLogEditorProps, DatavLogPanel as Panel } from "./types"
 import CodeEditor from "components/CodeEditor/CodeEditor"
+import { locale } from "src/i18n/i18n";
+import { Switch, useToast } from "@chakra-ui/react";
 
 const PanelEditor = memo(({ panel, onChange }: DatavLogEditorProps) => {
-    const t1 = useStore(textPanelMsg)
-    return (<PanelAccordion title={t1.textSettings}>
-        <PanelEditItem title={t1.content}>
-            <CodeEditor value={panel.plugins[PanelType].md} onChange={(v) => {
-                onChange((panel: Panel) => {
-                    panel.plugins[PanelType].md = v
-                })
-            }} language="markdown" height="240px" />
+    let lang = useStore(locale)
+    const toast = useToast()
+    const [columns, setColumns] = useState(JSON.stringify(panel.plugins[PanelType].columns.displayColumns,null,4))
+    return (<>
+    <PanelAccordion title={lang == "en" ? "Log basic settings" : "日志基本设置"}>
+        <PanelEditItem title={lang == "en" ? "Show bar chart" : "显示柱状图"}>
+            <Switch defaultChecked={panel.plugins[PanelType].showChart} onChange={e => onChange((panel: Panel) => {
+                    panel.plugins[PanelType].showChart = e.currentTarget.checked
+                })} />
         </PanelEditItem>
-
-        <PanelEditItem title={t1.horizontalPos}>
-            <RadionButtons options={[{ label: t1.left, value: "left" }, { label: t1.center, value: "center" }, { label: t1.right, value: "right" }]} value={panel.plugins[PanelType].justifyContent} onChange={v => onChange((panel: Panel) => {
-                panel.plugins[PanelType].justifyContent = v
-            })} />
-
+        <PanelEditItem title={lang == "en" ? "Show logs" : "显示日志列表"}>
+            <Switch defaultChecked={panel.plugins[PanelType].showLogs} onChange={e => onChange((panel: Panel) => {
+                    panel.plugins[PanelType].showLogs = e.currentTarget.checked
+                })} />
         </PanelEditItem>
-
-        <PanelEditItem title={t1.verticalPos}>
-            <RadionButtons options={[{ label: t1.top, value: "top" }, { label: t1.center, value: "center" }, { label: t1.bottom, value: "end" }]} value={panel.plugins[PanelType].alignItems} onChange={v => onChange((panel: Panel) => {
-                panel.plugins[PanelType].alignItems = v
-            })} />
-
+        <PanelEditItem title={lang == "en" ? "Show search" : "显示搜索栏"}>
+            <Switch defaultChecked={panel.plugins[PanelType].showSearch} onChange={e => onChange((panel: Panel) => {
+                    panel.plugins[PanelType].showSearch = e.currentTarget.checked
+                })} />
         </PanelEditItem>
     </PanelAccordion>
+    <PanelAccordion title={lang == "en" ? "Log row" : "日志行"}>
+        <PanelEditItem title={lang == "en" ? "Wrap line" : "换行"}>
+            <Switch defaultChecked={panel.plugins[PanelType].logline.wrapLine} onChange={e => onChange((panel: Panel) => {
+                    panel.plugins[PanelType].logline.wrapLine = e.currentTarget.checked
+                })} />
+        </PanelEditItem>
+        <PanelEditItem title={lang == "en" ? "Overflow" : "显示完整行"}>
+            <Switch defaultChecked={panel.plugins[PanelType].logline.allowOverflow} onChange={e => onChange((panel: Panel) => {
+                    panel.plugins[PanelType].logline.allowOverflow = e.currentTarget.checked
+                })} />
+        </PanelEditItem>
+    </PanelAccordion>
+    <PanelAccordion title={lang == "en" ? "Columns" : "日志列"}>
+        <CodeEditor height="300px" language="json" value={columns}  onChange={v => onChange((panel: Panel) => {
+            setColumns(v)
+        })}  onBlur={() => {
+            
+                onChange((panel: Panel) => {
+                    try {
+                    panel.plugins[PanelType].columns.displayColumns = JSON.parse(columns)
+                } catch (error) {
+                    toast({
+                        title: "Error",
+                        description: "Invalid JSON",
+                        status: "error",
+                        duration: 3000,
+                    })
+                }
+                })
+       
+        }}/>
+    </PanelAccordion>
+    </>
     )
 })
 
 export default PanelEditor
+

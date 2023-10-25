@@ -13,7 +13,7 @@
 import { Box, Center, Text, useDisclosure, useMediaQuery, VStack } from "@chakra-ui/react"
 import { PanelProps } from "types/dashboard"
 import React, { memo, useMemo, useState } from "react";
-import { DatavLogPanel } from "./types";
+import { DatavLogPanel, PanelType } from "./types";
 import ColumnResizableTable from "components/table/ColumnResizableTable";
 import { ColumnDef } from "@tanstack/react-table";
 import { DatasourceMaxDataPoints, DatasourceMinInterval, IsSmallScreen } from "src/data/constants";
@@ -43,13 +43,13 @@ const PanelWrapper = memo((props: Props) => {
 
     if (isEmpty(data)) {
         return <>
-            <Search panel={props.panel} />
+            {props.panel.plugins[PanelType].showSearch && <Search panel={props.panel} />}
             <Center height="100%"><NoData /></Center>
         </>
     }
 
     return (<>
-        <Search panel={props.panel} />
+        {props.panel.plugins[PanelType].showSearch && <Search panel={props.panel} />}
         {
             !isLogData(data[0])
                 ?
@@ -79,42 +79,48 @@ const Panel = (props: Props) => {
     const [selectedLog, setSelectedLog] = useState<Field[]>(null)
     const { isOpen, onOpen, onClose } = useDisclosure()
 
-    const wrapLine = false
+    const options =  panel.plugins[PanelType]
 
-    const defaultColumns: ColumnDef<any>[] = useMemo(() => ([
-        {
-            accessorKey: 'timestamp',
-            header: 'timestamp',
-            size: isMobileScreen ? 100 : 170,
-            cell: info => <Text opacity={0.7} fontWeight={550} fontSize={12}>{info.getValue() as any}</Text>,
-        },
-        // {
-        //     accessorFn: row => row.lastName,
-        //     id: 'lastName',
-        //     cell: info => info.getValue(),
-        //     header: () => <span>Last Name</span>,
-        // },
+    const defaultColumns: ColumnDef<any>[] = useMemo(() => {
+        return options.columns.displayColumns.map((c, i) => {
+            const base: any = {
+                accessorKey: c.key,
+                header: c.name??c.key,
+                size: typeof c.width == "number" ? c.width :  (isMobileScreen ? c.width[0] : c.width[1]),
+            }
+            
+            if (c.name == "timestamp") {
+                base.cell = info => <Text opacity={0.7} fontWeight={550}>{info.getValue() as any}</Text>
+            } else if (c.name == "severity") {
+                base.cell = info => {
+                    const severity = info.getValue() as any
+                    return <Text className={severity == "error" && "error-text"}>{severity}</Text>
+                }
+            } else if (c.key.startsWith("resources.")) {
+                const name = c.key.replace("resources.", "")
+                base.cell = info => {
+                    return <Text>{info.row.original.resources_string[name]}</Text>
+                }
+            } else if (c.key.startsWith("attributes.")) {
+                const name = c.key.replace("attributes.", "")
+                base.cell = info => {
+                    if (info.row.original.attributes_string[name]) {
+                        return <Text>{info.row.original.attributes_string[name]}</Text>
+                    }
+                    if (info.row.original.attributes_int64[name]) {
+                        return <Text>{info.row.original.attributes_int64[name]}</Text>
+                    }
 
-        {
-            accessorKey: 'severity',
-            header: "severity",
-            cell: info => {
-                const severity = info.getValue() as any
-                return <Text className={severity == "error" && "error-text"}>{severity}</Text>
-            },
-            size: isMobileScreen ? 50 : 90
-        },
-        {
-            accessorKey: 'service',
-            header: "service",
-            size: isMobileScreen ? 150 : 120
-        },
-        {
-            accessorKey: 'body',
-            header: 'body',
-            size: wrapLine ? 500 : 800
-        }
-    ]), [isMobileScreen, wrapLine])
+                    if (info.row.original.attributes_float64[name]) {
+                        return <Text>{info.row.original.attributes_float64[name]}</Text>
+                    }
+
+                    return <Text></Text>
+                }
+            }
+
+            return base
+        })}, [isMobileScreen, options.logline.wrapLine,options.columns.displayColumns])
 
     const logs = useMemo(() => {
         return parseLogs(data, isMobileScreen)
@@ -180,15 +186,17 @@ const Panel = (props: Props) => {
         }
     }
 
+
     const chartHeight = 100
+    const showLogs = options.showLogs && logs.length > 0
+    const showChart = options.showChart && data.chart && logs.length > 0
     return (<>
         <Box px="2" height="100%" id="datav-log-panel" >
-            {data.chart && logs.length > 0 && <Box height={chartHeight} mb="2">
+            {showChart && <Box key={showLogs as any} height={showLogs ? chartHeight: props.height} mb="2">
                 <DatavLogChart panel={panel} width={props.width} data={data.chart} onClick={onClickChart} totalLogs={totalLogs} displayLogs={displayLogCount} />
             </Box>}
-            {logs.length > 0 && <QueryClientProvider client={queryClient}>
-                <ColumnResizableTable highlightRow={selectedLog?.find(f => f.name == "id").values[0]} columns={defaultColumns} data={logs} wrapLine={wrapLine} fontSize={12} allowOverflow={false} height={props.height - chartHeight} totalRowCount={totalLogs} onLoadPage={onLoadLogsPage} onRowsCountChange={setDisplayLogs} onRowClick={onLogRowClick} />
-
+            {showLogs && <QueryClientProvider client={queryClient}>
+                <ColumnResizableTable highlightRow={selectedLog?.find(f => f.name == "id").values[0]} columns={defaultColumns} data={logs} wrapLine={options.logline.wrapLine} fontSize={12} allowOverflow={options.logline.allowOverflow} height={props.height - (showChart ? chartHeight : 0)} totalRowCount={totalLogs} onLoadPage={onLoadLogsPage} onRowsCountChange={setDisplayLogs} onRowClick={onLogRowClick} />
             </QueryClientProvider>}
             {logs.length == 0 && <Center height="100%"><NoData /></Center>}
         </Box>

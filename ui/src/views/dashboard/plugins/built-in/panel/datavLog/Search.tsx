@@ -37,7 +37,6 @@ const Search = ({ panel }: Props) => {
         (e) => { return e.type == OnLogSearchChangeEvent + panel.id },
         (e) => {
             const { query: q, isNew } = e.data
-            console.log("here333333:", e.data)
             let newQuery;
             if (isNew) {
                 newQuery = q

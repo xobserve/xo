@@ -45,6 +45,6 @@ export interface QueryPluginResult {
 
 export interface QueryPluginData  {
     columns: string[] 
-    data: any[][]
+    data: any
     types: Record<string,string>
 }

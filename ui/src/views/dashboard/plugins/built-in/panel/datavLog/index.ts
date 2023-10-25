@@ -3,7 +3,7 @@ import { PanelPluginComponents } from "types/plugin";
 import PanelEditor from "./Editor";
 import DatavLogPanel from "./Panel";
 import icon from './icon.svg'
-import { PanelType } from "./types";
+import { DatavLogSettings, PanelType } from "./types";
 import { mockLogDataForTestDataDs } from "./mocks/mockData";
 
 
@@ -15,12 +15,22 @@ const panelComponents: PanelPluginComponents = {
         type: PanelType,
         icon,
         initOptions: {
-            md: `#Welcome to Datav1\n This is a new panel\n You can edit it by clicking the edit button on the top title\n ###Have fun!`,
-            justifyContent: "left",
-            alignItems: "top",
-            fontSize: '1.2em',
-            fontWeight: '500',
-        }
+            showChart: true,
+            showLogs: true,
+            showSearch: true,
+            logline: {
+                wrapLine: false,
+                allowOverflow: false,
+            },
+            columns: {
+                displayColumns: [
+                    {key: "timestamp",name:"timestamp", width: [100,170]},
+                    {key: "severity",name:"severity", width: [50, 90]},
+                    {key: "service",name:"service", width: [150,120]},
+                    {key: "body", name:"body", width: [500, 800]},
+                ]
+            }
+        } as DatavLogSettings
     },
 }
 

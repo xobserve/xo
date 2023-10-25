@@ -15,8 +15,15 @@ export interface DatavLogEditorProps extends PanelEditorProps {
 
 
 
-interface DatavLogSettings  {
-    md?: string
-    justifyContent: "center" | "left" | "right"
-    alignItems: "center" | "top" | "bottom"
+export interface DatavLogSettings  {
+    showChart: boolean 
+    showLogs: boolean
+    showSearch: boolean
+    logline: {
+        wrapLine: boolean
+        allowOverflow: boolean
+    }
+    columns: {
+        displayColumns: {key:string;name?: string;width: number | number[]}[]
+    }
 }

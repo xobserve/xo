@@ -15,7 +15,7 @@ import { Variable } from "types/variable"
 import { Panel, PanelQuery } from "types/dashboard"
 import { TimeRange } from "types/time"
 import { genDynamicFunction } from "utils/dashboard/dynamicCall"
-import {  isFunction, round } from "lodash"
+import {  isFunction, isObject, round } from "lodash"
 import _ from 'lodash'
 import { getNewestTimeRange } from "src/components/DatePicker/TimePicker"
 import { isJSON } from "utils/is"
@@ -84,7 +84,18 @@ export const runQuery = async (panel: Panel, q: PanelQuery, range: TimeRange, ds
             data = queryPluginDataToTimeSeries(res.data.data, q)
             break
         case DataFormat.Table:
-            data =  queryPluginDataToTable(res.data.data, q)
+            if (res.data.data.columns) {
+                data =  queryPluginDataToTable(res.data.data, q)
+            } else {
+                if (isObject(res.data.data)) {
+                    Object.values(res.data.data).forEach((v:any) => {
+                        if (v.columns) {
+                            data =  queryPluginDataToTable(v, q)
+                        }
+                    })
+                }
+            }
+          
             break
         case DataFormat.Logs:
             data =  queryPluginDataToLogs(res.data.data as any, q)
@@ -163,3 +174,5 @@ export const query_http_alerts = async (panel:Panel, timeRange: TimeRange, ds:Da
     // return res
     return []
 }
+
+
