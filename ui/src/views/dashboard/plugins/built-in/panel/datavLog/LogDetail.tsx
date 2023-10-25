@@ -11,6 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Box, Divider, Drawer, DrawerBody, DrawerContent, DrawerOverlay, Flex, HStack, Tab, TabList, TabPanel, TabPanels, Tabs, Text, Tooltip, useColorModeValue, useMediaQuery, VStack } from "@chakra-ui/react"
+import ColorKV from "components/ColorKV"
 import CopyToClipboard from "components/CopyToClipboard"
 import moment from "moment"
 import React, { useMemo, useState } from "react"
@@ -107,10 +108,8 @@ export default LogDetail
 
 const LogKV = ({ k, v, onSearch}) => {
     const [onHover, setOnHover] = useState(false)
-    const isString = typeof v == "string"
     return <Flex gap="2" onMouseEnter={() => setOnHover(true)} onMouseLeave={() => setOnHover(false)} >
-        <Text color="rgb(131, 120, 255)" minW="fit-content">{k}</Text>
-        <Text color={isString ? useColorModeValue("rgb(0, 166, 0)", "rgb(166, 226, 46)") : useColorModeValue("rgb(253, 130, 31)", "rgb(253, 151, 31)")} >{isString ? `"${v}"` : v}</Text>
+        <ColorKV k={k} v={v} />
 
         <HStack opacity={0.5} fontSize="0.7rem" position="relative" visibility={onHover ? "visible" : "hidden"}>
             <Tooltip label="Add to current search"><Box cursor="pointer"><FaSearchPlus onClick={() => onSearch(false)} /></Box></Tooltip>
