@@ -25,5 +25,6 @@ export interface DatavLogSettings  {
     }
     columns: {
         displayColumns: {key:string;name?: string;width: number | number[]}[]
+        highlight: Record<string,string>[]
     }
 }

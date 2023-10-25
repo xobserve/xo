@@ -14,7 +14,8 @@ import {
     useInfiniteQuery,
 } from '@tanstack/react-query'
 import { isEmpty } from 'utils/validate'
-import { cloneDeep } from 'lodash'
+import { cloneDeep, toString } from 'lodash'
+import { getStringColorMapping } from 'src/views/dashboard/plugins/components/StringColorMapping'
 
 interface Props {
     totalRowCount: number
@@ -29,11 +30,12 @@ interface Props {
     onRowsCountChange?: any
     onRowClick?: any
     highlightRow?: string
+    columnHighlights?: {column:string; match: string; color: string}[]
 }
 
 const ColumnResizableTable = (props: Props) => {
 
-    const { columns, fontSize = 13, wrapLine = true, stickyHeader = true, allowOverflow = false, height = "100%", totalRowCount, onLoadPage, onRowsCountChange, onRowClick ,highlightRow} = props
+    const { columns, fontSize = 13, wrapLine = true, stickyHeader = true, allowOverflow = false, height = "100%", totalRowCount, onLoadPage, onRowsCountChange, onRowClick ,highlightRow,columnHighlights=[]} = props
     const [initData, setInitData] = useState<Record<string, any>[]>([])
     const currentPage = useRef(1)
     const tableContainerRef = React.useRef<HTMLDivElement>(null)
@@ -171,18 +173,33 @@ const ColumnResizableTable = (props: Props) => {
                         <tbody>
                             {table.getRowModel().rows.map(row => (
                                 <tr key={row.id} className={highlightRow == row.original.id ? "hover-text color-text" : "hover-text"} style={{ cursor: "pointer" }} onClick={() => onRowClick(row.original)}>
-                                    {row.getVisibleCells().map(cell => (
+                                    {row.getVisibleCells().map(cell =>  {
+                                        const column = cell.column.columnDef.header
+                                        const value:string = toString(cell.getValue())
+                                        let color = columnHighlights.find(c => c.column == null)?.color ?? 'inherit'
+                                        for (const h of columnHighlights) {
+                                            if (h.column === null) {
+                                                continue
+                                            }
+                                            
+                                            if (h.column == column && value.match(h.match)) {
+                                                color = h.color
+                                            }
+                                        }
+
+                                       return  (
                                         <td
                                             className={wrapLine ? "" : "text-truncate"}
                                             key={cell.id}
                                             style={{
                                                 verticalAlign: "top",
-                                                overflow: allowOverflow ? null : "hidden"
+                                                overflow: allowOverflow ? null : "hidden",
+                                                color: color
                                             }}
                                         >
                                             {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                         </td>
-                                    ))}
+                                    )})}
                                 </tr>
                             ))}
                         </tbody>

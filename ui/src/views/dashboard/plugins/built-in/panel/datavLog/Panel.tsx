@@ -33,6 +33,7 @@ import LogDetail from "./LogDetail";
 import { Field } from "types/seriesData";
 import { formatLogTimestamp } from "./utils";
 import { dispatch } from "use-bus";
+import { paletteColorNameToHex } from "utils/colors";
 
 interface Props extends PanelProps {
     panel: DatavLogPanel
@@ -190,13 +191,35 @@ const Panel = (props: Props) => {
     const chartHeight = 100
     const showLogs = options.showLogs && logs.length > 0
     const showChart = options.showChart && data.chart && logs.length > 0
+    const highlights = useMemo(() => {
+        const highlights = []
+        for (const h of options.columns.highlight) {
+            if (h.value === null) {
+                highlights.push({
+                    column: null,
+                    match: null,
+                    color: paletteColorNameToHex(h.color)
+                })
+                continue
+            }
+
+            const v = h.value.split("=")
+            highlights.push({
+                column: v[0],
+                match: v[1],
+                color: paletteColorNameToHex(h.color)
+            })
+        }
+        return highlights
+    },[options.columns.highlight])
+
     return (<>
         <Box px="2" height="100%" id="datav-log-panel" >
             {showChart && <Box key={showLogs as any} height={showLogs ? chartHeight: props.height} mb="2">
                 <DatavLogChart panel={panel} width={props.width} data={data.chart} onClick={onClickChart} totalLogs={totalLogs} displayLogs={displayLogCount} />
             </Box>}
             {showLogs && <QueryClientProvider client={queryClient}>
-                <ColumnResizableTable highlightRow={selectedLog?.find(f => f.name == "id").values[0]} columns={defaultColumns} data={logs} wrapLine={options.logline.wrapLine} fontSize={12} allowOverflow={options.logline.allowOverflow} height={props.height - (showChart ? chartHeight : 0)} totalRowCount={totalLogs} onLoadPage={onLoadLogsPage} onRowsCountChange={setDisplayLogs} onRowClick={onLogRowClick} />
+                <ColumnResizableTable highlightRow={selectedLog?.find(f => f.name == "id").values[0]} columns={defaultColumns} data={logs} wrapLine={options.logline.wrapLine} fontSize={12} allowOverflow={options.logline.allowOverflow} height={props.height - (showChart ? chartHeight : 0)} totalRowCount={totalLogs} onLoadPage={onLoadLogsPage} onRowsCountChange={setDisplayLogs} onRowClick={onLogRowClick} columnHighlights={highlights}/>
             </QueryClientProvider>}
             {logs.length == 0 && <Center height="100%"><NoData /></Center>}
         </Box>

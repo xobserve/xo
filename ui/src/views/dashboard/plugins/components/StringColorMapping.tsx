@@ -61,7 +61,7 @@ const StringColorMappingEditor = (props) => {
 
     return (<Box>
         <Button onClick={addItem} width="100%" size="sm" colorScheme="gray">Add color mapping</Button>
-        <Text fontSize="0.8rem" textStyle="annotation" mt="2">Render string with specify color</Text>
+        <Text fontSize="0.8rem" textStyle="annotation" mt="2">{props.tips ?? "Render string with specify color"}</Text>
         <VStack alignItems="left" mt="2">
             {value?.map((mapping, i) =>
                 <Flex key={mapping.color + mapping.value + i} justifyContent="space-between" alignItems="center">
