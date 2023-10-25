@@ -19,6 +19,7 @@ import { isEmpty } from "./validate";
 import { externalDatasourcePlugins } from "src/views/dashboard/plugins/external/plugins";
 import { builtinDatasourcePlugins } from "src/views/dashboard/plugins/built-in/plugins";
 import { TimeRange } from "types/time";
+import { isObject } from "lodash";
 
 export const hasVariableFormat = (s: string) => {
     return isEmpty(s) ? false : s.includes("${")
@@ -68,6 +69,18 @@ export const replaceQueryWithVariables = (q: PanelQuery, dsType: string, interva
 
         if (f == VariableTimerangeTo) {
             q.metrics = q.metrics.replaceAll(`\${${f}}`, (timeRange.end.getTime() / 1000).toString())
+        }
+    }
+
+    if (q.data.enableVariableKeys) {
+        const keys = q.data.enableVariableKeys
+        for (const k of keys) {
+            const v = q.data[k]
+            if (isObject(v)) {
+                q.data[k] = JSON.parse(replaceWithVariables(JSON.stringify(v)))
+            } else {
+                q.data[k] = replaceWithVariables(q.data[k])
+            }
         }
     }
 }

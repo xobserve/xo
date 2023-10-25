@@ -76,6 +76,11 @@ func GetLogs(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[str
 	}
 
 	namespace, service, host := datavutils.GetNamespaceServiceHostFromParams(params)
+	severityI := params["severity"]
+	var severity string
+	if severityI != nil {
+		severity = severityI.(string)
+	}
 
 	var domainQuery string
 	var domainArgs []interface{}
@@ -90,6 +95,11 @@ func GetLogs(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[str
 	if host != "" {
 		domainQuery += " AND host = ?"
 		domainArgs = append(domainArgs, host)
+	}
+
+	if severity != "" {
+		domainQuery += " AND severity = ?"
+		domainArgs = append(domainArgs, severity)
 	}
 
 	// query logs

@@ -30,6 +30,14 @@ const HttpQueryEditor = ({ panel, datasource, query, onChange }: DatasourceEdito
     const code = useStore(locale)
     const [tempQuery, setTempQuery] = useState<PanelQuery>(cloneDeep(query))
     const api = apiList.find(api => api.name == tempQuery.metrics)
+    if (!tempQuery.data.enableVariableKeys && api?.name) {
+        tempQuery.data.enableVariableKeys = [api.name]
+        const q = cloneDeep(tempQuery)
+        setTempQuery(q)
+        onChange(q)
+        return 
+    }
+
     if (api && api.params) {
         if (!tempQuery.data[api.name]) {
             tempQuery.data[api.name] = {}
@@ -56,6 +64,7 @@ const HttpQueryEditor = ({ panel, datasource, query, onChange }: DatasourceEdito
                 <InputSelect value={tempQuery.metrics} options={apiList.map(api => ({ label: api.name, value: api.name, annotation: api.desc }))} annotationDir="vertical" onChange={v => {
                     tempQuery.metrics = v
                     const api1 = apiList.find(api => api.name == v)
+                    tempQuery.data.enableVariableKeys = [v]
                     if (!tempQuery.data[v]) {
                         tempQuery.data[v] = {}
                     }
@@ -76,7 +85,8 @@ const HttpQueryEditor = ({ panel, datasource, query, onChange }: DatasourceEdito
                         <Tr>
                             <Th>Param</Th>
                             <Th>Desc</Th>
-                            <Th>Default value</Th>
+                            <Th>Default</Th>
+                            <Th>Allow values</Th>
                         </Tr>
                     </Thead>
                     <Tbody>
@@ -85,6 +95,7 @@ const HttpQueryEditor = ({ panel, datasource, query, onChange }: DatasourceEdito
                                 <Td>{desc[0]}</Td>
                                 <Td>{desc[1]}</Td>
                                 <Td>{desc[2]}</Td>
+                                <Td>{desc[3]}</Td>
                             </Tr>)
                         }
                     </Tbody>
@@ -149,10 +160,12 @@ const apiList = [{
     params: `{
 }`,
     paramsDesc: [
-        ["env", "environment name, such as dev, test, prod etc", ""],
-        ["service", "filter by service names, e.g datav|driver", ""],
-        ["perPage", "page size of logs when query from datasource", "100"],
-        ["orderByTimestamp", "order by timestamp, default is desc", "asc | desc"],
+        ["namespace", "such as dev, test, prod etc", "", ""],
+        ["service", "filter by service names, e.g datav|driver", "", ""],
+        ["host", "filter by host names, e.g datav-1", "", ""],
+        ["severity", "logs severity, e.g error,info", "", "debug | info | warn | error | fatal"],
+        ["perPage", "page size of logs when query from datasource", "100", "any number"],
+        ["orderByTimestamp", "order by timestamp", "desc", "asc | desc"],
     ],
     format: DataFormat.Logs
 }
