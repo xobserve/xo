@@ -506,6 +506,7 @@ const PanelHeader = ({ dashboardId, queryError, panel, onCopyPanel, onRemovePane
                         overlayStyle={{}}
                     >
                         <Button
+                            height={'100%'}
                             transition='all 0.2s'
                             _focus={{ border: null, background: null }}
                             _active={{ background: null, border: null, }}
