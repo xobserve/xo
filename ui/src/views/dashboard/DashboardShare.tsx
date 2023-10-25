@@ -18,9 +18,9 @@ import { Dashboard } from "types/dashboard"
 import { parseVariableFormat } from "utils/format"
 import { getCurrentTimeRange } from "src/components/DatePicker/TimePicker"
 import queryString from 'query-string';
-import { FaFileDownload, FaRegCopy, FaShare, FaRegEye } from "react-icons/fa"
+import { FaFileDownload, FaRegCopy, FaShare, FaRegEye, FaInfoCircle, FaEye } from "react-icons/fa"
 import { useStore } from "@nanostores/react"
-import { commonMsg, dashboardMsg } from "src/i18n/locales/en"
+import { commonMsg, dashboardMsg, dashboardSettingMsg } from "src/i18n/locales/en"
 import { dispatch } from "use-bus"
 import { ShareUrlEvent } from "src/data/bus-events"
 import { $variables } from "../variables/store"
@@ -44,20 +44,20 @@ const DashboardShare = ({ dashboard, ...rest }: Props) => {
     const variables = useStore($variables)
     const t = useStore(commonMsg)
     const t1 = useStore(dashboardMsg)
+    const t2 = useStore(dashboardSettingMsg)
 
     const { isOpen, onOpen, onClose } = useDisclosure()
 
     const [shareUrl, setShareUrl] = useState(null)
-    const [embededUrl, setEmbededUrl] = useState(null)
 
     const { onCopy, setValue, hasCopied } = useClipboard("", 5000);
-    const { onCopy:onEmbedCopy, setValue: setEmbedValue, hasCopied: hasEmbedCopied } = useClipboard("", 5000);
-    const [enableCurrentTimeRange, setEnableCurrentTimeRange] = useState(true)
+    const [enableCurrentTimeRange, setEnableCurrentTimeRange] = useState(false)
     const [useRawTime, setUseRawTime] = useState(false)
-    const [useToolbar, setUserToolbar] = useState(true)
+    const [useToolbar, setUserToolbar] = useState(false)
+    const [embedding, setEmbedding] = useState(true)
     const [refresh, setRefresh] = useState(REFRESH_OFF)
     const [embeddingPanel, setEmbeddingPanel] = useState<number>(0)
-    const [colorMode, setColorMode] = useState('light')
+    const [colorMode, setColorMode] = useState('dark')
 
     useEffect(() => {
         let url = window.origin + location.pathname + "?"
@@ -90,38 +90,39 @@ const DashboardShare = ({ dashboard, ...rest }: Props) => {
 
             }
         }
+
         dispatch(ShareUrlEvent)
+
         setTimeout(() => {
-            let embedding = url + "&embed=true&fullscreen=on"
-            if (!isEmpty(shareUrlParams)) {
-                const params = queryString.stringify(shareUrlParams, { sort: false })
-                url = url + params
-                embedding = embedding + "&" + params
-            } 
+            if (embedding) {
+                url += "&embed=true&fullscreen=on"
+                if (!isEmpty(shareUrlParams)) {
+                    const params = queryString.stringify(shareUrlParams, { sort: false })
+                    url += params
+                }
 
-            if (useToolbar) {
-                embedding = embedding + "&toolbar=on"
+                if (useToolbar) {
+                    url += "&toolbar=on"
+                }
+
+                if (refresh != REFRESH_OFF) {
+                    url += "&refresh=" + refresh
+                }
+
+                if (embeddingPanel > 0) {
+                    url += "&viewPanel=" + embeddingPanel
+                }
+
+                url += "&colorMode=" + colorMode
             }
-
-            if (refresh != REFRESH_OFF) {
-                embedding = embedding + "&refresh=" + refresh
-            }
-
-            if (embeddingPanel > 0) {
-                embedding = embedding + "&viewPanel=" + embeddingPanel
-            }
-
-            embedding = embedding + "&colorMode=" + colorMode
 
             setShareUrl(url)
-            setEmbededUrl(embedding)
             setValue(url)
-            setEmbedValue(embedding)
         }, 150)
-    }, [enableCurrentTimeRange, useRawTime, variables, useToolbar, refresh, embeddingPanel, colorMode])
+    }, [enableCurrentTimeRange, embedding, useRawTime, variables, useToolbar, refresh, embeddingPanel, colorMode])
 
     const filterPanels = (input: string, option?: { label: string; value: number }) =>
-    (option?.label ?? '').toLowerCase().includes(input.toLowerCase());
+        (option?.label ?? '').toLowerCase().includes(input.toLowerCase());
 
     return (<>
         <Tooltip label={t1.shareDashboard}><Box onClick={onOpen} {...rest}><BsShare /></Box></Tooltip>
@@ -141,7 +142,6 @@ const DashboardShare = ({ dashboard, ...rest }: Props) => {
                             <TabList>
                                 <Tab>{t.link}</Tab>
                                 <Tab>{t.export}</Tab>
-                                <Tab>{t.embedding}</Tab>
                             </TabList>
                         </HStack>
                     </ModalHeader>
@@ -149,8 +149,24 @@ const DashboardShare = ({ dashboard, ...rest }: Props) => {
                         <TabPanels>
                             <TabPanel>
                                 <VStack spacing={3} alignItems='inherit' justify='flex-start'>
-                                    <Text fontSize='sm'>{t1.shareHelp}</Text>
-                                    <Form>
+                                    <Form sx={{
+                                        '.form-item-label': {
+                                            width: "150px"
+                                        }
+                                    }}
+                                        spacing={2}
+                                    >
+                                        <FormItem title={t2.visibleTo} size="sm" alignItems={'center'}>
+                                            <RadionButtons
+                                                size="sm"
+                                                theme="brand"
+                                                options={[{ label: t2.visibleToAnonymous, value: "anonymous" }, { label: t2.visibleToTeam, value: "team" }, { label: t2.visibleToAll, value: "all" }]}
+                                                value={dashboard.visibleTo}
+                                                onChange={() => { }} />
+                                        </FormItem>
+
+                                        <FormItem title={t.options} size="sm" desc={t1.shareHelp}></FormItem>
+
                                         <FormItem title={t.currentTimeRange} size="sm" alignItems={'center'}>
                                             <Switch
                                                 isChecked={enableCurrentTimeRange}
@@ -165,6 +181,33 @@ const DashboardShare = ({ dashboard, ...rest }: Props) => {
                                                     setUseRawTime(e.currentTarget.checked)
                                                 }} />
                                         </FormItem>}
+                                        <FormItem title={t.embedding} size="sm" alignItems={'center'} desc={t1.embedHelp}>
+                                            <Switch
+                                                isChecked={embedding}
+                                                onChange={(e) => {
+                                                    setEmbedding(e.currentTarget.checked)
+                                                }} />
+                                        </FormItem>
+                                        {
+                                            embedding && <>
+                                                <FormItem title={t.showToolbar} size="sm" alignItems={'center'} desc={t.showToolbarTip}>
+                                                    <Switch
+                                                        isChecked={useToolbar}
+                                                        onChange={(e) => {
+                                                            setUserToolbar(e.currentTarget.checked)
+                                                        }} />
+                                                </FormItem>
+                                                <FormItem title={"Use refresh"} size="sm" alignItems={'center'}>
+                                                    <Select popupMatchSelectWidth={false} bordered={false} value={refresh} onChange={(v) => setRefresh(v)} options={[REFRESH_OFF, '5s', '10s', '30s', '1m', '5m', '10m'].map(v => ({ value: v, label: v }))} />
+                                                </FormItem>
+                                                <FormItem title={"Color mode"} size="sm" alignItems={'center'}>
+                                                    <RadionButtons size="sm" value={colorMode} options={[{ label: "Light", value: "light" }, { label: "Dark", value: "dark" }]} onChange={v => setColorMode(v)} />
+                                                </FormItem>
+                                                <FormItem title={"Embedding panel"} size="sm" alignItems={'center'}>
+                                                    <Select popupMatchSelectWidth={false} bordered={false} value={embeddingPanel} onChange={(v) => setEmbeddingPanel(v)} options={concat([{ value: 0, label: "OFF" }], dashboard.data.panels.map(p => ({ label: p.title, value: p.id })))} showSearch filterOption={filterPanels} style={{ width: "200px" }} />
+                                                </FormItem>
+                                            </>
+                                        }
                                     </Form>
                                     <HStack spacing={1}>
                                         <Textarea fontSize='xs' mr='1.5' wordBreak='break-all' p='1' className="code-bg" bgColor='#09090b' overflow='hidden' textOverflow='ellipsis' value={shareUrl} readOnly />
@@ -176,53 +219,6 @@ const DashboardShare = ({ dashboard, ...rest }: Props) => {
                             </TabPanel>
                             <TabPanel>
                                 <ExportComponent dashboard={dashboard} />
-                            </TabPanel>
-                            <TabPanel>
-                                <VStack spacing={3} alignItems='inherit' justify='flex-start'>
-                                    <Text fontSize='sm'>{t1.embedHelp}</Text>
-                                    <Form sx={{
-                                        '.form-item-label': {
-                                            width: "150px"
-                                        }
-                                    }} spacing={2}>
-                                        <FormItem title={t.currentTimeRange} size="sm" alignItems={'center'}>
-                                            <Switch
-                                                isChecked={enableCurrentTimeRange}
-                                                onChange={(e) => {
-                                                    setEnableCurrentTimeRange(e.currentTarget.checked)
-                                                }} />
-                                        </FormItem>
-                                        {enableCurrentTimeRange && <FormItem title="Use raw time" size="sm" alignItems={'center'}>
-                                            <Switch
-                                                isChecked={useRawTime}
-                                                onChange={(e) => {
-                                                    setUseRawTime(e.currentTarget.checked)
-                                                }} />
-                                        </FormItem>}
-                                        <FormItem title={"Show toolbar"} size="sm" alignItems={'center'} desc="With toolbar, users can select variables and time">
-                                            <Switch
-                                                isChecked={useToolbar}
-                                                onChange={(e) => {
-                                                    setUserToolbar(e.currentTarget.checked)
-                                                }} />
-                                        </FormItem>
-                                        <FormItem title={"Use refresh"} size="sm" alignItems={'center'}>
-                                            <Select popupMatchSelectWidth={false} bordered={false} value={refresh} onChange={(v) => setRefresh(v)} options={[REFRESH_OFF, '5s', '10s', '30s', '1m', '5m', '10m'].map(v => ({ value: v, label: v }))} />
-                                        </FormItem>
-                                        <FormItem title={"Color mode"} size="sm" alignItems={'center'}>
-                                            <RadionButtons size="sm" value={colorMode} options={[{label: "Light", value: "light"}, {label:"Dark", value: "dark"}]} onChange={v => setColorMode(v)} />
-                                        </FormItem>
-                                        <FormItem title={"Embedding panel"} size="sm" alignItems={'center'}>
-                                            <Select popupMatchSelectWidth={false} bordered={false} value={embeddingPanel} onChange={(v) => setEmbeddingPanel(v)} options={concat([{value: 0, label: "OFF"}], dashboard.data.panels.map(p => ({label: p.title, value: p.id})))} showSearch filterOption={filterPanels} style={{width: "200px"}}/>
-                                        </FormItem>
-                                    </Form>
-                                    <HStack spacing={1}>
-                                        <Textarea fontSize='xs' mr='1.5' wordBreak='break-all' p='1' className="code-bg" bgColor='#09090b' overflow='hidden' textOverflow='ellipsis' value={embededUrl} readOnly />
-                                        <Button size="sm" leftIcon={<FaRegCopy />} onClick={onEmbedCopy} variant={hasEmbedCopied ? "solid" : "outline"}>
-                                            {hasEmbedCopied ? t.copied : t.copy}
-                                        </Button>
-                                    </HStack>
-                                </VStack>
                             </TabPanel>
                         </TabPanels>
                     </ModalBody>
