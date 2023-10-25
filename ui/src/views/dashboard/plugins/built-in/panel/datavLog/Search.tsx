@@ -44,7 +44,7 @@ const Search = ({ panel }: Props) => {
                 if (isEmpty(query)) {
                     newQuery = q
                 } else {
-                    newQuery = (query + ' AND ' + q)
+                    newQuery = (query + ' && ' + q)
                 }
             }
             setQuery(newQuery)
@@ -57,7 +57,7 @@ const Search = ({ panel }: Props) => {
         const params = $datavQueryParams.get()
         $datavQueryParams.set({
             ...params,
-            search: (q??query).toLowerCase()
+            search: encodeURIComponent((q??query).toLowerCase())
         })
 
         dispatch(PanelForceRequeryEvent + panel.id)

@@ -74,14 +74,14 @@ const LogDetail = ({ log: rawlog, isOpen, onClose, onSearch }: Props) => {
                         <TabPanel>
                             <VStack alignItems="left" fontSize="0.85rem">
                                 {
-                                    basicKV.map(r => <LogKV k={r[0]} v={r[1]} onSearch={(isNew) => onSearch(`{{${r[0]}:${typeof r[1] == "string" ? `"${r[1]}"`: r[1]}}}`,isNew)}/>)
+                                    basicKV.map(r => <LogKV k={r[0]} v={r[1]} onSearch={(isNew) => onSearch(`${r[0]}=${typeof r[1] == "string" ? `"${r[1]}"`: r[1]}`,isNew)}/>)
                                 }
                             </VStack>
                             <Text fontWeight={550} mt="4" fontSize="0.85rem">Resources</Text>
                             <Divider mt="2" />
                             <VStack alignItems="left" fontSize="0.85rem" mt="2">
                                 {
-                                    log.resources.map(r => <LogKV k={r[0]} v={r[1]} onSearch={(isNew) => onSearch(`{{resources.${r[0]}:${typeof r[1] == "string" ? `"${r[1]}"`: r[1]}}}}}`,isNew)}/>)
+                                    log.resources.map(r => <LogKV k={r[0]} v={r[1]} onSearch={(isNew) => onSearch(`resources.${r[0]}=${typeof r[1] == "string" ? `"${r[1]}"`: r[1]}}}`,isNew)}/>)
                                 }
                             </VStack>
 
@@ -89,7 +89,7 @@ const LogDetail = ({ log: rawlog, isOpen, onClose, onSearch }: Props) => {
                             <Divider mt="2" />
                             <VStack alignItems="left" fontSize="0.85rem" mt="2">
                                 {
-                                    log.attributes.map(r => <LogKV k={r[0]} v={r[1]} onSearch={(isNew) => onSearch(`{{attributes.${r[0]}:${typeof r[1] == "string" ? `"${r[1]}"`: r[1]}}}}}`,isNew)}/>)
+                                    log.attributes.map(r => <LogKV k={r[0]} v={r[1]} onSearch={(isNew) => onSearch(`attributes.${r[0]}=${typeof r[1] == "string" ? `"${r[1]}"`: r[1]}}}`,isNew)}/>)
                                 }
                             </VStack>
                         </TabPanel>
@@ -112,7 +112,7 @@ const LogKV = ({ k, v, onSearch}) => {
         <Text color="rgb(131, 120, 255)" minW="fit-content">{k}</Text>
         <Text color={isString ? useColorModeValue("rgb(0, 166, 0)", "rgb(166, 226, 46)") : useColorModeValue("rgb(253, 130, 31)", "rgb(253, 151, 31)")} >{isString ? `"${v}"` : v}</Text>
 
-        <HStack opacity={0.6} fontSize="0.7rem" position="relative" visibility={onHover ? "visible" : "hidden"}>
+        <HStack opacity={0.5} fontSize="0.7rem" position="relative" visibility={onHover ? "visible" : "hidden"}>
             <Tooltip label="Add to current search"><Box cursor="pointer"><FaSearchPlus onClick={() => onSearch(false)} /></Box></Tooltip>
             <Tooltip label="Search with this value"><Box cursor="pointer"><FaSearch onClick={() => onSearch(true)}/></Box></Tooltip>
             <CopyToClipboard copyText={v} tooltipTitle="copy this value" fontSize="0.7rem"/>

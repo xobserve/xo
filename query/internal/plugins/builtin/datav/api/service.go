@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	ch "github.com/ClickHouse/clickhouse-go/v2"
-	obmodels "github.com/DataObserve/datav/query/internal/plugins/builtin/datav/models"
+	datavmodels "github.com/DataObserve/datav/query/internal/plugins/builtin/datav/models"
 	pluginUtils "github.com/DataObserve/datav/query/internal/plugins/utils"
 	"github.com/DataObserve/datav/query/pkg/colorlog"
 	"github.com/DataObserve/datav/query/pkg/config"
@@ -21,7 +21,7 @@ type ServiceNameRes struct {
 }
 
 func GetServiceNames(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[string]interface{}) models.PluginResult {
-	query := fmt.Sprintf("SELECT DISTINCT serviceName FROM %s.%s", config.Data.Observability.DefaultTraceDB, obmodels.DefaultTopLevelOperationsTable)
+	query := fmt.Sprintf("SELECT DISTINCT serviceName FROM %s.%s", config.Data.Observability.DefaultTraceDB, datavmodels.DefaultTopLevelOperationsTable)
 
 	rows, err := conn.Query(c.Request.Context(), query)
 	if err != nil {
@@ -47,7 +47,7 @@ func GetServiceOperations(c *gin.Context, ds *models.Datasource, conn ch.Conn, p
 
 	service := serviceI.(string)
 
-	query := fmt.Sprintf("SELECT DISTINCT name FROM %s.%s WHERE serviceName='%s'", config.Data.Observability.DefaultTraceDB, obmodels.DefaultTopLevelOperationsTable, service)
+	query := fmt.Sprintf("SELECT DISTINCT name FROM %s.%s WHERE serviceName='%s'", config.Data.Observability.DefaultTraceDB, datavmodels.DefaultTopLevelOperationsTable, service)
 	rows, err := conn.Query(c.Request.Context(), query)
 	if err != nil {
 		logger.Warn("Error Query service operations", "query", query, "error", err)
@@ -101,7 +101,7 @@ func GetServiceInfoList(c *gin.Context, ds *models.Datasource, conn ch.Conn, par
 		FROM %s.%s
 		WHERE %s timestamp>= %d AND timestamp<= %d
 		GROUP BY serviceName`,
-		config.Data.Observability.DefaultTraceDB, obmodels.DefaultIndexTable, serviceFilter, start, end)
+		config.Data.Observability.DefaultTraceDB, datavmodels.DefaultIndexTable, serviceFilter, start, end)
 	args := []interface{}{}
 	args = append(args,
 		ch.Named("serviceNames", serviceNames),
@@ -135,7 +135,7 @@ func GetServiceInfoList(c *gin.Context, ds *models.Datasource, conn ch.Conn, par
 		FROM %s.%s
 		WHERE %s timestamp>= %d AND timestamp<= %d AND statusCode=2
 		GROUP BY serviceName`,
-		config.Data.Observability.DefaultTraceDB, obmodels.DefaultIndexTable, serviceFilter, start, end)
+		config.Data.Observability.DefaultTraceDB, datavmodels.DefaultIndexTable, serviceFilter, start, end)
 
 	rows, err = conn.Query(c.Request.Context(), query, args...)
 	if err != nil {

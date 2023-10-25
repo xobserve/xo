@@ -42,10 +42,14 @@ const PanelWrapper = memo((props: Props) => {
     const data = props.data.flat()
 
     if (isEmpty(data)) {
-        return <Center height="100%"><NoData /></Center>
+        return <>
+            <Search panel={props.panel} />
+            <Center height="100%"><NoData /></Center>
+        </>
     }
 
     return (<>
+        <Search panel={props.panel} />
         {
             !isLogData(data[0])
                 ?
@@ -119,9 +123,10 @@ const Panel = (props: Props) => {
 
     const totalLogs = useMemo(() => {
         const d: any[] = data.chart.data
-        return d.reduce((total, b) => {
-            return total + b[1]
+        const total = d.reduce((total, b) => {
+            return total + b[1] + b[2]
         }, 0)
+        return total
     }, [data.chart])
 
     const onClickChart = (ts, level, step) => {
@@ -178,15 +183,14 @@ const Panel = (props: Props) => {
     const chartHeight = 100
     return (<>
         <Box px="2" height="100%" id="datav-log-panel" >
-            <Search panel={panel} />
-            {data.chart && <Box height={chartHeight} mb="2">
+            {data.chart && logs.length > 0 && <Box height={chartHeight} mb="2">
                 <DatavLogChart panel={panel} width={props.width} data={data.chart} onClick={onClickChart} totalLogs={totalLogs} displayLogs={displayLogCount} />
             </Box>}
-            <QueryClientProvider client={queryClient}>
-                <ColumnResizableTable highlightRow={selectedLog?.find(f=> f.name == "id").values[0]} columns={defaultColumns} data={logs} wrapLine={wrapLine} fontSize={12} allowOverflow={false} height={props.height - chartHeight} totalRowCount={totalLogs} onLoadPage={onLoadLogsPage} onRowsCountChange={setDisplayLogs} onRowClick={onLogRowClick} />
+            {logs.length > 0 && <QueryClientProvider client={queryClient}>
+                <ColumnResizableTable highlightRow={selectedLog?.find(f => f.name == "id").values[0]} columns={defaultColumns} data={logs} wrapLine={wrapLine} fontSize={12} allowOverflow={false} height={props.height - chartHeight} totalRowCount={totalLogs} onLoadPage={onLoadLogsPage} onRowsCountChange={setDisplayLogs} onRowClick={onLogRowClick} />
 
-            </QueryClientProvider>
-
+            </QueryClientProvider>}
+            {logs.length == 0 && <Center height="100%"><NoData /></Center>}
         </Box>
         {selectedLog && <LogDetail log={selectedLog} isOpen={isOpen} onClose={() => {
             // setSelectedLog(null)
