@@ -77,9 +77,18 @@ export const replaceQueryWithVariables = (q: PanelQuery, dsType: string, interva
         for (const k of keys) {
             const v = q.data[k]
             if (isObject(v)) {
-                q.data[k] = JSON.parse(replaceWithVariables(JSON.stringify(v)))
+                if (p && p.replaceQueryWithVariables) {
+                    q.data[k] = JSON.parse(p.replaceQueryWithVariables(JSON.stringify(v), interval))
+                } else {
+                    q.data[k] = JSON.parse(replaceWithVariables(JSON.stringify(v)))
+                }
             } else {
-                q.data[k] = replaceWithVariables(q.data[k])
+                if (p && p.replaceQueryWithVariables) {
+                    q.data[k] = p.replaceQueryWithVariables(v, interval)
+                } else {
+                    q.data[k] = replaceWithVariables(v)
+                }
+               
             }
         }
     }

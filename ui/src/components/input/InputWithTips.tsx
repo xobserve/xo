@@ -17,7 +17,7 @@ import React from "react"
 const InputWithTips = ({ value, onChange, onConfirm=null, width, children, placeholder = "Enter....", variant = "flushed", size = "md" }) => {
     const { isOpen, onToggle, onClose } = useDisclosure()
     return (<>
-        <Input value={value} onChange={e => onChange(e.currentTarget.value)} width={width} size={size} variant={variant} placeholder={placeholder} onFocus={onToggle} onBlur={onToggle} onKeyDown={e => {
+        <Input value={value} pl="2" onChange={e => onChange(e.currentTarget.value)} width={width} size={size} variant={variant} placeholder={placeholder} onFocus={onToggle} onBlur={onToggle} onKeyDown={e => {
             if (onConfirm && e.key === 'Enter') {
                 onConfirm()
             }

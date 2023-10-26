@@ -33,3 +33,5 @@ type SearchToken struct {
 	Value    string
 	Operator string
 }
+
+const VariableSplitChart = "|"

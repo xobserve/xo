@@ -28,6 +28,8 @@ import { QueryPluginResult } from "types/plugin"
 import { queryPluginDataToLogs, queryPluginDataToTable, queryPluginDataToTimeSeries } from "utils/plugins"
 import { DataFormat } from "types/format"
 import { $datavQueryParams } from "./store"
+import { parseVariableFormat } from "utils/format"
+import { VariableSplitChar } from "src/data/variable"
 
 export const runQuery = async (panel: Panel, q: PanelQuery, range: TimeRange, ds: Datasource, extraParams?: Record<string,any>) => {
     if (isEmpty(q.metrics)) {
@@ -42,7 +44,7 @@ export const runQuery = async (panel: Panel, q: PanelQuery, range: TimeRange, ds
 
 
     // clickhouse data has writing lacency, so we need to fetch data from 2 seconds before
-    let url = `/proxy/${ds.id}?query=${replaceWithVariables(q.metrics)}&params=${replaceWithVariables(JSON.parse(JSON.stringify(q.data[q.metrics].params)))}&start=${start}&end=${end-5}&step=${q.interval}`
+    let url = `/proxy/${ds.id}?query=${q.metrics}&params=${q.data[q.metrics].params}&start=${start}&end=${end-5}&step=${q.interval}`
     if (!isEmpty(extraParams)) {
         Object.entries(extraParams).forEach(v => {
             url += `&${v[0]}=${v[1]}`
@@ -163,8 +165,28 @@ export const queryHttpVariableValues = async (variable: Variable, useCurrentTime
 }
 
 
-export const replaceHttpQueryWithVariables = (query: PanelQuery, interval: string) => {
+export const replaceDatavQueryWithVariables = (query: PanelQuery | string, interval: string) => {
+    const vars = $variables.get()
+    if (typeof query == "string") {
+        let q: string = query
+        const formats = parseVariableFormat(q);
+        for (const f of formats) {
+            const v = vars.find(v => v.name == f)
+            if (v) {
+                q = q.replaceAll(`\${${f}}`,v.selected.replaceAll(VariableSplitChar, '|') );
+            }
+        }   
 
+        return q
+    }
+
+    const formats = parseVariableFormat(query.metrics);
+    for (const f of formats) {
+        const v = vars.find(v => v.name == f)
+        if (v) {
+            query.metrics = query.metrics.replaceAll(`\${${f}}`,v.selected.replaceAll(VariableSplitChar, '|'));
+        }
+    }   
 }
 
 

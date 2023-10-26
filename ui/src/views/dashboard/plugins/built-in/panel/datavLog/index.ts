@@ -18,8 +18,8 @@ const panelComponents: PanelPluginComponents = {
             showChart: true,
             showLogs: true,
             showSearch: true,
-            headerFontSize: 12,
-            logFontSize: 12,
+            headerFontSize: 12.5,
+            logFontSize: 12.5,
             logline: {
                 wrapLine: false,
                 allowOverflow: false,
@@ -31,6 +31,15 @@ const panelComponents: PanelPluginComponents = {
                     {key: "service",name:"service", width: [150,120]},
                     {key: "body", name:"body", width: [500, 800]},
                 ]
+            },
+            chart: {
+                height: 100,
+                type: "bar",
+                stack: true,
+                left: 1,
+                right: 3,
+                top: 6,
+                bottom: 35
             }
         } as DatavLogSettings
     },
