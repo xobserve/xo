@@ -10,6 +10,10 @@ const  customColors = {
         light: theme.colors.gray['100'], 
         dark: theme.colors.whiteAlpha['200']
     },
+    hoverItem: {
+        light: 'var(--chakra-colors-brand-500)', 
+        dark: 'var(--chakra-colors-brand-200)'
+    },
     // 侧边栏的卡片背景色
     sideCardBg: {
         light: "rgba(247,249,249,0.5)",
@@ -34,8 +38,8 @@ const  customColors = {
     },
     // primary text color
     primaryColor: {
-        light: 'var(--chakra-colors-brand-500)', 
-        dark: 'var(--chakra-colors-brand-500)'
+        light: 'var(--chakra-colors-brand-600)', 
+        dark: 'var(--chakra-colors-brand-200)',
     },
     popperBg: {
         light: '#fff',

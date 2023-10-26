@@ -59,7 +59,7 @@ const UserSidemenus = ({miniMode}) => {
     const [isMobileScreen] = useMediaQuery(MobileVerticalBreakpoint)
     return (
         <>
-            <Popover trigger={isMobileScreen ? "click" : "hover"} placement="auto">
+            <Popover trigger={isMobileScreen ? "click" : "hover"} placement="right">
                 <PopoverTrigger>
                     <HStack spacing={3} cursor="pointer" width="100%">
                     {miniMode ? <IconButton
@@ -71,7 +71,7 @@ const UserSidemenus = ({miniMode}) => {
                         _focus={{ border: null }}
                         icon={<FaAlignLeft />}
                     /> : <FaAlignLeft fontSize="1rem"/>}
-                    {!miniMode && <Text fontSize="1rem">{t1.selectSidemenu}</Text>}
+                    {!miniMode && <Text fontSize="0.9rem">{t1.selectSidemenu}</Text>}
                     </HStack>
                
                 </PopoverTrigger>
@@ -82,10 +82,10 @@ const UserSidemenus = ({miniMode}) => {
                         <CardSelect title={t1.selectSideMenuTips}>
                             {sidemenus.map(sidemenu => 
                                 <CardSelectItem key={sidemenu.teamId} selected={session?.user.sidemenu == sidemenu.teamId} onClick={() => selectSidemenu(sidemenu.teamId)}>
-                                    <Heading size='xs' textTransform='uppercase'>
+                                    <Text fontSize='0.9rem' fontWeight="550">
                                         {sidemenu.teamName}
-                                    </Heading>
-                                    <Text pt='2' fontSize='sm'>
+                                    </Text>
+                                    <Text pt='1' fontSize='sm'>
                                         {sidemenu.brief}
                                     </Text>
                                 </CardSelectItem>

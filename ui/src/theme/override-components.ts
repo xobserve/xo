@@ -25,7 +25,7 @@ const components =  {
           item: {
             bg: mode(customColors.popperBg.light, customColors.popperBg.dark)(props),
             _hover: {
-              color: "brand.500",
+              color:mode(customColors.hoverItem.light, customColors.hoverItem.dark)(props),
             },
             _focus: {
               color: "brand.500",

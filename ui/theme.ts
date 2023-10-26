@@ -20,7 +20,7 @@ const customTheme = extendTheme(
         // 自定义基本颜色
         colors: {
             ...overrideColors,
-            brand: overrideColors['cyan'] ?? baseTheme.colors['cyan'],
+            brand: overrideColors['whatsapp'] ?? baseTheme.colors['whatsapp'],
         },
         semanticTokens: {
             colors: {

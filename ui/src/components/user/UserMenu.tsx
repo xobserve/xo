@@ -92,10 +92,10 @@ const UserMenu = ({ fontSize = "1.1rem", miniMode }) => {
                         </MenuButton>
                 }
                 <Portal>
-                    <MenuList zIndex={1000}>
-                        <Link to={session ? `/account/setting` : null}><MenuItem py="2px" cursor="default" bg="transparent" _hover={{bg: "transparent"}}  icon={<FaUserAlt fontSize="1rem" />} >
+                    <MenuList zIndex={1000} fontSize="0.9rem">
+                        <Link to={session ? `/account/setting` : null}><MenuItem  py="2px" cursor="default" bg="transparent" _hover={{bg: "transparent"}}  icon={<FaUserAlt fontSize="1rem" />} >
                             <Text>{session?.user.name ?? "Datav guest"}</Text>
-                            {session && <Text textStyle="annotation">{session.user.username}</Text>}
+                            {session && <Text>{session.user.username}</Text>}
                         </MenuItem></Link>
                         <MenuDivider />
                         {session && isAdmin(session.user.role) && <><Link to={`/admin/users`}><MenuItem width="100%" icon={<FaStar fontSize="1rem" />} >{t1.adminPanel}</MenuItem></Link><MenuDivider /></>}

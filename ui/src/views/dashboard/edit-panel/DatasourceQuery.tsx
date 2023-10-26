@@ -198,7 +198,7 @@ const DatasourceQueryOption = ({ panel, onChange }: Props) => {
     return (
         <VStack alignItems="end" mt="8px">
 
-            <HStack color="brand.500" fontSize=".9rem" spacing={1} cursor="pointer" onClick={() => setExpanded(!expanded)} width="fit-content">
+            <HStack className="color-text" fontSize=".9rem" spacing={1} cursor="pointer" onClick={() => setExpanded(!expanded)} width="fit-content">
                 {expanded ? <FaAngleDown /> : <FaAngleRight />}
                 <Text fontWeight="500">{t1.queryOption}</Text>
             </HStack>
