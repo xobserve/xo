@@ -19,6 +19,8 @@ export interface DatavLogSettings  {
     showChart: boolean 
     showLogs: boolean
     showSearch: boolean
+    headerFontSize: number
+    logFontSize: number
     logline: {
         wrapLine: boolean
         allowOverflow: boolean

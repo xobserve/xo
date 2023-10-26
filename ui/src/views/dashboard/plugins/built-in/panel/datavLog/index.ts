@@ -18,6 +18,8 @@ const panelComponents: PanelPluginComponents = {
             showChart: true,
             showLogs: true,
             showSearch: true,
+            headerFontSize: 12,
+            logFontSize: 12,
             logline: {
                 wrapLine: false,
                 allowOverflow: false,

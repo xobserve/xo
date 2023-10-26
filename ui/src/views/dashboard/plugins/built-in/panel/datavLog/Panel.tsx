@@ -90,9 +90,9 @@ const Panel = (props: Props) => {
                 size: typeof c.width == "number" ? c.width :  (isMobileScreen ? c.width[0] : c.width[1]),
             }
             
-            if (c.name == "timestamp") {
-                base.cell = info => <Text opacity={0.7} fontWeight={550}>{info.getValue() as any}</Text>
-            } else if (c.name == "severity") {
+            if (c.key == "timestamp") {
+                base.cell = info => <Text opacity={0.6} fontWeight={500}>{info.getValue() as any}</Text>
+            } else if (c.key == "severity") {
                 base.cell = info => {
                     const severity = info.getValue() as any
                     return <Text className={severity == "error" && "error-text"}>{severity}</Text>
@@ -193,22 +193,24 @@ const Panel = (props: Props) => {
     const showChart = options.showChart && data.chart && logs.length > 0
     const highlights = useMemo(() => {
         const highlights = []
-        for (const h of options.columns.highlight) {
-            if (h.value === null) {
+        if (options.columns.highlight) {
+            for (const h of options.columns.highlight) {
+                if (h.value === null) {
+                    highlights.push({
+                        column: null,
+                        match: null,
+                        color: paletteColorNameToHex(h.color)
+                    })
+                    continue
+                }
+    
+                const v = h.value.split("=")
                 highlights.push({
-                    column: null,
-                    match: null,
+                    column: v[0],
+                    match: v[1],
                     color: paletteColorNameToHex(h.color)
                 })
-                continue
-            }
-
-            const v = h.value.split("=")
-            highlights.push({
-                column: v[0],
-                match: v[1],
-                color: paletteColorNameToHex(h.color)
-            })
+            }   
         }
         return highlights
     },[options.columns.highlight])
@@ -216,10 +218,10 @@ const Panel = (props: Props) => {
     return (<>
         <Box px="2" height="100%" id="datav-log-panel" >
             {showChart && <Box key={showLogs as any} height={showLogs ? chartHeight: props.height} mb="2">
-                <DatavLogChart panel={panel} width={props.width} data={data.chart} onClick={onClickChart} totalLogs={totalLogs} displayLogs={displayLogCount} />
+                <DatavLogChart panel={panel} width={props.width} data={data.chart} onClick={onClickChart} totalLogs={totalLogs} displayLogs={showLogs ? displayLogCount : null} />
             </Box>}
             {showLogs && <QueryClientProvider client={queryClient}>
-                <ColumnResizableTable highlightRow={selectedLog?.find(f => f.name == "id").values[0]} columns={defaultColumns} data={logs} wrapLine={options.logline.wrapLine} fontSize={12} allowOverflow={options.logline.allowOverflow} height={props.height - (showChart ? chartHeight : 0)} totalRowCount={totalLogs} onLoadPage={onLoadLogsPage} onRowsCountChange={setDisplayLogs} onRowClick={onLogRowClick} columnHighlights={highlights}/>
+                <ColumnResizableTable highlightRow={selectedLog?.find(f => f.name == "id").values[0]} columns={defaultColumns} data={logs} wrapLine={options.logline.wrapLine} fontSize={options.logFontSize} headerFontSize={options.headerFontSize} allowOverflow={options.logline.allowOverflow} height={props.height - (showChart ? chartHeight : 0)} totalRowCount={totalLogs} onLoadPage={onLoadLogsPage} onRowsCountChange={setDisplayLogs} onRowClick={onLogRowClick} columnHighlights={highlights}/>
             </QueryClientProvider>}
             {logs.length == 0 && <Center height="100%"><NoData /></Center>}
         </Box>
