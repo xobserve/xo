@@ -167,7 +167,6 @@ const Panel = (props: Props) => {
     }
 
     const onLogRowClick = async log => {
-
         const rawlog = data.logs.find(l => l.id == log.id)
         const ds = $datasources.get().find(ds => ds.id == panel.datasource.id)
         const plugin = builtinDatasourcePlugins[ds.type] ?? externalDatasourcePlugins[ds.type]
@@ -190,7 +189,7 @@ const Panel = (props: Props) => {
     }
 
 
-    const chartHeight = 100
+    const chartHeight = options.chart.height
     const showLogs = options.showLogs && logs.length > 0
     const showChart = options.showChart && data.chart && logs.length > 0
     const highlights = useMemo(() => {

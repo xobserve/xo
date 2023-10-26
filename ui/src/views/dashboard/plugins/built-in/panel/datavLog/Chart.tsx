@@ -21,6 +21,7 @@ import { dateTimeFormat } from "utils/datetime/formatter"
 import { getTimeFormatForChart } from "utils/format"
 import customColors from "theme/colors"
 import {colors1} from 'utils/colors'
+import { DatavLogSettings, PanelType } from "./types"
 
 interface Props {
     data: QueryPluginData
@@ -38,6 +39,7 @@ const DatavLogChart = memo((props: Props) => {
     const timelineCache = useRef<string[]>(null)
     const timeBucksCache = useRef<string[]>(null)
     const stepCache = useRef(null)
+    const panelOptions: DatavLogSettings = panel.plugins[PanelType]
     useEffect(() => {
         if (chart) {
             chart.on('click', function (event) {
@@ -76,7 +78,7 @@ const DatavLogChart = memo((props: Props) => {
         return [timeline, names, data.slice(1)]
     },[props.data])
 
-
+    
 
     const chartOptions = {
         animation: false,
@@ -91,10 +93,10 @@ const DatavLogChart = memo((props: Props) => {
             },
         },
         grid: {
-            left: "1%",
-            right: "3%",
-            top: "6%",
-            bottom: '35%',
+            left: `${panelOptions.chart.left}%`,
+            right: `${panelOptions.chart.right}%`,
+            top: `${panelOptions.chart.top}%`,
+            bottom: `${panelOptions.chart.bottom}%`,
             // padding: 0,
             containLabel: true
         },
@@ -131,8 +133,8 @@ const DatavLogChart = memo((props: Props) => {
             return ({
             name: name,
             data: data[i],
-            type: 'bar',
-            stack: "total",
+            type: panelOptions.chart.type,
+            stack: panelOptions.chart.stack,
             label: {
                 show: false,
                 formatter: (v) => {

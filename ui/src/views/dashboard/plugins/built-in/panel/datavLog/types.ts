@@ -29,4 +29,13 @@ export interface DatavLogSettings  {
         displayColumns: {key:string;name?: string;width: number | number[]}[]
         highlight: Record<string,string>[]
     }
+    chart: {
+        height: number 
+        type: "line" | "bar"
+        stack: boolean
+        top: number 
+        right: number 
+        bottom: number
+        left: number
+    }
 }

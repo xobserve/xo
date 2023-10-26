@@ -22,6 +22,8 @@ import CodeEditor from "components/CodeEditor/CodeEditor"
 import { locale } from "src/i18n/i18n";
 import { Switch, useToast } from "@chakra-ui/react";
 import StringColorMappingEditor from "../../../components/StringColorMapping";
+import { dispatch } from "use-bus";
+import { PanelForceRebuildEvent } from "src/data/bus-events";
 
 const PanelEditor = memo(({ panel, onChange }: DatavLogEditorProps) => {
     let lang = useStore(locale)
@@ -47,12 +49,12 @@ const PanelEditor = memo(({ panel, onChange }: DatavLogEditorProps) => {
             <PanelEditItem title={lang == "en" ? "Column fontsize" : "列标题字体大小"}>
                 <EditorNumberItem value={panel.plugins[PanelType].headerFontSize} onChange={v => onChange((panel: Panel) => {
                     panel.plugins[PanelType].headerFontSize = v
-                })} step={0.5} min={8} max={20}/>
+                })} step={0.5} min={8} max={20} />
             </PanelEditItem>
             <PanelEditItem title={lang == "en" ? "Log font size" : "日志字体大小"}>
                 <EditorNumberItem value={panel.plugins[PanelType].logFontSize} onChange={v => onChange((panel: Panel) => {
                     panel.plugins[PanelType].logFontSize = v
-                })} step={0.5} min={8} max={20}/>
+                })} step={0.5} min={8} max={20} />
             </PanelEditItem>
         </PanelAccordion>
         <PanelAccordion title={lang == "en" ? "Log row" : "日志行"}>
@@ -91,7 +93,45 @@ const PanelEditor = memo(({ panel, onChange }: DatavLogEditorProps) => {
             <PanelEditItem title={lang == "en" ? "Highlight column values" : "高亮显示列的值"} desc={`columnName=regexp e.g: body=.*customer.*  resources.container_name=hotrod`}>
                 <StringColorMappingEditor value={panel.plugins[PanelType].columns.highlight} onChange={(v) => onChange((panel: Panel) => {
                     panel.plugins[PanelType].columns.highlight = v
-                })} tips="Render column value with specify color"/>
+                })} tips="Render column value with specify color" />
+            </PanelEditItem>
+        </PanelAccordion>
+        <PanelAccordion title={"Chart"}>
+            <PanelEditItem title={lang == "en" ? "Type" : "图表类型"}>
+                <RadionButtons options={[{ label: "Bar", value: "bar" }, { label: "Line", value: "line" }]} value={panel.plugins[PanelType].chart.type} onChange={v => onChange((panel: Panel) => {
+                    panel.plugins[PanelType].chart.type = v
+                })} />
+            </PanelEditItem>
+            <PanelEditItem title={lang == "en" ? "Height" : "图表高度"}>
+                <EditorNumberItem value={panel.plugins[PanelType].chart.height} onChange={v => onChange((panel: Panel) => {
+                    panel.plugins[PanelType].chart.height = v
+                    dispatch(PanelForceRebuildEvent + panel.id)
+                })} step={10} min={0} max={1000} />
+            </PanelEditItem>
+            <PanelEditItem title={"Stack"}>
+                <Switch defaultChecked={panel.plugins[PanelType].chart.stack} onChange={e => onChange((panel: Panel) => {
+                    panel.plugins[PanelType].chart.stack = e.currentTarget.checked
+                })} />
+            </PanelEditItem>
+            <PanelEditItem title={"Top"}>
+                <EditorNumberItem value={panel.plugins[PanelType].chart.top} onChange={v => onChange((panel: Panel) => {
+                    panel.plugins[PanelType].chart.top = v
+                })} step={1} min={0} max={100} /> %
+            </PanelEditItem>
+            <PanelEditItem title={"Right"}>
+                <EditorNumberItem value={panel.plugins[PanelType].chart.right} onChange={v => onChange((panel: Panel) => {
+                    panel.plugins[PanelType].chart.right = v
+                })} step={1} min={0} max={100} /> %
+            </PanelEditItem>
+            <PanelEditItem title={"Bottom"}>
+                <EditorNumberItem value={panel.plugins[PanelType].chart.bottom} onChange={v => onChange((panel: Panel) => {
+                    panel.plugins[PanelType].chart.bottom = v
+                })} step={1} min={0} max={100} /> %
+            </PanelEditItem>
+            <PanelEditItem title={"Left"}>
+                <EditorNumberItem value={panel.plugins[PanelType].chart.left} onChange={v => onChange((panel: Panel) => {
+                    panel.plugins[PanelType].chart.left = v
+                })} step={1} min={0} max={100} /> %
             </PanelEditItem>
         </PanelAccordion>
     </>
