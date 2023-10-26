@@ -5,3 +5,4 @@ release
 .vite
 ui/src/views/dashboard/plugins/external/
 query/datav
+ui/package-lock.json
