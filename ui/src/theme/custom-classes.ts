@@ -86,11 +86,11 @@ export function customClasses(props) {
         ".tag-bg": {
             background: mode(
                 'var(--chakra-colors-brand-50)',
-                "rgba(157, 236, 249, 0.16)"
+                "var(--chakra-colors-brand-100)"
             )(props),
             color: mode(
                 'var(--chakra-colors-brand-800)',
-                'var(--chakra-colors-brand-200)'
+                customColors.textColor.light
             )(props),
             borderRadius: "6px",
         },

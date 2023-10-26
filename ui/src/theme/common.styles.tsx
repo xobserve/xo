@@ -125,6 +125,13 @@ const CommonStyles = () => (
       .uplot .u-over {
         pointer-events: auto !important;
       }
+
+      .color-border-table {
+        td,th {
+          border-bottom: 0.5px solid;
+          border-color: ${colorMode == "light" ? customColors.colorBorder.light : customColors.borderColor.dark};
+        }
+      }
     `}}
   />
 )

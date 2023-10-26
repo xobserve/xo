@@ -155,7 +155,7 @@ interface PanelComponentProps extends PanelGridProps {
 
 export const prevQueries = new Map()
 export const prevQueryData = new Map()
-export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onHidePanel, width, height, sync, timeRange: timeRange0 ,forceQuery}: PanelComponentProps) => {
+export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onHidePanel, width, height, sync, timeRange: timeRange0, forceQuery }: PanelComponentProps) => {
     const toast = useToast()
     const [panelData, setPanelData] = useState<any[]>(null)
     const [queryError, setQueryError] = useState<string>()
@@ -364,7 +364,7 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
     return <Box height={height} width={width} className={(panel.styles.border == "Normal" && "bordered") + (dashboard.data.styles.bgEnabled ? " panel-bg-alpha" : " panel-bg")} position="relative">
 
         {data && <Box overflow="hidden">
-            <PanelHeader dashboardId={dashboard.id} panel={panel} data={panelData} queryError={queryError} onCopyPanel={onCopyPanel} onRemovePanel={onRemovePanel} onHidePanel={onHidePanel} />
+            <PanelHeader dashboardId={dashboard.id} panel={panel} data={panelData} queryError={queryError} onCopyPanel={onCopyPanel} onRemovePanel={onRemovePanel} onHidePanel={onHidePanel} loading={loading}/>
             <ErrorBoundary>
                 <Box
                     // panel={panel}
@@ -378,24 +378,6 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
 
         </Box>}
         {loading && <Box position="absolute" top="0" right="0"><Loading size="sm" /></Box>}
-        {!loading && panel.enableScopeTime && <Popover trigger="hover">
-            <PopoverTrigger>
-                <Box position="absolute" top="5px" right="5px" opacity="0.5" fontSize="0.8rem" zIndex={1000} cursor="pointer"><FaRegClock /></Box>
-            </PopoverTrigger>
-            <PopoverContent>
-                <PopoverArrow />
-                <PopoverBody>
-                    <PanelDatePicker id={panel.id.toString()} timeRange={panel.scopeTime} onChange={tr => {
-                        panel.scopeTime = tr
-                        dispatch({
-                            type: UpdatePanelEvent,
-                            data: cloneDeep(panel)
-                        })
-                    }} showIcon />
-                    <Text opacity={0.7} mt="2" ml="3" fontSize="0.9rem">Panel time range</Text>
-                </PopoverBody>
-            </PopoverContent>
-        </Popover>}
         <Box position="absolute" top="0" left="0" right="0" bottom="0" zIndex={-1} overflow="hidden"><PanelBorder width={width} height={height} border={panel.styles?.border} > <Box></Box></PanelBorder></Box>
     </Box>
 }
@@ -418,9 +400,10 @@ interface PanelHeaderProps {
     onRemovePanel: (panel: Panel) => void
     onHidePanel: (panel: Panel) => void
     data: any[]
+    loading: boolean
 }
 
-const PanelHeader = ({ dashboardId, queryError, panel, onCopyPanel, onRemovePanel, onHidePanel, data }: PanelHeaderProps) => {
+const PanelHeader = ({ dashboardId, queryError, panel, onCopyPanel, onRemovePanel, onHidePanel, data,loading }: PanelHeaderProps) => {
     const viewPanel = useSearchParam("viewPanel")
     const t = useStore(commonMsg)
     const t1 = useStore(panelMsg)
@@ -536,6 +519,24 @@ const PanelHeader = ({ dashboardId, queryError, panel, onCopyPanel, onRemovePane
                         </Button>
                     </Dropdown>
                 </Center>
+                {!loading && panel.enableScopeTime && <Popover trigger="hover">
+                    <PopoverTrigger>
+                        <Box opacity="0.5" fontSize="0.8rem" zIndex={1000} cursor="pointer"><FaRegClock /></Box>
+                    </PopoverTrigger>
+                    <PopoverContent>
+                        <PopoverArrow />
+                        <PopoverBody>
+                            <PanelDatePicker id={panel.id.toString()} timeRange={panel.scopeTime} onChange={tr => {
+                                panel.scopeTime = tr
+                                dispatch({
+                                    type: UpdatePanelEvent,
+                                    data: cloneDeep(panel)
+                                })
+                            }} showIcon />
+                            <Text opacity={0.7} mt="2" ml="3" fontSize="0.9rem">Panel time range</Text>
+                        </PopoverBody>
+                    </PopoverContent>
+                </Popover>}
                 {/* <Box display="none"><FaBook className="grid-drag-handle" /></Box> */}
             </HStack>
             <PanelDecoration decoration={panel.styles.decoration} />

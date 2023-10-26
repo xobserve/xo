@@ -109,7 +109,7 @@ const TeamMembers = ({team}: {team: Team}) => {
                 <Button size="sm" onClick={onAddMemberOpen}>{t.newItem({name: t.members})}</Button>
             </Flex>
             {members ? <TableContainer>
-                <Table variant="simple">
+                <Table variant="simple" className="color-border-table">
                     <Thead>
                         <Tr>
                             <Th>{t.userName}</Th>

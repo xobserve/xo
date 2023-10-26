@@ -45,7 +45,7 @@ export const AdminAuditLogs = memo(() => {
 
     return <Page title={t.Admin} subTitle={t.manageItem({ name: t.auditLog })} icon={<MdOutlineAdminPanelSettings />} tabs={adminLinks}>
         <TableContainer>
-            <Table variant='simple' size={"sm"}>
+            <Table variant='simple' size={"sm"} className="color-border-table">
                 <Thead>
                     <Tr>
                         <Th>Type</Th>

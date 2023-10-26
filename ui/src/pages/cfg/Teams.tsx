@@ -60,7 +60,7 @@ const TeamsPage = () => {
                 <Button size="sm" onClick={onOpen}>{t.newItem({name: t.team})}</Button>
             </Flex>
             <TableContainer>
-                <Table variant="simple">
+                <Table variant="simple" className="color-border-table">
                     <Thead>
                         <Tr>
                             <Th>Id</Th>

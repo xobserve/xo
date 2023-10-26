@@ -204,7 +204,7 @@ export const VariablesTable = ({ variables, onEdit, onRemove }: TableProps) => {
     const [isLargeScreen] = useMediaQuery('(min-width: 900px)')
     return (<>
         {variables.length > 0 ? <TableContainer>
-            <Table variant="simple">
+            <Table variant="simple" className="color-border-table">
                 <Thead>
                     <Tr>
                         <Th>{t.itemName({ name: t.variable })}</Th>

@@ -129,7 +129,7 @@ const DashboardShare = ({ dashboard, ...rest }: Props) => {
         <Modal isOpen={isOpen} onClose={onClose} autoFocus={false}>
             <ModalOverlay />
             <ModalContent minWidth="600px">
-                <Tabs size='sm'>
+                <Tabs>
                     <ModalHeader maxHeight='20' paddingBottom={'1'}>
                         <HStack spacing={8}>
                             <HStack>
@@ -149,7 +149,7 @@ const DashboardShare = ({ dashboard, ...rest }: Props) => {
                         <TabPanels>
                             <TabPanel>
                                 <VStack spacing={3} alignItems='inherit' justify='flex-start'>
-                                    <Text fontSize='sm'>{t1.shareHelp}</Text>
+                                    <Text fontSize="0.9em">{t1.shareHelp}</Text>
                                     <Form>
                                         <FormItem title={t.currentTimeRange} size="sm" alignItems={'center'}>
                                             <Switch
@@ -166,8 +166,8 @@ const DashboardShare = ({ dashboard, ...rest }: Props) => {
                                                 }} />
                                         </FormItem>}
                                     </Form>
-                                    <HStack spacing={1}>
-                                        <Textarea fontSize='xs' mr='1.5' wordBreak='break-all' p='1' className="code-bg" bgColor='#09090b' overflow='hidden' textOverflow='ellipsis' value={shareUrl} readOnly />
+                                    <HStack spacing={1} alignItems="end">
+                                        <Textarea fontSize="0.95em" mr='1.5' wordBreak='break-all' p='1' className="code-bg" bgColor='#09090b' overflow='hidden' textOverflow='ellipsis' value={shareUrl} readOnly />
                                         <Button size="sm" leftIcon={<FaRegCopy />} onClick={onCopy} variant={hasCopied ? "solid" : "outline"}>
                                             {hasCopied ? t.copied : t.copy}
                                         </Button>
@@ -179,7 +179,7 @@ const DashboardShare = ({ dashboard, ...rest }: Props) => {
                             </TabPanel>
                             <TabPanel>
                                 <VStack spacing={3} alignItems='inherit' justify='flex-start'>
-                                    <Text fontSize='sm'>{t1.embedHelp}</Text>
+                                    <Text fontSize="0.9em">{t1.embedHelp}</Text>
                                     <Form sx={{
                                         '.form-item-label': {
                                             width: "150px"
@@ -217,7 +217,7 @@ const DashboardShare = ({ dashboard, ...rest }: Props) => {
                                         </FormItem>
                                     </Form>
                                     <HStack spacing={1}>
-                                        <Textarea fontSize='xs' mr='1.5' wordBreak='break-all' p='1' className="code-bg" bgColor='#09090b' overflow='hidden' textOverflow='ellipsis' value={embededUrl} readOnly />
+                                        <Textarea fontSize="0.95em" mr='1.5' wordBreak='break-all' p='1' className="code-bg" bgColor='#09090b' overflow='hidden' textOverflow='ellipsis' value={embededUrl} readOnly />
                                         <Button size="sm" leftIcon={<FaRegCopy />} onClick={onEmbedCopy} variant={hasEmbedCopied ? "solid" : "outline"}>
                                             {hasEmbedCopied ? t.copied : t.copy}
                                         </Button>
@@ -245,7 +245,7 @@ function ExportComponent({ dashboard }: {
     return (
         <>
             <VStack alignItems='inherit' justify='flex-start' spacing={4}>
-                <Text fontSize='sm'>{t1.exportHelp}</Text>
+                <Text fontSize="0.9em">{t1.exportHelp}</Text>
                 <Box>
                     <HStack spacing={4}>
                         <Button size="sm" variant='outline' colorScheme='green' leftIcon={<FaFileDownload />}

@@ -149,7 +149,7 @@ const DatavLogChart = memo((props: Props) => {
     };
 
     return (<>
-        <Text textStyle="annotation" mb="2" fontSize="0.7rem" fontWeight={500}>{displayLogs && (displayLogs + ' /')}  {totalLogs} Logs </Text>
+        <Text opacity={0.8} mb="2" fontSize="0.8rem" fontWeight={500}>{displayLogs && (displayLogs + ' /')}  {totalLogs} Logs </Text>
         <ChartComponent key={colorMode} options={chartOptions} clearWhenSetOption theme={colorMode} onChartCreated={c => setChart(c)} width={width} />
     </>)
 })
