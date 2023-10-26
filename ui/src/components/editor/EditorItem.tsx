@@ -12,7 +12,6 @@
 // limitations under the License.
 import { Slider, SliderFilledTrack, SliderThumb, SliderTrack, Textarea, useColorModeValue } from "@chakra-ui/react"
 import { Input, InputNumber } from "antd"
-import { Variant } from "chakra-react-select/dist/types/types"
 import React, { useState } from "react"
 import customColors from "theme/colors"
 

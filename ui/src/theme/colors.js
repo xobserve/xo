@@ -2,6 +2,7 @@ import { extendTheme } from "@chakra-ui/react"
 const theme = extendTheme()
 
 const  customColors = {
+    baseFontSize: 14,
     borderColor: {
         light: theme.colors.gray['200'], 
         dark: theme.colors.whiteAlpha['300']
@@ -9,6 +10,10 @@ const  customColors = {
     hoverBg: {
         light: theme.colors.gray['100'], 
         dark: theme.colors.whiteAlpha['200']
+    },
+    hoverItem: {
+        light: 'var(--chakra-colors-brand-500)', 
+        dark: 'var(--chakra-colors-brand-200)'
     },
     // 侧边栏的卡片背景色
     sideCardBg: {
@@ -34,8 +39,8 @@ const  customColors = {
     },
     // primary text color
     primaryColor: {
-        light: 'var(--chakra-colors-brand-500)', 
-        dark: 'var(--chakra-colors-brand-500)'
+        light: 'var(--chakra-colors-brand-600)', 
+        dark: 'var(--chakra-colors-brand-200)',
     },
     popperBg: {
         light: '#fff',

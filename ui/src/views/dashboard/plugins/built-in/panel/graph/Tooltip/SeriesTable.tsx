@@ -98,13 +98,13 @@ const SeriesTable = memo(({ props, data, nearestSeries, filterIdx, panelType, wi
                             }
                             return (
                                 <Tr verticalAlign="top">
-                                    <Td fontSize="0.75rem" py="1" >
+                                    <Td fontSize="0.8rem" py="1" >
                                         <HStack alignItems="start" opacity={(v.name == nearestSeries?.name ? 1 : 0.8)} fontWeight={v.name == nearestSeries?.name ? 'bold' : "inherit"} userSelect="none">
-                                            <Box width="10px" minWidth="10px" height="4px" background={v.color} mt="7.5px"></Box>
+                                            <Box width="8px" minWidth="8px" height="4px" background={v.color} mt="6.5px"></Box>
                                             <Text noOfLines={3} minWidth="fit-content" wordBreak="break-all" whiteSpace={"break-spaces"} maxW={isMobileScreen ? props.width / 3 : null}>{v.name}</Text>
                                         </HStack>
                                     </Td>
-                                    {v.value.map((v0, i) => <Td textAlign="right" fontSize="0.75rem" py="1" px="1">{v0[1] ? (v.unitsType != "none"
+                                    {v.value.map((v0, i) => <Td textAlign="right" fontSize="0.8rem" py="1" px="1">{v0[1] ? (v.unitsType != "none"
                                         ? formatUnit(v0[1], v.units, v.decimal)
                                         : round(v0[1], v.decimal)) : v0[1]}</Td>)}
                                 </Tr>

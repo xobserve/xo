@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { EditorInputItem } from "src/components/editor/EditorItem"
+import { EditorInputItem, EditorNumberItem } from "src/components/editor/EditorItem"
 import RadionButtons from "src/components/RadioButtons"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
@@ -43,6 +43,16 @@ const PanelEditor = memo(({ panel, onChange }: DatavLogEditorProps) => {
                 <Switch defaultChecked={panel.plugins[PanelType].showSearch} onChange={e => onChange((panel: Panel) => {
                     panel.plugins[PanelType].showSearch = e.currentTarget.checked
                 })} />
+            </PanelEditItem>
+            <PanelEditItem title={lang == "en" ? "Column fontsize" : "列标题字体大小"}>
+                <EditorNumberItem value={panel.plugins[PanelType].headerFontSize} onChange={v => onChange((panel: Panel) => {
+                    panel.plugins[PanelType].headerFontSize = v
+                })} step={1} min={8} max={20}/>
+            </PanelEditItem>
+            <PanelEditItem title={lang == "en" ? "Log font size" : "日志字体大小"}>
+                <EditorNumberItem value={panel.plugins[PanelType].logFontSize} onChange={v => onChange((panel: Panel) => {
+                    panel.plugins[PanelType].logFontSize = v
+                })} step={1} min={8} max={20}/>
             </PanelEditItem>
         </PanelAccordion>
         <PanelAccordion title={lang == "en" ? "Log row" : "日志行"}>

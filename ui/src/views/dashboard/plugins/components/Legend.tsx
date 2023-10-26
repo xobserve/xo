@@ -184,7 +184,7 @@ const LegendTable = memo(({dashboardId,panelWidth, options, panel, data, width, 
                                         data: cloneDeep(panel)
                                     })
                                 }}>
-                                    <HStack spacing={0} justifyContent="end" cursor="pointer" position="relative"><Text fontSize="0.6rem !important" lineHeight="13px">{v[0]}</Text><Text> {options.legend.order.by == v[0] && <Text fontSize="0.6rem" opacity="0.7" position="absolute" top="3.5px">{options.legend.order.sort == "asc" ? <FaChevronUp /> : <FaChevronDown />}</Text>}</Text></HStack>
+                                    <HStack spacing={0} justifyContent="end" cursor="pointer" position="relative"><Text fontSize="0.9em !important" lineHeight="13px">{v[0]}</Text><Text> {options.legend.order.by == v[0] && <Text fontSize="0.6em" opacity="0.7" position="absolute" top="3.5px">{options.legend.order.sort == "asc" ? <FaChevronUp /> : <FaChevronDown />}</Text>}</Text></HStack>
                                 </Td>)}
                         </Tr>
                     </Thead>
@@ -192,9 +192,9 @@ const LegendTable = memo(({dashboardId,panelWidth, options, panel, data, width, 
                         {values.map((v, i) => {
                             return (
                                 <Tr verticalAlign="top" width="100%">
-                                    <Td fontSize="0.75rem" py="1" cursor="pointer" onClick={() => onSelectSeries(v.name, i, pressShift[0])}>
+                                    <Td fontSize="0.8em" py="1" cursor="pointer" onClick={() => onSelectSeries(v.name, i, pressShift[0])}>
                                         <HStack alignItems="start" opacity={(inactiveSeries.includes(v.name)) ? '0.6' : 1} userSelect="none">
-                                        <Box width="10px" minWidth="10px" height="4px" background={v.color} mt="7.5px"></Box>
+                                        <Box width="10px" minWidth="10px" height="4px" background={v.color} mt="6.5px"></Box>
                                             
                                             {
                                                 (options.legend.placement == "bottom") ?
@@ -205,7 +205,7 @@ const LegendTable = memo(({dashboardId,panelWidth, options, panel, data, width, 
 
                                         </HStack>
                                     </Td>
-                                    {v.value.map((v0, i) => <Td textAlign="right" fontSize="0.75rem" py="1" px="1">{v0[1] ? (v.unitsType != "none"
+                                    {v.value.map((v0, i) => <Td textAlign="right" fontSize="0.75em" py="1" px="1">{v0[1] ? (v.unitsType != "none"
                                         ? formatUnit(v0[1], v.units, v.decimal)
                                         : round(v0[1], v.decimal)) : v0[1]}</Td>)}
                                 </Tr>

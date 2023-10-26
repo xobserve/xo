@@ -41,7 +41,7 @@ export const ColorModeSwitcher: React.FC<ColorModeSwitcherProps & { miniMode: bo
     }
   },[cm])
   
-  const textComponent = <Text fontSize="1rem">{t1.themeChange + upperFirst(colorMode)}</Text>
+  const textComponent = <Text fontSize="1em">{t1.themeChange + upperFirst(colorMode)}</Text>
   return (
     <PopoverTooltip
       trigger={disableTrigger ? null : (miniMode ? "hover" : null)}

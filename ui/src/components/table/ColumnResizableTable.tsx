@@ -15,13 +15,13 @@ import {
 } from '@tanstack/react-query'
 import { isEmpty } from 'utils/validate'
 import { cloneDeep, toString } from 'lodash'
-import { getStringColorMapping } from 'src/views/dashboard/plugins/components/StringColorMapping'
 
 interface Props {
     totalRowCount: number
     data: Record<string, any>[]
     columns: ColumnDef<any>[]
     fontSize?: number
+    headerFontSize?: number
     wrapLine?: boolean
     stickyHeader?: boolean
     allowOverflow?: boolean
@@ -35,7 +35,7 @@ interface Props {
 
 const ColumnResizableTable = (props: Props) => {
 
-    const { columns, fontSize = 13, wrapLine = true, stickyHeader = true, allowOverflow = false, height = "100%", totalRowCount, onLoadPage, onRowsCountChange, onRowClick ,highlightRow,columnHighlights=[]} = props
+    const { columns, fontSize = 13, headerFontSize = 13, wrapLine = true, stickyHeader = true, allowOverflow = false, height = "100%", totalRowCount, onLoadPage, onRowsCountChange, onRowClick ,highlightRow,columnHighlights=[]} = props
     const [initData, setInitData] = useState<Record<string, any>[]>([])
     const currentPage = useRef(1)
     const tableContainerRef = React.useRef<HTMLDivElement>(null)
@@ -137,7 +137,6 @@ const ColumnResizableTable = (props: Props) => {
                     <table
                         style={{
                             width: "100%",
-                            fontSize: fontSize,
                             tableLayout: 'fixed',
                             fontWeight: useColorModeValue(400, 500)
                         }}
@@ -150,7 +149,7 @@ const ColumnResizableTable = (props: Props) => {
                                             <th
                                                 key={header.id}
                                                 colSpan={header.colSpan}
-                                                style={{ width: header.getSize() }}
+                                                style={{ width: header.getSize(), fontWeight: 550, fontSize: headerFontSize}}
                                             >
                                                 {header.isPlaceholder
                                                     ? null
@@ -194,7 +193,8 @@ const ColumnResizableTable = (props: Props) => {
                                             style={{
                                                 verticalAlign: "top",
                                                 overflow: allowOverflow ? null : "hidden",
-                                                color: color
+                                                color: color,
+                                                fontSize: fontSize
                                             }}
                                         >
                                             {flexRender(cell.column.columnDef.cell, cell.getContext())}

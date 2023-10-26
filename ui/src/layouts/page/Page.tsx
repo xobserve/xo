@@ -58,7 +58,7 @@ const Page = (props: Props) => {
                             <Box className={tab.url == activeTab.url ? "top-gradient-border" : null} >
                                 <HStack py="2" px={!isMobileScreen ? 3 : 2} >
                                     {!isMobileScreen && tab.icon}
-                                    <Text fontSize="0.95rem">{t[tab.title] ?? t1[tab.title]}</Text>
+                                    <Text fontSize="1rem">{t[tab.title] ?? t1[tab.title]}</Text>
                                 </HStack>
                             </Box>
                         </HStack>

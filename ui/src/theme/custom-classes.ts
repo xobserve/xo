@@ -96,8 +96,8 @@ export function customClasses(props) {
         },
         ".color-text": {
             color: mode(
-                'var(--chakra-colors-brand-500)',
-                'var(--chakra-colors-brand-300)'
+                customColors.primaryColor.light,
+                customColors.primaryColor.dark
             )(props)
         },
         ".annotation-text": {

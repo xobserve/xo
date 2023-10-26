@@ -13,6 +13,7 @@ import { mode } from "@chakra-ui/theme-tools";
 
 import "./src/theme/css/react-grid.css"
 import "./src/theme/css/echarts.css"
+import customColors from "./src/theme/colors";
 
 
 const customTheme = extendTheme(
@@ -20,7 +21,7 @@ const customTheme = extendTheme(
         // 自定义基本颜色
         colors: {
             ...overrideColors,
-            brand: overrideColors['cyan'] ?? baseTheme.colors['cyan'],
+            brand: overrideColors['whatsapp'] ?? baseTheme.colors['whatsapp'],
         },
         semanticTokens: {
             colors: {
@@ -55,6 +56,9 @@ const customTheme = extendTheme(
                 return {
                     // 自定义 class
                     ...customClasses(props),
+                    'html, body': {
+                        fontSize: customColors.baseFontSize + 'px',
+                      },
                     p: {
                         wordBreak: "break-word",
                     },

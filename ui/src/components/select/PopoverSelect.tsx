@@ -112,14 +112,14 @@ const PopoverSelect = ({ value, options, onChange, variant = "outline", customOp
     return (<>
         {<Flex height="100%" px="1" className={getBorderStyle()} py="1" justifyContent="space-between" alignItems="center" cursor="pointer" onClick={onToggle}>
             <Tooltip placement="right" openDelay={500} label={value.length > 0 && value.join(' + ')}>
-                <Text width="fit-content" maxW="250px" wordBreak="break-all" noOfLines={1} layerStyle="textSecondary" opacity={useColorModeValue(0.7,null)}  fontSize={size == "sm" ? "0.9rem" : "1rem"}>
+                <Text width="fit-content" maxW="250px" wordBreak="break-all" noOfLines={1} layerStyle="textSecondary" opacity={useColorModeValue(0.7,null)}  fontSize="0.95em">
                     {value.length > 0 ? value.join(' + ') : placeholder}
                 </Text>
             </Tooltip> {!isMulti && isClearable && value.length > 0
                 ?
-                <FaTimes fontSize="0.8rem" onClick={clearSelected} />
+                <FaTimes fontSize="0.9em" onClick={clearSelected} />
                 :
-                showArrow && <Box pl="1"><FaChevronDown fontSize="0.6rem" /></Box>}</Flex>}
+                showArrow && <Box pl="1"><FaChevronDown fontSize="0.8em" /></Box>}</Flex>}
         <Popover matchWidth={matchWidth} closeOnBlur={closeOnBlur} placement={placement} isOpen={isOpen} initialFocusRef={ref} onClose={onClose}>
             <PopoverTrigger >
                 <Box position="absolute"></Box>
@@ -133,15 +133,15 @@ const PopoverSelect = ({ value, options, onChange, variant = "outline", customOp
                         </Box>
 
 
-                        {isMulti && <HStack className="hover-bg" py="2" px="2" cursor="pointer" fontSize="0.9rem" onClick={onClickSelect}>
-                            <Box color="brand.500" fontSize="0.6rem" width="12px">{value.length > 0 ? <FaMinus /> : <FaPlus />}</Box>
+                        {isMulti && <HStack className="hover-bg" py="2" px="2" cursor="pointer" fontSize="0.9em" onClick={onClickSelect}>
+                            <Box color="brand.500" fontSize="0.8em" width="12px">{value.length > 0 ? <FaMinus /> : <FaPlus />}</Box>
                             <Text >Selected {value.length}</Text>
                         </HStack>}
 
                         <VStack alignItems="left" spacing="0" maxH="300px" overflowY="auto">
                             {
-                                searchedResult.map(option => <HStack key={option.label} className="hover-bg" py="1" px="2" cursor="pointer" onClick={() => onOptionClick(option)} fontSize="0.9rem">
-                                    <Box color="brand.500" fontSize="0.6rem" width="12px">{value.includes(option.value) && <FaCheck />}</Box>
+                                searchedResult.map(option => <HStack key={option.label} className="hover-bg" py="1" px="2" cursor="pointer" onClick={() => onOptionClick(option)} fontSize="0.9em">
+                                    <Box color="brand.500" fontSize="0.8em" width="12px">{value.includes(option.value) && <FaCheck />}</Box>
                                     {customOption ? customOption(option) : <Text>{option.label}</Text>}
                                 </HStack>)
                             }

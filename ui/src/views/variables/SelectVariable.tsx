@@ -211,12 +211,12 @@ const SelectVariable = memo(({ v }: { v: Variable }) => {
     const value = isEmpty(v.selected) ? [] : v.selected.split(VariableSplitChar)
     const teams = $teams.get()
     const isDashVar = v.id.toString().startsWith("d-")
-    return <HStack key={v.id} spacing={1}>
-        <Tooltip openDelay={300} label={(isDashVar ? t1.dashScoped : (teams.find(t => t.id == v.teamId)?.name  + ' team - ' + t1.globalScoped)) + ": " + v.name} placement="auto"><Text fontSize="sm" minWidth="max-content" noOfLines={1}>{v.name}</Text></Tooltip>
+    return <HStack key={v.id} spacing={1} >
+        <Tooltip openDelay={300} label={(isDashVar ? t1.dashScoped : (teams.find(t => t.id == v.teamId)?.name  + ' team - ' + t1.globalScoped)) + ": " + v.name} placement="auto"><Text fontSize="0.95em" minWidth="max-content" noOfLines={1}>{v.name}</Text></Tooltip>
         {!loading && v.type != VariableQueryType.TextInput && !isEmpty(values) &&
             <PopoverSelect
                 value={value}
-                size="sm"
+                size="md"
                 variant="unstyled"
                 onChange={value => {
                     const vs = value.filter(v1 => values.includes(v1))
