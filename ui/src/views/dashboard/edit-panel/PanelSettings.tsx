@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box, Center, Image, SimpleGrid, Switch, Text } from "@chakra-ui/react"
+import { Box, Center, Image, SimpleGrid, Switch, Text, useColorModeValue } from "@chakra-ui/react"
 import { upperFirst } from "lodash"
 import { Panel, PanelEditorProps, PanelTypeRow } from "types/dashboard"
 import PanelAccordion from "./Accordion"
@@ -27,6 +27,7 @@ import { builtinPanelPlugins } from "../plugins/built-in/plugins"
 import { externalPanelPlugins } from "../plugins/external/plugins"
 import { initTimeRange } from "components/DatePicker/TimePicker"
 import DatePicker from "../components/PanelDatePicker"
+import customColors from "theme/colors"
 
 // in edit mode, we need to cache all the plugins we have edited, until we save the dashboard
 let pluginsCachedInEdit = {}
@@ -162,7 +163,7 @@ export default PanelSettings
 
 const VisulizationItem = ({ title, imageUrl, onClick = null, selected = false }) => {
     return (
-        <Box className={`tag-bg ${selected ? "highlight-bordered" : ""}`} onClick={onClick} pb="2" cursor="pointer">
+        <Box className={`tag-bg`} border={`3px solid ${selected ? useColorModeValue(customColors.colorBorder.dark, `var(--chakra-colors-brand-500)`) : 'transparent'}`} onClick={onClick} pb="2" cursor="pointer">
             <Center >
                 <Text>{title}</Text>
             </Center>

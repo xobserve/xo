@@ -79,6 +79,9 @@ const ColumnResizableTable = (props: Props) => {
         }
 
         const newPageData = await onLoadPage(currentPage.current)
+        if (isEmpty(newPageData)) {
+            return
+        }
         const d = [...initData, ...newPageData]
         setInitData(d)
         onRowsCountChange && onRowsCountChange(d.length)
