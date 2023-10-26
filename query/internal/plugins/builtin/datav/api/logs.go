@@ -268,5 +268,5 @@ func mapSqlField(field string, value interface{}) (string, interface{}) {
 		// return
 	}
 
-	return field, newValue
+	return fmt.Sprintf("lower(%s)", field), newValue
 }
