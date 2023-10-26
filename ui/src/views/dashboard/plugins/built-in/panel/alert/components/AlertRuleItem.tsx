@@ -165,7 +165,7 @@ const AlertRuleItem = memo((props: Props) => {
                         </Flex>
                         <Divider mt="2" />
                         <TableContainer mt="2">
-                            <Table variant='simple'>
+                            <Table variant='simple' className="color-border-table">
                                 <Thead>
                                     <Tr>
                                         <Th>Labels</Th>

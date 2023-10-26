@@ -33,7 +33,7 @@ const HelpComponent = memo(({ data,size="sm",iconSize="0.9rem" }: Props) => {
                     {
                         data.map(help => <Box key={help.title}>
                             <Center><Text textStyle="title">{help.title}</Text></Center>
-                            <Table variant='simple' size={size} mt="2">
+                            <Table variant='simple' size={size} mt="2" className="color-border-table">
                                 <Thead>
                                     <Tr>
                                         {help.headers.map(header => <Th key={header}>{header}</Th>)}

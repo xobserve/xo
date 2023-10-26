@@ -47,7 +47,7 @@ const TeamDashboards = ({team}: {team:Team}) => {
                 <Button size="sm" onClick={() => navigate(`${ReserveUrls.New}/dashboard?team=${team.id}`)}>{t.newItem({name: t.dashboard})}</Button>
             </Flex>
             {dashboards ? <TableContainer>
-                <Table variant="simple">
+                <Table variant="simple" className="color-border-table">
                     <Thead>
                         <Tr>
                             <Th>{t.name}</Th>

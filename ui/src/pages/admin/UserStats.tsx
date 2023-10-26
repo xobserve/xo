@@ -40,7 +40,7 @@ export const AdminUserStats = memo(() => {
 
     return <Page title={t.Admin} subTitle={t.manageItem({ name: t.userStats })} icon={<FaUser />} tabs={adminLinks}>
         <TableContainer mt="2">
-            <Table variant="simple" size="sm">
+            <Table variant="simple" size="sm" className="color-border-table">
                 <Thead>
                     <Tr>
                         <Th>{t.userName}</Th>

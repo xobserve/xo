@@ -1,19 +1,19 @@
 export default function textStyles() {
     return {
         mainTitle: {
-            fontSize: "1.5rem",
+            fontSize: "1.5em",
             fontWeight: "500",
         },
         subTitle: {
-            fontSize: "1rem",
+            fontSize: "1em",
             fontWeight: "500",
         },
         title: {
-            fontSize: "1rem",
+            fontSize: "1em",
             fontWeight: "500",
         },
         annotation: {
-            fontSize: "0.85rem",
+            fontSize: "0.9em",
             opacity: 0.7
         }
     }

@@ -2,14 +2,15 @@ import { Box, Checkbox, Flex, HStack, Tag, TagLabel, TagLeftIcon, Text, Wrap, Wr
 import { Trace } from "src/views/dashboard/plugins/built-in/panel/trace/types/trace"
 import { formatDuration, formatRelativeDate } from "utils/date"
 import { sortBy } from "lodash"
-import colorGenerator from "utils/colorGenerator"
+import {ColorGenerator} from "utils/colorGenerator"
 import { FaInfoCircle } from "react-icons/fa"
 import moment from "moment"
 import React from "react";
 import { getDatasource } from "utils/datasource"
 import { MobileBreakpoint } from "src/data/constants"
-import { paletteColorNameToHex, palettes } from "utils/colors"
+import { colors1, colors2, colors3, paletteColorNameToHex, palettes } from "utils/colors"
 import { Datasource } from "types/datasource"
+import customColors from "theme/colors"
 
 interface Props {
     trace: Trace
@@ -27,14 +28,16 @@ const TraceCard = ({ trace, maxDuration,checked=false, onChecked=null,simple=fal
 
     const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
 
+    const colorGenerator =  new ColorGenerator(colors1)
+
     return (<Box width="100%" borderRadius="0" cursor="pointer"  onClick={onClick} fontSize={isLargeScreen ? "sm" : "xs"}>
         <Box width="100%" position="relative" className="label-bg">
             <HStack spacing={0} py="2px">
                 {onChecked && <Flex alignItems="center" px="2" zIndex={2}  onClick={e => {
                     e.stopPropagation(); 
                 }}><Checkbox size="sm" defaultChecked={checked} isChecked={checked} isDisabled={checkDisabled} bg={useColorModeValue("white", "transparent")} onChange={e =>  onChecked(trace.traceID)  }/></Flex>}
-                <Box width={`${(trace.duration / maxDuration) * 100}%`} bg={useColorModeValue("#c7e7ea", "brand.800")} height="100%" position="absolute" top="0"></Box>
-                <Flex alignItems="center" width="100%" justifyContent="space-between" position="relative" pr="2" >
+                <Box width={`${(trace.duration / maxDuration) * 100}%`} className="tag-bg" height="100%" position="absolute" top="0"></Box>
+                <Flex color={customColors.textColor.light} alignItems="center" width="100%" justifyContent="space-between" position="relative" pr="2" >
                     <Flex flexDir={isLargeScreen ? "row" : "column"} gap={isLargeScreen ? 1 : 0}>
                         <Text>{trace.traceName}</Text>
                         <Text opacity="0.7">{trace.traceID.slice(0, 7)}</Text>
@@ -46,9 +49,9 @@ const TraceCard = ({ trace, maxDuration,checked=false, onChecked=null,simple=fal
         <Flex flexDir={isLargeScreen ? "row" : "column"} alignItems={isLargeScreen ? "center" : "start"} width="100%" justifyContent={isLargeScreen ? "space-between"  : null} pt={isLargeScreen ? 2 : 2} pb={isLargeScreen ? 4 : 3} px={isLargeScreen ? 2 : 1}>
             <Box>
                 <HStack alignItems="top">
-                    <Tag size="md" variant="subtle" colorScheme="gray" bg="transparent" fontSize="0.7rem">{trace.spans.length} Spans</Tag>
-                    <Tag size="md" variant="subtle" colorScheme="gray" bg="transparent"  fontSize="0.7rem">{Object.keys(trace.processes).length} Services</Tag>
-                    {trace.errorsCount > 0 && <Tag size="sm" variant="subtle" colorScheme="gray" bg="transparent" color={paletteColorNameToHex(palettes[15])}  fontSize="0.7rem">{trace.errorsCount} Errors</Tag>}
+                    <Tag size="md" variant="subtle" colorScheme="gray" bg="transparent" fontSize="0.9em">{trace.spans.length} Spans</Tag>
+                    <Tag size="md" variant="subtle" colorScheme="gray" bg="transparent"  fontSize="0.9em">{Object.keys(trace.processes).length} Services</Tag>
+                    {trace.errorsCount > 0 && <Tag size="sm" variant="subtle" colorScheme="gray" bg="transparent" color={paletteColorNameToHex(palettes[15])}  fontSize="0.9em">{trace.errorsCount} Errors</Tag>}
                   
                 </HStack>
                 {!simple && <Wrap mt={1} spacingX={3}>
@@ -61,9 +64,9 @@ const TraceCard = ({ trace, maxDuration,checked=false, onChecked=null,simple=fal
                                     colorScheme="gray"
                                     bg="transparent"
                                     className="bordered"
-                                    borderLeft={`6px solid ${colorGenerator.getColorByKey(name)}`}
+                                    borderLeft={`4px solid ${colorGenerator.getColorByKey(name)}`}
                                     size="sm"
-                                    borderRadius={4}
+                                    borderRadius={2}
                                     opacity={0.8}
                                 >
                                     {trace.errorServices.has(name) && <TagLeftIcon color={paletteColorNameToHex(palettes[15])} as={FaInfoCircle} />}

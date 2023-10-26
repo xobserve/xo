@@ -7,6 +7,10 @@ const  customColors = {
         light: theme.colors.gray['200'], 
         dark: theme.colors.whiteAlpha['300']
     },
+    colorBorder: {
+        light: `var(--chakra-colors-brand-100)`,
+        dark : `var(--chakra-colors-brand-100)`
+    },
     hoverBg: {
         light: theme.colors.gray['100'], 
         dark: theme.colors.whiteAlpha['200']
@@ -61,7 +65,7 @@ const  customColors = {
     error: {
         light : 'rgb(255,93,91)',
         dark: 'rgb(255,93,91)'
-    }  
+    } 
 }
 
 export default customColors

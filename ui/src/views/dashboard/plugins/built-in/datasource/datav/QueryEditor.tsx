@@ -80,7 +80,7 @@ const HttpQueryEditor = ({ panel, datasource, query, onChange }: DatasourceEdito
                 {!isMobileScreen && api?.desc && <Text textStyle="annotation">{api.desc}</Text>}
             </FormItem>
             {api?.params && <FormItem title="Params" labelWidth="100px" size="sm" flexDirection={isMobileScreen ? "column" : "row"} desc={<TableContainer>
-                <Table variant='simple' size="sm">
+                <Table variant='simple' size="sm" className="color-border-table">
                     <Thead>
                         <Tr>
                             <Th>Param</Th>

@@ -58,7 +58,7 @@ const TagsFilter = ({ value, tags, onChange, tagCount = {}, minWidth = "260px" }
                 value={value}
                 tagRender={tagRender}
                 onChange={onChange}
-
+                
             >
                 {
                     tags.sort().map(tag => {
