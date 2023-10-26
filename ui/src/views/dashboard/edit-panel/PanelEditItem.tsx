@@ -25,7 +25,7 @@ interface Props {
 const PanelEditItem = (props: Props) => {
     return (<Box>
         <HStack>
-            {props.title && <Text fontSize="sm" fontWeight="550">{props.title}</Text>}
+            {props.title && <Text fontSize="0.85rem" fontWeight="550">{props.title}</Text>}
             {props.info && <Popover trigger="hover">
                 <PopoverTrigger>
                     <Box cursor="pointer" layerStyle="textFourth"><FaInfoCircle /></Box>
@@ -36,7 +36,7 @@ const PanelEditItem = (props: Props) => {
                 </PopoverContent>
             </Popover>}
         </HStack>
-        <Text fontSize="sm" layerStyle="textSecondary" mt="0">{props.desc}</Text>
+        <Text fontSize="0.85rem" layerStyle="textSecondary" mt="0">{props.desc}</Text>
         <Box mt="1">
             {props.children}
         </Box>

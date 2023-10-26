@@ -55,6 +55,9 @@ const customTheme = extendTheme(
                 return {
                     // 自定义 class
                     ...customClasses(props),
+                    'html, body': {
+                        fontSize: '15px',
+                      },
                     p: {
                         wordBreak: "break-word",
                     },
