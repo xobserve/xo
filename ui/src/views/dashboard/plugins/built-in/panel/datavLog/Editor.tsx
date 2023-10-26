@@ -47,12 +47,12 @@ const PanelEditor = memo(({ panel, onChange }: DatavLogEditorProps) => {
             <PanelEditItem title={lang == "en" ? "Column fontsize" : "列标题字体大小"}>
                 <EditorNumberItem value={panel.plugins[PanelType].headerFontSize} onChange={v => onChange((panel: Panel) => {
                     panel.plugins[PanelType].headerFontSize = v
-                })} step={1} min={8} max={20}/>
+                })} step={0.5} min={8} max={20}/>
             </PanelEditItem>
             <PanelEditItem title={lang == "en" ? "Log font size" : "日志字体大小"}>
                 <EditorNumberItem value={panel.plugins[PanelType].logFontSize} onChange={v => onChange((panel: Panel) => {
                     panel.plugins[PanelType].logFontSize = v
-                })} step={1} min={8} max={20}/>
+                })} step={0.5} min={8} max={20}/>
             </PanelEditItem>
         </PanelAccordion>
         <PanelAccordion title={lang == "en" ? "Log row" : "日志行"}>

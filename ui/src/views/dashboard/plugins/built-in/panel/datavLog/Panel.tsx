@@ -34,6 +34,7 @@ import { Field } from "types/seriesData";
 import { formatLogTimestamp } from "./utils";
 import { dispatch } from "use-bus";
 import { paletteColorNameToHex } from "utils/colors";
+import { replaceQueryWithVariables } from "utils/variable";
 
 interface Props extends PanelProps {
     panel: DatavLogPanel
@@ -150,6 +151,7 @@ const Panel = (props: Props) => {
             const intervalObj = calculateInterval(props.timeRange, panel.datasource.queryOptions.maxDataPoints ?? DatasourceMaxDataPoints, isEmpty(panel.datasource.queryOptions.minInterval) ? DatasourceMinInterval : panel.datasource.queryOptions.minInterval)
             query.interval = intervalObj.intervalMs / 1000
 
+            replaceQueryWithVariables(query, ds.type,intervalObj.interval,props.timeRange)
             const res = await plugin.runQuery(panel, query, props.timeRange, ds, {
                 page: page
             })

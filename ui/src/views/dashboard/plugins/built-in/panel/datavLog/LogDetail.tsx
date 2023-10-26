@@ -73,14 +73,14 @@ const LogDetail = ({ log: rawlog, isOpen, onClose, onSearch }: Props) => {
 
                     <TabPanels>
                         <TabPanel>
-                            <VStack alignItems="left" fontSize="0.85rem">
+                            <VStack alignItems="left" fontSize="0.9rem">
                                 {
                                     basicKV.map(r => <LogKV k={r[0]} v={r[1]} onSearch={(isNew) => onSearch(`${r[0]}=${typeof r[1] == "string" ? `"${r[1]}"`: r[1]}`,isNew)}/>)
                                 }
                             </VStack>
                             <Text fontWeight={550} mt="4" fontSize="0.85rem">Resources</Text>
                             <Divider mt="2" />
-                            <VStack alignItems="left" fontSize="0.85rem" mt="2">
+                            <VStack alignItems="left" fontSize="0.9rem" mt="2">
                                 {
                                     log.resources.map(r => <LogKV k={r[0]} v={r[1]} onSearch={(isNew) => onSearch(`resources.${r[0]}=${typeof r[1] == "string" ? `"${r[1]}"`: r[1]}`,isNew)}/>)
                                 }
@@ -88,7 +88,7 @@ const LogDetail = ({ log: rawlog, isOpen, onClose, onSearch }: Props) => {
 
                             <Text fontWeight={550} mt="4" fontSize="0.85rem">Attributes</Text>
                             <Divider mt="2" />
-                            <VStack alignItems="left" fontSize="0.85rem" mt="2">
+                            <VStack alignItems="left" fontSize="0.9rem" mt="2">
                                 {
                                     log.attributes.map(r => <LogKV k={r[0]} v={r[1]} onSearch={(isNew) => onSearch(`attributes.${r[0]}=${typeof r[1] == "string" ? `"${r[1]}"`: r[1]}`,isNew)}/>)
                                 }
@@ -111,7 +111,7 @@ const LogKV = ({ k, v, onSearch}) => {
     return <Flex gap="2" onMouseEnter={() => setOnHover(true)} onMouseLeave={() => setOnHover(false)} >
         <ColorKV k={k} v={v} />
 
-        <HStack opacity={0.5} fontSize="0.7rem" position="relative" visibility={onHover ? "visible" : "hidden"}>
+        <HStack opacity={0.5} fontSize="0.8rem" position="relative" visibility={onHover ? "visible" : "hidden"}>
             <Tooltip label="Add to current search"><Box cursor="pointer"><FaSearchPlus onClick={() => onSearch(false)} /></Box></Tooltip>
             <Tooltip label="Search with this value"><Box cursor="pointer"><FaSearch onClick={() => onSearch(true)}/></Box></Tooltip>
             <CopyToClipboard copyText={v} tooltipTitle="copy this value" fontSize="0.7rem"/>

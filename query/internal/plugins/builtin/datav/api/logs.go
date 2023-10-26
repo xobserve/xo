@@ -75,31 +75,23 @@ func GetLogs(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[str
 		order = orderI.(string)
 	}
 
-	namespace, service, host := datavutils.GetNamespaceServiceHostFromParams(params)
-	severityI := params["severity"]
-	var severity string
-	if severityI != nil {
-		severity = severityI.(string)
-	}
+	namespaces, services, hosts := datavutils.GetNamespaceServiceHostFromParams(params)
+	severity := datavutils.GetValueListFromParams(params, "severity")
 
 	var domainQuery string
 	var domainArgs []interface{}
-	if namespace != "" {
-		domainQuery += " AND namespace = ?"
-		domainArgs = append(domainArgs, namespace)
+	if namespaces != nil {
+		domainQuery += fmt.Sprintf(" AND namespace in ('%s')", strings.Join(namespaces, "','"))
 	}
-	if service != "" {
-		domainQuery += " AND service = ?"
-		domainArgs = append(domainArgs, service)
+	if services != nil {
+		domainQuery += fmt.Sprintf(" AND service in ('%s')", strings.Join(services, "','"))
 	}
-	if host != "" {
-		domainQuery += " AND host = ?"
-		domainArgs = append(domainArgs, host)
+	if hosts != nil {
+		domainQuery += fmt.Sprintf(" AND host in ('%s')", strings.Join(hosts, "','"))
 	}
 
-	if severity != "" {
-		domainQuery += " AND severity = ?"
-		domainArgs = append(domainArgs, severity)
+	if severity != nil {
+		domainQuery += fmt.Sprintf(" AND severity in ('%s')", strings.Join(severity, "','"))
 	}
 
 	// query logs
