@@ -74,7 +74,7 @@ const DashboardHeader = memo(({ dashboard, onChange, sideWidth }: HeaderProps) =
                             </>}
                             <Box>{dashboard.title}</Box>
                             {isLargeScreen && <>
-                                <DashboardStar dashboardId={dashboard.id} fontSize="1.2rem" />
+                                <DashboardStar dashboardId={dashboard.id} fontSize="1.1rem" />
                                 <DashboardShare dashboard={dashboard} fontSize="0.9rem" opacity="0.8" cursor="pointer" className="hover-text" />
                             </>}
                         </HStack>

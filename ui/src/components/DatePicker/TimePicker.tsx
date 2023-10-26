@@ -232,7 +232,7 @@ const TimePicker = ({initTimeRange, onClose, onTimeChange,showCanlendar=true }: 
 
     return (
         <>
-            {tempRange && <Flex alignItems="top" justifyContent="space-between">
+            {tempRange && <Flex alignItems="top" justifyContent="space-between" gap="6">
                 {displayCalender &&
                     <Box>
                         <Flex justifyContent="space-between" alignItems="center" fontSize="lg" mb="2">
@@ -262,7 +262,7 @@ const TimePicker = ({initTimeRange, onClose, onTimeChange,showCanlendar=true }: 
                 <VStack alignItems="left" spacing={4}>
                     <Text>{t1.customTime}</Text>
                     <Box>
-                        <Text size="sm">{t1.from}</Text>
+                        <Text fontSize="0.9em">{t1.from}</Text>
                         <HStack>
                             <EditorInputItem
                                 key={tempRange.startRaw}
@@ -275,7 +275,7 @@ const TimePicker = ({initTimeRange, onClose, onTimeChange,showCanlendar=true }: 
                         {error.start && <Text mt="1" fontSize="sm" color="red">{error.start}</Text>}
                     </Box>
                     <Box>
-                        <Text size="sm">{t1.to}</Text>
+                        <Text fontSize="0.9em">{t1.to}</Text>
                         <HStack>
                             <EditorInputItem
                                 key={tempRange.endRaw}
@@ -300,7 +300,7 @@ const TimePicker = ({initTimeRange, onClose, onTimeChange,showCanlendar=true }: 
                         flex={1}
                     >
                         {
-                            quickOptions.map(o => <Button size="sm" key={o.value} onClick={() => setQuickTime(o)} colorScheme="gray" variant={range.startRaw == o.raw && range.endRaw == "now" ? "solid" : "ghost"} borderRadius="0">
+                            quickOptions.map(o => <Button size="md" key={o.value} onClick={() => setQuickTime(o)} colorScheme="gray" variant={range.startRaw == o.raw && range.endRaw == "now" ? "solid" : "ghost"} borderRadius="0">
                                 {o.label}
                             </Button>)
                         }

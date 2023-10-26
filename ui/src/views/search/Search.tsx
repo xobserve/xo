@@ -278,7 +278,7 @@ const Search = memo((props: Props) => {
                         </ModalHeader>
                         <ModalBody >
                             <HStack px="0">
-                                <InputGroup size="sm">
+                                <InputGroup>
                                     <InputLeftElement
                                         pointerEvents='none'
                                         children={

@@ -266,7 +266,7 @@ const TeamSidemenu = ({team}:{team:Team}) => {
                             const Icon = Icons[node.icon]
                             return (
                                 <HStack width="100%">
-                                    <Box width="30px" fontSize="18px" opacity="0.7">{Icon && <Icon />}</Box>
+                                    <Box fontSize="1rem" opacity="0.7">{Icon && <Icon />}</Box>
                                     <Input
                                         width="200px"
                                         size="sm"

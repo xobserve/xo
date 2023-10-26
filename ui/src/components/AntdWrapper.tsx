@@ -42,11 +42,17 @@ const AntdWrapper = ({ children }) => {
                     colorBorderSecondary: colorMode == "light" ? customColors.borderColor.light : customColors.borderColor.dark,
                     zIndexPopupBase: 1500,
                     colorBorder: "var(--chakra-colors-chakra-border-color)",
+                    fontSize: customColors.baseFontSize,
                 },
                 components: {
                     Select: {
                         optionSelectedColor:colorMode == "light" ? chakraTheme.colors.brand[600] : chakraTheme.colors.brand[200],
                         optionSelectedBg: "transparent"
+                    },
+                    Table: {
+                        cellFontSize: customColors.baseFontSize * 0.9,
+                        cellFontSizeMD: customColors.baseFontSize * 0.9,
+                        cellFontSizeSM:     customColors.baseFontSize * 0.9,
                     }
                 }
             }}>
