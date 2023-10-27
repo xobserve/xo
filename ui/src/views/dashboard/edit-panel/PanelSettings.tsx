@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box, Center, Image, SimpleGrid, Switch, Text, useColorModeValue } from "@chakra-ui/react"
+import { Box, Center, Image, SimpleGrid, Switch, Text, useColorModeValue, Wrap, WrapItem } from "@chakra-ui/react"
 import { upperFirst } from "lodash"
 import { Panel, PanelEditorProps, PanelTypeRow } from "types/dashboard"
 import PanelAccordion from "./Accordion"
@@ -120,7 +120,7 @@ const PanelSettings = memo(({ panel, onChange }: PanelEditorProps) => {
 
             {/* panel visulization choosing */}
             <PanelAccordion title={t1.visualization + (!isExternalPanel ? ` -> ${panel.type}` : "")} defaultOpen={false}>
-                <SimpleGrid columns={3} spacing="2">
+            <Wrap>
                     {
                         builtinPlugins.map((panelType) => {
                             const plugin = builtinPanelPlugins[panelType]
@@ -135,11 +135,11 @@ const PanelSettings = memo(({ panel, onChange }: PanelEditorProps) => {
                             />
                         })
                     }
-                </SimpleGrid>
+                </Wrap>
             </PanelAccordion>
             {
                 externalPlugins.length > 0 && <PanelAccordion title={t1.externalPanels + (isExternalPanel ? ` -> ${panel.type}` : "")} defaultOpen={false}>
-                    <SimpleGrid columns={3} spacing="2">
+                    <Wrap>
                         {
                             externalPlugins.map((panelType) => {
                                 const plugin = externalPanelPlugins[panelType]
@@ -151,7 +151,7 @@ const PanelSettings = memo(({ panel, onChange }: PanelEditorProps) => {
                                 />
                             })
                         }
-                    </SimpleGrid>
+                    </Wrap>
                 </PanelAccordion>
             }
         </>
@@ -163,11 +163,11 @@ export default PanelSettings
 
 const VisulizationItem = ({ title, imageUrl, onClick = null, selected = false }) => {
     return (
-        <Box className={`tag-bg`} border={`3px solid ${selected ? useColorModeValue(customColors.colorBorder.dark, `var(--chakra-colors-brand-500)`) : 'transparent'}`} onClick={onClick} pb="2" cursor="pointer">
+        <Box className={`tag-bg`}  border={`3px solid ${selected ? useColorModeValue(customColors.colorBorder.dark, `var(--chakra-colors-brand-400)`) : 'transparent'}`} onClick={onClick} pb="2" cursor="pointer">
             <Center >
                 <Text>{title}</Text>
             </Center>
-            <Image src={imageUrl} height="70px" width="100%" />
+            <Image src={imageUrl} height="50px" width="100px"  />
         </Box>
 
     )
