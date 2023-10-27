@@ -11,7 +11,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+
+import { round } from "lodash"
 import { PanelQuery } from "types/dashboard"
+import { Edge, NodeGraphData, Node } from "types/panel/plugins"
 import { QueryPluginData } from "types/plugin"
 import { FieldType, SeriesData } from "types/seriesData"
 import { jsonToEqualPairs1, parseLegendFormat } from "./format"
@@ -196,4 +199,70 @@ export const queryPluginDataToLogs = (data: {
             data: chartData
         }
     }]
+}
+
+export const queryPluginDataToNodeGraph = (data: QueryPluginData, query: PanelQuery): NodeGraphData => {
+    const sourceIndex = data.columns.indexOf("src")
+    const targetIndex = data.columns.indexOf("dest")
+    const callsIndex = data.columns.indexOf("calls")
+    const errorsIndex = data.columns.indexOf("errors")
+    const p50Index = data.columns.indexOf("p50")
+    const p75Index = data.columns.indexOf("p75")
+    const p90Index = data.columns.indexOf("p90")
+    const p95Index = data.columns.indexOf("p95")
+    const p99Index = data.columns.indexOf("p99")
+
+    const nodesMap: Record<string,Node> = {}
+    const edges: Edge[] = []
+    for (const row of data.data) {
+        const callsCount = row[callsIndex]
+        const errorsCount = row[errorsIndex]
+        const successCount = callsCount- errorsCount
+        const latency = round(row[p99Index] / 1000000,1)
+        const source = row[sourceIndex]
+        const target = row[targetIndex]
+        const edge: Edge = {
+            source: source,
+            target: target,
+            label: `${callsCount} / ${errorsCount} / ${latency}ms`,
+            data: {
+                success: successCount,
+                error: errorsCount,
+                p50: row[p50Index] / 1000000,
+                p75: row[p75Index] / 1000000,
+                p90: row[p90Index] / 1000000,
+                p95: row[p95Index] / 1000000,
+                p99: row[p99Index] / 1000000,
+            }
+        }
+        edges.push(edge)
+
+        const node = nodesMap[target]
+        if (!node) {
+            nodesMap[target] = {
+                id: target,
+                label: target,
+                data: { 
+                    success: successCount,
+                    error: errorsCount,
+                }
+            }
+        } else {
+            node.data.success += successCount
+            node.data.error += errorsCount
+        }
+
+        const srcNode = nodesMap[source]
+        if (!srcNode) nodesMap[source] = {
+            id: source, 
+            label: source,
+            data: {}
+        }
+    }
+
+    const nodes = Object.values(nodesMap)
+    return {
+        nodes,
+        edges
+    }
 }

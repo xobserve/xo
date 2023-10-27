@@ -11,8 +11,8 @@ const (
 	GetServiceInfoListAPI   = "getServiceInfoList"
 	GetServiceNamesAPI      = "getServiceNames"
 	GetServiceOperationsAPI = "getServiceOperations"
-
-	GetLogsAPI = "getLogs"
+	GetDependencyGraphAPI   = "getDependencyGraph"
+	GetLogsAPI              = "getLogs"
 )
 
 var APIRoutes = map[string]func(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[string]interface{}) models.PluginResult{
@@ -20,4 +20,5 @@ var APIRoutes = map[string]func(c *gin.Context, ds *models.Datasource, conn ch.C
 	GetServiceNamesAPI:      GetServiceNames,
 	GetServiceOperationsAPI: GetServiceOperations,
 	GetLogsAPI:              GetLogs,
+	GetDependencyGraphAPI:   GetDependencyGraph,
 }

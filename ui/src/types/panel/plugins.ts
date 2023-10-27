@@ -57,3 +57,26 @@ export interface Units {
     unitsType: UnitsType,
     units: Unit[],
 }
+
+
+export interface NodeGraphData {
+    nodes: Node[]
+    edges:  Edge[]
+  }
+
+export interface Node   {
+    id: string 
+    label: string
+    data: {
+        [key:string]:number
+    }
+}
+
+export interface Edge  {
+    source: string // source node id
+    target: string // target node id
+    label: string
+    data: {
+        [key:string]:number
+    }
+}
