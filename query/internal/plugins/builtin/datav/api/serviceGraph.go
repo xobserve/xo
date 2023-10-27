@@ -3,9 +3,11 @@ package api
 import (
 	"fmt"
 	"strconv"
+	"strings"
 
 	ch "github.com/ClickHouse/clickhouse-go/v2"
 	datavmodels "github.com/DataObserve/datav/query/internal/plugins/builtin/datav/models"
+	datavutils "github.com/DataObserve/datav/query/internal/plugins/builtin/datav/utils"
 	pluginUtils "github.com/DataObserve/datav/query/internal/plugins/utils"
 	"github.com/DataObserve/datav/query/pkg/config"
 	"github.com/DataObserve/datav/query/pkg/models"
@@ -15,6 +17,29 @@ import (
 func GetDependencyGraph(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[string]interface{}) models.PluginResult {
 	start, _ := strconv.ParseInt(c.Query("start"), 10, 64)
 	end, _ := strconv.ParseInt(c.Query("end"), 10, 64)
+
+	source := datavutils.GetValueListFromParams(params, "source")
+	target := datavutils.GetValueListFromParams(params, "target")
+	environment := datavutils.GetValueListFromParams(params, "environment")
+	cluster := datavutils.GetValueListFromParams(params, "cluster")
+	namespace := datavutils.GetValueListFromParams(params, "namespace")
+
+	var domainQuery string
+	if source != nil {
+		domainQuery += fmt.Sprintf(" AND src in ('%s')", strings.Join(source, "','"))
+	}
+	if target != nil {
+		domainQuery += fmt.Sprintf(" AND dest in ('%s')", strings.Join(target, "','"))
+	}
+	if environment != nil {
+		domainQuery += fmt.Sprintf(" AND environment in ('%s')", strings.Join(environment, "','"))
+	}
+	if cluster != nil {
+		domainQuery += fmt.Sprintf(" AND cluster in ('%s')", strings.Join(cluster, "','"))
+	}
+	if namespace != nil {
+		domainQuery += fmt.Sprintf(" AND namespace in ('%s')", strings.Join(namespace, "','"))
+	}
 
 	query := fmt.Sprintf(`WITH
 	quantilesMergeState(0.5, 0.75, 0.9, 0.95, 0.99)(duration_quantiles_state) AS duration_quantiles_state,
@@ -30,8 +55,8 @@ SELECT
 	sum(total_count) as calls,
 	sum(error_count) as errors
 FROM %s.%s
-WHERE toUInt64(toDateTime(timestamp)) >= ? AND toUInt64(toDateTime(timestamp)) <= ? GROUP BY src, dest`,
-		config.Data.Observability.DefaultTraceDB, datavmodels.DefaultDependencyGraphTable)
+WHERE toUInt64(toDateTime(timestamp)) >= ? AND toUInt64(toDateTime(timestamp)) <= ? %s GROUP BY src, dest`,
+		config.Data.Observability.DefaultTraceDB, datavmodels.DefaultDependencyGraphTable, domainQuery)
 
 	rows, err := conn.Query(c.Request.Context(), query, start, end)
 	if err != nil {

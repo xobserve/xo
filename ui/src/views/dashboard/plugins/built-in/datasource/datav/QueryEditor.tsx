@@ -162,8 +162,8 @@ const apiList = [{
     paramsDesc: [
         ["namespace", "such as dev, test, prod etc", "", ""],
         ["service", "filter by service names, e.g datav|driver", "", ""],
-        ["host", "filter by host names, e.g datav-1", "", ""],
-        ["severity", "logs severity, e.g error,info", "", "debug | info | warn | error | fatal"],
+        ["host", "filter by host names, e.g datav-1|datav-2", "", ""],
+        ["severity", "logs severity, e.g error|info", "", "debug| info | warn | error | fatal"],
         ["perPage", "page size of logs when query from datasource", "100", "any number"],
         ["orderByTimestamp", "order by timestamp", "desc", "asc | desc"],
     ],
@@ -175,8 +175,11 @@ const apiList = [{
     params: `{
 }`,
     paramsDesc: [
-        ["namespace", "such as dev, test, prod etc", "", ""],
-        ["service", "filter by service names, e.g datav|driver", "", ""],
+        ["environment", "such as dev, test, prod etc", "", ""],
+        ["cluster", "e.g k8s cluster name", "", ""],
+        ["namespace", "e.g k8s namespace name", "", ""],
+        ["source", "service name list, e.g datav|mysql","",""],
+        ["target", "service name list, e.g datav|mysql","",""]
     ],
     format: DataFormat.NodeGraph
 }
