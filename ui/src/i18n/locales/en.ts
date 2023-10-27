@@ -410,8 +410,10 @@ export const panelMsg = i18n("panel", {
 
   "panelTitle": "Panel Title",
   "panelDesc": "give a short description to this panel",
-  "visualization": "Built-in plugins",
-  "externalPanels": "External plugins",
+  "panelType": "Panel type",
+  "visualization": "Built-in",
+  "externalPanels": "External",
+  "datavPanels": "Datav",
   "panelBorder": "Panel layout and border",
   "paletteTips": "Only support Graph, Bar, Pie and Echarts panel",
   "titleDecoration": "Title decoration",
@@ -537,18 +539,6 @@ export const echartsPanelMsg = i18n("echartsPanel", {
   "regEvents": "Register events function",
   "regEventsTips": "custom your chart events, e.g mouseclick, mouseover etc",
   "editRegFunc": "Edit registerEvents function",
-})
-
-export const textPanelMsg = i18n("textPanel", {
-  "textSettings": "Text settings",
-  "content": "Content",
-  "horizontalPos": "Horizontal position",
-  "verticalPos": "Vertical position",
-  "left": "Left",
-  "center": "Center",
-  "right": "Right",
-  "top": "Top",
-  "bottom": "Bottom",
 })
 
 export const piePanelMsg = i18n("piePanel", {

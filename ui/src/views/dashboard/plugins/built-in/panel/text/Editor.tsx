@@ -10,51 +10,50 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Textarea } from "@chakra-ui/react"
 import { EditorInputItem } from "src/components/editor/EditorItem"
 import RadionButtons from "src/components/RadioButtons"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
 import React, { memo } from "react";
 import { useStore } from "@nanostores/react"
-import { textPanelMsg } from "src/i18n/locales/en"
-import { TextEditorProps, TextPanel as Panel } from "./types"
+import { PanelType, TextEditorProps, TextPanel as Panel } from "./types"
 import CodeEditor from "components/CodeEditor/CodeEditor"
+import { locale } from "src/i18n/i18n";
 
 const TextPanelEditor = memo(({ panel, onChange }: TextEditorProps) => {
-    const t1 = useStore(textPanelMsg)
-    return (<PanelAccordion title={t1.textSettings}>
-        <PanelEditItem title={t1.content}>
-            <CodeEditor value={panel.plugins.text.md} onChange={(v) => {
+    const lang = useStore(locale)
+    return (<PanelAccordion title={lang == "en" ? "Text settings" : "Text 设置"}>
+        <PanelEditItem title={lang == "en" ? "Content" : "内容"}>
+            <CodeEditor value={panel.plugins[PanelType].md} onChange={(v) => {
                 onChange((panel: Panel) => {
-                    panel.plugins.text.md = v
+                    panel.plugins[PanelType].md = v
                 })
             }} language="markdown" height="240px" />
         </PanelEditItem>
 
-        <PanelEditItem title={t1.horizontalPos}>
-            <RadionButtons options={[{ label: t1.left, value: "left" }, { label: t1.center, value: "center" }, { label: t1.right, value: "right" }]} value={panel.plugins.text.justifyContent} onChange={v => onChange((panel: Panel) => {
-                panel.plugins.text.justifyContent = v
+        <PanelEditItem title={lang == "en" ? "Horizontal position" : "文字水平位置"}>
+            <RadionButtons options={[{ label: "Left", value: "left" }, { label: "Center", value: "center" }, { label: "Right", value: "right" }]} value={panel.plugins[PanelType].justifyContent} onChange={v => onChange((panel: Panel) => {
+                panel.plugins[PanelType].justifyContent = v
             })} />
 
         </PanelEditItem>
 
-        <PanelEditItem title={t1.verticalPos}>
-            <RadionButtons options={[{ label: t1.top, value: "top" }, { label: t1.center, value: "center" }, { label: t1.bottom, value: "end" }]} value={panel.plugins.text.alignItems} onChange={v => onChange((panel: Panel) => {
-                panel.plugins.text.alignItems = v
+        <PanelEditItem title={lang == "en" ? "Vertical position" : "文字竖直位置"}>
+            <RadionButtons options={[{ label: "Top", value: "top" }, { label: "Center", value: "center" }, { label: "Bottom", value: "end" }]} value={panel.plugins[PanelType].alignItems} onChange={v => onChange((panel: Panel) => {
+                panel.plugins[PanelType].alignItems = v
             })} />
 
         </PanelEditItem>
 
         <PanelEditItem title="Font size">
-            <EditorInputItem value={panel.plugins.text.fontSize} onChange={v => onChange((panel: Panel) => {
-                panel.plugins.text.fontSize = v
+            <EditorInputItem value={panel.plugins[PanelType].fontSize} onChange={v => onChange((panel: Panel) => {
+                panel.plugins[PanelType].fontSize = v
             })} />
         </PanelEditItem>
 
         <PanelEditItem title="Font weight">
-            <EditorInputItem value={panel.plugins.text.fontWeight} onChange={v => onChange((panel: Panel) => {
-                panel.plugins.text.fontWeight = v
+            <EditorInputItem value={panel.plugins[PanelType].fontWeight} onChange={v => onChange((panel: Panel) => {
+                panel.plugins[PanelType].fontWeight = v
             })} />
         </PanelEditItem>
     </PanelAccordion>

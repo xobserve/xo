@@ -386,8 +386,10 @@
     "finalIntervalTips": "最终间隔是根据当前的时间范围、最大点数和最小间隔综合计算出的，它将被发送到数据源并用于最终渲染的图表点间隔，例如 Prometheus 需要的 step 参数就是使用该值",
     "panelTitle": "图表标题",
     "panelDesc": "给图表一个简单描述",
-    "visualization": "内置图表插件",
-    "externalPanels": "外部图表插件",
+    "panelType": "图表类型",
+    "visualization": "内置图表",
+    "externalPanels": "外部图表",
+    "datavPanels": "DataV 图表",
     "panelBorder": "图表布局和边框",
     "paletteTips": "只支持 Graph, Bar, Pie 和 Echarts 图表",
     "titleDecoration": "标题装饰",
@@ -503,17 +505,6 @@
     "regEvents": "注册事件函数",
     "regEventsTips": "定制你的图表事件，例如：鼠标点击，鼠标悬浮等",
     "editRegFunc": "编辑 registerEvents 函数"
-  },
-  "textPanel": {
-    "textSettings": "Text 设置",
-    "content": "内容",
-    "horizontalPos": "文字水平位置",
-    "verticalPos": "文字竖直位置",
-    "left": "左",
-    "center": "中",
-    "right": "右",
-    "top": "顶部",
-    "bottom": "底部"
   },
   "piePanel": {
     "showLabel": "显示标签",

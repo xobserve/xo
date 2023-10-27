@@ -190,10 +190,6 @@ const apiList = [{
 }`,
     paramsDesc: [
         ["environment", "such as dev, test, prod etc", "", ""],
-        ["cluster", "e.g k8s cluster name", "", ""],
-        ["namespace", "e.g k8s namespace name", "", ""],
-        ["source", "service name list, e.g datav|mysql","",""],
-        ["target", "service name list, e.g datav|mysql","",""]
     ],
     format: DataFormat.NodeGraph
 }

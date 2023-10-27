@@ -1,5 +1,4 @@
 import { Panel, PanelEditorProps } from "types/dashboard"
-import { DisableDatasource } from "types/panel/plugins"
 
 export const PanelType = "datavLog"
 

@@ -17,6 +17,7 @@ import tablePanel from './panel/table'
 import textPanel from './panel/text'
 import tracePanel from './panel/trace'
 import datavLogPanel from './panel/datavLog'
+import datavTracePanel from './panel/datavTrace'
 
 import prometheusDs from './datasource/prometheus'
 import httpDs from './datasource/http'
@@ -43,7 +44,8 @@ export const builtinPanelPlugins: Record<string,PanelPluginComponents> = {
     [tablePanel.settings.type]: tablePanel,
     [textPanel.settings.type]: textPanel,
     [tracePanel.settings.type]: tracePanel,
-    [datavLogPanel.settings.type]: datavLogPanel
+    [datavLogPanel.settings.type]: datavLogPanel,
+    [datavTracePanel.settings.type]: datavTracePanel
 }
 
 export const builtinDatasourcePlugins: Record<string,DatasourcePluginComponents> = {

@@ -63,7 +63,8 @@ const PanelSettings = memo(({ panel, onChange }: PanelEditorProps) => {
     const externalPlugins = Object.keys(externalPanelPlugins).filter(panelType => !disabledPanels?.includes(panelType))
     const builtinPlugins = Object.keys(builtinPanelPlugins).filter(panelType => !disabledPanels?.includes(panelType))
     const isExternalPanel = !isEmpty(externalPlugins.find(panelType => panelType == panel.type))
-
+    const isBuiltin = !isExternalPanel && !panel.type.startsWith("datav")
+    const isDatav = !isExternalPanel && panel.type.startsWith("datav")
     return (
         <>
             <PanelAccordion title={t.basicSetting} spacing={2} defaultOpen={false}>
@@ -119,30 +120,18 @@ const PanelSettings = memo(({ panel, onChange }: PanelEditorProps) => {
             </PanelAccordion>
 
             {/* panel visulization choosing */}
-            <PanelAccordion title={t1.visualization + (!isExternalPanel ? ` -> ${panel.type}` : "")} defaultOpen={false}>
-            <Wrap>
-                    {
-                        builtinPlugins.map((panelType) => {
-                            const plugin = builtinPanelPlugins[panelType]
-                            if (panelType == PanelTypeRow) {
-                                return <></>
-                            }
-                            return <VisulizationItem
-                                selected={panel.type == panelType}
-                                title={upperFirst(panelType)}
-                                imageUrl={plugin?.settings.icon}
-                                onClick={() => onChangeVisualization(panelType)}
-                            />
-                        })
-                    }
-                </Wrap>
-            </PanelAccordion>
-            {
-                externalPlugins.length > 0 && <PanelAccordion title={t1.externalPanels + (isExternalPanel ? ` -> ${panel.type}` : "")} defaultOpen={false}>
+            <PanelAccordion title={t1.panelType +  ` -> ${isExternalPanel ? t1.externalPanels : (isBuiltin ? t1.visualization : t1.datavPanels)} -> ${panel.type}`} defaultOpen={false} spacing={0}>
+                <PanelAccordion title={t1.visualization} defaultOpen={isBuiltin}>
                     <Wrap>
                         {
-                            externalPlugins.map((panelType) => {
-                                const plugin = externalPanelPlugins[panelType]
+                            builtinPlugins.map((panelType) => {
+                                if (panelType.startsWith("datav")) {
+                                    return <></>
+                                }
+                                const plugin = builtinPanelPlugins[panelType]
+                                if (panelType == PanelTypeRow) {
+                                    return <></>
+                                }
                                 return <VisulizationItem
                                     selected={panel.type == panelType}
                                     title={upperFirst(panelType)}
@@ -153,7 +142,42 @@ const PanelSettings = memo(({ panel, onChange }: PanelEditorProps) => {
                         }
                     </Wrap>
                 </PanelAccordion>
-            }
+                {
+                    externalPlugins.length > 0 && <PanelAccordion title={t1.externalPanels} defaultOpen={isExternalPanel}>
+                        <Wrap>
+                            {
+                                externalPlugins.map((panelType) => {
+                                    const plugin = externalPanelPlugins[panelType]
+                                    return <VisulizationItem
+                                        selected={panel.type == panelType}
+                                        title={upperFirst(panelType)}
+                                        imageUrl={plugin?.settings.icon}
+                                        onClick={() => onChangeVisualization(panelType)}
+                                    />
+                                })
+                            }
+                        </Wrap>
+                    </PanelAccordion>
+                }
+                <PanelAccordion title={t1.datavPanels} defaultOpen={isDatav}>
+                    <Wrap>
+                        {
+                            builtinPlugins.map((panelType) => {
+                                if (panelType.startsWith("datav")) {
+                                    const plugin = builtinPanelPlugins[panelType]
+                                    return <VisulizationItem
+                                        selected={panel.type == panelType}
+                                        title={upperFirst(panelType)}
+                                        imageUrl={plugin?.settings.icon}
+                                        onClick={() => onChangeVisualization(panelType)}
+                                    />
+                                }
+
+                            })
+                        }
+                    </Wrap>
+                </PanelAccordion>
+            </PanelAccordion>
         </>
     )
 })
@@ -163,11 +187,11 @@ export default PanelSettings
 
 const VisulizationItem = ({ title, imageUrl, onClick = null, selected = false }) => {
     return (
-        <Box className={`tag-bg`}  border={`3px solid ${selected ? useColorModeValue(customColors.colorBorder.dark, `var(--chakra-colors-brand-400)`) : 'transparent'}`} onClick={onClick} pb="2" cursor="pointer">
+        <Box className={`tag-bg`} border={`3px solid ${selected ? useColorModeValue(customColors.colorBorder.dark, `var(--chakra-colors-brand-400)`) : 'transparent'}`} onClick={onClick} pb="2" cursor="pointer">
             <Center >
                 <Text>{title}</Text>
             </Center>
-            <Image src={imageUrl} height="50px" width="100px"  />
+            <Image src={imageUrl} height="50px" width="90px" />
         </Box>
 
     )
