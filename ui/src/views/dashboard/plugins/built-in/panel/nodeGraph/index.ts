@@ -56,7 +56,9 @@ function highlightNodes(data, lodash) {
                     light: '#C8F2C2',
                     dark: '#00B5D8'
                 },
-                display: true
+                display: true,
+                showDetail: "hover",
+                detailPos: "edge"
             },
 
             legend: {

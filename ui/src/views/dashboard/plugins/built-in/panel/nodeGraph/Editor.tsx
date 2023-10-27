@@ -195,6 +195,18 @@ const NodeGraphPanelEditor = memo((props: NodeGraphEditorProps) => {
                     <Box width="40px" height="30px" background={panel.plugins.nodeGraph.edge.highlightColor.dark}></Box>
                 </HStack>
             </PanelEditItem> */}
+            <PanelEditItem title="Show detail">
+                <RadionButtons options={[{ label: "None", value: "none" },{ label: "Hover", value: "hover" }, { label: "Click", value: "click" }]} value={panel.plugins.nodeGraph.edge.showDetail} onChange={v => onChange((panel: Panel) => {
+                    panel.plugins.nodeGraph.edge.showDetail = v
+                    dispatch(PanelForceRebuildEvent + panel.id)
+                })} />
+            </PanelEditItem>
+            {panel.plugins.nodeGraph.edge.showDetail  && <PanelEditItem title="Detail position">
+                <RadionButtons options={[{ label: "Edge", value: "edge" },{ label: "Top left", value: "top-left" }]} value={panel.plugins.nodeGraph.edge.detailPos} onChange={v => onChange((panel: Panel) => {
+                    panel.plugins.nodeGraph.edge.detailPos = v
+                    dispatch(PanelForceRebuildEvent + panel.id)
+                })} />
+            </PanelEditItem>}
         </PanelAccordion>
 
 

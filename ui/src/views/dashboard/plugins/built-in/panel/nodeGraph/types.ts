@@ -46,7 +46,9 @@ export interface NodeGraphSettings {
             light: string
             dark: string
         }
-        display: boolean
+        display: boolean,
+        showDetail: "none" | "hover" | "click"
+        detailPos: "edge" | "top-left"
     }
 
     legend: {

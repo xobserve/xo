@@ -26,7 +26,7 @@ import useContextMenu from './plugins/useContextMenu';
 import HiddenItems from './HiddenItem';
 import { filterData } from './filter/filterData';
 import { getDefaultEdgeLabel, getDefaultEdgeStyle, getDefaultNodeLabel, getDefaultNodeStyle } from './default-styles';
-import { NodeGraphPluginData } from './types';
+import { NodeGraphPluginData, PanelTypeNodeGraph } from './types';
 import { isFunction } from 'lodash';
 import { colors, paletteColorNameToHex } from 'utils/colors';
 import './customNode'
@@ -242,21 +242,30 @@ const NodeGrapPanel = ({ data, panel, dashboardId, width, height }: NodeGraphPan
             });
 
             const g1 = gh
-            g1.on('edge:mouseenter', (evt) => {
-                const { item } = evt;
-                g1.setItemState(item, "active", true);
-                clearInterval(edgeInActive.current)
-                setActiveEdge(item)
-                console.log("here333333 on edge hover", item)
-            })
-            g1.on('edge:mouseleave', (evt) => {
-                const { item } = evt;
-                g1.setItemState(item, "active", false);
-                edgeInActive.current = setTimeout(() => {
-                    setActiveEdge(null)
-                }, 400)
+            if (panel.plugins[PanelTypeNodeGraph].edge.showDetail != "none") {
+                if (panel.plugins[PanelTypeNodeGraph].edge.showDetail == "click") {
+                    g1.on('edge:click', (evt) => {
+                        const { item } = evt;
+                        setActiveEdge(item)
+                    })
+                } else {
+                    g1.on('edge:mouseenter', (evt) => {
+                        const { item } = evt;
+                        g1.setItemState(item, "active", true);
+                        clearInterval(edgeInActive.current)
+                        setActiveEdge(item)
+                    })
+                    g1.on('edge:mouseleave', (evt) => {
+                        const { item } = evt;
+                        g1.setItemState(item, "active", false);
+                        edgeInActive.current = setTimeout(() => {
+                            setActiveEdge(null)
+                        }, 400)
+        
+                    })
+                }
+            }
 
-            })
             g1.on('node:mouseenter', (evt) => {
                 const { item } = evt;
                 g1.setItemState(item, 'active', true);
@@ -325,6 +334,7 @@ const NodeGrapPanel = ({ data, panel, dashboardId, width, height }: NodeGraphPan
                 clearSelectedEdgesState(g1, defaultEdgeLabelCfg)
                 // clearSelectedNodesState(g1,defaultEdgeLabelCfg)
                 setSelected(false)
+                setActiveEdge(null)
             });
 
 
@@ -347,13 +357,12 @@ const NodeGrapPanel = ({ data, panel, dashboardId, width, height }: NodeGraphPan
 
     const onSelectChange = useCallback(v => setSelected(v), [])
 
-    console.log("here333333", activeEdge)
     return <>
         {graph && <NodeGraphToolbar graph={graph} dashboardId={dashboardId} panelId={panel.id} data={data[0]} onFilterRulesChange={onFilterRulesChange} />}
         <Box ml="10px" width="calc(100% - 20px)" height="100%" ref={container} />
         <Help data={nodeGraphHelp} iconSize="0.8rem" />
         {graph && <Box><HiddenItems dashboardId={dashboardId} panelId={panel.id} selected={selected} graph={graph} onSelectChange={onSelectChange} data={data} /></Box>}
-        {activeEdge && <Box zIndex={1500} pointerEvents="none" p="4" position="absolute" left={activeEdge._cfg.model.startPoint?.x + (activeEdge._cfg.model.endPoint?.x - activeEdge._cfg.model.startPoint?.x) / 2} top={activeEdge._cfg.model.startPoint?.y + (activeEdge._cfg.model.endPoint?.y - activeEdge._cfg.model.startPoint?.y) / 2} background={useColorModeValue(customColors.bodyBg.dark, customColors.bodyBg.dark)}>
+        {activeEdge && <Box zIndex={1500} pointerEvents="none" p="4" position="absolute" left={panel.plugins[PanelTypeNodeGraph].edge.detailPos == "edge" ? (activeEdge._cfg.model.startPoint?.x + (activeEdge._cfg.model.endPoint?.x - activeEdge._cfg.model.startPoint?.x) / 2) : "0"} top={panel.plugins[PanelTypeNodeGraph].edge.detailPos == "edge" ? (activeEdge._cfg.model.startPoint?.y + (activeEdge._cfg.model.endPoint?.y - activeEdge._cfg.model.startPoint?.y) / 2) : "0"} background={useColorModeValue(customColors.bodyBg.dark, customColors.bodyBg.dark)}>
             <Flex gap="3">
                 <ColorKV k={activeEdge._cfg.model.label} v={"callsCount/error/p99"} renderString={false}/>
             </Flex>
