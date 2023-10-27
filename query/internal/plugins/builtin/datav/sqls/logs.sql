@@ -9,13 +9,13 @@ CREATE TABLE IF NOT EXISTS signoz_logs.logs ON CLUSTER cluster  (
 	severity_number UInt8,
 	body String CODEC(ZSTD(2)),
 
-  namespace LowCardinality(String) CODEC(ZSTD(1)),
+  environment LowCardinality(String) CODEC(ZSTD(1)),
   service LowCardinality(String) CODEC(ZSTD(1)),
   host String CODEC(ZSTD(1)),
 
 	resources_string_key Array(String) CODEC(ZSTD(1)),
 	resources_string_value Array(String) CODEC(ZSTD(1)),
-  attributes_string_key Array(String) CODEC(ZSTD(1)),
+  	attributes_string_key Array(String) CODEC(ZSTD(1)),
 	attributes_string_value Array(String) CODEC(ZSTD(1)),
 	attributes_int64_key Array(String) CODEC(ZSTD(1)),
 	attributes_int64_value Array(Int64) CODEC(ZSTD(1)),
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS signoz_logs.logs ON CLUSTER cluster  (
 	INDEX body_idx      body      TYPE tokenbf_v1(10240, 3, 0) GRANULARITY 4
 ) ENGINE MergeTree
 PARTITION BY toDate(timestamp / 1000000000)
-ORDER BY (timestamp, namespace, service)
+ORDER BY (timestamp, environment, service)
 TTL toDateTime(timestamp / 1000000000) + INTERVAL 1296000 SECOND DELETE
 SETTINGS index_granularity = 8192, ttl_only_drop_parts = 1
 

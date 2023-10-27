@@ -8,7 +8,7 @@ export interface OpenTelemetryLog {
     severityText: string
     body: string
 
-    namespace: string 
+    environment: string 
     service: string 
     host: string
 

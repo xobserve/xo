@@ -75,13 +75,16 @@ func GetLogs(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[str
 		order = orderI.(string)
 	}
 
-	namespaces, services, hosts := datavutils.GetNamespaceServiceHostFromParams(params)
+	environment := datavutils.GetValueListFromParams(params, "environment")
+	services := datavutils.GetValueListFromParams(params, "service")
+	hosts := datavutils.GetValueListFromParams(params, "host")
+
 	severity := datavutils.GetValueListFromParams(params, "severity")
 
 	var domainQuery string
 	var domainArgs []interface{}
-	if namespaces != nil {
-		domainQuery += fmt.Sprintf(" AND namespace in ('%s')", strings.Join(namespaces, "','"))
+	if environment != nil {
+		domainQuery += fmt.Sprintf(" AND environment in ('%s')", strings.Join(environment, "','"))
 	}
 	if services != nil {
 		domainQuery += fmt.Sprintf(" AND service in ('%s')", strings.Join(services, "','"))

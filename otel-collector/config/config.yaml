@@ -37,7 +37,7 @@ receivers:
         from: attributes.container_id
         to: resource.host_name
       - type: add
-        field: resource.namespace
+        field: resource.environment
         value: default
       # - type: add
       #   field: attributes.test1

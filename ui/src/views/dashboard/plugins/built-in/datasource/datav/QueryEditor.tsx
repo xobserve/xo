@@ -160,7 +160,7 @@ const apiList = [{
     params: `{
 }`,
     paramsDesc: [
-        ["namespace", "such as dev, test, prod etc", "", ""],
+        ["environment", "such as dev, test, prod etc", "", ""],
         ["service", "filter by service names, e.g datav|driver", "", ""],
         ["host", "filter by host names, e.g datav-1|datav-2", "", ""],
         ["severity", "logs severity, e.g error|info", "", "debug| info | warn | error | fatal"],
@@ -172,6 +172,20 @@ const apiList = [{
 {
     name: "getDependencyGraph",
     desc: "service dependency graph",
+    params: `{
+}`,
+    paramsDesc: [
+        ["environment", "such as dev, test, prod etc", "", ""],
+        ["cluster", "e.g k8s cluster name", "", ""],
+        ["namespace", "e.g k8s namespace name", "", ""],
+        ["source", "service name list, e.g datav|mysql","",""],
+        ["target", "service name list, e.g datav|mysql","",""]
+    ],
+    format: DataFormat.NodeGraph
+},
+{
+    name: "getTraces",
+    desc: "get traces list and statistics",
     params: `{
 }`,
     paramsDesc: [

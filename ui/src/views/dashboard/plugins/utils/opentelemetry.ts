@@ -27,8 +27,8 @@ export const seriesFieldsToOpenTelemetryLog = (fields: Field[]): Partial<OpenTel
             case "body":
                 log.body = f.values[0]
                 break
-            case "namespace":
-                log.namespace = f.values[0]
+            case "environment":
+                log.environment = f.values[0]
                 break
             case "service":
                 log.service= f.values[0]

@@ -7,14 +7,6 @@ import (
 	"github.com/DataObserve/datav/query/pkg/models"
 )
 
-func GetNamespaceServiceHostFromParams(params map[string]interface{}) (namespaces []string, services []string, hosts []string) {
-	namespaces = GetValueListFromParams(params, "namespace")
-	services = GetValueListFromParams(params, "service")
-	hosts = GetValueListFromParams(params, "host")
-
-	return
-}
-
 func GetValueListFromParams(params map[string]interface{}, key string) []string {
 	valueI := params[key]
 	var value []string

@@ -54,7 +54,7 @@ SELECT
 	result[5] AS p99,
 	sum(total_count) as calls,
 	sum(error_count) as errors
-FROM %s.%s
+FROM %s.%s	
 WHERE toUInt64(toDateTime(timestamp)) >= ? AND toUInt64(toDateTime(timestamp)) <= ? %s GROUP BY src, dest`,
 		config.Data.Observability.DefaultTraceDB, datavmodels.DefaultDependencyGraphTable, domainQuery)
 

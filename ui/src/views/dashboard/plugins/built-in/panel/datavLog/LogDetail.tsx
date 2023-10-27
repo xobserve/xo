@@ -39,7 +39,7 @@ const LogDetail = ({ log: rawlog, isOpen, onClose, onSearch }: Props) => {
     const basicKV = [
         ["id", log.id],
         ["severity", log.severityText],
-        ["namespace", log.namespace],
+        ["environment", log.environment],
         ["service", log.service],
         ["host", log.host],
         ["trace_id", log.traceId],

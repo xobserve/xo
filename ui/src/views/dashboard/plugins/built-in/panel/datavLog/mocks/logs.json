@@ -8,7 +8,7 @@
        "severity": "default",
        "severity_number": 0,
        "body": "http://0.0.0.0:8081/customer?customer=731",
-       "namespace": "default",
+       "environment": "default",
        "service": "hotrod",
        "host": "b39fb8a20536",
        "attributes_string": {
@@ -20,7 +20,7 @@
          "container_id": "b39fb8a20536",
          "container_name": "hotrod",
          "host_name": "b39fb8a20536",
-         "namespace": "default",
+         "environment": "default",
          "service_name": "hotrod"
        }
      },
@@ -33,7 +33,7 @@
        "severity": "default",
        "severity_number": 0,
        "body": " Waiting for lock behind 1 transactions: []",
-       "namespace": "default",
+       "environment": "default",
        "service": "hotrod",
        "host": "b39fb8a20536",
        "attributes_string": {
@@ -45,7 +45,7 @@
          "container_id": "b39fb8a20536",
          "container_name": "hotrod",
          "host_name": "b39fb8a20536",
-         "namespace": "default",
+         "environment": "default",
          "service_name": "hotrod"
        }
      },
@@ -58,7 +58,7 @@
        "severity": "default",
        "severity_number": 0,
        "body": "http://0.0.0.0:8081/customer?customer=567",
-       "namespace": "default",
+       "environment": "default",
        "service": "hotrod",
        "host": "b39fb8a20536",
        "attributes_string": {
@@ -70,7 +70,7 @@
          "container_id": "b39fb8a20536",
          "container_name": "hotrod",
          "host_name": "b39fb8a20536",
-         "namespace": "default",
+         "environment": "default",
          "service_name": "hotrod"
        }
      },
@@ -83,7 +83,7 @@
        "severity": "default",
        "severity_number": 0,
        "body": "http://0.0.0.0:8081/customer?customer=392",
-       "namespace": "default",
+       "environment": "default",
        "service": "hotrod",
        "host": "b39fb8a20536",
        "attributes_string": {
@@ -95,7 +95,7 @@
          "container_id": "b39fb8a20536",
          "container_name": "hotrod",
          "host_name": "b39fb8a20536",
-         "namespace": "default",
+         "environment": "default",
          "service_name": "hotrod"
        }
      },
@@ -108,7 +108,7 @@
        "severity": "default",
        "severity_number": 0,
        "body": "http://0.0.0.0:8081/customer?customer=567",
-       "namespace": "default",
+       "environment": "default",
        "service": "hotrod",
        "host": "b39fb8a20536",
        "attributes_string": {
@@ -120,7 +120,7 @@
          "container_id": "b39fb8a20536",
          "container_name": "hotrod",
          "host_name": "b39fb8a20536",
-         "namespace": "default",
+         "environment": "default",
          "service_name": "hotrod"
        }
      },
@@ -133,7 +133,7 @@
        "severity": "default",
        "severity_number": 0,
        "body": "http://0.0.0.0:8081/customer?customer=567",
-       "namespace": "default",
+       "environment": "default",
        "service": "hotrod",
        "host": "b39fb8a20536",
        "attributes_string": {
@@ -145,7 +145,7 @@
          "container_id": "b39fb8a20536",
          "container_name": "hotrod",
          "host_name": "b39fb8a20536",
-         "namespace": "default",
+         "environment": "default",
          "service_name": "hotrod"
        }
      },
@@ -158,7 +158,7 @@
        "severity": "default",
        "severity_number": 0,
        "body": "http://0.0.0.0:8081/customer?customer=567",
-       "namespace": "default",
+       "environment": "default",
        "service": "hotrod",
        "host": "b39fb8a20536",
        "attributes_string": {
@@ -170,7 +170,7 @@
          "container_id": "b39fb8a20536",
          "container_name": "hotrod",
          "host_name": "b39fb8a20536",
-         "namespace": "default",
+         "environment": "default",
          "service_name": "hotrod"
        }
      },
@@ -183,7 +183,7 @@
        "severity": "default",
        "severity_number": 0,
        "body": "http://0.0.0.0:8081/customer?customer=731",
-       "namespace": "default",
+       "environment": "default",
        "service": "hotrod",
        "host": "b39fb8a20536",
        "attributes_string": {
@@ -195,7 +195,7 @@
          "container_id": "b39fb8a20536",
          "container_name": "hotrod",
          "host_name": "b39fb8a20536",
-         "namespace": "default",
+         "environment": "default",
          "service_name": "hotrod"
        }
      },
@@ -208,7 +208,7 @@
        "severity": "default",
        "severity_number": 0,
        "body": "http://0.0.0.0:8081/customer?customer=731",
-       "namespace": "default",
+       "environment": "default",
        "service": "hotrod",
        "host": "b39fb8a20536",
        "attributes_string": {
@@ -220,7 +220,7 @@
          "container_id": "b39fb8a20536",
          "container_name": "hotrod",
          "host_name": "b39fb8a20536",
-         "namespace": "default",
+         "environment": "default",
          "service_name": "hotrod"
        }
      },
@@ -233,7 +233,7 @@
        "severity": "default",
        "severity_number": 0,
        "body": "http://0.0.0.0:8081/customer?customer=731",
-       "namespace": "default",
+       "environment": "default",
        "service": "hotrod",
        "host": "b39fb8a20536",
        "attributes_string": {
@@ -245,7 +245,7 @@
          "container_id": "b39fb8a20536",
          "container_name": "hotrod",
          "host_name": "b39fb8a20536",
-         "namespace": "default",
+         "environment": "default",
          "service_name": "hotrod"
        }
      },
@@ -258,7 +258,7 @@
        "severity": "default",
        "severity_number": 0,
        "body": "http://0.0.0.0:8081/customer?customer=731",
-       "namespace": "default",
+       "environment": "default",
        "service": "hotrod",
        "host": "b39fb8a20536",
        "attributes_string": {
@@ -270,7 +270,7 @@
          "container_id": "b39fb8a20536",
          "container_name": "hotrod",
          "host_name": "b39fb8a20536",
-         "namespace": "default",
+         "environment": "default",
          "service_name": "hotrod"
        }
      },
@@ -283,7 +283,7 @@
        "severity": "default",
        "severity_number": 0,
        "body": " Waiting for lock behind 1 transactions: []",
-       "namespace": "default",
+       "environment": "default",
        "service": "hotrod",
        "host": "b39fb8a20536",
        "attributes_string": {
@@ -295,7 +295,7 @@
          "container_id": "b39fb8a20536",
          "container_name": "hotrod",
          "host_name": "b39fb8a20536",
-         "namespace": "default",
+         "environment": "default",
          "service_name": "hotrod"
        }
      },
@@ -308,7 +308,7 @@
        "severity": "default",
        "severity_number": 0,
        "body": "http://0.0.0.0:8081/customer?customer=123",
-       "namespace": "default",
+       "environment": "default",
        "service": "hotrod",
        "host": "b39fb8a20536",
        "attributes_string": {
@@ -320,7 +320,7 @@
          "container_id": "b39fb8a20536",
          "container_name": "hotrod",
          "host_name": "b39fb8a20536",
-         "namespace": "default",
+         "environment": "default",
          "service_name": "hotrod"
        }
      },
@@ -333,7 +333,7 @@
        "severity": "default",
        "severity_number": 0,
        "body": "http://0.0.0.0:8081/customer?customer=731",
-       "namespace": "default",
+       "environment": "default",
        "service": "hotrod",
        "host": "b39fb8a20536",
        "attributes_string": {
@@ -345,7 +345,7 @@
          "container_id": "b39fb8a20536",
          "container_name": "hotrod",
          "host_name": "b39fb8a20536",
-         "namespace": "default",
+         "environment": "default",
          "service_name": "hotrod"
        }
      },
@@ -358,7 +358,7 @@
        "severity": "default",
        "severity_number": 0,
        "body": "http://0.0.0.0:8081/customer?customer=123",
-       "namespace": "default",
+       "environment": "default",
        "service": "hotrod",
        "host": "b39fb8a20536",
        "attributes_string": {
@@ -370,7 +370,7 @@
          "container_id": "b39fb8a20536",
          "container_name": "hotrod",
          "host_name": "b39fb8a20536",
-         "namespace": "default",
+         "environment": "default",
          "service_name": "hotrod"
        }
      },
@@ -383,7 +383,7 @@
        "severity": "default",
        "severity_number": 0,
        "body": "http://0.0.0.0:8081/customer?customer=731",
-       "namespace": "default",
+       "environment": "default",
        "service": "hotrod",
        "host": "b39fb8a20536",
        "attributes_string": {
@@ -395,7 +395,7 @@
          "container_id": "b39fb8a20536",
          "container_name": "hotrod",
          "host_name": "b39fb8a20536",
-         "namespace": "default",
+         "environment": "default",
          "service_name": "hotrod"
        }
      },
@@ -408,7 +408,7 @@
        "severity": "default",
        "severity_number": 0,
        "body": "http://0.0.0.0:8081/customer?customer=731",
-       "namespace": "default",
+       "environment": "default",
        "service": "hotrod",
        "host": "b39fb8a20536",
        "attributes_string": {
@@ -420,7 +420,7 @@
          "container_id": "b39fb8a20536",
          "container_name": "hotrod",
          "host_name": "b39fb8a20536",
-         "namespace": "default",
+         "environment": "default",
          "service_name": "hotrod"
        }
      },
@@ -433,7 +433,7 @@
        "severity": "default",
        "severity_number": 0,
        "body": " Waiting for lock behind 1 transactions: []",
-       "namespace": "default",
+       "environment": "default",
        "service": "hotrod",
        "host": "b39fb8a20536",
        "attributes_string": {
@@ -445,7 +445,7 @@
          "container_id": "b39fb8a20536",
          "container_name": "hotrod",
          "host_name": "b39fb8a20536",
-         "namespace": "default",
+         "environment": "default",
          "service_name": "hotrod"
        }
      },
@@ -458,7 +458,7 @@
        "severity": "default",
        "severity_number": 0,
        "body": "http://0.0.0.0:8081/customer?customer=731",
-       "namespace": "default",
+       "environment": "default",
        "service": "hotrod",
        "host": "b39fb8a20536",
        "attributes_string": {
@@ -470,7 +470,7 @@
          "container_id": "b39fb8a20536",
          "container_name": "hotrod",
          "host_name": "b39fb8a20536",
-         "namespace": "default",
+         "environment": "default",
          "service_name": "hotrod"
        }
      },
@@ -483,7 +483,7 @@
        "severity": "default",
        "severity_number": 0,
        "body": "http://0.0.0.0:8081/customer?customer=123",
-       "namespace": "default",
+       "environment": "default",
        "service": "hotrod",
        "host": "b39fb8a20536",
        "attributes_string": {
@@ -495,7 +495,7 @@
          "container_id": "b39fb8a20536",
          "container_name": "hotrod",
          "host_name": "b39fb8a20536",
-         "namespace": "default",
+         "environment": "default",
          "service_name": "hotrod"
        }
      },
@@ -508,7 +508,7 @@
        "severity": "default",
        "severity_number": 0,
        "body": "http://0.0.0.0:8081/customer?customer=392",
-       "namespace": "default",
+       "environment": "default",
        "service": "hotrod",
        "host": "b39fb8a20536",
        "attributes_string": {
@@ -520,7 +520,7 @@
          "container_id": "b39fb8a20536",
          "container_name": "hotrod",
          "host_name": "b39fb8a20536",
-         "namespace": "default",
+         "environment": "default",
          "service_name": "hotrod"
        }
      },
@@ -533,7 +533,7 @@
        "severity": "default",
        "severity_number": 0,
        "body": "http://0.0.0.0:8081/customer?customer=392",
-       "namespace": "default",
+       "environment": "default",
        "service": "hotrod",
        "host": "b39fb8a20536",
        "attributes_string": {
@@ -545,7 +545,7 @@
          "container_id": "b39fb8a20536",
          "container_name": "hotrod",
          "host_name": "b39fb8a20536",
-         "namespace": "default",
+         "environment": "default",
          "service_name": "hotrod"
        }
      },
@@ -558,7 +558,7 @@
        "severity": "default",
        "severity_number": 0,
        "body": "http://0.0.0.0:8081/customer?customer=123",
-       "namespace": "default",
+       "environment": "default",
        "service": "hotrod",
        "host": "b39fb8a20536",
        "attributes_string": {
@@ -570,7 +570,7 @@
          "container_id": "b39fb8a20536",
          "container_name": "hotrod",
          "host_name": "b39fb8a20536",
-         "namespace": "default",
+         "environment": "default",
          "service_name": "hotrod"
        }
      },
@@ -583,7 +583,7 @@
        "severity": "default",
        "severity_number": 0,
        "body": "http://0.0.0.0:8081/customer?customer=567",
-       "namespace": "default",
+       "environment": "default",
        "service": "hotrod",
        "host": "b39fb8a20536",
        "attributes_string": {
@@ -595,7 +595,7 @@
          "container_id": "b39fb8a20536",
          "container_name": "hotrod",
          "host_name": "b39fb8a20536",
-         "namespace": "default",
+         "environment": "default",
          "service_name": "hotrod"
        }
      },
@@ -608,7 +608,7 @@
        "severity": "default",
        "severity_number": 0,
        "body": "http://0.0.0.0:8081/customer?customer=731",
-       "namespace": "default",
+       "environment": "default",
        "service": "hotrod",
        "host": "b39fb8a20536",
        "attributes_string": {
@@ -620,7 +620,7 @@
          "container_id": "b39fb8a20536",
          "container_name": "hotrod",
          "host_name": "b39fb8a20536",
-         "namespace": "default",
+         "environment": "default",
          "service_name": "hotrod"
        }
      }
