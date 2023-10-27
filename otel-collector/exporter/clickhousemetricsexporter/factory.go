@@ -24,8 +24,6 @@ import (
 	"go.opencensus.io/stats/view"
 	"go.opencensus.io/tag"
 	"go.opentelemetry.io/collector/component"
-	"go.opentelemetry.io/collector/config/confighttp"
-	"go.opentelemetry.io/collector/config/configopaque"
 	"go.opentelemetry.io/collector/exporter"
 	"go.opentelemetry.io/collector/exporter/exporterhelper"
 )
@@ -91,7 +89,7 @@ func createMetricsExporter(ctx context.Context, set exporter.CreateSettings,
 			NumConsumers: 1,
 			QueueSize:    prwCfg.RemoteWriteQueue.QueueSize,
 		}),
-		exporterhelper.WithRetry(prwCfg.RetrySettings),
+		exporterhelper.WithRetry(exporterhelper.NewDefaultRetrySettings()),
 		exporterhelper.WithStart(prwe.Start),
 		exporterhelper.WithShutdown(prwe.Shutdown),
 	)
@@ -108,20 +106,15 @@ func createDefaultConfig() component.Config {
 		Namespace:       "",
 		ExternalLabels:  map[string]string{},
 		TimeoutSettings: exporterhelper.NewDefaultTimeoutSettings(),
-		RetrySettings: exporterhelper.RetrySettings{
-			Enabled:         true,
-			InitialInterval: 50 * time.Millisecond,
-			MaxInterval:     200 * time.Millisecond,
-			MaxElapsedTime:  1 * time.Minute,
-		},
-		HTTPClientSettings: confighttp.HTTPClientSettings{
-			Endpoint: "http://some.url:9411/api/prom/push",
-			// We almost read 0 bytes, so no need to tune ReadBufferSize.
-			ReadBufferSize:  0,
-			WriteBufferSize: 512 * 1024,
-			Timeout:         exporterhelper.NewDefaultTimeoutSettings().Timeout,
-			Headers:         map[string]configopaque.String{},
-		},
+		RetrySettings:   exporterhelper.NewDefaultRetrySettings(),
+		// HTTPClientSettings: confighttp.HTTPClientSettings{
+		// 	Endpoint: "http://some.url:9411/api/prom/push",
+		// 	// We almost read 0 bytes, so no need to tune ReadBufferSize.
+		// 	ReadBufferSize:  0,
+		// 	WriteBufferSize: 512 * 1024,
+		// 	Timeout:         exporterhelper.NewDefaultTimeoutSettings().Timeout,
+		// 	Headers:         map[string]configopaque.String{},
+		// },
 		// TODO(jbd): Adjust the default queue size.
 		RemoteWriteQueue: RemoteWriteQueue{
 			Enabled:      true,

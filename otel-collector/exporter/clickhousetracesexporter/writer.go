@@ -335,8 +335,8 @@ func (w *SpanWriter) writeModelBatch(batchSpans []*Span) error {
 	ctx := context.Background()
 	statement, err := w.db.PrepareBatch(ctx, fmt.Sprintf("INSERT INTO %s.%s", w.traceDatabase, w.spansTable))
 	if err != nil {
-		logBatch := batchSpans[:int(math.Min(10, float64(len(batchSpans))))]
-		w.logger.Error("Could not prepare batch for model table: ", zap.Any("batch", logBatch), zap.Error(err))
+		// logBatch := batchSpans[:int(math.Min(10, float64(len(batchSpans))))]
+		w.logger.Error("Could not prepare batch for model table: ", zap.Error(err))
 		return err
 	}
 
@@ -345,7 +345,7 @@ func (w *SpanWriter) writeModelBatch(batchSpans []*Span) error {
 		var serialized []byte
 		usageMap := span.TraceModel
 		usageMap.TagMap = map[string]string{}
-		serialized, err = json.Marshal(span.TraceModel)
+		// serialized, err = json.Marshal(span.TraceModel)
 		serializedUsage, err := json.Marshal(usageMap)
 
 		if err != nil {
@@ -382,22 +382,22 @@ func (w *SpanWriter) writeModelBatch(batchSpans []*Span) error {
 func (w *SpanWriter) WriteBatchOfSpans(batch []*Span) error {
 	if w.spansTable != "" {
 		if err := w.writeModelBatch(batch); err != nil {
-			logBatch := batch[:int(math.Min(10, float64(len(batch))))]
-			w.logger.Error("Could not write a batch of spans to model table: ", zap.Any("batch", logBatch), zap.Error(err))
+			// logBatch := batch[:int(math.Min(10, float64(len(batch))))]
+			w.logger.Error("Could not write a batch of spans to model table: ", zap.Error(err))
 			return err
 		}
 	}
 	if w.indexTable != "" {
 		if err := w.writeIndexBatch(batch); err != nil {
-			logBatch := batch[:int(math.Min(10, float64(len(batch))))]
-			w.logger.Error("Could not write a batch of spans to index table: ", zap.Any("batch", logBatch), zap.Error(err))
+			// logBatch := batch[:int(math.Min(10, float64(len(batch))))]
+			w.logger.Error("Could not write a batch of spans to index table: ", zap.Error(err))
 			return err
 		}
 	}
 	if w.errorTable != "" {
 		if err := w.writeErrorBatch(batch); err != nil {
-			logBatch := batch[:int(math.Min(10, float64(len(batch))))]
-			w.logger.Error("Could not write a batch of spans to error table: ", zap.Any("batch", logBatch), zap.Error(err))
+			// logBatch := batch[:int(math.Min(10, float64(len(batch))))]
+			w.logger.Error("Could not write a batch of spans to error table: ", zap.Error(err))
 			return err
 		}
 	}

@@ -191,10 +191,20 @@ exporters:
     low_cardinal_exception_grouping: ${LOW_CARDINAL_EXCEPTION_GROUPING}
   clickhousemetricswrite:
     endpoint: tcp://localhost:9000/?database=signoz_metrics
+    retry_on_failure:
+      enabled: true
+      initial_interval: 10s
+      max_interval: 60s
+      max_elapsed_time: 10m
     resource_to_telemetry_conversion:
       enabled: true
   clickhousemetricswrite/prometheus:
     endpoint: tcp://localhost:9000/?database=signoz_metrics
+    retry_on_failure:
+      enabled: true
+      initial_interval: 10s
+      max_interval: 60s
+      max_elapsed_time: 10m
   prometheus:
     endpoint: 0.0.0.0:8889
   # logging: {}
@@ -205,11 +215,6 @@ exporters:
     timeout: 5s
     sending_queue:
       queue_size: 100
-    retry_on_failure:
-      enabled: true
-      initial_interval: 5s
-      max_interval: 30s
-      max_elapsed_time: 300s
 
 service:
   telemetry:
