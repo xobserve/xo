@@ -24,6 +24,7 @@
     "@emotion/react": "^11.10.0",
     "@emotion/styled": "^11.9.3",
     "@grafana/monaco-logql": "^0.0.7",
+    "@hyperdx/lucene": "^3.1.1",
     "@jiaminghi/c-render": "^0.4.3",
     "@jiaminghi/charts": "^0.2.18",
     "@jiaminghi/color": "^1.1.3",
@@ -40,6 +41,7 @@
     "@tanstack/react-table": "8.10.7",
     "@types/ol": "^7.0.0",
     "@uselessdev/datepicker": "^2.7.0",
+    "allotment": "^1.19.3",
     "antd": "5.10.2",
     "axios": "^1.3.0",
     "chakra-react-select": "^4.6.0",
@@ -88,7 +90,9 @@
     "recompose": "^0.30.0",
     "save-as-file": "^0.3.0",
     "scroll-into-view-if-needed": "^2.2.29",
+    "serialize-error": "^8.1.0",
     "short-number": "^1.0.7",
+    "sqlstring": "^2.3.3",
     "swr": "^0.3.11",
     "tinycolor2": "1.4.2",
     "ts-key-enum": "^2.0.0",
@@ -99,10 +103,7 @@
     "use-deep-compare-effect": "^1.8.1",
     "use-immer": "^0.9.0",
     "validator": "^13.5.2",
-    "viz.js": "1.8.1",
-    "@hyperdx/lucene": "^3.1.1",
-    "serialize-error": "^8.1.0",
-    "sqlstring": "^2.3.3"
+    "viz.js": "1.8.1"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.123",
