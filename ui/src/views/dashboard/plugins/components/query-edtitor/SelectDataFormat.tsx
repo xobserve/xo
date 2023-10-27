@@ -41,7 +41,7 @@ const SelectDataFormat = ({ tempQuery, setTempQuery, onChange, labelWidth = "150
             <option value={DataFormat.Table}>Table</option>
             <option value={DataFormat.Logs}>Logs</option>
             <option value={DataFormat.Traces}>Traces</option>
-
+            <option value={DataFormat.NodeGraph}>NodeGraph</option>
         </Select>
     </FormItem>
 }

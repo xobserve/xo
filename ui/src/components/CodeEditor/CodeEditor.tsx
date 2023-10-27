@@ -27,6 +27,7 @@ import { languageConfiguration, monarchlanguage } from '@grafana/monaco-logql';
 
 
 import './CodeEditor.css'
+import customColors from "theme/colors";
 
 interface Props {
   value: string
@@ -44,7 +45,7 @@ interface Props {
 }
 
 const singleLineOptions: editor.IEditorOptions = {
-  fontSize: 15,
+  fontSize: customColors.baseFontSize * 0.9,
   codeLens: false,
   contextmenu: false,
   fixedOverflowWidgets: true,
@@ -73,7 +74,7 @@ function installLogQL(monaco) {
   }
 }
 
-function CodeEditor({ value, onChange, onBlur, onMount, language = "typescript", readonly = false, fontSize = 12, options = {}, isSingleLine = false, placeholder = null, bordered = true, height = "100%" }: Props) {
+function CodeEditor({ value, onChange, onBlur, onMount, language = "typescript", readonly = false, fontSize = customColors.baseFontSize * 0.85, options = {}, isSingleLine = false, placeholder = null, bordered = true, height = "100%" }: Props) {
   const { colorMode } = useColorMode()
   const containerRef = useRef<HTMLDivElement>(null);
   const handleEditorOnMount = (editor) => {
@@ -109,7 +110,10 @@ function CodeEditor({ value, onChange, onBlur, onMount, language = "typescript",
 
   return (<Box ref={containerRef} width="100%" height="100%" className={(isSingleLine && bordered) ? "bordered" : null} pl={isSingleLine ? 2 : 0} onBlur={onBlur} position="relative" sx={{
     ".monaco-editor, .monaco-editor-background": {
-      backgroundColor: isSingleLine ? 'transparent' : null
+      backgroundColor:  'transparent'
+    },
+    ".monaco-editor, .margin": {
+      backgroundColor:  'transparent !important'
     }
   }}><MonacoEditor
       language={language}
@@ -126,8 +130,8 @@ function CodeEditor({ value, onChange, onBlur, onMount, language = "typescript",
         lineDecorationsWidth: 0,
         overviewRulerBorder: false,
         scrollbar: {
-          verticalSliderSize: 5,
-          horizontalSliderSize: 5,
+          verticalSliderSize: 2,
+          horizontalSliderSize: 2,
         },
         scrollBeyondLastLine: false,
         readOnly: readonly,

@@ -117,7 +117,7 @@ const EditPanelQuery = (props: Props) => {
     }
 
     return (<>
-        <Box className="bordered-top" p="2" borderRadius="0" height="100%">
+        <Box  p="2" borderRadius="0" height="100%">
             <Flex justifyContent="space-between" alignItems="start">
                 <HStack>
                     <Image width="30px" height="30px" src={dsIcon} />

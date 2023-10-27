@@ -168,5 +168,16 @@ const apiList = [{
         ["orderByTimestamp", "order by timestamp", "desc", "asc | desc"],
     ],
     format: DataFormat.Logs
+},
+{
+    name: "getDependencyGraph",
+    desc: "service dependency graph",
+    params: `{
+}`,
+    paramsDesc: [
+        ["namespace", "such as dev, test, prod etc", "", ""],
+        ["service", "filter by service names, e.g datav|driver", "", ""],
+    ],
+    format: DataFormat.NodeGraph
 }
 ]

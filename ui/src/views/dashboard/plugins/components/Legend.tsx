@@ -166,7 +166,7 @@ const LegendTable = memo(({dashboardId,panelWidth, options, panel, data, width, 
 
     return (
         <Box  width="100%">
-            <TableContainer maxW={options.legend.placement == "bottom" ? panelWidth : width} p={0} marginLeft="-18px" sx={{
+            <TableContainer maxW={options.legend.placement == "bottom" ? panelWidth : width} p={0} marginLeft="-18px"  overflowX="hidden" sx={{
                 '::-webkit-scrollbar': {
                     width: '1px',
                     height: '1px',
