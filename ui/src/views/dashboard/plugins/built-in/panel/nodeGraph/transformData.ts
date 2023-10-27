@@ -86,15 +86,15 @@ export const setAttrsForData = (settings: NodeGraphSettings, data: NodeGraphPlug
         })
 
         if (!node.size) {
-            const p = Math.log2(t / base)
-            if (p <= 1) {
+            // const p = Math.log2(t / base)
+            // if (p <= 1) {
                 node.size = settings.node.baseSize
-            } else if (p >= settings.node.maxSize) {
-                node.size = settings.node.baseSize * settings.node.maxSize
+            // } else if (p >= settings.node.maxSize) {
+            //     node.size = settings.node.baseSize * settings.node.maxSize
     
-            } else {
-                node.size = p * settings.node.baseSize
-            }
+            // } else {
+            //     node.size = p * settings.node.baseSize
+            // }
         }
        
 

@@ -82,13 +82,14 @@ const NodeGraphPanelEditor = memo((props: NodeGraphEditorProps) => {
             <PanelEditItem title={t1.baseSize}>
                 <EditorSliderItem value={panel.plugins.nodeGraph.node.baseSize} min={20} max={100} step={2} onChange={v => onChange((panel: Panel) => {
                     panel.plugins.nodeGraph.node.baseSize = v
+                    dispatch(PanelForceRebuildEvent + panel.id)
                 })} />
             </PanelEditItem>
-            <PanelEditItem title={t1.maxSize}>
+            {/* <PanelEditItem title={t1.maxSize}>
                 <EditorNumberItem value={panel.plugins.nodeGraph.node.maxSize} min={1} max={5} onChange={v => onChange((panel: Panel) => {
                     panel.plugins.nodeGraph.node.maxSize = v
                 })} />
-            </PanelEditItem>
+            </PanelEditItem> */}
 
             <IconSetting panel={panel} onChange={v => {
                 onChange(v)
