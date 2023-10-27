@@ -130,7 +130,7 @@ const EditPanelQuery = (props: Props) => {
 
             <VStack alignItems="left" mt="3" spacing="2">
                 {panel.datasource.queries?.map((query, index) => {
-                    return <Box key={index} className="bordered" p="1" pb="2">
+                    return <Box key={index} className="bordered-top" p="1" pb="2">
                         <Flex justifyContent="space-between" py="0" px="2" mb="1">
                             <Text className="color-text">{String.fromCharCode(query.id)}</Text>
                             <HStack layerStyle="textSecondary" fontSize="12px" spacing={3}>

@@ -48,25 +48,25 @@ export function customClasses(props) {
             borderRadius: "6px",
         },
         ".bordered-bottom": {
-            borderBottom: `1px solid ${mode(
+            borderBottom: `0.5px solid ${mode(
                 customColors.borderColor.light,
                 customColors.borderColor.dark
             )(props)}`
         },
         ".bordered-left": {
-            borderLeft: `1px solid ${mode(
+            borderLeft: `0.5px solid ${mode(
                 customColors.borderColor.light,
                 customColors.borderColor.dark
             )(props)}`
         },
         ".bordered-right": {
-            borderRight: `1px solid ${mode(
+            borderRight: `0.5px solid ${mode(
                 customColors.borderColor.light,
                 customColors.borderColor.dark
             )(props)}`
         },
         ".bordered-top": {
-            borderTop: `1px solid ${mode(
+            borderTop: `0.5px solid ${mode(
                 customColors.borderColor.light,
                 customColors.borderColor.dark
             )(props)}`
