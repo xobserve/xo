@@ -11,9 +11,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import G6, { Graph } from '@antv/g6';
-import { Box, Center, Text, VStack, useColorMode, useToast } from '@chakra-ui/react';
+import { Box, Center, Text, VStack, useColorMode, useToast, useColorModeValue, Flex } from '@chakra-ui/react';
 import { Panel, PanelData, PanelProps } from 'types/dashboard';
 import { initTooltip } from './plugins/tooltip';
 import { getActiveEdgeLabelCfg } from './default-styles';
@@ -40,6 +40,8 @@ import { nodeGraphPanelMsg } from 'src/i18n/locales/en';
 import { isEmpty } from 'utils/validate';
 import { isNodeGraphData } from './utils';
 import NoData from 'src/views/dashboard/components/PanelNoData';
+import customColors from 'theme/colors';
+import ColorKV from 'components/ColorKV';
 
 
 
@@ -79,6 +81,8 @@ const NodeGrapPanel = ({ data, panel, dashboardId, width, height }: NodeGraphPan
     const toast = useToast()
     const container = React.useRef(null);
     const [graph, setGraph] = useState<Graph>(null);
+    const [activeEdge, setActiveEdge] = useState(null)
+    const edgeInActive = useRef(null)
     const { colorMode } = useColorMode();
     const defaultNodeLabelCfg = getDefaultNodeLabel(colorMode)
     const defaultEdgeLabelCfg = getDefaultEdgeLabel(colorMode, panel.plugins.nodeGraph)
@@ -225,7 +229,7 @@ const NodeGrapPanel = ({ data, panel, dashboardId, width, height }: NodeGraphPan
                     style: {
                         lineWidth: 0,
                         fill: 'transparent',
-                        stroke: paletteColorNameToHex(panel.plugins.nodeGraph.node.borderColor,colorMode)
+                        stroke: paletteColorNameToHex(panel.plugins.nodeGraph.node.borderColor, colorMode)
                     },
                     size: panel.plugins.nodeGraph.node.baseSize,
                     labelCfg: defaultNodeLabelCfg,
@@ -238,6 +242,21 @@ const NodeGrapPanel = ({ data, panel, dashboardId, width, height }: NodeGraphPan
             });
 
             const g1 = gh
+            g1.on('edge:mouseenter', (evt) => {
+                const { item } = evt;
+                g1.setItemState(item, "active", true);
+                clearInterval(edgeInActive.current)
+                setActiveEdge(item)
+                console.log("here333333 on edge hover", item)
+            })
+            g1.on('edge:mouseleave', (evt) => {
+                const { item } = evt;
+                g1.setItemState(item, "active", false);
+                edgeInActive.current = setTimeout(() => {
+                    setActiveEdge(null)
+                }, 400)
+
+            })
             g1.on('node:mouseenter', (evt) => {
                 const { item } = evt;
                 g1.setItemState(item, 'active', true);
@@ -259,7 +278,6 @@ const NodeGrapPanel = ({ data, panel, dashboardId, width, height }: NodeGraphPan
                     })
                 })
             });
-
             g1.on('node:mouseleave', (evt) => {
                 const { item } = evt;
                 g1.setItemState(item, 'active', false);
@@ -312,7 +330,7 @@ const NodeGrapPanel = ({ data, panel, dashboardId, width, height }: NodeGraphPan
 
             const newData = filterData(data[0], dashboardId, panel.id)
             gh.data(newData);
-            
+
             gh.render();
 
             setGraph(gh)
@@ -329,12 +347,28 @@ const NodeGrapPanel = ({ data, panel, dashboardId, width, height }: NodeGraphPan
 
     const onSelectChange = useCallback(v => setSelected(v), [])
 
-
+    console.log("here333333", activeEdge)
     return <>
         {graph && <NodeGraphToolbar graph={graph} dashboardId={dashboardId} panelId={panel.id} data={data[0]} onFilterRulesChange={onFilterRulesChange} />}
         <Box ml="10px" width="calc(100% - 20px)" height="100%" ref={container} />
         <Help data={nodeGraphHelp} iconSize="0.8rem" />
         {graph && <Box><HiddenItems dashboardId={dashboardId} panelId={panel.id} selected={selected} graph={graph} onSelectChange={onSelectChange} data={data} /></Box>}
+        {activeEdge && <Box zIndex={1500} pointerEvents="none" p="4" position="absolute" left={activeEdge._cfg.model.startPoint?.x + (activeEdge._cfg.model.endPoint?.x - activeEdge._cfg.model.startPoint?.x) / 2} top={activeEdge._cfg.model.startPoint?.y + (activeEdge._cfg.model.endPoint?.y - activeEdge._cfg.model.startPoint?.y) / 2} background={useColorModeValue(customColors.bodyBg.dark, customColors.bodyBg.dark)}>
+            <Flex gap="3">
+                <ColorKV k={activeEdge._cfg.model.label} v={"callsCount/error/p99"} renderString={false}/>
+            </Flex>
+            <Flex gap="3">
+                <ColorKV k="source" v={activeEdge._cfg.model.source} renderString={false}/>
+            </Flex>
+            <Flex gap="3">
+                <ColorKV k="target" v={activeEdge._cfg.model.target} renderString={false}/>
+            </Flex>
+            {
+                Object.entries(activeEdge._cfg.model.data).map(kv => <Flex gap="3">
+                    <ColorKV k={kv[0]} v={kv[1]} renderString={false}/>
+                </Flex>)
+            }
+        </Box>}
     </>;
 }
 
@@ -423,5 +457,4 @@ const onDataAndSettingsChange = (panel: Panel, data: PanelData[], colorMode, das
         graph.changeData(newData)
     }
 }
-
 

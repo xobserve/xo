@@ -218,21 +218,22 @@ export const queryPluginDataToNodeGraph = (data: QueryPluginData, query: PanelQu
         const callsCount = row[callsIndex]
         const errorsCount = row[errorsIndex]
         const successCount = callsCount- errorsCount
-        const latency = round(row[p99Index] / 1000000,1)
+        const latency = round(row[p99Index] / 1000000,1) + 'ms'
         const source = row[sourceIndex]
         const target = row[targetIndex]
         const edge: Edge = {
             source: source,
             target: target,
-            label: `${callsCount} / ${errorsCount} / ${latency}ms`,
+            label: `${callsCount} / ${errorsCount} / ${latency}`,
             data: {
+                callsCount: callsCount,
                 success: successCount,
                 error: errorsCount,
-                p50: row[p50Index] / 1000000,
-                p75: row[p75Index] / 1000000,
-                p90: row[p90Index] / 1000000,
-                p95: row[p95Index] / 1000000,
-                p99: row[p99Index] / 1000000,
+                p50: round(row[p50Index] / 1000000,1).toString() + 'ms',
+                p75: round(row[p75Index] / 1000000,1).toString() + 'ms',
+                p90: round(row[p90Index] / 1000000,1).toString() + 'ms',
+                p95: round(row[p95Index] / 1000000,1).toString() + 'ms',
+                p99: latency,
             }
         }
         edges.push(edge)

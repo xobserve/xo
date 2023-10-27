@@ -65,13 +65,16 @@ export const nodeGraphData = (nodesCount, rand) => {
           if (Math.random() > rand) {
             const req = Math.round(Math.random() * 1000)
             const error = Math.round(Math.random() * 100)
+            const duration =  Math.round(Math.random() * 1000)
             edges.push({
               source: nodes[i].id,
               target: nodes[j].id,
-              label:  `${req} / ${error}`,
+              label:  `${req} / ${error} / ${duration}ms`,
               data: {
-                req: req,
+                callsCount: req,
+                success: req - error,
                 error: error,
+                p99: duration + 'ms'
               },
             })
 

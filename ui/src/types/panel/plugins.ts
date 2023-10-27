@@ -77,6 +77,6 @@ export interface Edge  {
     target: string // target node id
     label: string
     data: {
-        [key:string]:number
+        [key:string]:number | string
     }
 }
