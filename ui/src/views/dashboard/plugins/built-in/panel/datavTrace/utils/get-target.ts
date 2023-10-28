@@ -1,4 +1,5 @@
-// Copyright 2023 Datav.io Team
+// Copyright (c) 2023 The Jaeger Authors
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -10,20 +11,13 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box } from "@chakra-ui/react"
-import { MarkdownRender } from "src/components/markdown/MarkdownRender"
-import { PanelProps } from "types/dashboard"
-import { replaceWithVariables } from "utils/variable"
-import React from "react";
-import { PanelType, DatavTracePanel } from "./types";
 
-interface Props extends PanelProps {
-    panel: DatavTracePanel
+import { getConfigValue } from '../config/get-config';
+
+export function getTargetEmptyOrBlank() {
+  return getConfigValue('forbidNewPage') ? '' : '_blank';
 }
 
-const PanelWrapper = (props: Props) => {
-    return (<Box>
-    </Box>)
+export function getTargetBlankOrTop() {
+  return getConfigValue('forbidNewPage') ? '_top' : '_blank';
 }
-
-export default PanelWrapper

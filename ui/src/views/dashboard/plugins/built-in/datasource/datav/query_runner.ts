@@ -47,7 +47,9 @@ export const runQuery = async (panel: Panel, q: PanelQuery, range: TimeRange, ds
     let url = `/proxy/${ds.id}?query=${q.metrics}&params=${q.data[q.metrics].params}&start=${start}&end=${end-5}&step=${q.interval}`
     if (!isEmpty(extraParams)) {
         Object.entries(extraParams).forEach(v => {
-            url += `&${v[0]}=${v[1]}`
+            if (!isEmpty(v[1])) {
+                url += `&${v[0]}=${v[1]}`
+            }
         })
     }
 
@@ -170,6 +172,10 @@ export const queryHttpVariableValues = async (variable: Variable, useCurrentTime
 
 export const replaceDatavQueryWithVariables = (query: PanelQuery | string, interval: string) => {
     const vars = $variables.get()
+    console.log("here444444:",query)
+    if (!query) {
+        return query
+    }
     if (typeof query == "string") {
         let q: string = query
         const formats = parseVariableFormat(q);

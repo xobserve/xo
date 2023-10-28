@@ -24,6 +24,7 @@ import { MobileBreakpoint } from "src/data/constants"
 import { $datasources } from "src/views/datasource/store"
 import { addParamToUrl } from "utils/url"
 import { DatasourceTypeJaeger } from "../../../datasource/jaeger/types"
+import { PanelType } from "../types"
 interface Props {
     panel: Panel
     onSearch: any
@@ -221,7 +222,7 @@ const TraceSearchPanel = ({ timeRange, dashboardId, panel, onSearch, onSearchIds
         <Form spacing={isLargeScreen ? 4 : 2} fontSize={isLargeScreen ? '0.8rem' : "0.7rem"}>
             <FormSection title="Service"  spacing={1}>
                 {
-                    panel.plugins.trace.enableEditService ?
+                    panel.plugins[PanelType].enableEditService ?
                         <InputSelect variant="flushed" value={service} options={services.map(s => ({ label: s, value: s }))} size={size} onChange={v => setService(v)} />
                         : <Input variant="flushed" value={service} disabled size={size} />
                 }
@@ -267,8 +268,8 @@ const getInitParams = (searchParams, panel, lastSearch) => {
     const urlService = searchParams.get('service')
     if (!isEmpty(urlService)) {
         service = urlService
-    } else if (!panel.plugins.trace.enableEditService) {
-        service = panel.plugins.trace.defaultService
+    } else if (!panel.plugins[PanelType].enableEditService) {
+        service = panel.plugins[PanelType].defaultService
     } else {
         service = lastSearch.service ?? null
     }

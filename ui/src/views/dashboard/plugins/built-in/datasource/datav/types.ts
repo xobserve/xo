@@ -1,1 +1,1 @@
-export const DatasourceTypeHttp = "datav"
+export const DatasourceTypeDatav = "datav"

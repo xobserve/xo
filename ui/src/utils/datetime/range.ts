@@ -12,6 +12,7 @@
 // limitations under the License.
 import { has } from "lodash";
 import { IntervalValues, TimeRange } from "types/time";
+import { isEmpty } from "utils/validate";
 
 
 
@@ -34,6 +35,9 @@ export function calculateInterval(range: TimeRange, resolution: number, lowLimit
 // convert a interval string to milliseconds
 // e.g. 1m -> 60000
 export function intervalToMs(str: string): number {
+    if (isEmpty(str)) {
+        return 0
+    }
     const info = describeInterval(str);
     return info.sec * 1000 * info.count;
 }

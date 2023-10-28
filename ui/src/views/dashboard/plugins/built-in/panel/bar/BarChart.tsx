@@ -18,7 +18,6 @@ import {  floor, round } from "lodash"
 import React, { memo, useEffect, useMemo, useState } from "react"
 import { Panel } from "types/dashboard"
 import { dateTimeFormat } from "utils/datetime/formatter"
-import moment from "moment"
 import { isEmpty } from "utils/validate"
 import { measureText } from "utils/measureText"
 import { formatUnit } from "src/views/dashboard/plugins/components/UnitPicker"
@@ -32,6 +31,7 @@ import { findOverride, findOverrideRule, findRuleInOverride } from "utils/dashbo
 import { BarRules } from "./OverridesEditor"
 import { commonInteractionEvent, genDynamicFunction } from "utils/dashboard/dynamicCall"
 import { useNavigate } from "react-router-dom"
+import { getTimeFormatForChart } from "utils/format"
 
 
 interface Props {
@@ -87,7 +87,7 @@ const BarChart = memo((props: Props) => {
 
         const ds = panel.datasource
         const intervalObj = calculateInterval(timeRange, ds.queryOptions.maxDataPoints ?? DatasourceMaxDataPoints, isEmpty(ds.queryOptions.minInterval) ? DatasourceMinInterval : ds.queryOptions.minInterval)
-        const timeFormat = getTimeFormat(start * 1000, now.getTime(), intervalObj.intervalMs / 1000)
+        const timeFormat = getTimeFormatForChart(start * 1000, now.getTime(), intervalObj.intervalMs / 1000)
 
         return [timeline.map(t => dateTimeFormat(t, { format: timeFormat })), names, data, rawNames]
     }, [props.data])

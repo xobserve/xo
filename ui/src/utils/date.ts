@@ -147,6 +147,19 @@ export function durationToSeconds(timeExpr) {
 	return seconds;
 }
 
+export function durationToMilliseconds(timeExpr) {
+	var units = {'h': 3600000, 'm': 60000, 's': 1000,'ms': 1};
+	var regex = /(\d+)(ms|[hms])/g;
+
+	let seconds = 0;
+	var match;
+	while ((match = regex.exec(timeExpr))) 
+	{
+		seconds += parseInt(match[1]) * units[match[2]];
+	}
+
+	return seconds;
+}
 
 export function formatRelativeDate(value: any, fullMonthName: boolean = false) {
   const m = moment.isMoment(value) ? value : moment(value);

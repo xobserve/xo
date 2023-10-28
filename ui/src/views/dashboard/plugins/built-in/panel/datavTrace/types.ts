@@ -1,19 +1,23 @@
+import { ClickAction } from "src/views/dashboard/edit-panel/components/ClickActionsEditor"
 import { Panel, PanelEditorProps } from "types/dashboard"
-import { DisableDatasource } from "types/panel/plugins"
 
 export const PanelType = "datavTrace"
 
-export interface DatavTracePanel extends Panel {
+export interface TracePanel extends Panel {
     plugins: {
-        [PanelType]: DatavTraceSettings
+        [PanelType]: TraceSettings
     }
 }
 
-export interface DatavTraceEditorProps extends PanelEditorProps {
-    panel: DatavTracePanel
+export interface TraceEditorProps extends PanelEditorProps {
+    panel: TracePanel
 }
 
-
-
-export interface DatavTraceSettings extends DisableDatasource {
+export interface TraceSettings {
+    defaultService: string
+    enableEditService: boolean
+    interaction: {
+        enable: boolean
+        actions: ClickAction[]
+    }
 }

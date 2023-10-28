@@ -12,6 +12,7 @@ export interface PanelPluginComponents {
         type: string;
         icon: string;
         initOptions: Record<string,any>
+        disableAutoQuery?: boolean
     },
 }
 

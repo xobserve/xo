@@ -159,7 +159,7 @@ const PanelSettings = memo(({ panel, onChange }: PanelEditorProps) => {
                         </Wrap>
                     </PanelAccordion>
                 }
-                <PanelAccordion title={t1.datavPanels} defaultOpen={isDatav}>
+                <PanelAccordion title={t1.datavPanels} defaultOpen={isDatav} >
                     <Wrap>
                         {
                             builtinPlugins.map((panelType) => {
@@ -187,11 +187,11 @@ export default PanelSettings
 
 const VisulizationItem = ({ title, imageUrl, onClick = null, selected = false }) => {
     return (
-        <Box className={`tag-bg`} border={`3px solid ${selected ? useColorModeValue(customColors.colorBorder.dark, `var(--chakra-colors-brand-400)`) : 'transparent'}`} onClick={onClick} pb="2" cursor="pointer">
+        <Box  border={`2px solid ${selected ? useColorModeValue(customColors.colorBorder.dark, `var(--chakra-colors-brand-400)`) : 'transparent'}`} onClick={onClick} pb="2" cursor="pointer">
             <Center >
                 <Text>{title}</Text>
             </Center>
-            <Image src={imageUrl} height="50px" width="90px" />
+            <Image src={imageUrl} height="50px" width="90px" mt="1"/>
         </Box>
 
     )

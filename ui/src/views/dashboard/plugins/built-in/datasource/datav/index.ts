@@ -9,7 +9,7 @@ import { DatasourcePluginComponents } from "types/plugin";
 import DatasourceEditor from "./DatasourceEditor";
 import VariableEditor from "./VariableEditor";
 import QueryEditor from "./QueryEditor";
-import { DatasourceTypeHttp } from "./types"
+import { DatasourceTypeDatav } from "./types"
 import { checkAndTestDatasource, queryHttpVariableValues, query_http_alerts, replaceDatavQueryWithVariables, runQuery } from "./query_runner";
 import { $config } from "src/data/configs/config";
 
@@ -32,7 +32,7 @@ const components: DatasourcePluginComponents = {
     queryAlerts: query_http_alerts,
 
     settings:{
-        type: DatasourceTypeHttp,
+        type: DatasourceTypeDatav,
         icon: "/logo.png",
         disabled: getDisabled
     }

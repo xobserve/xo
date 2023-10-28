@@ -1,26 +1,29 @@
 
 import { PanelPluginComponents } from "types/plugin";
 import PanelEditor from "./Editor";
-import Panel from "./Panel";
+import TracePanelWrapper from "./Trace";
+import { mockTraceDataForTestDataDs } from "./mocks/mockData";
 import icon from './icon.svg'
 import { PanelType } from "./types";
 
 
 const panelComponents: PanelPluginComponents = {
-    panel: Panel,
+    panel: TracePanelWrapper,
     editor: PanelEditor,
+    mockDataForTestDataDs:  mockTraceDataForTestDataDs,
     settings: {
         type: PanelType,
         icon,
         initOptions: {
-            disableDatasource: true,
-            md: `#Welcome to Datav\n This is a new panel\n You can edit it by clicking the edit button on the top title\n ###Have fun!`,
-            justifyContent: "left",
-            alignItems: "top",
-            fontSize: '1.2em',
-            fontWeight: '500',
-        }
-    },
+            defaultService: "",
+            enableEditService: true,
+            interaction: {
+                enable: false,
+                actions: []
+            }
+        },
+        disableAutoQuery: true
+    }
 }
 
 export default  panelComponents

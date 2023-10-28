@@ -191,6 +191,11 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
 
 
     const queryData = async (panel: Panel, dashboardId: string) => {
+        const panelPlugin = builtinPanelPlugins[panel.type] ?? externalPanelPlugins[panel.type]
+        if (panelPlugin?.settings.disableAutoQuery) {
+            setPanelData([])
+            return 
+        }
         console.time("time used - query data for panel:")
         const ds = panel.datasource
         const datasource = getDatasource(ds.id)
@@ -218,7 +223,7 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
             setPanelData([])
             return
         }
-
+        
         setLoading(true)
         if (panel.type == PanelTypeAlert) {
             const res = await queryAlerts(panel, timeRange, panel.plugins.alert.filter.datasources, panel.plugins.alert.filter.httpQuery, datasources)
