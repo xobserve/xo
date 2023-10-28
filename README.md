@@ -24,33 +24,32 @@
 
 ## Datav
 
-Datav is a programmable observability platform designed specifically for developers, and it also serves as an alternative data visualization platform to Grafana. 
+Datav is a programmable observability platform designed specifically for developers. It also serves as an alternative data visualization platform to Grafana.
 
-It can help users quickly create online observability scenarios such as monitoring, logging, and tracing. Datav can help you build any observability scenario you want. If it doesn't, you can always file an issue, and reasonable requests will be quickly supported.
+Datav enables users to quickly create online observability scenarios such as monitoring, logging, and tracing. If Datav does not meet your specific needs, you can always file an issue, and reasonable requests will be promptly addressed.
 
 ## Roadmap to V1.0
 
-Till now, we have implemented the UI part of Datav, which can also be used as an alternative to Grafana.
-
-We are now still working on the observability part, and it will be released in [V1.0](https://github.com/data-observe/datav/milestone/7).
+Up to this point, we have implemented the user interface (UI) part of Datav, which can be used as an alternative to Grafana. We are currently working on the observability features, which will be released in V1.0.
 
 ## Features
+Datav offers a wide range of features, including:
 
-1. **Observability**: covers an extremely wide range of observability scenarios, native support Opentelemetry
+1. **Observability**: Encompasses an extensive range of observability scenarios with native support for Opentelemetry.
    
-2. **Charts and Datasources**: offers lots of chart components and data sources with rich customization options.
+2. **Charts and Datasources**: Provides numerous chart components and data sources with rich customization options.
 
-3. **Interactivity**: provides deep and customizable interactions between charts and pages.
+3. **Interactivity**: Offers deep and customizable interactions between charts and pages.
 
-4. **Enterprise features supported**: multi-tenancy, permission management, navigation menus, and global state management.
+4. **Enterprise features supported**: Includes multi-tenancy, permission management, navigation menus, and global state management.
 
-5. **User experiences**: blazing fast performance and full customizability providing great user experience.
+5. **User experiences**: Offers blazing fast performance and full customizability, ensuring a great user experience.
 
-6. **Modern UI design**: supports large data screens, and is perfectly compatible with mobile devices.
+6. **Modern UI design**: Supports large data screens and is perfectly compatible with mobile devices.
 
-7. **Programmability**: powerful programmability and developer-friendly for customizations, e.g Datav agent support use webassembly to develop your own plugins and data process pipelines.
+7. **Programmability**: Empowers developers with powerful programmability and customization options. For instance, Datav agent supports using WebAssembly to develop your own plugins and data processing pipelines.
 
-8. **Community**: comes with a permissive open-source license, extensive documentation, and rapid community support response.
+8. **Community**: Comes with a permissive open-source license, extensive documentation, and rapid community support response.
 
 ## Quick start & Documentation
 
