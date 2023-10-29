@@ -26,6 +26,9 @@ import { useSearchParam } from "react-use"
 import traceData from '../../mocks/traces.json'
 import { DatasourceTypeJaeger } from "../../../../datasource/jaeger/types"
 import { DatasourceTypeTestData } from "../../../../datasource/testdata/types"
+import { builtinDatasourcePlugins } from "../../../../plugins"
+import { externalDatasourcePlugins } from "src/views/dashboard/plugins/external/plugins"
+import { getCurrentTimeRange } from "components/DatePicker/TimePicker"
 
 const TraceDetailWrapper = ({id,dsId}) => {
     const [trace, setTrace] = useState<Trace>(null)
@@ -43,7 +46,10 @@ const TraceDetailWrapper = ({id,dsId}) => {
     const datasource = getDatasource(dsId, datasources)
     
     useEffect(() => {
-        load()
+        if (datasource?.type) {
+            load()
+        }   
+
 
         return () => {
             if (scrollManager?.current) {
@@ -73,6 +79,14 @@ const TraceDetailWrapper = ({id,dsId}) => {
                 }
                 break
             default:
+                const dsPlugin = builtinDatasourcePlugins[datasource?.type] ?? externalDatasourcePlugins[datasource?.type]
+                if (dsPlugin && dsPlugin.runQuery) {
+                    const res1 = await dsPlugin.runQuery(null, {
+                        metrics: "getTrace",
+                        data: {}
+                    }, getCurrentTimeRange(), datasource, { traceID: id })
+                    console.log("here333333:",res1)
+                }
                 break;
         }
 

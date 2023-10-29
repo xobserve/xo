@@ -44,7 +44,7 @@ export const runQuery = async (panel: Panel, q: PanelQuery, range: TimeRange, ds
 
 
     // clickhouse data has writing lacency, so we need to fetch data from 2 seconds before
-    let url = `/proxy/${ds.id}?query=${q.metrics}&params=${q.data[q.metrics].params}&start=${start}&end=${end-5}&step=${q.interval}`
+    let url = `/proxy/${ds.id}?query=${q.metrics}&params=${q.data[q.metrics]?.params?? {}}&start=${start}&end=${end-5}&step=${q.interval}`
     if (!isEmpty(extraParams)) {
         Object.entries(extraParams).forEach(v => {
             if (!isEmpty(v[1])) {
