@@ -1,4 +1,4 @@
-import traceData from './traces.json'
+import traceData from '../../trace/mocks/traces.json'
 
 import { Panel, PanelDatasource, PanelQuery } from "types/dashboard"
 import { TimeRange } from "types/time"

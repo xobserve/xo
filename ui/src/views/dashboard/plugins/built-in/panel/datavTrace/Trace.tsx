@@ -18,7 +18,7 @@ import TraceSearchPanel from "./components/SearchPanel"
 import logfmtParser from 'logfmt/lib/logfmt_parser';
 import { queryJaegerTrace } from "../../datasource/jaeger/query_runner"
 import { memo, useEffect, useMemo, useState } from "react"
-import { TraceData } from "src/views/dashboard/plugins/built-in/panel/trace/types/trace"
+import { Trace, TraceData } from "src/views/dashboard/plugins/built-in/panel/trace/types/trace"
 import TraceSearchResult from "./components/SearchResult"
 import transformTraceData from "./utils/transform-trace-data"
 import { cloneDeep, uniqBy } from "lodash";
@@ -66,7 +66,7 @@ export default TracePanelWrapper
 
 const TracePanel = (props: PanelProps) => {
     const { panel } = props
-    const [rawTraces, setRawTraces] = useState<TraceData[]>(null)
+    const [traces, setTraces] = useState<Trace[]>(null)
     const datasources = useStore($datasources)
     const ds = getDatasource(props.panel.datasource.id, datasources)
     const dsPlugin = builtinDatasourcePlugins[ds.type] ?? externalDatasourcePlugins[ds.type]
@@ -84,7 +84,6 @@ const TracePanel = (props: PanelProps) => {
         }
         switch (ds.type) {
             case DatasourceTypeDatav:
-                console.log("here3333333:", dsPlugin)
                 tags = replaceWithVariables(tags)
                 min = !isEmpty(min) ? durationToMilliseconds(replaceWithVariables(min)) : min
                 max = durationToMilliseconds(replaceWithVariables(max))
@@ -95,14 +94,13 @@ const TracePanel = (props: PanelProps) => {
                 const query = cloneDeep(panel.datasource.queries[0])
 
                 const res = await dsPlugin.runQuery(panel, query, props.timeRange, ds, { tags, min, max, limit, service: services, operation: operations })
-                console.log("here3333333:", res)
-                setRawTraces(uniqBy(res.filter(r => r).flat(), t => t.traceID))
+                setTraces(transformTraces(res.data.traces))
                 break;
             case DatasourceTypeTestData:
-                setRawTraces(uniqBy(cloneDeep(props.data).flat().filter(r => r).flat(), t => t.traceID))
+                setTraces(props.data)
                 break
             default:
-                setRawTraces([])
+                setTraces([])
                 break;
         }
 
@@ -112,14 +110,15 @@ const TracePanel = (props: PanelProps) => {
         const query = cloneDeep(panel.datasource.queries[0])
 
         const res = await dsPlugin.runQuery(panel, query, props.timeRange, ds, { traceIds })
-        setRawTraces(res.filter(r => r).flat())
+        setTraces(res.data.traces)
     }
 
-    const traces = useMemo(() => rawTraces?.map(transformTraceData), [rawTraces])
 
     const resultHeight = props.height - 7
     const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
     const searchPanelWidth = isLargeScreen ? "400px" : "140px"
+
+    console.log("here33333:", traces)
     return (<>
         {
             <HStack alignItems="top" px="2" py="1" spacing={isLargeScreen ? 6 : 2}>
@@ -135,4 +134,48 @@ const TracePanel = (props: PanelProps) => {
                 </Box>
             </HStack>}
     </>)
+}
+
+// services: { name: string; numberOfSpans: number }[];
+// errorsCount?: number;
+// errorServices?: Set<string>
+
+
+// duration
+// : 
+// 769650
+// services
+// : 
+// [{name: "frontend", numSpans: 24, errors: 0}, {name: "redis", numSpans: 14, errors: 3},…]
+// startTime
+// : 
+// 1698558040663876
+// statusCode
+// : 
+// "200"
+// traceID
+// : 
+// "00000000000000006faf8a8c9c5de30e"
+// traceName
+// : 
+// "HTTP GET /dispatch"
+const transformTraces = (traces: any[]): Trace[] => {
+    for (const trace of traces) {
+        const services = []
+        const errorServices = new Set<string>()
+        let errorsCount = 0
+        for (const service of trace.services) {
+            services.push({ name: service.name, numberOfSpans: service.numSpans })
+            if (service.errors > 0) {
+                errorServices.add(service.name)
+                errorsCount += service.errors
+            }
+        }
+
+        trace.services = services
+        trace.errorServices = errorServices
+        trace.errorsCount = errorsCount
+    }
+
+    return traces
 }

@@ -49,8 +49,8 @@ const TraceCard = ({ trace, maxDuration,checked=false, onChecked=null,simple=fal
         <Flex flexDir={isLargeScreen ? "row" : "column"} alignItems={isLargeScreen ? "center" : "start"} width="100%" justifyContent={isLargeScreen ? "space-between"  : null} pt={isLargeScreen ? 2 : 2} pb={isLargeScreen ? 4 : 3} px={isLargeScreen ? 2 : 1}>
             <Box>
                 <HStack alignItems="top">
-                    <Tag size="md" variant="subtle" colorScheme="gray" bg="transparent" fontSize="0.9em">{trace.spans.length} Spans</Tag>
-                    <Tag size="md" variant="subtle" colorScheme="gray" bg="transparent"  fontSize="0.9em">{Object.keys(trace.processes).length} Services</Tag>
+                    <Tag size="md" variant="subtle" colorScheme="gray" bg="transparent" fontSize="0.9em">{trace.services.reduce((t,e)=>e.numberOfSpans,0)} Spans</Tag>
+                    <Tag size="md" variant="subtle" colorScheme="gray" bg="transparent"  fontSize="0.9em">{Object.keys(trace.services).length} Services</Tag>
                     {trace.errorsCount > 0 && <Tag size="sm" variant="subtle" colorScheme="gray" bg="transparent" color={paletteColorNameToHex(palettes[15])}  fontSize="0.9em">{trace.errorsCount} Errors</Tag>}
                   
                 </HStack>

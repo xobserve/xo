@@ -3,8 +3,9 @@ import { KeyValuePair, Trace } from "src/views/dashboard/plugins/built-in/panel/
 export const isErrorTag = ({ key, value }: KeyValuePair) =>
     key === 'error' && (value === true || value === 'true');
 
-export const isErrorTrace = (t: Trace): boolean =>
-    t.spans.some(span => span.tags.some(isErrorTag))
+export const isErrorTrace = (t: Trace): boolean => {
+   return  t.errorsCount > 0
+}
 
 
 

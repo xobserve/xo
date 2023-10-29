@@ -107,6 +107,9 @@ export const runQuery = async (panel: Panel, q: PanelQuery, range: TimeRange, ds
         case DataFormat.NodeGraph:
             data =  queryPluginDataToNodeGraph(res.data.data as any, q)
             break
+        case DataFormat.Traces:
+            data = res.data.data 
+            break
         default:
             data =  queryPluginDataToTable(res.data.data, q)
     }
