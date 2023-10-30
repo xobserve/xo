@@ -135,7 +135,7 @@ export const queryPluginDataToTrace = (data: QueryPluginData, query: PanelQuery)
 
     for (const rootSpan of rootSpans) {
         rootSpan.depth = 0
-        setSpan(rootSpan,spans)
+        spanTreeToList(rootSpan,spans)
     }
 
     trace.duration = rootSpan.duration
@@ -215,33 +215,7 @@ export const queryPluginDataToTrace = (data: QueryPluginData, query: PanelQuery)
     return trace
 }
 
-// {
-//     "timestamp": 1690120390387503,
-//     "fields": [
-//         {
-//             "key": "event",
-//             "type": "string",
-//             "value": "HTTP request received"
-//         },
-//         {
-//             "key": "level",
-//             "type": "string",
-//             "value": "info"
-//         },
-//         {
-//             "key": "method",
-//             "type": "string",
-//             "value": "GET"
-//         },
-//         {
-//             "key": "url",
-//             "type": "string",
-//             "value": "/dispatch?customer=731&nonse=0.09374781505628182"
-//         }
-//     ]
-// }
-
-export const setSpan = (span: TraceSpan, totalSpans: TraceSpan[]) => {
+export const spanTreeToList = (span: TraceSpan, totalSpans: TraceSpan[]) => {
     if (!span.children) {
         return 
     }
@@ -251,7 +225,41 @@ export const setSpan = (span: TraceSpan, totalSpans: TraceSpan[]) => {
     for (const s of span.children) {
         s.depth = span.depth + 1
         totalSpans.push(s)
-        setSpan(s,totalSpans)
+        spanTreeToList(s,totalSpans)
     }
     delete span.children
+}
+
+
+export const queryPluginDataToTraceChart = (chart: QueryPluginData) => {
+    console.log("here333333",chart)
+    const chartColumns = ["ts_bucket", "others", "errors"]
+    const chartData = []
+    const chartDataMap = {}
+    
+    if (chart) {
+        for (const row of chart.data) {
+            const ts = row[0]
+            const v = chartDataMap[ts]
+            if (!v) {
+                chartDataMap[ts] = {
+                    [row[1]]: row[2]
+                }
+            } else {
+                v[row[1]] = row[2]
+            }
+        }
+        Object.keys(chartDataMap).forEach(ts => {
+            const v = chartDataMap[ts]
+            chartData.push([ts, v[false]??null, v[true]??null])
+        })    
+    }
+
+    console.log("here333333:",chartData)
+
+
+    return {
+        columns: chartColumns,
+        data: chartData
+    }
 }

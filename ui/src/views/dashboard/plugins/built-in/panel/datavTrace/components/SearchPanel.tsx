@@ -7,7 +7,7 @@ import { isEqual, set, sortBy, uniq } from "lodash"
 import { EditorInputItem, EditorNumberItem } from "src/components/editor/EditorItem"
 import { Button, Checkbox, Divider, Flex, HStack, Input, Text, useMediaQuery } from "@chakra-ui/react"
 import storage from "utils/localStorage"
-import { TraceSearchKey } from "../config/constants"
+
 import { TimeRange } from "types/time"
 import { hasVariableFormat, replaceWithVariablesHasMultiValues } from "utils/variable"
 import useBus from "use-bus"
@@ -25,6 +25,7 @@ import { $datasources } from "src/views/datasource/store"
 import { addParamToUrl } from "utils/url"
 import { DatasourceTypeJaeger } from "../../../datasource/jaeger/types"
 import { PanelType } from "../types"
+import { TraceSearchKey } from "../../trace/config/constants"
 interface Props {
     panel: Panel
     onSearch: any

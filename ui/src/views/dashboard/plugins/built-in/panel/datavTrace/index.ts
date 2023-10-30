@@ -20,9 +20,18 @@ const panelComponents: PanelPluginComponents = {
             interaction: {
                 enable: false,
                 actions: []
+            },
+            chart: {
+                height: 100,
+                type: "line",
+                stack: true,
+                left: 1,
+                right: 3,
+                top: 6,
+                bottom: 15
             }
         },
-        disableAutoQuery: true
+        disableAutoQuery: true,
     }
 }
 

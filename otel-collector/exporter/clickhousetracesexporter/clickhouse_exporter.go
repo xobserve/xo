@@ -300,7 +300,6 @@ func newStructuredSpan(otelSpan ptrace.Span, ServiceName string, resource pcommo
 	})
 
 	resourceAttributes.Range(func(k string, v pcommon.Value) bool {
-		tagMap[k] = v.AsString()
 		spanAttribute := SpanAttribute{
 			Key:      k,
 			TagType:  "resource",
@@ -308,18 +307,14 @@ func newStructuredSpan(otelSpan ptrace.Span, ServiceName string, resource pcommo
 		}
 		resourceAttrs[k] = v.AsString()
 		if v.Type() == pcommon.ValueTypeDouble {
-			numberTagMap[k] = v.Double()
 			spanAttribute.NumberValue = v.Double()
 			spanAttribute.DataType = "float64"
 		} else if v.Type() == pcommon.ValueTypeInt {
-			numberTagMap[k] = float64(v.Int())
 			spanAttribute.NumberValue = float64(v.Int())
 			spanAttribute.DataType = "float64"
 		} else if v.Type() == pcommon.ValueTypeBool {
-			boolTagMap[k] = v.Bool()
 			spanAttribute.DataType = "bool"
 		} else {
-			stringTagMap[k] = v.AsString()
 			spanAttribute.StringValue = v.AsString()
 			spanAttribute.DataType = "string"
 		}

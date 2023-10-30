@@ -9,6 +9,7 @@ import (
 	datavmodels "github.com/DataObserve/datav/query/internal/plugins/builtin/datav/models"
 	datavutils "github.com/DataObserve/datav/query/internal/plugins/builtin/datav/utils"
 	pluginUtils "github.com/DataObserve/datav/query/internal/plugins/utils"
+	"github.com/DataObserve/datav/query/pkg/config"
 	"github.com/DataObserve/datav/query/pkg/models"
 	"github.com/gin-gonic/gin"
 )
@@ -16,6 +17,7 @@ import (
 func GetTraces(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[string]interface{}) models.PluginResult {
 	start, _ := strconv.ParseInt(c.Query("start"), 10, 64)
 	end, _ := strconv.ParseInt(c.Query("end"), 10, 64)
+	step, _ := strconv.ParseInt(c.Query("step"), 10, 64)
 
 	// @performace: 对 traceId 做 skip index
 	traceIds := strings.TrimSpace(c.Query("traceIds"))
@@ -135,22 +137,22 @@ func GetTraces(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[s
 
 	var res1 *models.PluginResultData
 	if traceIds == "" {
-		// // query metrics
-		// metricsQuery := fmt.Sprintf("SELECT toStartOfInterval(fromUnixTimestamp64Nano(timestamp), INTERVAL %d SECOND) AS ts_bucket, if(multiSearchAny(severity, ['error', 'err', 'emerg', 'alert', 'crit', 'fatal']), 'errors', 'others') as severity_group, count(*) as count from %s.%s where (timestamp >= ? AND timestamp <= ? %s %s) group by ts_bucket,severity_group order by ts_bucket", step, config.Data.Observability.DefaultLogDB, datavmodels.DefaultLogsTable, domainQuery, searchQuery)
+		// query metrics
+		metricsQuery := fmt.Sprintf("SELECT toStartOfInterval(fromUnixTimestamp64Nano(startTime), INTERVAL %d SECOND) AS ts_bucket, hasError, count(DISTINCT traceId) as count from %s.%s where (startTime >= %d AND startTime <= %d %s) group by ts_bucket,hasError order by ts_bucket", step, config.Data.Observability.DefaultTraceDB, datavmodels.DefaultIndexTable, start*1e9, end*1e9, domainQuery)
 
-		// rows, err = conn.Query(c.Request.Context(), metricsQuery, args...)
-		// if err != nil {
-		// 	logger.Warn("Error Query log metrics", "query", metricsQuery, "error", err)
-		// 	return models.GenPluginResult(models.PluginStatusError, err.Error(), nil)
-		// }
-		// defer rows.Close()
+		rows, err = conn.Query(c.Request.Context(), metricsQuery)
+		if err != nil {
+			logger.Warn("Error Query log metrics", "query", metricsQuery, "error", err)
+			return models.GenPluginResult(models.PluginStatusError, err.Error(), nil)
+		}
+		defer rows.Close()
 
-		// logger.Info("Query log metrics", "query", metricsQuery)
+		logger.Info("Query log metrics", "query", metricsQuery)
 
-		// res1, err = pluginUtils.ConvertDbRowsToPluginData(rows)
-		// if err != nil {
-		// 	return models.GenPluginResult(models.PluginStatusError, err.Error(), nil)
-		// }
+		res1, err = pluginUtils.ConvertDbRowsToPluginData(rows)
+		if err != nil {
+			return models.GenPluginResult(models.PluginStatusError, err.Error(), nil)
+		}
 	}
 
 	return models.GenPluginResult(models.PluginStatusSuccess, "", map[string]interface{}{

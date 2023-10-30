@@ -19,7 +19,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { DatasourceMaxDataPoints, DatasourceMinInterval, IsSmallScreen } from "src/data/constants";
 import { isEmpty } from "utils/validate";
 import NoData from "src/views/dashboard/components/PanelNoData";
-import DatavLogChart from "./Chart";
+import DatavLogChart from "../../../components/charts/ErrorOkChart";
 import Search, { OnLogSearchChangeEvent } from "./Search";
 import { setDateTime } from "components/DatePicker/DatePicker";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -219,7 +219,7 @@ const Panel = (props: Props) => {
     return (<>
         <Box px="2" height="100%" id="datav-log-panel" >
             {showChart && <Box key={showLogs as any} height={showLogs ? chartHeight: props.height} mb="2">
-                <DatavLogChart panel={panel} width={props.width} data={data.chart} onClick={onClickChart} totalLogs={totalLogs} displayLogs={showLogs ? displayLogCount : null} />
+                <DatavLogChart data={data.chart} onClick={onClickChart} totalCount={totalLogs} displayCount={showLogs ? displayLogCount : null} options={panel.plugins[PanelType].chart}/>
             </Box>}
             {showLogs && <QueryClientProvider client={queryClient}>
                 <ColumnResizableTable highlightRow={selectedLog?.find(f => f.name == "id").values[0]} columns={defaultColumns} data={logs} wrapLine={options.logline.wrapLine} fontSize={options.logFontSize} headerFontSize={options.headerFontSize} allowOverflow={options.logline.allowOverflow} height={props.height - (showChart ? chartHeight : 0)} totalRowCount={totalLogs} onLoadPage={onLoadLogsPage} onRowsCountChange={setDisplayLogs} onRowClick={onLogRowClick} columnHighlights={highlights}/>

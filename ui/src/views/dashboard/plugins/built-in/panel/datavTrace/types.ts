@@ -19,5 +19,14 @@ export interface TraceSettings {
     interaction: {
         enable: boolean
         actions: ClickAction[]
+    },
+    chart: {
+        height: number 
+        type: "line" | "bar"
+        stack: boolean
+        top: number 
+        right: number 
+        bottom: number
+        left: number
     }
 }

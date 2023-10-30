@@ -21,25 +21,22 @@ import { dateTimeFormat } from "utils/datetime/formatter"
 import { getTimeFormatForChart } from "utils/format"
 import customColors from "theme/colors"
 import {colors1} from 'utils/colors'
-import { DatavLogSettings, PanelType } from "./types"
 
 interface Props {
     data: QueryPluginData
-    panel: Panel
-    width: number
     onClick: any
-    totalLogs: number
-    displayLogs: number
+    totalCount: number
+    displayCount: number
+    options: any
 }
 
-const DatavLogChart = memo((props: Props) => {
-    const { panel, width, onClick, totalLogs, displayLogs } = props
+const ErrorOkChart = memo((props: Props) => {
+    const {  onClick, totalCount, displayCount,options } = props
     const [chart, setChart] = useState<echarts.ECharts>(null)
     const { colorMode } = useColorMode()
     const timelineCache = useRef<string[]>(null)
     const timeBucksCache = useRef<string[]>(null)
     const stepCache = useRef(null)
-    const panelOptions: DatavLogSettings = panel.plugins[PanelType]
     useEffect(() => {
         if (chart) {
             chart.on('click', function (event) {
@@ -93,10 +90,10 @@ const DatavLogChart = memo((props: Props) => {
             },
         },
         grid: {
-            left: `${panelOptions.chart.left}%`,
-            right: `${panelOptions.chart.right}%`,
-            top: `${panelOptions.chart.top}%`,
-            bottom: `${panelOptions.chart.bottom}%`,
+            left: `${options}%`,
+            right: `${options.right}%`,
+            top: `${options.top}%`,
+            bottom: `${options.bottom}%`,
             // padding: 0,
             containLabel: true
         },
@@ -133,8 +130,8 @@ const DatavLogChart = memo((props: Props) => {
             return ({
             name: name,
             data: data[i],
-            type: panelOptions.chart.type,
-            stack: panelOptions.chart.stack,
+            type: options.type,
+            stack: options.stack,
             label: {
                 show: false,
                 formatter: (v) => {
@@ -151,10 +148,10 @@ const DatavLogChart = memo((props: Props) => {
     };
 
     return (<>
-        <Text opacity={0.8} mb="2" fontSize="0.8rem" fontWeight={500}>{displayLogs && (displayLogs + ' /')}  {totalLogs} Logs </Text>
-        <ChartComponent key={colorMode} options={chartOptions} clearWhenSetOption theme={colorMode} onChartCreated={c => setChart(c)} width={width} />
+        <Text opacity={0.8} mb="2" fontSize="0.8rem" fontWeight={500}>{displayCount && (displayCount + ' /')}  {totalCount} Hits </Text>
+        <ChartComponent key={colorMode} options={chartOptions} clearWhenSetOption theme={colorMode} onChartCreated={c => setChart(c)} />
     </>)
 })
 
-export default DatavLogChart
+export default ErrorOkChart
 

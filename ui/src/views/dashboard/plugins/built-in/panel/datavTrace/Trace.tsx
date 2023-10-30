@@ -15,30 +15,29 @@ import React from "react";
 import { Box, Center, HStack, useMediaQuery } from "@chakra-ui/react"
 import { PanelProps } from "types/dashboard"
 import TraceSearchPanel from "./components/SearchPanel"
-import logfmtParser from 'logfmt/lib/logfmt_parser';
-import { queryJaegerTrace } from "../../datasource/jaeger/query_runner"
-import { memo, useEffect, useMemo, useState } from "react"
-import { Trace, TraceData } from "src/views/dashboard/plugins/built-in/panel/trace/types/trace"
-import TraceSearchResult from "./components/SearchResult"
-import transformTraceData from "./utils/transform-trace-data"
-import { cloneDeep, uniqBy } from "lodash";
+import { memo, useEffect, useState } from "react"
+import { Trace } from "src/views/dashboard/plugins/built-in/panel/trace/types/trace"
+
+import { cloneDeep } from "lodash";
 import { replaceWithVariables } from "utils/variable";
 import { getNewestTimeRange } from "src/components/DatePicker/TimePicker";
 import { getDatasource } from "utils/datasource";
 import CustomScrollbar from "src/components/CustomScrollbar/CustomScrollbar";
-import { MobileBreakpoint } from "src/data/constants";
-import { isTraceData } from "./utils/trace";
+import { DatasourceMaxDataPoints, DatasourceMinInterval, MobileBreakpoint } from "src/data/constants";
 import { isEmpty } from "utils/validate";
 import { useStore } from "@nanostores/react";
 import { $datasources } from "src/views/datasource/store";
 import { DatasourceTypeTestData } from "../../datasource/testdata/types";
-import { DatasourceTypeJaeger } from "../../datasource/jaeger/types";
 import { builtinDatasourcePlugins } from "../../plugins";
 import { externalDatasourcePlugins } from "../../../external/plugins";
-import { calculateInterval, intervalToMs } from "utils/datetime/range";
+import { calculateInterval } from "utils/datetime/range";
 import { DatasourceTypeDatav } from "../../datasource/datav/types";
 import { durationToMilliseconds } from "utils/date";
 import { convTagsLogfmt } from "../trace/Trace";
+import { QueryPluginData } from "types/plugin";
+import { PanelType } from "./types";
+import TraceSearchResult from "../trace/components/SearchResult";
+import { isTraceData } from "../trace/utils/trace";
 
 
 
@@ -67,6 +66,7 @@ export default TracePanelWrapper
 const TracePanel = (props: PanelProps) => {
     const { panel } = props
     const [traces, setTraces] = useState<Trace[]>(null)
+    const [traceChart, setTraceChart] = useState<QueryPluginData>(null)
     const datasources = useStore($datasources)
     const ds = getDatasource(props.panel.datasource.id, datasources)
     const dsPlugin = builtinDatasourcePlugins[ds.type] ?? externalDatasourcePlugins[ds.type]
@@ -92,9 +92,12 @@ const TracePanel = (props: PanelProps) => {
                 const operations = dsPlugin.replaceQueryWithVariables(operation)
 
                 const query = cloneDeep(panel.datasource.queries[0])
+                const intervalObj = calculateInterval(props.timeRange, panel.datasource.queryOptions.maxDataPoints ?? DatasourceMaxDataPoints, isEmpty(panel.datasource.queryOptions.minInterval) ? DatasourceMinInterval : panel.datasource.queryOptions.minInterval)
+                query.interval = intervalObj.intervalMs / 1000
 
                 const res = await dsPlugin.runQuery(panel, query, props.timeRange, ds, { tags, min, max, limit, service: services, operation: operations })
                 setTraces(transformTraces(res.data.traces))
+                setTraceChart(res.data.chart)
                 break;
             case DatasourceTypeTestData:
                 setTraces(props.data)
@@ -114,6 +117,7 @@ const TracePanel = (props: PanelProps) => {
     }
 
 
+
     const resultHeight = props.height - 7
     const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
     const searchPanelWidth = isLargeScreen ? "400px" : "140px"
@@ -128,8 +132,10 @@ const TracePanel = (props: PanelProps) => {
                     </CustomScrollbar>
                 </Box>
                 <Box width={`calc(100% - ${searchPanelWidth})`} maxH={resultHeight}>
+
                     <CustomScrollbar>
-                        {traces && <TraceSearchResult traces={traces} panel={props.panel} dashboardId={props.dashboardId} teamId={props.teamId} timeRange={props.timeRange} height={resultHeight} />}
+                       
+                        {traces && panel.plugins[PanelType].chart && <TraceSearchResult traces={traces} panel={props.panel} dashboardId={props.dashboardId} teamId={props.teamId} timeRange={props.timeRange} height={resultHeight} traceChart={traceChart} traceChartOptions={panel.plugins[PanelType].chart}/>}
                     </CustomScrollbar>
                 </Box>
             </HStack>}

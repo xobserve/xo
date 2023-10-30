@@ -30,7 +30,7 @@ import { DataFormat } from "types/format"
 import { $datavQueryParams } from "./store"
 import { parseVariableFormat } from "utils/format"
 import { VariableSplitChar } from "src/data/variable"
-import { queryPluginDataToTrace } from "./utils"
+import { queryPluginDataToTrace, queryPluginDataToTraceChart } from "./utils"
 
 export const runQuery = async (panel: Panel, q: PanelQuery, range: TimeRange, ds: Datasource, extraParams?: Record<string,any>) => {
     if (isEmpty(q.metrics)) {
@@ -109,7 +109,8 @@ export const runQuery = async (panel: Panel, q: PanelQuery, range: TimeRange, ds
             data =  queryPluginDataToNodeGraph(res.data.data as any, q)
             break
         case DataFormat.Traces:
-            data = res.data.data 
+            data = res.data.data
+            data.chart = queryPluginDataToTraceChart(data.chart)
             break
         case DataFormat.Trace:
             data =  queryPluginDataToTrace(res.data.data as any, q)
