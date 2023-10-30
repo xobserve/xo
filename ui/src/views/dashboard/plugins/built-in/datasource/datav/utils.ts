@@ -63,7 +63,7 @@ export const queryPluginDataToTrace = (data: QueryPluginData, query: PanelQuery)
         span.resources = []
         if (span.resourcesMap) {
             Object.entries(span.resourcesMap).forEach(r => {
-                span.tags.push(
+                span.resources.push(
                     {
                         "key": r[0],
                         "value": r[1]
@@ -73,7 +73,7 @@ export const queryPluginDataToTrace = (data: QueryPluginData, query: PanelQuery)
         }
         if (span.stringAttributesMap) {
             Object.entries(span.stringAttributesMap).forEach(r => {
-                span.tags.push(
+                span.attributes.push(
                     {
                         "key": r[0],
                         "value": r[1]
@@ -83,7 +83,7 @@ export const queryPluginDataToTrace = (data: QueryPluginData, query: PanelQuery)
         }   
         if (span.numberAttributesMap) {
             Object.entries(span.numberAttributesMap).forEach(r => {
-                span.tags.push(
+                span.attributes.push(
                     {
                         "key": r[0],
                         "value": r[1]
@@ -101,7 +101,6 @@ export const queryPluginDataToTrace = (data: QueryPluginData, query: PanelQuery)
                 )
             })
         }
-
         spansMap[span.spanId] = span
         spansPool[span.spanId] = span
     }
@@ -171,10 +170,10 @@ export const queryPluginDataToTrace = (data: QueryPluginData, query: PanelQuery)
             span.references = []
         }
         
-        span.logs = []
+        const events = []
         if (span.events) {
             for (const eventStr of span.events) {
-                const event = JSON.parse(eventStr)
+                const event = JSON.parse(eventStr as any)
                 const log: SpanLog = {
                     timestamp: event.timeUnixNano / 1e3,
                     fields: [
@@ -194,10 +193,11 @@ export const queryPluginDataToTrace = (data: QueryPluginData, query: PanelQuery)
                     })
                 }
             
-                span.logs.push(log)
+                events.push(log)
             }
         }
-        span.events = span.logs as any
+
+        span.events = events
         const processId = serviceIndex[span.serviceName]
 
         span.process = { serviceName: span.serviceName, tags: [] }
@@ -209,6 +209,31 @@ export const queryPluginDataToTrace = (data: QueryPluginData, query: PanelQuery)
     return trace
 }
 
+// {
+//     "timestamp": 1690120390387503,
+//     "fields": [
+//         {
+//             "key": "event",
+//             "type": "string",
+//             "value": "HTTP request received"
+//         },
+//         {
+//             "key": "level",
+//             "type": "string",
+//             "value": "info"
+//         },
+//         {
+//             "key": "method",
+//             "type": "string",
+//             "value": "GET"
+//         },
+//         {
+//             "key": "url",
+//             "type": "string",
+//             "value": "/dispatch?customer=731&nonse=0.09374781505628182"
+//         }
+//     ]
+// }
 
 export const setSpan = (span: TraceSpan, totalSpans: TraceSpan[]) => {
     if (!span.children) {

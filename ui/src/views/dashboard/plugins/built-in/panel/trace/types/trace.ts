@@ -45,7 +45,7 @@ export type KeyValuePair = {
     spanId?: string;
     traceId?: string;
     parentId: string
-    events: string[]
+    events: SpanLog[]
     processID: string;
     name?:string
     operationName: string;

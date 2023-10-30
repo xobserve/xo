@@ -27,6 +27,7 @@ import { formatDuration } from 'utils/date';
 import { Box, Divider, Flex, HStack, Text, useMediaQuery } from '@chakra-ui/react';
 import LabeledList from 'src/components/LabelList';
 import { MobileBreakpoint } from 'src/data/constants';
+import { isEmpty } from 'utils/validate';
 
 type SpanDetailProps = {
   detailState: DetailState;
@@ -57,8 +58,9 @@ export default function SpanDetail(props: SpanDetailProps) {
     focusSpan,
   } = props;
   const { isTagsOpen, isProcessOpen, logs: logsState, isWarningsOpen, isReferencesOpen } = detailState;
-  const { operationName, process, duration, relativeStartTime, spanID, logs, tags, warnings, references } =
+  const { operationName, process, duration, relativeStartTime, spanID, logs, tags,events, warnings, references } =
     span;
+  console.log("here33333:",events)
   const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
   const overviewItems = [
     isLargeScreen && {
@@ -112,10 +114,10 @@ export default function SpanDetail(props: SpanDetailProps) {
             />
           )}
         </div>
-        {logs && logs.length > 0 && (
+        { (
           <AccordianLogs
             linksGetter={linksGetter}
-            logs={logs}
+            logs={isEmpty(logs) ?  events as any : logs}
             isOpen={logsState.isOpen}
             openedItems={logsState.openedItems}
             onToggle={() => logsToggle(spanID)}

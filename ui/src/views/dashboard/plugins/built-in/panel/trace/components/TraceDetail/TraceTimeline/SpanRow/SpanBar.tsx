@@ -24,6 +24,7 @@ import { TraceSpan } from 'src/views/dashboard/plugins/built-in/panel/trace/type
 import AccordianLogs from './SpanDetail/AccordianLogs';
 import { Popover } from 'antd';
 import { Box, useColorModeValue } from '@chakra-ui/react';
+import { isEmpty } from 'utils/validate';
 
 type TCommonProps = {
     color: string;
@@ -75,7 +76,7 @@ function SpanBar(props: TInnerProps) {
         span,
     } = props;
     // group logs based on timestamps
-    const logGroups = _groupBy(span.logs, log => {
+    const logGroups = _groupBy((isEmpty(span.logs) ? span.events : span.logs), log => {
         const posPercent = getViewedBounds(log.timestamp, log.timestamp).start;
         // round to the nearest 0.2%
         return toPercent(Math.round(posPercent * 500) / 500);

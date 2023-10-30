@@ -63,7 +63,7 @@ export default function AccordianLogs(props: AccordianLogsProps) {
       },
     }}>
       <HeaderComponent className={cx('AccordianLogs--header', { 'is-open': isOpen })} {...headerProps}>
-        {arrow} <strong style={{marginLeft: '-2px'}}>Logs</strong> ({logs.length})
+        {arrow} <strong style={{marginLeft: '-2px'}}>Events</strong> ({logs.length})
       </HeaderComponent>
       {isOpen && (
         <VStack alignItems="left" spacing={1} className="AccordianLogs--content bordered-top" >
@@ -83,7 +83,7 @@ export default function AccordianLogs(props: AccordianLogsProps) {
             />
           ))}
           <small className="AccordianLogs--footer">
-            Log timestamps are relative to the start time of the full trace.
+            Event timestamps are relative to the start time of the full trace.
           </small>
         </VStack>
       )}
