@@ -16,6 +16,7 @@ import { TraceSpan } from 'src/views/dashboard/plugins/built-in/panel/trace/type
 import _find from 'lodash/find';
 import _get from 'lodash/get';
 import { TNil } from 'types/misc';
+import { concat } from 'lodash';
 
 export type ViewedBoundsFunctionType = (start: number, end: number) => { start: number; end: number };
 /**
@@ -66,10 +67,11 @@ export function createViewedBoundsFunc(viewRange: {
  * @return {boolean}      True if a match was found.
  */
 export function spanHasTag(key: string, value: any, span: TraceSpan) {
-  if (!Array.isArray(span.tags) || !span.tags.length) {
+  const tags = concat(span.tags??[], span.attributes??[])
+  if (!Array.isArray(tags) || !tags.length) {
     return false;
   }
-  return span.tags.some(tag => tag.key === key && tag.value === value);
+  return tags.some(tag => tag.key === key && tag.value === value);
 }
 
 export const isClientSpan = spanHasTag.bind(null, 'span.kind', 'client');

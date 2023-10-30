@@ -12,7 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { concat } from 'lodash';
 import { KeyValuePair, TraceSpan } from 'src/views/dashboard/plugins/built-in/panel/trace/types/trace';
+import { isEmpty } from 'utils/validate';
 import { TNil } from '../types/misc';
 
 export default function filterSpans(textFilter: string, spans: TraceSpan[] | TNil) {
@@ -58,8 +60,8 @@ export default function filterSpans(textFilter: string, spans: TraceSpan[] | TNi
   const isSpanAMatch = (span: TraceSpan) =>
     isTextInFilters(includeFilters, span.operationName) ||
     isTextInFilters(includeFilters, span.process.serviceName) ||
-    isTextInKeyValues(span.tags) ||
-    (span.logs !== null && span.logs.some(log => isTextInKeyValues(log.fields))) ||
+    isTextInKeyValues(concat(span.tags,span.attributes,span.resources)) ||
+    ((isEmpty(span.logs) ? span.events : (span.logs !== null && span.logs)).some(log => isTextInKeyValues(log.fields))) ||
     isTextInKeyValues(span.process.tags) ||
     includeFilters.some(filter => filter.replace(/^0*/, '') === span.spanID.replace(/^0*/, ''));
 
