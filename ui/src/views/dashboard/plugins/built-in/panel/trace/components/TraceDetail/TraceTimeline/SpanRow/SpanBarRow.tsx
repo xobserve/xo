@@ -32,6 +32,7 @@ import { Box, Flex, Popover, PopoverArrow, PopoverBody, PopoverContent, PopoverT
 import customColors from 'src/theme/colors';
 import { formatDuration } from 'utils/date'
 import KeyValuesTable from './SpanDetail/KeyValuesTable';
+import { isEmpty } from 'utils/validate';
 
 type SpanBarRowProps = {
     className?: string;
@@ -261,10 +262,21 @@ const SpanBarRow = (props: SpanBarRowProps) => {
                                 </Box>
                             </PopoverTrigger>
                             <Portal>
-                            <PopoverContent zIndex={1000} minW="500px">
+                            <PopoverContent zIndex={1000} minW="500px" maxHeight="600px" overflowY="scroll">
                                 <PopoverArrow />
                                 <PopoverBody>
-                                      <KeyValuesTable data={span.tags} linksGetter={null} />
+                                        {!isEmpty(span.tags) && <>
+                                            <Text>Tags</Text>
+                                            <KeyValuesTable data={span.tags} linksGetter={null} />
+                                        </>}
+                                        {!isEmpty(span.attributes) && <>
+                                            <Text>Attributes</Text>
+                                            <KeyValuesTable data={span.attributes} linksGetter={null} />
+                                        </>}
+                                        {!isEmpty(span.resources) && <>
+                                            <Text>Resources</Text>
+                                            <KeyValuesTable data={span.resources} linksGetter={null} />
+                                        </>}
                                       <KeyValuesTable data={span.process.tags} linksGetter={null} />
                                 </PopoverBody>
                             </PopoverContent>

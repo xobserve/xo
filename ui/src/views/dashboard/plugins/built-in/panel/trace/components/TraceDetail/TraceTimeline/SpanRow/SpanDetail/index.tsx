@@ -58,9 +58,8 @@ export default function SpanDetail(props: SpanDetailProps) {
     focusSpan,
   } = props;
   const { isTagsOpen, isProcessOpen, logs: logsState, isWarningsOpen, isReferencesOpen } = detailState;
-  const { operationName, process, duration, relativeStartTime, spanID, logs, tags,events, warnings, references } =
+  const { operationName, process, duration, relativeStartTime, spanID, logs,resources,attributes, tags,events, warnings, references } =
     span;
-  console.log("here33333:",events)
   const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
   const overviewItems = [
     isLargeScreen && {
@@ -97,13 +96,27 @@ export default function SpanDetail(props: SpanDetailProps) {
       <Divider className="SpanDetail--divider" />
       <Box mt={isLargeScreen ? 3 : 1}>
         <div>
-          <AccordianKeyValues
+          {!isEmpty(tags) && <AccordianKeyValues
             data={tags}
             label="Tags"
             linksGetter={linksGetter}
             isOpen={isTagsOpen}
             onToggle={() => tagsToggle(spanID)}
-          />
+          />}
+          {!isEmpty(attributes) && <AccordianKeyValues
+            data={attributes}
+            label="Attributes"
+            linksGetter={linksGetter}
+            isOpen={isTagsOpen}
+            onToggle={() => tagsToggle(spanID)}
+          />}
+          {!isEmpty(resources) && <AccordianKeyValues
+            data={resources}
+            label="Resources"
+            linksGetter={linksGetter}
+            isOpen={isTagsOpen}
+            onToggle={() => tagsToggle(spanID)}
+          />}
           {process.tags && (
             <AccordianKeyValues
               data={process.tags}

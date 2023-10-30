@@ -20,7 +20,8 @@ limitations under the License.
   
   .json-markup {
     line-height: 17px;
-    font-size: 14px;
+    font-size: 1em;
+    font-weight: 500;
     font-family: monospace;
     white-space: pre-wrap;
     word-break: break-all;
