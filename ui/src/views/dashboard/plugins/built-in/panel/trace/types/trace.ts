@@ -40,16 +40,30 @@ export type KeyValuePair = {
   };
   
   export type SpanData = {
-    spanID: string;
     traceID: string;
+    spanID: string;
+    spanId?: string;
+    traceId?: string;
+    parentId: string
+    events: string[]
     processID: string;
+    name?:string
     operationName: string;
+    serviceName?: string
     startTime: number;
     duration: number;
+    hasError?: boolean
+    statusCode?: number
     logs: Array<SpanLog>;
     tags?: Array<KeyValuePair>;
+    resources?: Array<KeyValuePair>;
+    attributes?: Array<KeyValuePair>;
     references?: Array<SpanReference>;
     warnings?: Array<string> | null;
+    resourcesMap?: Record<string,string>
+    stringAttributesMap?: Record<string,string>
+    numberAttributesMap?: Record<string,number>
+    boolAttributesMap?:   Record<string,boolean>
   };
   
   export type TraceSpan = SpanData & {
@@ -61,6 +75,7 @@ export type KeyValuePair = {
     references: NonNullable<SpanData['references']>;
     warnings: NonNullable<SpanData['warnings']>;
     subsidiarilyReferencedBy: Array<SpanReference>;
+    children? : TraceSpan[]
   };
   
   export type TraceData = {
@@ -69,10 +84,12 @@ export type KeyValuePair = {
   };
   
   export type Trace = TraceData & {
-    duration: number;
-    endTime: number;
-    spans: TraceSpan[];
     startTime: number;
+    endTime: number;
+    duration: number;
+
+    spans: TraceSpan[];
+
     traceName: string;
     services: { name: string; numberOfSpans: number }[];
     errorsCount?: number;

@@ -29,6 +29,7 @@ import { DatasourceTypeTestData } from "../../../../datasource/testdata/types"
 import { builtinDatasourcePlugins } from "../../../../plugins"
 import { externalDatasourcePlugins } from "src/views/dashboard/plugins/external/plugins"
 import { getCurrentTimeRange } from "components/DatePicker/TimePicker"
+import { DataFormat } from "types/format"
 
 const TraceDetailWrapper = ({id,dsId}) => {
     const [trace, setTrace] = useState<Trace>(null)
@@ -45,6 +46,13 @@ const TraceDetailWrapper = ({id,dsId}) => {
     const datasources = useStore($datasources)
     const datasource = getDatasource(dsId, datasources)
     
+    useEffect(() => {
+        let bodyStyle = document.body.style
+        setTimeout(() => {
+        bodyStyle.fontSize = 16 + "px!important"
+
+        },100)
+    },[])
     useEffect(() => {
         if (datasource?.type) {
             load()
@@ -81,11 +89,14 @@ const TraceDetailWrapper = ({id,dsId}) => {
             default:
                 const dsPlugin = builtinDatasourcePlugins[datasource?.type] ?? externalDatasourcePlugins[datasource?.type]
                 if (dsPlugin && dsPlugin.runQuery) {
-                    const res1 = await dsPlugin.runQuery(null, {
+                    const res = await dsPlugin.runQuery(null, {
                         metrics: "getTrace",
-                        data: {}
-                    }, getCurrentTimeRange(), datasource, { traceID: id })
-                    console.log("here333333:",res1)
+                        data: {
+                            format: DataFormat.Trace
+                        }
+                    }, getCurrentTimeRange(), datasource, { traceId: id })
+                    data = res.data
+                    console.log("here333333:",data)
                 }
                 break;
         }
@@ -98,6 +109,7 @@ const TraceDetailWrapper = ({id,dsId}) => {
         setScrollManager(sm)
     }
 
+    console.log("here3333333:",trace)
     return (<>
         {trace && scrollManager && <TraceDetail trace={trace} scrollManager={scrollManager}/>}
     </>)

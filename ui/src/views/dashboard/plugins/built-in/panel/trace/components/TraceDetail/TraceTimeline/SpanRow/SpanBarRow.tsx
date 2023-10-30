@@ -205,6 +205,7 @@ const SpanBarRow = (props: SpanBarRowProps) => {
                             role="switch"
                             style={{ borderColor: color }}
                             tabIndex={0}
+                            alignItems="center"
                         >
                             <Flex
                                 alignItems="center"
@@ -231,7 +232,7 @@ const SpanBarRow = (props: SpanBarRowProps) => {
                                     </Flex>
                                 )}
                             </Flex>
-                            <small className="endpoint-name">{rpc ? rpc.operationName : operationName}</small>
+                            <Text opacity="0.8">{rpc ? rpc.operationName : operationName}</Text>
                         </Flex>
                         {span.references && span.references.length > 1 && (
                             <ReferencesButton

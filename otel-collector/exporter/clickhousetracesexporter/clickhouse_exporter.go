@@ -328,47 +328,58 @@ func newStructuredSpan(otelSpan ptrace.Span, ServiceName string, resource pcommo
 
 	})
 
-	references, _ := makeJaegerProtoReferences(otelSpan.Links(), otelSpan.ParentSpanID(), otelSpan.TraceID())
+	// references, _ := makeJaegerProtoReferences(otelSpan.Links(), otelSpan.ParentSpanID(), otelSpan.TraceID())
 
-	tenant := usage.GetTenantNameFromResource(resource)
+	tenantId := utils.GetTenantNameFromResource(resource)
+	environment := utils.GetEnvNameFromResource(resource)
+
+	statusCode := int16(otelSpan.Status().Code())
+	hasError := false
+	if statusCode == 2 {
+		hasError = true
+	}
+
+	traceId := utils.TraceIDToHexOrEmptyString(otelSpan.TraceID())
+	spanId := utils.SpanIDToHexOrEmptyString(otelSpan.SpanID())
+	parentId := utils.SpanIDToHexOrEmptyString(otelSpan.ParentSpanID())
 
 	var span *Span = &Span{
-		TraceId:           utils.TraceIDToHexOrEmptyString(otelSpan.TraceID()),
-		SpanId:            utils.SpanIDToHexOrEmptyString(otelSpan.SpanID()),
-		ParentSpanId:      utils.SpanIDToHexOrEmptyString(otelSpan.ParentSpanID()),
-		Name:              otelSpan.Name(),
-		StartTimeUnixNano: uint64(otelSpan.StartTimestamp()),
-		DurationNano:      durationNano,
-		ServiceName:       ServiceName,
-		Kind:              int8(otelSpan.Kind()),
-		StatusCode:        int16(otelSpan.Status().Code()),
-		TagMap:            tagMap,
-		StringTagMap:      stringTagMap,
-		NumberTagMap:      numberTagMap,
-		BoolTagMap:        boolTagMap,
-		ResourceTagsMap:   resourceAttrs,
-		HasError:          false,
+		TraceId:             traceId,
+		SpanId:              spanId,
+		ParentId:            parentId,
+		Name:                otelSpan.Name(),
+		StartTime:           uint64(otelSpan.StartTimestamp()),
+		Duration:            durationNano,
+		TenantId:            tenantId,
+		Environment:         environment,
+		ServiceName:         ServiceName,
+		Kind:                int8(otelSpan.Kind()),
+		StatusCode:          statusCode,
+		AttributesMap:       tagMap,
+		StringAttributesMap: stringTagMap,
+		NumberAttributesMap: numberTagMap,
+		BoolAttributesMap:   boolTagMap,
+		ResourcesMap:        resourceAttrs,
+		HasError:            hasError,
 		TraceModel: TraceModel{
-			TraceId:           utils.TraceIDToHexOrEmptyString(otelSpan.TraceID()),
-			SpanId:            utils.SpanIDToHexOrEmptyString(otelSpan.SpanID()),
-			Name:              otelSpan.Name(),
-			DurationNano:      durationNano,
-			StartTimeUnixNano: uint64(otelSpan.StartTimestamp()),
-			ServiceName:       ServiceName,
-			Kind:              int8(otelSpan.Kind()),
-			References:        references,
-			TagMap:            tagMap,
-			StringTagMap:      stringTagMap,
-			NumberTagMap:      numberTagMap,
-			BoolTagMap:        boolTagMap,
-			HasError:          false,
+			TraceId:             traceId,
+			SpanId:              spanId,
+			ParentId:            parentId,
+			Name:                otelSpan.Name(),
+			Duration:            durationNano,
+			StartTime:           uint64(otelSpan.StartTimestamp()),
+			ServiceName:         ServiceName,
+			Kind:                int8(otelSpan.Kind()),
+			Links:               otelSpan.Links(),
+			ResourcesMap:        resourceAttrs,
+			StringAttributesMap: stringTagMap,
+			NumberAttributesMap: numberTagMap,
+			BoolAttributesMap:   boolTagMap,
+			HasError:            hasError,
+			StatusCode:          statusCode,
 		},
-		Tenant: &tenant,
 	}
 
-	if span.StatusCode == 2 {
-		span.HasError = true
-	}
 	populateOtherDimensions(attributes, span)
 	populateEvents(otelSpan.Events(), span, config.lowCardinalExceptionGrouping)
 	populateTraceModel(span)
@@ -424,25 +435,25 @@ func (s *storage) Shutdown(_ context.Context) error {
 func extractSpanAttributesFromSpanIndex(span *Span) []SpanAttribute {
 	spanAttributes := []SpanAttribute{}
 	spanAttributes = append(spanAttributes, SpanAttribute{
-		Key:         "traceID",
+		Key:         "traceId",
 		TagType:     "tag",
 		IsColumn:    true,
 		DataType:    "string",
 		StringValue: span.TraceId,
 	})
 	spanAttributes = append(spanAttributes, SpanAttribute{
-		Key:         "spanID",
+		Key:         "spanId",
 		TagType:     "tag",
 		IsColumn:    true,
 		DataType:    "string",
 		StringValue: span.SpanId,
 	})
 	spanAttributes = append(spanAttributes, SpanAttribute{
-		Key:         "parentSpanID",
+		Key:         "parentId",
 		TagType:     "tag",
 		IsColumn:    true,
 		DataType:    "string",
-		StringValue: span.ParentSpanId,
+		StringValue: span.ParentId,
 	})
 	spanAttributes = append(spanAttributes, SpanAttribute{
 		Key:         "name",
@@ -466,11 +477,11 @@ func extractSpanAttributesFromSpanIndex(span *Span) []SpanAttribute {
 		NumberValue: float64(span.Kind),
 	})
 	spanAttributes = append(spanAttributes, SpanAttribute{
-		Key:         "durationNano",
+		Key:         "duration",
 		TagType:     "tag",
 		IsColumn:    true,
 		DataType:    "float64",
-		NumberValue: float64(span.DurationNano),
+		NumberValue: float64(span.Duration),
 	})
 	spanAttributes = append(spanAttributes, SpanAttribute{
 		Key:         "statusCode",

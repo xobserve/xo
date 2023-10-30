@@ -18,3 +18,8 @@ export const isTraceData = (data: any[]) => {
     return false
 }
 
+
+
+export const getShortTraceId = (traceId: string) => {
+    return traceId.slice(traceId.length - 7, traceId.length)
+}

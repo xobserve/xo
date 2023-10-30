@@ -35,6 +35,7 @@ import { isEmpty } from "utils/validate"
 import { commonInteractionEvent, genDynamicFunction } from "utils/dashboard/dynamicCall"
 import { isFunction } from "lodash"
 import { $teamVariables, $variables } from "src/views/variables/store"
+import { getShortTraceId } from "../../utils/trace"
 
 interface Props {
     trace: Trace
@@ -91,7 +92,7 @@ const TraceDetailHeader = ({ trace, viewRange, updateNextViewRangeTime, updateVi
                 <CollapseIcon collapsed={collapsed} onClick={onGraphCollapsed} opacity="0.5" fontSize={size} />
                 <Flex flexDir={isLargeScreen ? "row" : "column"} alignItems={isLargeScreen ? "center" : "start"} gap={isLargeScreen ? 2 : 0}>
                     <Text fontSize={isLargeScreen ? size : "xs"} noOfLines={1}>{trace.traceName}</Text>
-                    {isLargeScreen && <Text textStyle="annotation">{trace.traceID.slice(0, 7)}</Text>}
+                    {isLargeScreen && <Text textStyle="annotation">{getShortTraceId(trace.traceID)}</Text>}
                 </Flex>
             </HStack>
             <HStack spacing={2}>

@@ -9,7 +9,6 @@ import (
 	"time"
 
 	"go.opencensus.io/tag"
-	"go.opentelemetry.io/collector/pdata/pcommon"
 )
 
 const (
@@ -62,12 +61,4 @@ func AddMetric(metrics map[string]Metric, tenant string, count int64, size int64
 			Count: count,
 		}
 	}
-}
-
-func GetTenantNameFromResource(resource pcommon.Resource) string {
-	tenant, found := resource.Attributes().Get("tenant")
-	if !found {
-		return "default"
-	}
-	return tenant.AsString()
 }

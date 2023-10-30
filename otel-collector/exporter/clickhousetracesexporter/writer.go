@@ -98,14 +98,16 @@ func (w *SpanWriter) writeIndexBatch(batchSpans []*Span) error {
 
 	for _, span := range batchSpans {
 		err = statement.Append(
-			time.Unix(0, int64(span.StartTimeUnixNano)),
+			span.StartTime,
+			span.Duration,
 			span.TraceId,
 			span.SpanId,
-			span.ParentSpanId,
+			span.ParentId,
+			span.TenantId,
+			span.Environment,
 			span.ServiceName,
 			span.Name,
 			span.Kind,
-			span.DurationNano,
 			span.StatusCode,
 			span.ExternalHttpMethod,
 			span.ExternalHttpUrl,
@@ -123,17 +125,17 @@ func (w *SpanWriter) writeIndexBatch(batchSpans []*Span) error {
 			span.MsgSystem,
 			span.MsgOperation,
 			span.HasError,
-			span.TagMap,
 			span.GRPCMethod,
 			span.GRPCCode,
 			span.RPCSystem,
 			span.RPCService,
 			span.RPCMethod,
+			span.AttributesMap,
 			span.ResponseStatusCode,
-			span.StringTagMap,
-			span.NumberTagMap,
-			span.BoolTagMap,
-			span.ResourceTagsMap,
+			span.StringAttributesMap,
+			span.NumberAttributesMap,
+			span.BoolAttributesMap,
+			span.ResourcesMap,
 		)
 		if err != nil {
 			w.logger.Error("Could not append span to batch: ", zap.Object("span", span), zap.Error(err))
@@ -210,7 +212,7 @@ func (w *SpanWriter) writeTagBatch(batchSpans []*Span) error {
 
 			if spanAttribute.DataType == "string" {
 				err = tagStatement.Append(
-					time.Unix(0, int64(span.StartTimeUnixNano)),
+					span.StartTime,
 					spanAttribute.Key,
 					spanAttribute.TagType,
 					spanAttribute.DataType,
@@ -220,7 +222,7 @@ func (w *SpanWriter) writeTagBatch(batchSpans []*Span) error {
 				)
 			} else if spanAttribute.DataType == "float64" {
 				err = tagStatement.Append(
-					time.Unix(0, int64(span.StartTimeUnixNano)),
+					span.StartTime,
 					spanAttribute.Key,
 					spanAttribute.TagType,
 					spanAttribute.DataType,
@@ -230,7 +232,7 @@ func (w *SpanWriter) writeTagBatch(batchSpans []*Span) error {
 				)
 			} else if spanAttribute.DataType == "bool" {
 				err = tagStatement.Append(
-					time.Unix(0, int64(span.StartTimeUnixNano)),
+					span.StartTime,
 					spanAttribute.Key,
 					spanAttribute.TagType,
 					spanAttribute.DataType,
@@ -304,7 +306,7 @@ func (w *SpanWriter) writeErrorBatch(batchSpans []*Span) error {
 			span.ErrorEvent.AttributeMap["exception.message"],
 			span.ErrorEvent.AttributeMap["exception.stacktrace"],
 			stringToBool(span.ErrorEvent.AttributeMap["exception.escaped"]),
-			span.ResourceTagsMap,
+			span.ResourcesMap,
 		)
 		if err != nil {
 			w.logger.Error("Could not append span to batch: ", zap.Object("span", span), zap.Error(err))
@@ -344,21 +346,21 @@ func (w *SpanWriter) writeModelBatch(batchSpans []*Span) error {
 	for _, span := range batchSpans {
 		var serialized []byte
 		usageMap := span.TraceModel
-		usageMap.TagMap = map[string]string{}
-		// serialized, err = json.Marshal(span.TraceModel)
+		usageMap.AttributesMap = map[string]string{}
+		serialized, err = json.Marshal(span.TraceModel)
 		serializedUsage, err := json.Marshal(usageMap)
 
 		if err != nil {
 			return err
 		}
 
-		err = statement.Append(time.Unix(0, int64(span.StartTimeUnixNano)), span.TraceId, string(serialized))
+		err = statement.Append(span.StartTime, span.TraceId, string(serialized))
 		if err != nil {
 			w.logger.Error("Could not append span to batch: ", zap.Object("span", span), zap.Error(err))
 			return err
 		}
 
-		usage.AddMetric(metrics, *span.Tenant, 1, int64(len(serializedUsage)))
+		usage.AddMetric(metrics, *&span.TenantId, 1, int64(len(serializedUsage)))
 	}
 	start := time.Now()
 

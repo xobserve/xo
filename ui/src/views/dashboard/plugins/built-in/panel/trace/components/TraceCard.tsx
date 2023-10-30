@@ -11,6 +11,7 @@ import { MobileBreakpoint } from "src/data/constants"
 import { colors1, colors2, colors3, paletteColorNameToHex, palettes } from "utils/colors"
 import { Datasource } from "types/datasource"
 import customColors from "theme/colors"
+import { getShortTraceId } from "../utils/trace"
 
 interface Props {
     trace: Trace
@@ -40,7 +41,7 @@ const TraceCard = ({ trace, maxDuration,checked=false, onChecked=null,simple=fal
                 <Flex color={customColors.textColor.light} alignItems="center" width="100%" justifyContent="space-between" position="relative" pr="2" >
                     <Flex flexDir={isLargeScreen ? "row" : "column"} gap={isLargeScreen ? 1 : 0}>
                         <Text>{trace.traceName}</Text>
-                        <Text opacity="0.7">{trace.traceID.slice(0, 7)}</Text>
+                        <Text opacity="0.7">{getShortTraceId(trace.traceID)}</Text>
                     </Flex>
                     <Text minWidth="fit-content">{formatDuration(trace.duration)}</Text>
                 </Flex>

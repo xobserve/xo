@@ -93,7 +93,7 @@ const TracePanel = (props: PanelProps) => {
                 setRawTraces(uniqBy(res.filter(r => r).flat(), t => t.traceID))
                 break;
             case DatasourceTypeTestData:
-                setRawTraces(uniqBy(cloneDeep(props.data).flat().filter(r => r).flat(), t => t.traceID))
+                setRawTraces(uniqBy(cloneDeep(props.data).flat().filter(r => r).flat(), t => t.traceId))
                 break
             default:
                 setRawTraces([])

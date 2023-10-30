@@ -30,6 +30,7 @@ import { DataFormat } from "types/format"
 import { $datavQueryParams } from "./store"
 import { parseVariableFormat } from "utils/format"
 import { VariableSplitChar } from "src/data/variable"
+import { queryPluginDataToTrace } from "./utils"
 
 export const runQuery = async (panel: Panel, q: PanelQuery, range: TimeRange, ds: Datasource, extraParams?: Record<string,any>) => {
     if (isEmpty(q.metrics)) {
@@ -44,7 +45,7 @@ export const runQuery = async (panel: Panel, q: PanelQuery, range: TimeRange, ds
 
 
     // clickhouse data has writing lacency, so we need to fetch data from 2 seconds before
-    let url = `/proxy/${ds.id}?query=${q.metrics}&params=${q.data[q.metrics]?.params?? {}}&start=${start}&end=${end-5}&step=${q.interval}`
+    let url = `/proxy/${ds.id}?query=${q.metrics}&params=${q.data[q.metrics]?.params?? "{}"}&start=${start}&end=${end-5}&step=${q.interval}`
     if (!isEmpty(extraParams)) {
         Object.entries(extraParams).forEach(v => {
             if (!isEmpty(v[1])) {
@@ -109,6 +110,9 @@ export const runQuery = async (panel: Panel, q: PanelQuery, range: TimeRange, ds
             break
         case DataFormat.Traces:
             data = res.data.data 
+            break
+        case DataFormat.Trace:
+            data =  queryPluginDataToTrace(res.data.data as any, q)
             break
         default:
             data =  queryPluginDataToTable(res.data.data, q)
@@ -208,5 +212,4 @@ export const query_http_alerts = async (panel:Panel, timeRange: TimeRange, ds:Da
     // return res
     return []
 }
-
 

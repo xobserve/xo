@@ -32,7 +32,7 @@ export default class DetailState {
       isWarningsOpen,
       logs,
     }: DetailState | Record<string, undefined> = oldState || {};
-    this.isTagsOpen = Boolean(isTagsOpen);
+    this.isTagsOpen = true // Boolean(isTagsOpen);
     this.isProcessOpen = Boolean(isProcessOpen);
     this.isReferencesOpen = Boolean(isReferencesOpen);
     this.isWarningsOpen = Boolean(isWarningsOpen);

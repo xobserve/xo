@@ -3,7 +3,6 @@ import { Trace } from "src/views/dashboard/plugins/built-in/panel/trace/types/tr
 import SearchResultPlot from "./SearchResultPlot"
 import { TimeRange } from "types/time"
 import { Box, Button, Flex, HStack, Popover, PopoverArrow, PopoverBody, PopoverContent, PopoverTrigger, Select, StackDivider, Text, VStack, chakra, useMediaQuery } from "@chakra-ui/react"
-import TraceCard from "./TraceCard"
 import { useCallback, useEffect, useMemo, useState } from "react"
 import { clone, remove } from "lodash"
 import { FaTimes } from "react-icons/fa"
@@ -16,6 +15,7 @@ import { $datasources } from "src/views/datasource/store"
 import { Datasource } from "types/datasource"
 import { getDatasource } from "utils/datasource"
 import TraceCompare from "../../trace/components/TraceCompare/TraceCompare"
+import TraceCard from "../../trace/components/TraceCard"
 
 interface Props {
     dashboardId: string

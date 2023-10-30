@@ -3,5 +3,6 @@ export enum DataFormat {
     Table = "table",
     Logs = "logs",
     Traces = "traces",
+    Trace = "trace",
     NodeGraph = "nodeGraph"
 }

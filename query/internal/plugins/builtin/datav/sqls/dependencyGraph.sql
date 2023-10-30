@@ -19,29 +19,29 @@ TO signoz_traces.dependency_graph_minutes_v2 AS
 SELECT
     A.serviceName as src,
     B.serviceName as dest,
-    quantilesState(0.5, 0.75, 0.9, 0.95, 0.99)(toFloat64(B.durationNano)) as duration_quantiles_state,
+    quantilesState(0.5, 0.75, 0.9, 0.95, 0.99)(toFloat64(B.duration)) as duration_quantiles_state,
     countIf(B.statusCode=2) as error_count,
     count(*) as total_count,
-    toStartOfMinute(B.timestamp) as timestamp,
-    B.resourceTagsMap['environment'] as environment,
-    B.resourceTagsMap['cluster'] as cluster,
-    B.resourceTagsMap['namespace'] as namespace
+    toStartOfMinute(fromUnixTimestamp64Nano(B.startTime)) as timestamp,
+    B.resourcesMap['environment'] as environment,
+    B.resourcesMap['cluster'] as cluster,
+    B.resourcesMap['namespace'] as namespace
 FROM signoz_traces.signoz_index_v2 AS A, signoz_traces.signoz_index_v2 AS B
-WHERE (A.serviceName != B.serviceName) AND (A.spanID = B.parentSpanID)
+WHERE (A.serviceName != B.serviceName) AND (A.spanId = B.parentId)
 GROUP BY timestamp, src, dest, environment, cluster, namespace;
 
 CREATE MATERIALIZED VIEW IF NOT EXISTS signoz_traces.dependency_graph_minutes_db_calls_mv_v2 ON CLUSTER cluster
 TO signoz_traces.dependency_graph_minutes_v2 AS
 SELECT
     serviceName as src,
-    tagMap['db.system'] as dest,
-    quantilesState(0.5, 0.75, 0.9, 0.95, 0.99)(toFloat64(durationNano)) as duration_quantiles_state,
+    attributesMap['db.system'] as dest,
+    quantilesState(0.5, 0.75, 0.9, 0.95, 0.99)(toFloat64(duration)) as duration_quantiles_state,
     countIf(statusCode=2) as error_count,
     count(*) as total_count,
-    toStartOfMinute(timestamp) as timestamp,
-    resourceTagsMap['environment'] as environment,
-    resourceTagsMap['cluster'] as cluster,
-    resourceTagsMap['namespace'] as namespace
+    toStartOfMinute(fromUnixTimestamp64Nano(startTime)) as timestamp,
+    resourcesMap['environment'] as environment,
+    resourcesMap['cluster'] as cluster,
+    resourcesMap['namespace'] as namespace
 FROM signoz_traces.signoz_index_v2
 WHERE dest != '' and kind != 2
 GROUP BY timestamp, src, dest,  environment, cluster, namespace;
@@ -50,14 +50,14 @@ CREATE MATERIALIZED VIEW IF NOT EXISTS signoz_traces.dependency_graph_minutes_me
 TO signoz_traces.dependency_graph_minutes_v2 AS
 SELECT
     serviceName as src,
-    tagMap['messaging.system'] as dest,
-    quantilesState(0.5, 0.75, 0.9, 0.95, 0.99)(toFloat64(durationNano)) as duration_quantiles_state,
+    attributesMap['messaging.system'] as dest,
+    quantilesState(0.5, 0.75, 0.9, 0.95, 0.99)(toFloat64(duration)) as duration_quantiles_state,
     countIf(statusCode=2) as error_count,
     count(*) as total_count,
-    toStartOfMinute(timestamp) as timestamp,
-    resourceTagsMap['environment'] as environment,
-    resourceTagsMap['cluster.name'] as cluster,
-    resourceTagsMap['namespace.name'] as namespace
+    toStartOfMinute(fromUnixTimestamp64Nano(startTime)) as timestamp,
+    resourcesMap['environment'] as environment,
+    resourcesMap['cluster'] as cluster,
+    resourcesMap['namespace'] as namespace
 FROM signoz_traces.signoz_index_v2
 WHERE dest != '' and kind != 2
 GROUP BY timestamp, src, dest,  environment, cluster, namespace;
