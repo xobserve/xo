@@ -41,18 +41,14 @@ import (
 )
 
 const (
-	namespace                        = "promhouse"
-	subsystem                        = "clickhouse"
-	nameLabel                        = "__name__"
-	CLUSTER                          = "cluster"
-	DISTRIBUTED_TIME_SERIES_TABLE    = "distributed_time_series_v2"
-	DISTRIBUTED_TIME_SERIES_TABLE_V3 = "distributed_time_series_v3"
-	DISTRIBUTED_SAMPLES_TABLE        = "distributed_samples_v2"
-	TIME_SERIES_TABLE                = "time_series_v2"
-	TIME_SERIES_TABLE_V3             = "time_series_v3"
-	SAMPLES_TABLE                    = "samples_v2"
-	temporalityLabel                 = "__temporality__"
-	envLabel                         = "env"
+	namespace                     = "promhouse"
+	subsystem                     = "clickhouse"
+	nameLabel                     = "__name__"
+	CLUSTER                       = "cluster"
+	DISTRIBUTED_TIME_SERIES_TABLE = "distributed_time_series"
+	DISTRIBUTED_SAMPLES_TABLE     = "distributed_samples"
+	temporalityLabel              = "__temporality__"
+	envLabel                      = "environment"
 )
 
 // clickHouse implements storage interface for the ClickHouse.
@@ -252,6 +248,47 @@ func (ch *clickHouse) Write(ctx context.Context, data *prompb.WriteRequest, metr
 	}
 	ch.timeSeriesRW.Unlock()
 
+	// err := func() error {
+	// 	ctx := context.Background()
+	// 	err := ch.conn.Exec(ctx, `SET allow_experimental_object_type = 1`)
+	// 	if err != nil {
+	// 		return err
+	// 	}
+
+	// 	statement, err := ch.conn.PrepareBatch(ctx, fmt.Sprintf("INSERT INTO %s.%s (metric_name, temporality, timestamp_ms, fingerprint, labels) VALUES (?, ?, ?, ?)", ch.database, DISTRIBUTED_TIME_SERIES_TABLE))
+	// 	if err != nil {
+	// 		return err
+	// 	}
+	// 	timestamp := model.Now().Time().UnixMilli()
+	// 	for fingerprint, labels := range newTimeSeries {
+	// 		encodedLabels := string(marshalLabels(labels, make([]byte, 0, 128)))
+	// 		err = statement.Append(
+	// 			fingerprintToName[fingerprint][nameLabel],
+	// 			metricNameToTemporality[fingerprintToName[fingerprint][nameLabel]].String(),
+	// 			timestamp,
+	// 			fingerprint,
+	// 			encodedLabels,
+	// 		)
+	// 		if err != nil {
+	// 			return err
+	// 		}
+	// 	}
+
+	// 	start := time.Now()
+	// 	err = statement.Send()
+	// 	ctx, _ = tag.New(ctx,
+	// 		tag.Upsert(exporterKey, string(component.DataTypeMetrics)),
+	// 		tag.Upsert(tableKey, DISTRIBUTED_TIME_SERIES_TABLE),
+	// 	)
+	// 	stats.Record(ctx, writeLatencyMillis.M(int64(time.Since(start).Milliseconds())))
+	// 	return err
+	// }()
+
+	// if err != nil {
+	// 	return err
+	// }
+
+	// Write to time_series_v3 table
 	err := func() error {
 		ctx := context.Background()
 		err := ch.conn.Exec(ctx, `SET allow_experimental_object_type = 1`)
@@ -259,48 +296,7 @@ func (ch *clickHouse) Write(ctx context.Context, data *prompb.WriteRequest, metr
 			return err
 		}
 
-		statement, err := ch.conn.PrepareBatch(ctx, fmt.Sprintf("INSERT INTO %s.%s (metric_name, temporality, timestamp_ms, fingerprint, labels) VALUES (?, ?, ?, ?)", ch.database, DISTRIBUTED_TIME_SERIES_TABLE))
-		if err != nil {
-			return err
-		}
-		timestamp := model.Now().Time().UnixMilli()
-		for fingerprint, labels := range newTimeSeries {
-			encodedLabels := string(marshalLabels(labels, make([]byte, 0, 128)))
-			err = statement.Append(
-				fingerprintToName[fingerprint][nameLabel],
-				metricNameToTemporality[fingerprintToName[fingerprint][nameLabel]].String(),
-				timestamp,
-				fingerprint,
-				encodedLabels,
-			)
-			if err != nil {
-				return err
-			}
-		}
-
-		start := time.Now()
-		err = statement.Send()
-		ctx, _ = tag.New(ctx,
-			tag.Upsert(exporterKey, string(component.DataTypeMetrics)),
-			tag.Upsert(tableKey, DISTRIBUTED_TIME_SERIES_TABLE),
-		)
-		stats.Record(ctx, writeLatencyMillis.M(int64(time.Since(start).Milliseconds())))
-		return err
-	}()
-
-	if err != nil {
-		return err
-	}
-
-	// Write to time_series_v3 table
-	err = func() error {
-		ctx := context.Background()
-		err := ch.conn.Exec(ctx, `SET allow_experimental_object_type = 1`)
-		if err != nil {
-			return err
-		}
-
-		statement, err := ch.conn.PrepareBatch(ctx, fmt.Sprintf("INSERT INTO %s.%s (env, temporality, metric_name, fingerprint, timestamp_ms, labels) VALUES (?, ?, ?, ?, ?, ?)", ch.database, TIME_SERIES_TABLE_V3))
+		statement, err := ch.conn.PrepareBatch(ctx, fmt.Sprintf("INSERT INTO %s.%s (environment, temporality, metric_name, fingerprint, timestamp_ms, labels) VALUES (?, ?, ?, ?, ?, ?)", ch.database, DISTRIBUTED_TIME_SERIES_TABLE))
 		if err != nil {
 			return err
 		}
@@ -324,7 +320,7 @@ func (ch *clickHouse) Write(ctx context.Context, data *prompb.WriteRequest, metr
 		err = statement.Send()
 		ctx, _ = tag.New(ctx,
 			tag.Upsert(exporterKey, string(component.DataTypeMetrics)),
-			tag.Upsert(tableKey, TIME_SERIES_TABLE_V3),
+			tag.Upsert(tableKey, DISTRIBUTED_TIME_SERIES_TABLE),
 		)
 		stats.Record(ctx, writeLatencyMillis.M(int64(time.Since(start).Milliseconds())))
 		return err
@@ -351,7 +347,7 @@ func (ch *clickHouse) Write(ctx context.Context, data *prompb.WriteRequest, metr
 				tenant := "default"
 				collectUsage := true
 				for _, val := range timeSeries[fingerprint] {
-					if val.Name == nameLabel && strings.HasPrefix(val.Value, "signoz_") {
+					if val.Name == nameLabel && strings.HasPrefix(val.Value, "datav_") {
 						collectUsage = false
 						break
 					}
@@ -389,7 +385,7 @@ func (ch *clickHouse) Write(ctx context.Context, data *prompb.WriteRequest, metr
 	}
 
 	for k, v := range metrics {
-		stats.RecordWithTags(ctx, []tag.Mutator{tag.Upsert(usage.TagTenantKey, k)}, ExporterSigNozSentMetricPoints.M(int64(v.Count)), ExporterSigNozSentMetricPointsBytes.M(int64(v.Size)))
+		stats.RecordWithTags(ctx, []tag.Mutator{tag.Upsert(usage.TagTenantKey, k)}, ExporterSentMetricPoints.M(int64(v.Count)), ExporterSentMetricPointsBytes.M(int64(v.Size)))
 	}
 
 	n := len(newTimeSeries)

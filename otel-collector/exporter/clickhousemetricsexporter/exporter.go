@@ -94,7 +94,7 @@ func NewPrwExporter(cfg *Config, set exporter.CreateSettings) (*PrwExporter, err
 		usage.Options{
 			ReportingInterval: usage.DefaultCollectionInterval,
 		},
-		"signoz_metrics",
+		"datav_metrics",
 		UsageExporter,
 	)
 	if err != nil {

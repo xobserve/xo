@@ -25,11 +25,11 @@ import (
 
 const (
 	// The value of "type" key in configuration.
-	typeStr = "signozspanmetrics"
+	typeStr = "datavspanmetrics"
 	// The stability level of the processor.
 	stability = component.StabilityLevelBeta
 
-	signozID = "signoz.collector.id"
+	datavID = "datav.collector.id"
 )
 
 // NewFactory creates a factory for the spanmetrics processor.

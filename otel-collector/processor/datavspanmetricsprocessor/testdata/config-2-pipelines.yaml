@@ -25,7 +25,7 @@ exporters:
 
 processors:
   batch:
-  signozspanmetrics:
+  datavspanmetrics:
     metrics_exporter: prometheus
     dimensions_cache_size: 500
 service:
@@ -34,7 +34,7 @@ service:
       receivers: [jaeger]
       # spanmetrics will pass on span data untouched to next processor
       # while also accumulating metrics to be sent to the configured 'prometheus' exporter.
-      processors: [signozspanmetrics, batch]
+      processors: [datavspanmetrics, batch]
       exporters: [jaeger]
 
     metrics:

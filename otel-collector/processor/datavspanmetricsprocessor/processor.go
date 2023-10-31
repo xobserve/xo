@@ -76,25 +76,25 @@ type processorImp struct {
 	nextConsumer    consumer.Traces
 
 	// Additional dimensions to add to metrics.
-	dimensions             []dimension // signoz_latency metric
-	callDimensions         []dimension // signoz_calls_total metric
-	dbCallDimensions       []dimension // signoz_db_latency_* metric
-	externalCallDimensions []dimension // signoz_external_call_latency_* metric
+	dimensions             []dimension // datav_latency metric
+	callDimensions         []dimension // datav_calls_total metric
+	dbCallDimensions       []dimension // datav_db_latency_* metric
+	externalCallDimensions []dimension // datav_external_call_latency_* metric
 
 	// The starting time of the data points.
 	startTimestamp pcommon.Timestamp
 
 	// Histogram.
-	histograms    map[metricKey]*histogramData // signoz_latency metric
+	histograms    map[metricKey]*histogramData // datav_latency metric
 	latencyBounds []float64
 
-	callHistograms    map[metricKey]*histogramData // signoz_calls_total metric
+	callHistograms    map[metricKey]*histogramData // datav_calls_total metric
 	callLatencyBounds []float64
 
-	dbCallHistograms    map[metricKey]*histogramData // signoz_db_latency_* metric
+	dbCallHistograms    map[metricKey]*histogramData // datav_db_latency_* metric
 	dbCallLatencyBounds []float64
 
-	externalCallHistograms    map[metricKey]*histogramData // signoz_external_call_latency_* metric
+	externalCallHistograms    map[metricKey]*histogramData // datav_external_call_latency_* metric
 	externalCallLatencyBounds []float64
 
 	keyBuf *bytes.Buffer
@@ -138,7 +138,7 @@ type histogramData struct {
 }
 
 func newProcessor(logger *zap.Logger, instanceID string, config component.Config, nextConsumer consumer.Traces) (*processorImp, error) {
-	logger.Info("Building signozspanmetricsprocessor")
+	logger.Info("Building datavspanmetricsprocessor")
 	pConfig := config.(*Config)
 
 	bounds := defaultLatencyHistogramBucketsMs
@@ -302,7 +302,7 @@ func (p *processorImp) shouldSkip(serviceName string, span ptrace.Span, resource
 
 // Start implements the component.Component interface.
 func (p *processorImp) Start(ctx context.Context, host component.Host) error {
-	p.logger.Info("Starting signozspanmetricsprocessor with config", zap.Any("config", p.config))
+	p.logger.Info("Starting datavspanmetricsprocessor with config", zap.Any("config", p.config))
 	exporters := host.GetExporters()
 
 	var availableMetricsExporters []string
@@ -316,13 +316,13 @@ func (p *processorImp) Start(ctx context.Context, host component.Host) error {
 
 		availableMetricsExporters = append(availableMetricsExporters, k.String())
 
-		p.logger.Debug("Looking for signozspanmetrics exporter from available exporters",
-			zap.String("signozspanmetrics-exporter", p.config.MetricsExporter),
+		p.logger.Debug("Looking for datavspanmetrics exporter from available exporters",
+			zap.String("datavspanmetrics-exporter", p.config.MetricsExporter),
 			zap.Any("available-exporters", availableMetricsExporters),
 		)
 		if k.String() == p.config.MetricsExporter {
 			p.metricsExporter = metricsExp
-			p.logger.Info("Found exporter", zap.String("signozspanmetrics-exporter", p.config.MetricsExporter))
+			p.logger.Info("Found exporter", zap.String("datavspanmetrics-exporter", p.config.MetricsExporter))
 			break
 		}
 	}
@@ -330,13 +330,13 @@ func (p *processorImp) Start(ctx context.Context, host component.Host) error {
 		return fmt.Errorf("failed to find metrics exporter: '%s'; please configure metrics_exporter from one of: %+v",
 			p.config.MetricsExporter, availableMetricsExporters)
 	}
-	p.logger.Info("Started signozspanmetricsprocessor")
+	p.logger.Info("Started datavspanmetricsprocessor")
 	return nil
 }
 
 // Shutdown implements the component.Component interface.
 func (p *processorImp) Shutdown(ctx context.Context) error {
-	p.logger.Info("Shutting down signozspanmetricsprocessor")
+	p.logger.Info("Shutting down datavspanmetricsprocessor")
 	return nil
 }
 
@@ -384,7 +384,7 @@ func (p *processorImp) tracesToMetrics(ctx context.Context, traces ptrace.Traces
 func (p *processorImp) buildMetrics() (pmetric.Metrics, error) {
 	m := pmetric.NewMetrics()
 	ilm := m.ResourceMetrics().AppendEmpty().ScopeMetrics().AppendEmpty()
-	ilm.Scope().SetName("signozspanmetricsprocessor")
+	ilm.Scope().SetName("datavspanmetricsprocessor")
 
 	if err := p.collectCallMetrics(ilm); err != nil {
 		return pmetric.Metrics{}, err
@@ -428,7 +428,7 @@ func (p *processorImp) logCardinalityInfo() {
 // into the given instrumentation library metrics.
 func (p *processorImp) collectLatencyMetrics(ilm pmetric.ScopeMetrics) error {
 	mLatency := ilm.Metrics().AppendEmpty()
-	mLatency.SetName("signoz_latency")
+	mLatency.SetName("datav_latency")
 	mLatency.SetUnit("ms")
 	mLatency.SetEmptyHistogram().SetAggregationTemporality(p.config.GetAggregationTemporality())
 	dps := mLatency.Histogram().DataPoints()
@@ -459,13 +459,13 @@ func (p *processorImp) collectLatencyMetrics(ilm pmetric.ScopeMetrics) error {
 // into the given instrumentation library metrics.
 func (p *processorImp) collectDBCallMetrics(ilm pmetric.ScopeMetrics) error {
 	mDBCallSum := ilm.Metrics().AppendEmpty()
-	mDBCallSum.SetName("signoz_db_latency_sum")
+	mDBCallSum.SetName("datav_db_latency_sum")
 	mDBCallSum.SetUnit("1")
 	mDBCallSum.SetEmptySum().SetIsMonotonic(true)
 	mDBCallSum.Sum().SetAggregationTemporality(p.config.GetAggregationTemporality())
 
 	mDBCallCount := ilm.Metrics().AppendEmpty()
-	mDBCallCount.SetName("signoz_db_latency_count")
+	mDBCallCount.SetName("datav_db_latency_count")
 	mDBCallCount.SetUnit("1")
 	mDBCallCount.SetEmptySum().SetIsMonotonic(true)
 	mDBCallCount.Sum().SetAggregationTemporality(p.config.GetAggregationTemporality())
@@ -501,13 +501,13 @@ func (p *processorImp) collectDBCallMetrics(ilm pmetric.ScopeMetrics) error {
 
 func (p *processorImp) collectExternalCallMetrics(ilm pmetric.ScopeMetrics) error {
 	mExternalCallSum := ilm.Metrics().AppendEmpty()
-	mExternalCallSum.SetName("signoz_external_call_latency_sum")
+	mExternalCallSum.SetName("datav_external_call_latency_sum")
 	mExternalCallSum.SetUnit("1")
 	mExternalCallSum.SetEmptySum().SetIsMonotonic(true)
 	mExternalCallSum.Sum().SetAggregationTemporality(p.config.GetAggregationTemporality())
 
 	mExternalCallCount := ilm.Metrics().AppendEmpty()
-	mExternalCallCount.SetName("signoz_external_call_latency_count")
+	mExternalCallCount.SetName("datav_external_call_latency_count")
 	mExternalCallCount.SetUnit("1")
 	mExternalCallCount.SetEmptySum().SetIsMonotonic(true)
 	mExternalCallCount.Sum().SetAggregationTemporality(p.config.GetAggregationTemporality())
@@ -545,7 +545,7 @@ func (p *processorImp) collectExternalCallMetrics(ilm pmetric.ScopeMetrics) erro
 // into the given instrumentation library metrics.
 func (p *processorImp) collectCallMetrics(ilm pmetric.ScopeMetrics) error {
 	mCalls := ilm.Metrics().AppendEmpty()
-	mCalls.SetName("signoz_calls_total")
+	mCalls.SetName("datav_calls_total")
 	mCalls.SetEmptySum().SetIsMonotonic(true)
 	mCalls.Sum().SetAggregationTemporality(p.config.GetAggregationTemporality())
 	dps := mCalls.Sum().DataPoints()
@@ -748,7 +748,7 @@ func (p *processorImp) aggregateMetrics(traces ptrace.Traces) {
 		if !ok {
 			continue
 		}
-		resourceAttr.PutStr(signozID, p.instanceID)
+		resourceAttr.PutStr(datavID, p.instanceID)
 		serviceName := serviceAttr.Str()
 		ilsSlice := rspans.ScopeSpans()
 		for j := 0; j < ilsSlice.Len(); j++ {

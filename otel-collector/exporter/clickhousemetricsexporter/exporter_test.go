@@ -42,7 +42,6 @@ import (
 )
 
 // Test_NewPRWExporter checks that a new exporter instance with non-nil fields is initialized
-// FIXME(srikanthccv): Enable the tests once this issue is fixed: https://github.com/SigNoz/signoz-otel-collector/issues/65
 func skip_Test_NewPRWExporter(t *testing.T) {
 	cfg := &Config{
 		TimeoutSettings:    exporterhelper.TimeoutSettings{},
@@ -134,7 +133,6 @@ func skip_Test_NewPRWExporter(t *testing.T) {
 }
 
 // Test_Start checks if the client is properly created as expected.
-// FIXME(srikanthccv): Enable the tests once this issue is fixed: https://github.com/SigNoz/signoz-otel-collector/issues/65
 func skip_Test_Start(t *testing.T) {
 	cfg := &Config{
 		TimeoutSettings: exporterhelper.TimeoutSettings{},

@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   otel-collector:
-    image: signoz/otel-collector:latest
+    image: datav/otel-collector:latest
     container_name: otel
     user: root # required for reading docker container logs
     command:

@@ -35,7 +35,6 @@ func Test_createDefaultConfig(t *testing.T) {
 }
 
 // Tests whether or not a correct Metrics Exporter from the default Config parameters
-// FIXME(srikanthccv): Enable the tests once this issue is fixed: https://github.com/SigNoz/signoz-otel-collector/issues/65
 func skip_Test_createMetricsExporter(t *testing.T) {
 
 	invalidConfig := createDefaultConfig().(*Config)

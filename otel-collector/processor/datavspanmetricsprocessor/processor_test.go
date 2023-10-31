@@ -546,16 +546,16 @@ func verifyConsumeMetricsInput(t testing.TB, input pmetric.Metrics, expectedTemp
 
 	ilm := rm.At(0).ScopeMetrics()
 	require.Equal(t, 1, ilm.Len())
-	assert.Equal(t, "signozspanmetricsprocessor", ilm.At(0).Scope().Name())
+	assert.Equal(t, "datavspanmetricsprocessor", ilm.At(0).Scope().Name())
 
 	m := ilm.At(0).Metrics()
-	// 6 metrics: signoz_calls_total, signoz_latency, signoz_db_latency_sum
-	// signoz_db_latency_count, signoz_external_latency_sum, signoz_external_latency_count
+	// 6 metrics: datav_calls_total, datav_latency, datav_db_latency_sum
+	// datav_db_latency_count, datav_external_latency_sum, datav_external_latency_count
 	require.Equal(t, 6, m.Len())
 
 	seenMetricIDs := make(map[metricID]bool)
 	// The first 3 data points are for call counts.
-	assert.Equal(t, "signoz_calls_total", m.At(0).Name())
+	assert.Equal(t, "datav_calls_total", m.At(0).Name())
 	assert.Equal(t, expectedTemporality, m.At(0).Sum().AggregationTemporality())
 	assert.True(t, m.At(0).Sum().IsMonotonic())
 	callsDps := m.At(0).Sum().DataPoints()
@@ -570,7 +570,7 @@ func verifyConsumeMetricsInput(t testing.TB, input pmetric.Metrics, expectedTemp
 
 	seenMetricIDs = make(map[metricID]bool)
 	// The remaining 3 data points are for latency.
-	assert.Equal(t, "signoz_latency", m.At(1).Name())
+	assert.Equal(t, "datav_latency", m.At(1).Name())
 	assert.Equal(t, "ms", m.At(1).Unit())
 	assert.Equal(t, expectedTemporality, m.At(1).Histogram().AggregationTemporality())
 	latencyDps := m.At(1).Histogram().DataPoints()
@@ -823,10 +823,10 @@ func TestBuildKeyWithDimensions(t *testing.T) {
 		{
 			name: "resource attribute contains instance ID",
 			optionalDims: []dimension{
-				{name: signozID},
+				{name: datavID},
 			},
 			resourceAttrMap: map[string]interface{}{
-				signozID: testID,
+				datavID: testID,
 			},
 			wantKey: "ab\u0000c\u0000SPAN_KIND_UNSPECIFIED\u0000STATUS_CODE_UNSET\u0000test-instance-id",
 		},

@@ -38,7 +38,7 @@ exporters:
 
 processors:
   batch:
-  signozspanmetrics:
+  datavspanmetrics:
     metrics_exporter: otlp/spanmetrics
     aggregation_temporality: "AGGREGATION_TEMPORALITY_CUMULATIVE"
 
@@ -48,7 +48,7 @@ service:
       receivers: [jaeger]
       # spanmetrics will pass on span data untouched to next processor
       # while also accumulating metrics to be sent to the configured 'otlp/spanmetrics' exporter.
-      processors: [signozspanmetrics, batch]
+      processors: [datavspanmetrics, batch]
       exporters: [jaeger]
 
     # This pipeline acts as a proxy to the 'metrics' pipeline below,

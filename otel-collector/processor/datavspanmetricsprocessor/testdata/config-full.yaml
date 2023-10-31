@@ -33,7 +33,7 @@ exporters:
 
 processors:
   batch:
-  signozspanmetrics:
+  datavspanmetrics:
     metrics_exporter: otlp/spanmetrics
     latency_histogram_buckets: [100us, 1ms, 2ms, 6ms, 10ms, 100ms, 250ms]
     dimensions_cache_size: 1500
@@ -48,15 +48,15 @@ processors:
       # If the span is missing http.method, the processor will insert
       # the http.method dimension with value 'GET'.
       # For example, in the following scenario, http.method is not present in a span and so will be added as a dimension to the metric with value "GET":
-      # - signoz_calls_total{http_method="GET",operation="/Address",service_name="shippingservice",span_kind="SPAN_KIND_SERVER",status_code="STATUS_CODE_UNSET"} 1
+      # - datav_calls_total{http_method="GET",operation="/Address",service_name="shippingservice",span_kind="SPAN_KIND_SERVER",status_code="STATUS_CODE_UNSET"} 1
       - name: http.method
         default: GET
 
       # If a default is not provided, the http.status_code dimension will be omitted
       # if the span does not contain http.status_code.
       # For example, consider a scenario with two spans, one span having http.status_code=200 and another missing http.status_code. Two metrics would result with this configuration, one with the http_status_code omitted and the other included:
-      # - signoz_calls_total{http_status_code="200",operation="/Address",service_name="shippingservice",span_kind="SPAN_KIND_SERVER",status_code="STATUS_CODE_UNSET"} 1
-      # - signoz_calls_total{operation="/Address",service_name="shippingservice",span_kind="SPAN_KIND_SERVER",status_code="STATUS_CODE_UNSET"} 1
+      # - datav_calls_total{http_status_code="200",operation="/Address",service_name="shippingservice",span_kind="SPAN_KIND_SERVER",status_code="STATUS_CODE_UNSET"} 1
+      # - datav_calls_total{operation="/Address",service_name="shippingservice",span_kind="SPAN_KIND_SERVER",status_code="STATUS_CODE_UNSET"} 1
       - name: http.status_code
 
     # The aggregation temporality of the generated metrics.
@@ -69,7 +69,7 @@ service:
       receivers: [jaeger]
       # spanmetrics will pass on span data untouched to next processor
       # while also accumulating metrics to be sent to the configured 'otlp/spanmetrics' exporter.
-      processors: [signozspanmetrics, batch]
+      processors: [datavspanmetrics, batch]
       exporters: [jaeger]
 
     # This pipeline acts as a proxy to the 'metrics' pipeline below,

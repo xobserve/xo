@@ -24,7 +24,7 @@ import (
 const (
 	delta                  = "AGGREGATION_TEMPORALITY_DELTA"
 	cumulative             = "AGGREGATION_TEMPORALITY_CUMULATIVE"
-	dropSanitizationGateID = "processor.signozspanmetrics.PermissiveLabelSanitization"
+	dropSanitizationGateID = "processor.datavspanmetrics.PermissiveLabelSanitization"
 )
 
 var dropSanitizationFeatureGate *featuregate.Gate
