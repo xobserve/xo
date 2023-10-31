@@ -72,11 +72,11 @@ const TracePanel = (props: PanelProps) => {
     const dsPlugin = builtinDatasourcePlugins[ds.type] ?? externalDatasourcePlugins[ds.type]
     useEffect(() => {
         if (ds.type == DatasourceTypeTestData) {
-            onSearch(null, null, null, null, null, null, true)
+            onSearch(null, null, null, null, null, null, true,null)
         }
     }, [ds.type, props.data]
     )
-    const onSearch = async (service, operation, tags, min, max, limit, useLatestTime) => {
+    const onSearch = async (service, operation, tags, min, max, limit, useLatestTime, [aggregate, groupby]) => {
         tags = convTagsLogfmt(tags);
         let tr = getNewestTimeRange()
         if (!useLatestTime) {
@@ -95,9 +95,9 @@ const TracePanel = (props: PanelProps) => {
                 const intervalObj = calculateInterval(props.timeRange, panel.datasource.queryOptions.maxDataPoints ?? DatasourceMaxDataPoints, isEmpty(panel.datasource.queryOptions.minInterval) ? DatasourceMinInterval : panel.datasource.queryOptions.minInterval)
                 query.interval = intervalObj.intervalMs / 1000
 
-                const res = await dsPlugin.runQuery(panel, query, props.timeRange, ds, { tags, min, max, limit, service: services, operation: operations })
+                const res = await dsPlugin.runQuery(panel, query, props.timeRange, ds, { tags, min, max, limit, service: services, operation: operations, aggregate, groupby})
                 setTraces(transformTraces(res.data.traces))
-                console.log("here333333:",res.data.traces)
+         
                 setTraceChart(res.data.chart)
                 break;
             case DatasourceTypeTestData:

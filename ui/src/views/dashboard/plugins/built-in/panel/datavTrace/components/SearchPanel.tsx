@@ -26,6 +26,7 @@ import { addParamToUrl } from "utils/url"
 import { DatasourceTypeJaeger } from "../../../datasource/jaeger/types"
 import { PanelType } from "../types"
 import { TraceSearchKey } from "../../trace/config/constants"
+import { useSearchParam } from "react-use"
 interface Props {
     panel: Panel
     onSearch: any
@@ -47,6 +48,10 @@ const TraceSearchPanel = ({ timeRange, dashboardId, panel, onSearch, onSearchIds
 
     const lastSearch = useMemo(() => storage.get(TraceSearchKey + dashboardId + panel.id) ?? {}, [])
     const [initService, initOperation, initTags, initMax, initMin, initLimit] = getInitParams(searchParams, panel, lastSearch)
+    const aggregate = useSearchParam("aggregate")
+    const groupby = useSearchParam("groupby")
+
+
     const initTraceIds = searchParams.get('traceIds')
     const [service, setService] = useState<string>(initService)
     const [operation, setOperation] = useState<string>(initOperation)
@@ -55,10 +60,16 @@ const TraceSearchPanel = ({ timeRange, dashboardId, panel, onSearch, onSearchIds
     const [min, setMin] = useState<string>(initMin)
     const [limit, setLimit] = useState<number>(initLimit)
     const [traceIds, setTraceIds] = useState<string>(initTraceIds)
-    
+
     const [useLatestTime, setUseLatestTime] = useState(true)
     const datasources = useStore($datasources)
     const ds = getDatasource(panel.datasource.id, datasources)
+    
+    useEffect(() => {
+        if (inited) {
+            onSearch(service, operation, tags, min, max, limit, useLatestTime, [aggregate, groupby])
+        }
+    },[aggregate, groupby])
 
     useEffect(() => {
         if (!isEmpty(initTraceIds)) {
@@ -68,8 +79,12 @@ const TraceSearchPanel = ({ timeRange, dashboardId, panel, onSearch, onSearchIds
 
         if (service) {
             loadOperations()
-            onSearch(service, operation, tags, min, max, limit, useLatestTime)
+            onSearch(service, operation, tags, min, max, limit, useLatestTime, [aggregate, groupby])
         } 
+
+        setTimeout(() => {
+            setInited(true)
+        }, 1000)
 
         return () => {
             delete traceServicesCache[dashboardId + panel.id]
@@ -84,7 +99,7 @@ const TraceSearchPanel = ({ timeRange, dashboardId, panel, onSearch, onSearchIds
                 onSearchIds(traceIds)
             } else {
                 if (service && operation) {
-                    onSearch(service, operation, tags, min, max, limit)
+                    onSearch(service, operation, tags, min, max, limit,useLatestTime, [aggregate, groupby])
                 }
             }
         }
@@ -103,7 +118,7 @@ const TraceSearchPanel = ({ timeRange, dashboardId, panel, onSearch, onSearchIds
 
             if (service) {
                 loadOperations()
-                onSearch(service, operation, tags, min, max, limit, useLatestTime)
+                onSearch(service, operation, tags, min, max, limit, useLatestTime, [aggregate, groupby])
             } else {
                 setOperations([])
             }
@@ -140,7 +155,7 @@ const TraceSearchPanel = ({ timeRange, dashboardId, panel, onSearch, onSearchIds
             onSearchIds(traceIds)
             return 
         }
-        onSearch(service, operation, tags, min, max, limit, useLatestTime)
+        onSearch(service, operation, tags, min, max, limit, useLatestTime,[aggregate, groupby])
     }
 
     useBus(
@@ -210,12 +225,13 @@ const TraceSearchPanel = ({ timeRange, dashboardId, panel, onSearch, onSearchIds
         if (!isEmpty(traceIds)) {
             onSearchIds(traceIds)
         } else {
-            onSearch(service, operation, tags, min, max, limit, useLatestTime)
+            onSearch(service, operation, tags, min, max, limit, useLatestTime,[aggregate, groupby])
             storage.set(TraceSearchKey + dashboardId + panel.id, {
                 service, operation, tags, min, max, limit
             })
         }
     }
+
 
     const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
     const size = "sm"

@@ -174,7 +174,7 @@ func (e *clickhouseLogsExporter) pushLogsData(ctx context.Context, ld plog.Logs)
 					if err != nil {
 						return err
 					}
-					namespace, _ := res.Attributes().Get("namespace")
+					environment, _ := res.Attributes().Get("environment")
 					service, _ := res.Attributes().Get("service_name")
 					host, _ := res.Attributes().Get("host_name")
 
@@ -196,7 +196,7 @@ func (e *clickhouseLogsExporter) pushLogsData(ctx context.Context, ld plog.Logs)
 						attributes.IntValues,
 						attributes.FloatKeys,
 						attributes.FloatValues,
-						namespace.AsString(),
+						environment.AsString(),
 						service.AsString(),
 						host.AsString(),
 					)
@@ -377,7 +377,7 @@ const (
 							attributes_int64_value,
 							attributes_float64_key,
 							attributes_float64_value,
-							namespace,
+							environment,
 							service,
 							host
 							) VALUES (

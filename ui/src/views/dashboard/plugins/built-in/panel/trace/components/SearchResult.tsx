@@ -4,7 +4,7 @@ import SearchResultPlot from "./SearchResultPlot"
 import { TimeRange } from "types/time"
 import { Box, Button, Flex, HStack, Popover, PopoverArrow, PopoverBody, PopoverContent, PopoverTrigger, Select, StackDivider, Text, VStack, chakra, useMediaQuery } from "@chakra-ui/react"
 import { useCallback, useEffect, useMemo, useState } from "react"
-import { clone, remove } from "lodash"
+import { clone, remove, set } from "lodash"
 import { FaTimes } from "react-icons/fa"
 import React from "react";
 import { useStore } from "@nanostores/react"
@@ -17,6 +17,8 @@ import { getDatasource } from "utils/datasource"
 import TraceCompare from "../../trace/components/TraceCompare/TraceCompare"
 import TraceCard from "../../trace/components/TraceCard"
 import ErrorOkChart from "src/views/dashboard/plugins/components/charts/ErrorOkChart"
+import { addParamToUrl } from "utils/url"
+import { useSearchParam } from "react-use"
 
 interface Props {
     dashboardId: string
@@ -36,7 +38,13 @@ const TraceSearchResult = (props: Props) => {
     const [selectedTraces, setSelectedTraces] = useState<Trace[]>([])
     const [sort, setSort] = useState(traceSortTypes[0].value)
     const [comparison, setComparison] = useState<string[]>([])
-    const [chartType, setChartType] = useState<"plot" | "graph">(traceChartOptions ? "graph": "plot")
+    const [chartType, setChartType] = useState<"plot" | "graph">(traceChartOptions ? "graph" : "plot")
+    const initAggregate = useSearchParam("aggregate")
+    const initGroupby = useSearchParam("groupby")
+    const [aggregate, setAggregate] = useState(initAggregate ?? aggregateFunctions[0].value)
+    const [groupby, setGroupby] = useState(initGroupby?? null)
+
+
 
     useEffect(() => {
         setSelectedTraces(clone(traces))
@@ -61,9 +69,9 @@ const TraceSearchResult = (props: Props) => {
             case "shortest":
                 return selectedTraces.sort((a, b) => a.duration - b.duration)
             case "mostSpans":
-                return selectedTraces.sort((a, b) => b.services.reduce((t,e)=>e.numberOfSpans + t,0)  - a.services.reduce((t,e)=>e.numberOfSpans + t,0))
+                return selectedTraces.sort((a, b) => b.services.reduce((t, e) => e.numberOfSpans + t, 0) - a.services.reduce((t, e) => e.numberOfSpans + t, 0))
             case "leastSpans":
-                return selectedTraces.sort((a, b) => a.services.reduce((t,e)=>e.numberOfSpans + t,0)- b.services.reduce((t,e)=>e.numberOfSpans + t,0))
+                return selectedTraces.sort((a, b) => a.services.reduce((t, e) => e.numberOfSpans + t, 0) - b.services.reduce((t, e) => e.numberOfSpans + t, 0))
             default:
                 return traces
         }
@@ -90,7 +98,7 @@ const TraceSearchResult = (props: Props) => {
     }
 
     const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
-    const plotHeight = traceChartOptions.height ?? 200
+    const plotHeight = traceChartOptions?.height ?? 200
 
     const ds = getDatasource(panel.datasource.id, datasources)
 
@@ -116,7 +124,7 @@ const TraceSearchResult = (props: Props) => {
             {chartType == "graph" && <Box height={plotHeight}>
                 {traceChart && <ErrorOkChart data={traceChart} onClick={null} totalCount={totalTraces} displayCount={traces?.length} options={traceChartOptions} />}
             </Box>}
-            {chartType == "plot" && <SearchResultPlot traces={traces} timeRange={timeRange} onSelect={onSelect} height={plotHeight+ 3} />}
+            {chartType == "plot" && <SearchResultPlot traces={traces} timeRange={timeRange} onSelect={onSelect} height={plotHeight + 3} />}
             <Box pl="2" pr="20px" pt="4">
                 <Flex alignItems="center" justifyContent="space-between" mb="1" fontSize={isLargeScreen ? null : "xs"}>
                     <HStack height="40px" fontSize="0.9rem">
@@ -131,13 +139,37 @@ const TraceSearchResult = (props: Props) => {
                     }
                     <HStack alignItems="center">
                         {/* <Text minWidth="fit-content" fontSize="0.9rem">排序</Text> */}
-                        <Select variant="unstyled" size={isLargeScreen ? "sm" : "xs"} value={sort} onChange={e => setSort(e.currentTarget.value)}>
+                        <Select width="fit-content" variant="unstyled" size={isLargeScreen ? "sm" : "xs"} value={sort} onChange={e => setSort(e.currentTarget.value)}>
                             {traceSortTypes.map(sortType => <option key={sortType.value} value={sortType.value}>{t1[sortType.value]}</option>)}
                         </Select>
-                        {traceChartOptions && <Select minWidth="fit-content" variant="unstyled" size={isLargeScreen ? "sm" : "xs"} value={chartType} onChange={e => setChartType(e.currentTarget.value as any)}>
-                            <option value="plot">Results scatter</option>
-                            <option value="graph">Hits graph</option>
-                        </Select>}
+                        {traceChartOptions && <HStack fontSize="0.9rem">
+                            <Select minWidth="fit-content" variant="unstyled" size={isLargeScreen ? "sm" : "xs"} value={chartType} onChange={e => setChartType(e.currentTarget.value as any)}>
+                                <option value="plot">Results scatter</option>
+                                <option value="graph">Hits graph</option>
+                            </Select>
+                            {chartType == "graph" && <>
+                            <Text minWidth="fit-content">Aggerate</Text>
+                            <Select minWidth="fit-content" size="sm" value={aggregate} onChange={e => {
+                                setAggregate(e.currentTarget.value)
+                                addParamToUrl({ aggregate: e.currentTarget.value })
+                            }}>
+                                {
+                                    aggregateFunctions.map(f => <option key={f.value} value={f.value}>{f.label}</option>)
+                                }
+                            </Select>
+                            <Text minWidth="fit-content">Group by</Text>
+                            <Select minWidth="fit-content" size="sm" value={groupby} onChange={e => {
+                                setGroupby(e.currentTarget.value)
+                                addParamToUrl({ groupby: e.currentTarget.value })
+                            }}>
+                                {
+                                    aggregateFunctions.map(f => <option key={f.value} value={f.value}>{f.label}</option>)
+                                }
+                            </Select>
+                            </>}
+                        </HStack>
+
+                        }
                     </HStack>
                 </Flex>
                 <VStack alignItems="left" maxH={height - plotHeight - 58}>
@@ -201,4 +233,52 @@ const traceSortTypes = [
         label: "Least Spans",
         value: "leastSpans"
     }
+]
+
+
+const aggregateFunctions =  [
+    {
+        label: "Suc/Err count",
+        value: "count"
+    },
+    {
+        label: "Total count",
+        value: "total-count"
+    },
+    {
+        label: "Rate per second",
+        value: "rate"
+    },
+    {
+        label: "Sum duration",
+        value: "sum"
+    },
+    {
+        label: "Avg duration",
+        value: "avg"
+    },
+    {
+        label: "Max duration",
+        value: "max"
+    },
+    {
+        label: "Min duration",
+        value: "min"
+    },
+    {
+        label: "p50 duration",
+        value: "p50"
+    },
+    {
+        label: "p90 duration",
+        value: "p90"
+    },
+    {
+        label: "p95 duration",
+        value: "p95"
+    },
+    {
+        label: "p99 duration",
+        value: "p99"
+    },
 ]
