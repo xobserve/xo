@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Text, useColorMode, useColorModeValue } from "@chakra-ui/react"
+import { Switch, Text, useColorMode, useColorModeValue } from "@chakra-ui/react"
 import ChartComponent from "src/components/charts/Chart"
 import React, { memo, useEffect, useMemo, useRef, useState } from "react"
 import { Panel } from "types/dashboard"
@@ -21,6 +21,14 @@ import { dateTimeFormat } from "utils/datetime/formatter"
 import { getTimeFormatForChart } from "utils/format"
 import customColors from "theme/colors"
 import {colors1} from 'utils/colors'
+import { useStore } from "@nanostores/react"
+import { locale } from "src/i18n/i18n"
+import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
+import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
+import RadionButtons from "components/RadioButtons"
+import { EditorNumberItem } from "components/editor/EditorItem"
+import { dispatch } from "use-bus"
+import { PanelForceRebuildEvent } from "src/data/bus-events"
 
 interface Props {
     data: QueryPluginData
@@ -148,10 +156,54 @@ const ErrorOkChart = memo((props: Props) => {
     };
 
     return (<>
-        <Text opacity={0.8} mb="2" fontSize="0.8rem" fontWeight={500}>{displayCount && (displayCount + ' /')}  {totalCount} Hits </Text>
+        <Text opacity={0.8} mb="2" fontSize="0.8rem" fontWeight={500}>{displayCount && (displayCount + ' Results / ')}  {totalCount} Hits </Text>
         <ChartComponent key={colorMode} options={chartOptions} clearWhenSetOption theme={colorMode} onChartCreated={c => setChart(c)} />
     </>)
 })
 
 export default ErrorOkChart
 
+
+export const ErrorOkChartEditor = ({panel,panelType,onChange }) => {
+    const lang = useStore(locale)
+    return (
+        <PanelAccordion title={"Chart"}>
+        <PanelEditItem title={lang == "en" ? "Type" : "图表类型"}>
+            <RadionButtons options={[{ label: "Bar", value: "bar" }, { label: "Line", value: "line" }]} value={panel.plugins[panelType].chart.type} onChange={v => onChange((panel: Panel) => {
+                panel.plugins[panelType].chart.type = v
+            })} />
+        </PanelEditItem>
+        <PanelEditItem title={lang == "en" ? "Height" : "图表高度"}>
+            <EditorNumberItem value={panel.plugins[panelType].chart.height} onChange={v => onChange((panel: Panel) => {
+                panel.plugins[panelType].chart.height = v
+                dispatch(PanelForceRebuildEvent + panel.id)
+            })} step={10} min={0} max={1000} />
+        </PanelEditItem>
+        <PanelEditItem title={"Stack"}>
+            <Switch defaultChecked={panel.plugins[panelType].chart.stack} onChange={e => onChange((panel: Panel) => {
+                panel.plugins[panelType].chart.stack = e.currentTarget.checked
+            })} />
+        </PanelEditItem>
+        <PanelEditItem title={"Top"}>
+            <EditorNumberItem value={panel.plugins[panelType].chart.top} onChange={v => onChange((panel: Panel) => {
+                panel.plugins[panelType].chart.top = v
+            })} step={1} min={0} max={100} /> %
+        </PanelEditItem>
+        <PanelEditItem title={"Right"}>
+            <EditorNumberItem value={panel.plugins[panelType].chart.right} onChange={v => onChange((panel: Panel) => {
+                panel.plugins[panelType].chart.right = v
+            })} step={1} min={0} max={100} /> %
+        </PanelEditItem>
+        <PanelEditItem title={"Bottom"}>
+            <EditorNumberItem value={panel.plugins[panelType].chart.bottom} onChange={v => onChange((panel: Panel) => {
+                panel.plugins[panelType].chart.bottom = v
+            })} step={1} min={0} max={100} /> %
+        </PanelEditItem>
+        <PanelEditItem title={"Left"}>
+            <EditorNumberItem value={panel.plugins[panelType].chart.left} onChange={v => onChange((panel: Panel) => {
+                panel.plugins[panelType].chart.left = v
+            })} step={1} min={0} max={100} /> %
+        </PanelEditItem>
+    </PanelAccordion>
+    )
+}

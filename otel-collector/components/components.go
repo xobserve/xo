@@ -116,8 +116,8 @@ import (
 	"github.com/DataObserve/datav/otel-collector/exporter/clickhousemetricsexporter"
 	"github.com/DataObserve/datav/otel-collector/exporter/clickhousetracesexporter"
 	_ "github.com/DataObserve/datav/otel-collector/pkg/parser/grok"
-	"github.com/DataObserve/datav/otel-collector/processor/signozspanmetricsprocessor"
-	"github.com/DataObserve/datav/otel-collector/processor/signoztailsampler"
+	"github.com/DataObserve/datav/otel-collector/processor/datavspanmetricsprocessor"
+	"github.com/DataObserve/datav/otel-collector/processor/datavtailsampler"
 	"github.com/DataObserve/datav/otel-collector/receiver/httpreceiver"
 )
 
@@ -239,13 +239,13 @@ func Components() (otelcol.Factories, error) {
 		routingprocessor.NewFactory(),
 		schemaprocessor.NewFactory(),
 		servicegraphprocessor.NewFactory(),
-		signozspanmetricsprocessor.NewFactory(),
+		datavspanmetricsprocessor.NewFactory(),
 		spanmetricsprocessor.NewFactory(),
 		spanprocessor.NewFactory(),
 		tailsamplingprocessor.NewFactory(),
 		transformprocessor.NewFactory(),
 		logstransformprocessor.NewFactory(),
-		signoztailsampler.NewFactory(),
+		datavtailsampler.NewFactory(),
 	}
 	for _, pr := range factories.Processors {
 		processors = append(processors, pr)

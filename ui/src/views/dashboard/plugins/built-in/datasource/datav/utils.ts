@@ -232,7 +232,6 @@ export const spanTreeToList = (span: TraceSpan, totalSpans: TraceSpan[]) => {
 
 
 export const queryPluginDataToTraceChart = (chart: QueryPluginData) => {
-    console.log("here333333",chart)
     const chartColumns = ["ts_bucket", "others", "errors"]
     const chartData = []
     const chartDataMap = {}

@@ -101,7 +101,7 @@ func GetServiceInfoList(c *gin.Context, ds *models.Datasource, conn ch.Conn, par
 		FROM %s.%s
 		WHERE %s timestamp>= %d AND timestamp<= %d
 		GROUP BY serviceName`,
-		config.Data.Observability.DefaultTraceDB, datavmodels.DefaultIndexTable, serviceFilter, start, end)
+		config.Data.Observability.DefaultTraceDB, datavmodels.DefaultTraceIndexTable, serviceFilter, start, end)
 	args := []interface{}{}
 	args = append(args,
 		ch.Named("serviceNames", serviceNames),
@@ -135,7 +135,7 @@ func GetServiceInfoList(c *gin.Context, ds *models.Datasource, conn ch.Conn, par
 		FROM %s.%s
 		WHERE %s timestamp>= %d AND timestamp<= %d AND statusCode=2
 		GROUP BY serviceName`,
-		config.Data.Observability.DefaultTraceDB, datavmodels.DefaultIndexTable, serviceFilter, start, end)
+		config.Data.Observability.DefaultTraceDB, datavmodels.DefaultTraceIndexTable, serviceFilter, start, end)
 
 	rows, err = conn.Query(c.Request.Context(), query, args...)
 	if err != nil {

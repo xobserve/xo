@@ -23,8 +23,8 @@ const panelComponents: PanelPluginComponents = {
             },
             chart: {
                 height: 100,
-                type: "line",
-                stack: true,
+                type: "bar",
+                stack: false,
                 left: 1,
                 right: 3,
                 top: 6,

@@ -15,13 +15,16 @@
 package clickhousetracesexporter
 
 import (
+	"errors"
+
 	"go.opentelemetry.io/collector/component"
+	"go.uber.org/multierr"
 )
 
 // Config defines configuration for tracing exporter.
 type Config struct {
 	Options    `mapstructure:",squash"`
-	Datasource string `mapstructure:"datasource"`
+	DSN        string `mapstructure:"dsn"`
 	Migrations string `mapstructure:"migrations"`
 	// Docker Multi Node Cluster is a flag to enable the docker multi node cluster. Default is false.
 	DockerMultiNodeCluster bool `mapstructure:"docker_multi_node_cluster"`
@@ -31,7 +34,14 @@ type Config struct {
 
 var _ component.Config = (*Config)(nil)
 
-// Validate checks if the exporter configuration is valid
-func (cfg *Config) Validate() error {
-	return nil
+var (
+	errConfigNoDSN = errors.New("dsn must be specified")
+)
+
+// Validate validates the clickhouse server configuration.
+func (cfg *Config) Validate() (err error) {
+	if cfg.DSN == "" {
+		err = multierr.Append(err, errConfigNoDSN)
+	}
+	return err
 }

@@ -374,7 +374,7 @@ func (w *SpanWriter) writeModelBatch(batchSpans []*Span) error {
 		return err
 	}
 	for k, v := range metrics {
-		stats.RecordWithTags(ctx, []tag.Mutator{tag.Upsert(usage.TagTenantKey, k)}, ExporterSigNozSentSpans.M(int64(v.Count)), ExporterSigNozSentSpansBytes.M(int64(v.Size)))
+		stats.RecordWithTags(ctx, []tag.Mutator{tag.Upsert(usage.TagTenantKey, k)}, ExporterSentSpans.M(int64(v.Count)), ExporterSentSpansBytes.M(int64(v.Size)))
 	}
 
 	return nil

@@ -25,25 +25,19 @@ import (
 )
 
 const (
-	defaultDatasource               string   = "tcp://127.0.0.1:9000/?database=signoz_traces"
-	DefaultTraceDatabase            string   = "signoz_traces"
-	defaultMigrations               string   = "/migrations"
-	defaultOperationsTable          string   = "distributed_signoz_operations"
-	DefaultIndexTable               string   = "distributed_signoz_index_v2"
-	LocalIndexTable                 string   = "signoz_index_v2"
-	defaultErrorTable               string   = "distributed_signoz_error_index_v2"
-	defaultSpansTable               string   = "distributed_signoz_spans"
-	defaultAttributeTable           string   = "distributed_span_attributes"
-	defaultAttributeKeyTable        string   = "distributed_span_attributes_keys"
-	DefaultDurationSortTable        string   = "durationSort"
-	DefaultDurationSortMVTable      string   = "durationSortMV"
-	defaultArchiveSpansTable        string   = "signoz_archive_spans"
-	defaultClusterName              string   = "cluster"
-	defaultDependencyGraphTable     string   = "dependency_graph_minutes"
-	defaultDependencyGraphServiceMV string   = "dependency_graph_minutes_service_calls_mv"
-	defaultDependencyGraphDbMV      string   = "dependency_graph_minutes_db_calls_mv"
-	DependencyGraphMessagingMV      string   = "dependency_graph_minutes_messaging_calls_mv"
-	defaultEncoding                 Encoding = EncodingJSON
+	DefaultTraceDatabase         string = "datav_traces"
+	DefaultClusterName           string = "cluster"
+	DefaultTraceDatasource       string = "tcp://127.0.0.1:9000/?database=datav_traces"
+	DefaultIndexTable            string = "distributed_trace_index"
+	DefaultTraceErrorTable       string = "distributed_trace_error_index"
+	DefaultTraceSpansTable       string = "distributed_trace_spans"
+	DefaultSpanAttributeTable    string = "distributed_span_attributes"
+	DefaultSpanAttributeKeyTable string = "distributed_span_attributes_keys"
+	DefaultDurationSortTable     string = "trcae_durationSort"
+	DefaultArchiveSpansTable     string = "archive_spans"
+
+	DefaultDependencyGraphTable string   = "dependency_graph_minutes"
+	defaultEncoding             Encoding = EncodingJSON
 )
 
 const (
@@ -59,28 +53,20 @@ const (
 
 // NamespaceConfig is Clickhouse's internal configuration data
 type namespaceConfig struct {
-	namespace                  string
-	Enabled                    bool
-	Datasource                 string
-	Migrations                 string
-	TraceDatabase              string
-	OperationsTable            string
-	IndexTable                 string
-	LocalIndexTable            string
-	SpansTable                 string
-	ErrorTable                 string
-	AttributeTable             string
-	AttributeKeyTable          string
-	Cluster                    string
-	DurationSortTable          string
-	DurationSortMVTable        string
-	DependencyGraphServiceMV   string
-	DependencyGraphDbMV        string
-	DependencyGraphMessagingMV string
-	DependencyGraphTable       string
-	DockerMultiNodeCluster     bool
-	Encoding                   Encoding
-	Connector                  Connector
+	namespace              string
+	Enabled                bool
+	Datasource             string
+	TraceDatabase          string
+	IndexTable             string
+	SpansTable             string
+	ErrorTable             string
+	AttributeTable         string
+	AttributeKeyTable      string
+	Cluster                string
+	DurationSortTable      string
+	DockerMultiNodeCluster bool
+	Encoding               Encoding
+	Connector              Connector
 }
 
 // Connecto defines how to connect to the database
@@ -124,38 +110,26 @@ type Options struct {
 
 // NewOptions creates a new Options struct.
 func NewOptions(migrations string, datasource string, dockerMultiNodeCluster bool, primaryNamespace string, otherNamespaces ...string) *Options {
-
 	if datasource == "" {
-		datasource = defaultDatasource
-	}
-	if migrations == "" {
-		migrations = defaultMigrations
+		datasource = DefaultTraceDatasource
 	}
 
 	options := &Options{
 		primary: &namespaceConfig{
-			namespace:                  primaryNamespace,
-			Enabled:                    true,
-			Datasource:                 datasource,
-			Migrations:                 migrations,
-			TraceDatabase:              DefaultTraceDatabase,
-			OperationsTable:            defaultOperationsTable,
-			IndexTable:                 DefaultIndexTable,
-			LocalIndexTable:            LocalIndexTable,
-			ErrorTable:                 defaultErrorTable,
-			SpansTable:                 defaultSpansTable,
-			AttributeTable:             defaultAttributeTable,
-			AttributeKeyTable:          defaultAttributeKeyTable,
-			DurationSortTable:          DefaultDurationSortTable,
-			DurationSortMVTable:        DefaultDurationSortMVTable,
-			Cluster:                    defaultClusterName,
-			DependencyGraphTable:       defaultDependencyGraphTable,
-			DependencyGraphServiceMV:   defaultDependencyGraphServiceMV,
-			DependencyGraphDbMV:        defaultDependencyGraphDbMV,
-			DependencyGraphMessagingMV: DependencyGraphMessagingMV,
-			DockerMultiNodeCluster:     dockerMultiNodeCluster,
-			Encoding:                   defaultEncoding,
-			Connector:                  defaultConnector,
+			namespace:              primaryNamespace,
+			Enabled:                true,
+			Datasource:             datasource,
+			TraceDatabase:          DefaultTraceDatabase,
+			IndexTable:             DefaultIndexTable,
+			ErrorTable:             DefaultTraceErrorTable,
+			SpansTable:             DefaultTraceSpansTable,
+			AttributeTable:         DefaultSpanAttributeTable,
+			AttributeKeyTable:      DefaultSpanAttributeKeyTable,
+			DurationSortTable:      DefaultDurationSortTable,
+			Cluster:                DefaultClusterName,
+			DockerMultiNodeCluster: dockerMultiNodeCluster,
+			Encoding:               defaultEncoding,
+			Connector:              defaultConnector,
 		},
 		others: make(map[string]*namespaceConfig, len(otherNamespaces)),
 	}
@@ -163,14 +137,12 @@ func NewOptions(migrations string, datasource string, dockerMultiNodeCluster boo
 	for _, namespace := range otherNamespaces {
 		if namespace == archiveNamespace {
 			options.others[namespace] = &namespaceConfig{
-				namespace:       namespace,
-				Datasource:      datasource,
-				Migrations:      migrations,
-				OperationsTable: "",
-				IndexTable:      "",
-				SpansTable:      defaultArchiveSpansTable,
-				Encoding:        defaultEncoding,
-				Connector:       defaultConnector,
+				namespace:  namespace,
+				Datasource: datasource,
+				IndexTable: "",
+				SpansTable: DefaultArchiveSpansTable,
+				Encoding:   defaultEncoding,
+				Connector:  defaultConnector,
 			}
 		} else {
 			options.others[namespace] = &namespaceConfig{namespace: namespace}
@@ -202,20 +174,6 @@ func addFlags(flagSet *flag.FlagSet, nsConfig *namespaceConfig) {
 		"Clickhouse datasource string.",
 	)
 
-	if nsConfig.namespace != archiveNamespace {
-		flagSet.String(
-			nsConfig.namespace+suffixOperationsTable,
-			nsConfig.OperationsTable,
-			"Clickhouse operations table name.",
-		)
-
-		flagSet.String(
-			nsConfig.namespace+suffixIndexTable,
-			nsConfig.IndexTable,
-			"Clickhouse index table name.",
-		)
-	}
-
 	flagSet.String(
 		nsConfig.namespace+suffixSpansTable,
 		nsConfig.SpansTable,
@@ -243,7 +201,6 @@ func initFromViper(cfg *namespaceConfig, v *viper.Viper) {
 	cfg.TraceDatabase = v.GetString(cfg.namespace + suffixTraceDatabase)
 	cfg.IndexTable = v.GetString(cfg.namespace + suffixIndexTable)
 	cfg.SpansTable = v.GetString(cfg.namespace + suffixSpansTable)
-	cfg.OperationsTable = v.GetString(cfg.namespace + suffixOperationsTable)
 	cfg.Encoding = Encoding(v.GetString(cfg.namespace + suffixEncoding))
 }
 

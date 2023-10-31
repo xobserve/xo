@@ -31,8 +31,6 @@ const (
 	typeStr          = "clickhouselogsexporter"
 	primaryNamespace = "clickhouselogs"
 	archiveNamespace = "clickhouselogs-archive"
-	databaseName     = "signoz_logs"
-	tableName        = "logs"
 	migrationsFolder = "./migrations"
 )
 

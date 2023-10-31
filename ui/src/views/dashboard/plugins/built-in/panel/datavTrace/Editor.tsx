@@ -22,6 +22,7 @@ import { dispatch } from "use-bus";
 import { PanelForceRebuildEvent } from "src/data/bus-events";
 import { ClickActionsEditor } from "src/views/dashboard/edit-panel/components/ClickActionsEditor";
 import { PanelType, TraceEditorProps, TracePanel as Panel } from "./types";
+import { ErrorOkChartEditor } from "../../../components/charts/ErrorOkChart";
 
 const TracePanelEditor = ({ panel, onChange }: TraceEditorProps) => {
     const t = useStore(commonMsg)
@@ -52,6 +53,7 @@ const TracePanelEditor = ({ panel, onChange }: TraceEditorProps) => {
                 })
             }} actions={panel.plugins[PanelType].interaction.actions} />}
         </PanelAccordion>
+        <ErrorOkChartEditor panel={panel} panelType={PanelType} onChange={onChange}/>
     </>
 
     )

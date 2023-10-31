@@ -1,4 +1,4 @@
-CREATE TABLE signoz_traces.signoz_index_v2
+CREATE TABLE datav_traces.trace_index
 (
     `startTime` UInt64 CODEC(DoubleDelta, LZ4),
     `duration` UInt64 CODEC(T64, ZSTD(1)),
@@ -62,10 +62,10 @@ ORDER BY (startTime, tenantId, environment, serviceName, name)
 TTL toDateTime(startTime / 1000000000) + INTERVAL 1296000 SECOND DELETE
 SETTINGS index_granularity = 8192, ttl_only_drop_parts = 1
 
-CREATE TABLE IF NOT EXISTS signoz_traces.distributed_signoz_index_v2 ON CLUSTER cluster AS signoz_traces.signoz_index_v2
-ENGINE = Distributed("cluster", "signoz_traces", signoz_index_v2, cityHash64(traceId));
+CREATE TABLE IF NOT EXISTS datav_traces.distributed_trace_index ON CLUSTER cluster AS datav_traces.trace_index
+ENGINE = Distributed("cluster", "datav_traces", trace_index, cityHash64(traceId));
 
-CREATE TABLE span_attributes
+CREATE TABLE datav_traces.span_attributes
 (
     `startTime` UInt64 CODEC(DoubleDelta, LZ4),
     `tagKey` LowCardinality(String) CODEC(ZSTD(1)),
@@ -80,10 +80,10 @@ ORDER BY (tagKey, tagType, dataType, stringTagValue, float64TagValue, isColumn)
 TTL toDateTime(startTime / 1000000000)  + toIntervalSecond(172800)
 SETTINGS ttl_only_drop_parts = 1, allow_nullable_key = 1, index_granularity = 8192
 
-CREATE TABLE IF NOT EXISTS signoz_traces.distributed_span_attributes ON CLUSTER cluster AS signoz_traces.span_attributes
-ENGINE = Distributed("cluster", "signoz_traces", span_attributes, cityHash64(rand()));
+CREATE TABLE IF NOT EXISTS datav_traces.distributed_span_attributes ON CLUSTER cluster AS datav_traces.span_attributes
+ENGINE = Distributed("cluster", "datav_traces", span_attributes, cityHash64(rand()));
 
-CREATE TABLE signoz_traces.signoz_spans
+CREATE TABLE datav_traces.trace_spans
 (
     `startTime` UInt64 CODEC(DoubleDelta, LZ4),
     `traceId` FixedString(32) CODEC(ZSTD(1)),
@@ -95,65 +95,101 @@ ORDER BY traceId
 TTL toDateTime(startTime / 1000000000)  + toIntervalSecond(604800)
 SETTINGS index_granularity = 1024, ttl_only_drop_parts = 1
 
-CREATE TABLE IF NOT EXISTS signoz_traces.distributed_signoz_spans ON CLUSTER cluster AS signoz_traces.signoz_spans
-ENGINE = Distributed("cluster", "signoz_traces", signoz_spans, cityHash64(traceId));
+CREATE TABLE IF NOT EXISTS datav_traces.distributed_trace_spans ON CLUSTER cluster AS datav_traces.trace_spans
+ENGINE = Distributed("cluster", "datav_traces", trace_spans, cityHash64(traceId));
 
-CREATE MATERIALIZED VIEW IF NOT EXISTS signoz_traces.usage_explorer_mv ON CLUSTER cluster
-TO signoz_traces.usage_explorer
+CREATE TABLE datav_traces.top_level_operations
+(
+    `name` LowCardinality(String) CODEC(ZSTD(1)),
+    `serviceName` LowCardinality(String) CODEC(ZSTD(1))
+)
+ENGINE = ReplacingMergeTree
+ORDER BY (serviceName, name)
+SETTINGS index_granularity = 8192
+
+CREATE TABLE IF NOT EXISTS datav_traces.distributed_top_level_operations ON CLUSTER cluster AS datav_traces.top_level_operations
+ENGINE = Distributed("cluster", "datav_traces", top_level_operations, cityHash64(rand()));
+
+CREATE MATERIALIZED VIEW IF NOT EXISTS datav_traces.usage_explorer_mv ON CLUSTER cluster
+TO datav_traces.usage_explorer
 AS SELECT
   toStartOfHour(toDateTime(startTime)) as timestamp,
   serviceName as service_name,
   count() as count
-FROM signoz_traces.signoz_index_v2
+FROM datav_traces.trace_index
 GROUP BY timestamp, serviceName;
 
 
-CREATE MATERIALIZED VIEW IF NOT EXISTS signoz_traces.sub_root_operations ON CLUSTER cluster
-TO signoz_traces.top_level_operations
+CREATE MATERIALIZED VIEW IF NOT EXISTS datav_traces.sub_root_operations_mv ON CLUSTER cluster
+TO datav_traces.top_level_operations
 AS SELECT DISTINCT
     name,
     serviceName
-FROM signoz_traces.signoz_index_v2 AS A, signoz_traces.signoz_index_v2 AS B
+FROM datav_traces.trace_index AS A, datav_traces.trace_index AS B
 WHERE (A.serviceName != B.serviceName) AND (A.parentId = B.spanId);
 
-CREATE MATERIALIZED VIEW IF NOT EXISTS signoz_traces.root_operations ON CLUSTER cluster
-TO signoz_traces.top_level_operations
+CREATE MATERIALIZED VIEW IF NOT EXISTS datav_traces.root_operations_mv ON CLUSTER cluster
+TO datav_traces.top_level_operations
 AS SELECT DISTINCT
     name,
     serviceName
-FROM signoz_traces.signoz_index_v2
+FROM datav_traces.trace_index
 WHERE parentId = '';
 
 
+CREATE TABLE datav_traces.usage_explorer
+(
+    `timestamp` DateTime64(9) CODEC(DoubleDelta, LZ4),
+    `service_name` LowCardinality(String) CODEC(ZSTD(1)),
+    `count` UInt64 CODEC(T64, ZSTD(1))
+)
+ENGINE = SummingMergeTree
+PARTITION BY toDate(timestamp)
+ORDER BY (timestamp, service_name)
+TTL toDateTime(timestamp) + toIntervalSecond(604800)
+SETTINGS index_granularity = 8192, ttl_only_drop_parts = 1
 
-CREATE MATERIALIZED VIEW IF NOT EXISTS signoz_traces.durationSortMV ON CLUSTER cluster
-TO signoz_traces.durationSort
-AS SELECT
-  startTime,
-  traceId,
-  spanId,
-  parentId,
-  serviceName,
-  name,
-  kind,
-  duration,
-  statusCode,
-  component,
-  httpMethod,
-  httpUrl,
-  httpCode,
-  httpRoute,
-  httpHost,
-  gRPCMethod,
-  gRPCCode,
-  hasError,
-  rpcSystem,
-  rpcService,
-  rpcMethod,
-  responseStatusCode,
-  attributesMap,
-  stringAttributesMap,
-  numberAttributesMap,
-  boolAttributesMap
-FROM signoz_traces.signoz_index_v2
-ORDER BY duration, startTime;
+CREATE TABLE IF NOT EXISTS datav_traces.distributed_usage_explorer ON CLUSTER cluster AS datav_traces.usage_explorer
+ENGINE = Distributed("cluster", "datav_traces", usage_explorer, cityHash64(rand()));
+
+
+CREATE TABLE datav_traces.trace_error_index
+(
+    `timestamp` DateTime64(9) CODEC(DoubleDelta, LZ4),
+    `errorID` FixedString(32) CODEC(ZSTD(1)),
+    `groupID` FixedString(32) CODEC(ZSTD(1)),
+    `traceID` FixedString(32) CODEC(ZSTD(1)),
+    `spanID` String CODEC(ZSTD(1)),
+    `serviceName` LowCardinality(String) CODEC(ZSTD(1)),
+    `exceptionType` LowCardinality(String) CODEC(ZSTD(1)),
+    `exceptionMessage` String CODEC(ZSTD(1)),
+    `exceptionStacktrace` String CODEC(ZSTD(1)),
+    `exceptionEscaped` Bool CODEC(T64, ZSTD(1)),
+    `resourceTagsMap` Map(LowCardinality(String), String) CODEC(ZSTD(1)),
+    INDEX idx_error_id errorID TYPE bloom_filter GRANULARITY 4,
+    INDEX idx_resourceTagsMapKeys mapKeys(resourceTagsMap) TYPE bloom_filter(0.01) GRANULARITY 64,
+    INDEX idx_resourceTagsMapValues mapValues(resourceTagsMap) TYPE bloom_filter(0.01) GRANULARITY 64
+)
+ENGINE = MergeTree
+PARTITION BY toDate(timestamp)
+ORDER BY (timestamp, groupID)
+TTL toDateTime(timestamp) + toIntervalSecond(604800)
+SETTINGS index_granularity = 8192, ttl_only_drop_parts = 1
+
+CREATE TABLE IF NOT EXISTS datav_traces.distributed_trace_error_index ON CLUSTER cluster AS datav_traces.trace_error_index
+ENGINE = Distributed("cluster", "datav_traces", trace_error_index, cityHash64(groupID));
+
+
+CREATE TABLE datav_traces.span_attributes_keys
+(
+    `tagKey` LowCardinality(String) CODEC(ZSTD(1)),
+    `tagType` Enum8('tag' = 1, 'resource' = 2) CODEC(ZSTD(1)),
+    `dataType` Enum8('string' = 1, 'bool' = 2, 'float64' = 3) CODEC(ZSTD(1)),
+    `isColumn` Bool CODEC(ZSTD(1))
+)
+ENGINE = ReplacingMergeTree
+ORDER BY (tagKey, tagType, dataType, isColumn)
+SETTINGS index_granularity = 8192
+
+CREATE TABLE IF NOT EXISTS datav_traces.distributed_span_attributes_keys ON CLUSTER cluster AS datav_traces.span_attributes_keys
+ENGINE = Distributed("cluster", "datav_traces", span_attributes_keys, cityHash64(rand()));

@@ -41,7 +41,7 @@ func newExporter(cfg component.Config, logger *zap.Logger) (*storage, error) {
 
 	configClickHouse := cfg.(*Config)
 
-	f := ClickHouseNewFactory(configClickHouse.Migrations, configClickHouse.Datasource, configClickHouse.DockerMultiNodeCluster)
+	f := ClickHouseNewFactory(configClickHouse.Migrations, configClickHouse.DSN, configClickHouse.DockerMultiNodeCluster)
 
 	err := f.Initialize(logger)
 	if err != nil {
@@ -55,7 +55,7 @@ func newExporter(cfg component.Config, logger *zap.Logger) (*storage, error) {
 	collector := usage.NewUsageCollector(
 		f.db,
 		usage.Options{ReportingInterval: usage.DefaultCollectionInterval},
-		"signoz_traces",
+		"datav_traces",
 		UsageExporter,
 	)
 	if err != nil {

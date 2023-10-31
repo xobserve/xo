@@ -31,7 +31,6 @@ func main() {
 
 	f.String("config", "", "File path for the collector configuration")
 	f.String("manager-config", "", "File path for the agent manager configuration")
-	f.String("copy-path", "/etc/otel/signozcol-config.yaml", "File path for the copied collector configuration")
 	f.Var(datavFeatureGate.NewFlag(otelcolFeatureGate.GlobalRegistry()), "feature-gates",
 		"Comma-delimited list of feature gate identifiers. Prefix with '-' to disable the feature. '+' or no prefix will enable the feature.")
 	err := f.Parse(os.Args[1:])

@@ -32,13 +32,13 @@ const TraceCard = ({ trace, maxDuration,checked=false, onChecked=null,simple=fal
     const colorGenerator =  new ColorGenerator(colors1)
 
     return (<Box width="100%" borderRadius="0" cursor="pointer"  onClick={onClick} fontSize={isLargeScreen ? "sm" : "xs"}>
-        <Box width="100%" position="relative" className="label-bg">
+        <Box width="100%" position="relative" >
             <HStack spacing={0} py="2px">
                 {onChecked && <Flex alignItems="center" px="2" zIndex={2}  onClick={e => {
                     e.stopPropagation(); 
-                }}><Checkbox size="sm" defaultChecked={checked} isChecked={checked} isDisabled={checkDisabled} bg={useColorModeValue("white", customColors.bodyBg.dark)} onChange={e =>  onChecked(trace.traceID)  }/></Flex>}
-                <Box width={`${(trace.duration / maxDuration) * 100}%`} className="tag-bg" height="100%" position="absolute" top="0"></Box>
-                <Flex color={customColors.textColor.light} alignItems="center" width="100%" justifyContent="space-between" position="relative" pr="2" >
+                }}><Checkbox size="sm" defaultChecked={checked} isChecked={checked} isDisabled={checkDisabled}  onChange={e =>  onChecked(trace.traceID)  }/></Flex>}
+                <Box width={`${(trace.duration / maxDuration) * 100}%`} bg={useColorModeValue('#f5f7fa', 'rgba(255,255,255,0.07)')} height="100%" position="absolute" top="0"></Box>
+                <Flex  alignItems="center" width="100%" justifyContent="space-between" position="relative" pr="2" >
                     <Flex flexDir={isLargeScreen ? "row" : "column"} gap={isLargeScreen ? 1 : 0}>
                         <Text>{trace.traceName}</Text>
                         <Text opacity="0.7">{getShortTraceId(trace.traceID)}</Text>
@@ -50,7 +50,7 @@ const TraceCard = ({ trace, maxDuration,checked=false, onChecked=null,simple=fal
         <Flex flexDir={isLargeScreen ? "row" : "column"} alignItems={isLargeScreen ? "center" : "start"} width="100%" justifyContent={isLargeScreen ? "space-between"  : null} pt={isLargeScreen ? 2 : 2} pb={isLargeScreen ? 4 : 3} px={isLargeScreen ? 2 : 1}>
             <Box>
                 <HStack alignItems="top">
-                    <Tag size="md" variant="subtle" colorScheme="gray" bg="transparent" fontSize="0.9em">{trace.services.reduce((t,e)=>e.numberOfSpans,0)} Spans</Tag>
+                    <Tag size="md" variant="subtle" colorScheme="gray" bg="transparent" fontSize="0.9em">{trace.services.reduce((t,e)=>e.numberOfSpans + t,0)} Spans</Tag>
                     <Tag size="md" variant="subtle" colorScheme="gray" bg="transparent"  fontSize="0.9em">{Object.keys(trace.services).length} Services</Tag>
                     {trace.errorsCount > 0 && <Tag size="sm" variant="subtle" colorScheme="gray" bg="transparent" color={paletteColorNameToHex(palettes[15])}  fontSize="0.9em">{trace.errorsCount} Errors</Tag>}
                   

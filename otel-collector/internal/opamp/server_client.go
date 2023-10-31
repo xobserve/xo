@@ -99,7 +99,7 @@ func (s *serverClient) createAgentDescription() *protobufs.AgentDescription {
 	// Create Agent description.
 	return &protobufs.AgentDescription{
 		IdentifyingAttributes: []*protobufs.KeyValue{
-			keyVal("service.name", "signoz-otel-collector"),
+			keyVal("service.name", "datav-otel-collector"),
 			keyVal("service.version", constants.Version),
 		},
 		NonIdentifyingAttributes: []*protobufs.KeyValue{

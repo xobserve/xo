@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS signoz_traces.dependency_graph_minutes_v2 ON CLUSTER cluster (
+CREATE TABLE IF NOT EXISTS datav_traces.dependency_graph_minutes ON CLUSTER cluster (
     src LowCardinality(String) CODEC(ZSTD(1)),
     dest LowCardinality(String) CODEC(ZSTD(1)),
     duration_quantiles_state AggregateFunction(quantiles(0.5, 0.75, 0.9, 0.95, 0.99), Float64) CODEC(Default),
@@ -14,8 +14,8 @@ ORDER BY (timestamp, src, dest, environment, cluster, namespace)
 TTL toDateTime(timestamp) + INTERVAL 1296000 SECOND DELETE;
 
 
-CREATE MATERIALIZED VIEW IF NOT EXISTS signoz_traces.dependency_graph_minutes_service_calls_mv_v2 ON CLUSTER cluster
-TO signoz_traces.dependency_graph_minutes_v2 AS
+CREATE MATERIALIZED VIEW IF NOT EXISTS datav_traces.dependency_graph_minutes_service_calls_mv ON CLUSTER cluster
+TO datav_traces.dependency_graph_minutes AS
 SELECT
     A.serviceName as src,
     B.serviceName as dest,
@@ -26,12 +26,12 @@ SELECT
     B.resourcesMap['environment'] as environment,
     B.resourcesMap['cluster'] as cluster,
     B.resourcesMap['namespace'] as namespace
-FROM signoz_traces.signoz_index_v2 AS A, signoz_traces.signoz_index_v2 AS B
+FROM datav_traces.trace_index AS A, datav_traces.trace_index AS B
 WHERE (A.serviceName != B.serviceName) AND (A.spanId = B.parentId)
 GROUP BY timestamp, src, dest, environment, cluster, namespace;
 
-CREATE MATERIALIZED VIEW IF NOT EXISTS signoz_traces.dependency_graph_minutes_db_calls_mv_v2 ON CLUSTER cluster
-TO signoz_traces.dependency_graph_minutes_v2 AS
+CREATE MATERIALIZED VIEW IF NOT EXISTS datav_traces.dependency_graph_minutes_db_calls_mv ON CLUSTER cluster
+TO datav_traces.dependency_graph_minutes AS
 SELECT
     serviceName as src,
     attributesMap['db.system'] as dest,
@@ -42,12 +42,12 @@ SELECT
     resourcesMap['environment'] as environment,
     resourcesMap['cluster'] as cluster,
     resourcesMap['namespace'] as namespace
-FROM signoz_traces.signoz_index_v2
+FROM datav_traces.trace_index
 WHERE dest != '' and kind != 2
 GROUP BY timestamp, src, dest,  environment, cluster, namespace;
 
-CREATE MATERIALIZED VIEW IF NOT EXISTS signoz_traces.dependency_graph_minutes_messaging_calls_mv_v2 ON CLUSTER cluster
-TO signoz_traces.dependency_graph_minutes_v2 AS
+CREATE MATERIALIZED VIEW IF NOT EXISTS datav_traces.dependency_graph_minutes_messaging_calls_mv ON CLUSTER cluster
+TO datav_traces.dependency_graph_minutes AS
 SELECT
     serviceName as src,
     attributesMap['messaging.system'] as dest,
@@ -58,9 +58,9 @@ SELECT
     resourcesMap['environment'] as environment,
     resourcesMap['cluster'] as cluster,
     resourcesMap['namespace'] as namespace
-FROM signoz_traces.signoz_index_v2
+FROM datav_traces.trace_index
 WHERE dest != '' and kind != 2
 GROUP BY timestamp, src, dest,  environment, cluster, namespace;
 
-CREATE TABLE IF NOT EXISTS signoz_traces.distributed_dependency_graph_minutes_v2 ON CLUSTER cluster AS signoz_traces.dependency_graph_minutes_v2
-ENGINE = Distributed("cluster", "signoz_traces", dependency_graph_minutes_v2, cityHash64(rand()));
+CREATE TABLE IF NOT EXISTS datav_traces.distributed_dependency_graph_minutes ON CLUSTER cluster AS datav_traces.dependency_graph_minutes
+ENGINE = Distributed("cluster", "datav_traces", dependency_graph_minutes, cityHash64(rand()));

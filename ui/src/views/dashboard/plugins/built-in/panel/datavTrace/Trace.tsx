@@ -97,6 +97,7 @@ const TracePanel = (props: PanelProps) => {
 
                 const res = await dsPlugin.runQuery(panel, query, props.timeRange, ds, { tags, min, max, limit, service: services, operation: operations })
                 setTraces(transformTraces(res.data.traces))
+                console.log("here333333:",res.data.traces)
                 setTraceChart(res.data.chart)
                 break;
             case DatasourceTypeTestData:
@@ -135,7 +136,7 @@ const TracePanel = (props: PanelProps) => {
 
                     <CustomScrollbar>
                        
-                        {traces && panel.plugins[PanelType].chart && <TraceSearchResult traces={traces} panel={props.panel} dashboardId={props.dashboardId} teamId={props.teamId} timeRange={props.timeRange} height={resultHeight} traceChart={traceChart} traceChartOptions={panel.plugins[PanelType].chart}/>}
+                        {traces && panel.plugins[PanelType].chart && <TraceSearchResult traces={traces} panel={props.panel} dashboardId={props.dashboardId} teamId={props.teamId} timeRange={props.timeRange} height={resultHeight} traceChart={traceChart} traceChartOptions={panel.plugins[PanelType].chart} />}
                     </CustomScrollbar>
                 </Box>
             </HStack>}

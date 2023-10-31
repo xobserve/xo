@@ -34,9 +34,9 @@ func GetTraces(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[s
 
 	var query string
 	if traceIds != "" {
-		query = fmt.Sprintf("SELECT startTime,traceId,name,duration,responseStatusCode FROM signoz_traces.distributed_signoz_index_v2 WHERE traceId in ('%s') AND parentId=''", strings.Join(strings.Split(traceIds, ","), "','"))
+		query = fmt.Sprintf("SELECT startTime,traceId,name,duration,responseStatusCode FROM %s.%s WHERE traceId in ('%s') AND parentId=''", config.Data.Observability.DefaultTraceDB, datavmodels.DefaultTraceIndexTable, strings.Join(strings.Split(traceIds, ","), "','"))
 	} else {
-		query = fmt.Sprintf("SELECT startTime,traceId,name,duration,responseStatusCode FROM signoz_traces.distributed_signoz_index_v2 WHERE startTime >= %d AND startTime <= %d %s AND parentId='' ORDER BY startTime DESC limit 20", start*1e9, end*1e9, domainQuery)
+		query = fmt.Sprintf("SELECT startTime,traceId,name,duration,responseStatusCode FROM %s.%s WHERE startTime >= %d AND startTime <= %d %s AND parentId='' ORDER BY startTime DESC limit 20", config.Data.Observability.DefaultTraceDB, datavmodels.DefaultTraceIndexTable, start*1e9, end*1e9, domainQuery)
 
 	}
 	// query traceIDs
@@ -65,7 +65,7 @@ func GetTraces(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[s
 	logger.Info("Query trace ids", "query", query)
 
 	// query extra trace info
-	query = fmt.Sprintf("select traceId,serviceName,hasError,count(spanId) from signoz_traces.signoz_index_v2 where traceId in ('%s') GROUP by traceId,serviceName,hasError", strings.Join(traceIDList, "','"))
+	query = fmt.Sprintf("select traceId,serviceName,hasError,count(spanId) from %s.%s where traceId in ('%s') GROUP by traceId,serviceName,hasError", config.Data.Observability.DefaultTraceDB, datavmodels.DefaultTraceIndexTable, strings.Join(traceIDList, "','"))
 	rows, err = conn.Query(c.Request.Context(), query)
 	if err != nil {
 		logger.Warn("Error Query logs", "query", query, "error", err)
@@ -138,7 +138,7 @@ func GetTraces(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[s
 	var res1 *models.PluginResultData
 	if traceIds == "" {
 		// query metrics
-		metricsQuery := fmt.Sprintf("SELECT toStartOfInterval(fromUnixTimestamp64Nano(startTime), INTERVAL %d SECOND) AS ts_bucket, hasError, count(DISTINCT traceId) as count from %s.%s where (startTime >= %d AND startTime <= %d %s) group by ts_bucket,hasError order by ts_bucket", step, config.Data.Observability.DefaultTraceDB, datavmodels.DefaultIndexTable, start*1e9, end*1e9, domainQuery)
+		metricsQuery := fmt.Sprintf("SELECT toStartOfInterval(fromUnixTimestamp64Nano(startTime), INTERVAL %d SECOND) AS ts_bucket, hasError, count(DISTINCT traceId) as count from %s.%s where (startTime >= %d AND startTime <= %d %s) group by ts_bucket,hasError order by ts_bucket", step, config.Data.Observability.DefaultTraceDB, datavmodels.DefaultTraceIndexTable, start*1e9, end*1e9, domainQuery)
 
 		rows, err = conn.Query(c.Request.Context(), metricsQuery)
 		if err != nil {
@@ -164,7 +164,7 @@ func GetTraces(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[s
 func GetTrace(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[string]interface{}) models.PluginResult {
 	traceID := strings.TrimSpace(c.Query("traceId"))
 
-	query := fmt.Sprintf("SELECT startTime, traceId, model FROM signoz_traces.distributed_signoz_spans WHERE traceId='%s'", traceID)
+	query := fmt.Sprintf("SELECT startTime, traceId, model FROM %s.%s WHERE traceId='%s'", config.Data.Observability.DefaultTraceDB, datavmodels.DefaultTraceSpansTable, traceID)
 	// query traceIDs
 	rows, err := conn.Query(c.Request.Context(), query)
 	if err != nil {

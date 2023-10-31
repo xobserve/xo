@@ -111,6 +111,6 @@ observability:
     ## you can collect metrics, traces and logs into Datav, and view them through observability plugins
     ## please visit https://datav.io/docs/observability for more info
     enable: true
-    default_trace_db: "signoz_traces"
-    default_metrics_db: "signoz_metrics"
-    default_log_db: "signoz_logs"
+    default_trace_db: "datav_traces"
+    default_metrics_db: "datav_metrics"
+    default_log_db: "datav_logs"

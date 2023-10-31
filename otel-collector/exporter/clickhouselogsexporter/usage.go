@@ -11,33 +11,33 @@ import (
 )
 
 const (
-	SigNozSentLogRecordsKey      = "singoz_sent_log_records"
-	SigNozSentLogRecordsBytesKey = "singoz_sent_log_records_bytes"
+	SentLogRecordsKey      = "singoz_sent_log_records"
+	SentLogRecordsBytesKey = "singoz_sent_log_records_bytes"
 )
 
 var (
 	// Measures for usage
-	ExporterSigNozSentLogRecords = stats.Int64(
-		SigNozSentLogRecordsKey,
-		"Number of signoz log records successfully sent to destination.",
+	ExporterSentLogRecords = stats.Int64(
+		SentLogRecordsKey,
+		"Number of datav log records successfully sent to destination.",
 		stats.UnitDimensionless)
-	ExporterSigNozSentLogRecordsBytes = stats.Int64(
-		SigNozSentLogRecordsBytesKey,
-		"Total size of signoz log records successfully sent to destination.",
+	ExporterSentLogRecordsBytes = stats.Int64(
+		SentLogRecordsBytesKey,
+		"Total size of datav log records successfully sent to destination.",
 		stats.UnitDimensionless)
 
 	// Views for usage
 	LogsCountView = &view.View{
-		Name:        "signoz_logs_count",
-		Measure:     ExporterSigNozSentLogRecords,
-		Description: "The number of logs exported to signoz",
+		Name:        "datav_logs_count",
+		Measure:     ExporterSentLogRecords,
+		Description: "The number of logs exported to datav",
 		Aggregation: view.Sum(),
 		TagKeys:     []tag.Key{usage.TagTenantKey},
 	}
 	LogsSizeView = &view.View{
-		Name:        "signoz_logs_bytes",
-		Measure:     ExporterSigNozSentLogRecordsBytes,
-		Description: "The size of logs exported to signoz",
+		Name:        "datav_logs_bytes",
+		Measure:     ExporterSentLogRecordsBytes,
+		Description: "The size of logs exported to datav",
 		Aggregation: view.Sum(),
 		TagKeys:     []tag.Key{usage.TagTenantKey},
 	}
@@ -46,7 +46,7 @@ var (
 func UsageExporter(metrics []*metricdata.Metric) (map[string]usage.Usage, error) {
 	data := map[string]usage.Usage{}
 	for _, metric := range metrics {
-		if strings.Contains(metric.Descriptor.Name, "signoz_logs_count") {
+		if strings.Contains(metric.Descriptor.Name, "datav_logs_count") {
 			for _, v := range metric.TimeSeries {
 				tenant := v.LabelValues[0].Value
 				if d, ok := data[tenant]; ok {
@@ -58,7 +58,7 @@ func UsageExporter(metrics []*metricdata.Metric) (map[string]usage.Usage, error)
 					}
 				}
 			}
-		} else if strings.Contains(metric.Descriptor.Name, "signoz_logs_bytes") {
+		} else if strings.Contains(metric.Descriptor.Name, "datav_logs_bytes") {
 			for _, v := range metric.TimeSeries {
 				tenant := v.LabelValues[0].Value
 				if d, ok := data[tenant]; ok {

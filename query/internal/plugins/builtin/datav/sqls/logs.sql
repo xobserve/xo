@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS signoz_logs.logs ON CLUSTER cluster  (
+CREATE TABLE IF NOT EXISTS datav_logs.logs ON CLUSTER cluster  (
 	timestamp UInt64 CODEC(DoubleDelta, LZ4),
 	observed_timestamp UInt64 CODEC(DoubleDelta, LZ4),
 	id String CODEC(ZSTD(1)),
@@ -37,52 +37,68 @@ ORDER BY (timestamp, environment, service)
 TTL toDateTime(timestamp / 1000000000) + INTERVAL 1296000 SECOND DELETE
 SETTINGS index_granularity = 8192, ttl_only_drop_parts = 1
 
+CREATE TABLE IF NOT EXISTS datav_logs.distributed_logs ON CLUSTER cluster  AS datav_logs.logs
+ENGINE = Distributed("cluster","datav_logs", logs, cityHash64(id));
 
-CREATE TABLE IF NOT EXISTS signoz_logs.logs_atrribute_keys ON CLUSTER cluster (
+
+CREATE TABLE IF NOT EXISTS datav_logs.logs_atrribute_keys ON CLUSTER cluster (
 name String,
 datatype String
 )ENGINE = ReplacingMergeTree
 ORDER BY (name, datatype);
 
+CREATE TABLE IF NOT EXISTS datav_logs.distributed_logs_atrribute_keys  ON CLUSTER cluster AS datav_logs.logs_atrribute_keys
+ENGINE = Distributed("cluster", "datav_logs", logs_atrribute_keys, cityHash64(datatype));
 
-
-CREATE TABLE IF NOT EXISTS signoz_logs.logs_resource_keys ON CLUSTER cluster (
+CREATE TABLE IF NOT EXISTS datav_logs.logs_resource_keys ON CLUSTER cluster (
 name String,
 datatype String
 )ENGINE = ReplacingMergeTree
 ORDER BY (name, datatype);
 
+CREATE TABLE IF NOT EXISTS datav_logs.distributed_logs_resource_keys  ON CLUSTER cluster AS datav_logs.logs_resource_keys
+ENGINE = Distributed("cluster", "datav_logs", logs_resource_keys, cityHash64(datatype));
 
-CREATE MATERIALIZED VIEW IF NOT EXISTS  atrribute_keys_string_final_mv ON CLUSTER cluster TO signoz_logs.logs_atrribute_keys AS
+CREATE TABLE IF NOT EXISTS datav_logs.log_tag_attributes ON CLUSTER cluster (
+    timestamp DateTime CODEC(ZSTD(1)), 
+    tagKey LowCardinality(String) CODEC(ZSTD(1)),
+    tagType Enum('tag', 'resource') CODEC(ZSTD(1)),
+    tagDataType Enum('string', 'bool', 'int64', 'float64') CODEC(ZSTD(1)),
+    stringTagValue String CODEC(ZSTD(1)),
+    int64TagValue Nullable(Int64) CODEC(ZSTD(1)),
+    float64TagValue Nullable(Float64) CODEC(ZSTD(1))
+) ENGINE ReplacingMergeTree
+ORDER BY (tagKey, tagType, tagDataType, stringTagValue, int64TagValue, float64TagValue)
+TTL toDateTime(timestamp) + INTERVAL 172800 SECOND DELETE
+SETTINGS ttl_only_drop_parts = 1, allow_nullable_key = 1;
+
+CREATE TABLE IF NOT EXISTS datav_logs.distributed_log_tag_attributes ON CLUSTER cluster AS datav_logs.log_tag_attributes
+ENGINE = Distributed("cluster", "datav_logs", log_tag_attributes, rand());
+
+
+CREATE MATERIALIZED VIEW IF NOT EXISTS  atrribute_keys_string_final_mv ON CLUSTER cluster TO datav_logs.logs_atrribute_keys AS
 SELECT
 distinct arrayJoin(attributes_string_key) as name, 'String' datatype
-FROM signoz_logs.logs
+FROM datav_logs.logs
 ORDER BY name;
 
-CREATE MATERIALIZED VIEW IF NOT EXISTS  atrribute_keys_int64_final_mv ON CLUSTER cluster  TO signoz_logs.logs_atrribute_keys AS
+CREATE MATERIALIZED VIEW IF NOT EXISTS  atrribute_keys_int64_final_mv ON CLUSTER cluster  TO datav_logs.logs_atrribute_keys AS
 SELECT
 distinct arrayJoin(attributes_int64_key) as name, 'Int64' datatype
-FROM signoz_logs.logs
+FROM datav_logs.logs
 ORDER BY  name;
 
-CREATE MATERIALIZED VIEW IF NOT EXISTS  atrribute_keys_float64_final_mv ON CLUSTER cluster TO signoz_logs.logs_atrribute_keys AS
+CREATE MATERIALIZED VIEW IF NOT EXISTS  atrribute_keys_float64_final_mv ON CLUSTER cluster TO datav_logs.logs_atrribute_keys AS
 SELECT
 distinct arrayJoin(attributes_float64_key) as name, 'Float64' datatype
-FROM signoz_logs.logs
+FROM datav_logs.logs
 ORDER BY  name;
 
-CREATE MATERIALIZED VIEW IF NOT EXISTS  resource_keys_string_final_mv ON CLUSTER cluster  TO signoz_logs.logs_resource_keys AS
+CREATE MATERIALIZED VIEW IF NOT EXISTS  resource_keys_string_final_mv ON CLUSTER cluster  TO datav_logs.logs_resource_keys AS
 SELECT
 distinct arrayJoin(resources_string_key) as name, 'String' datatype
-FROM signoz_logs.logs
+FROM datav_logs.logs
 ORDER BY  name;
 
 
-CREATE TABLE IF NOT EXISTS signoz_logs.distributed_logs ON CLUSTER cluster  AS signoz_logs.logs
-ENGINE = Distributed("cluster","signoz_logs", logs, cityHash64(id));
 
-CREATE TABLE IF NOT EXISTS signoz_logs.distributed_logs_atrribute_keys  ON CLUSTER cluster AS signoz_logs.logs_atrribute_keys
-ENGINE = Distributed("cluster", "signoz_logs", logs_atrribute_keys, cityHash64(datatype));
-
-CREATE TABLE IF NOT EXISTS signoz_logs.distributed_logs_resource_keys  ON CLUSTER cluster AS signoz_logs.logs_resource_keys
-ENGINE = Distributed("cluster", "signoz_logs", logs_resource_keys, cityHash64(datatype));

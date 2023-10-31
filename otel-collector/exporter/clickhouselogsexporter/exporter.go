@@ -40,12 +40,6 @@ import (
 	"go.uber.org/zap"
 )
 
-const (
-	CLUSTER                    = "cluster"
-	DISTRIBUTED_LOGS_TABLE     = "distributed_logs"
-	DISTRIBUTED_TAG_ATTRIBUTES = "distributed_tag_attributes"
-)
-
 type clickhouseLogsExporter struct {
 	db            clickhouse.Conn
 	insertLogsSQL string
@@ -77,7 +71,7 @@ func newExporter(logger *zap.Logger, cfg *Config) (*clickhouseLogsExporter, erro
 		usage.Options{
 			ReportingInterval: usage.DefaultCollectionInterval,
 		},
-		"signoz_logs",
+		"datav_logs",
 		UsageExporter,
 	)
 	if err != nil {
@@ -133,7 +127,7 @@ func (e *clickhouseLogsExporter) pushLogsData(ctx context.Context, ld plog.Logs)
 			return fmt.Errorf("PrepareBatch:%w", err)
 		}
 
-		tagStatement, err := e.db.PrepareBatch(ctx, fmt.Sprintf("INSERT INTO %s.%s", databaseName, DISTRIBUTED_TAG_ATTRIBUTES))
+		tagStatement, err := e.db.PrepareBatch(ctx, fmt.Sprintf("INSERT INTO %s.%s", DefaultLogDatabase, DefaultLogTagAttributes))
 		if err != nil {
 			return fmt.Errorf("PrepareTagBatch:%w", err)
 		}
@@ -218,7 +212,7 @@ func (e *clickhouseLogsExporter) pushLogsData(ctx context.Context, ld plog.Logs)
 		stats.RecordWithTags(ctx,
 			[]tag.Mutator{
 				tag.Upsert(exporterKey, string(component.DataTypeLogs)),
-				tag.Upsert(tableKey, DISTRIBUTED_LOGS_TABLE),
+				tag.Upsert(tableKey, DefaultLogsTable),
 			},
 			writeLatencyMillis.M(int64(time.Since(dbWriteStart).Milliseconds())),
 		)
@@ -230,7 +224,7 @@ func (e *clickhouseLogsExporter) pushLogsData(ctx context.Context, ld plog.Logs)
 			zap.String("cost", duration.String()))
 
 		for k, v := range metrics {
-			stats.RecordWithTags(ctx, []tag.Mutator{tag.Upsert(usage.TagTenantKey, k)}, ExporterSigNozSentLogRecords.M(int64(v.Count)), ExporterSigNozSentLogRecordsBytes.M(int64(v.Size)))
+			stats.RecordWithTags(ctx, []tag.Mutator{tag.Upsert(usage.TagTenantKey, k)}, ExporterSentLogRecords.M(int64(v.Count)), ExporterSentLogRecordsBytes.M(int64(v.Size)))
 		}
 
 		// push tag attributes
@@ -239,7 +233,7 @@ func (e *clickhouseLogsExporter) pushLogsData(ctx context.Context, ld plog.Logs)
 		stats.RecordWithTags(ctx,
 			[]tag.Mutator{
 				tag.Upsert(exporterKey, string(component.DataTypeLogs)),
-				tag.Upsert(tableKey, DISTRIBUTED_TAG_ATTRIBUTES),
+				tag.Upsert(tableKey, DefaultLogTagAttributes),
 			},
 			writeLatencyMillis.M(int64(time.Since(tagWriteStart).Milliseconds())),
 		)
@@ -440,5 +434,5 @@ func newClickhouseClient(logger *zap.Logger, cfg *Config) (clickhouse.Conn, erro
 }
 
 func renderInsertLogsSQL(cfg *Config) string {
-	return fmt.Sprintf(insertLogsSQLTemplate, databaseName, DISTRIBUTED_LOGS_TABLE)
+	return fmt.Sprintf(insertLogsSQLTemplate, DefaultLogDatabase, DefaultLogsTable)
 }

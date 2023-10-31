@@ -11,19 +11,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { EditorInputItem, EditorNumberItem } from "src/components/editor/EditorItem"
-import RadionButtons from "src/components/RadioButtons"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
 import React, { memo, useState } from "react";
 import { useStore } from "@nanostores/react"
-import { textPanelMsg } from "src/i18n/locales/en"
 import { PanelType, DatavLogEditorProps, DatavLogPanel as Panel } from "./types"
 import CodeEditor from "components/CodeEditor/CodeEditor"
 import { locale } from "src/i18n/i18n";
 import { Switch, useToast } from "@chakra-ui/react";
 import StringColorMappingEditor from "../../../components/StringColorMapping";
-import { dispatch } from "use-bus";
-import { PanelForceRebuildEvent } from "src/data/bus-events";
+import { ErrorOkChartEditor } from "../../../components/charts/ErrorOkChart";
 
 const PanelEditor = memo(({ panel, onChange }: DatavLogEditorProps) => {
     let lang = useStore(locale)
@@ -96,44 +93,7 @@ const PanelEditor = memo(({ panel, onChange }: DatavLogEditorProps) => {
                 })} tips="Render column value with specify color" />
             </PanelEditItem>
         </PanelAccordion>
-        <PanelAccordion title={"Chart"}>
-            <PanelEditItem title={lang == "en" ? "Type" : "图表类型"}>
-                <RadionButtons options={[{ label: "Bar", value: "bar" }, { label: "Line", value: "line" }]} value={panel.plugins[PanelType].chart.type} onChange={v => onChange((panel: Panel) => {
-                    panel.plugins[PanelType].chart.type = v
-                })} />
-            </PanelEditItem>
-            <PanelEditItem title={lang == "en" ? "Height" : "图表高度"}>
-                <EditorNumberItem value={panel.plugins[PanelType].chart.height} onChange={v => onChange((panel: Panel) => {
-                    panel.plugins[PanelType].chart.height = v
-                    dispatch(PanelForceRebuildEvent + panel.id)
-                })} step={10} min={0} max={1000} />
-            </PanelEditItem>
-            <PanelEditItem title={"Stack"}>
-                <Switch defaultChecked={panel.plugins[PanelType].chart.stack} onChange={e => onChange((panel: Panel) => {
-                    panel.plugins[PanelType].chart.stack = e.currentTarget.checked
-                })} />
-            </PanelEditItem>
-            <PanelEditItem title={"Top"}>
-                <EditorNumberItem value={panel.plugins[PanelType].chart.top} onChange={v => onChange((panel: Panel) => {
-                    panel.plugins[PanelType].chart.top = v
-                })} step={1} min={0} max={100} /> %
-            </PanelEditItem>
-            <PanelEditItem title={"Right"}>
-                <EditorNumberItem value={panel.plugins[PanelType].chart.right} onChange={v => onChange((panel: Panel) => {
-                    panel.plugins[PanelType].chart.right = v
-                })} step={1} min={0} max={100} /> %
-            </PanelEditItem>
-            <PanelEditItem title={"Bottom"}>
-                <EditorNumberItem value={panel.plugins[PanelType].chart.bottom} onChange={v => onChange((panel: Panel) => {
-                    panel.plugins[PanelType].chart.bottom = v
-                })} step={1} min={0} max={100} /> %
-            </PanelEditItem>
-            <PanelEditItem title={"Left"}>
-                <EditorNumberItem value={panel.plugins[PanelType].chart.left} onChange={v => onChange((panel: Panel) => {
-                    panel.plugins[PanelType].chart.left = v
-                })} step={1} min={0} max={100} /> %
-            </PanelEditItem>
-        </PanelAccordion>
+        <ErrorOkChartEditor panel={panel} panelType={PanelType} onChange={onChange}/>
     </>
     )
 })

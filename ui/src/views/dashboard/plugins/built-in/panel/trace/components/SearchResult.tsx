@@ -29,7 +29,8 @@ interface Props {
     traceChartOptions?: any
 }
 
-const TraceSearchResult = ({ dashboardId, teamId, panel, traces, timeRange, height, traceChart, traceChartOptions }: Props) => {
+const TraceSearchResult = (props: Props) => {
+    const { dashboardId, teamId, panel, traces, timeRange, height, traceChart, traceChartOptions } = props
     const t1 = useStore(tracePanelMsg)
     const datasources = useStore($datasources)
     const [selectedTraces, setSelectedTraces] = useState<Trace[]>([])
@@ -60,9 +61,9 @@ const TraceSearchResult = ({ dashboardId, teamId, panel, traces, timeRange, heig
             case "shortest":
                 return selectedTraces.sort((a, b) => a.duration - b.duration)
             case "mostSpans":
-                return selectedTraces.sort((a, b) => b.spans.length - a.spans.length)
+                return selectedTraces.sort((a, b) => b.services.reduce((t,e)=>e.numberOfSpans + t,0)  - a.services.reduce((t,e)=>e.numberOfSpans + t,0))
             case "leastSpans":
-                return selectedTraces.sort((a, b) => a.spans.length - b.spans.length)
+                return selectedTraces.sort((a, b) => a.services.reduce((t,e)=>e.numberOfSpans + t,0)- b.services.reduce((t,e)=>e.numberOfSpans + t,0))
             default:
                 return traces
         }
@@ -89,7 +90,7 @@ const TraceSearchResult = ({ dashboardId, teamId, panel, traces, timeRange, heig
     }
 
     const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
-    const plotHeight = 200
+    const plotHeight = traceChartOptions.height ?? 200
 
     const ds = getDatasource(panel.datasource.id, datasources)
 
@@ -119,7 +120,7 @@ const TraceSearchResult = ({ dashboardId, teamId, panel, traces, timeRange, heig
             <Box pl="2" pr="20px" pt="4">
                 <Flex alignItems="center" justifyContent="space-between" mb="1" fontSize={isLargeScreen ? null : "xs"}>
                     <HStack height="40px" fontSize="0.9rem">
-                        {selectedTraces.length != traces.length ? <Text>{selectedTraces.length} {t1.tracesSelected}</Text> : <Text>{selectedTraces.length} {t1.tracesTotal}</Text>}
+                        {selectedTraces.length != traces.length ? <Text>{selectedTraces.length} {t1.tracesSelected}</Text> : <Text>{selectedTraces.length} Results</Text>}
                         {selectedTraces.length != traces.length && <Button size="sm" variant="outline" onClick={() => setSelectedTraces(clone(traces))}>{t1.clearSelection}</Button>}
                     </HStack>
                     {
@@ -133,9 +134,9 @@ const TraceSearchResult = ({ dashboardId, teamId, panel, traces, timeRange, heig
                         <Select variant="unstyled" size={isLargeScreen ? "sm" : "xs"} value={sort} onChange={e => setSort(e.currentTarget.value)}>
                             {traceSortTypes.map(sortType => <option key={sortType.value} value={sortType.value}>{t1[sortType.value]}</option>)}
                         </Select>
-                        {traceChartOptions && <Select variant="unstyled" size={isLargeScreen ? "sm" : "xs"} value={chartType} onChange={e => setChartType(e.currentTarget.value as any)}>
-                            <option value="plot">Plot</option>
-                            <option value="graph">Graph</option>
+                        {traceChartOptions && <Select minWidth="fit-content" variant="unstyled" size={isLargeScreen ? "sm" : "xs"} value={chartType} onChange={e => setChartType(e.currentTarget.value as any)}>
+                            <option value="plot">Results scatter</option>
+                            <option value="graph">Hits graph</option>
                         </Select>}
                     </HStack>
                 </Flex>
