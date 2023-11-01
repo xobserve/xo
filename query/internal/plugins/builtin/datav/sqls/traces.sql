@@ -65,23 +65,6 @@ SETTINGS index_granularity = 8192, ttl_only_drop_parts = 1
 CREATE TABLE IF NOT EXISTS datav_traces.distributed_trace_index ON CLUSTER cluster AS datav_traces.trace_index
 ENGINE = Distributed("cluster", "datav_traces", trace_index, cityHash64(traceId));
 
-CREATE TABLE datav_traces.span_attributes
-(
-    `startTime` UInt64 CODEC(DoubleDelta, LZ4),
-    `tagKey` LowCardinality(String) CODEC(ZSTD(1)),
-    `tagType` Enum8('tag' = 1, 'resource' = 2) CODEC(ZSTD(1)),
-    `dataType` Enum8('string' = 1, 'bool' = 2, 'float64' = 3) CODEC(ZSTD(1)),
-    `stringTagValue` String CODEC(ZSTD(1)),
-    `float64TagValue` Nullable(Float64) CODEC(ZSTD(1)),
-    `isColumn` Bool CODEC(ZSTD(1))
-)
-ENGINE = ReplacingMergeTree
-ORDER BY (tagKey, tagType, dataType, stringTagValue, float64TagValue, isColumn)
-TTL toDateTime(startTime / 1000000000)  + toIntervalSecond(172800)
-SETTINGS ttl_only_drop_parts = 1, allow_nullable_key = 1, index_granularity = 8192
-
-CREATE TABLE IF NOT EXISTS datav_traces.distributed_span_attributes ON CLUSTER cluster AS datav_traces.span_attributes
-ENGINE = Distributed("cluster", "datav_traces", span_attributes, cityHash64(rand()));
 
 CREATE TABLE datav_traces.trace_spans
 (
@@ -182,14 +165,39 @@ ENGINE = Distributed("cluster", "datav_traces", trace_error_index, cityHash64(gr
 
 CREATE TABLE datav_traces.span_attributes_keys
 (
-    `tagKey` LowCardinality(String) CODEC(ZSTD(1)),
-    `tagType` Enum8('tag' = 1, 'resource' = 2) CODEC(ZSTD(1)),
-    `dataType` Enum8('string' = 1, 'bool' = 2, 'float64' = 3) CODEC(ZSTD(1)),
-    `isColumn` Bool CODEC(ZSTD(1))
+    tenantId LowCardinality(String) CODEC(ZSTD(1)),
+    environment LowCardinality(String) CODEC(ZSTD(1)),
+    serviceName LowCardinality(String) CODEC(ZSTD(1)),
+    tagKey LowCardinality(String) CODEC(ZSTD(1)),
+    tagType Enum8('tag' = 1, 'resource' = 2) CODEC(ZSTD(1)),
+    dataType Enum8('string' = 1, 'bool' = 2, 'float64' = 3) CODEC(ZSTD(1)),
+    isColumn Bool CODEC(ZSTD(1))
 )
 ENGINE = ReplacingMergeTree
-ORDER BY (tagKey, tagType, dataType, isColumn)
+ORDER BY (tenantId, environment, serviceName,tagKey,tagType,dataType,isColumn)
 SETTINGS index_granularity = 8192
 
 CREATE TABLE IF NOT EXISTS datav_traces.distributed_span_attributes_keys ON CLUSTER cluster AS datav_traces.span_attributes_keys
 ENGINE = Distributed("cluster", "datav_traces", span_attributes_keys, cityHash64(rand()));
+
+
+CREATE TABLE datav_traces.span_attributes
+(
+    `startTime` UInt64 CODEC(DoubleDelta, LZ4),
+    tenantId LowCardinality(String) CODEC(ZSTD(1)),
+    environment LowCardinality(String) CODEC(ZSTD(1)),
+    serviceName LowCardinality(String) CODEC(ZSTD(1)),
+    `tagKey` LowCardinality(String) CODEC(ZSTD(1)),
+    `tagType` Enum8('tag' = 1, 'resource' = 2) CODEC(ZSTD(1)),
+    `dataType` Enum8('string' = 1, 'bool' = 2, 'float64' = 3) CODEC(ZSTD(1)),
+    `stringTagValue` String CODEC(ZSTD(1)),
+    `float64TagValue` Nullable(Float64) CODEC(ZSTD(1)),
+    `isColumn` Bool CODEC(ZSTD(1))
+)
+ENGINE = ReplacingMergeTree
+ORDER BY (tenantId,environment,serviceName,tagKey, tagType, dataType, stringTagValue, float64TagValue, isColumn)
+TTL toDateTime(startTime / 1000000000)  + toIntervalSecond(172800)
+SETTINGS ttl_only_drop_parts = 1, allow_nullable_key = 1, index_granularity = 8192
+
+CREATE TABLE IF NOT EXISTS datav_traces.distributed_span_attributes ON CLUSTER cluster AS datav_traces.span_attributes
+ENGINE = Distributed("cluster", "datav_traces", span_attributes, cityHash64(rand()));

@@ -191,17 +191,33 @@ func (w *SpanWriter) writeTagBatch(batchSpans []*Span) error {
 			mapOfSpanAttributeValues[mapOfSpanAttributeValueKey] = struct{}{}
 
 			// form a map key of span attribute key, tagType, dataType and isColumn
-			mapOfSpanAttributeKey := spanAttribute.Key + spanAttribute.TagType + spanAttribute.DataType + strconv.FormatBool(spanAttribute.IsColumn)
+			mapOfSpanAttributeKey := spanAttribute.TenantId + spanAttribute.Environment + spanAttribute.ServiceName + spanAttribute.Key + spanAttribute.TagType + spanAttribute.DataType + strconv.FormatBool(spanAttribute.IsColumn)
 
 			// check if mapOfSpanAttributeKey already exists in map
 			_, ok = mapOfSpanAttributeKeys[mapOfSpanAttributeKey]
 			if !ok {
-				err = tagKeyStatement.Append(
-					spanAttribute.Key,
-					spanAttribute.TagType,
-					spanAttribute.DataType,
-					spanAttribute.IsColumn,
-				)
+				if spanAttribute.IsColumn {
+					err = tagKeyStatement.Append(
+						"",
+						"",
+						"",
+						spanAttribute.Key,
+						spanAttribute.TagType,
+						spanAttribute.DataType,
+						spanAttribute.IsColumn,
+					)
+				} else {
+					err = tagKeyStatement.Append(
+						spanAttribute.TenantId,
+						spanAttribute.Environment,
+						spanAttribute.ServiceName,
+						spanAttribute.Key,
+						spanAttribute.TagType,
+						spanAttribute.DataType,
+						spanAttribute.IsColumn,
+					)
+				}
+
 				if err != nil {
 					w.logger.Error("Could not append span to tagKey Statement to batch due to error: ", zap.Error(err), zap.Object("span", span))
 					return err
@@ -213,6 +229,9 @@ func (w *SpanWriter) writeTagBatch(batchSpans []*Span) error {
 			if spanAttribute.DataType == "string" {
 				err = tagStatement.Append(
 					span.StartTime,
+					spanAttribute.TenantId,
+					spanAttribute.Environment,
+					spanAttribute.ServiceName,
 					spanAttribute.Key,
 					spanAttribute.TagType,
 					spanAttribute.DataType,
@@ -223,6 +242,9 @@ func (w *SpanWriter) writeTagBatch(batchSpans []*Span) error {
 			} else if spanAttribute.DataType == "float64" {
 				err = tagStatement.Append(
 					span.StartTime,
+					spanAttribute.TenantId,
+					spanAttribute.Environment,
+					spanAttribute.ServiceName,
 					spanAttribute.Key,
 					spanAttribute.TagType,
 					spanAttribute.DataType,
@@ -233,6 +255,9 @@ func (w *SpanWriter) writeTagBatch(batchSpans []*Span) error {
 			} else if spanAttribute.DataType == "bool" {
 				err = tagStatement.Append(
 					span.StartTime,
+					spanAttribute.TenantId,
+					spanAttribute.Environment,
+					spanAttribute.ServiceName,
 					spanAttribute.Key,
 					spanAttribute.TagType,
 					spanAttribute.DataType,

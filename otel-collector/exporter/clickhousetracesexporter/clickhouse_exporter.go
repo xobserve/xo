@@ -170,7 +170,12 @@ func populateOtherDimensions(attributes pcommon.Map, span *Span) {
 			span.ExternalHttpMethod = v.Str()
 			span.HttpMethod = v.Str()
 		} else if k == "http.url" && span.Kind != 3 {
-			span.HttpUrl = v.Str()
+			urlParts := strings.Split(v.Str(), "?")
+			if len(urlParts) == 2 {
+				span.HttpUrl = urlParts[0]
+			} else {
+				span.HttpUrl = v.Str()
+			}
 		} else if k == "http.method" && span.Kind != 3 {
 			span.HttpMethod = v.Str()
 		} else if k == "http.route" {
@@ -258,7 +263,7 @@ func populateTraceModel(span *Span) {
 	span.TraceModel.HasError = span.HasError
 }
 
-func newStructuredSpan(otelSpan ptrace.Span, ServiceName string, resource pcommon.Resource, config storageConfig) *Span {
+func newStructuredSpan(otelSpan ptrace.Span, serviceName string, resource pcommon.Resource, config storageConfig) *Span {
 	durationNano := uint64(otelSpan.EndTimestamp() - otelSpan.StartTimestamp())
 
 	attributes := otelSpan.Attributes()
@@ -267,9 +272,12 @@ func newStructuredSpan(otelSpan ptrace.Span, ServiceName string, resource pcommo
 	stringTagMap := map[string]string{}
 	numberTagMap := map[string]float64{}
 	boolTagMap := map[string]bool{}
-	spanAttributes := []SpanAttribute{}
+	spanAttributes := []*SpanAttribute{}
 
 	resourceAttrs := map[string]string{}
+
+	tenantId := utils.GetTenantNameFromResource(resource)
+	environment := utils.GetEnvNameFromResource(resource)
 
 	attributes.Range(func(k string, v pcommon.Value) bool {
 		tagMap[k] = v.AsString()
@@ -294,7 +302,7 @@ func newStructuredSpan(otelSpan ptrace.Span, ServiceName string, resource pcommo
 			spanAttribute.StringValue = v.AsString()
 			spanAttribute.DataType = "string"
 		}
-		spanAttributes = append(spanAttributes, spanAttribute)
+		spanAttributes = append(spanAttributes, &spanAttribute)
 		return true
 
 	})
@@ -318,15 +326,12 @@ func newStructuredSpan(otelSpan ptrace.Span, ServiceName string, resource pcommo
 			spanAttribute.StringValue = v.AsString()
 			spanAttribute.DataType = "string"
 		}
-		spanAttributes = append(spanAttributes, spanAttribute)
+		spanAttributes = append(spanAttributes, &spanAttribute)
 		return true
 
 	})
 
 	// references, _ := makeJaegerProtoReferences(otelSpan.Links(), otelSpan.ParentSpanID(), otelSpan.TraceID())
-
-	tenantId := utils.GetTenantNameFromResource(resource)
-	environment := utils.GetEnvNameFromResource(resource)
 
 	statusCode := int16(otelSpan.Status().Code())
 	hasError := false
@@ -349,7 +354,7 @@ func newStructuredSpan(otelSpan ptrace.Span, ServiceName string, resource pcommo
 		Duration:            durationNano,
 		TenantId:            tenantId,
 		Environment:         environment,
-		ServiceName:         ServiceName,
+		ServiceName:         serviceName,
 		Kind:                int8(otelSpan.Kind()),
 		StatusCode:          statusCode,
 		AttributesMap:       tagMap,
@@ -365,7 +370,7 @@ func newStructuredSpan(otelSpan ptrace.Span, ServiceName string, resource pcommo
 			Name:                otelSpan.Name(),
 			Duration:            durationNano,
 			StartTime:           uint64(otelSpan.StartTimestamp()),
-			ServiceName:         ServiceName,
+			ServiceName:         serviceName,
 			Kind:                int8(otelSpan.Kind()),
 			Links:               otelSpan.Links(),
 			ResourcesMap:        resourceAttrs,
@@ -381,6 +386,12 @@ func newStructuredSpan(otelSpan ptrace.Span, ServiceName string, resource pcommo
 	populateEvents(otelSpan.Events(), span, config.lowCardinalExceptionGrouping)
 	populateTraceModel(span)
 	spanAttributes = append(spanAttributes, extractSpanAttributesFromSpanIndex(span)...)
+	for _, v := range spanAttributes {
+		v.TenantId = tenantId
+		v.Environment = environment
+		v.ServiceName = serviceName
+	}
+
 	span.SpanAttributes = spanAttributes
 	return span
 }
@@ -429,188 +440,155 @@ func (s *storage) Shutdown(_ context.Context) error {
 	return nil
 }
 
-func extractSpanAttributesFromSpanIndex(span *Span) []SpanAttribute {
-	spanAttributes := []SpanAttribute{}
-	spanAttributes = append(spanAttributes, SpanAttribute{
-		Key:         "traceId",
-		TagType:     "tag",
-		IsColumn:    true,
-		DataType:    "string",
-		StringValue: span.TraceId,
-	})
-	spanAttributes = append(spanAttributes, SpanAttribute{
-		Key:         "spanId",
-		TagType:     "tag",
-		IsColumn:    true,
-		DataType:    "string",
-		StringValue: span.SpanId,
-	})
-	spanAttributes = append(spanAttributes, SpanAttribute{
-		Key:         "parentId",
-		TagType:     "tag",
-		IsColumn:    true,
-		DataType:    "string",
-		StringValue: span.ParentId,
-	})
-	spanAttributes = append(spanAttributes, SpanAttribute{
-		Key:         "name",
-		TagType:     "tag",
-		IsColumn:    true,
-		DataType:    "string",
-		StringValue: span.Name,
-	})
-	spanAttributes = append(spanAttributes, SpanAttribute{
+func extractSpanAttributesFromSpanIndex(span *Span) []*SpanAttribute {
+	spanAttributes := []*SpanAttribute{}
+	spanAttributes = append(spanAttributes, &SpanAttribute{
 		Key:         "serviceName",
 		TagType:     "tag",
 		IsColumn:    true,
 		DataType:    "string",
 		StringValue: span.ServiceName,
 	})
-	spanAttributes = append(spanAttributes, SpanAttribute{
+	spanAttributes = append(spanAttributes, &SpanAttribute{
+		Key:         "name",
+		TagType:     "tag",
+		IsColumn:    true,
+		DataType:    "string",
+		StringValue: span.Name,
+	})
+	spanAttributes = append(spanAttributes, &SpanAttribute{
 		Key:         "kind",
 		TagType:     "tag",
 		IsColumn:    true,
 		DataType:    "float64",
 		NumberValue: float64(span.Kind),
 	})
-	spanAttributes = append(spanAttributes, SpanAttribute{
-		Key:         "duration",
-		TagType:     "tag",
-		IsColumn:    true,
-		DataType:    "float64",
-		NumberValue: float64(span.Duration),
-	})
-	spanAttributes = append(spanAttributes, SpanAttribute{
+	spanAttributes = append(spanAttributes, &SpanAttribute{
 		Key:         "statusCode",
 		TagType:     "tag",
 		IsColumn:    true,
 		DataType:    "float64",
 		NumberValue: float64(span.StatusCode),
 	})
-	spanAttributes = append(spanAttributes, SpanAttribute{
-		Key:      "hasError",
-		TagType:  "tag",
-		IsColumn: true,
-		DataType: "bool",
-	})
-	spanAttributes = append(spanAttributes, SpanAttribute{
+	spanAttributes = append(spanAttributes, &SpanAttribute{
 		Key:         "externalHttpMethod",
 		TagType:     "tag",
 		IsColumn:    true,
 		DataType:    "string",
 		StringValue: span.ExternalHttpMethod,
 	})
-	spanAttributes = append(spanAttributes, SpanAttribute{
+	spanAttributes = append(spanAttributes, &SpanAttribute{
 		Key:         "externalHttpUrl",
 		TagType:     "tag",
 		IsColumn:    true,
 		DataType:    "string",
 		StringValue: span.ExternalHttpUrl,
 	})
-	spanAttributes = append(spanAttributes, SpanAttribute{
+	spanAttributes = append(spanAttributes, &SpanAttribute{
 		Key:         "component",
 		TagType:     "tag",
 		IsColumn:    true,
 		DataType:    "string",
 		StringValue: span.Component,
 	})
-	spanAttributes = append(spanAttributes, SpanAttribute{
+	spanAttributes = append(spanAttributes, &SpanAttribute{
 		Key:         "dbSystem",
 		TagType:     "tag",
 		IsColumn:    true,
 		DataType:    "string",
 		StringValue: span.DBSystem,
 	})
-	spanAttributes = append(spanAttributes, SpanAttribute{
+	spanAttributes = append(spanAttributes, &SpanAttribute{
 		Key:         "dbName",
 		TagType:     "tag",
 		IsColumn:    true,
 		DataType:    "string",
 		StringValue: span.DBName,
 	})
-	spanAttributes = append(spanAttributes, SpanAttribute{
+	spanAttributes = append(spanAttributes, &SpanAttribute{
 		Key:         "dbOperation",
 		TagType:     "tag",
 		IsColumn:    true,
 		DataType:    "string",
 		StringValue: span.DBOperation,
 	})
-	spanAttributes = append(spanAttributes, SpanAttribute{
+	spanAttributes = append(spanAttributes, &SpanAttribute{
 		Key:         "peerService",
 		TagType:     "tag",
 		IsColumn:    true,
 		DataType:    "string",
 		StringValue: span.PeerService,
 	})
-	spanAttributes = append(spanAttributes, SpanAttribute{
+	spanAttributes = append(spanAttributes, &SpanAttribute{
 		Key:         "httpMethod",
 		TagType:     "tag",
 		IsColumn:    true,
 		DataType:    "string",
 		StringValue: span.HttpMethod,
 	})
-	spanAttributes = append(spanAttributes, SpanAttribute{
+	spanAttributes = append(spanAttributes, &SpanAttribute{
 		Key:         "httpUrl",
 		TagType:     "tag",
 		IsColumn:    true,
 		DataType:    "string",
 		StringValue: span.HttpUrl,
 	})
-	spanAttributes = append(spanAttributes, SpanAttribute{
+	spanAttributes = append(spanAttributes, &SpanAttribute{
 		Key:         "httpRoute",
 		TagType:     "tag",
 		IsColumn:    true,
 		DataType:    "string",
 		StringValue: span.HttpRoute,
 	})
-	spanAttributes = append(spanAttributes, SpanAttribute{
+	spanAttributes = append(spanAttributes, &SpanAttribute{
 		Key:         "httpHost",
 		TagType:     "tag",
 		IsColumn:    true,
 		DataType:    "string",
 		StringValue: span.HttpHost,
 	})
-	spanAttributes = append(spanAttributes, SpanAttribute{
+	spanAttributes = append(spanAttributes, &SpanAttribute{
 		Key:         "msgSystem",
 		TagType:     "tag",
 		IsColumn:    true,
 		DataType:    "string",
 		StringValue: span.MsgSystem,
 	})
-	spanAttributes = append(spanAttributes, SpanAttribute{
+	spanAttributes = append(spanAttributes, &SpanAttribute{
 		Key:         "msgOperation",
 		TagType:     "tag",
 		IsColumn:    true,
 		DataType:    "string",
 		StringValue: span.MsgOperation,
 	})
-	spanAttributes = append(spanAttributes, SpanAttribute{
+	spanAttributes = append(spanAttributes, &SpanAttribute{
 		Key:         "rpcSystem",
 		TagType:     "tag",
 		IsColumn:    true,
 		DataType:    "string",
 		StringValue: span.RPCSystem,
 	})
-	spanAttributes = append(spanAttributes, SpanAttribute{
+	spanAttributes = append(spanAttributes, &SpanAttribute{
 		Key:         "rpcService",
 		TagType:     "tag",
 		IsColumn:    true,
 		DataType:    "string",
 		StringValue: span.RPCService,
 	})
-	spanAttributes = append(spanAttributes, SpanAttribute{
+	spanAttributes = append(spanAttributes, &SpanAttribute{
 		Key:         "rpcMethod",
 		TagType:     "tag",
 		IsColumn:    true,
 		DataType:    "string",
 		StringValue: span.RPCMethod,
 	})
-	spanAttributes = append(spanAttributes, SpanAttribute{
+	spanAttributes = append(spanAttributes, &SpanAttribute{
 		Key:         "responseStatusCode",
 		TagType:     "tag",
 		IsColumn:    true,
 		DataType:    "string",
 		StringValue: span.ResponseStatusCode,
 	})
+
 	return spanAttributes
 }

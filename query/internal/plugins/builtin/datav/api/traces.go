@@ -20,7 +20,7 @@ func GetTraces(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[s
 	step, _ := strconv.ParseInt(c.Query("step"), 10, 64)
 	onlyChart := c.Query("onlyChart")
 	aggregate := c.Query("aggregate")
-	// groupby := c.Query("groupby")
+	groupby := c.Query("groupby")
 
 	// @performace: 对 traceId 做 skip index
 	traceIds := strings.TrimSpace(c.Query("traceIds"))
@@ -33,7 +33,9 @@ func GetTraces(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[s
 	service := c.Query("service")
 	if service == "" {
 		serviceI := datavutils.GetValueListFromParams(params, "service")
-		domainQuery += fmt.Sprintf(" AND serviceName in ('%s')", strings.Join(serviceI, "','"))
+		if serviceI != nil {
+			domainQuery += fmt.Sprintf(" AND serviceName in ('%s')", strings.Join(serviceI, "','"))
+		}
 	} else {
 		domainQuery += fmt.Sprintf(" AND serviceName='%s'", service)
 	}
@@ -149,9 +151,18 @@ func GetTraces(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[s
 		// query metrics
 		aggregateQuery := "count(DISTINCT traceId) as count"
 		groupBy := "ts_bucket"
+		if groupby != "" {
+			groupBy = groupBy + "," + groupby
+		}
+		// if groupby != "" {
+		// 	domainQuery += fmt.Sprintf(" AND notEmpty(%s)", groupby)
+		// }
+		if groupby != "" {
+			groupby = groupby + ","
+		}
 		switch aggregate {
 		case "rate":
-			aggregateQuery = fmt.Sprintf("count(DISTINCT traceId) / %d as rate", step)
+			aggregateQuery = fmt.Sprintf("round(count(DISTINCT traceId) / %d,2) as rate", step)
 		case "sum":
 			aggregateQuery = "round(sum(duration) / 1e6,2) as sum"
 		case "avg":
@@ -169,7 +180,8 @@ func GetTraces(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[s
 		case "p99":
 			aggregateQuery = "round(quantile(0.99)(duration) / 1e6,2) as p99"
 		}
-		metricsQuery := fmt.Sprintf("SELECT toStartOfInterval(fromUnixTimestamp64Nano(startTime), INTERVAL %d SECOND) AS ts_bucket, %s from %s.%s where (startTime >= %d AND startTime <= %d %s) group by %s order by ts_bucket", step, aggregateQuery, config.Data.Observability.DefaultTraceDB, datavmodels.DefaultTraceIndexTable, start*1e9, end*1e9, domainQuery, groupBy)
+
+		metricsQuery := fmt.Sprintf("SELECT toStartOfInterval(fromUnixTimestamp64Nano(startTime), INTERVAL %d SECOND) AS ts_bucket, %s %s from %s.%s where (startTime >= %d AND startTime <= %d %s) group by %s order by ts_bucket", step, groupby, aggregateQuery, config.Data.Observability.DefaultTraceDB, datavmodels.DefaultTraceIndexTable, start*1e9, end*1e9, domainQuery, groupBy)
 
 		rows, err := conn.Query(c.Request.Context(), metricsQuery)
 		if err != nil {
@@ -213,4 +225,83 @@ func GetTrace(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[st
 	}
 
 	return models.GenPluginResult(models.PluginStatusSuccess, "", res)
+}
+
+type TagKey struct {
+	Name     string `json:"name"`
+	Type     string `json:"type"`     // "attributes" or "resources"
+	DataType string `json:"dataType"` // string, bool or float64
+	IsColumn bool   `json:"isColumn"`
+}
+
+func GetTraceTagKeys(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[string]interface{}) models.PluginResult {
+	var domainQuery string
+	tenant := datavutils.GetValueListFromParams(params, "tenant")
+	if tenant != nil {
+		domainQuery += fmt.Sprintf(" tenant='%s'", tenant)
+	}
+
+	environment := datavutils.GetValueListFromParams(params, "environment")
+	if environment != nil {
+		domainQuery += fmt.Sprintf(" AND environment in ('%s')", strings.Join(environment, "','"))
+	}
+
+	service := c.Query("service")
+	if service == "" {
+		serviceI := datavutils.GetValueListFromParams(params, "service")
+		if serviceI != nil {
+			domainQuery += fmt.Sprintf(" AND serviceName in ('%s')", strings.Join(serviceI, "','"))
+		}
+	} else {
+		domainQuery += fmt.Sprintf(" AND serviceName='%s'", service)
+	}
+
+	if domainQuery != "" {
+		domainQuery = "WHERE " + domainQuery + " AND isColumn=true"
+	} else {
+		domainQuery = "WHERE isColumn=true"
+	}
+
+	// query := fmt.Sprintf("SELECT DISTINCT tagKey,tagType,dataType FROM %s.%s %s ", config.Data.Observability.DefaultTraceDB, datavmodels.DefaultSpanAttributeKeysTable, domainQuery)
+	// // query traceIDs
+	// rows, err := conn.Query(c.Request.Context(), query)
+	// if err != nil {
+	// 	logger.Warn("Error Query trace tag keys", "query", query, "error", err)
+	// 	return models.GenPluginResult(models.PluginStatusError, err.Error(), nil)
+	// }
+	// defer rows.Close()
+
+	tags := make([]*TagKey, 0)
+	// for rows.Next() {
+	// 	tag := &TagKey{}
+	// 	err := rows.Scan(&tag.Name, &tag.Type, &tag.DataType)
+	// 	if err != nil {
+	// 		logger.Warn("Error scan trace tag key", "error", err)
+	// 		continue
+	// 	}
+	// 	tag.IsColumn = false
+	// 	tags = append(tags, tag)
+	// }
+
+	query := fmt.Sprintf("SELECT DISTINCT tagKey,tagType,dataType FROM %s.%s %s ", config.Data.Observability.DefaultTraceDB, datavmodels.DefaultSpanAttributeKeysTable, domainQuery)
+	// query traceIDs
+	rows, err := conn.Query(c.Request.Context(), query)
+	if err != nil {
+		logger.Warn("Error Query trace tag keys", "query", query, "error", err)
+		return models.GenPluginResult(models.PluginStatusError, err.Error(), nil)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		tag := &TagKey{}
+		err := rows.Scan(&tag.Name, &tag.Type, &tag.DataType)
+		if err != nil {
+			logger.Warn("Error scan trace tag key", "error", err)
+			continue
+		}
+		tag.IsColumn = true
+		tags = append(tags, tag)
+	}
+
+	return models.GenPluginResult(models.PluginStatusSuccess, "", tags)
 }

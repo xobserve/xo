@@ -127,10 +127,13 @@ type Span struct {
 	RPCService          string             `json:"rpcService,omitempty"`
 	RPCMethod           string             `json:"rpcMethod,omitempty"`
 	ResponseStatusCode  string             `json:"responseStatusCode,omitempty"`
-	SpanAttributes      []SpanAttribute    `json:"spanAttributes,omitempty"`
+	SpanAttributes      []*SpanAttribute   `json:"spanAttributes,omitempty"`
 }
 
 type SpanAttribute struct {
+	TenantId    string
+	Environment string
+	ServiceName string
 	Key         string
 	TagType     string
 	DataType    string

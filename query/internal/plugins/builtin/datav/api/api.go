@@ -15,6 +15,7 @@ const (
 	GetLogsAPI              = "getLogs"
 	GetTracesAPI            = "getTraces"
 	GetTraceAPI             = "getTrace"
+	GetTraceTagKeysAPI      = "getTraceTagKeys"
 )
 
 var APIRoutes = map[string]func(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[string]interface{}) models.PluginResult{
@@ -25,4 +26,5 @@ var APIRoutes = map[string]func(c *gin.Context, ds *models.Datasource, conn ch.C
 	GetDependencyGraphAPI:   GetDependencyGraph,
 	GetTracesAPI:            GetTraces,
 	GetTraceAPI:             GetTrace,
+	GetTraceTagKeysAPI:      GetTraceTagKeys,
 }
