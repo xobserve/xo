@@ -113,8 +113,11 @@ const TraceSearchResult = (props: Props) => {
             return 0
         }
         const d: any[] = traceChart.data
-        const total = d.reduce((total, b) => {
-            return total + b[1] + b[2]
+        const total = d.reduce((t, b) => {
+            for (let i = 1; i < b.length; i++) {
+                t += b[i]
+            }
+            return t
         }, 0)
         return total
     }, [traceChart])
@@ -126,7 +129,7 @@ const TraceSearchResult = (props: Props) => {
             </Box>}
             {chartType == "plot" && <SearchResultPlot traces={traces} timeRange={timeRange} onSelect={onSelect} height={plotHeight + 3} />}
             <Box pl="2" pr="20px" pt="4">
-                <Flex alignItems="center" justifyContent="space-between" mb="1" fontSize={isLargeScreen ? null : "xs"}>
+                <Flex flexDirection={isLargeScreen ? "row" : "column"} alignItems={isLargeScreen ? "center" : "start"} justifyContent="space-between" mb="1" fontSize={isLargeScreen ? null : "xs"}>
                     <HStack height="40px" fontSize="0.9rem">
                         {selectedTraces.length != traces.length ? <Text>{selectedTraces.length} {t1.tracesSelected}</Text> : <Text>{selectedTraces.length} Results</Text>}
                         {selectedTraces.length != traces.length && <Button size="sm" variant="outline" onClick={() => setSelectedTraces(clone(traces))}>{t1.clearSelection}</Button>}
@@ -137,7 +140,7 @@ const TraceSearchResult = (props: Props) => {
                             <TraceCompare traces={comparedTraces} />
                         </HStack>
                     }
-                    <HStack alignItems="center">
+                    <Flex alignItems={isLargeScreen ? "center" : "start"} flexDirection={isLargeScreen ? "row" : "column"}>
                         {/* <Text minWidth="fit-content" fontSize="0.9rem">排序</Text> */}
                         <Select width="fit-content" variant="unstyled" size={isLargeScreen ? "sm" : "xs"} value={sort} onChange={e => setSort(e.currentTarget.value)}>
                             {traceSortTypes.map(sortType => <option key={sortType.value} value={sortType.value}>{t1[sortType.value]}</option>)}
@@ -170,7 +173,7 @@ const TraceSearchResult = (props: Props) => {
                         </HStack>
 
                         }
-                    </HStack>
+                    </Flex>
                 </Flex>
                 <VStack alignItems="left" maxH={height - plotHeight - 58}>
                     <CustomScrollbar>
@@ -237,12 +240,12 @@ const traceSortTypes = [
 
 
 const aggregateFunctions =  [
+    // {
+    //     label: "Suc/Err count",
+    //     value: "count"
+    // },
     {
-        label: "Suc/Err count",
-        value: "count"
-    },
-    {
-        label: "Total count",
+        label: "Count",
         value: "total-count"
     },
     {

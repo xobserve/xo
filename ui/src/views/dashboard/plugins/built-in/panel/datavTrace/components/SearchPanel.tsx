@@ -67,7 +67,7 @@ const TraceSearchPanel = ({ timeRange, dashboardId, panel, onSearch, onSearchIds
     
     useEffect(() => {
         if (inited) {
-            onSearch(service, operation, tags, min, max, limit, useLatestTime, [aggregate, groupby])
+            onSearch(service, operation, tags, min, max, limit, useLatestTime, [[aggregate, groupby],true])
         }
     },[aggregate, groupby])
 
@@ -79,7 +79,7 @@ const TraceSearchPanel = ({ timeRange, dashboardId, panel, onSearch, onSearchIds
 
         if (service) {
             loadOperations()
-            onSearch(service, operation, tags, min, max, limit, useLatestTime, [aggregate, groupby])
+            onSearch(service, operation, tags, min, max, limit, useLatestTime, [[aggregate, groupby],false])
         } 
 
         setTimeout(() => {
@@ -99,7 +99,7 @@ const TraceSearchPanel = ({ timeRange, dashboardId, panel, onSearch, onSearchIds
                 onSearchIds(traceIds)
             } else {
                 if (service && operation) {
-                    onSearch(service, operation, tags, min, max, limit,useLatestTime, [aggregate, groupby])
+                    onSearch(service, operation, tags, min, max, limit,useLatestTime, [[aggregate, groupby],false])
                 }
             }
         }
@@ -118,7 +118,7 @@ const TraceSearchPanel = ({ timeRange, dashboardId, panel, onSearch, onSearchIds
 
             if (service) {
                 loadOperations()
-                onSearch(service, operation, tags, min, max, limit, useLatestTime, [aggregate, groupby])
+                onSearch(service, operation, tags, min, max, limit, useLatestTime, [[aggregate, groupby],false])
             } else {
                 setOperations([])
             }
@@ -155,7 +155,7 @@ const TraceSearchPanel = ({ timeRange, dashboardId, panel, onSearch, onSearchIds
             onSearchIds(traceIds)
             return 
         }
-        onSearch(service, operation, tags, min, max, limit, useLatestTime,[aggregate, groupby])
+        onSearch(service, operation, tags, min, max, limit, useLatestTime,[[aggregate, groupby],false])
     }
 
     useBus(
@@ -225,7 +225,7 @@ const TraceSearchPanel = ({ timeRange, dashboardId, panel, onSearch, onSearchIds
         if (!isEmpty(traceIds)) {
             onSearchIds(traceIds)
         } else {
-            onSearch(service, operation, tags, min, max, limit, useLatestTime,[aggregate, groupby])
+            onSearch(service, operation, tags, min, max, limit, useLatestTime,[[aggregate, groupby],false])
             storage.set(TraceSearchKey + dashboardId + panel.id, {
                 service, operation, tags, min, max, limit
             })

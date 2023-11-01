@@ -332,6 +332,8 @@ func newStructuredSpan(otelSpan ptrace.Span, ServiceName string, resource pcommo
 	hasError := false
 	if statusCode == 2 {
 		hasError = true
+		tagMap["error"] = "true"
+		boolTagMap["error"] = true
 	}
 
 	traceId := utils.TraceIDToHexOrEmptyString(otelSpan.TraceID())

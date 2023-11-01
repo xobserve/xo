@@ -150,7 +150,7 @@ const ErrorOkChart = memo((props: Props) => {
             // emphasis: {
             //     focus: 'series'
             // },
-            color: name == "others" ? useColorModeValue(colors1[0], 'rgb(80,250,123)') : customColors.error.light
+            color: name != "errors" ? useColorModeValue(colors1[0], 'rgb(80,250,123)') : customColors.error.light
             // barWidth: '90%'
         })})
     };

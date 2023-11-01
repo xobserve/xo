@@ -232,29 +232,33 @@ export const spanTreeToList = (span: TraceSpan, totalSpans: TraceSpan[]) => {
 
 
 export const queryPluginDataToTraceChart = (chart: QueryPluginData) => {
-    const chartColumns = ["ts_bucket", "others", "errors"]
+    let chartColumns = chart.columns
     const chartData = []
     const chartDataMap = {}
     
     if (chart) {
-        for (const row of chart.data) {
-            const ts = row[0]
-            const v = chartDataMap[ts]
-            if (!v) {
-                chartDataMap[ts] = {
-                    [row[1]]: row[2]
+        if (chartColumns.length == 3) {
+            // chartColumns = ["ts_bucket", "others", "errors"]
+            for (const row of chart.data) {
+                const ts = row[0]
+                const v = chartDataMap[ts]
+                if (!v) {
+                    chartDataMap[ts] = {
+                        [row[1]]: row[2]
+                    }
+                } else {
+                    v[row[1]] = row[2]
                 }
-            } else {
-                v[row[1]] = row[2]
             }
-        }
-        Object.keys(chartDataMap).forEach(ts => {
-            const v = chartDataMap[ts]
-            chartData.push([ts, v[false]??null, v[true]??null])
-        })    
+            Object.keys(chartDataMap).forEach(ts => {
+                const v = chartDataMap[ts]
+                chartData.push([ts, v[false]??null, v[true]??null])
+            })  
+        } else if (chartColumns.length == 2) {
+            chartData.push(...chart.data)
+        }   
     }
 
-    console.log("here333333:",chartData)
 
 
     return {

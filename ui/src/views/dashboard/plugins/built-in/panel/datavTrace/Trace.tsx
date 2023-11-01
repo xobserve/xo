@@ -76,7 +76,7 @@ const TracePanel = (props: PanelProps) => {
         }
     }, [ds.type, props.data]
     )
-    const onSearch = async (service, operation, tags, min, max, limit, useLatestTime, [aggregate, groupby]) => {
+    const onSearch = async (service, operation, tags, min, max, limit, useLatestTime, [[aggregate, groupby], onlyChart]) => {
         tags = convTagsLogfmt(tags);
         let tr = getNewestTimeRange()
         if (!useLatestTime) {
@@ -95,8 +95,10 @@ const TracePanel = (props: PanelProps) => {
                 const intervalObj = calculateInterval(props.timeRange, panel.datasource.queryOptions.maxDataPoints ?? DatasourceMaxDataPoints, isEmpty(panel.datasource.queryOptions.minInterval) ? DatasourceMinInterval : panel.datasource.queryOptions.minInterval)
                 query.interval = intervalObj.intervalMs / 1000
 
-                const res = await dsPlugin.runQuery(panel, query, props.timeRange, ds, { tags, min, max, limit, service: services, operation: operations, aggregate, groupby})
-                setTraces(transformTraces(res.data.traces))
+                const res = await dsPlugin.runQuery(panel, query, props.timeRange, ds, { tags, min, max, limit, service: services, operation: operations, aggregate, groupby, onlyChart})
+                if (!onlyChart) {
+                    setTraces(transformTraces(res.data.traces))
+                }
          
                 setTraceChart(res.data.chart)
                 break;

@@ -19,6 +19,8 @@ func GetTraces(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[s
 	end, _ := strconv.ParseInt(c.Query("end"), 10, 64)
 	step, _ := strconv.ParseInt(c.Query("step"), 10, 64)
 	onlyChart := c.Query("onlyChart")
+	aggregate := c.Query("aggregate")
+	// groupby := c.Query("groupby")
 
 	// @performace: 对 traceId 做 skip index
 	traceIds := strings.TrimSpace(c.Query("traceIds"))
@@ -28,9 +30,12 @@ func GetTraces(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[s
 	if environment != nil {
 		domainQuery += fmt.Sprintf(" AND environment in ('%s')", strings.Join(environment, "','"))
 	}
-	service := datavutils.GetValueListFromParams(params, "service")
-	if service != nil {
-		domainQuery += fmt.Sprintf(" AND serviceName in ('%s')", strings.Join(environment, "','"))
+	service := c.Query("service")
+	if service == "" {
+		serviceI := datavutils.GetValueListFromParams(params, "service")
+		domainQuery += fmt.Sprintf(" AND serviceName in ('%s')", strings.Join(serviceI, "','"))
+	} else {
+		domainQuery += fmt.Sprintf(" AND serviceName='%s'", service)
 	}
 
 	traceIndexes := make([]*datavmodels.TraceIndex, 0)
@@ -142,7 +147,29 @@ func GetTraces(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[s
 	var res1 *models.PluginResultData
 	if traceIds == "" {
 		// query metrics
-		metricsQuery := fmt.Sprintf("SELECT toStartOfInterval(fromUnixTimestamp64Nano(startTime), INTERVAL %d SECOND) AS ts_bucket, hasError, count(DISTINCT traceId) as count from %s.%s where (startTime >= %d AND startTime <= %d %s) group by ts_bucket,hasError order by ts_bucket", step, config.Data.Observability.DefaultTraceDB, datavmodels.DefaultTraceIndexTable, start*1e9, end*1e9, domainQuery)
+		aggregateQuery := "count(DISTINCT traceId) as count"
+		groupBy := "ts_bucket"
+		switch aggregate {
+		case "rate":
+			aggregateQuery = fmt.Sprintf("count(DISTINCT traceId) / %d as rate", step)
+		case "sum":
+			aggregateQuery = "round(sum(duration) / 1e6,2) as sum"
+		case "avg":
+			aggregateQuery = "round(avg(duration) / 1e6,2) as avg"
+		case "max":
+			aggregateQuery = "round(max(duration) / 1e6,2) as max"
+		case "min":
+			aggregateQuery = "round(min(duration) / 1e6,2) as min"
+		case "p50":
+			aggregateQuery = "round(quantile(0.5)(duration) / 1e6,2) as p50"
+		case "p90":
+			aggregateQuery = "round(quantile(0.9)(duration) / 1e6,2) as p90"
+		case "p95":
+			aggregateQuery = "round(quantile(0.95)(duration) / 1e6,2) as p95"
+		case "p99":
+			aggregateQuery = "round(quantile(0.99)(duration) / 1e6,2) as p99"
+		}
+		metricsQuery := fmt.Sprintf("SELECT toStartOfInterval(fromUnixTimestamp64Nano(startTime), INTERVAL %d SECOND) AS ts_bucket, %s from %s.%s where (startTime >= %d AND startTime <= %d %s) group by %s order by ts_bucket", step, aggregateQuery, config.Data.Observability.DefaultTraceDB, datavmodels.DefaultTraceIndexTable, start*1e9, end*1e9, domainQuery, groupBy)
 
 		rows, err := conn.Query(c.Request.Context(), metricsQuery)
 		if err != nil {
