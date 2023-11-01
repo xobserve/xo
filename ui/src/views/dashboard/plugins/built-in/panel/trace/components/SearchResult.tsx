@@ -4,7 +4,7 @@ import SearchResultPlot from "./SearchResultPlot"
 import { TimeRange } from "types/time"
 import { Box, Button, Flex, HStack, Popover, PopoverArrow, PopoverBody, PopoverContent, PopoverTrigger, Select, StackDivider, Text, VStack, chakra, useMediaQuery } from "@chakra-ui/react"
 import { useCallback, useEffect, useMemo, useState } from "react"
-import { clone, remove, set } from "lodash"
+import { clone, concat, remove, set } from "lodash"
 import { FaTimes } from "react-icons/fa"
 import React from "react";
 import { useStore } from "@nanostores/react"
@@ -29,10 +29,11 @@ interface Props {
     height: number
     traceChart?: any
     traceChartOptions?: any
+    groupByOptions?: {label:string;value:string}[]
 }
 
 const TraceSearchResult = (props: Props) => {
-    const { dashboardId, teamId, panel, traces, timeRange, height, traceChart, traceChartOptions } = props
+    const { dashboardId, teamId, panel, traces, timeRange, height, traceChart, traceChartOptions, groupByOptions = [] } = props
     const t1 = useStore(tracePanelMsg)
     const datasources = useStore($datasources)
     const [selectedTraces, setSelectedTraces] = useState<Trace[]>([])
@@ -152,7 +153,7 @@ const TraceSearchResult = (props: Props) => {
                             </Select>
                             {chartType == "graph" && <>
                             <Text minWidth="fit-content">Aggerate</Text>
-                            <Select minWidth="fit-content" size="sm" value={aggregate} onChange={e => {
+                            <Select minWidth="fit-content" variant="unstyled" size="sm" value={aggregate} onChange={e => {
                                 setAggregate(e.currentTarget.value)
                                 addParamToUrl({ aggregate: e.currentTarget.value })
                             }}>
@@ -161,12 +162,12 @@ const TraceSearchResult = (props: Props) => {
                                 }
                             </Select>
                             <Text minWidth="fit-content">Group by</Text>
-                            <Select minWidth="fit-content" size="sm" value={groupby} onChange={e => {
+                            <Select minWidth="fit-content"  variant="unstyled" size="sm" value={groupby} onChange={e => {
                                 setGroupby(e.currentTarget.value)
                                 addParamToUrl({ groupby: e.currentTarget.value })
                             }}>
                                 {
-                                    aggregateFunctions.map(f => <option key={f.value} value={f.value}>{f.label}</option>)
+                                    groupByOptions.map(o => <option key={o.value} value={o.value}>{o.label}</option>)
                                 }
                             </Select>
                             </>}
@@ -283,5 +284,21 @@ const aggregateFunctions =  [
     {
         label: "p99 duration",
         value: "p99"
+    },
+]
+
+
+const baseGroupBy = [
+    {
+        label: "None",
+        value: ""
+    },
+    {
+        label: "Service name",
+        value: "serviceName"
+    },
+    {
+        label: "Operation name",
+        value: "name"
     },
 ]

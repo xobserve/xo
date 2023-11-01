@@ -116,7 +116,7 @@ export const runQuery = async (panel: Panel, q: PanelQuery, range: TimeRange, ds
             data =  queryPluginDataToTrace(res.data.data as any, q)
             break
         default:
-            data =  queryPluginDataToTable(res.data.data, q)
+            data = res.data.data
     }
 
     return {

@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from "react";
+import React, { useMemo } from "react";
 import { Box, Center, HStack, useMediaQuery } from "@chakra-ui/react"
 import { PanelProps } from "types/dashboard"
 import TraceSearchPanel from "./components/SearchPanel"
@@ -63,19 +63,43 @@ const TracePanelWrapper = memo((props: PanelProps) => {
 export default TracePanelWrapper
 
 
+export interface TraceTagKey {
+    name: string
+    type: string    // "attributes" or "resources"
+    dataType: string // string, bool or float64
+    isColumn: boolean
+}
+
 const TracePanel = (props: PanelProps) => {
     const { panel } = props
     const [traces, setTraces] = useState<Trace[]>(null)
     const [traceChart, setTraceChart] = useState<QueryPluginData>(null)
+    const [traceTagKeys, setTraceTagKeys] = useState<TraceTagKey[]>([])
     const datasources = useStore($datasources)
     const ds = getDatasource(props.panel.datasource.id, datasources)
     const dsPlugin = builtinDatasourcePlugins[ds.type] ?? externalDatasourcePlugins[ds.type]
     useEffect(() => {
         if (ds.type == DatasourceTypeTestData) {
-            onSearch(null, null, null, null, null, null, true,null)
+            onSearch(null, null, null, null, null, null, true, null)
         }
-    }, [ds.type, props.data]
-    )
+    }, [ds.type, props.data])
+
+    useEffect(() => {
+        if (dsPlugin) {
+            loadTagKeys()
+        }
+    }, [dsPlugin])
+
+    const loadTagKeys = async () => {
+        console.log("here333333:", dsPlugin)
+        const res = await dsPlugin.runQuery(panel, {
+            id: 65,
+            metrics: "getTraceTagKeys",
+            data: {}
+        }, props.timeRange, ds, {})
+        setTraceTagKeys(res.data)
+    }
+
     const onSearch = async (service, operation, tags, min, max, limit, useLatestTime, [[aggregate, groupby], onlyChart]) => {
         tags = convTagsLogfmt(tags);
         let tr = getNewestTimeRange()
@@ -95,11 +119,11 @@ const TracePanel = (props: PanelProps) => {
                 const intervalObj = calculateInterval(props.timeRange, panel.datasource.queryOptions.maxDataPoints ?? DatasourceMaxDataPoints, isEmpty(panel.datasource.queryOptions.minInterval) ? DatasourceMinInterval : panel.datasource.queryOptions.minInterval)
                 query.interval = intervalObj.intervalMs / 1000
 
-                const res = await dsPlugin.runQuery(panel, query, props.timeRange, ds, { tags, min, max, limit, service: services, operation: operations, aggregate, groupby, onlyChart})
+                const res = await dsPlugin.runQuery(panel, query, props.timeRange, ds, { tags, min, max, limit, service: services, operation: operations, aggregate, groupby, onlyChart })
                 if (!onlyChart) {
                     setTraces(transformTraces(res.data.traces))
                 }
-         
+
                 setTraceChart(res.data.chart)
                 break;
             case DatasourceTypeTestData:
@@ -125,6 +149,16 @@ const TracePanel = (props: PanelProps) => {
     const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
     const searchPanelWidth = isLargeScreen ? "400px" : "140px"
 
+    const groupByOptions = useMemo(() => {
+        const groupByOptions = [{label: "None", value: ""},{ label: "operationName", value: "name" },{ label: "serviceName", value: "serviceName" }]
+        for (const tagKey of traceTagKeys) {
+            if (tagKey.name != "serviceName" && tagKey.name != "name") {
+                groupByOptions.push({ label: tagKey.name, value: tagKey.name })
+            }
+        }
+        return groupByOptions
+    }, [traceTagKeys])
+
     console.log("here33333:", traces)
     return (<>
         {
@@ -137,37 +171,14 @@ const TracePanel = (props: PanelProps) => {
                 <Box width={`calc(100% - ${searchPanelWidth})`} maxH={resultHeight}>
 
                     <CustomScrollbar>
-                       
-                        {traces && panel.plugins[PanelType].chart && <TraceSearchResult traces={traces} panel={props.panel} dashboardId={props.dashboardId} teamId={props.teamId} timeRange={props.timeRange} height={resultHeight} traceChart={traceChart} traceChartOptions={panel.plugins[PanelType].chart} />}
+
+                        {traces && panel.plugins[PanelType].chart && <TraceSearchResult traces={traces} panel={props.panel} dashboardId={props.dashboardId} teamId={props.teamId} timeRange={props.timeRange} height={resultHeight} traceChart={traceChart} traceChartOptions={panel.plugins[PanelType].chart} groupByOptions={groupByOptions} />}
                     </CustomScrollbar>
                 </Box>
             </HStack>}
     </>)
 }
 
-// services: { name: string; numberOfSpans: number }[];
-// errorsCount?: number;
-// errorServices?: Set<string>
-
-
-// duration
-// : 
-// 769650
-// services
-// : 
-// [{name: "frontend", numSpans: 24, errors: 0}, {name: "redis", numSpans: 14, errors: 3},…]
-// startTime
-// : 
-// 1698558040663876
-// statusCode
-// : 
-// "200"
-// traceID
-// : 
-// "00000000000000006faf8a8c9c5de30e"
-// traceName
-// : 
-// "HTTP GET /dispatch"
 const transformTraces = (traces: any[]): Trace[] => {
     for (const trace of traces) {
         const services = []

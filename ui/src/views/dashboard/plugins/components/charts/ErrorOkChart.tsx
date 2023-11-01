@@ -84,7 +84,17 @@ const ErrorOkChart = memo((props: Props) => {
     },[props.data])
 
     
+    const calculateColor = name => {
+        if (name == "errors") {
+            return customColors.error.light
+        }
 
+        if (name == "others") {
+            return useColorModeValue(colors1[0], 'rgb(80,250,123)')
+        }
+        
+        return null
+    }
     const chartOptions = {
         animation: false,
         animationDuration: 500,
@@ -97,6 +107,15 @@ const ErrorOkChart = memo((props: Props) => {
                 type: 'none', // 'shadow' as default; can also be 'line' or 'shadow',
             },
         },
+        legend: {
+            show: names.length > 1,
+            bottom: 0,
+            selectedMode: true,
+            icon: "circle",
+            textStyle: {
+                fontSize: 10
+            },
+          },
         grid: {
             left: `${options}%`,
             right: `${options.right}%`,
@@ -150,7 +169,7 @@ const ErrorOkChart = memo((props: Props) => {
             // emphasis: {
             //     focus: 'series'
             // },
-            color: name != "errors" ? useColorModeValue(colors1[0], 'rgb(80,250,123)') : customColors.error.light
+            color: calculateColor(name)
             // barWidth: '90%'
         })})
     };
