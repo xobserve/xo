@@ -81,6 +81,10 @@ SETTINGS index_granularity = 1024, ttl_only_drop_parts = 1
 CREATE TABLE IF NOT EXISTS datav_traces.distributed_trace_spans ON CLUSTER cluster AS datav_traces.trace_spans
 ENGINE = Distributed("cluster", "datav_traces", trace_spans, cityHash64(traceId));
 
+
+
+
+
 CREATE TABLE datav_traces.top_level_operations
 (
     `name` LowCardinality(String) CODEC(ZSTD(1)),
@@ -92,16 +96,6 @@ SETTINGS index_granularity = 8192
 
 CREATE TABLE IF NOT EXISTS datav_traces.distributed_top_level_operations ON CLUSTER cluster AS datav_traces.top_level_operations
 ENGINE = Distributed("cluster", "datav_traces", top_level_operations, cityHash64(rand()));
-
-CREATE MATERIALIZED VIEW IF NOT EXISTS datav_traces.usage_explorer_mv ON CLUSTER cluster
-TO datav_traces.usage_explorer
-AS SELECT
-  toStartOfHour(toDateTime(startTime)) as timestamp,
-  serviceName as service_name,
-  count() as count
-FROM datav_traces.trace_index
-GROUP BY timestamp, serviceName;
-
 
 CREATE MATERIALIZED VIEW IF NOT EXISTS datav_traces.sub_root_operations_mv ON CLUSTER cluster
 TO datav_traces.top_level_operations
@@ -119,6 +113,29 @@ AS SELECT DISTINCT
 FROM datav_traces.trace_index
 WHERE parentId = '';
 
+CREATE TABLE datav_traces.service_operations
+(
+    tenantId LowCardinality(String) CODEC(ZSTD(1)),
+    environment LowCardinality(String) CODEC(ZSTD(1)),
+    serviceName LowCardinality(String) CODEC(ZSTD(1)),
+    name LowCardinality(String) CODEC(ZSTD(1))
+)
+ENGINE = ReplacingMergeTree
+ORDER BY (tenantId, environment, serviceName, name)
+SETTINGS index_granularity = 8192
+
+CREATE MATERIALIZED VIEW IF NOT EXISTS datav_traces.service_operations_mv ON CLUSTER cluster
+TO datav_traces.service_operations
+AS SELECT DISTINCT
+    tenantId,
+    environment,
+    serviceName,
+    name
+FROM datav_traces.trace_index
+
+CREATE TABLE IF NOT EXISTS datav_traces.distributed_service_operations ON CLUSTER cluster AS datav_traces.service_operations
+ENGINE = Distributed("cluster", "datav_traces", service_operations, cityHash64(rand()));
+
 
 CREATE TABLE datav_traces.usage_explorer
 (
@@ -134,6 +151,15 @@ SETTINGS index_granularity = 8192, ttl_only_drop_parts = 1
 
 CREATE TABLE IF NOT EXISTS datav_traces.distributed_usage_explorer ON CLUSTER cluster AS datav_traces.usage_explorer
 ENGINE = Distributed("cluster", "datav_traces", usage_explorer, cityHash64(rand()));
+
+CREATE MATERIALIZED VIEW IF NOT EXISTS datav_traces.usage_explorer_mv ON CLUSTER cluster
+TO datav_traces.usage_explorer
+AS SELECT
+  toStartOfHour(toDateTime(startTime)) as timestamp,
+  serviceName as service_name,
+  count() as count
+FROM datav_traces.trace_index
+GROUP BY timestamp, serviceName;
 
 
 CREATE TABLE datav_traces.trace_error_index

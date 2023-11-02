@@ -4,5 +4,6 @@ export enum DataFormat {
     Logs = "logs",
     Traces = "traces",
     Trace = "trace",
-    NodeGraph = "nodeGraph"
+    NodeGraph = "nodeGraph",
+    StringList = "stringList"
 }

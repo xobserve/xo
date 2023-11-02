@@ -133,17 +133,25 @@ const apiList = [{
     params: `{
 }`,
     paramsDesc: [
-        ["env", "environment name, such as dev, test, prod etc"],
+        ["environment", "environment name, such as dev, test, prod etc"],
         ["service", "filter by service names, e.g datav|driver"]
     ]
+},
+{
+    name: "getEnvironments",
+    desc: "get environment names",
+    params: `{
+}`,
+    paramsDesc: [["environment", "environment name, such as dev, test, prod etc"]],
+    format: DataFormat.StringList
 },
 {
     name: "getServiceNames",
     desc: "get service names, can be used in variable values",
     params: `{
 }`,
-    paramsDesc: [["env", "environment name, such as dev, test, prod etc"]],
-    format: DataFormat.Table
+    paramsDesc: [["environment", "environment name, such as dev, test, prod etc"]],
+    format: DataFormat.StringList
 },
 {
     name: "getServiceOperations",
@@ -151,8 +159,11 @@ const apiList = [{
     params: `{
     "service": "datav"
 }`,
-    paramsDesc: [["env", "environment name, such as dev, test, prod etc"]],
-    format: DataFormat.Table
+    paramsDesc: [
+        ["environment", "environment name, such as dev, test, prod etc"],
+        ["service", "service name"]
+    ],
+    format: DataFormat.StringList
 },
 {
     name: "getLogs",

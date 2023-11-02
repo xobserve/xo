@@ -8,6 +8,7 @@ const (
 	DefaultTraceSpansTable         string = "distributed_trace_spans"
 	DefaultDependencyGraphTable    string = "distributed_dependency_graph_minutes"
 	DefaultTopLevelOperationsTable string = "distributed_top_level_operations"
+	DefaultServiceOperationsTable  string = "distributed_service_operations"
 	DefaultSpanAttributeTable      string = "distributed_span_attributes"
 	DefaultSpanAttributeKeysTable  string = "distributed_span_attributes_keys"
 	DefaultLogsTable               string = "distributed_logs"
@@ -35,3 +36,5 @@ type SearchToken struct {
 }
 
 const VariableSplitChart = "|"
+
+const DefaultEvironment = "default"

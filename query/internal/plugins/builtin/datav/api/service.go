@@ -7,6 +7,7 @@ import (
 
 	ch "github.com/ClickHouse/clickhouse-go/v2"
 	datavmodels "github.com/DataObserve/datav/query/internal/plugins/builtin/datav/models"
+	datavutils "github.com/DataObserve/datav/query/internal/plugins/builtin/datav/utils"
 	pluginUtils "github.com/DataObserve/datav/query/internal/plugins/utils"
 	"github.com/DataObserve/datav/query/pkg/colorlog"
 	"github.com/DataObserve/datav/query/pkg/config"
@@ -21,7 +22,18 @@ type ServiceNameRes struct {
 }
 
 func GetServiceNames(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[string]interface{}) models.PluginResult {
-	query := fmt.Sprintf("SELECT DISTINCT serviceName FROM %s.%s", config.Data.Observability.DefaultTraceDB, datavmodels.DefaultTopLevelOperationsTable)
+
+	tenant := models.DefaultTenant
+	domainQuery := fmt.Sprintf(" tenantId='%s'", tenant)
+	environment := datavutils.GetValueListFromParams(params, "environment")
+
+	if environment != nil {
+		domainQuery += fmt.Sprintf(" AND environment in ('%s')", strings.Join(environment, "','"))
+	} else {
+		domainQuery += fmt.Sprintf(" AND environment='%s'", datavmodels.DefaultEvironment)
+	}
+
+	query := fmt.Sprintf("SELECT DISTINCT serviceName FROM %s.%s WHERE %s", config.Data.Observability.DefaultTraceDB, datavmodels.DefaultServiceOperationsTable, domainQuery)
 
 	rows, err := conn.Query(c.Request.Context(), query)
 	if err != nil {
@@ -40,14 +52,21 @@ func GetServiceNames(c *gin.Context, ds *models.Datasource, conn ch.Conn, params
 }
 
 func GetServiceOperations(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[string]interface{}) models.PluginResult {
-	serviceI := params["service"]
-	if serviceI == nil {
-		return models.GenPluginResult(models.PluginStatusError, "service is required", nil)
+	tenant := models.DefaultTenant
+	domainQuery := fmt.Sprintf(" tenantId='%s'", tenant)
+	environment := datavutils.GetValueListFromParams(params, "environment")
+	if environment != nil {
+		domainQuery += fmt.Sprintf(" AND environment in ('%s')", strings.Join(environment, "','"))
+	} else {
+		domainQuery += fmt.Sprintf(" AND environment='%s'", datavmodels.DefaultEvironment)
 	}
 
-	service := serviceI.(string)
+	service := datavutils.GetValueListFromParams(params, "service")
+	if service != nil {
+		domainQuery += fmt.Sprintf(" AND serviceName in ('%s')", strings.Join(service, "','"))
+	}
 
-	query := fmt.Sprintf("SELECT DISTINCT name FROM %s.%s WHERE serviceName='%s'", config.Data.Observability.DefaultTraceDB, datavmodels.DefaultTopLevelOperationsTable, service)
+	query := fmt.Sprintf("SELECT DISTINCT name FROM %s.%s WHERE %s", config.Data.Observability.DefaultTraceDB, datavmodels.DefaultServiceOperationsTable, domainQuery)
 	rows, err := conn.Query(c.Request.Context(), query)
 	if err != nil {
 		logger.Warn("Error Query service operations", "query", query, "error", err)
