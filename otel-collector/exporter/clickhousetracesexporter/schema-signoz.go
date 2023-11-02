@@ -91,8 +91,9 @@ type Span struct {
 	Name                string             `json:"name,omitempty"`
 	Duration            uint64             `json:"duration,omitempty"`
 	StartTime           uint64             `json:"startTime,omitempty"`
-	TenantId            string             `json:"tenantId,omitempty"`
-	Environment         string             `json:"environmentant,omitempty"`
+	Tenant              string             `json:"tenant,omitempty"`
+	Namespace           string             `json:"namespace,omitempty"`
+	Group               string             `json:"group,omitempty"`
 	ServiceName         string             `json:"serviceName,omitempty"`
 	Kind                int8               `json:"kind,omitempty"`
 	StatusCode          int16              `json:"statusCode,omitempty"`
@@ -131,8 +132,9 @@ type Span struct {
 }
 
 type SpanAttribute struct {
-	TenantId    string
-	Environment string
+	Tenant      string
+	Namespace   string
+	Group       string
 	ServiceName string
 	Key         string
 	TagType     string

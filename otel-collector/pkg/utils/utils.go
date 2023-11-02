@@ -20,18 +20,26 @@ func SpanIDToHexOrEmptyString(spanID pcommon.SpanID) string {
 	return ""
 }
 
-func GetTenantNameFromResource(resource pcommon.Resource) string {
-	tenant, found := resource.Attributes().Get("tenantId")
+func GetTenantFromResource(resource pcommon.Resource) string {
+	tenant, found := resource.Attributes().Get("datav.tenant")
 	if !found {
 		return "default"
 	}
 	return tenant.AsString()
 }
 
-func GetEnvNameFromResource(resource pcommon.Resource) string {
-	env, found := resource.Attributes().Get("environment")
+func GetNamespaceFromResource(resource pcommon.Resource) string {
+	env, found := resource.Attributes().Get("datav.namespace")
 	if !found {
 		return "default"
 	}
 	return env.AsString()
+}
+
+func GetGroupFromResource(resource pcommon.Resource) string {
+	group, found := resource.Attributes().Get("datav.group")
+	if !found {
+		return "default"
+	}
+	return group.AsString()
 }

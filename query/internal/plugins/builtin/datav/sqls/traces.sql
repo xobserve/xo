@@ -5,8 +5,9 @@ CREATE TABLE datav_traces.trace_index
     `traceId` FixedString(32) CODEC(ZSTD(1)),
     `spanId` String CODEC(ZSTD(1)),
     `parentId` String CODEC(ZSTD(1)),
-     tenantId LowCardinality(String) CODEC(ZSTD(1)),
-     environment LowCardinality(String) CODEC(ZSTD(1)),
+     tenant LowCardinality(String) CODEC(ZSTD(1)),
+     namespace LowCardinality(String) CODEC(ZSTD(1)),
+     group LowCardinality(String) CODEC(ZSTD(1)),
     `serviceName` LowCardinality(String) CODEC(ZSTD(1)),
     `name` LowCardinality(String) CODEC(ZSTD(1)),
     `kind` Int8 CODEC(T64, ZSTD(1)),
@@ -58,7 +59,7 @@ CREATE TABLE datav_traces.trace_index
 )
 ENGINE = MergeTree
 PARTITION BY toDate(startTime / 1000000000)
-ORDER BY (startTime, tenantId, environment, serviceName, name)
+ORDER BY (startTime, tenant, namespace, group , serviceName, name)
 TTL toDateTime(startTime / 1000000000) + INTERVAL 1296000 SECOND DELETE
 SETTINGS index_granularity = 8192, ttl_only_drop_parts = 1
 
@@ -86,12 +87,15 @@ ENGINE = Distributed("cluster", "datav_traces", trace_spans, cityHash64(traceId)
 
 
 CREATE TABLE datav_traces.top_level_operations
-(
-    `name` LowCardinality(String) CODEC(ZSTD(1)),
-    `serviceName` LowCardinality(String) CODEC(ZSTD(1))
+(   
+    tenant LowCardinality(String) CODEC(ZSTD(1)),
+    namespace LowCardinality(String) CODEC(ZSTD(1)),
+    group LowCardinality(String) CODEC(ZSTD(1)),
+    serviceName LowCardinality(String) CODEC(ZSTD(1)),
+    name LowCardinality(String) CODEC(ZSTD(1))
 )
 ENGINE = ReplacingMergeTree
-ORDER BY (serviceName, name)
+ORDER BY (tenant, namespace, group , serviceName, name)
 SETTINGS index_granularity = 8192
 
 CREATE TABLE IF NOT EXISTS datav_traces.distributed_top_level_operations ON CLUSTER cluster AS datav_traces.top_level_operations
@@ -100,35 +104,43 @@ ENGINE = Distributed("cluster", "datav_traces", top_level_operations, cityHash64
 CREATE MATERIALIZED VIEW IF NOT EXISTS datav_traces.sub_root_operations_mv ON CLUSTER cluster
 TO datav_traces.top_level_operations
 AS SELECT DISTINCT
-    name,
-    serviceName
+    tenant, 
+    namespace, 
+    group,
+    serviceName,
+    name
 FROM datav_traces.trace_index AS A, datav_traces.trace_index AS B
 WHERE (A.serviceName != B.serviceName) AND (A.parentId = B.spanId);
 
 CREATE MATERIALIZED VIEW IF NOT EXISTS datav_traces.root_operations_mv ON CLUSTER cluster
 TO datav_traces.top_level_operations
 AS SELECT DISTINCT
-    name,
-    serviceName
+    tenant, 
+    namespace, 
+    group,
+    serviceName,
+    name
 FROM datav_traces.trace_index
 WHERE parentId = '';
 
 CREATE TABLE datav_traces.service_operations
 (
-    tenantId LowCardinality(String) CODEC(ZSTD(1)),
-    environment LowCardinality(String) CODEC(ZSTD(1)),
+    tenant LowCardinality(String) CODEC(ZSTD(1)),
+    namespace LowCardinality(String) CODEC(ZSTD(1)),
+    group LowCardinality(String) CODEC(ZSTD(1)),
     serviceName LowCardinality(String) CODEC(ZSTD(1)),
     name LowCardinality(String) CODEC(ZSTD(1))
 )
 ENGINE = ReplacingMergeTree
-ORDER BY (tenantId, environment, serviceName, name)
+ORDER BY (tenant, namespace, group , serviceName, name)
 SETTINGS index_granularity = 8192
 
 CREATE MATERIALIZED VIEW IF NOT EXISTS datav_traces.service_operations_mv ON CLUSTER cluster
 TO datav_traces.service_operations
 AS SELECT DISTINCT
-    tenantId,
-    environment,
+    tenant, 
+    namespace, 
+    group,
     serviceName,
     name
 FROM datav_traces.trace_index
@@ -140,12 +152,15 @@ ENGINE = Distributed("cluster", "datav_traces", service_operations, cityHash64(r
 CREATE TABLE datav_traces.usage_explorer
 (
     `timestamp` DateTime64(9) CODEC(DoubleDelta, LZ4),
+    tenant LowCardinality(String) CODEC(ZSTD(1)),
+    namespace LowCardinality(String) CODEC(ZSTD(1)),
+    group LowCardinality(String) CODEC(ZSTD(1)),
     `service_name` LowCardinality(String) CODEC(ZSTD(1)),
     `count` UInt64 CODEC(T64, ZSTD(1))
 )
 ENGINE = SummingMergeTree
 PARTITION BY toDate(timestamp)
-ORDER BY (timestamp, service_name)
+ORDER BY (timestamp,tenant, namespace, group , service_name)
 TTL toDateTime(timestamp) + toIntervalSecond(604800)
 SETTINGS index_granularity = 8192, ttl_only_drop_parts = 1
 
@@ -156,10 +171,11 @@ CREATE MATERIALIZED VIEW IF NOT EXISTS datav_traces.usage_explorer_mv ON CLUSTER
 TO datav_traces.usage_explorer
 AS SELECT
   toStartOfHour(toDateTime(startTime)) as timestamp,
+  tenant, namespace, group,
   serviceName as service_name,
   count() as count
 FROM datav_traces.trace_index
-GROUP BY timestamp, serviceName;
+GROUP BY timestamp, tenant, namespace, group, serviceName;
 
 
 CREATE TABLE datav_traces.trace_error_index
@@ -169,6 +185,9 @@ CREATE TABLE datav_traces.trace_error_index
     `groupID` FixedString(32) CODEC(ZSTD(1)),
     `traceID` FixedString(32) CODEC(ZSTD(1)),
     `spanID` String CODEC(ZSTD(1)),
+    tenant LowCardinality(String) CODEC(ZSTD(1)),
+    namespace LowCardinality(String) CODEC(ZSTD(1)),
+    group LowCardinality(String) CODEC(ZSTD(1)),
     `serviceName` LowCardinality(String) CODEC(ZSTD(1)),
     `exceptionType` LowCardinality(String) CODEC(ZSTD(1)),
     `exceptionMessage` String CODEC(ZSTD(1)),
@@ -181,7 +200,7 @@ CREATE TABLE datav_traces.trace_error_index
 )
 ENGINE = MergeTree
 PARTITION BY toDate(timestamp)
-ORDER BY (timestamp, groupID)
+ORDER BY (timestamp,  tenant, namespace, group, groupID)
 TTL toDateTime(timestamp) + toIntervalSecond(604800)
 SETTINGS index_granularity = 8192, ttl_only_drop_parts = 1
 
@@ -191,8 +210,9 @@ ENGINE = Distributed("cluster", "datav_traces", trace_error_index, cityHash64(gr
 
 CREATE TABLE datav_traces.span_attributes_keys
 (
-    tenantId LowCardinality(String) CODEC(ZSTD(1)),
-    environment LowCardinality(String) CODEC(ZSTD(1)),
+    tenant LowCardinality(String) CODEC(ZSTD(1)),
+    namespace LowCardinality(String) CODEC(ZSTD(1)),
+    group LowCardinality(String) CODEC(ZSTD(1)),
     serviceName LowCardinality(String) CODEC(ZSTD(1)),
     tagKey LowCardinality(String) CODEC(ZSTD(1)),
     tagType Enum8('tag' = 1, 'resource' = 2) CODEC(ZSTD(1)),
@@ -200,7 +220,7 @@ CREATE TABLE datav_traces.span_attributes_keys
     isColumn Bool CODEC(ZSTD(1))
 )
 ENGINE = ReplacingMergeTree
-ORDER BY (tenantId, environment, serviceName,tagKey,tagType,dataType,isColumn)
+ORDER BY (tenant, namespace, group, serviceName,tagKey,tagType,dataType,isColumn)
 SETTINGS index_granularity = 8192
 
 CREATE TABLE IF NOT EXISTS datav_traces.distributed_span_attributes_keys ON CLUSTER cluster AS datav_traces.span_attributes_keys
@@ -210,8 +230,9 @@ ENGINE = Distributed("cluster", "datav_traces", span_attributes_keys, cityHash64
 CREATE TABLE datav_traces.span_attributes
 (
     `startTime` UInt64 CODEC(DoubleDelta, LZ4),
-    tenantId LowCardinality(String) CODEC(ZSTD(1)),
-    environment LowCardinality(String) CODEC(ZSTD(1)),
+    tenant LowCardinality(String) CODEC(ZSTD(1)),
+    namespace LowCardinality(String) CODEC(ZSTD(1)),
+    group LowCardinality(String) CODEC(ZSTD(1)),
     serviceName LowCardinality(String) CODEC(ZSTD(1)),
     `tagKey` LowCardinality(String) CODEC(ZSTD(1)),
     `tagType` Enum8('tag' = 1, 'resource' = 2) CODEC(ZSTD(1)),
@@ -221,7 +242,7 @@ CREATE TABLE datav_traces.span_attributes
     `isColumn` Bool CODEC(ZSTD(1))
 )
 ENGINE = ReplacingMergeTree
-ORDER BY (tenantId,environment,serviceName,tagKey, tagType, dataType, stringTagValue, float64TagValue, isColumn)
+ORDER BY (tenant, namespace, group ,serviceName,tagKey, tagType, dataType, stringTagValue, float64TagValue, isColumn)
 TTL toDateTime(startTime / 1000000000)  + toIntervalSecond(172800)
 SETTINGS ttl_only_drop_parts = 1, allow_nullable_key = 1, index_granularity = 8192
 

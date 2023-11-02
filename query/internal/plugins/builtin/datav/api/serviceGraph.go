@@ -20,25 +20,15 @@ func GetDependencyGraph(c *gin.Context, ds *models.Datasource, conn ch.Conn, par
 
 	source := datavutils.GetValueListFromParams(params, "source")
 	target := datavutils.GetValueListFromParams(params, "target")
-	environment := datavutils.GetValueListFromParams(params, "environment")
-	cluster := datavutils.GetValueListFromParams(params, "cluster")
-	namespace := datavutils.GetValueListFromParams(params, "namespace")
 
-	var domainQuery string
+	tenant := models.GetTenant(c)
+	domainQuery := datavutils.BuildBasicDomainQuery(tenant, params)
+
 	if source != nil {
 		domainQuery += fmt.Sprintf(" AND src in ('%s')", strings.Join(source, "','"))
 	}
 	if target != nil {
 		domainQuery += fmt.Sprintf(" AND dest in ('%s')", strings.Join(target, "','"))
-	}
-	if environment != nil {
-		domainQuery += fmt.Sprintf(" AND environment in ('%s')", strings.Join(environment, "','"))
-	}
-	if cluster != nil {
-		domainQuery += fmt.Sprintf(" AND cluster in ('%s')", strings.Join(cluster, "','"))
-	}
-	if namespace != nil {
-		domainQuery += fmt.Sprintf(" AND namespace in ('%s')", strings.Join(namespace, "','"))
 	}
 
 	query := fmt.Sprintf(`WITH
@@ -55,7 +45,7 @@ SELECT
 	sum(total_count) as calls,
 	sum(error_count) as errors
 FROM %s.%s	
-WHERE toUInt64(toDateTime(timestamp)) >= ? AND toUInt64(toDateTime(timestamp)) <= ? %s GROUP BY src, dest`,
+WHERE toUInt64(toDateTime(timestamp)) >= ? AND toUInt64(toDateTime(timestamp)) <= ? AND %s GROUP BY src, dest`,
 		config.Data.Observability.DefaultTraceDB, datavmodels.DefaultDependencyGraphTable, domainQuery)
 
 	rows, err := conn.Query(c.Request.Context(), query, start, end)

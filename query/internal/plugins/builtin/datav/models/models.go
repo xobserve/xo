@@ -37,4 +37,5 @@ type SearchToken struct {
 
 const VariableSplitChart = "|"
 
-const DefaultEvironment = "default"
+const DefaultNamespace = "default"
+const DefaultGroup = "default"

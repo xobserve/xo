@@ -25,11 +25,9 @@ func GetTraces(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[s
 	// @performace: 对 traceId 做 skip index
 	traceIds := strings.TrimSpace(c.Query("traceIds"))
 
-	var domainQuery string
-	environment := datavutils.GetValueListFromParams(params, "environment")
-	if environment != nil {
-		domainQuery += fmt.Sprintf(" AND environment in ('%s')", strings.Join(environment, "','"))
-	}
+	tenant := models.GetTenant(c)
+	domainQuery := datavutils.BuildBasicDomainQuery(tenant, params)
+
 	service := c.Query("service")
 	if service == "" {
 		serviceI := datavutils.GetValueListFromParams(params, "service")
@@ -47,7 +45,7 @@ func GetTraces(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[s
 		if traceIds != "" {
 			query = fmt.Sprintf("SELECT startTime,traceId,name,duration,responseStatusCode FROM %s.%s WHERE traceId in ('%s') AND parentId=''", config.Data.Observability.DefaultTraceDB, datavmodels.DefaultTraceIndexTable, strings.Join(strings.Split(traceIds, ","), "','"))
 		} else {
-			query = fmt.Sprintf("SELECT startTime,traceId,name,duration,responseStatusCode FROM %s.%s WHERE startTime >= %d AND startTime <= %d %s AND parentId='' ORDER BY startTime DESC limit 20", config.Data.Observability.DefaultTraceDB, datavmodels.DefaultTraceIndexTable, start*1e9, end*1e9, domainQuery)
+			query = fmt.Sprintf("SELECT startTime,traceId,name,duration,responseStatusCode FROM %s.%s WHERE startTime >= %d AND startTime <= %d AND %s AND parentId='' ORDER BY startTime DESC limit 20", config.Data.Observability.DefaultTraceDB, datavmodels.DefaultTraceIndexTable, start*1e9, end*1e9, domainQuery)
 
 		}
 		// query traceIDs
@@ -186,7 +184,7 @@ func GetTraces(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[s
 			aggregateQuery = "round(quantile(0.99)(duration) / 1e6,2) as p99"
 		}
 
-		metricsQuery := fmt.Sprintf("SELECT toStartOfInterval(fromUnixTimestamp64Nano(startTime), INTERVAL %d SECOND) AS ts_bucket, %s %s from %s.%s where (startTime >= %d AND startTime <= %d %s) group by %s order by ts_bucket", step, groupby, aggregateQuery, config.Data.Observability.DefaultTraceDB, datavmodels.DefaultTraceIndexTable, start*1e9, end*1e9, domainQuery, groupBy)
+		metricsQuery := fmt.Sprintf("SELECT toStartOfInterval(fromUnixTimestamp64Nano(startTime), INTERVAL %d SECOND) AS ts_bucket, %s %s from %s.%s where (startTime >= %d AND startTime <= %d AND %s) group by %s order by ts_bucket", step, groupby, aggregateQuery, config.Data.Observability.DefaultTraceDB, datavmodels.DefaultTraceIndexTable, start*1e9, end*1e9, domainQuery, groupBy)
 
 		rows, err := conn.Query(c.Request.Context(), metricsQuery)
 		if err != nil {
@@ -240,17 +238,10 @@ type TagKey struct {
 }
 
 func GetTraceTagKeys(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[string]interface{}) models.PluginResult {
+	// tenant := models.GetTenant(c)
+	// domainQuery := datavutils.BuildBasicDomainQuery(tenant, params)
+
 	var domainQuery string
-	tenant := datavutils.GetValueListFromParams(params, "tenant")
-	if tenant != nil {
-		domainQuery += fmt.Sprintf(" tenant='%s'", tenant)
-	}
-
-	environment := datavutils.GetValueListFromParams(params, "environment")
-	if environment != nil {
-		domainQuery += fmt.Sprintf(" AND environment in ('%s')", strings.Join(environment, "','"))
-	}
-
 	service := c.Query("service")
 	if service == "" {
 		serviceI := datavutils.GetValueListFromParams(params, "service")

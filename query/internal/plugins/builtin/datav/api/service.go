@@ -22,16 +22,8 @@ type ServiceNameRes struct {
 }
 
 func GetServiceNames(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[string]interface{}) models.PluginResult {
-
 	tenant := models.DefaultTenant
-	domainQuery := fmt.Sprintf(" tenantId='%s'", tenant)
-	environment := datavutils.GetValueListFromParams(params, "environment")
-
-	if environment != nil {
-		domainQuery += fmt.Sprintf(" AND environment in ('%s')", strings.Join(environment, "','"))
-	} else {
-		domainQuery += fmt.Sprintf(" AND environment='%s'", datavmodels.DefaultEvironment)
-	}
+	domainQuery := datavutils.BuildBasicDomainQuery(tenant, params)
 
 	query := fmt.Sprintf("SELECT DISTINCT serviceName FROM %s.%s WHERE %s", config.Data.Observability.DefaultTraceDB, datavmodels.DefaultServiceOperationsTable, domainQuery)
 
@@ -53,13 +45,7 @@ func GetServiceNames(c *gin.Context, ds *models.Datasource, conn ch.Conn, params
 
 func GetServiceOperations(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[string]interface{}) models.PluginResult {
 	tenant := models.DefaultTenant
-	domainQuery := fmt.Sprintf(" tenantId='%s'", tenant)
-	environment := datavutils.GetValueListFromParams(params, "environment")
-	if environment != nil {
-		domainQuery += fmt.Sprintf(" AND environment in ('%s')", strings.Join(environment, "','"))
-	} else {
-		domainQuery += fmt.Sprintf(" AND environment='%s'", datavmodels.DefaultEvironment)
-	}
+	domainQuery := datavutils.BuildBasicDomainQuery(tenant, params)
 
 	service := datavutils.GetValueListFromParams(params, "service")
 	if service != nil {
@@ -100,33 +86,20 @@ func GetServiceInfoList(c *gin.Context, ds *models.Datasource, conn ch.Conn, par
 		return models.GenPluginResult(models.PluginStatusError, "start and end is required", nil)
 	}
 
-	serviceFilter := ""
-	serviceI := params["service"]
-	serviceNames := make([]string, 0)
-	if serviceI != nil {
-		service := serviceI.(string)
-		serviceFilter = " serviceName IN @serviceNames AND"
-		serviceNames = strings.Split(service, "|")
+	tenant := models.DefaultTenant
+	domainQuery := datavutils.BuildBasicDomainQuery(tenant, params)
+
+	service := datavutils.GetValueListFromParams(params, "service")
+	if service != nil {
+		domainQuery += fmt.Sprintf(" AND serviceName in ('%s')", strings.Join(service, "','"))
 	}
 
 	serviceMap := make(map[string]*ServiceInfo)
 	query := fmt.Sprintf(
-		`SELECT
-			serviceName,
-			quantile(0.99)(durationNano) / 1e6 as p99,
-			avg(durationNano) / 1e6  as avgDuration,
-			count(DISTINCT traceID) as numCalls,
-			count(*) as numOperations
-		FROM %s.%s
-		WHERE %s timestamp>= %d AND timestamp<= %d
-		GROUP BY serviceName`,
-		config.Data.Observability.DefaultTraceDB, datavmodels.DefaultTraceIndexTable, serviceFilter, start, end)
-	args := []interface{}{}
-	args = append(args,
-		ch.Named("serviceNames", serviceNames),
-	)
+		`SELECT serviceName, quantile(0.99)(duration) / 1e6 as p99, avg(duration) / 1e6  as avgDuration, count(DISTINCT traceId) as numCalls, count(*) as numOperations FROM %s.%s WHERE startTime>= %d AND startTime<= %d AND %s GROUP BY serviceName`,
+		config.Data.Observability.DefaultTraceDB, datavmodels.DefaultTraceIndexTable, start*1e9, end*1e9, domainQuery)
 
-	rows, err := conn.Query(c.Request.Context(), query, args...)
+	rows, err := conn.Query(c.Request.Context(), query)
 	if err != nil {
 		logger.Warn("Error Query service operations", "query", query, "error", err)
 		return models.GenPluginResult(models.PluginStatusError, err.Error(), nil)
@@ -148,15 +121,10 @@ func GetServiceInfoList(c *gin.Context, ds *models.Datasource, conn ch.Conn, par
 	logger.Info("Query service operations", "query", query)
 
 	query = fmt.Sprintf(
-		`SELECT
-			serviceName,
-			count(DISTINCT traceID)  as numErrors
-		FROM %s.%s
-		WHERE %s timestamp>= %d AND timestamp<= %d AND statusCode=2
-		GROUP BY serviceName`,
-		config.Data.Observability.DefaultTraceDB, datavmodels.DefaultTraceIndexTable, serviceFilter, start, end)
+		`SELECT serviceName, count(DISTINCT traceId)  as numErrors FROM %s.%s WHERE startTime>= %d AND startTime<= %d AND %s AND statusCode=2  GROUP BY serviceName`,
+		config.Data.Observability.DefaultTraceDB, datavmodels.DefaultTraceIndexTable, start*1e9, end*1e9, domainQuery)
 
-	rows, err = conn.Query(c.Request.Context(), query, args...)
+	rows, err = conn.Query(c.Request.Context(), query)
 	if err != nil {
 		logger.Warn("Error Query service operations", "query", query, "error", err)
 		return models.GenPluginResult(models.PluginStatusError, err.Error(), nil)

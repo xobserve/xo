@@ -127,31 +127,38 @@ export default HttpQueryEditor
 
 
 
+const domainParams = [
+    ["namespace", "namespace name, can be an environment name, such as dev, test, prod etc","default",""],
+    ["gropu", "group name, logical group of services","default",""],
+]
+
 const apiList = [{
     name: "getServiceInfoList",
     desc: "get service infos, such as p99 latency, errors, qps, render as a table",
     params: `{
 }`,
     paramsDesc: [
-        ["environment", "environment name, such as dev, test, prod etc"],
+        ...domainParams,
         ["service", "filter by service names, e.g datav|driver"]
-    ]
+    ],
+    format: DataFormat.Table
 },
+
 {
-    name: "getEnvironments",
-    desc: "get environment names",
+    name: "getNamespaces",
+    desc: "get namespace list",
     params: `{
 }`,
-    paramsDesc: [["environment", "environment name, such as dev, test, prod etc"]],
-    format: DataFormat.StringList
+    paramsDesc: [],
+    format: DataFormat.Table
 },
 {
     name: "getServiceNames",
     desc: "get service names, can be used in variable values",
     params: `{
 }`,
-    paramsDesc: [["environment", "environment name, such as dev, test, prod etc"]],
-    format: DataFormat.StringList
+    paramsDesc: [...domainParams],
+    format: DataFormat.Table
 },
 {
     name: "getServiceOperations",
@@ -160,10 +167,10 @@ const apiList = [{
     "service": "datav"
 }`,
     paramsDesc: [
-        ["environment", "environment name, such as dev, test, prod etc"],
+        ...domainParams,
         ["service", "service name"]
     ],
-    format: DataFormat.StringList
+    format: DataFormat.Table
 },
 {
     name: "getLogs",
@@ -171,7 +178,7 @@ const apiList = [{
     params: `{
 }`,
     paramsDesc: [
-        ["environment", "such as dev, test, prod etc", "", ""],
+        ...domainParams,
         ["service", "filter by service names, e.g datav|driver", "", ""],
         ["host", "filter by host names, e.g datav-1|datav-2", "", ""],
         ["severity", "logs severity, e.g error|info", "", "debug| info | warn | error | fatal"],
@@ -186,9 +193,7 @@ const apiList = [{
     params: `{
 }`,
     paramsDesc: [
-        ["environment", "such as dev, test, prod etc", "", ""],
-        ["cluster", "e.g k8s cluster name", "", ""],
-        ["namespace", "e.g k8s namespace name", "", ""],
+      ...domainParams,
         ["source", "service name list, e.g datav|mysql","",""],
         ["target", "service name list, e.g datav|mysql","",""]
     ],
@@ -200,7 +205,7 @@ const apiList = [{
     params: `{
 }`,
     paramsDesc: [
-        ["environment", "such as dev, test, prod etc", "", ""],
+        ...domainParams,
     ],
     format: DataFormat.NodeGraph
 }

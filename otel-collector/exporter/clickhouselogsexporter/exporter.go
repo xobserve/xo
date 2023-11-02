@@ -155,7 +155,7 @@ func (e *clickhouseLogsExporter) pushLogsData(ctx context.Context, ld plog.Logs)
 					r := rs.At(k)
 
 					// capturing the metrics
-					tenant := utils.GetTenantNameFromResource(logs.Resource())
+					tenant := utils.GetTenantFromResource(logs.Resource())
 					attrBytes, _ := json.Marshal(r.Attributes().AsRaw())
 					usage.AddMetric(metrics, tenant, 1, int64(len([]byte(r.Body().AsString()))+len(attrBytes)+len(resBytes)))
 

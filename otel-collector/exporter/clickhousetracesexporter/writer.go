@@ -103,8 +103,9 @@ func (w *SpanWriter) writeIndexBatch(batchSpans []*Span) error {
 			span.TraceId,
 			span.SpanId,
 			span.ParentId,
-			span.TenantId,
-			span.Environment,
+			span.Tenant,
+			span.Namespace,
+			span.Group,
 			span.ServiceName,
 			span.Name,
 			span.Kind,
@@ -191,13 +192,14 @@ func (w *SpanWriter) writeTagBatch(batchSpans []*Span) error {
 			mapOfSpanAttributeValues[mapOfSpanAttributeValueKey] = struct{}{}
 
 			// form a map key of span attribute key, tagType, dataType and isColumn
-			mapOfSpanAttributeKey := spanAttribute.TenantId + spanAttribute.Environment + spanAttribute.ServiceName + spanAttribute.Key + spanAttribute.TagType + spanAttribute.DataType + strconv.FormatBool(spanAttribute.IsColumn)
+			mapOfSpanAttributeKey := spanAttribute.Tenant + spanAttribute.Namespace + spanAttribute.Group + spanAttribute.ServiceName + spanAttribute.Key + spanAttribute.TagType + spanAttribute.DataType + strconv.FormatBool(spanAttribute.IsColumn)
 
 			// check if mapOfSpanAttributeKey already exists in map
 			_, ok = mapOfSpanAttributeKeys[mapOfSpanAttributeKey]
 			if !ok {
 				if spanAttribute.IsColumn {
 					err = tagKeyStatement.Append(
+						"",
 						"",
 						"",
 						"",
@@ -208,8 +210,9 @@ func (w *SpanWriter) writeTagBatch(batchSpans []*Span) error {
 					)
 				} else {
 					err = tagKeyStatement.Append(
-						spanAttribute.TenantId,
-						spanAttribute.Environment,
+						spanAttribute.Tenant,
+						spanAttribute.Namespace,
+						spanAttribute.Group,
 						spanAttribute.ServiceName,
 						spanAttribute.Key,
 						spanAttribute.TagType,
@@ -229,8 +232,9 @@ func (w *SpanWriter) writeTagBatch(batchSpans []*Span) error {
 			if spanAttribute.DataType == "string" {
 				err = tagStatement.Append(
 					span.StartTime,
-					spanAttribute.TenantId,
-					spanAttribute.Environment,
+					spanAttribute.Tenant,
+					spanAttribute.Namespace,
+					spanAttribute.Group,
 					spanAttribute.ServiceName,
 					spanAttribute.Key,
 					spanAttribute.TagType,
@@ -242,8 +246,9 @@ func (w *SpanWriter) writeTagBatch(batchSpans []*Span) error {
 			} else if spanAttribute.DataType == "float64" {
 				err = tagStatement.Append(
 					span.StartTime,
-					spanAttribute.TenantId,
-					spanAttribute.Environment,
+					spanAttribute.Tenant,
+					spanAttribute.Namespace,
+					spanAttribute.Group,
 					spanAttribute.ServiceName,
 					spanAttribute.Key,
 					spanAttribute.TagType,
@@ -255,8 +260,9 @@ func (w *SpanWriter) writeTagBatch(batchSpans []*Span) error {
 			} else if spanAttribute.DataType == "bool" {
 				err = tagStatement.Append(
 					span.StartTime,
-					spanAttribute.TenantId,
-					spanAttribute.Environment,
+					spanAttribute.Tenant,
+					spanAttribute.Namespace,
+					spanAttribute.Group,
 					spanAttribute.ServiceName,
 					spanAttribute.Key,
 					spanAttribute.TagType,
@@ -326,6 +332,9 @@ func (w *SpanWriter) writeErrorBatch(batchSpans []*Span) error {
 			span.ErrorGroupID,
 			span.TraceId,
 			span.SpanId,
+			span.Tenant,
+			span.Namespace,
+			span.Group,
 			span.ServiceName,
 			span.ErrorEvent.AttributeMap["exception.type"],
 			span.ErrorEvent.AttributeMap["exception.message"],
@@ -385,7 +394,7 @@ func (w *SpanWriter) writeModelBatch(batchSpans []*Span) error {
 			return err
 		}
 
-		usage.AddMetric(metrics, *&span.TenantId, 1, int64(len(serializedUsage)))
+		usage.AddMetric(metrics, *&span.Tenant, 1, int64(len(serializedUsage)))
 	}
 	start := time.Now()
 
