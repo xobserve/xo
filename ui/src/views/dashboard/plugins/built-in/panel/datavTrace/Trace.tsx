@@ -147,7 +147,7 @@ const TracePanel = (props: PanelProps) => {
 
     const resultHeight = props.height - 7
     const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
-    const searchPanelWidth = isLargeScreen ? "400px" : "140px"
+    const searchPanelWidth = isLargeScreen ? "300px" : "140px"
 
     const groupByOptions = useMemo(() => {
         const groupByOptions = [{label: "None", value: ""},{ label: "operationName", value: "name" },{ label: "serviceName", value: "serviceName" }]
@@ -159,7 +159,6 @@ const TracePanel = (props: PanelProps) => {
         return groupByOptions
     }, [traceTagKeys])
 
-    console.log("here33333:", traces)
     return (<>
         {
             <HStack alignItems="top" px="2" py="1" spacing={isLargeScreen ? 6 : 2}>
@@ -169,9 +168,7 @@ const TracePanel = (props: PanelProps) => {
                     </CustomScrollbar>
                 </Box>
                 <Box width={`calc(100% - ${searchPanelWidth})`} maxH={resultHeight}>
-
                     <CustomScrollbar>
-
                         {traces && panel.plugins[PanelType].chart && <TraceSearchResult traces={traces} panel={props.panel} dashboardId={props.dashboardId} teamId={props.teamId} timeRange={props.timeRange} height={resultHeight} traceChart={traceChart} traceChartOptions={panel.plugins[PanelType].chart} groupByOptions={groupByOptions} />}
                     </CustomScrollbar>
                 </Box>

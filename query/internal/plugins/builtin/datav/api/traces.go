@@ -152,14 +152,19 @@ func GetTraces(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[s
 		aggregateQuery := "count(DISTINCT traceId) as count"
 		groupBy := "ts_bucket"
 		if groupby != "" {
-			groupBy = groupBy + "," + groupby
+			if strings.HasPrefix(groupby, "resources.") {
+				realGroup := groupby[10:]
+				groupby = fmt.Sprintf("resourcesMap['%s'] as groupBy", realGroup) + ","
+			} else if strings.HasPrefix(groupby, "attributes.") {
+				realGroup := groupby[11:]
+
+				groupby = fmt.Sprintf("attributesMap['%s'] as groupBy", realGroup) + ","
+			} else {
+				groupby = groupby + " as groupBy,"
+			}
+			groupBy = groupBy + ", groupBy"
 		}
-		// if groupby != "" {
-		// 	domainQuery += fmt.Sprintf(" AND notEmpty(%s)", groupby)
-		// }
-		if groupby != "" {
-			groupby = groupby + ","
-		}
+
 		switch aggregate {
 		case "rate":
 			aggregateQuery = fmt.Sprintf("round(count(DISTINCT traceId) / %d,2) as rate", step)
