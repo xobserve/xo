@@ -59,11 +59,14 @@ func GetTraces(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[s
 		operationNameQuery1 = operationNameQuery
 	}
 
+	var durationQuery string
 	if min != 0 {
 		domainQuery += fmt.Sprintf(" AND duration >= %d", min*1e6)
+		durationQuery += fmt.Sprintf(" AND duration >= %d", min*1e6)
 	}
 	if max != 0 {
 		domainQuery += fmt.Sprintf(" AND duration <= %d", max*1e6)
+		durationQuery += fmt.Sprintf(" AND duration <= %d", max*1e6)
 	}
 
 	traceIndexes := make([]*datavmodels.TraceIndex, 0)
@@ -73,8 +76,8 @@ func GetTraces(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[s
 		if traceIds != "" {
 			query = fmt.Sprintf("SELECT startTime as ts,serviceName,name,traceId, duration as maxDuration FROM %s.%s WHERE traceId in ('%s') AND parentId=''", config.Data.Observability.DefaultTraceDB, datavmodels.DefaultTraceIndexTable, strings.Join(strings.Split(traceIds, ","), "','"))
 		} else if service != "" {
-			// SELECT traceId,min(startTime) as ts,count(spanId) as spanCount,max(duration) as maxDuration FROM trace_index WHERE startTime >= 1698975125000000000 AND startTime <= 1698975420000000000 AND serviceName='customer' GROUP BY traceId ORDER BY maxDuration DESC LIMIT 20
-			query = fmt.Sprintf("SELECT min(startTime) as ts,serviceName,name,traceId,max(duration) as maxDuration FROM %s.%s WHERE startTime >= %d AND startTime <= %d AND %s GROUP BY serviceName,name,traceId ORDER BY ts DESC limit %d", config.Data.Observability.DefaultTraceDB, datavmodels.DefaultTraceIndexTable, start*1e9, end*1e9, domainQuery+operationNameQuery, limit)
+			query0 := fmt.Sprintf("SELECT DISTINCT traceId FROM %s.%s WHERE startTime >= %d AND startTime <= %d AND %s ORDER BY startTime DESC limit %d", config.Data.Observability.DefaultTraceDB, datavmodels.DefaultTraceIndexTable, start*1e9, end*1e9, domainQuery+operationNameQuery, limit)
+			query = fmt.Sprintf("SELECT min(startTime) as ts,serviceName,name,traceId,max(duration) as maxDuration FROM %s.%s WHERE traceId in (%s) AND serviceName='%s' %s  %s GROUP BY serviceName,name,traceId", config.Data.Observability.DefaultTraceDB, datavmodels.DefaultTraceIndexTable, query0, service, operationNameQuery, durationQuery)
 		} else {
 			query = fmt.Sprintf("SELECT startTime as ts,serviceName,name,traceId, duration as maxDuration FROM %s.%s WHERE tartTime >= %d AND startTime <= %d AND %s  AND parentId='' ORDER BY ts DESC limit %d", config.Data.Observability.DefaultTraceDB, datavmodels.DefaultTraceIndexTable, start*1e9, end*1e9, domainQuery, limit)
 		}
@@ -294,9 +297,6 @@ type TagKey struct {
 }
 
 func GetTraceTagKeys(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[string]interface{}) models.PluginResult {
-	// tenant := models.GetTenant(c)
-	// domainQuery := datavutils.BuildBasicDomainQuery(tenant, params)
-
 	var domainQuery string
 	service := c.Query("service")
 	if service == "" {
@@ -314,26 +314,7 @@ func GetTraceTagKeys(c *gin.Context, ds *models.Datasource, conn ch.Conn, params
 		domainQuery = "WHERE isColumn=true"
 	}
 
-	// query := fmt.Sprintf("SELECT DISTINCT tagKey,tagType,dataType FROM %s.%s %s ", config.Data.Observability.DefaultTraceDB, datavmodels.DefaultSpanAttributeKeysTable, domainQuery)
-	// // query traceIDs
-	// rows, err := conn.Query(c.Request.Context(), query)
-	// if err != nil {
-	// 	logger.Warn("Error Query trace tag keys", "query", query, "error", err)
-	// 	return models.GenPluginResult(models.PluginStatusError, err.Error(), nil)
-	// }
-	// defer rows.Close()
-
 	tags := make([]*TagKey, 0)
-	// for rows.Next() {
-	// 	tag := &TagKey{}
-	// 	err := rows.Scan(&tag.Name, &tag.Type, &tag.DataType)
-	// 	if err != nil {
-	// 		logger.Warn("Error scan trace tag key", "error", err)
-	// 		continue
-	// 	}
-	// 	tag.IsColumn = false
-	// 	tags = append(tags, tag)
-	// }
 
 	query := fmt.Sprintf("SELECT DISTINCT tagKey,tagType,dataType FROM %s.%s %s ", config.Data.Observability.DefaultTraceDB, datavmodels.DefaultSpanAttributeKeysTable, domainQuery)
 	// query traceIDs

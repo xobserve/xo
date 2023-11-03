@@ -66,36 +66,6 @@ SETTINGS index_granularity = 8192, ttl_only_drop_parts = 1
 CREATE TABLE IF NOT EXISTS datav_traces.distributed_trace_index ON CLUSTER cluster AS datav_traces.trace_index
 ENGINE = Distributed("cluster", "datav_traces", trace_index, cityHash64(traceId));
 
-CREATE TABLE datav_traces.trace_service_root_operation
-(
-    `traceId` FixedString(32) CODEC(ZSTD(1)),
-    `serviceName` LowCardinality(String) CODEC(ZSTD(1)),
-    `name` LowCardinality(String) CODEC(ZSTD(1)),
-)
-ENGINE = ReplacingMergeTree
-ORDER BY (traceId,serviceName,name)
-SETTINGS index_granularity = 2048, ttl_only_drop_parts = 1
-
-CREATE TABLE IF NOT EXISTS datav_traces.distributed_trace_service_root_operation ON CLUSTER cluster AS datav_traces.trace_service_root_operation
-ENGINE = Distributed("cluster", "datav_traces", trace_service_root_operation, cityHash64(traceId));
-
-CREATE MATERIALIZED VIEW IF NOT EXISTS datav_traces.trace_service_root_operation_mv ON CLUSTER cluster
-TO datav_traces.trace_service_root_operation
-AS SELECT 
-    traceId,
-    serviceName,
-    name,
-FROM datav_traces.trace_index AS A, datav_traces.trace_index AS B
-WHERE (A.serviceName != B.serviceName) AND (A.parentId = B.spanId);
-
-CREATE MATERIALIZED VIEW IF NOT EXISTS datav_traces.trace_service_root_operation_mv1 ON CLUSTER cluster
-TO datav_traces.trace_service_root_operation
-AS SELECT 
-    traceId,
-    serviceName,
-    name,
-FROM datav_traces.trace_index
-WHERE parentId = '';
 
 CREATE TABLE datav_traces.trace_spans
 (
