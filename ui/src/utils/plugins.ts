@@ -149,6 +149,9 @@ export const queryPluginDataToTable = (data: QueryPluginData, query: PanelQuery)
     return [series]
 }
 
+export const queryPluginDataToValueList= (data: QueryPluginData, query: PanelQuery) => {
+    return data.data.flat()
+}
 
 export const queryPluginDataToLogs = (data: {
     logs: QueryPluginData;

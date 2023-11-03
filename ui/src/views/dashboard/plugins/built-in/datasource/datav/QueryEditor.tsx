@@ -132,7 +132,7 @@ const domainParams = [
     ["gropu", "group name, logical group of services","default",""],
 ]
 
-const apiList = [{
+export const apiList = [{
     name: "getServiceInfoList",
     desc: "get service infos, such as p99 latency, errors, qps, render as a table",
     params: `{
@@ -150,7 +150,7 @@ const apiList = [{
     params: `{
 }`,
     paramsDesc: [],
-    format: DataFormat.Table
+    format: DataFormat.ValueList
 },
 {
     name: "getServiceNames",
@@ -158,7 +158,7 @@ const apiList = [{
     params: `{
 }`,
     paramsDesc: [...domainParams],
-    format: DataFormat.Table
+    format: DataFormat.ValueList
 },
 {
     name: "getServiceOperations",
@@ -170,7 +170,7 @@ const apiList = [{
         ...domainParams,
         ["service", "service name"]
     ],
-    format: DataFormat.Table
+    format: DataFormat.ValueList
 },
 {
     name: "getLogs",

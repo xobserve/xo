@@ -25,12 +25,13 @@ import { isEmpty } from "utils/validate"
 import { roundDsTime } from "utils/datasource"
 import { $variables } from "src/views/variables/store"
 import { QueryPluginResult } from "types/plugin"
-import { queryPluginDataToLogs, queryPluginDataToNodeGraph, queryPluginDataToTable, queryPluginDataToTimeSeries } from "utils/plugins"
+import { queryPluginDataToLogs, queryPluginDataToNodeGraph, queryPluginDataToTable, queryPluginDataToTimeSeries, queryPluginDataToValueList } from "utils/plugins"
 import { DataFormat } from "types/format"
 import { $datavQueryParams } from "./store"
 import { parseVariableFormat } from "utils/format"
 import { VariableSplitChar } from "src/data/variable"
 import { queryPluginDataToTrace, queryPluginDataToTraceChart } from "./utils"
+import { $datasources } from "src/views/datasource/store"
 
 export const runQuery = async (panel: Panel, q: PanelQuery, range: TimeRange, ds: Datasource, extraParams?: Record<string,any>) => {
     if (isEmpty(q.metrics)) {
@@ -115,6 +116,9 @@ export const runQuery = async (panel: Panel, q: PanelQuery, range: TimeRange, ds
         case DataFormat.Trace:
             data =  queryPluginDataToTrace(res.data.data as any, q)
             break
+        case DataFormat.ValueList:
+            data =  queryPluginDataToValueList(res.data.data as any, q)
+            break
         default:
             data = res.data.data
     }
@@ -141,38 +145,33 @@ export const queryHttpVariableValues = async (variable: Variable, useCurrentTime
     if (!data || isEmpty(data.url)) {
         return result
     }
+
+    const ds = $datasources.get().find(ds => ds.id == variable.datasource)
+    if (!ds) {
+        console.error("datasource not found:",variable.datasource)
+        return result
+    }
+
     const timeRange = getNewestTimeRange()
-    const start = roundDsTime(timeRange.start.getTime() / 1000)
-    const end = roundDsTime(timeRange.end.getTime() / 1000)
 
-
-    const headers = {}
-    let url
-    if (!isEmpty(data.transformRequest)) {
-        const transformRequest = genDynamicFunction(data.transformRequest);
-        if (isFunction(transformRequest)) {
-            url = transformRequest(replaceWithVariables(data.url), headers, start, end, $variables.get())
-        } else {
-            return []
-        }
-    }
-
-    try {
-        const res = await requestApi.get(`/common/proxy/${variable.id}?proxy_url=${encodeURIComponent(url)}`,{headers})
-        result.data = res
-
-        if (!isEmpty(data.transformResult)) {
-            const transformResult = genDynamicFunction(data.transformResult);
-            if (isFunction(transformResult)) {
-                result = transformResult(res)
-            } else {
-                result.data = []
+    const query:PanelQuery = {
+        id: 65,
+        metrics: data.url,
+        data:{
+            [data.url]: {
+                params : data.params
             }
-        }
-    } catch (error) {
-        console.error("variable http request error:",error)
+        },
     }
 
+    const res = await runQuery(null, query, timeRange, ds, {})
+    if (res.error) {
+        result.error = res.error
+        return result
+    }
+
+    const res1 = queryPluginDataToValueList(res.data, query)
+    result.data = res1
 
     return result
 }
@@ -180,7 +179,6 @@ export const queryHttpVariableValues = async (variable: Variable, useCurrentTime
 
 export const replaceDatavQueryWithVariables = (query: PanelQuery | string, interval: string) => {
     const vars = $variables.get()
-    console.log("here444444:",query)
     if (!query) {
         return query
     }

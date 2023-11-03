@@ -131,8 +131,8 @@ export interface PanelDatasource {
 export interface PanelQuery {
     id: number
     metrics: string
-    legend: string
-    visible: boolean
+    legend?: string
+    visible?: boolean
     interval?: number
     data?: {[key:string]:any}
 }

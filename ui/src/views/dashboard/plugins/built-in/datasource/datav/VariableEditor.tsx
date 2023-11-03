@@ -10,95 +10,72 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { CodeEditorModal } from "src/components/CodeEditor/CodeEditorModal"
-import Label from "src/components/form/Item"
 import { isEmpty } from "lodash"
 import { DatasourceVariableEditorProps } from "types/datasource"
 import { isJSON } from "utils/is"
 import { useEffect } from "react"
 import { queryHttpVariableValues } from "./query_runner"
 import FormItem from "src/components/form/Item"
-import { EditorInputItem } from "src/components/editor/EditorItem"
 import React from "react";
 import { useStore } from "@nanostores/react"
 import { httpDsMsg } from "src/i18n/locales/en"
+import { Select } from "antd"
+import { apiList } from "./QueryEditor"
+import { Box } from "@chakra-ui/react"
+import CodeEditor from "components/CodeEditor/CodeEditor"
+import { DataFormat } from "types/format"
 
-const HttpVariableEditor = ({ variable, onChange, onQueryResult }: DatasourceVariableEditorProps) => {
+const VariableEditor = ({ variable, onChange, onQueryResult }: DatasourceVariableEditorProps) => {
     const t1 = useStore(httpDsMsg)
     const data = isJSON(variable.value) ? JSON.parse(variable.value) : {}
 
     let update;
-    if (isEmpty(data.transformResult)) {
-        data.transformResult =  initTransformResult
+    if (isEmpty(data.params)) {
+        data.params = "{}"
         update = true
     }
-    if (isEmpty(data.transformRequest)) {
-        data.transformRequest =  initTransformRequest
-        update = true
-    }
-    if (update)  onChange(variable => {
+    if (update) onChange(variable => {
         variable.value = JSON.stringify(data)
     })
 
     useEffect(() => {
         loadVariables(variable)
     }, [variable])
-    
+
     const loadVariables = async (v) => {
         const result = await queryHttpVariableValues(variable)
         onQueryResult(result)
     }
 
     return (<>
-        <FormItem title="URL">
-            <EditorInputItem
-                value={data.url}
-                onChange={(v) => {
-                    data.url = v
-                    onChange(variable => {
-                        variable.value = JSON.stringify(data)
-                    })
-                }}
-                placeholder="support variable"
-            />
-        </FormItem>
-        <FormItem title={t1.reqTransform}>
-            {/* <Label width="200px" desc="If you want insert some imformation before request is sent to remote, e.g current time, just edit this function">Request transform</Label> */}
-            <CodeEditorModal value={data.transformRequest} onChange={v => {
-                data.transformRequest = v
+        <FormItem title="API" labelWidth="100px" size="sm">
+            <Select style={{minWidth: "150px"}} popupMatchSelectWidth={false} value={data.url} options={apiList.filter(api => api.format == DataFormat.ValueList).map(api => ({ label: api.name, value: api.name }))} onChange={(v) => {
+                data.url = v
                 onChange(variable => {
                     variable.value = JSON.stringify(data)
                 })
             }} />
         </FormItem>
-
-
-        <FormItem title={t1.respTransform}>
-            {/* <Label width="200px" desc="The http request result is probably not compatible with your visualization panels, here you can define a function to transform the result">Result transform</Label> */}
-            <CodeEditorModal value={data.transformResult} onChange={v => {
-                data.transformResult = v
-                onChange(variable => {
-                    variable.value = JSON.stringify(data)
-                })
-            }} />
+        <FormItem title="Params" labelWidth="100px" size="sm">
+            <Box width="300px">
+                <CodeEditor
+                    language="json"
+                    value={data.params}
+                    height="200px"
+                    onChange={(v) => {
+                        data.params = v
+                    }}
+                    onBlur={() => {
+                        onChange(variable => {
+                            variable.value = JSON.stringify(data)
+                        })
+                    }}
+                    isSingleLine
+                />
+            </Box>
         </FormItem>
     </>)
 }
 
-export default HttpVariableEditor
+export default VariableEditor
 
-
-
-const initTransformRequest =
-`
-// support variables
-function transformRequest(url,headers,startTime, endTime, variables) {
-    let newUrl = url + \`?&start=$\{startTime}&end=$\{endTime}\`
-    return newUrl
-}`
-
-const initTransformResult =
-`function transformResult(httpResult) {
-    console.log("here333 transformResult:", httpResult)
-    return httpResult    
-}`
