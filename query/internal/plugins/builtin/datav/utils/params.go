@@ -7,6 +7,19 @@ import (
 	"github.com/DataObserve/datav/query/pkg/models"
 )
 
+func GetValueFromParams(params map[string]interface{}, key string) string {
+	valueI := params[key]
+	if valueI != nil {
+		valueS := valueI.(string)
+		if strings.TrimSpace(valueS) == "" {
+			return ""
+		}
+		return valueS
+	}
+
+	return ""
+}
+
 func GetValueListFromParams(params map[string]interface{}, key string) []string {
 	valueI := params[key]
 	var value []string

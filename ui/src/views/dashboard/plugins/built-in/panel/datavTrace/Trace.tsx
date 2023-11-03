@@ -91,7 +91,6 @@ const TracePanel = (props: PanelProps) => {
     }, [dsPlugin])
 
     const loadTagKeys = async () => {
-        console.log("here333333:", dsPlugin)
         const res = await dsPlugin.runQuery(panel, {
             id: 65,
             metrics: "getTraceTagKeys",
@@ -108,10 +107,9 @@ const TracePanel = (props: PanelProps) => {
         }
         switch (ds.type) {
             case DatasourceTypeDatav:
-                tags = replaceWithVariables(tags)
-                min = !isEmpty(min) ? durationToMilliseconds(replaceWithVariables(min)) : min
-                max = durationToMilliseconds(replaceWithVariables(max))
-                limit = replaceWithVariables(limit)
+                tags = dsPlugin.replaceQueryWithVariables(tags)
+                min = !isEmpty(min) ? durationToMilliseconds(dsPlugin.replaceQueryWithVariables(min)) : min
+                max = durationToMilliseconds(dsPlugin.replaceQueryWithVariables(max))
                 const services = dsPlugin.replaceQueryWithVariables(service)
                 const operations = dsPlugin.replaceQueryWithVariables(operation)
 

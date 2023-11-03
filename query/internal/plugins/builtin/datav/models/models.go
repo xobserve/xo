@@ -1,20 +1,21 @@
 package models
 
 const (
-	DefaultTraceIndexTable         string = "distributed_trace_index"
-	DefaultTraceErrorTable         string = "distributed_trace_error_index"
-	DefaultDurationTable           string = "distributed_durationSort"
-	DefaultUsageExplorerTable      string = "distributed_usage_explorer"
-	DefaultTraceSpansTable         string = "distributed_trace_spans"
-	DefaultDependencyGraphTable    string = "distributed_dependency_graph_minutes"
-	DefaultTopLevelOperationsTable string = "distributed_top_level_operations"
-	DefaultServiceOperationsTable  string = "distributed_service_operations"
-	DefaultSpanAttributeTable      string = "distributed_span_attributes"
-	DefaultSpanAttributeKeysTable  string = "distributed_span_attributes_keys"
-	DefaultLogsTable               string = "distributed_logs"
-	DefaultLogAttributeKeysTable   string = "distributed_logs_attribute_keys"
-	DefaultLogResourceKeysTable    string = "distributed_logs_resource_keys"
-	DefaultLogTagAttributeTable    string = "distributed_log_tag_attributes"
+	DefaultTraceIndexTable           string = "distributed_trace_index"
+	DefaultTraceServiceRootOperation string = "trace_service_root_operation"
+	DefaultTraceErrorTable           string = "distributed_trace_error_index"
+	DefaultDurationTable             string = "distributed_durationSort"
+	DefaultUsageExplorerTable        string = "distributed_usage_explorer"
+	DefaultTraceSpansTable           string = "distributed_trace_spans"
+	DefaultDependencyGraphTable      string = "distributed_dependency_graph_minutes"
+	DefaultTopLevelOperationsTable   string = "distributed_top_level_operations"
+	DefaultServiceOperationsTable    string = "distributed_service_operations"
+	DefaultSpanAttributeTable        string = "distributed_span_attributes"
+	DefaultSpanAttributeKeysTable    string = "distributed_span_attributes_keys"
+	DefaultLogsTable                 string = "distributed_logs"
+	DefaultLogAttributeKeysTable     string = "distributed_logs_attribute_keys"
+	DefaultLogResourceKeysTable      string = "distributed_logs_resource_keys"
+	DefaultLogTagAttributeTable      string = "distributed_log_tag_attributes"
 )
 
 const (

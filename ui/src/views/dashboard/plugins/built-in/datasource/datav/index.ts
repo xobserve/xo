@@ -10,7 +10,7 @@ import DatasourceEditor from "./DatasourceEditor";
 import VariableEditor from "./VariableEditor";
 import QueryEditor from "./QueryEditor";
 import { DatasourceTypeDatav } from "./types"
-import { checkAndTestDatasource, queryHttpVariableValues, query_http_alerts, replaceDatavQueryWithVariables, runQuery } from "./query_runner";
+import { checkAndTestDatasource, queryDatavVariableValues, query_http_alerts, replaceDatavQueryWithVariables, runQuery } from "./query_runner";
 import { $config } from "src/data/configs/config";
 
 
@@ -27,7 +27,7 @@ const components: DatasourcePluginComponents = {
     runQuery: runQuery,
     testDatasource: checkAndTestDatasource,
     replaceQueryWithVariables: replaceDatavQueryWithVariables,
-    queryVariableValues: queryHttpVariableValues,
+    queryVariableValues: queryDatavVariableValues,
     
     queryAlerts: query_http_alerts,
 

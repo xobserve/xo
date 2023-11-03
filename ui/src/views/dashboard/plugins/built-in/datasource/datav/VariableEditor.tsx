@@ -14,7 +14,7 @@ import { isEmpty } from "lodash"
 import { DatasourceVariableEditorProps } from "types/datasource"
 import { isJSON } from "utils/is"
 import { useEffect } from "react"
-import { queryHttpVariableValues } from "./query_runner"
+import { queryDatavVariableValues } from "./query_runner"
 import FormItem from "src/components/form/Item"
 import React from "react";
 import { useStore } from "@nanostores/react"
@@ -43,7 +43,7 @@ const VariableEditor = ({ variable, onChange, onQueryResult }: DatasourceVariabl
     }, [variable])
 
     const loadVariables = async (v) => {
-        const result = await queryHttpVariableValues(variable)
+        const result = await queryDatavVariableValues(variable)
         onQueryResult(result)
     }
 

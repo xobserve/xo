@@ -3,6 +3,8 @@ package models
 // Trace list item
 type TraceIndex struct {
 	TraceId        string               `json:"traceID"`
+	ServiceName    string               `json:"serviceName"`
+	OperationName  string               `json:"name"`
 	Duration       uint64               `json:"duration"`
 	StartTime      uint64               `json:"startTime"`
 	TraceName      string               `json:"traceName"`

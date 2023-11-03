@@ -11,12 +11,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func GetEnvironments(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[string]interface{}) models.PluginResult {
+func GetNamespaces(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[string]interface{}) models.PluginResult {
 
 	tenant := models.DefaultTenant
-	domainQuery := fmt.Sprintf(" tenantId='%s'", tenant)
+	domainQuery := fmt.Sprintf(" tenant='%s'", tenant)
 
-	query := fmt.Sprintf("SELECT DISTINCT environment FROM %s.%s WHERE %s", config.Data.Observability.DefaultTraceDB, datavmodels.DefaultServiceOperationsTable, domainQuery)
+	query := fmt.Sprintf("SELECT DISTINCT namespace FROM %s.%s WHERE %s", config.Data.Observability.DefaultTraceDB, datavmodels.DefaultServiceOperationsTable, domainQuery)
 
 	rows, err := conn.Query(c.Request.Context(), query)
 	if err != nil {
@@ -24,7 +24,7 @@ func GetEnvironments(c *gin.Context, ds *models.Datasource, conn ch.Conn, params
 	}
 	defer rows.Close()
 
-	logger.Info("Query environments", "query", query)
+	logger.Info("Query namespaces", "query", query)
 
 	res, err := pluginUtils.ConvertDbRowsToPluginData(rows)
 	if err != nil {

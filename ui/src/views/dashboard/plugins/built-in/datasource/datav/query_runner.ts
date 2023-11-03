@@ -14,12 +14,10 @@ import { Datasource } from "types/datasource"
 import { Variable } from "types/variable"
 import { Panel, PanelQuery } from "types/dashboard"
 import { TimeRange } from "types/time"
-import { genDynamicFunction } from "utils/dashboard/dynamicCall"
-import {  isFunction, isObject, round } from "lodash"
+import {   isObject } from "lodash"
 import _ from 'lodash'
 import { getNewestTimeRange } from "src/components/DatePicker/TimePicker"
 import { isJSON } from "utils/is"
-import { replaceWithVariables } from "utils/variable"
 import { requestApi } from "utils/axios/request"
 import { isEmpty } from "utils/validate"
 import { roundDsTime } from "utils/datasource"
@@ -136,7 +134,7 @@ export const checkAndTestDatasource = async (ds: Datasource) => {
 }
 
 
-export const queryHttpVariableValues = async (variable: Variable, useCurrentTimerange = true) => {
+export const queryDatavVariableValues = async (variable: Variable, useCurrentTimerange = true) => {
     let result = {
         error: null,
         data: null
@@ -159,11 +157,12 @@ export const queryHttpVariableValues = async (variable: Variable, useCurrentTime
         metrics: data.url,
         data:{
             [data.url]: {
-                params : data.params
+                params : replaceDatavQueryWithVariables(data.params, null)
             }
         },
     }
 
+    
     const res = await runQuery(null, query, timeRange, ds, {})
     if (res.error) {
         result.error = res.error

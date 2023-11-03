@@ -21,6 +21,10 @@ func GetTraces(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[s
 	onlyChart := c.Query("onlyChart")
 	aggregate := c.Query("aggregate")
 	groupby := c.Query("groupby")
+	operation := c.Query("operation")
+	limit, _ := strconv.ParseInt(c.Query("limit"), 10, 64)
+	min, _ := strconv.ParseInt(c.Query("min"), 10, 64)
+	max, _ := strconv.ParseInt(c.Query("max"), 10, 64)
 
 	// @performace: 对 traceId 做 skip index
 	traceIds := strings.TrimSpace(c.Query("traceIds"))
@@ -28,14 +32,38 @@ func GetTraces(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[s
 	tenant := models.GetTenant(c)
 	domainQuery := datavutils.BuildBasicDomainQuery(tenant, params)
 
-	service := c.Query("service")
-	if service == "" {
-		serviceI := datavutils.GetValueListFromParams(params, "service")
-		if serviceI != nil {
-			domainQuery += fmt.Sprintf(" AND serviceName in ('%s')", strings.Join(serviceI, "','"))
-		}
+	service0 := c.Query("service")
+	var service string
+	if service0 == "" {
+		service = datavutils.GetValueFromParams(params, "service")
 	} else {
-		domainQuery += fmt.Sprintf(" AND serviceName='%s'", service)
+		service = service0
+	}
+
+	if service == "" {
+		return models.GenPluginResult(models.PluginStatusError, "service can not be empty", nil)
+	}
+
+	domainQuery += fmt.Sprintf(" AND serviceName='%s'", service)
+
+	var operationNameQuery string
+	var operationNameQuery1 string
+	if operation == "" || operation == models.VarialbeAllOption {
+		if min > 0 || max > 0 {
+			query := fmt.Sprintf("select name from %s.%s where %s", config.Data.Observability.DefaultTraceDB, datavmodels.DefaultTopLevelOperationsTable, domainQuery)
+			operationNameQuery = fmt.Sprintf(" AND name in (%s)", query)
+		}
+
+	} else {
+		operationNameQuery = fmt.Sprintf(" AND name='%s'", operation)
+		operationNameQuery1 = operationNameQuery
+	}
+
+	if min != 0 {
+		domainQuery += fmt.Sprintf(" AND duration >= %d", min*1e6)
+	}
+	if max != 0 {
+		domainQuery += fmt.Sprintf(" AND duration <= %d", max*1e6)
 	}
 
 	traceIndexes := make([]*datavmodels.TraceIndex, 0)
@@ -43,10 +71,12 @@ func GetTraces(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[s
 	if onlyChart != "true" {
 		var query string
 		if traceIds != "" {
-			query = fmt.Sprintf("SELECT startTime,traceId,name,duration,responseStatusCode FROM %s.%s WHERE traceId in ('%s') AND parentId=''", config.Data.Observability.DefaultTraceDB, datavmodels.DefaultTraceIndexTable, strings.Join(strings.Split(traceIds, ","), "','"))
+			query = fmt.Sprintf("SELECT startTime as ts,serviceName,name,traceId, duration as maxDuration FROM %s.%s WHERE traceId in ('%s') AND parentId=''", config.Data.Observability.DefaultTraceDB, datavmodels.DefaultTraceIndexTable, strings.Join(strings.Split(traceIds, ","), "','"))
+		} else if service != "" {
+			// SELECT traceId,min(startTime) as ts,count(spanId) as spanCount,max(duration) as maxDuration FROM trace_index WHERE startTime >= 1698975125000000000 AND startTime <= 1698975420000000000 AND serviceName='customer' GROUP BY traceId ORDER BY maxDuration DESC LIMIT 20
+			query = fmt.Sprintf("SELECT min(startTime) as ts,serviceName,name,traceId,max(duration) as maxDuration FROM %s.%s WHERE startTime >= %d AND startTime <= %d AND %s GROUP BY serviceName,name,traceId ORDER BY ts DESC limit %d", config.Data.Observability.DefaultTraceDB, datavmodels.DefaultTraceIndexTable, start*1e9, end*1e9, domainQuery+operationNameQuery, limit)
 		} else {
-			query = fmt.Sprintf("SELECT startTime,traceId,name,duration,responseStatusCode FROM %s.%s WHERE startTime >= %d AND startTime <= %d AND %s AND parentId='' ORDER BY startTime DESC limit 20", config.Data.Observability.DefaultTraceDB, datavmodels.DefaultTraceIndexTable, start*1e9, end*1e9, domainQuery)
-
+			query = fmt.Sprintf("SELECT startTime as ts,serviceName,name,traceId, duration as maxDuration FROM %s.%s WHERE tartTime >= %d AND startTime <= %d AND %s  AND parentId='' ORDER BY ts DESC limit %d", config.Data.Observability.DefaultTraceDB, datavmodels.DefaultTraceIndexTable, start*1e9, end*1e9, domainQuery, limit)
 		}
 		// query traceIDs
 		rows, err := conn.Query(c.Request.Context(), query)
@@ -56,22 +86,48 @@ func GetTraces(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[s
 		}
 		defer rows.Close()
 
-		traceIndexMap := make(map[string]*datavmodels.TraceIndex, 0)
+		logger.Info("Query trace index", "query", query)
+
+		traceIndexMap0 := make(map[string][]*datavmodels.TraceIndex, 0)
 		traceIDList := make([]string, 0)
 		for rows.Next() {
 			var traceIndex datavmodels.TraceIndex
-			err := rows.Scan(&traceIndex.StartTime, &traceIndex.TraceId, &traceIndex.TraceName, &traceIndex.Duration, &traceIndex.RespStatusCode)
+			err := rows.Scan(&traceIndex.StartTime, &traceIndex.ServiceName, &traceIndex.OperationName, &traceIndex.TraceId, &traceIndex.Duration)
 			if err != nil {
 				logger.Warn("Error scan trace index", "error", err)
 				continue
 			}
 			traceIndex.StartTime = traceIndex.StartTime / 1e3
 			traceIndex.Duration = traceIndex.Duration / 1e3
-			traceIndexMap[traceIndex.TraceId] = &traceIndex
-			traceIDList = append(traceIDList, traceIndex.TraceId)
+			traceIndex.TraceName = traceIndex.ServiceName + ": " + traceIndex.OperationName
+			traceIndexMap0[traceIndex.TraceId] = append(traceIndexMap0[traceIndex.TraceId], &traceIndex)
 		}
 
-		logger.Info("Query trace ids", "query", query)
+		traceIndexMap := make(map[string]*datavmodels.TraceIndex, 0)
+		for _, traceIndexList := range traceIndexMap0 {
+			// find root operation, which has the smallest start time
+			var minStartTime uint64 = 0
+			var rootOperationIndex int = 0
+			for i, traceIndex := range traceIndexList {
+				if minStartTime == 0 {
+					minStartTime = traceIndex.StartTime
+					rootOperationIndex = i
+					continue
+				}
+
+				if traceIndex.StartTime < minStartTime {
+					minStartTime = traceIndex.StartTime
+					rootOperationIndex = i
+				}
+			}
+
+			traceIndex := traceIndexList[rootOperationIndex]
+			traceIndexMap[traceIndex.TraceId] = traceIndex
+		}
+
+		for _, traceIndex := range traceIndexMap {
+			traceIDList = append(traceIDList, traceIndex.TraceId)
+		}
 
 		// query extra trace info
 		query = fmt.Sprintf("select traceId,serviceName,hasError,count(spanId) from %s.%s where traceId in ('%s') GROUP by traceId,serviceName,hasError", config.Data.Observability.DefaultTraceDB, datavmodels.DefaultTraceIndexTable, strings.Join(traceIDList, "','"))
@@ -184,7 +240,7 @@ func GetTraces(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[s
 			aggregateQuery = "round(quantile(0.99)(duration) / 1e6,2) as p99"
 		}
 
-		metricsQuery := fmt.Sprintf("SELECT toStartOfInterval(fromUnixTimestamp64Nano(startTime), INTERVAL %d SECOND) AS ts_bucket, %s %s from %s.%s where (startTime >= %d AND startTime <= %d AND %s) group by %s order by ts_bucket", step, groupby, aggregateQuery, config.Data.Observability.DefaultTraceDB, datavmodels.DefaultTraceIndexTable, start*1e9, end*1e9, domainQuery, groupBy)
+		metricsQuery := fmt.Sprintf("SELECT toStartOfInterval(fromUnixTimestamp64Nano(startTime), INTERVAL %d SECOND) AS ts_bucket, %s %s from %s.%s where (startTime >= %d AND startTime <= %d AND %s) group by %s order by ts_bucket", step, groupby, aggregateQuery, config.Data.Observability.DefaultTraceDB, datavmodels.DefaultTraceIndexTable, start*1e9, end*1e9, domainQuery+operationNameQuery1, groupBy)
 
 		rows, err := conn.Query(c.Request.Context(), metricsQuery)
 		if err != nil {

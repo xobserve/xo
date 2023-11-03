@@ -9,7 +9,7 @@ import (
 const (
 	TestDatasourceAPI       = "testDatasource"
 	GetServiceInfoListAPI   = "getServiceInfoList"
-	GetEnvironmentsAPI      = "getEnvironments"
+	GetNamespacesAPI        = "getNamespaces"
 	GetServiceNamesAPI      = "getServiceNames"
 	GetServiceOperationsAPI = "getServiceOperations"
 	GetDependencyGraphAPI   = "getDependencyGraph"
@@ -21,7 +21,7 @@ const (
 
 var APIRoutes = map[string]func(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[string]interface{}) models.PluginResult{
 	GetServiceInfoListAPI:   GetServiceInfoList,
-	GetEnvironmentsAPI:      GetEnvironments,
+	GetNamespacesAPI:        GetNamespaces,
 	GetServiceNamesAPI:      GetServiceNames,
 	GetServiceOperationsAPI: GetServiceOperations,
 	GetLogsAPI:              GetLogs,
