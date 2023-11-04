@@ -89,7 +89,7 @@ export type KeyValuePair = {
     duration: number;
 
     spans: TraceSpan[];
-
+    serviceName: string
     traceName: string;
     services: { name: string; numberOfSpans: number }[];
     errorsCount?: number;

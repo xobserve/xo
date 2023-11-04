@@ -1,4 +1,4 @@
-import { Box, Checkbox, Flex, HStack, Tag, TagLabel, TagLeftIcon, Text, Wrap, WrapItem, useColorModeValue, useMediaQuery } from "@chakra-ui/react"
+import { Box, Checkbox, Flex, HStack, Tag, TagLabel, TagLeftIcon, Text, Wrap, WrapItem, useColorModeValue, useMediaQuery, Tooltip } from "@chakra-ui/react"
 import { Trace } from "src/views/dashboard/plugins/built-in/panel/trace/types/trace"
 import { formatDuration, formatRelativeDate } from "utils/date"
 import { sortBy } from "lodash"
@@ -39,11 +39,13 @@ const TraceCard = ({ trace, maxDuration,checked=false, onChecked=null,simple=fal
                 }}><Checkbox size="sm" defaultChecked={checked} isChecked={checked} isDisabled={checkDisabled}  onChange={e =>  onChecked(trace.traceID)  }/></Flex>}
                 <Box width={`${(trace.duration / maxDuration) * 100}%`} bg={useColorModeValue('#f5f7fa', 'rgba(255,255,255,0.07)')} height="100%" position="absolute" top="0"></Box>
                 <Flex  alignItems="center" width="100%" justifyContent="space-between" position="relative" pr="2" >
-                    <Flex flexDir={isLargeScreen ? "row" : "column"} gap={isLargeScreen ? 1 : 0}>
+                    <Flex alignItems={isLargeScreen ? "center" : "start"} flexDir={isLargeScreen ? "row" : "column"} gap={isLargeScreen ? 1 : 0}>
                         <Text>{trace.traceName}</Text>
                         <Text opacity="0.7">{getShortTraceId(trace.traceID)}</Text>
+                        {trace.errorServices.has(trace.serviceName)  && <Tooltip label={"root span has error"} ><Box><FaInfoCircle color={paletteColorNameToHex(palettes[15])} fontSize="0.8rem" opacity={0.8}/></Box></Tooltip>}
                     </Flex>
                     <Text minWidth="fit-content">{formatDuration(trace.duration)}</Text>
+                   
                 </Flex>
             </HStack>
         </Box>
@@ -52,7 +54,7 @@ const TraceCard = ({ trace, maxDuration,checked=false, onChecked=null,simple=fal
                 <HStack alignItems="top">
                     <Tag size="md" variant="subtle" colorScheme="gray" bg="transparent" fontSize="0.9em">{trace.services.reduce((t,e)=>e.numberOfSpans + t,0)} Spans</Tag>
                     <Tag size="md" variant="subtle" colorScheme="gray" bg="transparent"  fontSize="0.9em">{Object.keys(trace.services).length} Services</Tag>
-                    {trace.errorsCount > 0 && <Tag size="sm" variant="subtle" colorScheme="gray" bg="transparent" color={paletteColorNameToHex(palettes[15])}  fontSize="0.9em">{trace.errorsCount} Errors</Tag>}
+                    {trace.errorsCount > 0 && <Tooltip label={`This trace has ${trace.errorsCount} error spans`}><Tag size="sm" variant="subtle" colorScheme="gray" bg="transparent" color={paletteColorNameToHex(palettes[15])}  fontSize="0.9em">{trace.errorsCount} Errors</Tag></Tooltip>}
                   
                 </HStack>
                 {!simple && <Wrap mt={1} spacingX={3}>
@@ -70,8 +72,7 @@ const TraceCard = ({ trace, maxDuration,checked=false, onChecked=null,simple=fal
                                     borderRadius={2}
                                     opacity={0.8}
                                 >
-                                    {trace.errorServices.has(name) && <TagLeftIcon color={paletteColorNameToHex(palettes[15])} as={FaInfoCircle} />}
-                                    <TagLabel >{name} {count}</TagLabel>
+                                    <Tooltip label={trace.errorServices.has(name) && `service ${name} has error`}><TagLabel className={trace.errorServices.has(name) && "error-text"}>{name} {count}</TagLabel></Tooltip>
                                 </Tag>
                             </WrapItem>
                         );
