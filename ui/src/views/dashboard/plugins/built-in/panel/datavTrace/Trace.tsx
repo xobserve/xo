@@ -12,13 +12,13 @@
 // limitations under the License.
 
 import React, { useMemo } from "react";
-import { Box, Center, HStack, useMediaQuery } from "@chakra-ui/react"
+import { Box, Center, HStack, Text, useMediaQuery } from "@chakra-ui/react"
 import { PanelProps } from "types/dashboard"
 import TraceSearchPanel from "./components/SearchPanel"
 import { memo, useEffect, useState } from "react"
 import { Trace } from "src/views/dashboard/plugins/built-in/panel/trace/types/trace"
 
-import { cloneDeep } from "lodash";
+import { cloneDeep, set } from "lodash";
 import { replaceWithVariables } from "utils/variable";
 import { getNewestTimeRange } from "src/components/DatePicker/TimePicker";
 import { getDatasource } from "utils/datasource";
@@ -75,6 +75,7 @@ const TracePanel = (props: PanelProps) => {
     const [traces, setTraces] = useState<Trace[]>(null)
     const [traceChart, setTraceChart] = useState<QueryPluginData>(null)
     const [traceTagKeys, setTraceTagKeys] = useState<TraceTagKey[]>([])
+    const [error, setError] = useState<string>(null)
     const datasources = useStore($datasources)
     const ds = getDatasource(props.panel.datasource.id, datasources)
     const dsPlugin = builtinDatasourcePlugins[ds.type] ?? externalDatasourcePlugins[ds.type]
@@ -118,6 +119,15 @@ const TracePanel = (props: PanelProps) => {
                 query.interval = intervalObj.intervalMs / 1000
 
                 const res = await dsPlugin.runQuery(panel, query, props.timeRange, ds, { tags, min, max, limit, service: services, operation: operations, aggregate, groupby, onlyChart })
+                console.log("here33333:",res)
+                if (res.error) {
+                    setError(res.error)
+                    setTraces(null)
+                    setTraceChart(null)
+                    return 
+                } else {
+                    setError(null)
+                }
                 if (!onlyChart) {
                     setTraces(transformTraces(res.data.traces))
                 }
@@ -150,7 +160,7 @@ const TracePanel = (props: PanelProps) => {
     const groupByOptions = useMemo(() => {
         const groupByOptions = [{label: "None", value: ""},{ label: "operationName", value: "name" },{ label: "serviceName", value: "serviceName" }]
         for (const tagKey of traceTagKeys) {
-            if (tagKey.name != "serviceName" && tagKey.name != "name") {
+            if (tagKey.name != "serviceName" && tagKey.name != "name" && tagKey.isColumn) {
                 groupByOptions.push({ label: tagKey.name, value: tagKey.name })
             }
         }
@@ -162,12 +172,13 @@ const TracePanel = (props: PanelProps) => {
             <HStack alignItems="top" px="2" py="1" spacing={isLargeScreen ? 6 : 2}>
                 <Box width={searchPanelWidth} pt="2" pl="1" maxH={props.height} px={isLargeScreen ? 4 : 0}>
                     <CustomScrollbar>
-                        <TraceSearchPanel timeRange={props.timeRange} dashboardId={props.dashboardId} panel={props.panel} onSearch={onSearch} onSearchIds={onSearchIds} />
+                        <TraceSearchPanel timeRange={props.timeRange} dashboardId={props.dashboardId} panel={props.panel} onSearch={onSearch} onSearchIds={onSearchIds} traceTagKeys={traceTagKeys}/>
                     </CustomScrollbar>
                 </Box>
                 <Box width={`calc(100% - ${searchPanelWidth})`} maxH={resultHeight}>
                     <CustomScrollbar>
                         {traces && panel.plugins[PanelType].chart && <TraceSearchResult traces={traces} panel={props.panel} dashboardId={props.dashboardId} teamId={props.teamId} timeRange={props.timeRange} height={resultHeight} traceChart={traceChart} traceChartOptions={panel.plugins[PanelType].chart} groupByOptions={groupByOptions} />}
+                        {error && <Text>{error}</Text>}
                     </CustomScrollbar>
                 </Box>
             </HStack>}
