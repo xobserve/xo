@@ -200,12 +200,6 @@ export const queryPluginDataToTrace = (data: QueryPluginData, query: PanelQuery)
         span.events = events
         const processId = serviceIndex[span.serviceName]
 
-        if (span.hasError) {
-            span.attributes.push({
-                key: "error",
-                value: true
-            })
-        }
         span.process = { serviceName: span.serviceName, tags: [] }
         span.processID = processId
     }

@@ -96,7 +96,6 @@ const TraceDetailWrapper = ({id,dsId}) => {
                         }
                     }, getCurrentTimeRange(), datasource, { traceId: id })
                     data = res.data
-                    console.log("here333333:",data)
                 }
                 break;
         }
