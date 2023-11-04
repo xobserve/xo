@@ -164,7 +164,17 @@ export const apiList = [{
     name: "getServiceOperations",
     desc: "get service operations",
     params: `{
-    "service": "datav"
+}`,
+    paramsDesc: [
+        ...domainParams,
+        ["service", "service name"]
+    ],
+    format: DataFormat.ValueList
+},
+{
+    name: "getServiceRootOperations",
+    desc: "get service root span operations",
+    params: `{
 }`,
     paramsDesc: [
         ...domainParams,

@@ -70,7 +70,7 @@ const InputSelect = ({ value,label, options, onChange, variant = "outline", cust
             return options
         }
 
-        return options.filter(o => (label !== null ? o.label :  o.value).toLowerCase().indexOf(q) >= 0)
+        return options.filter(o => (label !== null ? o.label :  o.value).toLowerCase().indexOf(q.toLowerCase()) >= 0)
     }, [options, query])
 
     const getBorderStyle = () => {
@@ -96,7 +96,7 @@ const InputSelect = ({ value,label, options, onChange, variant = "outline", cust
                     {/* <PopoverArrow /> */}
                     <PopoverBody p="0">
                         <Box>
-                            <Input px="2" py="2" value={query} onChange={e => { setQuery(e.currentTarget.value.toLowerCase());if (!entered) {setEntered(true)} }} ref={ref} size={size} variant="unstyled" className="bordered-bottom"  placeholder="input to search, press Enter to use current input" onKeyDown={e => {
+                            <Input px="2" py="2" value={query} onChange={e => { setQuery(e.currentTarget.value);if (!entered) {setEntered(true)} }} ref={ref} size={size} variant="unstyled" className="bordered-bottom"  placeholder="input to search, press Enter to use current input" onKeyDown={e => {
                                  if (enableInput &&  e.key === 'Enter') {
                                     onChange(query)
                                     onToggle()
