@@ -70,6 +70,33 @@ func GetServiceOperations(c *gin.Context, ds *models.Datasource, conn ch.Conn, p
 	return models.GenPluginResult(models.PluginStatusSuccess, "", res)
 }
 
+func GetServiceRootOperations(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[string]interface{}) models.PluginResult {
+	tenant := models.DefaultTenant
+	domainQuery := datavutils.BuildBasicDomainQuery(tenant, params)
+
+	service := datavutils.GetValueListFromParams(params, "service")
+	if service != nil {
+		domainQuery += fmt.Sprintf(" AND serviceName in ('%s')", strings.Join(service, "','"))
+	}
+
+	query := fmt.Sprintf("SELECT DISTINCT name FROM %s.%s WHERE %s", config.Data.Observability.DefaultTraceDB, datavmodels.DefaultTopLevelOperationsTable, domainQuery)
+	rows, err := conn.Query(c.Request.Context(), query)
+	if err != nil {
+		logger.Warn("Error Query service operations", "query", query, "error", err)
+		return models.GenPluginResult(models.PluginStatusError, err.Error(), nil)
+	}
+	defer rows.Close()
+
+	logger.Info("Query service operations", "query", query)
+
+	res, err := pluginUtils.ConvertDbRowsToPluginData(rows)
+	if err != nil {
+		return models.GenPluginResult(models.PluginStatusError, err.Error(), nil)
+	}
+
+	return models.GenPluginResult(models.PluginStatusSuccess, "", res)
+}
+
 type ServiceInfo struct {
 	ServiceName   string
 	P99           float64

@@ -49,7 +49,6 @@ func GetTraces(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[s
 	domainQuery += fmt.Sprintf(" AND serviceName='%s'", service)
 
 	var operationNameQuery string
-	var operationNameQuery1 string
 	if operation == "" || operation == models.VarialbeAllOption {
 		// if min > 0 || max > 0 || rawTags != "" {
 		query := fmt.Sprintf("select name from %s.%s where %s", config.Data.Observability.DefaultTraceDB, datavmodels.DefaultTopLevelOperationsTable, domainQuery)
@@ -58,8 +57,8 @@ func GetTraces(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[s
 
 	} else {
 		operationNameQuery = fmt.Sprintf(" AND name='%s'", operation)
-		operationNameQuery1 = operationNameQuery
 	}
+	domainQuery += operationNameQuery
 
 	var durationQuery string
 	if min != 0 {
@@ -93,6 +92,22 @@ func GetTraces(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[s
 				} else {
 					domainQuery += fmt.Sprintf(" AND resourcesMap['%s'] = '%s'", realKey, v)
 				}
+			} else {
+				if v == models.VarialbeAllOption {
+					domainQuery += fmt.Sprintf(" AND %s != ''", k)
+				} else {
+					switch v.(type) {
+					case string:
+						domainQuery += fmt.Sprintf(" AND %s = '%s'", k, v)
+					case float64:
+						domainQuery += fmt.Sprintf(" AND %s = %f", k, v)
+					case bool:
+						domainQuery += fmt.Sprintf(" AND %s = %t", k, v)
+					default:
+						domainQuery += fmt.Sprintf(" AND %s = '%s'", k, v)
+					}
+
+				}
 			}
 		}
 
@@ -105,7 +120,7 @@ func GetTraces(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[s
 		if traceIds != "" {
 			query = fmt.Sprintf("SELECT startTime as ts,serviceName,name,traceId, duration as maxDuration FROM %s.%s WHERE traceId in ('%s') AND parentId=''", config.Data.Observability.DefaultTraceDB, datavmodels.DefaultTraceIndexTable, strings.Join(strings.Split(traceIds, ","), "','"))
 		} else if service != "" {
-			query0 := fmt.Sprintf("SELECT DISTINCT traceId FROM %s.%s WHERE startTime >= %d AND startTime <= %d AND %s ORDER BY startTime DESC limit %d", config.Data.Observability.DefaultTraceDB, datavmodels.DefaultTraceIndexTable, start*1e9, end*1e9, domainQuery+operationNameQuery, limit)
+			query0 := fmt.Sprintf("SELECT DISTINCT traceId FROM %s.%s WHERE startTime >= %d AND startTime <= %d AND %s ORDER BY startTime DESC limit %d", config.Data.Observability.DefaultTraceDB, datavmodels.DefaultTraceIndexTable, start*1e9, end*1e9, domainQuery, limit)
 			query = fmt.Sprintf("SELECT min(startTime) as ts,serviceName,name,traceId,max(duration) as maxDuration FROM %s.%s WHERE traceId in (%s) AND serviceName='%s' %s  %s GROUP BY serviceName,name,traceId", config.Data.Observability.DefaultTraceDB, datavmodels.DefaultTraceIndexTable, query0, service, operationNameQuery, durationQuery)
 		} else {
 			query = fmt.Sprintf("SELECT startTime as ts,serviceName,name,traceId, duration as maxDuration FROM %s.%s WHERE tartTime >= %d AND startTime <= %d AND %s  AND parentId='' ORDER BY ts DESC limit %d", config.Data.Observability.DefaultTraceDB, datavmodels.DefaultTraceIndexTable, start*1e9, end*1e9, domainQuery, limit)
@@ -272,7 +287,7 @@ func GetTraces(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[s
 			aggregateQuery = "round(quantile(0.99)(duration) / 1e6,2) as p99"
 		}
 
-		metricsQuery := fmt.Sprintf("SELECT toStartOfInterval(fromUnixTimestamp64Nano(startTime), INTERVAL %d SECOND) AS ts_bucket, %s %s from %s.%s where (startTime >= %d AND startTime <= %d AND %s) group by %s order by ts_bucket", step, groupby, aggregateQuery, config.Data.Observability.DefaultTraceDB, datavmodels.DefaultTraceIndexTable, start*1e9, end*1e9, domainQuery+operationNameQuery1, groupBy)
+		metricsQuery := fmt.Sprintf("SELECT toStartOfInterval(fromUnixTimestamp64Nano(startTime), INTERVAL %d SECOND) AS ts_bucket, %s %s from %s.%s where (startTime >= %d AND startTime <= %d AND %s) group by %s order by ts_bucket", step, groupby, aggregateQuery, config.Data.Observability.DefaultTraceDB, datavmodels.DefaultTraceIndexTable, start*1e9, end*1e9, domainQuery, groupBy)
 
 		rows, err := conn.Query(c.Request.Context(), metricsQuery)
 		if err != nil {

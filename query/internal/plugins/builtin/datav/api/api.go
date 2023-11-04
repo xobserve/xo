@@ -7,26 +7,28 @@ import (
 )
 
 const (
-	TestDatasourceAPI       = "testDatasource"
-	GetServiceInfoListAPI   = "getServiceInfoList"
-	GetNamespacesAPI        = "getNamespaces"
-	GetServiceNamesAPI      = "getServiceNames"
-	GetServiceOperationsAPI = "getServiceOperations"
-	GetDependencyGraphAPI   = "getDependencyGraph"
-	GetLogsAPI              = "getLogs"
-	GetTracesAPI            = "getTraces"
-	GetTraceAPI             = "getTrace"
-	GetTraceTagKeysAPI      = "getTraceTagKeys"
+	TestDatasourceAPI           = "testDatasource"
+	GetServiceInfoListAPI       = "getServiceInfoList"
+	GetNamespacesAPI            = "getNamespaces"
+	GetServiceNamesAPI          = "getServiceNames"
+	GetServiceOperationsAPI     = "getServiceOperations"
+	GetServiceRootOperationsAPI = "getServiceRootOperations"
+	GetDependencyGraphAPI       = "getDependencyGraph"
+	GetLogsAPI                  = "getLogs"
+	GetTracesAPI                = "getTraces"
+	GetTraceAPI                 = "getTrace"
+	GetTraceTagKeysAPI          = "getTraceTagKeys"
 )
 
 var APIRoutes = map[string]func(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[string]interface{}) models.PluginResult{
-	GetServiceInfoListAPI:   GetServiceInfoList,
-	GetNamespacesAPI:        GetNamespaces,
-	GetServiceNamesAPI:      GetServiceNames,
-	GetServiceOperationsAPI: GetServiceOperations,
-	GetLogsAPI:              GetLogs,
-	GetDependencyGraphAPI:   GetDependencyGraph,
-	GetTracesAPI:            GetTraces,
-	GetTraceAPI:             GetTrace,
-	GetTraceTagKeysAPI:      GetTraceTagKeys,
+	GetServiceInfoListAPI:       GetServiceInfoList,
+	GetNamespacesAPI:            GetNamespaces,
+	GetServiceNamesAPI:          GetServiceNames,
+	GetServiceOperationsAPI:     GetServiceOperations,
+	GetServiceRootOperationsAPI: GetServiceRootOperations,
+	GetLogsAPI:                  GetLogs,
+	GetDependencyGraphAPI:       GetDependencyGraph,
+	GetTracesAPI:                GetTraces,
+	GetTraceAPI:                 GetTrace,
+	GetTraceTagKeysAPI:          GetTraceTagKeys,
 }
