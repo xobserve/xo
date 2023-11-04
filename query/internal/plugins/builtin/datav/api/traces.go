@@ -1,6 +1,7 @@
 package api
 
 import (
+	"encoding/json"
 	"fmt"
 	"strconv"
 	"strings"
@@ -25,6 +26,7 @@ func GetTraces(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[s
 	limit, _ := strconv.ParseInt(c.Query("limit"), 10, 64)
 	min, _ := strconv.ParseInt(c.Query("min"), 10, 64)
 	max, _ := strconv.ParseInt(c.Query("max"), 10, 64)
+	rawTags := strings.TrimSpace(c.Query("tags"))
 
 	// @performace: 对 traceId 做 skip index
 	traceIds := strings.TrimSpace(c.Query("traceIds"))
@@ -49,10 +51,10 @@ func GetTraces(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[s
 	var operationNameQuery string
 	var operationNameQuery1 string
 	if operation == "" || operation == models.VarialbeAllOption {
-		if min > 0 || max > 0 {
-			query := fmt.Sprintf("select name from %s.%s where %s", config.Data.Observability.DefaultTraceDB, datavmodels.DefaultTopLevelOperationsTable, domainQuery)
-			operationNameQuery = fmt.Sprintf(" AND name in (%s)", query)
-		}
+		// if min > 0 || max > 0 || rawTags != "" {
+		query := fmt.Sprintf("select name from %s.%s where %s", config.Data.Observability.DefaultTraceDB, datavmodels.DefaultTopLevelOperationsTable, domainQuery)
+		operationNameQuery = fmt.Sprintf(" AND name in (%s)", query)
+		// }
 
 	} else {
 		operationNameQuery = fmt.Sprintf(" AND name='%s'", operation)
@@ -67,6 +69,33 @@ func GetTraces(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[s
 	if max != 0 {
 		domainQuery += fmt.Sprintf(" AND duration <= %d", max*1e6)
 		durationQuery += fmt.Sprintf(" AND duration <= %d", max*1e6)
+	}
+
+	if rawTags != "" {
+		var tags map[string]interface{}
+		err := json.Unmarshal([]byte(rawTags), &tags)
+		if err != nil {
+			return models.GenPluginResult(models.PluginStatusError, fmt.Sprintf("decode tags error: %s", err.Error()), nil)
+		}
+
+		for k, v := range tags {
+			if strings.HasPrefix(k, "attributes.") {
+				realKey := k[11:]
+				if v == models.VarialbeAllOption {
+					domainQuery += fmt.Sprintf(" AND attributesMap['%s'] != ''", realKey)
+				} else {
+					domainQuery += fmt.Sprintf(" AND attributesMap['%s'] = '%s'", realKey, v)
+				}
+			} else if strings.HasPrefix(k, "resources.") {
+				realKey := k[10:]
+				if v == models.VarialbeAllOption {
+					domainQuery += fmt.Sprintf(" AND resourcesMap['%s'] != ''", realKey)
+				} else {
+					domainQuery += fmt.Sprintf(" AND resourcesMap['%s'] = '%s'", realKey, v)
+				}
+			}
+		}
+
 	}
 
 	traceIndexes := make([]*datavmodels.TraceIndex, 0)
@@ -297,7 +326,9 @@ type TagKey struct {
 }
 
 func GetTraceTagKeys(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[string]interface{}) models.PluginResult {
-	var domainQuery string
+	tenant := models.GetTenant(c)
+	domainQuery := datavutils.BuildBasicDomainQuery(tenant, params)
+
 	service := c.Query("service")
 	if service == "" {
 		serviceI := datavutils.GetValueListFromParams(params, "service")
@@ -308,15 +339,9 @@ func GetTraceTagKeys(c *gin.Context, ds *models.Datasource, conn ch.Conn, params
 		domainQuery += fmt.Sprintf(" AND serviceName='%s'", service)
 	}
 
-	if domainQuery != "" {
-		domainQuery = "WHERE " + domainQuery + " AND isColumn=true"
-	} else {
-		domainQuery = "WHERE isColumn=true"
-	}
-
 	tags := make([]*TagKey, 0)
 
-	query := fmt.Sprintf("SELECT DISTINCT tagKey,tagType,dataType FROM %s.%s %s ", config.Data.Observability.DefaultTraceDB, datavmodels.DefaultSpanAttributeKeysTable, domainQuery)
+	query := fmt.Sprintf("SELECT DISTINCT tagKey,tagType,dataType,isColumn FROM %s.%s WHERE (%s) OR isColumn=true", config.Data.Observability.DefaultTraceDB, datavmodels.DefaultSpanAttributeKeysTable, domainQuery)
 	// query traceIDs
 	rows, err := conn.Query(c.Request.Context(), query)
 	if err != nil {
@@ -327,12 +352,11 @@ func GetTraceTagKeys(c *gin.Context, ds *models.Datasource, conn ch.Conn, params
 
 	for rows.Next() {
 		tag := &TagKey{}
-		err := rows.Scan(&tag.Name, &tag.Type, &tag.DataType)
+		err := rows.Scan(&tag.Name, &tag.Type, &tag.DataType, &tag.IsColumn)
 		if err != nil {
 			logger.Warn("Error scan trace tag key", "error", err)
 			continue
 		}
-		tag.IsColumn = true
 		tags = append(tags, tag)
 	}
 
