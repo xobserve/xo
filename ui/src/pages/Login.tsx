@@ -144,7 +144,7 @@ function Login() {
                 }}
             />
 
-            <Box className="datav-login" width="100vw" height="100vh" display="flex" justifyContent="center" alignItems="center" background="url('/login-bg.png')" backgroundSize="cover" backgroundPosition="center" backgroundRepeat="no-repeat" backgroundColor="#33a2e5">
+            <Box className="observex-login" width="100vw" height="100vh" display="flex" justifyContent="center" alignItems="center" background="url('/login-bg.png')" backgroundSize="cover" backgroundPosition="center" backgroundRepeat="no-repeat" backgroundColor="#33a2e5">
                 <HStack width="900px" borderRadius="6px" boxShadow="-1px 1px 10px rgba(0, 0, 0, .4)" marginTop="-30px">
                     <Box className="login-left" width={isLargeScreen ? "50%" : "30%"} display="flex" justifyContent="center" alignItems="center" flexDir="column">
                         <Image src="/logo.png" alt="" height={isLargeScreen ? "160px" : "80px"} width={isLargeScreen ? "160px" : "80px"} marginLeft="-10px" />

@@ -11,8 +11,8 @@ import (
 /*
 This script sync plugins code from dev directory to this directory, it can help developers conveniently sync their code from development environment to release environment.
 
-dev directory: DATAV_ROOT/ui/src/views/dashboard/plugins/external
-release directory: DATAV_ROOT/plugins
+dev directory: OBSERVEX_ROOT/ui/src/views/dashboard/plugins/external
+release directory: OBSERVEX_ROOT/plugins
 */
 
 const sourceDir = "../ui/src/views/dashboard/plugins/external"

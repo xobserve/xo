@@ -1,8 +1,8 @@
 # Contributing
 
-This guide helps you get started developing Datav.
+This guide helps you get started developing ObserveX.
 
-## Build Datav
+## Build ObserveX
 
 @todo
 

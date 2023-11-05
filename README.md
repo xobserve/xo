@@ -13,7 +13,7 @@
 </p>
 
 <div>
-  <img src="https://github.com/data-observe/assets/blob/main/datav-readme/home-example1.jpg?raw=true" />
+  <img src="https://github.com/observexio/assets/blob/main/datav-readme/home-example1.jpg?raw=true" />
   <p align="center">
     English | <a href="./README_CN.md">简体中文</a>
   </p>
@@ -22,18 +22,18 @@
 
 
 
-## Datav
+## ObserveX
 
-Datav is a programmable observability platform designed specifically for developers. It also serves as an alternative data visualization platform to Grafana.
+ObserveX is a programmable observability platform designed specifically for developers. It also serves as an alternative data visualization platform to Grafana.
 
-Datav enables users to quickly create online observability scenarios such as monitoring, logging, and tracing. If Datav does not meet your specific needs, you can always file an issue, and reasonable requests will be promptly addressed.
+ObserveX enables users to quickly create online observability scenarios such as monitoring, logging, and tracing. If ObserveX does not meet your specific needs, you can always file an issue, and reasonable requests will be promptly addressed.
 
 ## Roadmap to V1.0
 
-Up to this point, we have implemented the user interface (UI) part of Datav, which can be used as an alternative to Grafana. We are currently working on the observability features, which will be released in V1.0.
+Up to this point, we have implemented the user interface (UI) part of ObserveX, which can be used as an alternative to Grafana. We are currently working on the observability features, which will be released in V1.0.
 
 ## Features
-Datav offers a wide range of features, including:
+ObserveX offers a wide range of features, including:
 
 1. **Observability**: Encompasses an extensive range of observability scenarios with native support for Opentelemetry.
    
@@ -53,26 +53,26 @@ Datav offers a wide range of features, including:
 
 ## Quick start & Documentation
 
-The documentation is available at [datav.io/docs](https://datav.io/docs).
+The documentation is available at [observex.io/docs](https://datav.io/docs).
 
-You can also try online demo at [play.datav.io](https://play.datav.io).
+You can also try online demo at [play.observex.io](https://play.datav.io).
 
 
 ## Example images
 
-<img src="https://github.com/data-observe/assets/blob/main/datav-readme/home-example1.jpg?raw=true" />
+<img src="https://github.com/observexio/assets/blob/main/datav-readme/home-example1.jpg?raw=true" />
 
-<img src="https://github.com/data-observe/assets/blob/main/datav-readme/runtime-example.jpg?raw=true" />
+<img src="https://github.com/observexio/assets/blob/main/datav-readme/runtime-example.jpg?raw=true" />
 
-<img src="https://github.com/data-observe/assets/blob/main/datav-readme/host-example.jpg?raw=true" />
+<img src="https://github.com/observexio/assets/blob/main/datav-readme/host-example.jpg?raw=true" />
 
-<img src="https://github.com/data-observe/assets/blob/main/datav-readme/trace-search-example.jpg?raw=true" />
+<img src="https://github.com/observexio/assets/blob/main/datav-readme/trace-search-example.jpg?raw=true" />
 
-<img src="https://github.com/data-observe/assets/blob/main/datav-readme/trace-example.jpg?raw=true" />
+<img src="https://github.com/observexio/assets/blob/main/datav-readme/trace-example.jpg?raw=true" />
 
-<img src="https://github.com/data-observe/assets/blob/main/datav-readme/log-example.jpg?raw=true" />
+<img src="https://github.com/observexio/assets/blob/main/datav-readme/log-example.jpg?raw=true" />
 
-<img src="https://github.com/data-observe/assets/blob/main/datav-readme/alert-example.jpg?raw=true" />
+<img src="https://github.com/observexio/assets/blob/main/datav-readme/alert-example.jpg?raw=true" />
 
 
 

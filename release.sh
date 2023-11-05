@@ -8,17 +8,17 @@ mkdir release/darwin release/linux release/windows
 
 ## build query 
 cd query
-GOOS=darwin GOARCH=amd64 go build -o ../release/darwin/datav
-GOOS=linux GOARCH=amd64 go build -o ../release/linux/datav
-GOOS=windows GOARCH=amd64 go build -o ../release/windows/datav.exe
+GOOS=darwin GOARCH=amd64 go build -o ../release/darwin/observex
+GOOS=linux GOARCH=amd64 go build -o ../release/linux/observex
+GOOS=windows GOARCH=amd64 go build -o ../release/windows/observex.exe
 
 ## copy files
-cp datav.yaml ../release/darwin/datav.yaml
-cp datav.yaml ../release/linux/datav.yaml
-cp datav.yaml ../release/windows/datav.yaml
-cp datav.sql ../release/darwin/datav.sql
-cp datav.sql ../release/linux/datav.sql
-cp datav.sql ../release/windows/datav.sql
+cp observex.yaml ../release/darwin/observex.yaml
+cp observex.yaml ../release/linux/observex.yaml
+cp observex.yaml ../release/windows/observex.yaml
+cp observex.sql ../release/darwin/observex.sql
+cp observex.sql ../release/linux/observex.sql
+cp observex.sql ../release/windows/observex.sql
 
 ## build ui
 
@@ -37,9 +37,9 @@ cp -r build ../release/windows/ui
 
 ## zip files
 cd ../release
-zip -r datav-darwin-amd64.zip darwin
-zip -r datav-linux-amd64.zip linux
-zip -r datav-windows-amd64.zip windows
+zip -r observex-darwin-amd64.zip darwin
+zip -r observex-linux-amd64.zip linux
+zip -r observex-windows-amd64.zip windows
 rm -rf darwin linux windows
 
 

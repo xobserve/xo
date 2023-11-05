@@ -4,5 +4,5 @@ release
 .vscode
 .vite
 ui/src/views/dashboard/plugins/external/
-query/datav
+query/observex
 ui/package-lock.json

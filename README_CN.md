@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://datav.io/logo.png" alt="datav-logo" width="80" />
+  <img src="https://observex.io/logo.png" alt="observex-logo" width="80" />
 </p>
 
 
@@ -9,28 +9,28 @@
 
 <p align="center">
     <img alt="License" src="https://img.shields.io/badge/license-Apache2.0-brightgreen"> 
-    <a href="https://datav.io"><img alt="Website" src="https://img.shields.io/badge/官网-datav.io-blue"></a>
-    <a href="https://play.datav.io"><img alt="Online demo" src="https://img.shields.io/badge/在线-demo-blue"></a>
+    <a href="https://observex.io"><img alt="Website" src="https://img.shields.io/badge/官网-observex.io-blue"></a>
+    <a href="https://play.observex.io"><img alt="Online demo" src="https://img.shields.io/badge/在线-demo-blue"></a>
 </p>
 
 
 <div>
-   <img src="https://github.com/data-observe/assets/blob/main/datav-readme/home-example1.jpg?raw=true" />
+   <img src="https://github.com/observexio/assets/blob/main/observex-readme/home-example1.jpg?raw=true" />
    <p align="center">
         <a href="./README.md">English</a> | 简体中文
   </p>
 </div>
   
   
-## 关于 Datav
+## 关于 ObserveX
 
-Datav 是专门为开发者设计的、可编程的可观测性平台，同时也是 Grafana 的数据可视化平替产品。
+ObserveX 是专门为开发者设计的、可编程的可观测性平台，同时也是 Grafana 的数据可视化平替产品。
 
-它可以帮助用户快速创建监控、日志、追踪等在线可观测性场景。如果 Datav 还不能满足你的需求，你可以随时提 issue，合理的需求会被快速支持。
+它可以帮助用户快速创建监控、日志、追踪等在线可观测性场景。如果 ObserveX 还不能满足你的需求，你可以随时提 issue，合理的需求会被快速支持。
 
 ## Roadmap to V1.0
 
-我们目前已经实现了 Datav 的 UI 部分，可以作为 Grafana 的替代品使用，而可观测性相关的功能将在 [V1.0](https://github.com/data-observe/datav/milestone/7) 版本中发布。
+我们目前已经实现了 ObserveX 的 UI 部分，可以作为 Grafana 的替代品使用，而可观测性相关的功能将在 [V1.0](https://github.com/observexio/ObserveX/milestone/7) 版本中发布。
 
 
 ## 核心特性
@@ -44,30 +44,30 @@ Datav 是专门为开发者设计的、可编程的可观测性平台，同时�
 - 强大的可编程性及二次开发友好性
 - 宽松的开源协议、丰富的文档和快速的社区响应支持
 
-> Datav 不是全世界最好的可观测性和数据可视化平台，这毫无疑问，至少目前不是。但是它对最开发者最友好，并且支持丰富的可编程性的平台
+> ObserveX 不是全世界最好的可观测性和数据可视化平台，这毫无疑问，至少目前不是。但是它对最开发者最友好，并且支持丰富的可编程性的平台
 > 
 > 当一个产品它的代码结构清晰简洁、架构干净、使用的技术符合时代主流、文档齐全，当一个产品在各种使用细节上都为开发者专门设计过，当一个产品允许各种深度可定制时，我们可以称其开发者友好
 
 ## 快速开始 & 文档
 
-文档地址： [datav.io/docs](https://zh.datav.io/docs).
+文档地址： [observex.io/docs](https://zh.observex.io/docs).
 
-同时大家也可以试试在线 Demo:  [play.datav.io](https://play.datav.io).
+同时大家也可以试试在线 Demo:  [play.observex.io](https://play.observex.io).
 
 
 ## 示例图片
 
-<img src="https://github.com/data-observe/assets/blob/main/datav-readme/home-example1.jpg?raw=true" />
+<img src="https://github.com/observexio/assets/blob/main/observex-readme/home-example1.jpg?raw=true" />
 
-<img src="https://github.com/data-observe/assets/blob/main/datav-readme/runtime-example.jpg?raw=true" />
+<img src="https://github.com/observexio/assets/blob/main/observex-readme/runtime-example.jpg?raw=true" />
 
-<img src="https://github.com/data-observe/assets/blob/main/datav-readme/host-example.jpg?raw=true" />
+<img src="https://github.com/observexio/assets/blob/main/observex-readme/host-example.jpg?raw=true" />
 
-<img src="https://github.com/data-observe/assets/blob/main/datav-readme/trace-search-example.jpg?raw=true" />
+<img src="https://github.com/observexio/assets/blob/main/observex-readme/trace-search-example.jpg?raw=true" />
 
-<img src="https://github.com/data-observe/assets/blob/main/datav-readme/trace-example.jpg?raw=true" />
+<img src="https://github.com/observexio/assets/blob/main/observex-readme/trace-example.jpg?raw=true" />
 
-<img src="https://github.com/data-observe/assets/blob/main/datav-readme/log-example.jpg?raw=true" />
+<img src="https://github.com/observexio/assets/blob/main/observex-readme/log-example.jpg?raw=true" />
 
-<img src="https://github.com/data-observe/assets/blob/main/datav-readme/alert-example.jpg?raw=true" />
+<img src="https://github.com/observexio/assets/blob/main/observex-readme/alert-example.jpg?raw=true" />
 
