@@ -1,4 +1,4 @@
-// Copyright 2023 Datav.io Team
+// Copyright 2023 observex.io Team
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -20,20 +20,20 @@ import (
 	"path/filepath"
 )
 
-//ErrWalkSkipDir is the Error returned when we want to skip descending into a directory
+// ErrWalkSkipDir is the Error returned when we want to skip descending into a directory
 var ErrWalkSkipDir = errors.New("skip this directory")
 
-//WalkFunc is a callback function called for each path as a directory is walked
-//If resolvedPath != "", then we are following symbolic links.
+// WalkFunc is a callback function called for each path as a directory is walked
+// If resolvedPath != "", then we are following symbolic links.
 type WalkFunc func(resolvedPath string, info os.FileInfo, err error) error
 
-//Walk walks a path, optionally following symbolic links, and for each path,
-//it calls the walkFn passed.
+// Walk walks a path, optionally following symbolic links, and for each path,
+// it calls the walkFn passed.
 //
-//It is similar to filepath.Walk, except that it supports symbolic links and
-//can detect infinite loops while following sym links.
-//It solves the issue where your WalkFunc needs a path relative to the symbolic link
-//(resolving links within walkfunc loses the path to the symbolic link for each traversal).
+// It is similar to filepath.Walk, except that it supports symbolic links and
+// can detect infinite loops while following sym links.
+// It solves the issue where your WalkFunc needs a path relative to the symbolic link
+// (resolving links within walkfunc loses the path to the symbolic link for each traversal).
 func Walk(path string, followSymlinks bool, detectSymlinkInfiniteLoop bool, walkFn WalkFunc) error {
 	info, err := os.Lstat(path)
 	if err != nil {
@@ -50,12 +50,12 @@ func Walk(path string, followSymlinks bool, detectSymlinkInfiniteLoop bool, walk
 	return walk(path, info, resolvedPath, symlinkPathsFollowed, walkFn)
 }
 
-//walk walks the path. It is a helper/sibling function to Walk.
-//It takes a resolvedPath into consideration. This way, paths being walked are
-//always relative to the path argument, even if symbolic links were resolved).
+// walk walks the path. It is a helper/sibling function to Walk.
+// It takes a resolvedPath into consideration. This way, paths being walked are
+// always relative to the path argument, even if symbolic links were resolved).
 //
-//If resolvedPath is "", then we are not following symbolic links.
-//If symlinkPathsFollowed is not nil, then we need to detect infinite loop.
+// If resolvedPath is "", then we are not following symbolic links.
+// If symlinkPathsFollowed is not nil, then we need to detect infinite loop.
 func walk(path string, info os.FileInfo, resolvedPath string, symlinkPathsFollowed map[string]bool, walkFn WalkFunc) error {
 	if info == nil {
 		return errors.New("Walk: Nil FileInfo passed")

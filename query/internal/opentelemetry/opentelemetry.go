@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/DataObserve/datav/query/pkg/colorlog"
-	"github.com/DataObserve/datav/query/pkg/config"
+	"github.com/DataObserve/observex/query/pkg/colorlog"
+	"github.com/DataObserve/observex/query/pkg/config"
 	"go.opentelemetry.io/contrib/instrumentation/runtime"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
@@ -46,7 +46,7 @@ func initResource() *sdkresource.Resource {
 	// 		sdkresource.Default(),
 	// 		sdkresource.New(
 	// 			context.Background(),
-	// 			semconv.ServiceName("datav"),
+	// 			semconv.ServiceName("observex"),
 	// 		),
 	// 	)
 	// })

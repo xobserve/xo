@@ -7,7 +7,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/DataObserve/datav/otel-collector/components"
+	"github.com/DataObserve/observex/otel-collector/components"
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/confmap"
 	"go.opentelemetry.io/collector/confmap/converter/expandconverter"

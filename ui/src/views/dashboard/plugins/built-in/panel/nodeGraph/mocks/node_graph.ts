@@ -1,4 +1,4 @@
-// Copyright 2023 Datav.io Team
+// Copyright 2023 observex.io Team
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -22,8 +22,8 @@ export const nodeGraphData = (nodesCount, rand) => {
       let node 
       if (i == 0) {
         node = {
-          id: "web-datav-1",
-          label: "web-datav-1",
+          id: "web-observex-1",
+          label: "web-observex-1",
           data: {
             success: success,
             error: error

@@ -1,4 +1,4 @@
-// Copyright 2023 Datav.io Team
+// Copyright 2023 observex.io Team
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -17,7 +17,7 @@ const Logo = ({showText = false, width = 10}) => {
     return (
             <HStack cursor="pointer" spacing="1">
                 <Image width={width} src="/logo.png" animation="spin 20s linear infinite"/>
-                {showText && <Text fontWeight="600" fontSize="xl">Datav</Text>}
+                {showText && <Text fontWeight="600" fontSize="xl">observex</Text>}
             </HStack>
     )
 }

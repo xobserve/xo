@@ -4,9 +4,9 @@ import (
 	"sync"
 
 	ch "github.com/ClickHouse/clickhouse-go/v2"
-	pluginUtils "github.com/DataObserve/datav/query/internal/plugins/utils"
-	"github.com/DataObserve/datav/query/pkg/colorlog"
-	"github.com/DataObserve/datav/query/pkg/models"
+	pluginUtils "github.com/DataObserve/observex/query/internal/plugins/utils"
+	"github.com/DataObserve/observex/query/pkg/colorlog"
+	"github.com/DataObserve/observex/query/pkg/models"
 	"github.com/gin-gonic/gin"
 )
 

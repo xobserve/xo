@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/DataObserve/datav/otel-collector/internal/collector"
+	"github.com/DataObserve/observex/otel-collector/internal/collector"
 	"github.com/gorilla/websocket"
 	"github.com/open-telemetry/opamp-go/protobufs"
 	"github.com/stretchr/testify/assert"

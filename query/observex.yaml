@@ -1,0 +1,116 @@
+#################################### Common Configurations##############################
+common:
+    version: 0.9.0
+    log_level: info
+    is_prod: false
+    app_name: observex
+    repo_url: https://github.com/data-observe/observex
+
+#################################### Server ##############################
+server:
+    ## api server listening address
+    ## ip:host
+    listening_addr: 0.0.0.0:10086
+    ## If leave empty, observex will use above `listening_addr` as api server address in UI 
+    ## Let's assume you have created domain names pointed to UI and api sever, you need to set this field to the new api server address
+    ## e.g https://api.observex.io
+    override_api_server_addr_for_ui: 
+    ## Find and override api server address in this directory
+    ui_static_path: ./ui/static
+
+    
+#################################### Database ##############################
+database:
+    type: sqlite
+    account: root
+    account_secret: 
+    host: localhost
+    port: 3306
+    database: datav
+
+#################################### User/Session ##############################
+user: 
+    # a session is created when user login to im.dev, this session will be expired after X seconds
+    session_expire: 2592000
+    # when enabled, various users can login with the same account name
+    enable_multi_login: true
+    # When enabled, a github login button will appears at Login page
+    enable_github_login: false
+    # Apply at https://github.com/settings/developers
+    github_oauth_token: 
+    github_oauth_secret: 
+    # When enabled, guests can view public dashboards without log-in
+    allow_anonymous: false
+
+#################################### Paths ##############################
+# Path to where im.dev can store temp files, sessions, and the sqlite3 db (if that is used)
+paths:
+    # sqlite3 db files
+    data: ""
+    logs: ""
+
+#################################### Dashboard ##############################
+dashboard: 
+    enable_delete: true
+
+#################################### Clean Tasks  ##############################
+task: 
+    # annotations created longer than this will be auto deleted
+    # default is 90 days
+    clean_annotations: 90
+
+
+
+#################################### Panel Plugins ##############################
+panel:
+  echarts: 
+    enable_baidu_map: false
+    baidu_map_ak: 
+
+#################################### SMTP ##############################
+smtp:
+  addr: ""
+  from_address: ""
+  from_name: ""
+  auth_username: "" 
+  auth_password: ""
+
+
+#################################### Paths ##############################
+# Path to where observex can store temp files, sessions, and the sqlite3 db (if that is used)
+paths:
+    # sqlite3 db files
+    sqlite_data: ""
+    logs: ""
+
+#################################### Sidemenu ##############################
+sidemenu:
+    show_alert_icon: true
+
+
+#################################### Self monitoring ##############################
+selfmonitoring:
+    mock_error_logs: true
+        # OpenTelemetry exporter support otlp or stdout
+    otlp_exportor: otlp
+    # OpenTelemetry collector endpoint eq: jaeger collector endpoint    
+    otlp_endpoint: 
+    
+#################################### Plugins ##############################
+plugins:
+    ## add plugin types to hidden it, e.g Table
+    ## As observex has a example demo panel for explain how to develop external plugins
+    ## but it is no use to you, so we default disable it here
+    disable_panels: ["demo"]
+    disable_datasources: []
+
+
+#################################### Observability ##############################
+observability:
+    ## when enabled, observex-observability features will be toggle on
+    ## you can collect metrics, traces and logs into observex, and view them through observability plugins
+    ## please visit https://observex.io/docs/observability for more info
+    enable: true
+    default_trace_db: "datav_traces"
+    default_metrics_db: "datav_metrics"
+    default_log_db: "datav_logs"

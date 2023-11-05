@@ -1,4 +1,4 @@
-// Copyright 2023 Datav.io Team
+// Copyright 2023 observex.io Team
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -19,9 +19,9 @@ import (
 	"os/signal"
 	"syscall"
 
-	server "github.com/DataObserve/datav/query/internal"
-	"github.com/DataObserve/datav/query/pkg/colorlog"
-	"github.com/DataObserve/datav/query/pkg/config"
+	server "github.com/DataObserve/observex/query/internal"
+	"github.com/DataObserve/observex/query/pkg/colorlog"
+	"github.com/DataObserve/observex/query/pkg/config"
 	"github.com/spf13/cobra"
 )
 
@@ -35,7 +35,7 @@ var rootCmd = &cobra.Command{
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	Run: func(cmd *cobra.Command, args []string) {
-		var cfg = "datav.yaml"
+		var cfg = "observex.yaml"
 		if cfgFile != "" {
 			cfg = cfgFile
 		}

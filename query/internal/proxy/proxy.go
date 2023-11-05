@@ -1,4 +1,4 @@
-// Copyright 2023 Datav.io Team
+// Copyright 2023 observex.io Team
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -22,8 +22,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/DataObserve/datav/query/pkg/colorlog"
-	"github.com/DataObserve/datav/query/pkg/common"
+	"github.com/DataObserve/observex/query/pkg/colorlog"
+	"github.com/DataObserve/observex/query/pkg/common"
 	"github.com/gin-gonic/gin"
 	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 )

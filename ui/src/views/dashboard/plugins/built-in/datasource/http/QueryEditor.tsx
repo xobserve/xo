@@ -1,4 +1,4 @@
-// Copyright 2023 Datav.io Team
+// Copyright 2023 observex.io Team
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -98,7 +98,7 @@ const initTransformResult =
     // When using http datasource, it's your responsibility to make the panel you are using work!
     // so you need to know which data format the panel is using, and return data in that format.
     // You can find panel data format in Panel Debug.
-    // Find more info in https://datav.io/docs or play the online demo https://play.datav.io
+    // Find more info in https://observex.io/docs or play the online demo https://play.observex.io
     return {
         error: null, 
         data: httpResult

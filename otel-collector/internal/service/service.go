@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/DataObserve/datav/otel-collector/internal/collector"
-	"github.com/DataObserve/datav/otel-collector/internal/opamp"
+	"github.com/DataObserve/observex/otel-collector/internal/collector"
+	"github.com/DataObserve/observex/otel-collector/internal/opamp"
 	"go.uber.org/zap"
 )
 

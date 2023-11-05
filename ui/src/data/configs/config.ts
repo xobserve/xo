@@ -1,4 +1,4 @@
-// Copyright 2023 Datav.io Team
+// Copyright 2023 observex.io Team
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -19,8 +19,8 @@ import { atom } from 'nanostores'
 
 // limitations under the License.
 const config: UIConfig = {
-    appName: 'datav',
-    repoUrl: 'https://github.com/data-observe/datav',
+    appName: 'observex',
+    repoUrl: 'https://github.com/data-observe/observex',
     panel: {
         echarts: {
             enableBaiduMap: false,

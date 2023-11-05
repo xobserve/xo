@@ -25,8 +25,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/DataObserve/datav/otel-collector/pkg/usage"
-	"github.com/DataObserve/datav/otel-collector/pkg/utils"
+	"github.com/DataObserve/observex/otel-collector/pkg/usage"
+	"github.com/DataObserve/observex/otel-collector/pkg/utils"
 	"github.com/google/uuid"
 	"go.opencensus.io/stats/view"
 	"go.opentelemetry.io/collector/component"
@@ -55,7 +55,7 @@ func newExporter(cfg component.Config, logger *zap.Logger) (*storage, error) {
 	collector := usage.NewUsageCollector(
 		f.db,
 		usage.Options{ReportingInterval: usage.DefaultCollectionInterval},
-		"datav_traces",
+		"observex_traces",
 		UsageExporter,
 	)
 	if err != nil {

@@ -413,7 +413,7 @@ export const panelMsg = i18n("panel", {
   "panelType": "Panel type",
   "visualization": "Built-in",
   "externalPanels": "External",
-  "datavPanels": "Datav",
+  "observexPanels": "observex",
   "panelBorder": "Panel layout and border",
   "paletteTips": "Only support Graph, Bar, Pie and Echarts panel",
   "titleDecoration": "Title decoration",

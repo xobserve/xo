@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/DataObserve/datav/otel-collector/internal/collector"
+	"github.com/DataObserve/observex/otel-collector/internal/collector"
 	"go.opentelemetry.io/collector/otelcol"
 	"go.uber.org/zap"
 )

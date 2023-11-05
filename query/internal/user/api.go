@@ -1,4 +1,4 @@
-// Copyright 2023 Datav.io Team
+// Copyright 2023 observex.io Team
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -15,10 +15,10 @@ package user
 import (
 	"net/http"
 
-	"github.com/DataObserve/datav/query/pkg/common"
-	"github.com/DataObserve/datav/query/pkg/e"
-	"github.com/DataObserve/datav/query/pkg/models"
-	"github.com/DataObserve/datav/query/pkg/utils"
+	"github.com/DataObserve/observex/query/pkg/common"
+	"github.com/DataObserve/observex/query/pkg/e"
+	"github.com/DataObserve/observex/query/pkg/models"
+	"github.com/DataObserve/observex/query/pkg/utils"
 	"github.com/gin-gonic/gin"
 )
 

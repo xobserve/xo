@@ -1,4 +1,4 @@
-module github.com/DataObserve/datav/query
+module github.com/DataObserve/observex/query
 
 go 1.20
 

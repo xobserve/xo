@@ -1,4 +1,4 @@
-// Copyright 2023 Datav.io Team
+// Copyright 2023 observex.io Team
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -15,9 +15,9 @@ package api
 import (
 	"strconv"
 
-	"github.com/DataObserve/datav/query/internal/variables"
-	"github.com/DataObserve/datav/query/pkg/common"
-	"github.com/DataObserve/datav/query/pkg/e"
+	"github.com/DataObserve/observex/query/internal/variables"
+	"github.com/DataObserve/observex/query/pkg/common"
+	"github.com/DataObserve/observex/query/pkg/e"
 	"github.com/gin-gonic/gin"
 )
 

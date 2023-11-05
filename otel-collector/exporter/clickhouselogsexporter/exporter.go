@@ -28,8 +28,8 @@ import (
 
 	"github.com/ClickHouse/clickhouse-go/v2"
 	driver "github.com/ClickHouse/clickhouse-go/v2/lib/driver"
-	"github.com/DataObserve/datav/otel-collector/pkg/usage"
-	"github.com/DataObserve/datav/otel-collector/pkg/utils"
+	"github.com/DataObserve/observex/otel-collector/pkg/usage"
+	"github.com/DataObserve/observex/otel-collector/pkg/utils"
 	"github.com/segmentio/ksuid"
 	"go.opencensus.io/stats"
 	"go.opencensus.io/stats/view"
@@ -71,7 +71,7 @@ func newExporter(logger *zap.Logger, cfg *Config) (*clickhouseLogsExporter, erro
 		usage.Options{
 			ReportingInterval: usage.DefaultCollectionInterval,
 		},
-		"datav_logs",
+		"observex_logs",
 		UsageExporter,
 	)
 	if err != nil {

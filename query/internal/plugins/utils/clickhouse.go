@@ -10,7 +10,7 @@ import (
 	"github.com/ClickHouse/clickhouse-go/v2/lib/driver"
 
 	ch "github.com/ClickHouse/clickhouse-go/v2"
-	"github.com/DataObserve/datav/query/pkg/models"
+	"github.com/DataObserve/observex/query/pkg/models"
 	"github.com/gin-gonic/gin"
 )
 

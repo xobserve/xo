@@ -174,7 +174,7 @@
                     },
                     "widthReduction": 0
                 },
-                "title": "Datav logs",
+                "title": "observex logs",
                 "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
                 "type": "log",
                 "valueMapping": null
@@ -203,7 +203,7 @@
             },
             {
                 "datasource": 3,
-                "default": "datav-service",
+                "default": "observex-service",
                 "enableAll": false,
                 "enableMulti": false,
                 "id": "d-9KB0s2iIk1694767059998",

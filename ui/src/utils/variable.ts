@@ -1,4 +1,4 @@
-// Copyright 2023 Datav.io Team
+// Copyright 2023 observex.io Team
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -26,7 +26,7 @@ export const hasVariableFormat = (s: string) => {
 }
 
 // replace ${xxx} format with corresponding variable
-// extraVars: datav preserved variables, such as __curentValue__
+// extraVars: observex preserved variables, such as __curentValue__
 export const replaceWithVariables = (s: string, extraVars?: {
     [varName: string]: string | number,
 }) => {

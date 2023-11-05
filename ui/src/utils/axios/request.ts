@@ -1,4 +1,4 @@
-// Copyright 2023 Datav.io Team
+// Copyright 2023 observex.io Team
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -74,7 +74,7 @@ requestApi.interceptors.response.use(
   error => {
     // error.response { 
     //    config :{url: '/datasource/all', method: 'get', headers: {…}, baseURL: 'http://localhost:10086/api', transformRequest: Array(1), …}
-    //    data: {status: 'success', data: Array(4), version: 'datav'}
+    //    data: {status: 'success', data: Array(4), version: 'observex'}
     //    status: 400
     //    statusText: "Bad Request"
     // }
@@ -84,8 +84,8 @@ requestApi.interceptors.response.use(
       const status = error.response.status
 
       // check if it's proxy request error
-      if (error.response.data.version != 'datav') {
-        // request route to other servers, not our datav api-server
+      if (error.response.data.version != 'observex') {
+        // request route to other servers, not our observex api-server
         // so it's proxy request error
         // DONT'T throw error, just return error.response.data, we need to handle it in the caller
         return error.response.data

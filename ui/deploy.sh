@@ -9,7 +9,7 @@ cp ./404.html ./build/404.html
 cd build
 
 ## for github pages
-touch CNAME && echo "play.datav.io" > CNAME
+touch CNAME && echo "play.observex.io" > CNAME
 touch .nojekyll
 
 git init
@@ -18,7 +18,7 @@ git config user.email "cto@188.com"
 git add .
 git commit -m 'deploy'
 git branch -M main
-git remote add origin https://github.com/data-observe/play.datav.io.git
+git remote add origin https://github.com/data-observe/play.observex.io.git
 
 ## push to github pages
 git push -u -f origin main

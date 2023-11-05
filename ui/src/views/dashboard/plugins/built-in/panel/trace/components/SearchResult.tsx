@@ -171,7 +171,7 @@ const TraceSearchResult = (props: Props) => {
                         </HStack>
 
                         }
-                        {chartType == "graph" && <Tooltip label="You can access resources or attributes fields like this: resources.datav.collector.id">
+                        {chartType == "graph" && <Tooltip label="You can access resources or attributes fields like this: resources.observex.collector.id">
                             <Box><FaInfoCircle className="action-icon" /></Box>
                         </Tooltip>}
                     </Flex>

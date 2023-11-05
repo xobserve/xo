@@ -181,6 +181,7 @@ export default function transformTraceData(data: TraceData & { spans: SpanData[]
     services,
     spans,
     traceID,
+    serviceName: traceName,
     traceName,
     // can't use spread operator for intersection types
     // repl: https://goo.gl/4Z23MJ

@@ -1,4 +1,4 @@
-// Copyright 2023 Datav.io Team
+// Copyright 2023 observex.io Team
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -14,7 +14,7 @@ package utils
 
 import "time"
 
-//将"2016-02-15" 格式转化为 time.Time
+// 将"2016-02-15" 格式转化为 time.Time
 func DateStringToTime(s string) (time.Time, error) {
 	loc, _ := time.LoadLocation("Local")
 	t, err := time.ParseInLocation("2006-1-2", s, loc)

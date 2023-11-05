@@ -1,4 +1,4 @@
-// Copyright 2023 Datav.io Team
+// Copyright 2023 observex.io Team
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -61,7 +61,7 @@ const d: SeriesData[] = flatten(data)
 }
 */
 // The above example will get targets from SeriesData, Table and Graph panels are using this method to get targets
-// If return [] or null or undefined, Datav will use the default function to get override targets
+// If return [] or null or undefined, observex will use the default function to get override targets
 export const getOverrideTargets = (panel, data) => {
     // for demonstration purpose, we just return a hard coded targets list
     return ['Volume','MA5','MA10','MA20','MA30'].map(v => ({label: v, value: v}))

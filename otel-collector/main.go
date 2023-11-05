@@ -9,10 +9,10 @@ import (
 	"syscall"
 	"time"
 
-	datavFeatureGate "github.com/DataObserve/datav/otel-collector/featuregate"
-	"github.com/DataObserve/datav/otel-collector/internal/collector"
-	"github.com/DataObserve/datav/otel-collector/internal/service"
-	"github.com/DataObserve/datav/otel-collector/pkg/constants"
+	observexFeatureGate "github.com/DataObserve/observex/otel-collector/featuregate"
+	"github.com/DataObserve/observex/otel-collector/internal/collector"
+	"github.com/DataObserve/observex/otel-collector/internal/service"
+	"github.com/DataObserve/observex/otel-collector/pkg/constants"
 	flag "github.com/spf13/pflag"
 	otelcolFeatureGate "go.opentelemetry.io/collector/featuregate"
 	"go.uber.org/zap"
@@ -31,7 +31,7 @@ func main() {
 
 	f.String("config", "", "File path for the collector configuration")
 	f.String("manager-config", "", "File path for the agent manager configuration")
-	f.Var(datavFeatureGate.NewFlag(otelcolFeatureGate.GlobalRegistry()), "feature-gates",
+	f.Var(observexFeatureGate.NewFlag(otelcolFeatureGate.GlobalRegistry()), "feature-gates",
 		"Comma-delimited list of feature gate identifiers. Prefix with '-' to disable the feature. '+' or no prefix will enable the feature.")
 	err := f.Parse(os.Args[1:])
 	if err != nil {

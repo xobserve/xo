@@ -25,9 +25,9 @@ import (
 )
 
 const (
-	DefaultTraceDatabase         string = "datav_traces"
+	DefaultTraceDatabase         string = "observex_traces"
 	DefaultClusterName           string = "cluster"
-	DefaultTraceDatasource       string = "tcp://127.0.0.1:9000/?database=datav_traces"
+	DefaultTraceDatasource       string = "tcp://127.0.0.1:9000/?database=observex_traces"
 	DefaultIndexTable            string = "distributed_trace_index"
 	DefaultTraceErrorTable       string = "distributed_trace_error_index"
 	DefaultTraceSpansTable       string = "distributed_trace_spans"

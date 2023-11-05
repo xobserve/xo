@@ -3,7 +3,7 @@ package clickhouselogsexporter
 import (
 	"strings"
 
-	"github.com/DataObserve/datav/otel-collector/pkg/usage"
+	"github.com/DataObserve/observex/otel-collector/pkg/usage"
 	"go.opencensus.io/metric/metricdata"
 	"go.opencensus.io/stats"
 	"go.opencensus.io/stats/view"
@@ -19,25 +19,25 @@ var (
 	// Measures for usage
 	ExporterSentLogRecords = stats.Int64(
 		SentLogRecordsKey,
-		"Number of datav log records successfully sent to destination.",
+		"Number of observex log records successfully sent to destination.",
 		stats.UnitDimensionless)
 	ExporterSentLogRecordsBytes = stats.Int64(
 		SentLogRecordsBytesKey,
-		"Total size of datav log records successfully sent to destination.",
+		"Total size of observex log records successfully sent to destination.",
 		stats.UnitDimensionless)
 
 	// Views for usage
 	LogsCountView = &view.View{
-		Name:        "datav_logs_count",
+		Name:        "observex_logs_count",
 		Measure:     ExporterSentLogRecords,
-		Description: "The number of logs exported to datav",
+		Description: "The number of logs exported to observex",
 		Aggregation: view.Sum(),
 		TagKeys:     []tag.Key{usage.TagTenantKey},
 	}
 	LogsSizeView = &view.View{
-		Name:        "datav_logs_bytes",
+		Name:        "observex_logs_bytes",
 		Measure:     ExporterSentLogRecordsBytes,
-		Description: "The size of logs exported to datav",
+		Description: "The size of logs exported to observex",
 		Aggregation: view.Sum(),
 		TagKeys:     []tag.Key{usage.TagTenantKey},
 	}
@@ -46,7 +46,7 @@ var (
 func UsageExporter(metrics []*metricdata.Metric) (map[string]usage.Usage, error) {
 	data := map[string]usage.Usage{}
 	for _, metric := range metrics {
-		if strings.Contains(metric.Descriptor.Name, "datav_logs_count") {
+		if strings.Contains(metric.Descriptor.Name, "observex_logs_count") {
 			for _, v := range metric.TimeSeries {
 				tenant := v.LabelValues[0].Value
 				if d, ok := data[tenant]; ok {
@@ -58,7 +58,7 @@ func UsageExporter(metrics []*metricdata.Metric) (map[string]usage.Usage, error)
 					}
 				}
 			}
-		} else if strings.Contains(metric.Descriptor.Name, "datav_logs_bytes") {
+		} else if strings.Contains(metric.Descriptor.Name, "observex_logs_bytes") {
 			for _, v := range metric.TimeSeries {
 				tenant := v.LabelValues[0].Value
 				if d, ok := data[tenant]; ok {

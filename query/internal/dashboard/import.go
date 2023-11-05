@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"time"
 
-	"github.com/DataObserve/datav/query/pkg/db"
-	"github.com/DataObserve/datav/query/pkg/models"
-	"github.com/DataObserve/datav/query/pkg/utils"
+	"github.com/DataObserve/observex/query/pkg/db"
+	"github.com/DataObserve/observex/query/pkg/models"
+	"github.com/DataObserve/observex/query/pkg/utils"
 )
 
 func ImportFromJSON(raw string, userId int64) (*models.Dashboard, error) {

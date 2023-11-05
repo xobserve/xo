@@ -1,4 +1,4 @@
-// Copyright 2023 Datav.io Team
+// Copyright 2023 observex.io Team
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -21,16 +21,16 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/DataObserve/datav/query/internal/admin"
-	"github.com/DataObserve/datav/query/internal/user"
-	"github.com/DataObserve/datav/query/pkg/colorlog"
-	"github.com/DataObserve/datav/query/pkg/common"
-	"github.com/DataObserve/datav/query/pkg/config"
-	"github.com/DataObserve/datav/query/pkg/db"
-	"github.com/DataObserve/datav/query/pkg/e"
-	"github.com/DataObserve/datav/query/pkg/log"
-	"github.com/DataObserve/datav/query/pkg/models"
-	"github.com/DataObserve/datav/query/pkg/utils"
+	"github.com/DataObserve/observex/query/internal/admin"
+	"github.com/DataObserve/observex/query/internal/user"
+	"github.com/DataObserve/observex/query/pkg/colorlog"
+	"github.com/DataObserve/observex/query/pkg/common"
+	"github.com/DataObserve/observex/query/pkg/config"
+	"github.com/DataObserve/observex/query/pkg/db"
+	"github.com/DataObserve/observex/query/pkg/e"
+	"github.com/DataObserve/observex/query/pkg/log"
+	"github.com/DataObserve/observex/query/pkg/models"
+	"github.com/DataObserve/observex/query/pkg/utils"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 )
@@ -432,7 +432,7 @@ func GetAllStarred(c *gin.Context) {
 
 func Delete(c *gin.Context) {
 	if !config.Data.Dashboard.EnableDelete {
-		c.JSON(http.StatusForbidden, common.RespError("Deleting dashboard is disabled in datav config"))
+		c.JSON(http.StatusForbidden, common.RespError("Deleting dashboard is disabled in observex config"))
 		return
 	}
 

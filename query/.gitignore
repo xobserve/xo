@@ -1,6 +1,6 @@
 ./query
-./datav
-datav.db
+./observex
+observex.db
 commit.sh
 testConfig.yaml
 start.sh

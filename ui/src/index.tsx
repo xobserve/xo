@@ -1,4 +1,4 @@
-// Copyright 2023 Datav.io Team
+// Copyright 2023 observex.io Team
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -21,7 +21,7 @@ import theme from 'theme'
 const embed = window.location.href.includes('embed=true')
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-    <ChakraProvider theme={theme} colorModeManager={createLocalStorageManager(embed ? "datav-embed-theme" : "datav-theme")}> 
+    <ChakraProvider theme={theme} colorModeManager={createLocalStorageManager(embed ? "observex-embed-theme" : "observex-theme")}> 
         <App />
     </ChakraProvider>
 

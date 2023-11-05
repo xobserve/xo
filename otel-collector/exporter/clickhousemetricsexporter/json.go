@@ -17,7 +17,7 @@ package clickhousemetricsexporter
 import (
 	"encoding/json"
 
-	"github.com/DataObserve/datav/otel-collector/exporter/clickhousemetricsexporter/utils/gofuzz"
+	"github.com/DataObserve/observex/otel-collector/exporter/clickhousemetricsexporter/utils/gofuzz"
 	"github.com/prometheus/prometheus/prompb"
 )
 

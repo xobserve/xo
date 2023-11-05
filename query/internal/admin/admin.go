@@ -1,4 +1,4 @@
-// Copyright 2023 Datav.io Team
+// Copyright 2023 observex.io Team
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -13,6 +13,6 @@
 
 package admin
 
-import "github.com/DataObserve/datav/query/pkg/colorlog"
+import "github.com/DataObserve/observex/query/pkg/colorlog"
 
 var logger = colorlog.RootLogger.New("logger", "admin")

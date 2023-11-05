@@ -9,8 +9,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/DataObserve/datav/query/pkg/colorlog"
-	"github.com/DataObserve/datav/query/pkg/models"
+	"github.com/DataObserve/observex/query/pkg/colorlog"
+	"github.com/DataObserve/observex/query/pkg/models"
 	"github.com/gin-gonic/gin"
 	_ "github.com/lib/pq"
 )

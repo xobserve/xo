@@ -112,13 +112,13 @@ import (
 	"go.opentelemetry.io/collector/receiver/otlpreceiver"
 	"go.uber.org/multierr"
 
-	"github.com/DataObserve/datav/otel-collector/exporter/clickhouselogsexporter"
-	"github.com/DataObserve/datav/otel-collector/exporter/clickhousemetricsexporter"
-	"github.com/DataObserve/datav/otel-collector/exporter/clickhousetracesexporter"
-	_ "github.com/DataObserve/datav/otel-collector/pkg/parser/grok"
-	"github.com/DataObserve/datav/otel-collector/processor/datavspanmetricsprocessor"
-	"github.com/DataObserve/datav/otel-collector/processor/datavtailsampler"
-	"github.com/DataObserve/datav/otel-collector/receiver/httpreceiver"
+	"github.com/DataObserve/observex/otel-collector/exporter/clickhouselogsexporter"
+	"github.com/DataObserve/observex/otel-collector/exporter/clickhousemetricsexporter"
+	"github.com/DataObserve/observex/otel-collector/exporter/clickhousetracesexporter"
+	_ "github.com/DataObserve/observex/otel-collector/pkg/parser/grok"
+	"github.com/DataObserve/observex/otel-collector/processor/observexspanmetricsprocessor"
+	"github.com/DataObserve/observex/otel-collector/processor/observextailsampler"
+	"github.com/DataObserve/observex/otel-collector/receiver/httpreceiver"
 )
 
 func Components() (otelcol.Factories, error) {
@@ -239,13 +239,13 @@ func Components() (otelcol.Factories, error) {
 		routingprocessor.NewFactory(),
 		schemaprocessor.NewFactory(),
 		servicegraphprocessor.NewFactory(),
-		datavspanmetricsprocessor.NewFactory(),
+		observexspanmetricsprocessor.NewFactory(),
 		spanmetricsprocessor.NewFactory(),
 		spanprocessor.NewFactory(),
 		tailsamplingprocessor.NewFactory(),
 		transformprocessor.NewFactory(),
 		logstransformprocessor.NewFactory(),
-		datavtailsampler.NewFactory(),
+		observextailsampler.NewFactory(),
 	}
 	for _, pr := range factories.Processors {
 		processors = append(processors, pr)

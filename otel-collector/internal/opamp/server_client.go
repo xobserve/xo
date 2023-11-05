@@ -9,8 +9,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/DataObserve/datav/otel-collector/internal/collector"
-	"github.com/DataObserve/datav/otel-collector/pkg/constants"
+	"github.com/DataObserve/observex/otel-collector/internal/collector"
+	"github.com/DataObserve/observex/otel-collector/pkg/constants"
 	"github.com/oklog/ulid"
 	"github.com/open-telemetry/opamp-go/client"
 	"github.com/open-telemetry/opamp-go/client/types"
@@ -99,7 +99,7 @@ func (s *serverClient) createAgentDescription() *protobufs.AgentDescription {
 	// Create Agent description.
 	return &protobufs.AgentDescription{
 		IdentifyingAttributes: []*protobufs.KeyValue{
-			keyVal("service.name", "datav-otel-collector"),
+			keyVal("service.name", "observex-otel-collector"),
 			keyVal("service.version", constants.Version),
 		},
 		NonIdentifyingAttributes: []*protobufs.KeyValue{

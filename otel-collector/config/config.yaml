@@ -57,8 +57,8 @@ receivers:
         to:   resource.container_name
       # please remove names from below if you want to collect logs from them
       # - type: filter
-      #   id: datav_logs_filter
-      #   expr: 'resource.container_name matches "^datav-(logspout|frontend|alertmanager|query-service|otel-collector|otel-collector-metrics|clickhouse|zookeeper)"'
+      #   id: observex_logs_filter
+      #   expr: 'resource.container_name matches "^observex-(logspout|frontend|alertmanager|query-service|otel-collector|otel-collector-metrics|clickhouse|zookeeper)"'
   opencensus:
     endpoint: 0.0.0.0:55678
   otlp/spanmetrics:
@@ -143,7 +143,7 @@ processors:
     send_batch_size: 10000
     send_batch_max_size: 11000
     timeout: 10s
-  datavspanmetrics/prometheus:
+  observexspanmetrics/prometheus:
     metrics_exporter: prometheus
     latency_histogram_buckets: [100us, 1ms, 2ms, 6ms, 10ms, 50ms, 100ms, 250ms, 500ms, 1000ms, 1400ms, 2000ms, 5s, 10s, 20s, 40s, 60s ]
     dimensions_cache_size: 100000
@@ -155,7 +155,7 @@ processors:
       # This is added to ensure the uniqueness of the timeseries
       # Otherwise, identical timeseries produced by multiple replicas of
       # collectors result in incorrect APM metrics
-      - name: 'datav.collector.id'
+      - name: 'observex.collector.id'
   # memory_limiter:
   #   # 80% of maximum memory up to 2G
   #   limit_mib: 1500
@@ -186,11 +186,11 @@ extensions:
 
 exporters:
   clickhousetraces:
-    dsn: tcp://localhost:9000/?database=datav_traces
+    dsn: tcp://localhost:9000/?database=observex_traces
     docker_multi_node_cluster: ${DOCKER_MULTI_NODE_CLUSTER}
     low_cardinal_exception_grouping: ${LOW_CARDINAL_EXCEPTION_GROUPING}
   clickhousemetricswrite:
-    endpoint: tcp://localhost:9000/?database=datav_metrics
+    endpoint: tcp://localhost:9000/?database=observex_metrics
     retry_on_failure:
       enabled: true
       initial_interval: 10s
@@ -199,7 +199,7 @@ exporters:
     resource_to_telemetry_conversion:
       enabled: true
   clickhousemetricswrite/prometheus:
-    endpoint: tcp://localhost:9000/?database=datav_metrics
+    endpoint: tcp://localhost:9000/?database=observex_metrics
     retry_on_failure:
       enabled: true
       initial_interval: 10s
@@ -210,7 +210,7 @@ exporters:
   # logging: {}
 
   clickhouselogsexporter:
-    dsn: tcp://localhost:9000/?database=datav_logs
+    dsn: tcp://localhost:9000/?database=observex_logs
     docker_multi_node_cluster: ${DOCKER_MULTI_NODE_CLUSTER}
     timeout: 5s
     sending_queue:
@@ -227,7 +227,7 @@ service:
   pipelines:
     traces:
       receivers: [jaeger, otlp]
-      processors: [datavspanmetrics/prometheus, batch]
+      processors: [observexspanmetrics/prometheus, batch]
       exporters: [clickhousetraces]
     metrics:
       receivers: [otlp]

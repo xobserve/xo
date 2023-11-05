@@ -34,9 +34,9 @@ import (
 	"go.opentelemetry.io/collector/pdata/pmetric"
 	semconv "go.opentelemetry.io/collector/semconv/v1.13.0"
 
-	"github.com/DataObserve/datav/otel-collector/exporter/clickhousemetricsexporter/base"
-	"github.com/DataObserve/datav/otel-collector/exporter/clickhousemetricsexporter/utils/timeseries"
-	"github.com/DataObserve/datav/otel-collector/pkg/usage"
+	"github.com/DataObserve/observex/otel-collector/exporter/clickhousemetricsexporter/base"
+	"github.com/DataObserve/observex/otel-collector/exporter/clickhousemetricsexporter/utils/timeseries"
+	"github.com/DataObserve/observex/otel-collector/pkg/usage"
 	"github.com/prometheus/prometheus/prompb"
 )
 
@@ -347,7 +347,7 @@ func (ch *clickHouse) Write(ctx context.Context, data *prompb.WriteRequest, metr
 				tenant := "default"
 				collectUsage := true
 				for _, val := range timeSeries[fingerprint] {
-					if val.Name == nameLabel && strings.HasPrefix(val.Value, "datav_") {
+					if val.Name == nameLabel && strings.HasPrefix(val.Value, "observex_") {
 						collectUsage = false
 						break
 					}

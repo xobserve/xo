@@ -3,7 +3,7 @@ package opamp
 import (
 	"context"
 
-	"github.com/DataObserve/datav/otel-collector/internal/collector"
+	"github.com/DataObserve/observex/otel-collector/internal/collector"
 	"go.uber.org/zap"
 )
 

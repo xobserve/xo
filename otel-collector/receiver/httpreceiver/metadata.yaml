@@ -4,6 +4,6 @@ status:
   class: receiver
   stability:
     alpha: [logs]
-  distributions: [datav]
+  distributions: [observex]
   codeowners:
-    active: [datav]
+    active: [observex]

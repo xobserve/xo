@@ -1,4 +1,4 @@
-// Copyright 2023 Datav.io Team
+// Copyright 2023 observex.io Team
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -68,9 +68,9 @@ export const initAlertFilter = () => {
 export const setEchartsOptions = `
 // setOptions return echarts.Options, it is directly passed to a echarts chart.
 // Find more options examples: https://echarts.apache.org/examples/en/index.html#chart-type-line
-// data: SeriesData[] which is the standard data format in Datav
+// data: SeriesData[] which is the standard data format in observex
 // thresholds: ThresholdsConfig[] | null
-// colors: color palettes using in Datav
+// colors: color palettes using in observex
 // echarts: imported echarts.js module 
 // lodash: imported lodash.js module
 // moment: imported momen.jst module

@@ -15,7 +15,7 @@
 package main
 
 import (
-	"github.com/DataObserve/datav/query/cmd"
+	"github.com/DataObserve/observex/query/cmd"
 	_ "go.uber.org/automaxprocs"
 )
 

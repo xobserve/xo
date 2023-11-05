@@ -4,7 +4,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/DataObserve/datav/otel-collector/receiver/httpreceiver/internal/metadata"
+	"github.com/DataObserve/observex/otel-collector/receiver/httpreceiver/internal/metadata"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/collector/component"
