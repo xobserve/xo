@@ -23,6 +23,7 @@ import { isEmpty } from "utils/validate"
 import { VariableCurrentValue } from "src/data/variable"
 import { replaceWithVariables } from "utils/variable"
 import { EditorInputItem } from "../../../../components/editor/EditorItem"
+import { init } from "echarts"
 
 interface Props {
     value: Units
@@ -71,33 +72,13 @@ export const UnitPicker = ({ value, onChange, size = "md" }: Props) => {
             case "short":
                 setUnits({
                     unitsType: t,
-                    units: [
-                        {
-                            operator: "/",
-                            rhs: 1,
-                            unit: ""
-                        },
-                        {
-                            operator: "/",
-                            rhs: 1000,
-                            unit: "k"
-                        },
-                        {
-                            operator: "/",
-                            rhs: 1000000,
-                            unit: "m"
-                        },
-                    ]
+                    units: initShortUnits()
                 })
                 break;
             case "percent":
                 setUnits({
                     unitsType: t,
-                    units: [{
-                        operator: "x",
-                        rhs: 100,
-                        unit: "%"
-                    }]
+                    units: initPercentUnits()
                 })
                 break
             case "percent%":
@@ -113,54 +94,13 @@ export const UnitPicker = ({ value, onChange, size = "md" }: Props) => {
             case "time":
                 setUnits({
                     unitsType: t,
-                    units: [
-                        {
-                            operator: "/",
-                            rhs: 1,
-                            unit: "ms"
-                        },
-                        {
-                            operator: "/",
-                            rhs: 1000,
-                            unit: "s"
-                        }, {
-                            operator: "/",
-                            rhs: 60 * 1000,
-                            unit: "m"
-                        }, {
-                            operator: "/",
-                            rhs: 60 * 60 * 1000,
-                            unit: "h"
-                        }, {
-                            operator: "/",
-                            rhs: 24 * 60 * 60 * 1000,
-                            unit: "d"
-                        }
-                    ]
+                    units: initTimeUnits()
                 })
                 break
             case "bytes":
                 setUnits({
                     unitsType: t,
-                    units: [
-                        {
-                            operator: "/",
-                            rhs: 1,
-                            unit: "B"
-                        },
-                        {
-                            operator: "/",
-                            rhs: 1024,
-                            unit: "KB"
-                        }, {
-                            operator: "/",
-                            rhs: 1024 * 1024,
-                            unit: "MB"
-                        }, {
-                            operator: "/",
-                            rhs: 1024 * 1024 * 1024,
-                            unit: "GB"
-                        }]
+                    units: initBytesUnits()
                 })
                 break
             case "format":
@@ -375,4 +315,83 @@ const calcValue = (v, unit: Unit) => {
             break;
     }
     return res
+}
+
+
+export const initShortUnits = (): Unit[] => {
+    return [
+        {
+            operator: "/",
+            rhs: 1,
+            unit: ""
+        },
+        {
+            operator: "/",
+            rhs: 1000,
+            unit: "k"
+        },
+        {
+            operator: "/",
+            rhs: 1000000,
+            unit: "m"
+        },
+    ]
+}
+
+export const initPercentUnits = (): Unit[]  => {
+    return [{
+        operator: "x",
+        rhs: 100,
+        unit: "%"
+    }]
+}
+
+export const initTimeUnits = (): Unit[]  => {
+    return [
+        {
+            operator: "/",
+            rhs: 1,
+            unit: "ms"
+        },
+        {
+            operator: "/",
+            rhs: 1000,
+            unit: "s"
+        }, {
+            operator: "/",
+            rhs: 60 * 1000,
+            unit: "m"
+        }, {
+            operator: "/",
+            rhs: 60 * 60 * 1000,
+            unit: "h"
+        }, {
+            operator: "/",
+            rhs: 24 * 60 * 60 * 1000,
+            unit: "d"
+        }
+    ]
+}
+
+export const initBytesUnits = (): Unit[]  => {
+    return [
+        {
+            operator: "/",
+            rhs: 1,
+            unit: "B"
+        },
+        {
+            operator: "/",
+            rhs: 1024,
+            unit: "KB"
+        }, {
+            operator: "/",
+            rhs: 1024 * 1024,
+            unit: "MB"
+        }, {
+            operator: "/",
+            rhs: 1024 * 1024 * 1024,
+            unit: "GB"
+        }
+    ]
 }

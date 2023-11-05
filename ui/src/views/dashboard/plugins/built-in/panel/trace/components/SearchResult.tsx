@@ -111,6 +111,9 @@ const TraceSearchResult = (props: Props) => {
     }
 
     const totalTraces = useMemo(() => {
+        if (aggregate != "total-count") {
+            return null
+        }
         if (!traceChart) {
             return 0
         }
@@ -127,7 +130,7 @@ const TraceSearchResult = (props: Props) => {
     return (<>
         <Box pl="2">
             {chartType == "graph" && <Box height={plotHeight}>
-                {traceChart && <ErrorOkChart data={traceChart} onClick={null} totalCount={totalTraces} displayCount={traces?.length} options={traceChartOptions} />}
+                {traceChart && <ErrorOkChart data={traceChart} onClick={null} totalCount={totalTraces} displayCount={traces?.length} options={traceChartOptions} isTimeUnit={aggregate != "total-count" && aggregate != "rate"}/>}
             </Box>}
             {chartType == "plot" && <SearchResultPlot traces={traces} timeRange={timeRange} onSelect={onSelect} height={plotHeight + 3} />}
             <Box pl="2" pr="20px" pt="4">
