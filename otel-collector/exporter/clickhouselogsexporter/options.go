@@ -7,3 +7,4 @@ const (
 	DefaultLogsTable        string = "distributed_logs"
 	DefaultLogTagAttributes string = "distributed_log_tag_attributes"
 )
+ 

@@ -40,7 +40,7 @@ const TraceSearchResult = (props: Props) => {
     const [selectedTraces, setSelectedTraces] = useState<Trace[]>([])
     const [sort, setSort] = useState(traceSortTypes[0].value)
     const [comparison, setComparison] = useState<string[]>([])
-    const [chartType, setChartType] = useState<"plot" | "graph">(traceChartOptions ? "graph" : "plot")
+    const [chartType, setChartType] = useState<"plot" | "graph">(traceChart ? "graph" : "plot")
     const initAggregate = useSearchParam("aggregate")
     const initGroupby = useSearchParam("groupby")
     const [aggregate, setAggregate] = useState(initAggregate ?? aggregateFunctions[0].value)
@@ -129,10 +129,10 @@ const TraceSearchResult = (props: Props) => {
 
     return (<>
         <Box pl="2">
-            {chartType == "graph" && <Box height={plotHeight}>
+            {(chartType == "graph" && traceChart) && <Box height={plotHeight}>
                 {traceChart && <ErrorOkChart data={traceChart} onClick={null} totalCount={totalTraces} displayCount={traces?.length} options={traceChartOptions} isTimeUnit={aggregate != "total-count" && aggregate != "rate"}/>}
             </Box>}
-            {chartType == "plot" && <SearchResultPlot traces={traces} timeRange={timeRange} onSelect={onSelect} height={plotHeight + 3} />}
+            {(chartType == "plot" || !traceChart) && <SearchResultPlot traces={traces} timeRange={timeRange} onSelect={onSelect} height={plotHeight + 3} />}
             <Box pl="2" pr="20px" pt="4">
                 <Flex flexDirection={isLargeScreen ? "row" : "column"} alignItems={isLargeScreen ? "center" : "start"} justifyContent="space-between" mb="1" fontSize={isLargeScreen ? null : "xs"}>
                     <HStack height="40px" fontSize="0.9rem">

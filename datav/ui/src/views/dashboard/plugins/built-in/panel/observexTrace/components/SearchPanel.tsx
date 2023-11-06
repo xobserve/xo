@@ -1,13 +1,11 @@
 import { Form, FormSection } from "src/components/form/Form"
 import InputSelect from "src/components/select/InputSelect"
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { Panel } from "types/dashboard"
-import { queryJaegerOperations, queryJaegerServices } from "../../../datasource/jaeger/query_runner"
-import { isEqual, set, sortBy, uniq } from "lodash"
+import { isEqual } from "lodash"
 import { EditorInputItem, EditorNumberItem } from "src/components/editor/EditorItem"
-import { Box, Button, Checkbox, Divider, Flex, HStack, Input, Popover, PopoverArrow, PopoverBody, PopoverContent, PopoverTrigger, Portal, Text, useMediaQuery, VStack } from "@chakra-ui/react"
+import { Box, Divider, Flex, HStack, Input, Popover, PopoverArrow, PopoverBody, PopoverContent, PopoverTrigger, Portal, Text, useMediaQuery, VStack } from "@chakra-ui/react"
 import storage from "utils/localStorage"
-import { AutoComplete } from 'antd';
 
 import { TimeRange } from "types/time"
 import { hasVariableFormat, replaceWithVariablesHasMultiValues } from "utils/variable"
@@ -24,12 +22,14 @@ import { getDatasource } from "utils/datasource"
 import { MobileBreakpoint } from "src/data/constants"
 import { $datasources } from "src/views/datasource/store"
 import { addParamToUrl } from "utils/url"
-import { DatasourceTypeJaeger } from "../../../datasource/jaeger/types"
 import { PanelType } from "../types"
 import { TraceSearchKey } from "../../trace/config/constants"
 import { useSearchParam } from "react-use"
 import { TraceTagKey } from "../Trace"
 import { FaList } from "react-icons/fa"
+import { builtinDatasourcePlugins } from "../../../plugins"
+import { externalDatasourcePlugins } from "src/views/dashboard/plugins/external/plugins"
+
 interface Props {
     panel: Panel
     onSearch: any
@@ -41,14 +41,11 @@ interface Props {
 
 // cache services parsed by variables, when a variable changes, we can compare the new parsed result with cache
 // and decide whether need to re-query operations
-const traceServicesCache = new Map()
+const traceQueryCache = new Map()
 const TraceSearchPanel = ({ timeRange, dashboardId, panel, onSearch, onSearchIds, traceTagKeys }: Props) => {
     const [searchParams] = useSearchParams()
     const variables = useStore($variables)
     const t1 = useStore(tracePanelMsg)
-    const [inited, setInited] = useState(false)
-    const [services, setServices] = useState([])
-    const [operations, setOperations] = useState([])
     const [searchProvider, setSearchProvider] = useState<string>("")
     const lastSearch = useMemo(() => storage.get(TraceSearchKey + dashboardId + panel.id) ?? {}, [])
     const [initService, initOperation, initTags, initMax, initMin, initLimit] = getInitParams(searchParams, panel, lastSearch)
@@ -64,103 +61,48 @@ const TraceSearchPanel = ({ timeRange, dashboardId, panel, onSearch, onSearchIds
     const [min, setMin] = useState<string>(initMin)
     const [limit, setLimit] = useState<number>(initLimit)
     const [traceIds, setTraceIds] = useState<string>(initTraceIds)
-
-    const [useLatestTime, setUseLatestTime] = useState(true)
+    const [queryCounter, setQueryCounter] = useState(0)
     const datasources = useStore($datasources)
     const ds = getDatasource(panel.datasource.id, datasources)
+    const dsPlugin = builtinDatasourcePlugins[ds.type] ?? externalDatasourcePlugins[ds.type]
 
     useEffect(() => {
-        if (inited) {
-            onSearch(service, operation, tags, min, max, limit, useLatestTime, [[aggregate, groupby], true])
-        }
-    }, [aggregate, groupby])
-
-    useEffect(() => {
-        if (!isEmpty(initTraceIds)) {
-            onSearchIds(initTraceIds)
-            return
-        }
-
-        if (service) {
-            loadOperations()
-            onSearch(service, operation, tags, min, max, limit, useLatestTime, [[aggregate, groupby], false])
-        }
-
-        setTimeout(() => {
-            setInited(true)
-        }, 1000)
-
         return () => {
-            delete traceServicesCache[dashboardId + panel.id]
+            delete traceQueryCache[dashboardId + panel.id]
         }
     }, [])
 
-
-
+    const queryH = useRef(null)
     useEffect(() => {
-        if (inited) {
+        if (queryH.current) {
+            clearTimeout(queryH.current)
+        }
+        queryH.current = setTimeout(() => {
             if (!isEmpty(traceIds)) {
                 onSearchIds(traceIds)
             } else {
                 if (service && operation) {
-                    onSearch(service, operation, tags, min, max, limit, useLatestTime, [[aggregate, groupby], false])
+                    onSearch(service, operation, tags, min, max, limit, true, [[aggregate, groupby], false])
                 }
             }
-        }
-    }, [timeRange])
+
+            storage.set(TraceSearchKey + dashboardId + panel.id, {
+                service, operation, tags, min, max, limit
+            })
+        }, 500)
+
+    }, [queryCounter, service, operation, tags, min, max, limit, traceIds, timeRange, aggregate, groupby])
 
     useEffect(() => {
-        loadServices()
-    }, [ds.type])
+        const query = dsPlugin.replaceQueryWithVariables(service + operation + tags + min + max + limit)
 
-    useEffect(() => {
-        if (inited) {
-            if (!isEmpty(traceIds)) {
-                onSearchIds(traceIds)
-                return
-            }
+        const cachedQuery = traceQueryCache[dashboardId + panel.id]
+        if (!isEqual(query, cachedQuery)) {
+            setQueryCounter(queryCounter + 1)
+        }
+        traceQueryCache[dashboardId + panel.id] = query
 
-            if (service) {
-                loadOperations()
-                onSearch(service, operation, tags, min, max, limit, useLatestTime, [[aggregate, groupby], false])
-            } else {
-                setOperations([])
-            }
-        }
-    }, [service, traceIds])
-
-    useEffect(() => {
-        if (inited) {
-            setTraceIds(initTraceIds)
-        }
-    }, [initTraceIds])
-    useEffect(() => {
-        if (!inited) {
-            return
-        }
-        if (hasVariableFormat(operation)) {
-            return
-        }
-
-        if (!hasVariableFormat(service)) {
-            return
-        }
-
-        const services = replaceWithVariablesHasMultiValues(service)
-        const cachedServices = traceServicesCache[dashboardId + panel.id]
-        if (!isEqual(services, cachedServices)) {
-            onVariablesChange()
-        }
     }, [variables])
-
-    const onVariablesChange = async () => {
-        loadOperations()
-        if (!isEmpty(traceIds)) {
-            onSearchIds(traceIds)
-            return
-        }
-        onSearch(service, operation, tags, min, max, limit, useLatestTime, [[aggregate, groupby], false])
-    }
 
     useBus(
         ShareUrlEvent,
@@ -179,63 +121,6 @@ const TraceSearchPanel = ({ timeRange, dashboardId, panel, onSearch, onSearchIds
         [service, operation, tags, max, min, limit, traceIds]
     )
 
-
-    const loadServices = async () => {
-        switch (ds.type) {
-            case DatasourceTypeJaeger:
-                const res = await queryJaegerServices(panel.datasource.id)
-                const ss = sortBy(res)
-                setServices(ss)
-                setTimeout(() => {
-                    setInited(true)
-                    if (ss.length > 0) {
-                        if (isEmpty(service)) {
-                            setService(ss[0])
-                        }
-                    }
-                }, 500)
-
-                break;
-
-            default:
-                break;
-        }
-    }
-
-    const loadOperations = async (s?) => {
-        switch (ds.type) {
-            case DatasourceTypeJaeger:
-                const services = s ?? replaceWithVariablesHasMultiValues(service)
-                traceServicesCache[dashboardId + panel.id] = services
-                const res = await Promise.all(services.map(service => queryJaegerOperations(panel.datasource.id, service)))
-
-                const ss = sortBy(uniq(res.filter(r => r).flat()))
-                setOperations(['all'].concat(ss))
-
-                if (!hasVariableFormat(operation)) {
-                    if (!operation || !ss.includes(operation)) {
-                        setOperation('all')
-                    }
-                }
-
-                break;
-
-            default:
-                break;
-        }
-    }
-
-    const onClickSearch = () => {
-        if (!isEmpty(traceIds)) {
-            onSearchIds(traceIds)
-        } else {
-            onSearch(service, operation, tags, min, max, limit, useLatestTime, [[aggregate, groupby], false])
-            storage.set(TraceSearchKey + dashboardId + panel.id, {
-                service, operation, tags, min, max, limit
-            })
-        }
-    }
-
     const tagsProvider = useMemo(() => {
         if (!traceTagKeys) {
             return null
@@ -246,7 +131,7 @@ const TraceSearchPanel = ({ timeRange, dashboardId, panel, onSearch, onSearchIds
             let v: string
             if (tag.isColumn) {
                 v = tag.name
-                
+
             } else if (tag.dataType == "resource") {
                 v = "resources." + tag.name
             } else {
@@ -269,12 +154,14 @@ const TraceSearchPanel = ({ timeRange, dashboardId, panel, onSearch, onSearchIds
             <FormSection title="Service" spacing={1}>
                 {
                     panel.plugins[PanelType].enableEditService ?
-                        <InputSelect variant="flushed" value={service} options={services.map(s => ({ label: s, value: s }))} size={size} onChange={v => setService(v)} />
+                        <EditorInputItem bordered={false} borderedBottom value={service} onChange={v => {
+                            setService(v)
+                        }} />
                         : <Input variant="flushed" value={service} disabled size={size} />
                 }
             </FormSection>
             <FormSection title="Operation" spacing={1}>
-                <InputSelect variant="flushed" value={operation} options={operations.map(s => ({ label: s, value: s }))} size={size} onChange={v => setOperation(v)} />
+                <EditorInputItem bordered={false} borderedBottom value={operation} onChange={v => setOperation(v)} />
             </FormSection>
             <FormSection title="Tags" spacing={1}>
                 <HStack>
@@ -284,15 +171,15 @@ const TraceSearchPanel = ({ timeRange, dashboardId, panel, onSearch, onSearchIds
                             <Box><FaList /></Box>
                         </PopoverTrigger>
                         <Portal >
-                        <PopoverContent>
-                            <PopoverArrow />
-                            <PopoverBody>
-                                <Input value={searchProvider} onChange={e => setSearchProvider(e.currentTarget.value)} placeholder="search options..."/>
-                                <VStack pt="2" alignItems={"left"}   h="calc(100vh - 50px)" overflowY="auto">
-                                {tagsProvider.map(t => <Text cursor="pointer" className="hover-text" onClick={() => setTags(tags + " " + t + "=")}>{t}</Text>)}
-                                </VStack>
-                            </PopoverBody>
-                        </PopoverContent>
+                            <PopoverContent>
+                                <PopoverArrow />
+                                <PopoverBody>
+                                    <Input value={searchProvider} onChange={e => setSearchProvider(e.currentTarget.value)} placeholder="search options..." />
+                                    <VStack pt="2" alignItems={"left"} h="calc(100vh - 50px)" overflowY="auto">
+                                        {tagsProvider.map(t => <Text cursor="pointer" className="hover-text" onClick={() => setTags(tags + " " + t + "=")}>{t}</Text>)}
+                                    </VStack>
+                                </PopoverBody>
+                            </PopoverContent>
                         </Portal>
                     </Popover>}
                 </HStack>
@@ -313,7 +200,7 @@ const TraceSearchPanel = ({ timeRange, dashboardId, panel, onSearch, onSearchIds
                 <EditorInputItem key={traceIds} placeholder={t1.traceIdsInputTips} value={traceIds} onChange={v => { setTraceIds(v); addParamToUrl({ traceIds: v }) }} size="md" />
             </FormSection>
             <Flex flexDir={isLargeScreen ? "row" : "column"} justifyContent="space-between" gap={3} pt="2">
-                <Button variant="outline" width={isLargeScreen ? "120px" : null} size={size} onClick={onClickSearch}>{isLargeScreen ? t1.findTraces : "Search"}</Button>
+                {/* <Button variant="outline" width={isLargeScreen ? "120px" : null} size={size} onClick={onClickSearch}>{isLargeScreen ? t1.findTraces : "Search"}</Button> */}
                 {/* <HStack spacing={1}>
                     <Checkbox isChecked={useLatestTime} onChange={e => setUseLatestTime(e.currentTarget.checked)} />
                     <Text opacity="0.7">{t1.useLatestTime}</Text>

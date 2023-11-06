@@ -19,7 +19,6 @@ import { memo, useEffect, useState } from "react"
 import { Trace } from "src/views/dashboard/plugins/built-in/panel/trace/types/trace"
 
 import { cloneDeep, set } from "lodash";
-import { replaceWithVariables } from "utils/variable";
 import { getNewestTimeRange } from "src/components/DatePicker/TimePicker";
 import { getDatasource } from "utils/datasource";
 import CustomScrollbar from "src/components/CustomScrollbar/CustomScrollbar";
@@ -119,7 +118,6 @@ const TracePanel = (props: PanelProps) => {
                 query.interval = intervalObj.intervalMs / 1000
 
                 const res = await dsPlugin.runQuery(panel, query, props.timeRange, ds, { tags, min, max, limit, service: services, operation: operations, aggregate, groupby, onlyChart })
-                console.log("here33333:",res)
                 if (res.error) {
                     setError(res.error)
                     setTraces(null)
@@ -148,7 +146,8 @@ const TracePanel = (props: PanelProps) => {
         const query = cloneDeep(panel.datasource.queries[0])
 
         const res = await dsPlugin.runQuery(panel, query, props.timeRange, ds, { traceIds })
-        setTraces(res.data.traces)
+        setTraces(transformTraces(res.data.traces))
+        setTraceChart(null)
     }
 
 

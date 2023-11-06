@@ -109,7 +109,7 @@ export const runQuery = async (panel: Panel, q: PanelQuery, range: TimeRange, ds
             break
         case DataFormat.Traces:
             data = res.data.data
-            data.chart = queryPluginDataToTraceChart(data.chart)
+            data.chart = data.chart && queryPluginDataToTraceChart(data.chart)
             break
         case DataFormat.Trace:
             data =  queryPluginDataToTrace(res.data.data as any, q)

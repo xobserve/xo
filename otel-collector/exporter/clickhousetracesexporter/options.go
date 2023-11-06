@@ -36,7 +36,7 @@ const (
 	DefaultSpanAttributeKeyTable string = "distributed_span_attributes_keys"
 	DefaultDurationSortTable     string = "trcae_durationSort"
 	DefaultArchiveSpansTable     string = "archive_spans"
-
+ 
 	DefaultDependencyGraphTable string   = "dependency_graph_minutes"
 	defaultEncoding             Encoding = EncodingJSON
 )

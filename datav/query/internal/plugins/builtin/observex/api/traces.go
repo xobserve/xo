@@ -42,10 +42,6 @@ func GetTraces(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[s
 		service = service0
 	}
 
-	if service == "" {
-		return models.GenPluginResult(models.PluginStatusError, "service can not be empty", nil)
-	}
-
 	domainQuery += fmt.Sprintf(" AND serviceName='%s'", service)
 
 	var operationNameQuery string
@@ -119,11 +115,12 @@ func GetTraces(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[s
 		var query string
 		if traceIds != "" {
 			query = fmt.Sprintf("SELECT startTime as ts,serviceName,name,traceId, duration as maxDuration FROM %s.%s WHERE traceId in ('%s') AND parentId=''", config.Data.Observability.DefaultTraceDB, observexmodels.DefaultTraceIndexTable, strings.Join(strings.Split(traceIds, ","), "','"))
-		} else if service != "" {
+		} else {
+			if service == "" {
+				return models.GenPluginResult(models.PluginStatusError, "service can not be empty", nil)
+			}
 			query0 := fmt.Sprintf("SELECT DISTINCT traceId FROM %s.%s WHERE startTime >= %d AND startTime <= %d AND %s ORDER BY startTime DESC limit %d", config.Data.Observability.DefaultTraceDB, observexmodels.DefaultTraceIndexTable, start*1e9, end*1e9, domainQuery, limit)
 			query = fmt.Sprintf("SELECT min(startTime) as ts,serviceName,name,traceId,max(duration) as maxDuration FROM %s.%s WHERE traceId in (%s) AND serviceName='%s' %s  %s GROUP BY serviceName,name,traceId", config.Data.Observability.DefaultTraceDB, observexmodels.DefaultTraceIndexTable, query0, service, operationNameQuery, durationQuery)
-		} else {
-			query = fmt.Sprintf("SELECT startTime as ts,serviceName,name,traceId, duration as maxDuration FROM %s.%s WHERE tartTime >= %d AND startTime <= %d AND %s  AND parentId='' ORDER BY ts DESC limit %d", config.Data.Observability.DefaultTraceDB, observexmodels.DefaultTraceIndexTable, start*1e9, end*1e9, domainQuery, limit)
 		}
 		// query traceIDs
 		rows, err := conn.Query(c.Request.Context(), query)

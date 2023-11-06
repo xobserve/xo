@@ -148,7 +148,7 @@ function Login() {
                 <HStack width="900px" borderRadius="6px" boxShadow="-1px 1px 10px rgba(0, 0, 0, .4)" marginTop="-30px">
                     <Box className="login-left" width={isLargeScreen ? "50%" : "30%"} display="flex" justifyContent="center" alignItems="center" flexDir="column">
                         <Image src="/logo.png" alt="" height={isLargeScreen ? "160px" : "80px"} width={isLargeScreen ? "160px" : "80px"} marginLeft="-10px" />
-                        <Box fontSize="26px" color="white" fontWeight="bold">Datav</Box>
+                        <Box fontSize="26px" color="white" fontWeight="bold">ObserveX</Box>
                     </Box>
                     <Box textAlign="center" width={isLargeScreen ? "50%" : "70%"}  backgroundColor={useColorModeValue("hsla(0, 0%, 100%, 0.2)", "hsla(0, 0%, 100%, 0.2)")} p="12">
                         <Heading size="lg" color={"white"}>Welcome</Heading>

@@ -3,6 +3,3 @@ build
 release
 .vscode
 .vite
-ui/src/views/dashboard/plugins/external/
-query/observex
-ui/package-lock.json
