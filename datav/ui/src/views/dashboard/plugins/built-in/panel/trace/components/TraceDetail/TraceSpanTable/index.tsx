@@ -21,6 +21,10 @@ import { Trace, TraceSpan } from 'src/views/dashboard/plugins/built-in/panel/tra
 import { timeConversion } from '../../../../../../../../../utils/date';
 import { getTargetEmptyOrBlank } from '../../../utils/get-target';
 import { Box, Button, Flex, HStack, Link, Text } from '@chakra-ui/react';
+import { addParamToUrl, getUrlParams } from 'utils/url';
+import { extend } from 'lodash';
+import { isEmpty } from 'utils/validate';
+import queryString from 'query-string'
 
 const Option = Select.Option;
 
@@ -156,9 +160,20 @@ export default class TraceSpanView extends Component<Props, State> {
                 dataIndex: 'spanID',
                 sorter: (a, b) => a.spanID.localeCompare(b.spanID),
                 render: (text: any, record: TraceSpan) => {
+                    const currentQuery = getUrlParams()
+                    extend(currentQuery, {view: "TimelineViewer", search: text})
+                
+                
+                    for (const k of Object.keys(currentQuery)) {
+                        if (isEmpty(currentQuery[k])){
+                            delete currentQuery[k]
+                        } 
+                    }
+                
+                    const params = queryString.stringify(currentQuery)
                     return (
                         <Link
-                            href={window.location.pathname + `?search=${text}`}
+                            href={window.location.pathname + `?${params}`}
                             target={getTargetEmptyOrBlank()}
                             rel="noopener noreferrer"
                             color='brand.600'
