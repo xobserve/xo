@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://datav.io/logo.png" alt="datav-logo" width="60" />
+  <img src="https://xobserve.io/logo.png" alt="datav-logo" width="60" />
 </p>
 
 <p align="center">
