@@ -1,5 +1,6 @@
 package clickhouselogsexporter
 
+// default log tables
 const (
 	DefaultLogDatabase      string = "observex_logs"
 	DefaultLogDatasource    string = "tcp://127.0.0.1:9000/?database=observex_logs"

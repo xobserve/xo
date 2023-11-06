@@ -24,6 +24,7 @@ import (
 	"github.com/spf13/viper"
 )
 
+// default trace tables
 const (
 	DefaultTraceDatabase         string = "observex_traces"
 	DefaultClusterName           string = "cluster"
