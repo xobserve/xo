@@ -592,6 +592,8 @@ export const tracePanelMsg = i18n("tracePanel", {
   "traceIdsInputTips": "search with trace ids, separated with comma",
   "selectForCompre": "selected for comparison",
   "startTime": "Start time",
+  "aggregate": "Aggrerate",
+  "groupBy": "Group by",
 })
 
 

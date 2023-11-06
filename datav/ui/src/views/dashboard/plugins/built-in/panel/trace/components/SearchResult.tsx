@@ -156,7 +156,7 @@ const TraceSearchResult = (props: Props) => {
                                 <option value="graph">Hits graph</option>
                             </Select>
                             {chartType == "graph" && <>
-                                <Text minWidth="fit-content">Aggerate</Text>
+                                <Text minWidth="fit-content">{t1.aggregate}</Text>
                                 <Select minWidth="fit-content" variant="unstyled" size="sm" value={aggregate} onChange={e => {
                                     setAggregate(e.currentTarget.value)
                                     addParamToUrl({ aggregate: e.currentTarget.value })
@@ -165,7 +165,7 @@ const TraceSearchResult = (props: Props) => {
                                         aggregateFunctions.map(f => <option key={f.value} value={f.value}>{f.label}</option>)
                                     }
                                 </Select>
-                                <Text minWidth="fit-content">Group by</Text>
+                                <Text minWidth="fit-content">{t1.groupBy}</Text>
                                 <InputSelect variant="unstyled" size="sm" value={groupby} options={groupByOptions} onChange={v => {
                                     setGroupby(v)
                                     addParamToUrl({ groupby: v })
@@ -174,7 +174,7 @@ const TraceSearchResult = (props: Props) => {
                         </HStack>
 
                         }
-                        {chartType == "graph" && <Tooltip label="You can access resources or attributes fields like this: resources.observex.collector.id">
+                        {chartType == "graph" && <Tooltip label="You can access resources or attributes fields as this: resources.observex.collector.id">
                             <Box><FaInfoCircle className="action-icon" /></Box>
                         </Tooltip>}
                     </Flex>

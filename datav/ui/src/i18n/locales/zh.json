@@ -553,7 +553,9 @@
     "traceIdsTips": "通过 Trace ids 来搜索具有最高的优先级，因此如果你想通过选项来搜索，请将该处置空",
     "traceIdsInputTips": "输入 Trace ids，以逗号分隔",
     "selectForCompre": "已选择比较对象",
-    "startTime": "开始时间"
+    "startTime": "开始时间",
+    "aggregate": "聚合",
+    "groupBy": "分组"
   },
   "components": {
     "addThreshold": "添加 Threshold",
