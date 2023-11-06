@@ -13,7 +13,7 @@
 </p>
 
 <div>
-  <img src="https://github.com/xobserveio/assets/blob/main/datav-readme/home-example1.jpg?raw=true" />
+  <img src="https://github.com/xObserve/assets/blob/main/datav-readme/home-example1.jpg?raw=true" />
   <p align="center">
     English | <a href="./README_CN.md">简体中文</a>
   </p>
@@ -60,19 +60,19 @@ You can also try online demo at [play.xobserve.io](https://play.datav.io).
 
 ## Example images
 
-<img src="https://github.com/xobserveio/assets/blob/main/datav-readme/home-example1.jpg?raw=true" />
+<img src="https://github.com/xObserve/assets/blob/main/datav-readme/home-example1.jpg?raw=true" />
 
-<img src="https://github.com/xobserveio/assets/blob/main/datav-readme/runtime-example.jpg?raw=true" />
+<img src="https://github.com/xObserve/assets/blob/main/datav-readme/runtime-example.jpg?raw=true" />
 
-<img src="https://github.com/xobserveio/assets/blob/main/datav-readme/host-example.jpg?raw=true" />
+<img src="https://github.com/xObserve/assets/blob/main/datav-readme/host-example.jpg?raw=true" />
 
-<img src="https://github.com/xobserveio/assets/blob/main/datav-readme/trace-search-example.jpg?raw=true" />
+<img src="https://github.com/xObserve/assets/blob/main/datav-readme/trace-search-example.jpg?raw=true" />
 
-<img src="https://github.com/xobserveio/assets/blob/main/datav-readme/trace-example.jpg?raw=true" />
+<img src="https://github.com/xObserve/assets/blob/main/datav-readme/trace-example.jpg?raw=true" />
 
-<img src="https://github.com/xobserveio/assets/blob/main/datav-readme/log-example.jpg?raw=true" />
+<img src="https://github.com/xObserve/assets/blob/main/datav-readme/log-example.jpg?raw=true" />
 
-<img src="https://github.com/xobserveio/assets/blob/main/datav-readme/alert-example.jpg?raw=true" />
+<img src="https://github.com/xObserve/assets/blob/main/datav-readme/alert-example.jpg?raw=true" />
 
 
 
