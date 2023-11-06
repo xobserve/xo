@@ -22,7 +22,7 @@
 
 
 
-## ObserveX
+## ObserveX [əbˈzɜːvex]
 
 ObserveX is a programmable observability platform designed specifically for developers. It also serves as an alternative data visualization platform to Grafana.
 
