@@ -48,7 +48,24 @@ func GetTraces(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[s
 	if operation == "" || operation == models.VarialbeAllOption {
 		// if min > 0 || max > 0 || rawTags != "" {
 		query := fmt.Sprintf("select name from %s.%s where %s", config.Data.Observability.DefaultTraceDB, observexmodels.DefaultTopLevelOperationsTable, domainQuery)
-		operationNameQuery = fmt.Sprintf(" AND name in (%s)", query)
+		rows, err := conn.Query(c.Request.Context(), query)
+		if err != nil {
+			logger.Warn("Error Query trace operations", "query", query, "error", err)
+			return models.GenPluginResult(models.PluginStatusError, err.Error(), nil)
+		}
+		defer rows.Close()
+
+		operations := make([]string, 0)
+		for rows.Next() {
+			var operation string
+			err := rows.Scan(&operation)
+			if err != nil {
+				logger.Warn("Error scan trace operation", "error", err)
+				continue
+			}
+			operations = append(operations, operation)
+		}
+		operationNameQuery = fmt.Sprintf(" AND name in ('%s')", strings.Join(operations, "','"))
 		// }
 
 	} else {

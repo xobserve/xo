@@ -6,11 +6,8 @@ import {ColorGenerator} from "utils/colorGenerator"
 import { FaInfoCircle } from "react-icons/fa"
 import moment from "moment"
 import React from "react";
-import { getDatasource } from "utils/datasource"
 import { MobileBreakpoint } from "src/data/constants"
-import { colors1, colors2, colors3, paletteColorNameToHex, palettes } from "utils/colors"
-import { Datasource } from "types/datasource"
-import customColors from "theme/colors"
+import { colors1, paletteColorNameToHex, palettes } from "utils/colors"
 import { getShortTraceId } from "../utils/trace"
 
 interface Props {
@@ -51,12 +48,12 @@ const TraceCard = ({ trace, maxDuration,checked=false, onChecked=null,simple=fal
         </Box>
         <Flex flexDir={isLargeScreen ? "row" : "column"} alignItems={isLargeScreen ? "center" : "start"} width="100%" justifyContent={isLargeScreen ? "space-between"  : null} pt={isLargeScreen ? 2 : 2} pb={isLargeScreen ? 4 : 3} px={isLargeScreen ? 2 : 1}>
             <Box>
-                <HStack alignItems="top">
+                {/* <HStack alignItems="top">
                     <Tag size="md" variant="subtle" colorScheme="gray" bg="transparent" fontSize="0.9em">{trace.services.reduce((t,e)=>e.numberOfSpans + t,0)} Spans</Tag>
                     <Tag size="md" variant="subtle" colorScheme="gray" bg="transparent"  fontSize="0.9em">{Object.keys(trace.services).length} Services</Tag>
                     {trace.errorsCount > 0 && <Tooltip label={`This trace has ${trace.errorsCount} error spans`}><Tag size="sm" variant="subtle" colorScheme="gray" bg="transparent" color={paletteColorNameToHex(palettes[15])}  fontSize="0.9em">{trace.errorsCount} Errors</Tag></Tooltip>}
                   
-                </HStack>
+                </HStack> */}
                 {!simple && <Wrap mt={1} spacingX={3}>
                     {sortBy(trace.services, s => s.name).map(service => {
                         const { name, numberOfSpans: count } = service;
@@ -85,8 +82,9 @@ const TraceCard = ({ trace, maxDuration,checked=false, onChecked=null,simple=fal
                     {/* @datetime-examples */}
                     <Text className="bordered-right" pr="1">{formatRelativeDate(trace.startTime / 1000)}</Text>
                     <Text>{timeStr}</Text>
+                    {isLargeScreen && <Text opacity="0.7" fontSize="0.8rem">{mDate.fromNow()}</Text>}
                 </HStack>}
-                {isLargeScreen && <Text mt="1">{mDate.fromNow()}</Text>}
+            
             </Box>
         </Flex>
     </Box>)
