@@ -1,5 +1,4 @@
 import { Form, FormSection } from "src/components/form/Form"
-import InputSelect from "src/components/select/InputSelect"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { Panel } from "types/dashboard"
 import { isEqual } from "lodash"
@@ -8,7 +7,6 @@ import { Box, Divider, Flex, HStack, Input, Popover, PopoverArrow, PopoverBody, 
 import storage from "utils/localStorage"
 
 import { TimeRange } from "types/time"
-import { hasVariableFormat, replaceWithVariablesHasMultiValues } from "utils/variable"
 import useBus from "use-bus"
 import { ShareUrlEvent } from "src/data/bus-events"
 import React from "react";
@@ -199,14 +197,6 @@ const TraceSearchPanel = ({ timeRange, dashboardId, panel, onSearch, onSearchIds
             <FormSection title="Trace ids" spacing={1} desc={t1.traceIdsTips}>
                 <EditorInputItem key={traceIds} placeholder={t1.traceIdsInputTips} value={traceIds} onChange={v => { setTraceIds(v); addParamToUrl({ traceIds: v }) }} size="md" />
             </FormSection>
-            <Flex flexDir={isLargeScreen ? "row" : "column"} justifyContent="space-between" gap={3} pt="2">
-                {/* <Button variant="outline" width={isLargeScreen ? "120px" : null} size={size} onClick={onClickSearch}>{isLargeScreen ? t1.findTraces : "Search"}</Button> */}
-                {/* <HStack spacing={1}>
-                    <Checkbox isChecked={useLatestTime} onChange={e => setUseLatestTime(e.currentTarget.checked)} />
-                    <Text opacity="0.7">{t1.useLatestTime}</Text>
-                </HStack> */}
-            </Flex>
-
         </Form>
     </>)
 }

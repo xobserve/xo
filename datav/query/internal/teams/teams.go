@@ -242,7 +242,7 @@ func AddTeamMembers(c *gin.Context) {
 	role := req.Role
 
 	if req.TeamId == models.GlobalTeamId {
-		c.JSON(400, common.RespError("error.addMemberToGlobal"))
+		c.JSON(400, common.RespError("There is no need to add members to global team"))
 		return
 	}
 
@@ -291,7 +291,7 @@ func AddTeamMembers(c *gin.Context) {
 		}
 
 		if id == 0 {
-			c.JSON(400, common.RespError(e.UserNotExist))
+			c.JSON(400, common.RespError(e.UserNotExist+", please create user first in admin page /admin/users"))
 			return
 		}
 

@@ -148,6 +148,7 @@ export const commonMsg = i18n("common", {
   "isDeleted": params("{name} deleted!"),
   "isExist": params("{name} already exists"),
   "newItem": params("New {name}"),
+  "addItem": params("Add {name}"),
   "manageItem": params("Manage {name}"),
   "deleteItem": params("Delete {name}"),
   "editItem": params("Edit {name}"),
@@ -243,7 +244,7 @@ export const cfgTeam = i18n("cfgTeam", {
   "allowGlobal": "Using global team resources",
   "allowGlobalTips": "Only global admin can set this option, when enabled, current team can use global team's resources, such as datasources, variables",
   "isPublicTips": "When set to public, users not in this team can also view team info and dashboards",
-
+  "addMemberTips": " Before adding a member, please make sure the user has already been added to system, click below to create a user.",
   "sidemenuTip1": "Customize the top section of your team's side menu, you can add, edit, delete and reorder the menu items.",
   "sidemenuTip2": "Menu item format",
   "sidemenuTip3": "Url format",
