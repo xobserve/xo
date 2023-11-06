@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-   An developer-friendly and programmable observability platform
+  Observe everything you want in your business and never miss any X factors . 
 </p>
 
 <p align="center">
