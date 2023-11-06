@@ -54,6 +54,18 @@ const TracePanelEditor = ({ panel, onChange }: TraceEditorProps) => {
             }} actions={panel.plugins[PanelType].interaction.actions} />}
         </PanelAccordion>
         <ErrorOkChartEditor panel={panel} panelType={PanelType} onChange={onChange}/>
+        <PanelAccordion title={t.interaction}>
+            <PanelEditItem title={t.enable}>
+                <Switch isChecked={panel.plugins[PanelType].interaction.enable} onChange={(e) => onChange((panel: Panel) => {
+                    panel.plugins[PanelType].interaction.enable = e.target.checked
+                })} />
+            </PanelEditItem>
+            {panel.plugins[PanelType].interaction.enable && <ClickActionsEditor panel={panel} onChange={v => {
+                onChange((panel: Panel) => {
+                    panel.plugins[PanelType].interaction.actions = v
+                })
+            }} actions={panel.plugins[PanelType].interaction.actions} />}
+        </PanelAccordion>
     </>
 
     )

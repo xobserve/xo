@@ -141,7 +141,7 @@ const TraceSearchResult = (props: Props) => {
                     </HStack>
                     {
                         comparison.length > 0 && <HStack textStyle="title">
-                            <Text><ComparisonTraces removeFromCompare={removeFromCompare} comparedTraces={comparedTraces} maxDuration={maxDuration} datasources={datasources} /> {t1.selectForCompre}</Text>
+                            <Text><ComparisonTraces panel={panel} removeFromCompare={removeFromCompare} comparedTraces={comparedTraces} maxDuration={maxDuration} datasources={datasources} /> {t1.selectForCompre}</Text>
                             <TraceCompare traces={comparedTraces} />
                         </HStack>
                     }
@@ -181,7 +181,7 @@ const TraceSearchResult = (props: Props) => {
                 </Flex>
                 <VStack alignItems="left" maxH={height - plotHeight - 58}>
                     <CustomScrollbar>
-                        {sortedTraces.map(trace => <TraceCard key={trace.traceID} trace={trace} maxDuration={maxDuration} checked={comparison.includes(trace.traceID)} checkDisabled={comparison.length >= 2 && !comparison.includes(trace.traceID)} onChecked={onTraceChecked} onClick={() => onTraceClick(trace)} />)}
+                        {sortedTraces.map(trace => <TraceCard panel={panel} key={trace.traceID} trace={trace} maxDuration={maxDuration} checked={comparison.includes(trace.traceID)} checkDisabled={comparison.length >= 2 && !comparison.includes(trace.traceID)} onChecked={onTraceChecked} onClick={() => onTraceClick(trace)} />)}
                     </CustomScrollbar>
                 </VStack>
             </Box>
@@ -193,7 +193,7 @@ const TraceSearchResult = (props: Props) => {
 export default TraceSearchResult
 
 
-const ComparisonTraces = ({ comparedTraces, maxDuration, removeFromCompare, datasources }: { comparedTraces: Trace[], maxDuration: number, removeFromCompare: any, datasources: Datasource[] }) => {
+const ComparisonTraces = ({panel, comparedTraces, maxDuration, removeFromCompare, datasources }: {panel: Panel; comparedTraces: Trace[], maxDuration: number, removeFromCompare: any, datasources: Datasource[] }) => {
     return (<>
         <Popover trigger="hover" placement="left">
             <PopoverTrigger>
@@ -205,7 +205,7 @@ const ComparisonTraces = ({ comparedTraces, maxDuration, removeFromCompare, data
                     <VStack alignItems="left" divider={<StackDivider />}>
                         {comparedTraces.map(trace => {
                             return trace && <HStack spacing={2}>
-                                <TraceCard trace={trace} maxDuration={maxDuration} simple />
+                                <TraceCard panel={panel} trace={trace} maxDuration={maxDuration} simple />
                                 <FaTimes cursor="pointer" onClick={() => removeFromCompare(trace.traceID)} />
                             </HStack>
                         })}

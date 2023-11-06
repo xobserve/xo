@@ -108,7 +108,6 @@ const TraceDetailWrapper = ({id,dsId}) => {
         setScrollManager(sm)
     }
 
-    console.log("here3333333:",trace)
     return (<>
         {trace && scrollManager && <TraceDetail trace={trace} scrollManager={scrollManager}/>}
     </>)

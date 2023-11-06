@@ -36,6 +36,7 @@ import { commonInteractionEvent, genDynamicFunction } from "utils/dashboard/dyna
 import { isFunction } from "lodash"
 import { $teamVariables, $variables } from "src/views/variables/store"
 import { getShortTraceId } from "../../utils/trace"
+import { PanelType } from "../../../observexTrace/types"
 
 interface Props {
     trace: Trace
@@ -86,6 +87,8 @@ const TraceDetailHeader = ({ trace, viewRange, updateNextViewRangeTime, updateVi
 
     const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
     const size = isLargeScreen ? "sm" : "sm"
+
+    const interactionOptions = panel?.plugins.trace?.interaction ?? panel?.plugins[PanelType]?.interaction
     return (<>
         <Flex justifyContent="space-between" alignItems="center" p={isLargeScreen ? 1 : 0}>
             <HStack>
@@ -96,9 +99,9 @@ const TraceDetailHeader = ({ trace, viewRange, updateNextViewRangeTime, updateVi
                 </Flex>
             </HStack>
             <HStack spacing={2}>
-                {panel && panel.plugins.trace?.interaction?.enable &&
+                {panel && interactionOptions?.enable &&
                     <HStack spacing={1}>
-                        {panel.plugins.trace.interaction.actions.map((action, index) => {
+                        {interactionOptions.actions.map((action, index) => {
                             if (isEmpty(action.name)) {
                                 return
                             }

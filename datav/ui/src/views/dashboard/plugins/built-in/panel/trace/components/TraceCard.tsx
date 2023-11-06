@@ -1,16 +1,21 @@
-import { Box, Checkbox, Flex, HStack, Tag, TagLabel, TagLeftIcon, Text, Wrap, WrapItem, useColorModeValue, useMediaQuery, Tooltip } from "@chakra-ui/react"
+import { Box, Checkbox, Flex, HStack, Tag, TagLabel, TagLeftIcon, Text, Wrap, WrapItem, useColorModeValue, useMediaQuery, Tooltip, Button, useToast } from "@chakra-ui/react"
 import { Trace } from "src/views/dashboard/plugins/built-in/panel/trace/types/trace"
 import { formatDuration, formatRelativeDate } from "utils/date"
-import { sortBy } from "lodash"
+import { isFunction, sortBy } from "lodash"
 import {ColorGenerator} from "utils/colorGenerator"
 import { FaInfoCircle } from "react-icons/fa"
 import moment from "moment"
-import React from "react";
+import React, { useState } from "react";
 import { MobileBreakpoint } from "src/data/constants"
 import { colors1, paletteColorNameToHex, palettes } from "utils/colors"
 import { getShortTraceId } from "../utils/trace"
+import { Panel } from "types/dashboard"
+import { PanelType } from "../../observexTrace/types"
+import { isEmpty } from "utils/validate"
+import { commonInteractionEvent, genDynamicFunction } from "utils/dashboard/dynamicCall"
 
 interface Props {
+    panel: Panel
     trace: Trace
     maxDuration: number
     checked?: boolean
@@ -20,15 +25,17 @@ interface Props {
     onClick?: any
 }
 
-const TraceCard = ({ trace, maxDuration,checked=false, onChecked=null,simple=false,checkDisabled=false, onClick}: Props) => {
+const TraceCard = ({panel, trace, maxDuration,checked=false, onChecked=null,simple=false,checkDisabled=false, onClick}: Props) => {
     const mDate = moment(trace.startTime / 1000);
     const timeStr = mDate.format('h:mm:ss a')
-
+    const [onHover, setOnHover] = useState(false)
     const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
-
+    const toast = useToast()
     const colorGenerator =  new ColorGenerator(colors1)
 
-    return (<Box width="100%" borderRadius="0" cursor="pointer"  onClick={onClick} fontSize={isLargeScreen ? "sm" : "xs"}>
+    const interactionOptions = panel?.plugins.trace?.interaction ?? panel?.plugins[PanelType]?.interaction
+
+    return (<Box width="100%" borderRadius="0" cursor="pointer"  onClick={onClick} fontSize={isLargeScreen ? "sm" : "xs"} onMouseEnter={() => setOnHover(true)} onMouseLeave={() => setOnHover(false)}>
         <Box width="100%" position="relative" >
             <HStack spacing={0} py="2px">
                 {onChecked && <Flex alignItems="center" px="2" zIndex={2}  onClick={e => {
@@ -79,6 +86,28 @@ const TraceCard = ({ trace, maxDuration,checked=false, onChecked=null,simple=fal
 
             <Box mt={isLargeScreen ? 0 : 2}>
                 {!simple && <HStack spacing={1}>
+                    {onHover && <>
+                    {interactionOptions.actions.map((action, index) => {
+                            if (isEmpty(action.name)) {
+                                return
+                            }
+                            const onClick = genDynamicFunction(action.action);
+                            return <Button key={index + action.name} colorScheme={action.color} variant="ghost" size={"xs"} onClick={(e) => {
+                                e.stopPropagation()
+                                if (!isFunction(onClick)) {
+                                    toast({
+                                        title: "Error",
+                                        description: "The action function you defined is not valid",
+                                        status: "error",
+                                        duration: 4000,
+                                        isClosable: true,
+                                    })
+                                } else {
+                                    commonInteractionEvent(onClick, trace)
+                                }
+                            }}>{action.name}</Button>
+                        })}
+                    </>}
                     {/* @datetime-examples */}
                     <Text className="bordered-right" pr="1">{formatRelativeDate(trace.startTime / 1000)}</Text>
                     <Text>{timeStr}</Text>
