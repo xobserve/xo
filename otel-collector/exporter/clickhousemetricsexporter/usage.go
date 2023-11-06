@@ -3,7 +3,7 @@ package clickhousemetricsexporter
 import (
 	"strings"
 
-	"github.com/DataObserve/observex/otel-collector/pkg/usage"
+	"github.com/xObserve/xObserve/otel-collector/pkg/usage"
 	"go.opencensus.io/metric/metricdata"
 	"go.opencensus.io/stats"
 	"go.opencensus.io/stats/view"
@@ -11,33 +11,33 @@ import (
 )
 
 const (
-	SentMetricPointsKey      = "observex_sent_metric_points"
-	SentMetricPointsBytesKey = "observex_sent_metric_points_bytes"
+	SentMetricPointsKey      = "xobserve_sent_metric_points"
+	SentMetricPointsBytesKey = "xobserve_sent_metric_points_bytes"
 )
 
 var (
 	// Measures for usage
 	ExporterSentMetricPoints = stats.Int64(
 		SentMetricPointsKey,
-		"Number of observex log records successfully sent to destination.",
+		"Number of xobserve log records successfully sent to destination.",
 		stats.UnitDimensionless)
 	ExporterSentMetricPointsBytes = stats.Int64(
 		SentMetricPointsBytesKey,
-		"Total size of observex log records successfully sent to destination.",
+		"Total size of xobserve log records successfully sent to destination.",
 		stats.UnitDimensionless)
 
 	// Views for usage
 	MetricPointsCountView = &view.View{
-		Name:        "observex_metric_points_count",
+		Name:        "xobserve_metric_points_count",
 		Measure:     ExporterSentMetricPoints,
-		Description: "The number of observex exported to observex",
+		Description: "The number of xobserve exported to xobserve",
 		Aggregation: view.Sum(),
 		TagKeys:     []tag.Key{usage.TagTenantKey},
 	}
 	MetricPointsBytesView = &view.View{
-		Name:        "observex_metric_points_bytes",
+		Name:        "xobserve_metric_points_bytes",
 		Measure:     ExporterSentMetricPointsBytes,
-		Description: "The size of logs exported to observex",
+		Description: "The size of logs exported to xobserve",
 		Aggregation: view.Sum(),
 		TagKeys:     []tag.Key{usage.TagTenantKey},
 	}
@@ -46,7 +46,7 @@ var (
 func UsageExporter(metrics []*metricdata.Metric) (map[string]usage.Usage, error) {
 	data := map[string]usage.Usage{}
 	for _, metric := range metrics {
-		if strings.Contains(metric.Descriptor.Name, "observex_metric_points_count") {
+		if strings.Contains(metric.Descriptor.Name, "xobserve_metric_points_count") {
 			for _, v := range metric.TimeSeries {
 				tenant := v.LabelValues[0].Value
 				if d, ok := data[tenant]; ok {
@@ -58,7 +58,7 @@ func UsageExporter(metrics []*metricdata.Metric) (map[string]usage.Usage, error)
 					}
 				}
 			}
-		} else if strings.Contains(metric.Descriptor.Name, "observex_metric_points_bytes") {
+		} else if strings.Contains(metric.Descriptor.Name, "xobserve_metric_points_bytes") {
 			for _, v := range metric.TimeSeries {
 				tenant := v.LabelValues[0].Value
 				if d, ok := data[tenant]; ok {

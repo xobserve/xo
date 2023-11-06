@@ -9,10 +9,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/DataObserve/observex/query/pkg/colorlog"
-	"github.com/DataObserve/observex/query/pkg/models"
 	"github.com/gin-gonic/gin"
 	_ "github.com/lib/pq"
+	"github.com/xObserve/xObserve/query/pkg/colorlog"
+	"github.com/xObserve/xObserve/query/pkg/models"
 )
 
 var datasourceName = "postgresql"

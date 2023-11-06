@@ -10,7 +10,7 @@ import { MobileBreakpoint } from "src/data/constants"
 import { colors1, paletteColorNameToHex, palettes } from "utils/colors"
 import { getShortTraceId } from "../utils/trace"
 import { Panel } from "types/dashboard"
-import { PanelType } from "../../observexTrace/types"
+import { PanelType } from "../../xobserveTrace/types"
 import { isEmpty } from "utils/validate"
 import { commonInteractionEvent, genDynamicFunction } from "utils/dashboard/dynamicCall"
 

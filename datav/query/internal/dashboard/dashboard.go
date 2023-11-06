@@ -1,4 +1,4 @@
-// Copyright 2023 observex.io Team
+// Copyright 2023 xObserve.io Team
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -21,17 +21,17 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/DataObserve/observex/query/internal/admin"
-	"github.com/DataObserve/observex/query/internal/user"
-	"github.com/DataObserve/observex/query/pkg/colorlog"
-	"github.com/DataObserve/observex/query/pkg/common"
-	"github.com/DataObserve/observex/query/pkg/config"
-	"github.com/DataObserve/observex/query/pkg/db"
-	"github.com/DataObserve/observex/query/pkg/e"
-	"github.com/DataObserve/observex/query/pkg/log"
-	"github.com/DataObserve/observex/query/pkg/models"
-	"github.com/DataObserve/observex/query/pkg/utils"
 	"github.com/gin-gonic/gin"
+	"github.com/xObserve/xObserve/query/internal/admin"
+	"github.com/xObserve/xObserve/query/internal/user"
+	"github.com/xObserve/xObserve/query/pkg/colorlog"
+	"github.com/xObserve/xObserve/query/pkg/common"
+	"github.com/xObserve/xObserve/query/pkg/config"
+	"github.com/xObserve/xObserve/query/pkg/db"
+	"github.com/xObserve/xObserve/query/pkg/e"
+	"github.com/xObserve/xObserve/query/pkg/log"
+	"github.com/xObserve/xObserve/query/pkg/models"
+	"github.com/xObserve/xObserve/query/pkg/utils"
 	"go.uber.org/zap"
 )
 
@@ -432,7 +432,7 @@ func GetAllStarred(c *gin.Context) {
 
 func Delete(c *gin.Context) {
 	if !config.Data.Dashboard.EnableDelete {
-		c.JSON(http.StatusForbidden, common.RespError("Deleting dashboard is disabled in observex config"))
+		c.JSON(http.StatusForbidden, common.RespError("Deleting dashboard is disabled in xobserve config"))
 		return
 	}
 

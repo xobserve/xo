@@ -3,7 +3,7 @@ package clickhouse
 import (
 	"fmt"
 
-	"github.com/DataObserve/observex/query/pkg/models"
+	"github.com/xObserve/xObserve/query/pkg/models"
 )
 
 /* Query plugin for clickhouse database */

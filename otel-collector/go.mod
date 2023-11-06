@@ -1,4 +1,4 @@
-module github.com/DataObserve/observex/otel-collector
+module github.com/xObserve/xObserve/otel-collector
 
 go 1.20
 

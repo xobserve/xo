@@ -1,6 +1,6 @@
 package cache
 
-import "github.com/DataObserve/observex/query/internal/datasource"
+import "github.com/xObserve/xObserve/query/internal/datasource"
 
 func Init() {
 	go datasource.InitDatasources()

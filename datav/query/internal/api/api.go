@@ -1,4 +1,4 @@
-// Copyright 2023 observex.io Team
+// Copyright 2023 xObserve.io Team
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -12,6 +12,6 @@
 // limitations under the License.
 package api
 
-import "github.com/DataObserve/observex/query/pkg/colorlog"
+import "github.com/xObserve/xObserve/query/pkg/colorlog"
 
 var logger = colorlog.RootLogger.New("logger", "api")

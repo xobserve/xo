@@ -39,7 +39,7 @@ RUN CGO_ENABLED=1 GOOS=linux go build -o query-service
 
 FROM ${BASE_IMAGE} as tgz-builder
 
-WORKDIR /tmp/observex
+WORKDIR /tmp/xobserve
 
 FROM ${GO_SRC} as go-src
 FROM ${JS_SRC} as js-src
@@ -50,11 +50,11 @@ FROM ${BASE_IMAGE}
 COPY --from=go-src /tmp/query/query-service /root/query-service
 COPY --from=js-src /tmp/ui/build /ui/
 
-COPY ./query/observex.sql /root/observex.sql
-COPY ./query/observex.yaml /root/observex.yml
+COPY ./query/xobserve.sql /root/xobserve.sql
+COPY ./query/xobserve.yaml /root/xobserve.yml
 
 EXPOSE 10086
 
 ENTRYPOINT ["/root/query-service"]
 
-CMD ["--config","/root/observex.yml"]
+CMD ["--config","/root/xobserve.yml"]

@@ -26,9 +26,9 @@ import (
 
 // default trace tables
 const (
-	DefaultTraceDatabase         string = "observex_traces"
+	DefaultTraceDatabase         string = "xobserve_traces"
 	DefaultClusterName           string = "cluster"
-	DefaultTraceDatasource       string = "tcp://127.0.0.1:9000/?database=observex_traces"
+	DefaultTraceDatasource       string = "tcp://127.0.0.1:9000/?database=xobserve_traces"
 	DefaultIndexTable            string = "distributed_trace_index"
 	DefaultTraceErrorTable       string = "distributed_trace_error_index"
 	DefaultTraceSpansTable       string = "distributed_trace_spans"
@@ -36,7 +36,7 @@ const (
 	DefaultSpanAttributeKeyTable string = "distributed_span_attributes_keys"
 	DefaultDurationSortTable     string = "trcae_durationSort"
 	DefaultArchiveSpansTable     string = "archive_spans"
- 
+
 	DefaultDependencyGraphTable string   = "dependency_graph_minutes"
 	defaultEncoding             Encoding = EncodingJSON
 )

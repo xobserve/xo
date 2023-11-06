@@ -21,7 +21,7 @@ func SpanIDToHexOrEmptyString(spanID pcommon.SpanID) string {
 }
 
 func GetTenantFromResource(resource pcommon.Resource) string {
-	tenant, found := resource.Attributes().Get("observex.tenant")
+	tenant, found := resource.Attributes().Get("xobserve.tenant")
 	if !found {
 		return "default"
 	}
@@ -29,7 +29,7 @@ func GetTenantFromResource(resource pcommon.Resource) string {
 }
 
 func GetNamespaceFromResource(resource pcommon.Resource) string {
-	env, found := resource.Attributes().Get("observex.namespace")
+	env, found := resource.Attributes().Get("xobserve.namespace")
 	if !found {
 		return "default"
 	}
@@ -37,7 +37,7 @@ func GetNamespaceFromResource(resource pcommon.Resource) string {
 }
 
 func GetGroupFromResource(resource pcommon.Resource) string {
-	group, found := resource.Attributes().Get("observex.group")
+	group, found := resource.Attributes().Get("xobserve.group")
 	if !found {
 		return "default"
 	}

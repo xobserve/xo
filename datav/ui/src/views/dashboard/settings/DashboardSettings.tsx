@@ -1,4 +1,4 @@
-// Copyright 2023 observex.io Team
+// Copyright 2023 xObserve.io Team
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -41,7 +41,7 @@ enum DashboardSettingType  {
     MetaData = 3,
     Annotation = 4
 }
-// color-scheme: dark;height: 100%;background-image: url(http://observex-react.jiaminghi.com/demo/manage-desk/static/media/bg.110420cf.png);background-size: auto;
+// color-scheme: dark;height: 100%;background-image: url(http://xobserve-react.jiaminghi.com/demo/manage-desk/static/media/bg.110420cf.png);background-size: auto;
 const DashboardSettings = ({ dashboard,onChange }: Props) => {
     const t = useStore(commonMsg)
     const t1 = useStore(dashboardSettingMsg)

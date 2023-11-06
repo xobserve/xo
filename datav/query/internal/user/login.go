@@ -1,4 +1,4 @@
-// Copyright 2023 observex.io Team
+// Copyright 2023 xObserve.io Team
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -16,19 +16,19 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/DataObserve/observex/query/pkg/config"
-	"github.com/DataObserve/observex/query/pkg/e"
-	"github.com/DataObserve/observex/query/pkg/models"
-	"github.com/DataObserve/observex/query/pkg/utils"
+	"github.com/xObserve/xObserve/query/pkg/config"
+	"github.com/xObserve/xObserve/query/pkg/e"
+	"github.com/xObserve/xObserve/query/pkg/models"
+	"github.com/xObserve/xObserve/query/pkg/utils"
 
 	// "fmt"
 	"net/http"
 	"strconv"
 	"time"
 
-	"github.com/DataObserve/observex/query/pkg/common"
-	"github.com/DataObserve/observex/query/pkg/db"
 	"github.com/gin-gonic/gin"
+	"github.com/xObserve/xObserve/query/pkg/common"
+	"github.com/xObserve/xObserve/query/pkg/db"
 )
 
 // LoginModel ...

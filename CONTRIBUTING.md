@@ -1,8 +1,8 @@
 # Contributing
 
-This guide helps you get started developing ObserveX.
+This guide helps you get started developing xObserve.
 
-## Build ObserveX
+## Build xObserve
 
 @todo
 

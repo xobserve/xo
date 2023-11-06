@@ -1,7 +1,7 @@
 package builtin
 
 import (
-	_ "github.com/DataObserve/observex/query/internal/plugins/builtin/mysql"
-	_ "github.com/DataObserve/observex/query/internal/plugins/builtin/observex"
-	_ "github.com/DataObserve/observex/query/internal/plugins/builtin/postgresql"
+	_ "github.com/xObserve/xObserve/query/internal/plugins/builtin/mysql"
+	_ "github.com/xObserve/xObserve/query/internal/plugins/builtin/postgresql"
+	_ "github.com/xObserve/xObserve/query/internal/plugins/builtin/xobserve"
 )

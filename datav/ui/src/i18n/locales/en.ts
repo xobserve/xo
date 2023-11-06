@@ -414,7 +414,7 @@ export const panelMsg = i18n("panel", {
   "panelType": "Panel type",
   "visualization": "Built-in",
   "externalPanels": "External",
-  "observexPanels": "observex",
+  "xobservePanels": "xobserve",
   "panelBorder": "Panel layout and border",
   "paletteTips": "Only support Graph, Bar, Pie and Echarts panel",
   "titleDecoration": "Title decoration",

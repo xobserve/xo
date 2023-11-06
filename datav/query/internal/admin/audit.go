@@ -5,10 +5,10 @@ import (
 	"encoding/json"
 	"time"
 
-	"github.com/DataObserve/observex/query/pkg/common"
-	"github.com/DataObserve/observex/query/pkg/db"
-	"github.com/DataObserve/observex/query/pkg/models"
 	"github.com/gin-gonic/gin"
+	"github.com/xObserve/xObserve/query/pkg/common"
+	"github.com/xObserve/xObserve/query/pkg/db"
+	"github.com/xObserve/xObserve/query/pkg/models"
 )
 
 func QueryAuditLogs(c *gin.Context) {

@@ -1,4 +1,4 @@
-// Copyright 2023 observex.io Team
+// Copyright 2023 xObserve.io Team
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -21,15 +21,15 @@ import (
 	"strings"
 	"time"
 
-	"github.com/DataObserve/observex/query/internal/dashboard"
-	storageData "github.com/DataObserve/observex/query/internal/storage/data"
-	"github.com/DataObserve/observex/query/pkg/colorlog"
-	"github.com/DataObserve/observex/query/pkg/config"
-	"github.com/DataObserve/observex/query/pkg/db"
-	"github.com/DataObserve/observex/query/pkg/e"
-	"github.com/DataObserve/observex/query/pkg/models"
-	"github.com/DataObserve/observex/query/pkg/utils"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/xObserve/xObserve/query/internal/dashboard"
+	storageData "github.com/xObserve/xObserve/query/internal/storage/data"
+	"github.com/xObserve/xObserve/query/pkg/colorlog"
+	"github.com/xObserve/xObserve/query/pkg/config"
+	"github.com/xObserve/xObserve/query/pkg/db"
+	"github.com/xObserve/xObserve/query/pkg/e"
+	"github.com/xObserve/xObserve/query/pkg/models"
+	"github.com/xObserve/xObserve/query/pkg/utils"
 	"go.nhat.io/otelsql"
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
 	semconv "go.opentelemetry.io/otel/semconv/v1.10.0"
@@ -88,7 +88,7 @@ func connectDatabase(tc *sdktrace.TracerProvider) error {
 		var path string
 		dataPath := strings.TrimSpace(config.Data.Paths.SqliteData)
 		if dataPath == "" {
-			path = "observex.db"
+			path = "xobserve.db"
 		} else {
 			exist, _ := utils.FileExists(dataPath)
 			if !exist {
@@ -99,7 +99,7 @@ func connectDatabase(tc *sdktrace.TracerProvider) error {
 				}
 			}
 
-			path = dataPath + "/observex.db"
+			path = dataPath + "/xobserve.db"
 		}
 		driver, _ := otelsql.Register("sqlite3",
 			otelsql.TraceQueryWithArgs(),

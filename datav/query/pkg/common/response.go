@@ -1,4 +1,4 @@
-// Copyright 2023 observex.io Team
+// Copyright 2023 xObserve.io Team
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -12,7 +12,7 @@
 // limitations under the License.
 package common
 
-import "github.com/DataObserve/observex/query/pkg/e"
+import "github.com/xObserve/xObserve/query/pkg/e"
 
 type Resp struct {
 	Status  string      `json:"status"`
@@ -25,7 +25,7 @@ func RespSuccess(data interface{}) *Resp {
 	r := &Resp{}
 	r.Status = Success
 	r.Data = data
-	r.Version = "observex"
+	r.Version = "xobserve"
 	return r
 }
 
@@ -33,7 +33,7 @@ func RespError(msg string) *Resp {
 	r := &Resp{}
 	r.Status = Error
 	r.Message = msg
-	r.Version = "observex"
+	r.Version = "xobserve"
 	return r
 }
 
@@ -42,7 +42,7 @@ func RespErrorWithData(msg string, data interface{}) *Resp {
 	r.Status = Error
 	r.Message = msg
 	r.Data = data
-	r.Version = "observex"
+	r.Version = "xobserve"
 	return r
 }
 
@@ -50,7 +50,7 @@ func RespInternalError() *Resp {
 	r := &Resp{}
 	r.Status = Error
 	r.Message = e.Internal
-	r.Version = "observex"
+	r.Version = "xobserve"
 
 	return r
 }

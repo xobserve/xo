@@ -9,9 +9,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/DataObserve/observex/otel-collector/receiver/httpreceiver/bodyparser"
-	"github.com/DataObserve/observex/otel-collector/receiver/httpreceiver/internal/metadata"
 	"github.com/gorilla/mux"
+	"github.com/xObserve/xObserve/otel-collector/receiver/httpreceiver/bodyparser"
+	"github.com/xObserve/xObserve/otel-collector/receiver/httpreceiver/internal/metadata"
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/config/confighttp"
 	"go.opentelemetry.io/collector/consumer"

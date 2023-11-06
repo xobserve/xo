@@ -10,8 +10,8 @@ import (
 	"github.com/ClickHouse/clickhouse-go/v2/lib/driver"
 
 	ch "github.com/ClickHouse/clickhouse-go/v2"
-	"github.com/DataObserve/observex/query/pkg/models"
 	"github.com/gin-gonic/gin"
+	"github.com/xObserve/xObserve/query/pkg/models"
 )
 
 func ConnectToClickhouse(url, database, username, password string) (ch.Conn, error) {

@@ -1,4 +1,4 @@
-// Copyright 2023 observex.io Team
+// Copyright 2023 xObserve.io Team
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -36,7 +36,7 @@ import { commonInteractionEvent, genDynamicFunction } from "utils/dashboard/dyna
 import { isFunction } from "lodash"
 import { $teamVariables, $variables } from "src/views/variables/store"
 import { getShortTraceId } from "../../utils/trace"
-import { PanelType } from "../../../observexTrace/types"
+import { PanelType } from "../../../xobserveTrace/types"
 
 interface Props {
     trace: Trace

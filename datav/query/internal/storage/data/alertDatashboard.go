@@ -98,7 +98,7 @@ const AlertDashboard = `
                         "fontSize": "1.2rem",
                         "fontWeight": "500",
                         "justifyContent": "left",
-                        "md": "#Welcome to observex\n This is a new panel\n You can edit it by clicking the edit button on the top title\n ###Have fun!"
+                        "md": "#Welcome to xobserve\n This is a new panel\n You can edit it by clicking the edit button on the top title\n ###Have fun!"
                     }
                 },
                 "styles": {

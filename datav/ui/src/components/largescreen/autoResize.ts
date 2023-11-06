@@ -1,4 +1,4 @@
-// Copyright 2023 observex.io Team
+// Copyright 2023 xObserve.io Team
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -25,9 +25,9 @@ export default function useAutoResize(ref) {
     setState({ width: clientWidth, height: clientHeight })
 
     if (!domRef.current) {
-      console.warn('observex: Failed to get dom node, component rendering may be abnormal!')
+      console.warn('xobserve: Failed to get dom node, component rendering may be abnormal!')
     } else if (!clientWidth || !clientHeight) {
-      console.warn('observex: Component width or height is 0px, rendering abnormality may occur!')
+      console.warn('xobserve: Component width or height is 0px, rendering abnormality may occur!')
     }
   }, [])
 

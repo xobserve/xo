@@ -5,7 +5,7 @@ import "os"
 // Version is the current version of the collector.
 // This is set at build time.
 var Version = "dev"
-var Desc = "observex OpenTelemetry Collector"
+var Desc = "xobserve OpenTelemetry Collector"
 
 // AllowLbExporterConfig enables lb exporter capability in the collector instance
 var SupportLbExporterConfig = GetOrDefaultEnv("SUPPORT_LB_EXPORTER_CONFIG", "1")

@@ -1,4 +1,4 @@
-// Copyright 2023 observex.io Team
+// Copyright 2023 xObserve.io Team
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -94,7 +94,7 @@ const UserMenu = ({ miniMode }) => {
                 <Portal>
                     <MenuList zIndex={1000} fontSize="1em">
                         <Link to={session ? `/account/setting` : null}><MenuItem  py="2px" cursor="default" bg="transparent" _hover={{bg: "transparent"}}  icon={<FaUserAlt fontSize="1em" />} >
-                            <Text>{session?.user.name ?? "observex guest"}</Text>
+                            <Text>{session?.user.name ?? "xobserve guest"}</Text>
                             {session && <Text>{session.user.username}</Text>}
                         </MenuItem></Link>
                         <MenuDivider />

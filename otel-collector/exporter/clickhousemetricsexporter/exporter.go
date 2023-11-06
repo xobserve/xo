@@ -32,8 +32,8 @@ import (
 
 	"github.com/prometheus/prometheus/prompb"
 
-	"github.com/DataObserve/observex/otel-collector/exporter/clickhousemetricsexporter/base"
-	"github.com/DataObserve/observex/otel-collector/pkg/usage"
+	"github.com/xObserve/xObserve/otel-collector/exporter/clickhousemetricsexporter/base"
+	"github.com/xObserve/xObserve/otel-collector/pkg/usage"
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/config/confighttp"
 	"go.opentelemetry.io/collector/consumer/consumererror"
@@ -94,7 +94,7 @@ func NewPrwExporter(cfg *Config, set exporter.CreateSettings) (*PrwExporter, err
 		usage.Options{
 			ReportingInterval: usage.DefaultCollectionInterval,
 		},
-		"observex_metrics",
+		"xobserve_metrics",
 		UsageExporter,
 	)
 	if err != nil {

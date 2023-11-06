@@ -1,4 +1,4 @@
-// Copyright 2023 observex.io Team
+// Copyright 2023 xObserve.io Team
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -15,10 +15,10 @@ package api
 import (
 	"strconv"
 
-	"github.com/DataObserve/observex/query/internal/variables"
-	"github.com/DataObserve/observex/query/pkg/common"
-	"github.com/DataObserve/observex/query/pkg/e"
 	"github.com/gin-gonic/gin"
+	"github.com/xObserve/xObserve/query/internal/variables"
+	"github.com/xObserve/xObserve/query/pkg/common"
+	"github.com/xObserve/xObserve/query/pkg/e"
 )
 
 func GetVariables(c *gin.Context) {

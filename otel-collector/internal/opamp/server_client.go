@@ -9,12 +9,12 @@ import (
 	"sync"
 	"time"
 
-	"github.com/DataObserve/observex/otel-collector/internal/collector"
-	"github.com/DataObserve/observex/otel-collector/pkg/constants"
 	"github.com/oklog/ulid"
 	"github.com/open-telemetry/opamp-go/client"
 	"github.com/open-telemetry/opamp-go/client/types"
 	"github.com/open-telemetry/opamp-go/protobufs"
+	"github.com/xObserve/xObserve/otel-collector/internal/collector"
+	"github.com/xObserve/xObserve/otel-collector/pkg/constants"
 	"go.uber.org/multierr"
 	"go.uber.org/zap"
 )
@@ -99,7 +99,7 @@ func (s *serverClient) createAgentDescription() *protobufs.AgentDescription {
 	// Create Agent description.
 	return &protobufs.AgentDescription{
 		IdentifyingAttributes: []*protobufs.KeyValue{
-			keyVal("service.name", "observex-otel-collector"),
+			keyVal("service.name", "xobserve-otel-collector"),
 			keyVal("service.version", constants.Version),
 		},
 		NonIdentifyingAttributes: []*protobufs.KeyValue{

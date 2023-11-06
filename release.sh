@@ -8,17 +8,17 @@ mkdir release/darwin release/linux release/windows
 
 ## build query 
 cd query
-GOOS=darwin GOARCH=amd64 go build -o ../release/darwin/observex
-GOOS=linux GOARCH=amd64 go build -o ../release/linux/observex
-GOOS=windows GOARCH=amd64 go build -o ../release/windows/observex.exe
+GOOS=darwin GOARCH=amd64 go build -o ../release/darwin/xobserve
+GOOS=linux GOARCH=amd64 go build -o ../release/linux/xobserve
+GOOS=windows GOARCH=amd64 go build -o ../release/windows/xobserve.exe
 
 ## copy files
-cp observex.yaml ../release/darwin/observex.yaml
-cp observex.yaml ../release/linux/observex.yaml
-cp observex.yaml ../release/windows/observex.yaml
-cp observex.sql ../release/darwin/observex.sql
-cp observex.sql ../release/linux/observex.sql
-cp observex.sql ../release/windows/observex.sql
+cp xobserve.yaml ../release/darwin/xobserve.yaml
+cp xobserve.yaml ../release/linux/xobserve.yaml
+cp xobserve.yaml ../release/windows/xobserve.yaml
+cp xobserve.sql ../release/darwin/xobserve.sql
+cp xobserve.sql ../release/linux/xobserve.sql
+cp xobserve.sql ../release/windows/xobserve.sql
 
 ## build ui
 
@@ -37,9 +37,9 @@ cp -r build ../release/windows/ui
 
 ## zip files
 cd ../release
-zip -r observex-darwin-amd64.zip darwin
-zip -r observex-linux-amd64.zip linux
-zip -r observex-windows-amd64.zip windows
+zip -r xobserve-darwin-amd64.zip darwin
+zip -r xobserve-linux-amd64.zip linux
+zip -r xobserve-windows-amd64.zip windows
 rm -rf darwin linux windows
 
 

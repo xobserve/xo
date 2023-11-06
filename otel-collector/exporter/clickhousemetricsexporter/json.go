@@ -17,8 +17,8 @@ package clickhousemetricsexporter
 import (
 	"encoding/json"
 
-	"github.com/DataObserve/observex/otel-collector/exporter/clickhousemetricsexporter/utils/gofuzz"
 	"github.com/prometheus/prometheus/prompb"
+	"github.com/xObserve/xObserve/otel-collector/exporter/clickhousemetricsexporter/utils/gofuzz"
 )
 
 // marshalLabels marshals Prometheus labels into JSON, appending it to b.

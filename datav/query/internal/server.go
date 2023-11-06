@@ -1,4 +1,4 @@
-// Copyright 2023 observex.io Team
+// Copyright 2023 xObserve.io Team
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -19,29 +19,29 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/DataObserve/observex/query/internal/admin"
-	"github.com/DataObserve/observex/query/internal/annotation"
-	"github.com/DataObserve/observex/query/internal/api"
-	"github.com/DataObserve/observex/query/internal/cache"
-	"github.com/DataObserve/observex/query/internal/dashboard"
-	"github.com/DataObserve/observex/query/internal/datasource"
-	ot "github.com/DataObserve/observex/query/internal/opentelemetry"
-	_ "github.com/DataObserve/observex/query/internal/plugins/builtin"
-	_ "github.com/DataObserve/observex/query/internal/plugins/external"
-	"github.com/DataObserve/observex/query/internal/proxy"
-	"github.com/DataObserve/observex/query/internal/storage"
-	"github.com/DataObserve/observex/query/internal/task"
-	"github.com/DataObserve/observex/query/internal/teams"
-	"github.com/DataObserve/observex/query/internal/user"
-	"github.com/DataObserve/observex/query/internal/variables"
-	"github.com/DataObserve/observex/query/pkg/colorlog"
-	"github.com/DataObserve/observex/query/pkg/common"
-	"github.com/DataObserve/observex/query/pkg/config"
-	"github.com/DataObserve/observex/query/pkg/e"
-	"github.com/DataObserve/observex/query/pkg/log"
 	"github.com/gin-contrib/gzip"
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
+	"github.com/xObserve/xObserve/query/internal/admin"
+	"github.com/xObserve/xObserve/query/internal/annotation"
+	"github.com/xObserve/xObserve/query/internal/api"
+	"github.com/xObserve/xObserve/query/internal/cache"
+	"github.com/xObserve/xObserve/query/internal/dashboard"
+	"github.com/xObserve/xObserve/query/internal/datasource"
+	ot "github.com/xObserve/xObserve/query/internal/opentelemetry"
+	_ "github.com/xObserve/xObserve/query/internal/plugins/builtin"
+	_ "github.com/xObserve/xObserve/query/internal/plugins/external"
+	"github.com/xObserve/xObserve/query/internal/proxy"
+	"github.com/xObserve/xObserve/query/internal/storage"
+	"github.com/xObserve/xObserve/query/internal/task"
+	"github.com/xObserve/xObserve/query/internal/teams"
+	"github.com/xObserve/xObserve/query/internal/user"
+	"github.com/xObserve/xObserve/query/internal/variables"
+	"github.com/xObserve/xObserve/query/pkg/colorlog"
+	"github.com/xObserve/xObserve/query/pkg/common"
+	"github.com/xObserve/xObserve/query/pkg/config"
+	"github.com/xObserve/xObserve/query/pkg/e"
+	"github.com/xObserve/xObserve/query/pkg/log"
 	"go.opentelemetry.io/contrib/instrumentation/github.com/gin-gonic/gin/otelgin"
 	"go.uber.org/zap"
 )
@@ -178,7 +178,7 @@ func (s *Server) Start() error {
 			Addr:    config.Data.Server.ListeningAddr,
 			Handler: router,
 		}
-		logger.Info("observex server is ready and listening on", "address", config.Data.Server.ListeningAddr)
+		logger.Info("xobserve server is ready and listening on", "address", config.Data.Server.ListeningAddr)
 		err := s.srv.ListenAndServe()
 		if err != nil && err != http.ErrServerClosed {
 			logger.Crit("start query service error", "error", err)
@@ -200,7 +200,7 @@ func (s *Server) Start() error {
 	// 		ReadTimeout:  15 * time.Second,
 	// 	}
 
-	// 	logger.Info("observex's ui server is listening on address", "address", config.Data.Server.UIAddr)
+	// 	logger.Info("xobserve's ui server is listening on address", "address", config.Data.Server.UIAddr)
 
 	// 	srv.ListenAndServe()
 	// }()

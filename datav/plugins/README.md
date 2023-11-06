@@ -1,6 +1,6 @@
-## ObserveX external plugins
+## xObserve external plugins
 
-This directory contains the source code of external plugins which are developed by community. The external plugins are not included in the default plugins, you need to [build them manually](https://observex.io/docs/external-panel-install) to use them.
+This directory contains the source code of external plugins which are developed by community. The external plugins are not included in the default plugins, you need to [build them manually](https://xobserve.io/docs/external-panel-install) to use them.
 
 ## Keep the source code if you need it
 

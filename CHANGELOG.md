@@ -4,7 +4,7 @@ We are now production ready!
 
 ### Features
 
-- Play demo: https://play.observex.io
+- Play demo: https://play.xobserve.io
 - Overall fixing and updating:
   - fix 80+ bugs
   - add small features 30+
@@ -71,7 +71,7 @@ We are now production ready!
 
 ### Features
 
-- Translate the whole project into chinese, so ObserveX supports English and Chinses at the moment.
+- Translate the whole project into chinese, so xObserve supports English and Chinses at the moment.
 
 ### Refactor
 

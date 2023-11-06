@@ -122,7 +122,7 @@
                         "fontSize": "1.2rem",
                         "fontWeight": "500",
                         "justifyContent": "left",
-                        "md": "#Welcome to ObserveX\n This is a new panel\n You can edit it by clicking the edit button on the top title\n ###Have fun!"
+                        "md": "#Welcome to xObserve\n This is a new panel\n You can edit it by clicking the edit button on the top title\n ###Have fun!"
                     }
                 },
                 "styles": {
@@ -320,7 +320,7 @@
                         "fontSize": "1.2em",
                         "fontWeight": "500",
                         "justifyContent": "left",
-                        "md": "#Welcome to ObserveX\n This is a new panel\n You can edit it by clicking the edit button on the top title\n ###Have fun!"
+                        "md": "#Welcome to xObserve\n This is a new panel\n You can edit it by clicking the edit button on the top title\n ###Have fun!"
                     }
                 },
                 "styles": {
@@ -434,14 +434,14 @@
                             ],
                             "enableHighlight": true,
                             "highlightColor": "#05c091",
-                            "highlightNodes": "observex",
+                            "highlightNodes": "xobserve",
                             "highlightNodesByFunc": "// data: {nodes, edges}\n// return nodes name list, e.g ['node-1', 'node-2']\nfunction highlightNodes(data, lodash) {\n    console.log(\"here3333\", data)\n    const matchingNodeNames = []\n    return matchingNodeNames\n}\n",
                             "icon": [],
                             "maxSize": 1.4,
                             "menu": [
                                 {
                                     "enable": true,
-                                    "event": "\n// setVariable: (varName:string, varValue:string) => void \n// navigate: react-router-dom -> useNavigate() -> navigate \n// setDateTime: (from: Timestamp, to: TimeStamp) => void\nfunction onRowClick(row, navigate, setVariable, setDateTime, $variables) {\n    // You can get all current variables in this way\n    // const currentVariables = $variables.get()\n    console.log(row)\n    const name = row.id \n    if (name.startsWith(\"fake\")) {\n        alert(\"This is a fake node, please click web-observex-1 for more info\")\n        return \n    }\n\n    setVariable(\"host\", name)\n    setTimeout(() => {\n            navigate(\"/host\")\n    }, 500)\n\n}\n",
+                                    "event": "\n// setVariable: (varName:string, varValue:string) => void \n// navigate: react-router-dom -> useNavigate() -> navigate \n// setDateTime: (from: Timestamp, to: TimeStamp) => void\nfunction onRowClick(row, navigate, setVariable, setDateTime, $variables) {\n    // You can get all current variables in this way\n    // const currentVariables = $variables.get()\n    console.log(row)\n    const name = row.id \n    if (name.startsWith(\"fake\")) {\n        alert(\"This is a fake node, please click web-xobserve-1 for more info\")\n        return \n    }\n\n    setVariable(\"host\", name)\n    setTimeout(() => {\n            navigate(\"/host\")\n    }, 500)\n\n}\n",
                                     "id": 1694688353376,
                                     "name": "View host metrics"
                                 }
@@ -458,7 +458,7 @@
                         "fontSize": "1.2em",
                         "fontWeight": "500",
                         "justifyContent": "left",
-                        "md": "#Welcome to ObserveX\n This is a new panel\n You can edit it by clicking the edit button on the top title\n ###Have fun!"
+                        "md": "#Welcome to xObserve\n This is a new panel\n You can edit it by clicking the edit button on the top title\n ###Have fun!"
                     }
                 },
                 "styles": {
@@ -512,7 +512,7 @@
                             "data": {},
                             "id": 65,
                             "legend": "PV",
-                            "metrics": "sum (count_over_time({job=\"observex-service\"}[${__interval__}]))  ",
+                            "metrics": "sum (count_over_time({job=\"xobserve-service\"}[${__interval__}]))  ",
                             "visible": true
                         }
                     ],
@@ -583,7 +583,7 @@
                         "fontSize": "1.2em",
                         "fontWeight": "500",
                         "justifyContent": "left",
-                        "md": "#Welcome to observex\n This is a new panel\n You can edit it by clicking the edit button on the top title\n ###Have fun!"
+                        "md": "#Welcome to xobserve\n This is a new panel\n You can edit it by clicking the edit button on the top title\n ###Have fun!"
                     }
                 },
                 "styles": {
@@ -637,7 +637,7 @@
                             "data": {},
                             "id": 65,
                             "legend": "",
-                            "metrics": "{job=~\"observex-service\"}",
+                            "metrics": "{job=~\"xobserve-service\"}",
                             "visible": true
                         }
                     ],
@@ -792,7 +792,7 @@
                             "data": {},
                             "id": 65,
                             "legend": "{{geoip_country_name}}",
-                            "metrics": "sum by(geoip_country_name) (count_over_time({job=\"observex-service\"} | geoip_country_name != \"\" \n[${__interval__}]))",
+                            "metrics": "sum by(geoip_country_name) (count_over_time({job=\"xobserve-service\"} | geoip_country_name != \"\" \n[${__interval__}]))",
                             "visible": true
                         }
                     ],
@@ -875,7 +875,7 @@
                         "fontSize": "1.2em",
                         "fontWeight": "500",
                         "justifyContent": "left",
-                        "md": "#Welcome to ObserveX\n This is a new panel\n You can edit it by clicking the edit button on the top title\n ###Have fun!"
+                        "md": "#Welcome to xObserve\n This is a new panel\n You can edit it by clicking the edit button on the top title\n ###Have fun!"
                     }
                 },
                 "styles": {
@@ -911,7 +911,7 @@
                     },
                     "widthReduction": 0
                 },
-                "title": "Requests to observex",
+                "title": "Requests to xobserve",
                 "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
                 "type": "geomap",
                 "valueMapping": null
@@ -929,7 +929,7 @@
                             "data": {},
                             "id": 65,
                             "legend": "{{geoip_country_name}}",
-                            "metrics": "topk(10, sum by (geoip_country_name) (count_over_time({job=\"observex-service\"} | geoip_country_name != \"\" [${__interval__}])))",
+                            "metrics": "topk(10, sum by (geoip_country_name) (count_over_time({job=\"xobserve-service\"} | geoip_country_name != \"\" [${__interval__}])))",
                             "visible": true
                         }
                     ],

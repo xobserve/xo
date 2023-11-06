@@ -24,7 +24,7 @@ import (
 	"time"
 
 	"github.com/ClickHouse/clickhouse-go/v2"
-	"github.com/DataObserve/observex/otel-collector/pkg/usage"
+	"github.com/xObserve/xObserve/otel-collector/pkg/usage"
 	"go.opencensus.io/stats"
 	"go.opencensus.io/stats/view"
 	"go.opencensus.io/tag"

@@ -3,11 +3,11 @@ package storage
 import (
 	"errors"
 
-	"github.com/DataObserve/observex/query/pkg/db"
-	"github.com/DataObserve/observex/query/pkg/e"
+	"github.com/xObserve/xObserve/query/pkg/db"
+	"github.com/xObserve/xObserve/query/pkg/e"
 )
 
-/* update table structure to current observex version */
+/* update table structure to current xobserve version */
 func update() error {
 	var visibleTo string
 	err := db.Conn.QueryRow("SELECT visible_to FROM dashboard limit 1").Scan(&visibleTo)

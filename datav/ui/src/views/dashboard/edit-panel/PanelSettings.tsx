@@ -1,4 +1,4 @@
-// Copyright 2023 observex.io Team
+// Copyright 2023 xObserve.io Team
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -63,8 +63,8 @@ const PanelSettings = memo(({ panel, onChange }: PanelEditorProps) => {
     const externalPlugins = Object.keys(externalPanelPlugins).filter(panelType => !disabledPanels?.includes(panelType))
     const builtinPlugins = Object.keys(builtinPanelPlugins).filter(panelType => !disabledPanels?.includes(panelType))
     const isExternalPanel = !isEmpty(externalPlugins.find(panelType => panelType == panel.type))
-    const isBuiltin = !isExternalPanel && !panel.type.startsWith("observex")
-    const isobservex = !isExternalPanel && panel.type.startsWith("observex")
+    const isBuiltin = !isExternalPanel && !panel.type.startsWith("xobserve")
+    const isxobserve = !isExternalPanel && panel.type.startsWith("xobserve")
     return (
         <>
             <PanelAccordion title={t.basicSetting} spacing={2} defaultOpen={false}>
@@ -120,12 +120,12 @@ const PanelSettings = memo(({ panel, onChange }: PanelEditorProps) => {
             </PanelAccordion>
 
             {/* panel visulization choosing */}
-            <PanelAccordion title={t1.panelType +  ` -> ${isExternalPanel ? t1.externalPanels : (isBuiltin ? t1.visualization : t1.observexPanels)} -> ${panel.type}`} defaultOpen={false} spacing={0}>
+            <PanelAccordion title={t1.panelType +  ` -> ${isExternalPanel ? t1.externalPanels : (isBuiltin ? t1.visualization : t1.xobservePanels)} -> ${panel.type}`} defaultOpen={false} spacing={0}>
                 <PanelAccordion title={t1.visualization} defaultOpen={isBuiltin}>
                     <Wrap>
                         {
                             builtinPlugins.map((panelType) => {
-                                if (panelType.startsWith("observex")) {
+                                if (panelType.startsWith("xobserve")) {
                                     return <></>
                                 }
                                 const plugin = builtinPanelPlugins[panelType]
@@ -159,11 +159,11 @@ const PanelSettings = memo(({ panel, onChange }: PanelEditorProps) => {
                         </Wrap>
                     </PanelAccordion>
                 }
-                <PanelAccordion title={t1.observexPanels} defaultOpen={isobservex} >
+                <PanelAccordion title={t1.xobservePanels} defaultOpen={isxobserve} >
                     <Wrap>
                         {
                             builtinPlugins.map((panelType) => {
-                                if (panelType.startsWith("observex")) {
+                                if (panelType.startsWith("xobserve")) {
                                     const plugin = builtinPanelPlugins[panelType]
                                     return <VisulizationItem
                                         selected={panel.type == panelType}

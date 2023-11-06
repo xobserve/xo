@@ -19,7 +19,7 @@ func Flags(featuregate *featuregate.Registry) *flag.FlagSet {
 	f.String("config", "", "File path for collector configuration")
 
 	pwd, _ := os.Getwd()
-	f.String("logpath", path.Join(pwd, "observex-otel-collector.log"), "File path for collector log")
+	f.String("logpath", path.Join(pwd, "xobserve-otel-collector.log"), "File path for collector log")
 	f.Var(NewFlag(otelcolFeatureGate.GlobalRegistry()), "feature-gates",
 		"Comma-delimited list of feature gate identifiers. Prefix with '-' to disable the feature. '+' or no prefix will enable the feature.")
 	return f

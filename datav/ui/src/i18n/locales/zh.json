@@ -391,7 +391,7 @@
     "panelType": "图表类型",
     "visualization": "内置图表",
     "externalPanels": "外部图表",
-    "observexPanels": "ObserveX 图表",
+    "xobservePanels": "xObserve 图表",
     "panelBorder": "图表布局和边框",
     "paletteTips": "只支持 Graph, Bar, Pie 和 Echarts 图表",
     "titleDecoration": "标题装饰",

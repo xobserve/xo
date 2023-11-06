@@ -4,6 +4,6 @@ status:
   class: receiver
   stability:
     alpha: [logs]
-  distributions: [observex]
+  distributions: [xobserve]
   codeowners:
-    active: [observex]
+    active: [xobserve]

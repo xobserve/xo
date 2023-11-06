@@ -1,6 +1,6 @@
 ./query
-./observex
-observex.db
+./xobserve
+xobserve.db
 commit.sh
 testConfig.yaml
 start.sh

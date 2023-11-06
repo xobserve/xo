@@ -3,9 +3,9 @@ package task
 import (
 	"time"
 
-	"github.com/DataObserve/observex/query/pkg/colorlog"
-	"github.com/DataObserve/observex/query/pkg/config"
-	"github.com/DataObserve/observex/query/pkg/db"
+	"github.com/xObserve/xObserve/query/pkg/colorlog"
+	"github.com/xObserve/xObserve/query/pkg/config"
+	"github.com/xObserve/xObserve/query/pkg/db"
 )
 
 var logger = colorlog.RootLogger.New("logger", "task")
