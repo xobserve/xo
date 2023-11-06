@@ -26,7 +26,7 @@ database:
     account_secret: 
     host: localhost
     port: 3306
-    database: datav
+    database: observex
 
 #################################### User/Session ##############################
 user: 
@@ -111,6 +111,6 @@ observability:
     ## you can collect metrics, traces and logs into observex, and view them through observability plugins
     ## please visit https://observex.io/docs/observability for more info
     enable: true
-    default_trace_db: "datav_traces"
-    default_metrics_db: "datav_metrics"
-    default_log_db: "datav_logs"
+    default_trace_db: "observex_traces"
+    default_metrics_db: "observex_metrics"
+    default_log_db: "observex_logs"
