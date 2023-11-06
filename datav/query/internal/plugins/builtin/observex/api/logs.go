@@ -75,17 +75,10 @@ func GetLogs(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[str
 		order = orderI.(string)
 	}
 
-	environment := observexutils.GetValueListFromParams(params, "environment")
+	tenant := models.GetTenant(c)
+	domainQuery := " AND " + observexutils.BuildBasicDomainQuery(tenant, params)
 	services := observexutils.GetValueListFromParams(params, "service")
 	hosts := observexutils.GetValueListFromParams(params, "host")
-
-	severity := observexutils.GetValueListFromParams(params, "severity")
-
-	var domainQuery string
-	var domainArgs []interface{}
-	if environment != nil {
-		domainQuery += fmt.Sprintf(" AND environment in ('%s')", strings.Join(environment, "','"))
-	}
 	if services != nil {
 		domainQuery += fmt.Sprintf(" AND service in ('%s')", strings.Join(services, "','"))
 	}
@@ -93,6 +86,7 @@ func GetLogs(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[str
 		domainQuery += fmt.Sprintf(" AND host in ('%s')", strings.Join(hosts, "','"))
 	}
 
+	severity := observexutils.GetValueListFromParams(params, "severity")
 	if severity != nil {
 		domainQuery += fmt.Sprintf(" AND severity in ('%s')", strings.Join(severity, "','"))
 	}
@@ -100,7 +94,7 @@ func GetLogs(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[str
 	// query logs
 	logsQuery := fmt.Sprintf(observexmodels.LogsSelectSQL+" FROM %s.%s  where (timestamp >= ? AND timestamp <= ? %s %s) order by timestamp %s LIMIT %d OFFSET %d", config.Data.Observability.DefaultLogDB, observexmodels.DefaultLogsTable, domainQuery, searchQuery, order, perPageLogs, page*int64(perPageLogs))
 
-	args := append([]interface{}{start * 1e9, (end) * 1e9}, append(domainArgs, searchArgs...)...)
+	args := append([]interface{}{start * 1e9, (end) * 1e9}, searchArgs...)
 	rows, err := conn.Query(c.Request.Context(), logsQuery, args...)
 	if err != nil {
 		logger.Warn("Error Query logs", "query", logsQuery, "error", err)

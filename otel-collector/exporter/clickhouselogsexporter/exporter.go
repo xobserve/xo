@@ -154,8 +154,9 @@ func (e *clickhouseLogsExporter) pushLogsData(ctx context.Context, ld plog.Logs)
 				for k := 0; k < rs.Len(); k++ {
 					r := rs.At(k)
 
+					tenant := utils.GetTenantFromResource(res)
+
 					// capturing the metrics
-					tenant := utils.GetTenantFromResource(logs.Resource())
 					attrBytes, _ := json.Marshal(r.Attributes().AsRaw())
 					usage.AddMetric(metrics, tenant, 1, int64(len([]byte(r.Body().AsString()))+len(attrBytes)+len(resBytes)))
 
@@ -174,7 +175,10 @@ func (e *clickhouseLogsExporter) pushLogsData(ctx context.Context, ld plog.Logs)
 					if err != nil {
 						return err
 					}
-					environment, _ := res.Attributes().Get("environment")
+
+					namespace := utils.GetNamespaceFromResource(res)
+					group := utils.GetGroupFromResource(res)
+
 					service, _ := res.Attributes().Get("service_name")
 					host, _ := res.Attributes().Get("host_name")
 
@@ -196,7 +200,9 @@ func (e *clickhouseLogsExporter) pushLogsData(ctx context.Context, ld plog.Logs)
 						attributes.IntValues,
 						attributes.FloatKeys,
 						attributes.FloatValues,
-						environment.AsString(),
+						tenant,
+						namespace,
+						group,
 						service.AsString(),
 						host.AsString(),
 					)
@@ -377,10 +383,14 @@ const (
 							attributes_int64_value,
 							attributes_float64_key,
 							attributes_float64_value,
-							environment,
+							tenant,
+							namespace,
+							group,
 							service,
 							host
 							) VALUES (
+								?,
+								?,
 								?,
 								?,
 								?,

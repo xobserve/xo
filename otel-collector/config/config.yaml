@@ -36,9 +36,6 @@ receivers:
       - type: copy
         from: attributes.container_id
         to: resource.host_name
-      - type: add
-        field: resource.environment
-        value: default
       # - type: add
       #   field: attributes.test1
       #   value: 1
