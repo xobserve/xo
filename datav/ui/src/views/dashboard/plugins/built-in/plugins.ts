@@ -21,7 +21,7 @@ import xobserveTracePanel from './panel/xobserveTrace'
 
 import prometheusDs from './datasource/prometheus'
 import httpDs from './datasource/http'
-import xobserveDs from './datasource/observex'
+import xobserveDs from './datasource/xobserve'
 import jaegerDs from './datasource/jaeger'
 import lokiDs from './datasource/loki'
 import testdataDs from './datasource/testdata'
