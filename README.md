@@ -1,9 +1,9 @@
 <p align="center">
-  <img src="https://datav.io/logo.png" alt="datav-logo" width="60" />
+  <img src="https://xobserve.io/logo.png" alt="datav-logo" width="60" />
 </p>
 
 <p align="center">
-   An developer-friendly and programmable observability platform
+  Observe everything you want in your business and never miss any X factors . 
 </p>
 
 <p align="center">
