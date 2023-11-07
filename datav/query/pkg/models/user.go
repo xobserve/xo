@@ -15,6 +15,7 @@ package models
 import (
 	"context"
 	"database/sql"
+	"encoding/json"
 	"time"
 
 	"github.com/xObserve/xObserve/query/pkg/db"
@@ -48,6 +49,7 @@ type User struct {
 	Updated    time.Time  `json:"updated,omitempty"`
 	SideMenu   int64      `json:"sidemenu,omitempty"`
 	Visits     int        `json:"visits,omitempty"`
+	Data       *UserData  `json:"data,omitempty"`
 	Salt       string     `json:"-"`
 	Password   string     `json:"-"`
 }
@@ -58,6 +60,11 @@ func (s Users) Len() int      { return len(s) }
 func (s Users) Swap(i, j int) { s[i], s[j] = s[j], s[i] }
 func (s Users) Less(i, j int) bool {
 	return s[i].Created.Unix() > s[j].Created.Unix()
+}
+
+type UserData struct {
+	ThemeColor    string `json:"themeColor,omitempty"`
+	ThemeFontsize int    `json:"themeFontsize,omitempty"`
 }
 
 // func QueryUser(id int64, username string, email string) (*User, error) {
@@ -84,10 +91,18 @@ func (s Users) Less(i, j int) bool {
 
 func QueryUserById(ctx context.Context, id int64) (*User, error) {
 	user := &User{}
-	err := db.Conn.QueryRowContext(ctx, `SELECT id,username,name,email,mobile,password,salt,sidemenu,last_seen_at,created FROM user WHERE id=?`,
-		id).Scan(&user.Id, &user.Username, &user.Name, &user.Email, &user.Mobile, &user.Password, &user.Salt, &user.SideMenu, &user.LastSeenAt, &user.Created)
+	var data []byte
+	err := db.Conn.QueryRowContext(ctx, `SELECT id,username,name,email,mobile,password,salt,sidemenu,data,last_seen_at,created FROM user WHERE id=?`,
+		id).Scan(&user.Id, &user.Username, &user.Name, &user.Email, &user.Mobile, &user.Password, &user.Salt, &user.SideMenu, &data, &user.LastSeenAt, &user.Created)
 	if err != nil && err != sql.ErrNoRows {
 		return user, err
+	}
+
+	if data != nil {
+		err := json.Unmarshal(data, &user.Data)
+		if err != nil {
+			return user, err
+		}
 	}
 
 	if user.Id == 0 {
@@ -106,10 +121,18 @@ func QueryUserById(ctx context.Context, id int64) (*User, error) {
 
 func QueryUserByName(ctx context.Context, username string) (*User, error) {
 	user := &User{}
-	err := db.Conn.QueryRowContext(ctx, `SELECT id,username,name,email,mobile,password,salt,sidemenu,last_seen_at FROM user WHERE username=?`,
-		username).Scan(&user.Id, &user.Username, &user.Name, &user.Email, &user.Mobile, &user.Password, &user.Salt, &user.SideMenu, &user.LastSeenAt)
+	var data []byte
+	err := db.Conn.QueryRowContext(ctx, `SELECT id,username,name,email,mobile,password,salt,sidemenu,data, last_seen_at FROM user WHERE username=?`,
+		username).Scan(&user.Id, &user.Username, &user.Name, &user.Email, &user.Mobile, &user.Password, &user.Salt, &user.SideMenu, &data, &user.LastSeenAt)
 	if err != nil && err != sql.ErrNoRows {
 		return user, err
+	}
+
+	if data != nil {
+		err := json.Unmarshal(data, &user.Data)
+		if err != nil {
+			return user, err
+		}
 	}
 
 	if user.Id == 0 {

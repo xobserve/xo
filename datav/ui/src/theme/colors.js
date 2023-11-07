@@ -3,6 +3,7 @@ const theme = extendTheme()
 
 const  customColors = {
     baseFontSize: 14,
+    defaultTheme: "whatsapp",
     borderColor: {
         light: theme.colors.gray['200'], 
         dark: theme.colors.whiteAlpha['300']

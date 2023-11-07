@@ -83,3 +83,18 @@ func UpdateUserInfo(c *gin.Context) {
 
 	c.JSON(http.StatusForbidden, common.RespError(e.NoPermission))
 }
+
+func UpdateUserData(c *gin.Context) {
+	var data *models.UserData
+	c.Bind(&data)
+
+	u := CurrentUser(c)
+
+	err := updateUserData(u.Id, data, c.Request.Context())
+	if err != nil {
+		c.JSON(err.Status, common.RespError(err.Message))
+		return
+	}
+
+	c.JSON(http.StatusOK, common.RespSuccess(nil))
+}

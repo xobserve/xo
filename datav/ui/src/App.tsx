@@ -30,6 +30,9 @@ import {  $teamVariables } from './views/variables/store';
 import { $teamDatasources } from './views/datasource/store';
 import { concat } from 'lodash';
 import { $teams } from './views/team/store';
+import useSession from 'hooks/use-session';
+import storage from 'utils/localStorage';
+import { UserDataStorageKey } from './data/storage-keys';
 
 
 const { ToastContainer } = createStandaloneToast()
@@ -46,7 +49,7 @@ const AppView = () => {
 
   const [cfg, setConfig] = useState<UIConfig>($config.get())
   canvasCtx = document.createElement('canvas').getContext('2d')!;
-
+  const {session} = useSession()
   useEffect(() => {
     const firstPageLoading = document.getElementById('first-page-loading');
     if (firstPageLoading) {
@@ -62,8 +65,12 @@ const AppView = () => {
   }, [])
 
   useEffect(() => {
-
-  },[])
+    if (session) {
+      if (session.user.data) {
+        storage.set(UserDataStorageKey, session.user.data)
+      }
+    }
+  },[session])
 
   const loadConfig = async () => {
     const r0 = requestApi.get(`/datasource/all`)

@@ -103,6 +103,7 @@ func (s *Server) Start() error {
 		r.GET("/user/session", user.GetSession)
 		r.POST("/account/password", CheckLogin(), user.UpdateUserPassword)
 		r.POST("/account/info", CheckLogin(), user.UpdateUserInfo)
+		r.POST("/account/updateData", CheckLogin(), user.UpdateUserData)
 
 		// teams apis
 		r.GET("/teams/all", otelPlugin, teams.GetTeams)

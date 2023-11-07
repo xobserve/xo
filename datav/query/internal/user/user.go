@@ -14,6 +14,7 @@ package user
 
 import (
 	"context"
+	"encoding/json"
 	"net/http"
 	"time"
 
@@ -57,6 +58,22 @@ func updateUserInfo(ctx context.Context, user *models.User) *e.Error {
 		user.Name, user.Email, now, user.Id)
 	if err != nil {
 		logger.Warn("update user error", "error", err)
+		return e.New(http.StatusInternalServerError, e.Internal)
+	}
+
+	return nil
+}
+
+func updateUserData(id int64, data *models.UserData, ctx context.Context) *e.Error {
+	d, err := json.Marshal(data)
+	if err != nil {
+		logger.Warn("update user error", "error", err)
+		return e.New(http.StatusBadRequest, e.BadRequest)
+	}
+	_, err = db.Conn.ExecContext(ctx, "UPDATE user SET data=? WHERE id=?",
+		d, id)
+	if err != nil {
+		logger.Warn("update user data error", "error", err)
 		return e.New(http.StatusInternalServerError, e.Internal)
 	}
 

@@ -30,5 +30,6 @@ export interface User {
     password?: string
     sidemenu?: number
     visits?: number
+    data?: Record<string, any>
     lastSeenAt?: string
 }

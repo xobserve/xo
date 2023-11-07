@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS user (
     sidemenu INTEGER DEFAULT 1,
     come_from VARCHAR(32) DEFAULT 'local',
     visit_count INTEGER DEFAULT 0,
+    data MEDIUMTEXT,
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL
 );
