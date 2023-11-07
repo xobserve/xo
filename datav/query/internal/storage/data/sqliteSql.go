@@ -35,6 +35,7 @@ CREATE TABLE IF NOT EXISTS team (
     is_public BOOL DEFAULT false,
     allow_global BOOL DEFAULT true,
     created_by INTEGER NOT NULL,
+    data MEDIUMTEXT,
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL
 );
@@ -73,6 +74,7 @@ CREATE TABLE IF NOT EXISTS variable (
     sort TINYINT DEFAULT 0,
     regex TEXT,
     team_id INTEGER NOT NULL DEFAULT 1,
+    data MEDIUMTEXT,
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL
 );
