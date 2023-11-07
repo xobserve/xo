@@ -360,7 +360,7 @@ const NodeGrapPanel = ({ data, panel, dashboardId, width, height }: NodeGraphPan
     return <>
         {graph && <NodeGraphToolbar graph={graph} dashboardId={dashboardId} panelId={panel.id} data={data[0]} onFilterRulesChange={onFilterRulesChange} />}
         <Box ml="10px" width="calc(100% - 20px)" height="100%" ref={container} />
-        <Help data={nodeGraphHelp} iconSize="0.8rem" />
+        <Help data={nodeGraphHelp} iconSize="0.8rem" opacity="0.7" position="absolute" right="10px" bottom="13px" zIndex="1000"/>
         {graph && <Box><HiddenItems dashboardId={dashboardId} panelId={panel.id} selected={selected} graph={graph} onSelectChange={onSelectChange} data={data} /></Box>}
         {activeEdge && <Box zIndex={1500} pointerEvents="none" p="4" position="absolute" left={panel.plugins[PanelTypeNodeGraph].edge.detailPos == "edge" ? (activeEdge._cfg.model.startPoint?.x + (activeEdge._cfg.model.endPoint?.x - activeEdge._cfg.model.startPoint?.x) / 2) : "0"} top={panel.plugins[PanelTypeNodeGraph].edge.detailPos == "edge" ? (activeEdge._cfg.model.startPoint?.y + (activeEdge._cfg.model.endPoint?.y - activeEdge._cfg.model.startPoint?.y) / 2) : "0"} background={useColorModeValue(customColors.bodyBg.dark, customColors.bodyBg.dark)}>
             <Flex gap="3">

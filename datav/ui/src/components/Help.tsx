@@ -10,22 +10,22 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box, Center, Modal, ModalBody, ModalContent, ModalOverlay, Table, Tbody, Td, Text, Th, Thead, Tooltip, Tr, useDisclosure } from "@chakra-ui/react"
+import { Box, Center, ChakraProps, Modal, ModalBody, ModalContent, ModalOverlay, Table, Tbody, Td, Text, Th, Thead, Tooltip, Tr, useDisclosure } from "@chakra-ui/react"
 import { memo } from "react"
 import { FaQuestion } from "react-icons/fa"
 import { Help } from "types/misc"
 import React from "react"
 
-interface Props {
+interface Props extends ChakraProps {
     data: Help[]
     size?: 'sm' | 'md' | 'lg'
     iconSize?: string
 }
 
-const HelpComponent = memo(({ data,size="sm",iconSize="0.9rem" }: Props) => {
+const HelpComponent = memo(({ data,size="sm",iconSize="0.9rem",...rest }: Props) => {
     const { isOpen, onOpen, onClose } = useDisclosure()
     return (<>
-        <Tooltip label="click to view the help doc"><Box opacity="0.7" position="absolute" right="10px" top="8px" zIndex="1000" cursor="pointer" onClick={onOpen} fontSize={iconSize}><FaQuestion /></Box></Tooltip>
+        <Tooltip label="click to view the help doc"><Box {...rest} cursor="pointer" onClick={onOpen} fontSize={iconSize}><FaQuestion /></Box></Tooltip>
         <Modal isOpen={isOpen} onClose={onClose} >
             <ModalOverlay />
             <ModalContent minWidth="600px">

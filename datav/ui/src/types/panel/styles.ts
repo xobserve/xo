@@ -20,6 +20,7 @@ export interface PanelStyles {
     borderOnHover: boolean
     decoration: DecorationStyles
     title: {
+        position: "left" | "center"
         decoration: {
             type: PanelTitleDecorationType
             width: string

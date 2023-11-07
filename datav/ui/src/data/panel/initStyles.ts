@@ -18,6 +18,7 @@ export const initPanelStyles: PanelStyles = {
     border: PanelBorderType.None,
     borderOnHover: true,
     title: {
+        position: "left",
         decoration: {
             type: PanelTitleDecorationType.None,
             width: '160px',

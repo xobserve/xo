@@ -137,7 +137,7 @@ export const NodeGraphToolbar = memo(({ graph,dashboardId,panelId,data,onFilterR
     console.timeEnd("init node graph, time used: ")
     return (
         <> 
-            <HStack spacing="3" className="nodegraph-toolbar" position="absolute" left="10px" top="7px" zIndex="1000" opacity="0.7" fontSize="0.8rem">
+            <HStack spacing="3" className="nodegraph-toolbar" position="absolute" right="40px" bottom="10px" zIndex="1000" opacity="0.7" fontSize="0.8rem">
                 <Tooltip label="Zoom in"><Box cursor="pointer" onClick={handleZoomIn}><FaMinus /></Box></Tooltip>
                 <Tooltip label="Fit to canvas"><Text cursor="pointer" fontWeight="600" onClick={handleFitViw}>FIT</Text></Tooltip>
                 <Tooltip label="Zoom out"><Box cursor="pointer" onClick={handleZoomOut}><FaPlus /></Box></Tooltip>

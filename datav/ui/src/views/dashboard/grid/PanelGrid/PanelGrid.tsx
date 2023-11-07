@@ -11,8 +11,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Dashboard, Panel, PanelProps, PanelQuery } from "types/dashboard"
-import { Box, Button, Center, HStack, Popover, PopoverArrow, PopoverBody, PopoverContent, PopoverTrigger, Text, Tooltip, useColorMode, useColorModeValue, useDisclosure, useToast } from "@chakra-ui/react";
-import { FaBug, FaEdit, FaLayerGroup, FaRegClock, FaRegClone, FaRegCopy, FaRegEye, FaRegEyeSlash, FaTrashAlt } from "react-icons/fa";
+import { Box, Button, Center, Flex, HStack, Popover, PopoverArrow, PopoverBody, PopoverContent, PopoverTrigger, Text, Tooltip, useColorMode, useColorModeValue, useDisclosure, useToast } from "@chakra-ui/react";
+import { FaBug, FaEdit, FaEllipsisV, FaLayerGroup, FaRegClock, FaRegClone, FaRegCopy, FaRegEye, FaRegEyeSlash, FaTrashAlt } from "react-icons/fa";
 import { IoMdInformation } from "react-icons/io";
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { DatasourceMaxDataPoints, DatasourceMinInterval, PANEL_HEADER_HEIGHT } from "src/data/constants";
@@ -162,6 +162,8 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
     const edit = useSearchParam('edit')
     const [loading, setLoading] = useState(false)
     const datasources = useStore($datasources)
+    const [onHover, setOnHover] = useState(false)
+
     const timeRange = cloneDeep(panel.enableScopeTime && panel.scopeTime ? panel.scopeTime : timeRange0)
     if (typeof timeRange.start == "string") {
         timeRange.start = new Date(timeRange.start)
@@ -194,7 +196,7 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
         const panelPlugin = builtinPanelPlugins[panel.type] ?? externalPanelPlugins[panel.type]
         if (panelPlugin?.settings.disableAutoQuery) {
             setPanelData([])
-            return 
+            return
         }
         console.time("time used - query data for panel:")
         const ds = panel.datasource
@@ -223,7 +225,7 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
             setPanelData([])
             return
         }
-        
+
         setLoading(true)
         if (panel.type == PanelTypeAlert) {
             const res = await queryAlerts(panel, timeRange, panel.plugins.alert.filter.datasources, panel.plugins.alert.filter.httpQuery, datasources)
@@ -366,10 +368,10 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
         return res
     }, [panel.transform, panel.enableTransform, panelData])
 
-    return <Box height={height} width={width} className={(panel.styles.border == "Normal" && "bordered") + (dashboard.data.styles.bgEnabled ? " panel-bg-alpha" : " panel-bg")} position="relative">
+    return <Box height={height} width={width} className={(panel.styles.border == "Normal" && "bordered") + (dashboard.data.styles.bgEnabled ? " panel-bg-alpha" : " panel-bg")} position="relative" onMouseEnter={() => setOnHover(true)} onMouseLeave={() => setOnHover(false)}>
 
         {data && <Box overflow="hidden">
-            <PanelHeader dashboardId={dashboard.id} panel={panel} data={panelData} queryError={queryError} onCopyPanel={onCopyPanel} onRemovePanel={onRemovePanel} onHidePanel={onHidePanel} loading={loading}/>
+            <PanelHeader dashboardId={dashboard.id} panel={panel} data={panelData} queryError={queryError} onCopyPanel={onCopyPanel} onRemovePanel={onRemovePanel} onHidePanel={onHidePanel} loading={loading} onHover={onHover} />
             <ErrorBoundary>
                 <Box
                     // panel={panel}
@@ -382,7 +384,7 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
             </ErrorBoundary>
 
         </Box>}
-        {loading && <Box position="absolute" top="0" right="0"><Loading size="sm" /></Box>}
+        {loading && <Box position="absolute" top="-2px" right="0"><Loading size="sm" /></Box>}
         <Box position="absolute" top="0" left="0" right="0" bottom="0" zIndex={-1} overflow="hidden"><PanelBorder width={width} height={height} border={panel.styles?.border} > <Box></Box></PanelBorder></Box>
     </Box>
 }
@@ -406,14 +408,16 @@ interface PanelHeaderProps {
     onHidePanel: (panel: Panel) => void
     data: any[]
     loading: boolean
+    onHover: boolean
 }
 
-const PanelHeader = ({ dashboardId, queryError, panel, onCopyPanel, onRemovePanel, onHidePanel, data,loading }: PanelHeaderProps) => {
+const PanelHeader = ({ dashboardId, queryError, panel, onCopyPanel, onRemovePanel, onHidePanel, data, loading, onHover }: PanelHeaderProps) => {
     const viewPanel = useSearchParam("viewPanel")
     const t = useStore(commonMsg)
     const t1 = useStore(panelMsg)
     const title = replaceWithVariables(panel.title)
     const { isOpen, onOpen, onClose } = useDisclosure()
+
     const { colorMode } = useColorMode()
     const embed = useEmbed()
     const menuItems: MenuProps['items'] = [
@@ -475,22 +479,46 @@ const PanelHeader = ({ dashboardId, queryError, panel, onCopyPanel, onRemovePane
     ]
     return (
         <>
-            <HStack className="grid-drag-handle hover-bg" height={`${PANEL_HEADER_HEIGHT - (isEmpty(title) ? 15 : 0)}px`} cursor="move" spacing="0" position={isEmpty(title) ? "absolute" : "relative"} width="100%" zIndex={1000}>
-                {(queryError || panel.desc) && <Box color={useColorModeValue(queryError ? "red" : "brand.500", queryError ? "red" : "brand.200")} position="absolute">
-                    <Tooltip label={toString(queryError) ?? replaceWithVariables(panel.desc)}>
-                        <Box>
-                            <IoMdInformation fontSize="20px" cursor="pointer" />
-                        </Box>
-                    </Tooltip>
-                </Box>}
-                <Center width="100%">
+            <HStack className="grid-drag-handle" height={`${PANEL_HEADER_HEIGHT - (isEmpty(title) ? 15 : 0)}px`} cursor="move" spacing="0" position={isEmpty(title) ? "absolute" : "relative"} width="100%" zIndex={1000} >
+
+                <Flex width="100%" justifyContent="space-between" alignItems="center" pl="2">
+                    {panel.styles.title.position != "left" && <Box></Box>}
+                    {!isEmpty(title) ?
+                        <HStack
+                            paddingTop={panel.styles.title.paddingTop}
+                            paddingBottom={panel.styles.title.paddingBottom}
+                            paddingLeft={panel.styles.title.paddingLeft}
+                            paddingRight={panel.styles.title.paddingRight}
+                            fontSize={panel.styles.title.fontSize}
+                            fontWeight={panel.styles.title.fontWeight}
+                            spacing={0}
+                        >
+                            <Box
+                                color={paletteColorNameToHex(panel.styles.title.color, colorMode)}>
+                                <TitleDecoration styles={panel.styles}>
+                                    <Text noOfLines={1}>
+                                        {title}
+                                    </Text>
+                                </TitleDecoration>
+                            </Box>
+                            {(queryError || panel.desc) && <Box color={useColorModeValue(queryError ? "red" : "brand.500", queryError ? "red" : "brand.200")}>
+                                <Tooltip label={toString(queryError) ?? replaceWithVariables(panel.desc)}>
+                                    <Box>
+                                        <IoMdInformation fontSize="20px" cursor="pointer" />
+                                    </Box>
+                                </Tooltip>
+                            </Box>}
+                        </HStack>
+
+                        :
+                        <Box width="100px">&nbsp;</Box>}
                     <Dropdown
                         placement='bottom'
                         menu={{
                             mode: 'inline',
                             items: menuItems
                         }}
-                        trigger={['click']}
+                        trigger={['hover']}
                         overlayStyle={{}}
                     >
                         <Button
@@ -500,30 +528,21 @@ const PanelHeader = ({ dashboardId, queryError, panel, onCopyPanel, onRemovePane
                             _active={{ background: null, border: null, }}
                             onClick={e => e.preventDefault()}
                             variant='ghost'
+                            size="xs"
                             disabled={embed}
                             _hover={{ background: null, border: null, }}
+                            visibility={onHover ? "visible" : "hidden"}
                             color={paletteColorNameToHex(panel.styles.title.color, colorMode)}
                         >
-                            <Center width="100%">
-                                {!isEmpty(title) ?
-                                    <Box cursor="pointer"
-                                        paddingTop={panel.styles.title.paddingTop} paddingBottom={panel.styles.title.paddingBottom}
-                                        paddingLeft={panel.styles.title.paddingLeft} paddingRight={panel.styles.title.paddingRight}
-                                        width="100%" fontSize={panel.styles.title.fontSize}
-                                        fontWeight={panel.styles.title.fontWeight}
-                                        color={paletteColorNameToHex(panel.styles.title.color, colorMode)}>
-                                        <TitleDecoration styles={panel.styles}>
-                                            <Text noOfLines={1}>
-                                                {title}
-                                            </Text>
-                                        </TitleDecoration>
-                                    </Box>
-                                    :
-                                    <Box width="100px">&nbsp;</Box>}
-                            </Center>
+                            {/* <Center width="100%"> */}
+
+                            <Box padding={1} opacity="0.6" fontSize="0.8rem" zIndex={1000} cursor="pointer">
+                                <FaEllipsisV />
+                            </Box>
+                            {/* </Center> */}
                         </Button>
                     </Dropdown>
-                </Center>
+                </Flex>
                 {!loading && panel.enableScopeTime && <Popover trigger="hover">
                     <PopoverTrigger>
                         <Box opacity="0.5" fontSize="0.8rem" zIndex={1000} cursor="pointer"><FaRegClock /></Box>
