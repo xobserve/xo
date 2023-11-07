@@ -23,12 +23,11 @@ import { VariableManuallyChangedKey } from "src/data/storage-keys"
 import React from "react";
 import { useStore } from "@nanostores/react"
 import { variableMsg } from "src/i18n/locales/en"
-import { addParamToUrl, getUrlParams } from "utils/url"
+import { getUrlParams } from "utils/url"
 import { $variables } from "./store"
 import { parseVariableFormat } from "utils/format"
 import { getDatasource } from "utils/datasource"
 import { isEmpty } from "utils/validate"
-import { usePrevious, useSearchParam } from "react-use"
 import { $datasources } from "../datasource/store"
 import { Datasource } from "types/datasource"
 import Loading from "components/loading/Loading"
@@ -57,9 +56,9 @@ const SelectVariable = memo(({ v }: { v: Variable }) => {
     const t1 = useStore(variableMsg)
     const [values, setValues] = useState<string[]>(null)
     const [loading, setLoading] = useState(false)
-    const urlKey = 'var-' + v.name
-    const varInUrl = useSearchParam(urlKey)
-    const prevVarInUrl = usePrevious(varInUrl)
+
+    // const urlKey = 'var-' + v.name
+    // const varInUrl = useSearchParam(urlKey)
 
     useBus(
         (e) => { return e.type == TimeChangedEvent },
@@ -81,14 +80,9 @@ const SelectVariable = memo(({ v }: { v: Variable }) => {
         []
     )
 
-    useEffect(() => {
-        if (values === null) {
-            return
-        }
-        if (!isEmpty(varInUrl) && varInUrl !== prevVarInUrl) {
-            setValue(v, varInUrl)
-        }
-    }, [varInUrl, prevVarInUrl])
+    // useEffect(() => {
+    //     setValue(v, varInUrl)
+    // }, [varInUrl])
 
     useEffect(() => {
         if (!v.values) { // only load values when first loading
@@ -140,18 +134,24 @@ const SelectVariable = memo(({ v }: { v: Variable }) => {
         }
         if (needQuery) {
             setLoading(true)
-            const res = await queryVariableValues(v, datasourcs)
-            setLoading(false)
-            console.log("load variable values( query )", v.name, res)
-            if (res.error) {
-                result = []
-            } else {
-                res.data?.sort()
-                result = [...result, ...res.data ?? []]
-                if (v.refresh == VariableRefresh.Manually) {
-                    storage.set(VariableManuallyChangedKey + v.id, res.data)
+            try {
+                const res = await queryVariableValues(v, datasourcs)
+                setLoading(false)
+                console.log("load variable values( query )", v.name, res)
+                if (res.error) {
+                    result = []
+                } else {
+                    res.data?.sort()
+                    result = [...result, ...res.data ?? []]
+                    if (v.refresh == VariableRefresh.Manually) {
+                        storage.set(VariableManuallyChangedKey + v.id, res.data)
+                    }
                 }
+            } catch (error) {
+                setLoading(false)
+                return
             }
+          
         }
 
         const oldSelected = v.selected
@@ -161,6 +161,7 @@ const SelectVariable = memo(({ v }: { v: Variable }) => {
                     const selected = v.selected.split(VariableSplitChar)?.filter(s => result.includes(s))
                     if (selected.length == 0) {
                         // autoSetSelected(v, result)
+                        v.selected = result[0] 
                     } else {
                         v.selected = selected.join(VariableSplitChar)
                     }
@@ -169,7 +170,7 @@ const SelectVariable = memo(({ v }: { v: Variable }) => {
                 }
             }
         }
-
+        // setValue(v, v.selected) 
         const vars = $variables.get()
         if (v.selected != oldSelected || v.selected == VarialbeAllOption) {
             const referVars = parseVariableFormat(v.value)
@@ -188,14 +189,6 @@ const SelectVariable = memo(({ v }: { v: Variable }) => {
                         dispatch(VariableForceReload + variable.id)
                     }, 100)
                 }
-
-                // if ((variable.datasource.toString()).indexOf('${' + v.name + '}') >= 0 || (variable.value).indexOf('${' + v.name + '}') >= 0) {
-                //     // to avoid cache missing ,add a interval here
-                //     // Two consecutive requests will miss the cache, because the result of first request has not been save to cache, but the second request has arrived
-                //     setTimeout(() => {
-                //         dispatch(VariableForceReload + variable.id)
-                //     }, 100)
-                // }
             }
 
         }
@@ -206,7 +199,7 @@ const SelectVariable = memo(({ v }: { v: Variable }) => {
         }
     }
 
-
+ 
 
     const value = isEmpty(v.selected) ? [] : v.selected.split(VariableSplitChar)
     const teams = $teams.get()
@@ -222,8 +215,9 @@ const SelectVariable = memo(({ v }: { v: Variable }) => {
                     const vs = value.filter(v1 => values.includes(v1))
                     if (isEmpty(vs)) {
                         setValue(v, "")
+                    } else {
+                        setValue(v, vs.join(VariableSplitChar))
                     }
-                    setVariableValue(v, vs.length == 0 ? "" : vs.join(VariableSplitChar))
                 }}
                 options={values.map(v => ({ value: v, label: v }))}
                 exclusive={VarialbeAllOption}
@@ -240,7 +234,7 @@ const SelectVariable = memo(({ v }: { v: Variable }) => {
         {loading && <Loading size="sm" />}
     </HStack>
 })
-export const setVariableSelected = (variables: Variable[]) => {
+export const initVariableSelected = (variables: Variable[]) => {
     const params = getUrlParams()
     const selectedInUrl = {}
     for (const k of Object.keys(params)) {
@@ -255,7 +249,6 @@ export const setVariableSelected = (variables: Variable[]) => {
         sv = {}
     }
 
-
     for (const v of variables) {
         const selected = selectedInUrl[v.name] ?? sv[v.id]
         if (!selected) {
@@ -266,23 +259,18 @@ export const setVariableSelected = (variables: Variable[]) => {
             }
         } else {
             v.selected = selected
+            if (selectedInUrl[v.name]) {
+                setValueToStorage(v, selected)
+            }
         }
     }
 }
 
 
 export const setVariableValue = (variable: Variable, value) => {
-    const k = 'var-' + variable.name
-    const params = getUrlParams()
-    if (!params[k]) {
-        addParamToUrl({
-            [k]: variable.selected
-        })
-    }
-    // sync to url
-    addParamToUrl({
-        [k]: value
-    })
+    // const k = 'var-' + variable.name
+    // removeParamFromUrl([k])
+    setValue(variable, value)
 }
 
 const setValue = (variable: Variable, value) => {
@@ -298,16 +286,8 @@ const setValue = (variable: Variable, value) => {
     }
     $variables.set(newVars)
 
-    const sv = storage.get(vkey)
-    if (!sv) {
-        storage.set(vkey, {
-            [variable.id]: value
-        })
-    } else {
-        sv[variable.id] = value
-        storage.set(vkey, sv)
-    }
-
+    setValueToStorage(variable, value)
+    
     const referVars = parseVariableFormat(variable.value)
     for (const v of vars) {
         // to avoid circle refer evets: 
@@ -318,6 +298,18 @@ const setValue = (variable: Variable, value) => {
         if ((v.datasource?.toString())?.indexOf('${' + variable.name + '}') >= 0 || v.value?.indexOf('${' + variable.name + '}') >= 0) {
             dispatch(VariableForceReload + v.id) 
         }
+    }
+}
+
+const setValueToStorage = (variable: Variable, value) => {
+    const sv = storage.get(vkey)
+    if (!sv) {
+        storage.set(vkey, {
+            [variable.id]: value
+        })
+    } else {
+        sv[variable.id] = value
+        storage.set(vkey, sv)
     }
 }
 export const setVariable = (name, value) => {
@@ -369,17 +361,4 @@ export const queryVariableValues = async (v: Variable, datasources: Datasource[]
     }
 
     return result
-}
-
-const autoSetSelected = (v: Variable, result: string[]) => {
-    // if (!isEmpty(v.default)) {
-    //     v.selected = v.default
-    //     return 
-    // }
-    for (const value of result) {
-        if (value != VarialbeAllOption) {
-            v.selected = value
-            return
-        }
-    }
 }

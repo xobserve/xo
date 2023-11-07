@@ -155,12 +155,19 @@ const TraceSearchPanel = ({ timeRange, dashboardId, panel, onSearch, onSearchIds
                         <EditorInputItem bordered={false} borderedBottom value={service} onChange={v => {
                             setService(v)
                         }} />
-                        : <Input variant="flushed" value={service} disabled size={size} />
+                        : <Input variant="unstyled" value={service} disabled size="md" mt="1" />
                 }
             </FormSection>
             <FormSection title="Operation" spacing={1}>
-                <EditorInputItem bordered={false} borderedBottom value={operation} onChange={v => setOperation(v)} />
+                {
+                    panel.plugins[PanelType].enableEditOperation ?
+                        <EditorInputItem bordered={false} borderedBottom value={operation} onChange={v => {
+                            setOperation(v)
+                        }} />
+                        : <Input variant="unstyled" value={operation} disabled size="md"  mt="1"/>
+                }
             </FormSection>
+
             <FormSection title="Tags" spacing={1}>
                 <HStack>
                     <EditorInputItem key={tags} bordered={false} borderedBottom value={tags} placeholder={`e.g http.status_code=200 error=true`} onChange={v => setTags(v)} />
@@ -215,7 +222,16 @@ const getInitParams = (searchParams, panel, lastSearch) => {
         service = lastSearch.service ?? null
     }
 
-    const operation = searchParams.get('operation') ?? (lastSearch.operation ?? null)
+    let operation
+    const urlOperation= searchParams.get('operation')
+    if (!isEmpty(urlOperation)) {
+        operation = urlOperation
+    } else if (!panel.plugins[PanelType].enableEditOperation) {
+        operation = panel.plugins[PanelType].defaultOperation
+    } else {
+        operation = lastSearch.operation ?? null
+    }
+
     const tags = searchParams.get('tags') ?? (lastSearch.tags ?? '')
     const max = searchParams.get('max') ?? (lastSearch.max ?? '')
     const min = searchParams.get('min') ?? (lastSearch.min ?? '')

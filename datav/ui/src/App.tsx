@@ -22,7 +22,7 @@ import CommonStyles from "src/theme/common.styles"
 import BaiduMap from 'src/components/BaiduMap'
 import { requestApi } from 'utils/axios/request'
 import { $config, UIConfig } from 'src/data/configs/config'
-import { setVariableSelected } from './views/variables/SelectVariable'
+import { initVariableSelected } from './views/variables/SelectVariable'
 import AntdWrapper from 'src/components/AntdWrapper'
 import { routes } from './routes';
 import { initColors } from 'utils/colors';
@@ -61,7 +61,9 @@ const AppView = () => {
     bodyStyle.background = null
   }, [])
 
+  useEffect(() => {
 
+  },[])
 
   const loadConfig = async () => {
     const r0 = requestApi.get(`/datasource/all`)
@@ -88,7 +90,7 @@ const AppView = () => {
     for (const v of res.data.vars) {
       vars[v.teamId] = concat(vars[v.teamId]??[], v)
     }
-    setVariableSelected(res.data.vars)
+    initVariableSelected(res.data.vars)
     $teamVariables.set(vars)
 }
 

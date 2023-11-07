@@ -37,7 +37,18 @@ const TracePanelEditor = ({ panel, onChange }: TraceEditorProps) => {
             <PanelEditItem title="Enable edit service" desc="when diabled, service will be automatically set to default service">
                 <Switch isChecked={panel.plugins[PanelType].enableEditService} onChange={(e) => onChange((panel: Panel) => {
                     panel.plugins[PanelType].enableEditService = e.target.checked
+                })} />
+            </PanelEditItem>
+            <PanelEditItem title="Default operation">
+                <EditorInputItem value={panel.plugins[PanelType].defaultOperation} onChange={(v) => onChange((panel: Panel) => {
+                    panel.plugins[PanelType].defaultOperation = v
                     dispatch(PanelForceRebuildEvent + panel.id)
+
+                })} />
+            </PanelEditItem>
+            <PanelEditItem title="Enable edit service" desc="when diabled, service will be automatically set to default service">
+                <Switch isChecked={panel.plugins[PanelType].enableEditOperation} onChange={(e) => onChange((panel: Panel) => {
+                    panel.plugins[PanelType].enableEditOperation = e.target.checked
                 })} />
             </PanelEditItem>
         </PanelAccordion>

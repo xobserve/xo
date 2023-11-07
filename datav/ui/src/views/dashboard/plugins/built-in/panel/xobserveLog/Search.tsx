@@ -20,7 +20,7 @@ import { PanelForceRequeryEvent } from "src/data/bus-events"
 import { Panel } from "types/dashboard"
 import useBus, { dispatch } from "use-bus"
 import { isEmpty } from "utils/validate"
-import { $xobserveQueryParams } from "../../datasource/xobserve/store"
+import { $xobserveQueryParams } from "../../datasource/observex/store"
 
 interface Props {
     panel: Panel

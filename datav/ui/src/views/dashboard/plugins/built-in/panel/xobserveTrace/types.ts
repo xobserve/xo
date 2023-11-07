@@ -16,6 +16,8 @@ export interface TraceEditorProps extends PanelEditorProps {
 export interface TraceSettings {
     defaultService: string
     enableEditService: boolean
+    defaultOperation: string
+    enableEditOperation: boolean
     interaction: {
         enable: boolean
         actions: ClickAction[]

@@ -17,7 +17,7 @@ import { requestApi } from "utils/axios/request"
 import DashboardHeader from "src/views/dashboard/DashboardHeader"
 import DashboardGrid from "src/views/dashboard/grid/DashboardGrid"
 import { clone, cloneDeep, concat, defaultsDeep, find, findIndex, orderBy } from "lodash"
-import SelectVariables, { setVariableSelected } from "src/views/variables/SelectVariable"
+import SelectVariables, { initVariableSelected } from "src/views/variables/SelectVariable"
 import { prevQueries, prevQueryData } from "src/views/dashboard/grid/PanelGrid/PanelGrid"
 import { unstable_batchedUpdates } from "react-dom"
 import useBus from 'use-bus'
@@ -224,7 +224,7 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
         const teamVars = $teamVariables.get()[dash.ownedBy] ?? []
 
         const dashVars = cloneDeep(dash.data.variables)
-        setVariableSelected(dashVars)
+        initVariableSelected(dashVars)
 
         $variables.set([...gVars, ...teamVars, ...dashVars])
     }

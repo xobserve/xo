@@ -30,7 +30,7 @@ import { DatasourceTypeTestData } from "../../datasource/testdata/types";
 import { builtinDatasourcePlugins } from "../../plugins";
 import { externalDatasourcePlugins } from "../../../external/plugins";
 import { calculateInterval } from "utils/datetime/range";
-import { DatasourceTypexobserve } from "../../datasource/xobserve/types";
+import { DatasourceTypexobserve } from "../../datasource/observex/types";
 import { durationToMilliseconds } from "utils/date";
 import { convTagsLogfmt } from "../trace/Trace";
 import { QueryPluginData } from "types/plugin";

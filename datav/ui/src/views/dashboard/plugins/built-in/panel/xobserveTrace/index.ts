@@ -4,8 +4,28 @@ import PanelEditor from "./Editor";
 import TracePanelWrapper from "./Trace";
 import { mockTraceDataForTestDataDs } from "./mocks/mockData";
 import icon from './icon.svg'
-import { PanelType } from "./types";
+import { PanelType, TraceSettings } from "./types";
 
+
+const initSettings =  ():TraceSettings => ({
+    defaultService: "",
+    enableEditService: true,
+    defaultOperation: "",
+    enableEditOperation: true,
+    interaction: {
+        enable: false,
+        actions: []
+    },
+    chart: {
+        height: 100,
+        type: "bar",
+        stack: false,
+        left: 1,
+        right: 3,
+        top: 6,
+        bottom: 15
+    }
+})
 
 const panelComponents: PanelPluginComponents = {
     panel: TracePanelWrapper,
@@ -14,23 +34,7 @@ const panelComponents: PanelPluginComponents = {
     settings: {
         type: PanelType,
         icon,
-        initOptions: {
-            defaultService: "",
-            enableEditService: true,
-            interaction: {
-                enable: false,
-                actions: []
-            },
-            chart: {
-                height: 100,
-                type: "bar",
-                stack: false,
-                left: 1,
-                right: 3,
-                top: 6,
-                bottom: 15
-            }
-        },
+        initOptions: initSettings(),
         disableAutoQuery: true,
     }
 }

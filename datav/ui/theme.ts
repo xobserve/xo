@@ -66,9 +66,9 @@ const customTheme = extendTheme(
                         boxShadow: 'none !important',
                         borderColor:  mode("brand.500 !important","brand.200 !important")(props)
                     },
-                    input: {
-                        borderWidth: '0.5px !important'
-                    },
+                    // input: {
+                    //     borderWidth: '0.5px !important'
+                    // },
                     ...markdownRender(props),
                     // update antd border colors
                     // '*, *::before, ::after': {

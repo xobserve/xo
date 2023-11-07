@@ -187,7 +187,7 @@ export const replacexobserveQueryWithVariables = (query: PanelQuery | string, in
         for (const f of formats) {
             const v = vars.find(v => v.name == f)
             if (v) {
-                q = q.replaceAll(`\${${f}}`,v.selected.replaceAll(VariableSplitChar, '|') );
+                q = q.replaceAll(`\${${f}}`,v.selected?.replaceAll(VariableSplitChar, '|') );
             }
         }   
 
@@ -198,7 +198,7 @@ export const replacexobserveQueryWithVariables = (query: PanelQuery | string, in
     for (const f of formats) {
         const v = vars.find(v => v.name == f)
         if (v) {
-            query.metrics = query.metrics.replaceAll(`\${${f}}`,v.selected.replaceAll(VariableSplitChar, '|'));
+            query.metrics = query.metrics.replaceAll(`\${${f}}`,v.selected?.replaceAll(VariableSplitChar, '|'));
         }
     }   
 }
