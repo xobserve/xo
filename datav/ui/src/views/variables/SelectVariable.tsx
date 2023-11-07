@@ -160,12 +160,12 @@ const SelectVariable = memo(({ v }: { v: Variable }) => {
                 if (!isEmpty(v.selected)) {
                     const selected = v.selected.split(VariableSplitChar)?.filter(s => result.includes(s))
                     if (selected.length == 0) {
-                        autoSetSelected(v, result)
+                        // autoSetSelected(v, result)
                     } else {
                         v.selected = selected.join(VariableSplitChar)
                     }
                 } else {
-                    autoSetSelected(v, result)
+                    // autoSetSelected(v, result)
                 }
             }
         }
@@ -224,7 +224,6 @@ const SelectVariable = memo(({ v }: { v: Variable }) => {
                         setValue(v, "")
                     }
                     setVariableValue(v, vs.length == 0 ? "" : vs.join(VariableSplitChar))
-
                 }}
                 options={values.map(v => ({ value: v, label: v }))}
                 exclusive={VarialbeAllOption}
@@ -317,7 +316,7 @@ const setValue = (variable: Variable, value) => {
             continue
         }
         if ((v.datasource?.toString())?.indexOf('${' + variable.name + '}') >= 0 || v.value?.indexOf('${' + variable.name + '}') >= 0) {
-            dispatch(VariableForceReload + v.id)
+            dispatch(VariableForceReload + v.id) 
         }
     }
 }

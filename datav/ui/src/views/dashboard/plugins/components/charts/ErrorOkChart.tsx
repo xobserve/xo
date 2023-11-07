@@ -185,7 +185,8 @@ const ErrorOkChart = memo((props: Props) => {
                 // emphasis: {
                 //     focus: 'series'
                 // },
-                color: calculateColor(name)
+                color: calculateColor(name),
+                symbolSize: 0
                 // barWidth: '90%'
             })
         })
