@@ -35,7 +35,7 @@ func ImportFromJSON(raw string, userId int64) (*models.Dashboard, error) {
 		return nil, err
 	}
 
-	_, err = db.Conn.Exec(`INSERT INTO dashboard (id,title, owned_by, created_by,tags, data,created,updated) VALUES (?,?,?,?,?,?,?,?)`,
+	_, err = db.Conn.Exec(`INSERT INTO dashboard (id,title, team_id, created_by,tags, data,created,updated) VALUES (?,?,?,?,?,?,?,?)`,
 		dash.Id, dash.Title, dash.OwnedBy, dash.CreatedBy, tags, jsonData, dash.Created, dash.Updated)
 	if err != nil {
 		return nil, err

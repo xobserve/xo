@@ -38,20 +38,21 @@ type Session struct {
 }
 
 type User struct {
-	Id         int64      `json:"id"`
-	Username   string     `json:"username"`
-	Name       string     `json:"name"`
-	Email      *string    `json:"email"`
-	Mobile     string     `json:"mobile"`
-	Role       RoleType   `json:"role"`
-	LastSeenAt *time.Time `json:"lastSeenAt,omitempty"`
-	Created    time.Time  `json:"created,omitempty"`
-	Updated    time.Time  `json:"updated,omitempty"`
-	SideMenu   int64      `json:"sidemenu,omitempty"`
-	Visits     int        `json:"visits,omitempty"`
-	Data       *UserData  `json:"data,omitempty"`
-	Salt       string     `json:"-"`
-	Password   string     `json:"-"`
+	Id            int64      `json:"id"`
+	Username      string     `json:"username"`
+	Name          string     `json:"name"`
+	Email         *string    `json:"email"`
+	Mobile        string     `json:"mobile"`
+	Role          RoleType   `json:"role"`
+	LastSeenAt    *time.Time `json:"lastSeenAt,omitempty"`
+	Created       time.Time  `json:"created,omitempty"`
+	Updated       time.Time  `json:"updated,omitempty"`
+	SideMenu      int64      `json:"sidemenu,omitempty"`
+	Visits        int        `json:"visits,omitempty"`
+	CurrentTenant int64      `json:"currentTenant,omitempty"`
+	Data          *UserData  `json:"data,omitempty"`
+	Salt          string     `json:"-"`
+	Password      string     `json:"-"`
 }
 
 type Users []*User
@@ -92,8 +93,8 @@ type UserData struct {
 func QueryUserById(ctx context.Context, id int64) (*User, error) {
 	user := &User{}
 	var data []byte
-	err := db.Conn.QueryRowContext(ctx, `SELECT id,username,name,email,mobile,password,salt,sidemenu,data,last_seen_at,created FROM user WHERE id=?`,
-		id).Scan(&user.Id, &user.Username, &user.Name, &user.Email, &user.Mobile, &user.Password, &user.Salt, &user.SideMenu, &data, &user.LastSeenAt, &user.Created)
+	err := db.Conn.QueryRowContext(ctx, `SELECT id,username,name,email,mobile,password,salt,sidemenu,data,current_tenant,last_seen_at,created FROM user WHERE id=?`,
+		id).Scan(&user.Id, &user.Username, &user.Name, &user.Email, &user.Mobile, &user.Password, &user.Salt, &user.SideMenu, &data, &user.CurrentTenant, &user.LastSeenAt, &user.Created)
 	if err != nil && err != sql.ErrNoRows {
 		return user, err
 	}
@@ -122,8 +123,8 @@ func QueryUserById(ctx context.Context, id int64) (*User, error) {
 func QueryUserByName(ctx context.Context, username string) (*User, error) {
 	user := &User{}
 	var data []byte
-	err := db.Conn.QueryRowContext(ctx, `SELECT id,username,name,email,mobile,password,salt,sidemenu,data, last_seen_at FROM user WHERE username=?`,
-		username).Scan(&user.Id, &user.Username, &user.Name, &user.Email, &user.Mobile, &user.Password, &user.Salt, &user.SideMenu, &data, &user.LastSeenAt)
+	err := db.Conn.QueryRowContext(ctx, `SELECT id,username,name,email,mobile,password,salt,sidemenu,data,current_tenant, last_seen_at FROM user WHERE username=?`,
+		username).Scan(&user.Id, &user.Username, &user.Name, &user.Email, &user.Mobile, &user.Password, &user.Salt, &user.SideMenu, &data, &user.CurrentTenant, &user.LastSeenAt)
 	if err != nil && err != sql.ErrNoRows {
 		return user, err
 	}

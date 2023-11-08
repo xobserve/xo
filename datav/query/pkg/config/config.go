@@ -100,6 +100,11 @@ type Config struct {
 		DisableDatasources []string `yaml:"disable_datasources"`
 	}
 	Observability Observability
+
+	Tenant struct {
+		Enable            bool `yaml:"enable"`
+		SyncUserToDefault bool `yaml:"sync_user_to_default"`
+	}
 }
 
 type Observability struct {

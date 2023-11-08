@@ -15,12 +15,41 @@ CREATE TABLE IF NOT EXISTS user (
     sidemenu INTEGER DEFAULT 1,
     come_from VARCHAR(32) DEFAULT 'local',
     visit_count INTEGER DEFAULT 0,
+    current_tenant INTEGER NOT NULL,
     data MEDIUMTEXT,
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL
 );
 
 CREATE INDEX user_username ON user (username);
+
+CREATE TABLE IF NOT EXISTS tenant (
+    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL UNIQUE,
+    nickname VARCHAR(255) DEFAULT '',
+    owner_id INTEGER NOT NULL,
+    data MEDIUMTEXT,
+    created DATETIME NOT NULL,
+    updated DATETIME NOT NULL
+);
+CREATE INDEX tenant_name ON tenant (name);
+CREATE INDEX tenant_owner ON tenant (owner_id);
+
+
+CREATE TABLE IF NOT EXISTS tenant_user (
+    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    tenant_id INTEGER NOT NULL,
+    user_id INTEGER NOT NULL,
+    role VARCHAR(10) DEFAULT 'Viewer',
+    created DATETIME NOT NULL,
+    updated DATETIME NOT NULL
+);
+
+CREATE INDEX tenant_user_tenant_id ON tenant_user (tenant_id);
+
+CREATE INDEX tenant_user_user_id ON tenant_user (user_id);
+
+CREATE UNIQUE INDEX tenant_user_tenant_user_id ON tenant_user (tenant_id, user_id);
 
 CREATE TABLE IF NOT EXISTS sessions (
     sid VARCHAR(255) PRIMARY KEY,
@@ -35,13 +64,15 @@ CREATE TABLE IF NOT EXISTS team (
     allow_global BOOL DEFAULT true,
     created_by INTEGER NOT NULL,
     data MEDIUMTEXT,
+    tenant INTEGER NOT NULL,
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL
 );
 
 CREATE INDEX team_name ON team (name);
-
+CREATE INDEX team_tenant ON team (tenant);
 CREATE INDEX team_created_by ON team (created_by);
+
 
 CREATE TABLE IF NOT EXISTS team_member (
     id INTEGER PRIMARY KEY AUTO_INCREMENT,
@@ -82,7 +113,7 @@ CREATE TABLE IF NOT EXISTS variable (
     enableAll BOOL NOT NULL DEFAULT false,
     sort SMALLINT DEFAULT 0,
     regex TEXT,
-    team_id INTEGER NOT NULL DEFAULT 1,
+    team_id INTEGER NOT NULL,
     data MEDIUMTEXT,
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL
@@ -94,7 +125,7 @@ CREATE INDEX  variable_team ON variable (team_id);
 CREATE TABLE IF NOT EXISTS dashboard (
     id VARCHAR(40) PRIMARY KEY NOT NULL,
     title VARCHAR(255) NOT NULL,
-    owned_by INTEGER NOT NULL DEFAULT '1',
+    team_id INTEGER NOT NULL,
     visible_to VARCHAR(32) DEFAULT 'team',
     created_by INTEGER NOT NULL,
     tags TEXT,
@@ -105,7 +136,7 @@ CREATE TABLE IF NOT EXISTS dashboard (
 );
 
 
-CREATE INDEX  dashboard_owned_by ON dashboard (owned_by);
+CREATE INDEX  dashboard_team_id ON dashboard (team_id);
 
 CREATE INDEX  dashboard_created_by ON dashboard (created_by);
 
@@ -126,7 +157,7 @@ CREATE TABLE IF NOT EXISTS datasource (
     type VARCHAR(32),
     url VARCHAR(255),
     data MEDIUMTEXT,
-    team_id INTEGER NOT NULL DEFAULT 1,
+    team_id INTEGER NOT NULL,
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL
 );
@@ -149,11 +180,13 @@ CREATE TABLE IF NOT EXISTS audit_logs (
     op_type VARCHAR(32) NOT NULL,
     target_id VARCHAR(64),
     data MEDIUMTEXT,
+    tenant INTEGER NOT NULL,
     created DATETIME NOT NULL
 );
 
 CREATE INDEX  audit_logs_op_id ON audit_logs (op_id);
 CREATE INDEX  audit_logs_op_type ON audit_logs (op_type);
+CREATE INDEX  audit_logs_tenant ON audit_logs (tenant);
 
 CREATE TABLE IF NOT EXISTS annotation (
     id  INTEGER PRIMARY KEY AUTO_INCREMENT,

@@ -106,7 +106,7 @@ func SaveDashboard(c *gin.Context) {
 		return
 	}
 	if !isUpdate {
-		_, err := db.Conn.ExecContext(c.Request.Context(), `INSERT INTO dashboard (id,title, owned_by,visible_to, created_by,tags, data,created,updated) VALUES (?,?,?,?,?,?,?,?,?)`,
+		_, err := db.Conn.ExecContext(c.Request.Context(), `INSERT INTO dashboard (id,title, team_id,visible_to, created_by,tags, data,created,updated) VALUES (?,?,?,?,?,?,?,?,?)`,
 			dash.Id, dash.Title, dash.OwnedBy, dash.VisibleTo, dash.CreatedBy, tags, jsonData, dash.Created, dash.Updated)
 		if err != nil {
 			if e.IsErrUniqueConstraint(err) {
@@ -118,7 +118,7 @@ func SaveDashboard(c *gin.Context) {
 			return
 		}
 	} else {
-		res, err := db.Conn.ExecContext(c.Request.Context(), `UPDATE dashboard SET title=?,tags=?,data=?,owned_by=?,visible_to=?,updated=? WHERE id=?`,
+		res, err := db.Conn.ExecContext(c.Request.Context(), `UPDATE dashboard SET title=?,tags=?,data=?,team_id=?,visible_to=?,updated=? WHERE id=?`,
 			dash.Title, tags, jsonData, dash.OwnedBy, dash.VisibleTo, dash.Updated, dash.Id)
 		if err != nil {
 			logger.Error("update dashboard error", "error", err)
@@ -279,7 +279,7 @@ func UpdateOwnedBy(c *gin.Context) {
 		return
 	}
 
-	_, err = db.Conn.ExecContext(c.Request.Context(), "UPDATE dashboard SET owned_by=? WHERE id=?", dash.OwnedBy, dash.Id)
+	_, err = db.Conn.ExecContext(c.Request.Context(), "UPDATE dashboard SET team_id=? WHERE id=?", dash.OwnedBy, dash.Id)
 	if err != nil {
 		logger.Warn("update dashboard ownedBy error", "error", err)
 		c.JSON(500, common.RespInternalError())
@@ -298,7 +298,7 @@ func GetTeamDashboards(c *gin.Context) {
 
 	dashboards := make([]*models.Dashboard, 0)
 
-	rows, err := db.Conn.QueryContext(c.Request.Context(), "SELECT id,title, created, updated FROM dashboard WHERE owned_by=?", teamId)
+	rows, err := db.Conn.QueryContext(c.Request.Context(), "SELECT id,title, created, updated FROM dashboard WHERE team_id=?", teamId)
 	if err != nil {
 		logger.Warn("query team dashboards error", "error", err)
 		c.JSON(500, common.RespError(e.Internal))
@@ -323,7 +323,7 @@ func GetTeamDashboards(c *gin.Context) {
 func GetSimpleList(c *gin.Context) {
 	dashboards := make([]*models.Dashboard, 0)
 
-	rows, err := db.Conn.QueryContext(c.Request.Context(), "SELECT dashboard.id,dashboard.title, dashboard.owned_by,team.name,dashboard.visible_to, dashboard.tags, dashboard.weight FROM dashboard INNER JOIN team ON dashboard.owned_by = team.id ORDER BY dashboard.weight DESC,dashboard.created DESC")
+	rows, err := db.Conn.QueryContext(c.Request.Context(), "SELECT dashboard.id,dashboard.title, dashboard.team_id,team.name,dashboard.visible_to, dashboard.tags, dashboard.weight FROM dashboard INNER JOIN team ON dashboard.team_id = team.id ORDER BY dashboard.weight DESC,dashboard.created DESC")
 	if err != nil {
 		logger.Warn("query simple dashboards error", "error", err)
 		c.JSON(500, common.RespError(e.Internal))

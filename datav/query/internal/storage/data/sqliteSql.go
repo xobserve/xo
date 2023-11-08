@@ -18,7 +18,27 @@ CREATE TABLE IF NOT EXISTS user (
     sidemenu INTEGER DEFAULT 1,
     come_from VARCHAR(32) DEFAULT 'local',
     visit_count INTEGER DEFAULT 0,
+    current_tenant INTEGER NOT NULL,
     data MEDIUMTEXT,
+    created DATETIME NOT NULL,
+    updated DATETIME NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS tenant (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name VARCHAR(255) NOT NULL UNIQUE,
+    nickname VARCHAR(255) DEFAULT '',
+    owner_id INTEGER NOT NULL,
+    data MEDIUMTEXT,
+    created DATETIME NOT NULL,
+    updated DATETIME NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS tenant_user (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    tenant_id INTEGER NOT NULL,
+    user_id INTEGER NOT NULL,
+    role VARCHAR(10) DEFAULT 'Viewer',
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL
 );
@@ -36,6 +56,7 @@ CREATE TABLE IF NOT EXISTS team (
     allow_global BOOL DEFAULT true,
     created_by INTEGER NOT NULL,
     data MEDIUMTEXT,
+    tenant INTEGER NOT NULL,
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL
 );
@@ -73,7 +94,7 @@ CREATE TABLE IF NOT EXISTS variable (
     enableAll BOOL NOT NULL DEFAULT false,
     sort TINYINT DEFAULT 0,
     regex TEXT,
-    team_id INTEGER NOT NULL DEFAULT 1,
+    team_id INTEGER NOT NULL,
     data MEDIUMTEXT,
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL
@@ -82,7 +103,7 @@ CREATE TABLE IF NOT EXISTS variable (
 CREATE TABLE IF NOT EXISTS dashboard (
     id VARCHAR(40) PRIMARY KEY NOT NULL,
     title VARCHAR(255) NOT NULL,
-    owned_by INTEGER NOT NULL DEFAULT '1',
+    team_id INTEGER NOT NULL,
     visible_to VARCHAR(32) DEFAULT 'team',
     created_by INTEGER NOT NULL,
     tags TEXT,
@@ -106,7 +127,7 @@ CREATE TABLE IF NOT EXISTS datasource (
     type VARCHAR(32),
     url VARCHAR(255),
     data MEDIUMTEXT,
-    team_id INTEGER NOT NULL DEFAULT 1,
+    team_id INTEGER NOT NULL,
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL
 );
@@ -125,6 +146,7 @@ CREATE TABLE IF NOT EXISTS audit_logs (
     op_type VARCHAR(32) NOT NULL,
     target_id VARCHAR(64),
     data MEDIUMTEXT,
+    tenant INTEGER NOT NULL,
     created DATETIME NOT NULL
 );
 
@@ -145,9 +167,15 @@ CREATE TABLE IF NOT EXISTS annotation (
 const SqliteIndex = `
 CREATE INDEX IF NOT EXISTS user_username ON user (username);
 
+CREATE INDEX IF NOT EXISTS tenant_name ON tenant (name);
+CREATE INDEX IF NOT EXISTS tenant_owner ON tenant (owner_id);
+
+CREATE INDEX IF NOT EXISTS tenant_user_tenant_id ON tenant_user (tenant_id);
+CREATE INDEX IF NOT EXISTS tenant_user_user_id ON tenant_user (user_id);
+CREATE UNIQUE INDEX IF NOT EXISTS tenant_user_tenant_user_id ON tenant_user (tenant_id, user_id);
 
 CREATE INDEX IF NOT EXISTS team_name ON team (name);
-
+CREATE INDEX IF NOT EXISTS team_tenant ON team (tenant);
 CREATE INDEX IF NOT EXISTS team_created_by ON team (created_by);
 
 
@@ -164,7 +192,7 @@ CREATE UNIQUE INDEX IF NOT EXISTS sidemenu_team_id ON sidemenu  (team_id);
 CREATE UNIQUE INDEX IF NOT EXISTS variable_name ON variable (name);
 CREATE INDEX IF NOT EXISTS variable_team ON variable (team_id);
 
-CREATE INDEX IF NOT EXISTS  dashboard_owned_by ON dashboard (owned_by);
+CREATE INDEX IF NOT EXISTS  dashboard_team_id ON dashboard (team_id);
 CREATE INDEX IF NOT EXISTS  dashboard_visible_to ON dashboard (visible_to);
 CREATE INDEX IF NOT EXISTS  dashboard_created_by ON dashboard (created_by);
 
@@ -182,7 +210,7 @@ CREATE UNIQUE INDEX IF NOT EXISTS  star_dashboard_id ON star_dashboard (user_id,
 
 CREATE INDEX IF NOT EXISTS   audit_logs_op_id ON audit_logs (op_id);
 CREATE INDEX IF NOT EXISTS   audit_logs_op_type ON audit_logs (op_type);
-
+CREATE INDEX IF NOT EXISTS audit_logs_tenant ON audit_logs (tenant);
 
 CREATE INDEX IF NOT EXISTS annotation_npid ON annotation (namespace_id);
 CREATE UNIQUE INDEX IF NOT EXISTS  annotation_time_ng ON annotation (namespace_id,group_id,time);

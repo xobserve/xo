@@ -55,9 +55,9 @@ function Login() {
             const oldPage = storage.get('current-page')
             if (oldPage) {
                 storage.remove('current-page')
-                navigate(oldPage)
+                window.location.href = oldPage
             } else {
-                navigate('/')
+                window.location.href = '/'
             }
         }, 200)
     };

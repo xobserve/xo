@@ -103,7 +103,7 @@ const TeamSidemenu = ({team}:{team:Team}) => {
                 return 
             }
             
-            if (reserveUrls.some(url => url === item.url)) {
+            if (reserveUrls.some(url => url.toLowerCase() === item.url.toLowerCase())) {
                 toast({
                     title: `${item.url} is reserved, you cannot use`,
                     status: "warning",

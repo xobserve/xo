@@ -104,6 +104,11 @@ plugins:
     disable_panels: ["demo"]
     disable_datasources: []
 
+#################################### Tenant ##############################
+tenant:
+    enable: false
+    ## Automatically sync users to default tenant
+    sync_user_to_default: true
 
 #################################### Observability ##############################
 observability:
