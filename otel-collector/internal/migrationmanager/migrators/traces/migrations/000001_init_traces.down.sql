@@ -1,0 +1,21 @@
+DROP TABLE IF EXISTS xobserve_traces.trace_index ON CLUSTER cluster;
+DROP TABLE IF EXISTS xobserve_traces.distributed_trace_index ON CLUSTER cluster;
+DROP TABLE IF EXISTS xobserve_traces.trace_spans ON CLUSTER cluster;
+DROP TABLE IF EXISTS xobserve_traces.distributed_trace_spans ON CLUSTER cluster;
+DROP TABLE IF EXISTS xobserve_traces.top_level_operations ON CLUSTER cluster;
+DROP TABLE IF EXISTS xobserve_traces.distributed_top_level_operations ON CLUSTER cluster;
+DROP TABLE IF EXISTS xobserve_traces.service_operations ON CLUSTER cluster;
+DROP TABLE IF EXISTS xobserve_traces.distributed_service_operations ON CLUSTER cluster;
+DROP TABLE IF EXISTS xobserve_traces.usage_explorer ON CLUSTER cluster;
+DROP TABLE IF EXISTS xobserve_traces.distributed_usage_explorer ON CLUSTER cluster;
+DROP TABLE IF EXISTS xobserve_traces.trace_error_index ON CLUSTER cluster;
+DROP TABLE IF EXISTS xobserve_traces.distributed_trace_error_index ON CLUSTER cluster;
+DROP TABLE IF EXISTS xobserve_traces.span_attributes_keys ON CLUSTER cluster;
+DROP TABLE IF EXISTS xobserve_traces.distributed_span_attributes_keys ON CLUSTER cluster;
+DROP TABLE IF EXISTS xobserve_traces.span_attributes ON CLUSTER cluster;
+DROP TABLE IF EXISTS xobserve_traces.distributed_span_attributes ON CLUSTER cluster;
+
+DROP VIEW IF EXISTS  xobserve_traces.sub_root_operations_mv ON CLUSTER cluster;
+DROP VIEW IF EXISTS  xobserve_traces.root_operations_mv ON CLUSTER cluster;
+DROP VIEW IF EXISTS  xobserve_traces.service_operations_mv ON CLUSTER cluster;
+DROP VIEW IF EXISTS  xobserve_traces.usage_explorer_mv ON CLUSTER cluster;

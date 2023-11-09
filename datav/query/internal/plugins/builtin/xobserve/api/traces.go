@@ -11,7 +11,6 @@ import (
 	xobservemodels "github.com/xObserve/xObserve/query/internal/plugins/builtin/xobserve/models"
 	xobserveutils "github.com/xObserve/xObserve/query/internal/plugins/builtin/xobserve/utils"
 	pluginUtils "github.com/xObserve/xObserve/query/internal/plugins/utils"
-	"github.com/xObserve/xObserve/query/pkg/config"
 	"github.com/xObserve/xObserve/query/pkg/models"
 )
 
@@ -47,7 +46,7 @@ func GetTraces(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[s
 	var operationNameQuery string
 	if operation == "" || operation == models.VarialbeAllOption {
 		// if min > 0 || max > 0 || rawTags != "" {
-		query := fmt.Sprintf("select name from %s.%s where %s", config.Data.Observability.DefaultTraceDB, xobservemodels.DefaultTopLevelOperationsTable, domainQuery)
+		query := fmt.Sprintf("select name from %s.%s where %s", xobservemodels.DefaultTraceDB, xobservemodels.DefaultTopLevelOperationsTable, domainQuery)
 		rows, err := conn.Query(c.Request.Context(), query)
 		if err != nil {
 			logger.Warn("Error Query trace operations", "query", query, "error", err)
@@ -131,13 +130,13 @@ func GetTraces(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[s
 	if onlyChart != "true" {
 		var query string
 		if traceIds != "" {
-			query = fmt.Sprintf("SELECT startTime as ts,serviceName,name,traceId, duration as maxDuration FROM %s.%s WHERE traceId in ('%s') AND parentId=''", config.Data.Observability.DefaultTraceDB, xobservemodels.DefaultTraceIndexTable, strings.Join(strings.Split(traceIds, ","), "','"))
+			query = fmt.Sprintf("SELECT startTime as ts,serviceName,name,traceId, duration as maxDuration FROM %s.%s WHERE traceId in ('%s') AND parentId=''", xobservemodels.DefaultTraceDB, xobservemodels.DefaultTraceIndexTable, strings.Join(strings.Split(traceIds, ","), "','"))
 		} else {
 			if service == "" {
 				return models.GenPluginResult(models.PluginStatusError, "service can not be empty", nil)
 			}
-			query0 := fmt.Sprintf("SELECT DISTINCT traceId FROM %s.%s WHERE startTime >= %d AND startTime <= %d AND %s ORDER BY startTime DESC limit %d", config.Data.Observability.DefaultTraceDB, xobservemodels.DefaultTraceIndexTable, start*1e9, end*1e9, domainQuery, limit)
-			query = fmt.Sprintf("SELECT min(startTime) as ts,serviceName,name,traceId,max(duration) as maxDuration FROM %s.%s WHERE traceId in (%s) AND serviceName='%s' %s  %s GROUP BY serviceName,name,traceId", config.Data.Observability.DefaultTraceDB, xobservemodels.DefaultTraceIndexTable, query0, service, operationNameQuery, durationQuery)
+			query0 := fmt.Sprintf("SELECT DISTINCT traceId FROM %s.%s WHERE startTime >= %d AND startTime <= %d AND %s ORDER BY startTime DESC limit %d", xobservemodels.DefaultTraceDB, xobservemodels.DefaultTraceIndexTable, start*1e9, end*1e9, domainQuery, limit)
+			query = fmt.Sprintf("SELECT min(startTime) as ts,serviceName,name,traceId,max(duration) as maxDuration FROM %s.%s WHERE traceId in (%s) AND serviceName='%s' %s  %s GROUP BY serviceName,name,traceId", xobservemodels.DefaultTraceDB, xobservemodels.DefaultTraceIndexTable, query0, service, operationNameQuery, durationQuery)
 		}
 		// query traceIDs
 		rows, err := conn.Query(c.Request.Context(), query)
@@ -191,7 +190,7 @@ func GetTraces(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[s
 		}
 
 		// query extra trace info
-		query = fmt.Sprintf("select traceId,serviceName,hasError,count(spanId) from %s.%s where traceId in ('%s') GROUP by traceId,serviceName,hasError", config.Data.Observability.DefaultTraceDB, xobservemodels.DefaultTraceIndexTable, strings.Join(traceIDList, "','"))
+		query = fmt.Sprintf("select traceId,serviceName,hasError,count(spanId) from %s.%s where traceId in ('%s') GROUP by traceId,serviceName,hasError", xobservemodels.DefaultTraceDB, xobservemodels.DefaultTraceIndexTable, strings.Join(traceIDList, "','"))
 		rows, err = conn.Query(c.Request.Context(), query)
 		if err != nil {
 			logger.Warn("Error Query logs", "query", query, "error", err)
@@ -301,7 +300,7 @@ func GetTraces(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[s
 			aggregateQuery = "round(quantile(0.99)(duration) / 1e6,2) as p99"
 		}
 
-		metricsQuery := fmt.Sprintf("SELECT toStartOfInterval(fromUnixTimestamp64Nano(startTime), INTERVAL %d SECOND) AS ts_bucket, %s %s from %s.%s where (startTime >= %d AND startTime <= %d AND %s) group by %s order by ts_bucket", step, groupby, aggregateQuery, config.Data.Observability.DefaultTraceDB, xobservemodels.DefaultTraceIndexTable, start*1e9, end*1e9, domainQuery, groupBy)
+		metricsQuery := fmt.Sprintf("SELECT toStartOfInterval(fromUnixTimestamp64Nano(startTime), INTERVAL %d SECOND) AS ts_bucket, %s %s from %s.%s where (startTime >= %d AND startTime <= %d AND %s) group by %s order by ts_bucket", step, groupby, aggregateQuery, xobservemodels.DefaultTraceDB, xobservemodels.DefaultTraceIndexTable, start*1e9, end*1e9, domainQuery, groupBy)
 
 		rows, err := conn.Query(c.Request.Context(), metricsQuery)
 		if err != nil {
@@ -327,7 +326,7 @@ func GetTraces(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[s
 func GetTrace(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[string]interface{}) models.PluginResult {
 	traceID := strings.TrimSpace(c.Query("traceId"))
 
-	query := fmt.Sprintf("SELECT startTime, traceId, model FROM %s.%s WHERE traceId='%s'", config.Data.Observability.DefaultTraceDB, xobservemodels.DefaultTraceSpansTable, traceID)
+	query := fmt.Sprintf("SELECT startTime, traceId, model FROM %s.%s WHERE traceId='%s'", xobservemodels.DefaultTraceDB, xobservemodels.DefaultTraceSpansTable, traceID)
 	// query traceIDs
 	rows, err := conn.Query(c.Request.Context(), query)
 	if err != nil {
@@ -370,7 +369,7 @@ func GetTraceTagKeys(c *gin.Context, ds *models.Datasource, conn ch.Conn, params
 
 	tags := make([]*TagKey, 0)
 
-	query := fmt.Sprintf("SELECT DISTINCT tagKey,tagType,dataType,isColumn FROM %s.%s WHERE (%s) OR isColumn=true", config.Data.Observability.DefaultTraceDB, xobservemodels.DefaultSpanAttributeKeysTable, domainQuery)
+	query := fmt.Sprintf("SELECT DISTINCT tagKey,tagType,dataType,isColumn FROM %s.%s WHERE (%s) OR isColumn=true", xobservemodels.DefaultTraceDB, xobservemodels.DefaultSpanAttributeKeysTable, domainQuery)
 	// query traceIDs
 	rows, err := conn.Query(c.Request.Context(), query)
 	if err != nil {

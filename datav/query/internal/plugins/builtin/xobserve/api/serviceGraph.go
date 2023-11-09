@@ -10,7 +10,6 @@ import (
 	xobservemodels "github.com/xObserve/xObserve/query/internal/plugins/builtin/xobserve/models"
 	xobserveutils "github.com/xObserve/xObserve/query/internal/plugins/builtin/xobserve/utils"
 	pluginUtils "github.com/xObserve/xObserve/query/internal/plugins/utils"
-	"github.com/xObserve/xObserve/query/pkg/config"
 	"github.com/xObserve/xObserve/query/pkg/models"
 )
 
@@ -46,7 +45,7 @@ SELECT
 	sum(error_count) as errors
 FROM %s.%s	
 WHERE toUInt64(toDateTime(timestamp)) >= ? AND toUInt64(toDateTime(timestamp)) <= ? AND %s GROUP BY src, dest`,
-		config.Data.Observability.DefaultTraceDB, xobservemodels.DefaultDependencyGraphTable, domainQuery)
+		xobservemodels.DefaultTraceDB, xobservemodels.DefaultDependencyGraphTable, domainQuery)
 
 	rows, err := conn.Query(c.Request.Context(), query, start, end)
 	if err != nil {

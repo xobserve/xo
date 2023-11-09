@@ -11,7 +11,6 @@ import (
 	xobserveutils "github.com/xObserve/xObserve/query/internal/plugins/builtin/xobserve/utils"
 	pluginUtils "github.com/xObserve/xObserve/query/internal/plugins/utils"
 	"github.com/xObserve/xObserve/query/pkg/colorlog"
-	"github.com/xObserve/xObserve/query/pkg/config"
 	"github.com/xObserve/xObserve/query/pkg/models"
 )
 
@@ -25,7 +24,7 @@ func GetServiceNames(c *gin.Context, ds *models.Datasource, conn ch.Conn, params
 	tenant := models.DefaultTenant
 	domainQuery := xobserveutils.BuildBasicDomainQuery(tenant, params)
 
-	query := fmt.Sprintf("SELECT DISTINCT serviceName FROM %s.%s WHERE %s", config.Data.Observability.DefaultTraceDB, xobservemodels.DefaultServiceOperationsTable, domainQuery)
+	query := fmt.Sprintf("SELECT DISTINCT serviceName FROM %s.%s WHERE %s", xobservemodels.DefaultTraceDB, xobservemodels.DefaultServiceOperationsTable, domainQuery)
 
 	rows, err := conn.Query(c.Request.Context(), query)
 	if err != nil {
@@ -52,7 +51,7 @@ func GetServiceOperations(c *gin.Context, ds *models.Datasource, conn ch.Conn, p
 		domainQuery += fmt.Sprintf(" AND serviceName in ('%s')", strings.Join(service, "','"))
 	}
 
-	query := fmt.Sprintf("SELECT DISTINCT name FROM %s.%s WHERE %s", config.Data.Observability.DefaultTraceDB, xobservemodels.DefaultServiceOperationsTable, domainQuery)
+	query := fmt.Sprintf("SELECT DISTINCT name FROM %s.%s WHERE %s", xobservemodels.DefaultTraceDB, xobservemodels.DefaultServiceOperationsTable, domainQuery)
 	rows, err := conn.Query(c.Request.Context(), query)
 	if err != nil {
 		logger.Warn("Error Query service operations", "query", query, "error", err)
@@ -79,7 +78,7 @@ func GetServiceRootOperations(c *gin.Context, ds *models.Datasource, conn ch.Con
 		domainQuery += fmt.Sprintf(" AND serviceName in ('%s')", strings.Join(service, "','"))
 	}
 
-	query := fmt.Sprintf("SELECT DISTINCT name FROM %s.%s WHERE %s", config.Data.Observability.DefaultTraceDB, xobservemodels.DefaultTopLevelOperationsTable, domainQuery)
+	query := fmt.Sprintf("SELECT DISTINCT name FROM %s.%s WHERE %s", xobservemodels.DefaultTraceDB, xobservemodels.DefaultTopLevelOperationsTable, domainQuery)
 	rows, err := conn.Query(c.Request.Context(), query)
 	if err != nil {
 		logger.Warn("Error Query service operations", "query", query, "error", err)
@@ -124,7 +123,7 @@ func GetServiceInfoList(c *gin.Context, ds *models.Datasource, conn ch.Conn, par
 	serviceMap := make(map[string]*ServiceInfo)
 	query := fmt.Sprintf(
 		`SELECT serviceName, quantile(0.99)(duration) / 1e6 as p99, avg(duration) / 1e6  as avgDuration, count(DISTINCT traceId) as numCalls, count(*) as numOperations FROM %s.%s WHERE startTime>= %d AND startTime<= %d AND %s GROUP BY serviceName`,
-		config.Data.Observability.DefaultTraceDB, xobservemodels.DefaultTraceIndexTable, start*1e9, end*1e9, domainQuery)
+		xobservemodels.DefaultTraceDB, xobservemodels.DefaultTraceIndexTable, start*1e9, end*1e9, domainQuery)
 
 	rows, err := conn.Query(c.Request.Context(), query)
 	if err != nil {
@@ -149,7 +148,7 @@ func GetServiceInfoList(c *gin.Context, ds *models.Datasource, conn ch.Conn, par
 
 	query = fmt.Sprintf(
 		`SELECT serviceName, count(DISTINCT traceId)  as numErrors FROM %s.%s WHERE startTime>= %d AND startTime<= %d AND %s AND statusCode=2  GROUP BY serviceName`,
-		config.Data.Observability.DefaultTraceDB, xobservemodels.DefaultTraceIndexTable, start*1e9, end*1e9, domainQuery)
+		xobservemodels.DefaultTraceDB, xobservemodels.DefaultTraceIndexTable, start*1e9, end*1e9, domainQuery)
 
 	rows, err = conn.Query(c.Request.Context(), query)
 	if err != nil {

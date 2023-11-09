@@ -13,7 +13,6 @@ import (
 	xobservemodels "github.com/xObserve/xObserve/query/internal/plugins/builtin/xobserve/models"
 	xobserveutils "github.com/xObserve/xObserve/query/internal/plugins/builtin/xobserve/utils"
 	pluginUtils "github.com/xObserve/xObserve/query/internal/plugins/utils"
-	"github.com/xObserve/xObserve/query/pkg/config"
 	"github.com/xObserve/xObserve/query/pkg/models"
 )
 
@@ -37,7 +36,7 @@ func GetLogs(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[str
 
 	if logId != "" {
 		// query logs
-		logsQuery := fmt.Sprintf(xobservemodels.LogSelectSQL+" FROM %s.%s  where timestamp = ? AND id = ?", config.Data.Observability.DefaultLogDB, xobservemodels.DefaultLogsTable)
+		logsQuery := fmt.Sprintf(xobservemodels.LogSelectSQL+" FROM %s.%s  where timestamp = ? AND id = ?", xobservemodels.DefaultLogDB, xobservemodels.DefaultLogsTable)
 
 		rows, err := conn.Query(c.Request.Context(), logsQuery, logTs, logId)
 		if err != nil {
@@ -92,7 +91,7 @@ func GetLogs(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[str
 	}
 
 	// query logs
-	logsQuery := fmt.Sprintf(xobservemodels.LogsSelectSQL+" FROM %s.%s  where (timestamp >= ? AND timestamp <= ? %s %s) order by timestamp %s LIMIT %d OFFSET %d", config.Data.Observability.DefaultLogDB, xobservemodels.DefaultLogsTable, domainQuery, searchQuery, order, perPageLogs, page*int64(perPageLogs))
+	logsQuery := fmt.Sprintf(xobservemodels.LogsSelectSQL+" FROM %s.%s  where (timestamp >= ? AND timestamp <= ? %s %s) order by timestamp %s LIMIT %d OFFSET %d", xobservemodels.DefaultLogDB, xobservemodels.DefaultLogsTable, domainQuery, searchQuery, order, perPageLogs, page*int64(perPageLogs))
 
 	args := append([]interface{}{start * 1e9, (end) * 1e9}, searchArgs...)
 	rows, err := conn.Query(c.Request.Context(), logsQuery, args...)
@@ -113,7 +112,7 @@ func GetLogs(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[str
 	var res1 *models.PluginResultData
 	if page == 0 {
 		// query metrics
-		metricsQuery := fmt.Sprintf("SELECT toStartOfInterval(fromUnixTimestamp64Nano(timestamp), INTERVAL %d SECOND) AS ts_bucket, if(multiSearchAny(severity, ['error', 'err', 'emerg', 'alert', 'crit', 'fatal']), 'errors', 'others') as severity_group, count(*) as count from %s.%s where (timestamp >= ? AND timestamp <= ? %s %s) group by ts_bucket,severity_group order by ts_bucket", step, config.Data.Observability.DefaultLogDB, xobservemodels.DefaultLogsTable, domainQuery, searchQuery)
+		metricsQuery := fmt.Sprintf("SELECT toStartOfInterval(fromUnixTimestamp64Nano(timestamp), INTERVAL %d SECOND) AS ts_bucket, if(multiSearchAny(severity, ['error', 'err', 'emerg', 'alert', 'crit', 'fatal']), 'errors', 'others') as severity_group, count(*) as count from %s.%s where (timestamp >= ? AND timestamp <= ? %s %s) group by ts_bucket,severity_group order by ts_bucket", step, xobservemodels.DefaultLogDB, xobservemodels.DefaultLogsTable, domainQuery, searchQuery)
 
 		rows, err = conn.Query(c.Request.Context(), metricsQuery, args...)
 		if err != nil {

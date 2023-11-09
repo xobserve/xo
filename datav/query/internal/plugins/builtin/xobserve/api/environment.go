@@ -7,7 +7,6 @@ import (
 	"github.com/gin-gonic/gin"
 	xobservemodels "github.com/xObserve/xObserve/query/internal/plugins/builtin/xobserve/models"
 	pluginUtils "github.com/xObserve/xObserve/query/internal/plugins/utils"
-	"github.com/xObserve/xObserve/query/pkg/config"
 	"github.com/xObserve/xObserve/query/pkg/models"
 )
 
@@ -16,7 +15,7 @@ func GetNamespaces(c *gin.Context, ds *models.Datasource, conn ch.Conn, params m
 	tenant := models.DefaultTenant
 	domainQuery := fmt.Sprintf(" tenant='%s'", tenant)
 
-	query := fmt.Sprintf("SELECT DISTINCT namespace FROM %s.%s WHERE %s", config.Data.Observability.DefaultTraceDB, xobservemodels.DefaultServiceOperationsTable, domainQuery)
+	query := fmt.Sprintf("SELECT DISTINCT namespace FROM %s.%s WHERE %s", xobservemodels.DefaultTraceDB, xobservemodels.DefaultServiceOperationsTable, domainQuery)
 
 	rows, err := conn.Query(c.Request.Context(), query)
 	if err != nil {
