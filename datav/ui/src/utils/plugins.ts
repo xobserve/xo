@@ -204,7 +204,10 @@ export const queryPluginDataToLogs = (data: {
     }]
 }
 
-export const queryPluginDataToNodeGraph = (data: QueryPluginData, query: PanelQuery): NodeGraphData => {
+export const queryPluginDataToNodeGraph = (data: QueryPluginData, query: PanelQuery) => {
+    if (!data.columns) {
+        return 
+    }
     const sourceIndex = data.columns.indexOf("src")
     const targetIndex = data.columns.indexOf("dest")
     const callsIndex = data.columns.indexOf("calls")

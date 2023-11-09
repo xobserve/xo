@@ -217,6 +217,6 @@ export const apiList = [{
     paramsDesc: [
         ...domainParams,
     ],
-    format: DataFormat.NodeGraph
+    format: DataFormat.Traces
 }
 ]

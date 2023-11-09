@@ -89,7 +89,7 @@ const TraceSearchPanel = ({ timeRange, dashboardId, panel, onSearch, onSearchIds
             })
         }, 500)
 
-    }, [queryCounter, service, operation, tags, min, max, limit, traceIds, timeRange, aggregate, groupby])
+    }, [queryCounter, service, operation, tags, min, max, limit, traceIds, timeRange, aggregate, groupby, panel.datasource])
 
     useEffect(() => {
         const query = dsPlugin.replaceQueryWithVariables(service + operation + tags + min + max + limit)

@@ -54,7 +54,6 @@ const AccountSetting = () => {
             setEmail(session.user.email)
             setName(session.user.name)
             setThemeColor(session.user.data?.themeColor ?? customColors.defaultTheme)
-            console.log("here33333:", session.user.data?.themeFontsize ?? customColors.baseFontSize)
             setThemeFontsize(session.user.data?.themeFontsize ?? customColors.baseFontSize)
         }
     }, [session])

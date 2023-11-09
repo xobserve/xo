@@ -126,8 +126,10 @@ const TracePanel = (props: PanelProps) => {
                 } else {
                     setError(null)
                 }
-                if (!onlyChart) {
+                if (!onlyChart && res.data.traces) {
                     setTraces(transformTraces(res.data.traces))
+                } else {
+                    setTraces([])
                 }
 
                 setTraceChart(res.data.chart)
