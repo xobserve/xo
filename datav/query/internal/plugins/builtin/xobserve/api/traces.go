@@ -21,7 +21,6 @@ func GetTraces(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[s
 	onlyChart := c.Query("onlyChart")
 	aggregate := c.Query("aggregate")
 	groupby := c.Query("groupby")
-	operation := c.Query("operation")
 	limit, _ := strconv.ParseInt(c.Query("limit"), 10, 64)
 	min, _ := strconv.ParseInt(c.Query("min"), 10, 64)
 	max, _ := strconv.ParseInt(c.Query("max"), 10, 64)
@@ -43,6 +42,7 @@ func GetTraces(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[s
 
 	domainQuery += fmt.Sprintf(" AND serviceName='%s'", service)
 
+	operation := c.Query("operation")
 	var operationNameQuery string
 	if operation == "" || operation == models.VarialbeAllOption {
 		// if min > 0 || max > 0 || rawTags != "" {

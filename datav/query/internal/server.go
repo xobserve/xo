@@ -35,6 +35,7 @@ import (
 	"github.com/xObserve/xObserve/query/internal/storage"
 	"github.com/xObserve/xObserve/query/internal/task"
 	"github.com/xObserve/xObserve/query/internal/teams"
+	"github.com/xObserve/xObserve/query/internal/tenant"
 	"github.com/xObserve/xObserve/query/internal/user"
 	"github.com/xObserve/xObserve/query/internal/variables"
 	"github.com/xObserve/xObserve/query/pkg/colorlog"
@@ -161,6 +162,9 @@ func (s *Server) Start() error {
 		r.POST("/datasource/save", MustLogin(), datasource.SaveDatasource)
 		r.GET("/datasource/all", otelPlugin, datasource.GetDatasources)
 		r.DELETE("/datasource/:id", MustLogin(), datasource.DeleteDatasource)
+
+		// tenant apis
+		r.GET("/tenant/list/all", MustLogin(), tenant.QueryTenants)
 
 		r.GET("/datasource/test", proxy.TestDatasource)
 		// proxy apis

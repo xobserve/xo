@@ -25,7 +25,7 @@ func (r RoleType) IsValid() bool {
 }
 
 func (r RoleType) IsAdmin() bool {
-	return r == ROLE_ADMIN
+	return r == ROLE_ADMIN || r == ROLE_SUPER_ADMIN
 }
 
 func (r RoleType) IsEditor() bool {

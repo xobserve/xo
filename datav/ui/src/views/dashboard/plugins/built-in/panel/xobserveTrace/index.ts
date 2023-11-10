@@ -8,10 +8,10 @@ import { PanelType, TraceSettings } from "./types";
 
 
 const initSettings =  ():TraceSettings => ({
-    defaultService: "",
-    enableEditService: true,
-    defaultOperation: "",
-    enableEditOperation: true,
+    defaultService: "${service}",
+    enableEditService: false,
+    defaultOperation: "${operation}",
+    enableEditOperation: false,
     interaction: {
         enable: false,
         actions: []

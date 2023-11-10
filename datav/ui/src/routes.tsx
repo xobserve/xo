@@ -28,7 +28,7 @@ import loadable from '@loadable/component';
 import PageContainer from "layouts/PageContainer";
 import AdminPage from "src/pages/admin/AuditLogs";
 import GithubLogin from "src/pages/GithubLogin";
-import  AdminUserStats  from "src/pages/admin/UserStats";
+import  AdminTenants  from "pages/admin/Tenants";
 import TeamLayout from "src/pages/cfg/team/[id]/components/Layout";
 import AdminUsers from "pages/admin/Users";
 import TeamDatasources from "pages/cfg/team/[id]/Datasources";
@@ -105,8 +105,8 @@ const adminRoutes = [
     element: pageContainer(<AdminPage />),
   },
   {
-    path: "/admin/userStats",
-    element: pageContainer(<AdminUserStats />),
+    path: "/admin/tenants",
+    element: pageContainer(<AdminTenants />),
   },
   {
     path: "/admin/users",

@@ -10,6 +10,7 @@ export const notFoundMsg = i18n("notfound", {
 })
 
 export const commonMsg = i18n("common", {
+  "tenant": "Tenant",
   "title": "Title",
   "name": "Name",
   "description": "Description",
@@ -225,7 +226,8 @@ export const cfgVariablemsg = i18n("cfgVariable", {
   "globalVariableTips2": "This is really userful in APM scenarios, you can set application list, environments, host namses as global variable。 e.g:  If you set 'application' variable to 'A' in one page, then when you entering a new page, 'application' variable is aslo set to 'A' automaticly"
 })
 
-export const cfgUsers = i18n("cfgUsers", {
+export const websiteAdmin = i18n("websiteAdmin", {
+  "websiteAdmin": "Website Admin",
   "pwAlert": "new password must be at least 6 characters long",
   "userRole": "User Role",
   "globalRole": "Global Role",

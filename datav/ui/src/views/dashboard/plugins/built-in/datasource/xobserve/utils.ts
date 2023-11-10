@@ -267,9 +267,6 @@ export const queryPluginDataToTraceChart = (chart: QueryPluginData) => {
         }   
     }
 
-    console.log("here333333:",chartData)
-
-
     return {
         columns: chartColumns,
         data: chartData

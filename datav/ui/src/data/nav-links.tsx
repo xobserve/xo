@@ -50,9 +50,9 @@ export const adminLinks = [
         icon: <MdOutlineAdminPanelSettings />
     },
     {
-        title: 'userStats',
-        url: '/admin/userStats',
-        baseUrl: '/admin/userStats',
+        title: 'tenant',
+        url: '/admin/tenants',
+        baseUrl: '/admin/tenants',
         icon: <FaUser />
     },
     {

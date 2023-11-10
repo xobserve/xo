@@ -26,7 +26,6 @@ CREATE INDEX user_username ON user (username);
 CREATE TABLE IF NOT EXISTS tenant (
     id INTEGER PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL UNIQUE,
-    nickname VARCHAR(255) DEFAULT '',
     owner_id INTEGER NOT NULL,
     data MEDIUMTEXT,
     created DATETIME NOT NULL,

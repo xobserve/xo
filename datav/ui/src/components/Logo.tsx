@@ -13,10 +13,10 @@
 import { Box, HStack, HTMLChakraProps, Image, Text, useColorModeValue } from "@chakra-ui/react"
 import React from "react"
 
-const Logo = ({showText = false, width = 10}) => {
+const Logo = ({showText = false, width = 8}) => {
     return (
             <HStack cursor="pointer" spacing="1">
-                <Image width={width} src="/logo.png" animation="spin 20s linear infinite"/>
+                <Image width={width} src="/logo.png" animation="spin 30s linear infinite"/>
                 {showText && <Text fontWeight="600" fontSize="xl">xobserve</Text>}
             </HStack>
     )

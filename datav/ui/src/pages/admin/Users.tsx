@@ -27,12 +27,12 @@ import { User } from "types/user"
 import { requestApi } from "utils/axios/request"
 import isEmail from "validator/lib/isEmail"
 import { useStore } from "@nanostores/react"
-import { cfgUsers, commonMsg } from "src/i18n/locales/en"
+import { websiteAdmin, commonMsg } from "src/i18n/locales/en"
 import { isEmpty } from "utils/validate"
 
 const AdminUsers = () => {
     const t = useStore(commonMsg)
-    const t1 = useStore(cfgUsers)
+    const t1 = useStore(websiteAdmin)
     const { session } = useSession()
     const toast = useToast()
     const [users, setUsers] = useState<User[]>(null)
@@ -173,7 +173,7 @@ const AdminUsers = () => {
     }
 
     return <>
-        <Page title={t.configuration} subTitle={t.manageItem({ name: t.user })} icon={<FaCog />} tabs={adminLinks} isLoading={users === null}>
+        <Page title={t1.websiteAdmin} subTitle={t.manageItem({ name: t.user })} icon={<FaCog />} tabs={adminLinks} isLoading={users === null}>
             <Flex justifyContent="space-between">
                 <Box></Box>
                 <Button size="sm" onClick={onAddUser}>{t.newItem({ name: t.user })}</Button>
@@ -186,8 +186,10 @@ const AdminUsers = () => {
                             <Th>{t.userName}</Th>
                             <Th>{t.nickname}</Th>
                             <Th>{t.email}</Th>
-                            <Th>{t.joined}</Th>
                             <Th>{t1.globalRole}</Th>
+                            <Th>{t.joined}</Th>
+                            <Th>Last seen at</Th>
+                            <Th>Visit count</Th>
                             <Th>{t.action}</Th>
                         </Tr>
                     </Thead>
@@ -203,8 +205,10 @@ const AdminUsers = () => {
                                 </Td>
                                 <Td>{user.name}</Td>
                                 <Td>{user.email}</Td>
-                                <Td>{moment(user.created).fromNow()}</Td>
                                 <Td>{t[user.role]}</Td>
+                                <Td>{moment(user.created).fromNow()}</Td>
+                                <Td>{user.lastSeenAt && moment(user.lastSeenAt).fromNow()}</Td>
+                                <Th>{user.visits ?? 0}</Th>
                                 <Td>
                                     <Button variant="ghost" size="sm" px="0" onClick={() => editUser(user)}>{t.edit}</Button>
                                 </Td>

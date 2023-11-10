@@ -15,7 +15,7 @@ import { useStore } from "@nanostores/react"
 import Page from "layouts/page/Page"
 import React, { memo, useEffect, useState } from "react"
 import { adminLinks } from "src/data/nav-links"
-import { commonMsg } from "src/i18n/locales/en"
+import { commonMsg, websiteAdmin } from "src/i18n/locales/en"
 import { HStack, Table, TableContainer, Tag, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react"
 
 import { requestApi } from "utils/axios/request"
@@ -23,47 +23,45 @@ import { FaEye, FaUser } from "react-icons/fa"
 import { User } from "types/user"
 import moment from "moment"
 import useSession from "hooks/use-session"
+import { Tenant } from "types/tenant"
 
-export const AdminUserStats = memo(() => {
+export const AdminTenants = memo(() => {
     const { session } = useSession()
     const t = useStore(commonMsg)
-    const [users, setUsers] = useState<User[]>([])
+    const t1 = useStore(websiteAdmin)
+    const [tenants, setTenants] = useState<Tenant[]>([])
     useEffect(() => {
         load()
     }, [])
 
     const load = async () => {
-        const res = await requestApi.get("/admin/users")
-        setUsers(res.data)
+        const res = await requestApi.get("/tenant/list/all")
+        setTenants(res.data)
     }
 
 
-    return <Page title={t.Admin} subTitle={t.manageItem({ name: t.userStats })} icon={<FaUser />} tabs={adminLinks}>
+    return <Page title={t1.websiteAdmin} subTitle={t.manageItem({ name: t.tenant })} icon={<FaUser />} tabs={adminLinks}>
         <TableContainer mt="2">
             <Table variant="simple" size="sm" className="color-border-table">
                 <Thead>
                     <Tr>
-                        <Th>{t.userName}</Th>
-                        <Th>{t.nickname}</Th>
-                        <Th>{t.joined}</Th>
-                        <Th>Last seen at</Th>
-                        <Th>Visit count</Th>
+                        <Th>{t.name}</Th>
+                        <Th>Owner</Th>
+                        <Th>{t.created}</Th>
                     </Tr>
                 </Thead>
                 <Tbody>
-                    {users.map(user => {
-                        return <Tr key={user.id}>
+                    {tenants.map(tenant => {
+                        return <Tr key={tenant.id}>
+                            <Td>{tenant.name}</Td>
                             <Td>
                                 <HStack>
                                     <span>
-                                        {user.username}
-                                    </span>  {session?.user?.id == user.id && <Tag size={"sm"}>You</Tag>}
+                                        {tenant.owner}
+                                    </span>  {session?.user?.id == tenant.ownerId && <Tag size={"sm"}>You</Tag>}
                                 </HStack>
                             </Td>
-                            <Td>{user.name}</Td>
-                            <Td>{moment(user.created).fromNow()}</Td>
-                            <Td>{user.lastSeenAt && moment(user.lastSeenAt).fromNow()}</Td>
-                            <Th>{user.visits ?? 0}</Th>
+                            <Td>{moment(tenant.created).fromNow()}</Td>
                         </Tr>
                     })}
                 </Tbody>
@@ -72,4 +70,4 @@ export const AdminUserStats = memo(() => {
     </Page >
 })
 
-export default AdminUserStats
+export default AdminTenants

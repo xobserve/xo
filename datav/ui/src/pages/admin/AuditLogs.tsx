@@ -15,7 +15,7 @@ import { useStore } from "@nanostores/react"
 import Page from "layouts/page/Page"
 import React, { memo, useEffect, useState } from "react"
 import { adminLinks } from "src/data/nav-links"
-import { commonMsg } from "src/i18n/locales/en"
+import { commonMsg, websiteAdmin } from "src/i18n/locales/en"
 import { MdOutlineAdminPanelSettings } from "react-icons/md"
 import { Box, Popover, PopoverArrow, PopoverBody, PopoverContent, PopoverTrigger, Table, TableContainer, Tbody, Td, Th, Thead, Tooltip, Tr, VStack } from "@chakra-ui/react"
 
@@ -28,6 +28,8 @@ import { prettyJson } from "utils/string"
 import CodeEditor from "src/components/CodeEditor/CodeEditor"
 export const AdminAuditLogs = memo(() => {
     const t = useStore(commonMsg)
+    const t1 = useStore(websiteAdmin)
+
     const [logs, setLogs] = useState<AuditLog[]>(null)
 
     useEffect(() => {
@@ -43,7 +45,7 @@ export const AdminAuditLogs = memo(() => {
     }
 
 
-    return <Page title={t.Admin} subTitle={t.manageItem({ name: t.auditLog })} icon={<MdOutlineAdminPanelSettings />} tabs={adminLinks}>
+    return <Page title={t1.websiteAdmin} subTitle={t.manageItem({ name: t.auditLog })} icon={<MdOutlineAdminPanelSettings />} tabs={adminLinks}>
         <TableContainer>
             <Table variant='simple' size={"sm"} className="color-border-table">
                 <Thead>
