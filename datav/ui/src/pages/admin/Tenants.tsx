@@ -16,20 +16,27 @@ import Page from "layouts/page/Page"
 import React, { memo, useEffect, useState } from "react"
 import { adminLinks } from "src/data/nav-links"
 import { commonMsg, websiteAdmin } from "src/i18n/locales/en"
-import { HStack, Table, TableContainer, Tag, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react"
+import { Box, Button, Flex, HStack, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Table, TableContainer, Tag, Tbody, Td, Th, Thead, Tr, useDisclosure, useToast } from "@chakra-ui/react"
 
 import { requestApi } from "utils/axios/request"
 import { FaEye, FaUser } from "react-icons/fa"
-import { User } from "types/user"
 import moment from "moment"
 import useSession from "hooks/use-session"
 import { Tenant } from "types/tenant"
+import { Form, FormSection } from "components/form/Form"
+import FormItem from "components/form/Item"
+import { cloneDeep } from "lodash"
+import { isEmpty } from "utils/validate"
 
 export const AdminTenants = memo(() => {
     const { session } = useSession()
+    const toast = useToast()
     const t = useStore(commonMsg)
     const t1 = useStore(websiteAdmin)
     const [tenants, setTenants] = useState<Tenant[]>([])
+    const { isOpen, onOpen, onClose } = useDisclosure()
+    const [tempTenant, setTempTenant] = useState<Partial<Tenant>>(null)
+
     useEffect(() => {
         load()
     }, [])
@@ -39,8 +46,37 @@ export const AdminTenants = memo(() => {
         setTenants(res.data)
     }
 
+    const onAddTenant = () => {
+        setTempTenant({ name: '' })
+        onOpen()
+    }
 
+    const onCreateTenant = async () => {
+        if (isEmpty(tempTenant.name)) {
+            toast({
+                title: t.isInvalid({ name: t.name }),
+                status: "error",
+                duration: 3000,
+                isClosable: true,
+            })
+            return
+        }
+
+        await requestApi.post("/tenant/create", tempTenant)
+        toast({
+            title: t.success,
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+        })
+        load()
+        onClose()
+    }
     return <Page title={t1.websiteAdmin} subTitle={t.manageItem({ name: t.tenant })} icon={<FaUser />} tabs={adminLinks}>
+        <Flex justifyContent="space-between">
+            <Box></Box>
+            <Button size="sm" onClick={onAddTenant}>{t.newItem({ name: t.tenant })}</Button>
+        </Flex>
         <TableContainer mt="2">
             <Table variant="simple" size="sm" className="color-border-table">
                 <Thead>
@@ -67,6 +103,25 @@ export const AdminTenants = memo(() => {
                 </Tbody>
             </Table>
         </TableContainer>
+        <Modal isOpen={isOpen} onClose={onClose}>
+            <ModalOverlay />
+            <ModalContent>
+                <ModalHeader>{t.addItem({ name: t.tenant })}</ModalHeader>
+                <ModalCloseButton />
+                <ModalBody>
+                    <Form pb="5">
+                        <FormSection title={t.basicSetting}>
+                            <FormItem title={t.name}>
+                                <Input placeholder={t.inputTips({ name: t.name })} value={tempTenant?.name} onChange={e => { tempTenant.name = e.currentTarget.value.trim(); setTempTenant(cloneDeep(tempTenant)) }} />
+                            </FormItem>
+
+                            <Button width="fit-content" onClick={onCreateTenant}>{t.submit}</Button>
+                        </FormSection>
+                    </Form>
+
+                </ModalBody>
+            </ModalContent>
+        </Modal>
     </Page >
 })
 

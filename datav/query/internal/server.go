@@ -165,6 +165,7 @@ func (s *Server) Start() error {
 
 		// tenant apis
 		r.GET("/tenant/list/all", MustLogin(), tenant.QueryTenants)
+		r.POST("/tenant/create", MustLogin(), tenant.CreateTenant)
 
 		r.GET("/datasource/test", proxy.TestDatasource)
 		// proxy apis

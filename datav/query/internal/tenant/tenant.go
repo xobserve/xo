@@ -2,6 +2,7 @@ package tenant
 
 import (
 	"sort"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/xObserve/xObserve/query/internal/user"
@@ -48,4 +49,30 @@ func QueryTenants(c *gin.Context) {
 
 	sort.Sort(tenants)
 	c.JSON(200, common.RespSuccess(tenants))
+}
+
+func CreateTenant(c *gin.Context) {
+	u := user.CurrentUser(c)
+
+	if !u.Role.IsAdmin() {
+		c.JSON(403, common.RespError(e.NoPermission))
+		return
+	}
+
+	req := &models.Tenant{}
+	c.Bind(&req)
+
+	if req.Name == "" {
+		c.JSON(400, common.RespError(e.ParamInvalid))
+		return
+	}
+
+	now := time.Now()
+	_, err := db.Conn.ExecContext(c.Request.Context(), `INSERT INTO tenant (name,owner_id,created,updated) VALUES (?,?,?,?)`, req.Name, u.Id, now, now)
+	if err != nil {
+		logger.Warn("Error create tenant", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+
 }

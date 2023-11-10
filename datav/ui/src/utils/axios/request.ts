@@ -82,7 +82,7 @@ requestApi.interceptors.response.use(
     if (!isSystemError) {
       const message = JSON.stringify(error.response.data)
       const status = error.response.status
-
+      
       // check if it's proxy request error
       if (error.response.data.version != 'xobserve') {
         // request route to other servers, not our xobserve api-server
