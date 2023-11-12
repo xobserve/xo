@@ -158,23 +158,6 @@ func AddNewUser(c *gin.Context) {
 
 	id, _ := res.LastInsertId()
 
-	_, err = tx.ExecContext(c.Request.Context(), ("INSERT INTO tenant_user (tenant_id,user_id,role,created,updated) VALUES (?,?,?,?,?)"),
-		models.DefaultTenantId, id, req.Role, now, now)
-	if err != nil {
-		logger.Warn("new user error", "error", err)
-		c.JSON(500, common.RespInternalError())
-		return
-	}
-
-	// add user to global team
-	_, err = tx.ExecContext(c.Request.Context(), ("INSERT INTO team_member (team_id,user_id,role,created,updated) VALUES (?,?,?,?,?)"),
-		models.GlobalTeamId, id, req.Role, now, now)
-	if err != nil {
-		logger.Warn("new user error", "error", err)
-		c.JSON(500, common.RespInternalError())
-		return
-	}
-
 	err = tx.Commit()
 	if err != nil {
 		logger.Warn("commit sql transaction error", "error", err)

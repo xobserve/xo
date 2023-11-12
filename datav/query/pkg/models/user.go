@@ -50,6 +50,7 @@ type User struct {
 	SideMenu      int64      `json:"sidemenu,omitempty"`
 	Visits        int        `json:"visits,omitempty"`
 	CurrentTenant int64      `json:"currentTenant,omitempty"`
+	TenantRole    RoleType   `json:"tenantRole"`
 	Data          *UserData  `json:"data,omitempty"`
 	Salt          string     `json:"-"`
 	Password      string     `json:"-"`
@@ -116,6 +117,13 @@ func QueryUserById(ctx context.Context, id int64) (*User, error) {
 	}
 
 	user.Role = globalMember.Role
+
+	tenantUser, err := QueryTenantUser(ctx, user.CurrentTenant, user.Id)
+	if err != nil {
+		return user, err
+	}
+
+	user.TenantRole = tenantUser.Role
 
 	return user, nil
 }

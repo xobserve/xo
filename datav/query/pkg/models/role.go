@@ -24,6 +24,10 @@ func (r RoleType) IsValid() bool {
 	return r == ROLE_VIEWER || r == ROLE_ADMIN
 }
 
+func (r RoleType) IsSuperAdmin() bool {
+	return r == ROLE_SUPER_ADMIN
+}
+
 func (r RoleType) IsAdmin() bool {
 	return r == ROLE_ADMIN || r == ROLE_SUPER_ADMIN
 }
@@ -42,6 +46,8 @@ func RoleSortWeight(role RoleType) int {
 		return 0
 	case ROLE_ADMIN:
 		return 2
+	case ROLE_SUPER_ADMIN:
+		return 3
 	default:
 		return 0
 	}

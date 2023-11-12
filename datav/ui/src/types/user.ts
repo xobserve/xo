@@ -25,6 +25,7 @@ export interface User {
     avatar: string
     name: string
     role: Role
+    tenantRole: Role
     email: string
     created: string
     password?: string

@@ -162,12 +162,14 @@ func (s *Server) Start() error {
 		r.POST("/datasource/save", MustLogin(), datasource.SaveDatasource)
 		r.GET("/datasource/all", otelPlugin, datasource.GetDatasources)
 		r.DELETE("/datasource/:id", MustLogin(), datasource.DeleteDatasource)
+		r.GET("/datasource/test", proxy.TestDatasource)
 
 		// tenant apis
 		r.GET("/tenant/list/all", MustLogin(), tenant.QueryTenants)
 		r.POST("/tenant/create", MustLogin(), tenant.CreateTenant)
-
-		r.GET("/datasource/test", proxy.TestDatasource)
+		r.GET(("/tenant/users"), MustLogin(), tenant.QueryTenantUsers)
+		r.POST("/tenant/user", MustLogin(), tenant.SubmitTenantUser)
+		r.DELETE("/tenant/user/:id", MustLogin(), tenant.DeleteTenantUser)
 		// proxy apis
 		r.Any("/proxy/:id/*path", proxy.ProxyDatasource)
 		r.Any("/proxy/:id", proxy.ProxyDatasource)

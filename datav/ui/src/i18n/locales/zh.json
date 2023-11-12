@@ -155,7 +155,8 @@
     "selectSideMenuTips": "你想使用哪个团队的侧面菜单栏?",
     "themeChange": "当前主题 - ",
     "accountSetting": "个人设置",
-    "adminPanel": "管理员面板",
+    "adminPanel": "网站管理",
+    "tenantAdmin": "租户管理",
     "currentLang": "当前语言",
     "newItem": "新建菜单项"
   },

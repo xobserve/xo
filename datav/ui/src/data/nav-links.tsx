@@ -63,6 +63,15 @@ export const adminLinks = [
     },
 ]
 
+export const tenantLinks = [
+    {
+        title: 'members',
+        url: '/admin/tenant/users',
+        baseUrl: '/admin/tenant/users',
+        icon: <FaUserCog />
+    },
+]
+
 export const cfgLinks = [
     {
         title: 'team',

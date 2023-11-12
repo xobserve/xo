@@ -166,7 +166,8 @@ export const sidebarMsg = i18n("sidebar", {
   "selectSideMenuTips": "Select a team sidemenu",
   "themeChange": "Current theme - ",
   "accountSetting": "User",
-  "adminPanel": "Admin Panel",
+  "adminPanel": "Website admin",
+  "tenantAdmin": "Tenant admin",
   "currentLang": "Current Lang",
   "newItem": "Add new item",
 })

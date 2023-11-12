@@ -34,6 +34,7 @@ import AdminUsers from "pages/admin/Users";
 import TeamDatasources from "pages/cfg/team/[id]/Datasources";
 import TeamVariablesPage from "pages/cfg/team/[id]/Variables";
 import IframeExamplesPage from "pages/examples/Iframe";
+import AdminTenantUsers from "pages/admin/TenantUsers";
 
 
 const DashboardPage = loadable(() => import('src/pages/dashboard/index'));
@@ -111,6 +112,10 @@ const adminRoutes = [
   {
     path: "/admin/users",
     element: pageContainer(<AdminUsers />),
+  },
+  {
+    path: "/admin/tenant/users",
+    element: pageContainer(<AdminTenantUsers />),
   },
 ]
 
