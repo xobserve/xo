@@ -18,7 +18,6 @@ import (
 	"encoding/json"
 	"net/http"
 	"strconv"
-	"strings"
 	"sync"
 	"time"
 
@@ -87,7 +86,8 @@ func SaveDatasource(c *gin.Context) {
 		return
 	}
 
-	u := user.CurrentUser((c))
+	u := user.CurrentUser(c)
+	ds.TeamId = u.CurrentTeam
 	// only admin or team admin can do this
 	if !u.Role.IsAdmin() {
 		isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), ds.TeamId, u.Id)
@@ -148,17 +148,20 @@ func SaveDatasource(c *gin.Context) {
 }
 
 func GetDatasources(c *gin.Context) {
-	teamId := c.Query("teamId")
 	dss := make([]*models.Datasource, 0)
 
 	var rows *sql.Rows
 	var err error
 
-	if strings.TrimSpace(teamId) != "" {
-		rows, err = db.Conn.QueryContext(c.Request.Context(), "SELECT id,name,type,url,team_id,data, created FROM datasource WHERE team_id=?", teamId)
-	} else {
-		rows, err = db.Conn.QueryContext(c.Request.Context(), "SELECT id,name,type,url,team_id,data, created FROM datasource")
+	u := user.CurrentUser(c)
+	_, teamId, err := models.GetUserTenantAndTeamId(u)
+	if err != nil {
+		logger.Warn("get datasource error", "error", err)
+		c.JSON(http.StatusInternalServerError, common.RespInternalError())
+		return
 	}
+
+	rows, err = db.Conn.QueryContext(c.Request.Context(), "SELECT id,name,type,url,team_id,data, created FROM datasource WHERE team_id=?", teamId)
 
 	if err != nil {
 		logger.Warn("get datasource error", "error", err)

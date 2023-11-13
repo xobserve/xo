@@ -2,6 +2,7 @@ package models
 
 import (
 	"context"
+	"database/sql"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -61,4 +62,108 @@ func QueryTenantUser(ctx context.Context, tenantId int64, userId int64) (*Tenant
 	member.TenantId = tenantId
 
 	return member, nil
+}
+
+func QueryTenant(ctx context.Context, tenantId int64) (*Tenant, error) {
+	tenant := &Tenant{
+		Id: tenantId,
+	}
+	err := db.Conn.QueryRowContext(ctx, `SELECT  name,owner_id,created FROM tenant WHERE id=?`, tenantId).Scan(&tenant.Name, &tenant.OwnerId, &tenant.Created)
+	if err != nil {
+		return nil, err
+	}
+
+	return tenant, nil
+}
+
+func QueryTenantsByUserId(userId int64) ([]int64, error) {
+	tenants := make([]int64, 0)
+	rows, err := db.Conn.Query("SELECT tenant_id FROM tenant_user WHERE user_id=? ORDER BY tenant_id", userId)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return tenants, nil
+		}
+		return nil, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var tenantId int64
+		err := rows.Scan(&tenantId)
+		if err != nil {
+			return nil, err
+		}
+
+		tenants = append(tenants, tenantId)
+	}
+
+	return tenants, nil
+}
+
+func QueryPublicTenants() ([]int64, error) {
+	tenants := make([]int64, 0)
+	rows, err := db.Conn.Query("SELECT id FROM tenant WHERE is_public=? ORDER BY id", true)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return tenants, nil
+		}
+		return nil, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var tenantId int64
+		err := rows.Scan(&tenantId)
+		if err != nil {
+			return nil, err
+		}
+
+		tenants = append(tenants, tenantId)
+	}
+
+	return tenants, nil
+}
+
+func QueryTenantTeamIds(tenantId int64) ([]int64, error) {
+	teamIds := make([]int64, 0)
+	rows, err := db.Conn.Query("SELECT id FROM team WHERE tenant_id=?", tenantId)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return teamIds, nil
+		}
+		return nil, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var teamId int64
+		err := rows.Scan(&teamId)
+		if err != nil {
+			return nil, err
+		}
+
+		teamIds = append(teamIds, teamId)
+	}
+
+	return teamIds, nil
+}
+
+func QueryTenantPublicTeamIds(tenantId int64) ([]int64, error) {
+	teamIds := make([]int64, 0)
+	rows, err := db.Conn.Query("SELECT id FROM team WHERE tenant_id=? and is_public=true", tenantId)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return teamIds, nil
+		}
+		return nil, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var teamId int64
+		err := rows.Scan(&teamId)
+		if err != nil {
+			return nil, err
+		}
+
+		teamIds = append(teamIds, teamId)
+	}
+
+	return teamIds, nil
 }

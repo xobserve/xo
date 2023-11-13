@@ -15,10 +15,10 @@ CREATE TABLE IF NOT EXISTS user (
     email VARCHAR(255),
     last_seen_at DATETIME,
     is_diabled BOOL NOT NULL DEFAULT false,
-    sidemenu INTEGER DEFAULT 1,
     come_from VARCHAR(32) DEFAULT 'local',
     visit_count INTEGER DEFAULT 0,
-    current_tenant INTEGER NOT NULL,
+    current_tenant INTEGER DEFAULT 0,
+    current_team INTEGER DEFAULT 0,
     data MEDIUMTEXT,
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL
@@ -30,6 +30,7 @@ CREATE TABLE IF NOT EXISTS tenant (
     nickname VARCHAR(255) DEFAULT '',
     owner_id INTEGER NOT NULL,
     data MEDIUMTEXT,
+    is_public BOOL DEFAULT false,
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL
 );
@@ -56,27 +57,19 @@ CREATE TABLE IF NOT EXISTS team (
     allow_global BOOL DEFAULT true,
     created_by INTEGER NOT NULL,
     data MEDIUMTEXT,
-    tenant INTEGER NOT NULL,
+    tenant_id INTEGER NOT NULL,
+    sidemenu MEDIUMTEXT NOT NULL,
+    sync_users BOOL DEFAULT false,
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS team_member (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
+    tenant_id INTEGER NOT NULL,
     team_id INTEGER NOT NULL,
     user_id INTEGER NOT NULL,
     role VARCHAR(10) DEFAULT 'Viewer',
-    created DATETIME NOT NULL,
-    updated DATETIME NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS sidemenu (
-	id INTEGER PRIMARY KEY AUTOINCREMENT,
-    team_id INTEGER NOT NULL,
-    is_public BOOL NOT NULL,
-    brief VARCHAR(255) DEFAUlT '',
-    data MEDIUMTEXT NOT NULL,
-    created_by INTEGER NOT NULL,
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL
 );
@@ -175,18 +168,14 @@ CREATE INDEX IF NOT EXISTS tenant_user_user_id ON tenant_user (user_id);
 CREATE UNIQUE INDEX IF NOT EXISTS tenant_user_tenant_user_id ON tenant_user (tenant_id, user_id);
 
 CREATE INDEX IF NOT EXISTS team_name ON team (name);
-CREATE INDEX IF NOT EXISTS team_tenant ON team (tenant);
+CREATE INDEX IF NOT EXISTS team_tenant ON team (tenant_id);
 CREATE INDEX IF NOT EXISTS team_created_by ON team (created_by);
 
 
 CREATE INDEX IF NOT EXISTS team_member_team_id ON team_member (team_id);
-
+CREATE INDEX IF NOT EXISTS team_member_tenant_id ON team_member (tenant_id);
 CREATE INDEX IF NOT EXISTS team_member_user_id ON team_member (user_id);
-
 CREATE UNIQUE INDEX IF NOT EXISTS team_member_team_user_id ON team_member (team_id, user_id);
-
-
-CREATE UNIQUE INDEX IF NOT EXISTS sidemenu_team_id ON sidemenu  (team_id);
 
 
 CREATE UNIQUE INDEX IF NOT EXISTS variable_name ON variable (name);

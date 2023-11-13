@@ -21,11 +21,9 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
-	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/xObserve/xObserve/query/internal/teams"
 	"github.com/xObserve/xObserve/query/internal/user"
 	"github.com/xObserve/xObserve/query/internal/variables"
 	"github.com/xObserve/xObserve/query/pkg/common"
@@ -85,23 +83,14 @@ func getUIConfig(c *gin.Context) {
 
 	// query sidemenu
 	u := user.CurrentUser(c)
-	var sidemenuId int64 = models.GlobalTeamId
-	if u != nil {
-		isTeamVisible, err := models.IsTeamVisibleToUser(c.Request.Context(), u.SideMenu, u.Id)
-		if err != nil {
-			logger.Warn("Error query sidemenu visible ", "error", err)
-			c.JSON(http.StatusInternalServerError, common.RespError(err.Error()))
-			return
-		}
-
-		if isTeamVisible {
-			sidemenuId = u.SideMenu
-		} else {
-			teams.SetSideMenuForUser(c.Request.Context(), strconv.FormatInt(models.GlobalTeamId, 10), u.Id)
-		}
+	_, teamId, err := models.GetUserTenantAndTeamId(u)
+	if err != nil {
+		logger.Warn("get user tenant and team id error", "error", err)
+		c.JSON(500, common.RespError(err.Error()))
+		return
 	}
 
-	menu, err := models.QuerySideMenu(c.Request.Context(), int64(sidemenuId), 0)
+	menu, err := models.QuerySideMenu(c.Request.Context(), teamId)
 	if err != nil {
 		if err != sql.ErrNoRows {
 			logger.Warn("query sidemenu error", "error", err)
@@ -111,7 +100,7 @@ func getUIConfig(c *gin.Context) {
 	}
 	cfg.Sidemenu = menu
 
-	vars, err := variables.GetVariables(c.Request.Context(), 0)
+	vars, err := variables.GetVariables(c.Request.Context(), teamId)
 	if err != nil {
 		logger.Warn("query variables error", "error", err)
 		c.JSON(500, common.RespError(e.Internal))

@@ -82,6 +82,38 @@ func login(user *models.User, c *gin.Context) {
 		deleteSessionByUserId(c.Request.Context(), user.Id)
 	}
 
+	if user.CurrentTenant == 0 {
+		tenants, err := models.QueryTenantsByUserId(user.Id)
+		if err != nil {
+			logger.Warn("Error query user tenants", "error", err)
+			c.JSON(500, common.RespInternalError())
+			return
+		}
+
+		if len(tenants) == 0 {
+			c.JSON(400, common.RespError("You are not in any tenant now"))
+			return
+		}
+
+		user.CurrentTenant = tenants[0]
+	}
+
+	if user.CurrentTeam == 0 {
+		teams, err := models.QueryVisibleTeamsByUserId(c.Request.Context(), user.CurrentTenant, user.Id)
+		if err != nil {
+			logger.Warn("Error query user teams", "error", err)
+			c.JSON(500, common.RespInternalError())
+			return
+		}
+
+		if len(teams) == 0 {
+			c.JSON(400, common.RespError("You are not in any team now"))
+			return
+		}
+
+		user.CurrentTeam = teams[0]
+	}
+
 	token := strconv.FormatInt(time.Now().UnixNano(), 10)
 
 	session := &models.Session{
@@ -97,7 +129,7 @@ func login(user *models.User, c *gin.Context) {
 	}
 
 	// 更新数据库中的user表
-	_, err = db.Conn.ExecContext(c.Request.Context(), `UPDATE user SET last_seen_at=?,visit_count=visit_count+1 WHERE id=?`, time.Now(), user.Id)
+	_, err = db.Conn.ExecContext(c.Request.Context(), `UPDATE user SET last_seen_at=?,visit_count=visit_count+1,current_tenant=?,current_team=? WHERE id=?`, time.Now(), user.CurrentTenant, user.CurrentTeam, user.Id)
 	if err != nil {
 		logger.Warn("set last login date error", "error", err)
 	}

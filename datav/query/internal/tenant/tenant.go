@@ -1,6 +1,7 @@
 package tenant
 
 import (
+	"context"
 	"database/sql"
 	"sort"
 	"strconv"
@@ -108,7 +109,13 @@ func CreateTenant(c *gin.Context) {
 func QueryTenantUsers(c *gin.Context) {
 	u := user.CurrentUser(c)
 
-	rows, err := db.Conn.Query("SELECT user_id, role, created FROM tenant_user WHERE tenant_id=?", u.CurrentTenant)
+	var tenantId int64
+	if u != nil {
+		tenantId = u.CurrentTenant
+	} else {
+		tenantId = models.DefaultTenantId
+	}
+	rows, err := db.Conn.Query("SELECT user_id, role, created FROM tenant_user WHERE tenant_id=?", tenantId)
 	if err != nil {
 		logger.Warn("Error get all tenant users", "error", err)
 		c.JSON(500, common.RespInternalError())
@@ -186,14 +193,28 @@ func SubmitTenantUser(c *gin.Context) {
 	now := time.Now()
 	if req.Id == 0 {
 		// insert
-		_, err = db.Conn.ExecContext(c.Request.Context(), "INSERT INTO tenant_user (tenant_id,user_id,role,created,updated) VALUES (?,?,?,?,?)",
-			u.CurrentTenant, targetUser.Id, req.Role, now, now)
+		tx, err := db.Conn.Begin()
+		if err != nil {
+			logger.Warn("new user error", "error", err)
+			c.JSON(500, common.RespInternalError())
+			return
+		}
+		defer tx.Rollback()
+
+		err = AddUserToTenant(targetUser.Id, u.CurrentTenant, req.Role, tx, c.Request.Context())
 		if err != nil {
 			if e.IsErrUniqueConstraint(err) {
 				c.JSON(400, common.RespError("user already in tenant"))
 				return
 			}
 			logger.Warn("insert tenant user error", "error", err)
+			c.JSON(500, common.RespInternalError())
+			return
+		}
+
+		err = tx.Commit()
+		if err != nil {
+			logger.Warn("commit sql transaction error", "error", err)
 			c.JSON(500, common.RespInternalError())
 			return
 		}
@@ -253,4 +274,60 @@ func DeleteTenantUser(c *gin.Context) {
 		c.JSON(500, common.RespInternalError())
 		return
 	}
+}
+
+func AddUserToTenant(userId int64, tenantId int64, role models.RoleType, tx *sql.Tx, ctx context.Context) error {
+	now := time.Now()
+	_, err := tx.ExecContext(ctx, ("INSERT INTO tenant_user (tenant_id,user_id,role,created,updated) VALUES (?,?,?,?,?)"),
+		tenantId, userId, role, now, now)
+	if err != nil {
+		return err
+	}
+
+	// find teams in tenant that enables user sync
+	rows, err := tx.QueryContext(ctx, `SELECT id FROM team WHERE tenant_id=? AND sync_users=true`, tenantId)
+	if err != nil {
+		return err
+	}
+
+	defer rows.Close()
+	teamIds := make([]int64, 0)
+	for rows.Next() {
+		var teamId int64
+		err := rows.Scan(&teamId)
+		if err != nil {
+			return err
+		}
+		teamIds = append(teamIds, teamId)
+	}
+
+	for _, teamId := range teamIds {
+		_, err = tx.ExecContext(ctx, ("INSERT INTO team_member (tenant_id,team_id,user_id,role,created,updated) VALUES (?,?,?,?,?,?)"),
+			tenantId, teamId, userId, role, now, now)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func GetTenantsUserIn(c *gin.Context) {
+	tenants := make([]int64, 0)
+
+	username := c.Param("username")
+	u, err := models.QueryUserByName(c.Request.Context(), username)
+	if err != nil || u.Id == 0 {
+		c.JSON(200, common.RespSuccess(tenants))
+		return
+	}
+
+	tenants, err = models.QueryTenantsByUserId(u.Id)
+	if err != nil {
+		logger.Warn("query tenants by user id error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+
+	c.JSON(200, common.RespSuccess(tenants))
 }

@@ -13,6 +13,7 @@
 package teams
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"net/http"
@@ -36,15 +37,24 @@ var logger = colorlog.RootLogger.New("logger", "teams")
 func GetTeams(c *gin.Context) {
 	teams := make(models.Teams, 0)
 
-	q := `SELECT id,name,brief,allow_global,is_public,created_by FROM team`
 	u := user.CurrentUser(c)
+	var tenantId int64
+	if u != nil {
+		tenantId = u.CurrentTenant
+	} else {
+		tenantId = models.DefaultTenantId
+	}
+
+	q := fmt.Sprintf(`SELECT id,name,brief,allow_global,is_public,created_by FROM team WHERE tenant_id='%d'`, tenantId)
+
+	fmt.Println("here3333:", tenantId)
 	if u == nil {
-		q = fmt.Sprintf("%s WHERE id = '%d' or is_public=true", q, models.GlobalTeamId)
+		q = fmt.Sprintf("%s AND is_public=true", q)
 	} else {
 		// user can see the teams he is in
 		if !u.Role.IsAdmin() {
 			userId := user.CurrentUserId(c)
-			members, err := models.QueryVisibleTeamsByUserId(c.Request.Context(), userId)
+			members, err := models.QueryVisibleTeamsByUserId(c.Request.Context(), tenantId, userId)
 			if err != nil {
 				logger.Warn("get all teams error", "error", err)
 				c.JSON(500, common.RespInternalError())
@@ -57,11 +67,11 @@ func GetTeams(c *gin.Context) {
 			}
 
 			if len(members) == 1 {
-				q = fmt.Sprintf("%s WHERE id = '%d'", q, members[0])
+				q = fmt.Sprintf("%s AND id = '%d'", q, members[0])
 			} else {
 				for i, m := range members {
 					if i == 0 {
-						q = fmt.Sprintf("%s WHERE id in ('%d'", q, m)
+						q = fmt.Sprintf("%s AND id in ('%d'", q, m)
 						continue
 					}
 
@@ -259,6 +269,11 @@ func AddTeamMembers(c *gin.Context) {
 		return
 	}
 
+	if u.CurrentTenant == 0 {
+		c.JSON(400, common.RespError("You must select a tenant first"))
+		return
+	}
+
 	// only global admin and team admin can do this
 	if !u.Role.IsAdmin() && !isTeamAdmin {
 		c.JSON(403, common.RespError(e.NoPermission))
@@ -300,7 +315,7 @@ func AddTeamMembers(c *gin.Context) {
 
 	now := time.Now()
 	for _, memberId := range memberIds {
-		_, err := db.Conn.ExecContext(c.Request.Context(), "INSERT INTO team_member (team_id,user_id,role,created,updated) VALUES (?,?,?,?,?)", req.TeamId, memberId, role, now, now)
+		_, err := db.Conn.ExecContext(c.Request.Context(), "INSERT INTO team_member (tenant_id,team_id,user_id,role,created,updated) VALUES (?,?,?,?,?,?)", u.CurrentTenant, req.TeamId, memberId, role, now, now)
 		if err != nil {
 			logger.Warn("add team member error", "error", err)
 			c.JSON(500, common.RespInternalError())
@@ -591,4 +606,68 @@ func UpdateAllowGlobal(c *gin.Context) {
 	}
 
 	c.JSON(200, common.RespSuccess(nil))
+}
+
+func SelectTeamForUser(c *gin.Context) {
+	userId := user.CurrentUserId(c)
+	teamId := c.Param("teamId")
+
+	err := SetTeamForUser(c.Request.Context(), teamId, userId)
+	if err != nil {
+		logger.Warn("update side menu error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+
+	c.JSON(200, common.RespSuccess(nil))
+}
+
+func SetTeamForUser(ctx context.Context, teamId string, userId int64) error {
+	_, err := db.Conn.ExecContext(ctx, "UPDATE user SET current_team=? WHERE id=?", teamId, userId)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func GetTeamsForUser(c *gin.Context) {
+	u := user.CurrentUser(c)
+	teams := make([]*models.Team, 0)
+	if u != nil {
+		teamIds, err := models.QueryVisibleTeamsByUserId(c.Request.Context(), u.CurrentTenant, u.Id)
+		if err != nil {
+			logger.Warn("query teams for user error", "error", err)
+			c.JSON(500, common.RespInternalError())
+			return
+		}
+
+		for _, id := range teamIds {
+			team, err := models.QueryTeam(c.Request.Context(), id, "")
+			if err != nil {
+				logger.Warn("query team error", "error", err)
+				continue
+			}
+
+			teams = append(teams, team)
+		}
+	} else {
+		_, teamId, err := models.GetUserTenantAndTeamId(nil)
+		if err != nil {
+			logger.Warn("query teams for user error", "error", err)
+			c.JSON(500, common.RespInternalError())
+			return
+		}
+
+		team, err := models.QueryTeam(c.Request.Context(), teamId, "")
+		if err != nil {
+			logger.Warn("query team error", "error", err)
+			c.JSON(500, common.RespInternalError())
+			return
+		}
+
+		teams = append(teams, team)
+	}
+
+	c.JSON(200, common.RespSuccess(teams))
 }

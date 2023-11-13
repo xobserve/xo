@@ -26,8 +26,8 @@ import { initVariableSelected } from './views/variables/SelectVariable'
 import AntdWrapper from 'src/components/AntdWrapper'
 import { routes } from './routes';
 import { initColors } from 'utils/colors';
-import {  $teamVariables } from './views/variables/store';
-import { $teamDatasources } from './views/datasource/store';
+import {  $variables } from './views/variables/store';
+import { $datasources } from './views/datasource/store';
 import { concat } from 'lodash';
 import { $teams } from './views/team/store';
 import useSession from 'hooks/use-session';
@@ -75,17 +75,13 @@ const AppView = () => {
   const loadConfig = async () => {
     const r0 = requestApi.get(`/datasource/all`)
     const r = requestApi.get("/config/ui")
-    const r1 = requestApi.get("teams/all")
+    const r1 = requestApi.get("/teams/all")
 
     const res1 = await Promise.all([r0, r])
 
     $teams.set((await r1).data)
 
-    const datasources = {}
-    for (const ds of res1[0].data) {
-      datasources[ds.teamId] = concat(datasources[ds.teamId]??[], ds)
-    }
-    $teamDatasources.set(datasources)
+    $datasources.set(res1[0].data)
 
     const res = res1[1]
     const cfg = res.data.config
@@ -93,12 +89,9 @@ const AppView = () => {
     setConfig(cfg)
     $config.set(cfg)
 
-    const vars = {}
-    for (const v of res.data.vars) {
-      vars[v.teamId] = concat(vars[v.teamId]??[], v)
-    }
+
     initVariableSelected(res.data.vars)
-    $teamVariables.set(vars)
+    $variables.set(res.data.vars)
 }
 
 

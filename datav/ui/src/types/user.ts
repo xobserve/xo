@@ -29,8 +29,9 @@ export interface User {
     email: string
     created: string
     password?: string
-    sidemenu?: number
     visits?: number
     data?: Record<string, any>
+    currentTenant?: number
+    currentTeam?: number
     lastSeenAt?: string
 }

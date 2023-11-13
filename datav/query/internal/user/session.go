@@ -53,7 +53,7 @@ func loadSession(ctx context.Context, sid string) *models.Session {
 		return nil
 	}
 
-	if user.Id == 0 {
+	if user.Id == 0 || user.CurrentTenant == 0 || user.CurrentTeam == 0 {
 		return nil
 	}
 

@@ -187,22 +187,28 @@ func initTables() error {
 		return err
 	}
 
-	_, err = db.Conn.Exec(`INSERT INTO user (id,username,password,salt,email,current_tenant,created,updated) VALUES (?,?,?,?,?,?,?,?)`,
-		models.SuperAdminId, models.SuperAdminUsername, adminPW, adminSalt, "", models.DefaultTenantId, now, now)
+	_, err = db.Conn.Exec(`INSERT INTO user (id,username,password,salt,email,created,updated) VALUES (?,?,?,?,?,?,?)`,
+		models.SuperAdminId, models.SuperAdminUsername, adminPW, adminSalt, "", now, now)
 	if err != nil && !e.IsErrUniqueConstraint(err) {
 		logger.Crit("init super admin error", "error:", err)
 		return err
 	}
 
-	_, err = db.Conn.Exec(`INSERT INTO team (id,name,is_public,created_by,tenant,created,updated) VALUES (?,?,?,?,?,?,?)`,
-		models.GlobalTeamId, models.GlobalTeamName, true, models.SuperAdminId, models.DefaultTenantId, now, now)
+	menuStr, err := json.Marshal(models.InitTeamMenu)
+	if err != nil {
+		logger.Crit("json encode default menu error ", "error:", err)
+		return err
+	}
+
+	_, err = db.Conn.Exec(`INSERT INTO team (id,name,is_public,created_by,tenant_id,sidemenu,created,updated) VALUES (?,?,?,?,?,?,?,?)`,
+		models.GlobalTeamId, models.GlobalTeamName, true, models.SuperAdminId, models.DefaultTenantId, menuStr, now, now)
 	if err != nil && !e.IsErrUniqueConstraint(err) {
 		logger.Crit("init global team error", "error:", err)
 		return err
 	}
 
-	_, err = db.Conn.Exec(`INSERT INTO team_member (team_id,user_id,role,created,updated) VALUES (?,?,?,?,?)`,
-		models.GlobalTeamId, models.SuperAdminId, models.ROLE_ADMIN, now, now)
+	_, err = db.Conn.Exec(`INSERT INTO team_member (tenant_id,team_id,user_id,role,created,updated) VALUES (?,?,?,?,?,?)`,
+		models.DefaultTenantId, models.GlobalTeamId, models.SuperAdminId, models.ROLE_ADMIN, now, now)
 	if err != nil && !e.IsErrUniqueConstraint(err) {
 		logger.Crit("init global team member error", "error:", err)
 		return err
@@ -219,20 +225,6 @@ func initTables() error {
 	_, err = dashboard.ImportFromJSON(storageData.AlertDashboard, models.SuperAdminId)
 	if err != nil && !e.IsErrUniqueConstraint(err) {
 		logger.Crit("init home dashboard error", "error:", err)
-		return err
-	}
-
-	// insert global sidemenu
-	menuStr, err := json.Marshal(models.InitTeamMenu)
-	if err != nil {
-		logger.Crit("json encode default menu error ", "error:", err)
-		return err
-	}
-
-	_, err = db.Conn.Exec(`INSERT INTO sidemenu (id,team_id,is_public,brief,data,created_by,created,updated) VALUES (?,?,?,?,?,?,?,?)`,
-		models.DefaultMenuId, models.GlobalTeamId, true, models.DefaultMenuBrief, menuStr, models.SuperAdminId, now, now)
-	if err != nil && !e.IsErrUniqueConstraint(err) {
-		logger.Crit("init default side menu  error", "error:", err)
 		return err
 	}
 

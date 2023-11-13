@@ -37,8 +37,6 @@ const DatasourceEditor = ({ ds, onChange = null, teamEditable = true }: Props) =
     const t1 = useStore(newMsg)
     const toast = useToast()
     const [datasource, setDatasource] = useImmer<Datasource>(ds)
-    const [teamId, setTeamId] = useState(useSearchParam('teamId') ?? (ds.teamId))
-    const teams = useStore($teams)
 
 
     const plugin = builtinDatasourcePlugins[datasource.type] ?? externalDatasourcePlugins[datasource.type]
@@ -46,7 +44,7 @@ const DatasourceEditor = ({ ds, onChange = null, teamEditable = true }: Props) =
     const EditorPlugin = plugin && plugin.datasourceEditor
 
     const saveDatasource = async () => {
-        await requestApi.post("/datasource/save", { ...datasource, teamId: Number(teamId) })
+        await requestApi.post("/datasource/save", datasource)
         toast({
             title: ds.id == 0 ? t1.dsToast : t.isUpdated({ name: t.datasource }),
             status: "success",
@@ -56,7 +54,7 @@ const DatasourceEditor = ({ ds, onChange = null, teamEditable = true }: Props) =
 
         if (ds.id == 0) {
             setTimeout(() => {
-                location.href = (`/cfg/team/${teamId}/datasources`)
+                location.href = (`/cfg/team/datasources`)
             }, 1000)
         } else {
             onChange()
@@ -136,7 +134,7 @@ const DatasourceEditor = ({ ds, onChange = null, teamEditable = true }: Props) =
                     {isExternalPlugin && <Text textStyle="annotation">{t.external}</Text>}
                 </HStack>
             </FormItem>
-            <FormItem title={t1.belongTeam}>
+            {/* <FormItem title={t1.belongTeam}>
                 <Box sx={{
                     '.chakra-select': {
                         paddingLeft: '15px'
@@ -148,7 +146,7 @@ const DatasourceEditor = ({ ds, onChange = null, teamEditable = true }: Props) =
                         </option>)}
                     </Select>
                 </Box>
-            </FormItem>
+            </FormItem> */}
             {EditorPlugin && <EditorPlugin datasource={datasource} onChange={setDatasource} />}
             <Button onClick={testDatasource} size="sm" mt="4">{t.test} & {t.save}</Button>
         </FormSection>

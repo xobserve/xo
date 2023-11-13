@@ -120,10 +120,9 @@ func (s *Server) Start() error {
 		r.DELETE("/team/leave/:id", MustLogin(), teams.LeaveTeam)
 		r.GET("/team/sidemenu/:id", teams.GetSideMenu)
 		r.POST("/team/sidemenu", MustLogin(), teams.UpdateSideMenu)
-		r.GET("/team/sidemenus/forUser", CheckLogin(), teams.GetAvailableSidMenusForUser)
-		r.POST("/team/sidemenu/select/:teamId", MustLogin(), teams.SelectSideMenuForUser)
-		r.GET("/team/sidemenu/current", CheckLogin(), teams.GetCurrentSidemenu)
+		r.POST("/team/select/:teamId", MustLogin(), teams.SelectTeamForUser)
 		r.POST("/team/allowGlobal", MustLogin(), teams.UpdateAllowGlobal)
+		r.GET("/team/for/user", teams.GetTeamsForUser)
 
 		// variable apis
 		r.POST("/variable/new", MustLogin(), variables.AddNewVariable)
@@ -167,9 +166,11 @@ func (s *Server) Start() error {
 		// tenant apis
 		r.GET("/tenant/list/all", MustLogin(), tenant.QueryTenants)
 		r.POST("/tenant/create", MustLogin(), tenant.CreateTenant)
-		r.GET(("/tenant/users"), MustLogin(), tenant.QueryTenantUsers)
+		r.GET(("/tenant/users"), tenant.QueryTenantUsers)
 		r.POST("/tenant/user", MustLogin(), tenant.SubmitTenantUser)
 		r.DELETE("/tenant/user/:id", MustLogin(), tenant.DeleteTenantUser)
+		r.GET("/tenant/user/in/:username", tenant.GetTenantsUserIn)
+
 		// proxy apis
 		r.Any("/proxy/:id/*path", proxy.ProxyDatasource)
 		r.Any("/proxy/:id", proxy.ProxyDatasource)

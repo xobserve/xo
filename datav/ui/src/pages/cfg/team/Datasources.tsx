@@ -41,7 +41,7 @@ const TeamDatasources = ({ team }: { team: Team }) => {
     }, [])
 
     const load = async () => {
-        const res = await requestApi.get(`/datasource/all?teamId=${team.id}`)
+        const res = await requestApi.get(`/datasource/all`)
         setDatasources(res.data)
     }
 

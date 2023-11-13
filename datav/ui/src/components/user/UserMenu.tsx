@@ -37,7 +37,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom"
 import { localeSetting, locale } from "src/i18n/i18n"
 import { useStore } from "@nanostores/react"
 import { commonMsg, sidebarMsg } from "src/i18n/locales/en"
-import UserSidemenus from "src/components/team/UserSidemenus"
+import SelectUserTeam from "components/team/SelectUserTeam"
 import { ColorModeSwitcher } from "src/components/ColorModeSwitcher"
 
 const UserMenu = ({ miniMode }) => {
@@ -97,14 +97,14 @@ const UserMenu = ({ miniMode }) => {
                             <Text>{session?.user.name ?? "xobserve guest"}</Text>
                             {session && <Text>{session.user.username}</Text>}
                         </MenuItem></Link>
-                        <MenuDivider />
+                        <MenuDivider /> 
                         {session && isAdmin(session.user.role) && <><Link to={`/admin/users`}><MenuItem width="100%" icon={<FaStar fontSize="1em" />} >{t1.adminPanel}</MenuItem></Link></>}
                         {session && <><Link to={`/admin/tenant/users`}><MenuItem width="100%" icon={<FaStar fontSize="1em" />} >{t1.tenantAdmin}</MenuItem></Link><MenuDivider /></>}
 
                         <MenuItem width="100%"><Box width="100%"><ColorModeSwitcher miniMode={false} /></Box></MenuItem>
                         <MenuItem width="100%" onClick={() => changeLang()} icon={<FaFont fontSize="1em" />}>{t1.currentLang} - {locale.get() == "en" ? "English" : "简体中文"}</MenuItem>
                         {session && <>
-                            <MenuItem mt="2px" width="100%">    <UserSidemenus miniMode={false} /></MenuItem>
+                            <MenuItem mt="2px" width="100%">    <SelectUserTeam miniMode={false} /></MenuItem>
                             <MenuDivider />
                             <Link to={`/account/setting`}><MenuItem width="100%" icon={<FaRegSun fontSize="1em" />}>{t1.accountSetting}</MenuItem></Link>
                             <MenuItem width="100%" onClick={() => logout()} icon={<FaSignOutAlt fontSize="1em" />}>{t.logout}</MenuItem>

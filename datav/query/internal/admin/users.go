@@ -20,8 +20,10 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/xObserve/xObserve/query/internal/tenant"
 	"github.com/xObserve/xObserve/query/internal/user"
 	"github.com/xObserve/xObserve/query/pkg/common"
+	"github.com/xObserve/xObserve/query/pkg/config"
 	"github.com/xObserve/xObserve/query/pkg/db"
 	"github.com/xObserve/xObserve/query/pkg/e"
 	"github.com/xObserve/xObserve/query/pkg/models"
@@ -148,8 +150,13 @@ func AddNewUser(c *gin.Context) {
 	}
 	defer tx.Rollback()
 
+	var tenantId int64
+	if config.Data.Tenant.SyncWebsiteUsers {
+		tenantId = models.DefaultTenantId
+	}
+
 	res, err := tx.ExecContext(c.Request.Context(), "INSERT INTO user (username,password,salt,email,current_tenant,created,updated) VALUES (?,?,?,?,?,?,?)",
-		req.Username, encodedPW, salt, req.Email, models.DefaultTenantId, now, now)
+		req.Username, encodedPW, salt, req.Email, tenantId, now, now)
 	if err != nil {
 		logger.Warn("new user error", "error", err)
 		c.JSON(500, common.RespInternalError())
@@ -157,6 +164,15 @@ func AddNewUser(c *gin.Context) {
 	}
 
 	id, _ := res.LastInsertId()
+
+	if tenantId != 0 {
+		err = tenant.AddUserToTenant(id, tenantId, req.Role, tx, c.Request.Context())
+		if err != nil {
+			logger.Warn("new user error", "error", err)
+			c.JSON(500, common.RespInternalError())
+			return
+		}
+	}
 
 	err = tx.Commit()
 	if err != nil {
@@ -289,8 +305,10 @@ func AddNewTeam(c *gin.Context) {
 	}
 	defer tx.Rollback()
 
-	res, err := tx.ExecContext(c.Request.Context(), "INSERT INTO team (name,brief,created_by,created,updated) VALUES (?,?,?,?,?)",
-		req.Name, req.Brief, u.Id, now, now)
+	sidemenu, _ := json.Marshal([]map[string]interface{}{})
+
+	res, err := tx.ExecContext(c.Request.Context(), "INSERT INTO team (tenant_id,name,brief,created_by,sidemenu,created,updated) VALUES (?,?,?,?,?,?,?)",
+		u.CurrentTenant, req.Name, req.Brief, u.Id, sidemenu, now, now)
 	if err != nil {
 		logger.Warn("new team error", "error", err)
 		c.JSON(500, common.RespInternalError())
@@ -300,18 +318,9 @@ func AddNewTeam(c *gin.Context) {
 	id, _ := res.LastInsertId()
 
 	// insert self as first team member
-	_, err = tx.ExecContext(c.Request.Context(), "INSERT INTO team_member (team_id,user_id,role,created,updated) VALUES (?,?,?,?,?)", id, u.Id, models.ROLE_ADMIN, now, now)
+	_, err = tx.ExecContext(c.Request.Context(), "INSERT INTO team_member (tenant_id,team_id,user_id,role,created,updated) VALUES (?,?,?,?,?,?)", u.CurrentTenant, id, u.Id, models.ROLE_ADMIN, now, now)
 	if err != nil {
 		logger.Warn("insert team member error", "error", err)
-		c.JSON(500, common.RespInternalError())
-		return
-	}
-
-	data, _ := json.Marshal(models.InitTeamMenu)
-	_, err = tx.ExecContext(c.Request.Context(), "INSERT INTO sidemenu (team_id,is_public,brief,data,created_by,created,updated) VALUES (?,?,?,?,?,?,?)",
-		id, false, req.Name+" team's sidemenu", data, u.Id, now, now)
-	if err != nil {
-		logger.Error("create sidemenu error", "error", err)
 		c.JSON(500, common.RespInternalError())
 		return
 	}

@@ -16,6 +16,7 @@ import (
 	"context"
 	"database/sql"
 	"encoding/json"
+	"errors"
 	"time"
 
 	"github.com/xObserve/xObserve/query/pkg/db"
@@ -47,10 +48,10 @@ type User struct {
 	LastSeenAt    *time.Time `json:"lastSeenAt,omitempty"`
 	Created       time.Time  `json:"created,omitempty"`
 	Updated       time.Time  `json:"updated,omitempty"`
-	SideMenu      int64      `json:"sidemenu,omitempty"`
 	Visits        int        `json:"visits,omitempty"`
 	CurrentTenant int64      `json:"currentTenant,omitempty"`
 	TenantRole    RoleType   `json:"tenantRole"`
+	CurrentTeam   int64      `json:"currentTeam,omitempty"`
 	Data          *UserData  `json:"data,omitempty"`
 	Salt          string     `json:"-"`
 	Password      string     `json:"-"`
@@ -94,8 +95,8 @@ type UserData struct {
 func QueryUserById(ctx context.Context, id int64) (*User, error) {
 	user := &User{}
 	var data []byte
-	err := db.Conn.QueryRowContext(ctx, `SELECT id,username,name,email,mobile,password,salt,sidemenu,data,current_tenant,last_seen_at,created FROM user WHERE id=?`,
-		id).Scan(&user.Id, &user.Username, &user.Name, &user.Email, &user.Mobile, &user.Password, &user.Salt, &user.SideMenu, &data, &user.CurrentTenant, &user.LastSeenAt, &user.Created)
+	err := db.Conn.QueryRowContext(ctx, `SELECT id,username,name,email,mobile,password,salt,data,current_tenant,current_team,last_seen_at,created FROM user WHERE id=?`,
+		id).Scan(&user.Id, &user.Username, &user.Name, &user.Email, &user.Mobile, &user.Password, &user.Salt, &data, &user.CurrentTenant, &user.CurrentTeam, &user.LastSeenAt, &user.Created)
 	if err != nil && err != sql.ErrNoRows {
 		return user, err
 	}
@@ -119,11 +120,14 @@ func QueryUserById(ctx context.Context, id int64) (*User, error) {
 	user.Role = globalMember.Role
 
 	tenantUser, err := QueryTenantUser(ctx, user.CurrentTenant, user.Id)
-	if err != nil {
+	if err != nil && err != sql.ErrNoRows {
 		return user, err
 	}
 
-	user.TenantRole = tenantUser.Role
+	if err == nil {
+		user.TenantRole = tenantUser.Role
+
+	}
 
 	return user, nil
 }
@@ -131,8 +135,8 @@ func QueryUserById(ctx context.Context, id int64) (*User, error) {
 func QueryUserByName(ctx context.Context, username string) (*User, error) {
 	user := &User{}
 	var data []byte
-	err := db.Conn.QueryRowContext(ctx, `SELECT id,username,name,email,mobile,password,salt,sidemenu,data,current_tenant, last_seen_at FROM user WHERE username=?`,
-		username).Scan(&user.Id, &user.Username, &user.Name, &user.Email, &user.Mobile, &user.Password, &user.Salt, &user.SideMenu, &data, &user.CurrentTenant, &user.LastSeenAt)
+	err := db.Conn.QueryRowContext(ctx, `SELECT id,username,name,email,mobile,password,salt,data,current_tenant,current_team, last_seen_at FROM user WHERE username=?`,
+		username).Scan(&user.Id, &user.Username, &user.Name, &user.Email, &user.Mobile, &user.Password, &user.Salt, &data, &user.CurrentTenant, &user.CurrentTeam, &user.LastSeenAt)
 	if err != nil && err != sql.ErrNoRows {
 		return user, err
 	}
@@ -159,4 +163,31 @@ type GithubUser struct {
 	Tagline  string `json:"bio"`
 	Website  string `json:"blog"`
 	Location string `json:"location"`
+}
+
+func GetUserTenantAndTeamId(u *User) (int64, int64, error) {
+	var tenantId int64
+	if u == nil {
+		tenantId = DefaultTenantId
+	} else {
+		tenantId = u.CurrentTenant
+	}
+
+	var teamId int64
+	if u != nil {
+		teamId = u.CurrentTeam
+	} else {
+		teams, err := QueryTenantPublicTeamIds(tenantId)
+		if err != nil {
+			return 0, 0, err
+		}
+
+		if len(teams) == 0 {
+			return 0, 0, errors.New("there is no public team for you to view in current tenant")
+		}
+
+		teamId = teams[0]
+	}
+
+	return tenantId, teamId, nil
 }

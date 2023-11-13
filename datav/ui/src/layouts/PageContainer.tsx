@@ -53,7 +53,7 @@ import { HamburgerIcon } from "@chakra-ui/icons"
 import CustomScrollbar from "src/components/CustomScrollbar/CustomScrollbar"
 import { locale } from "src/i18n/i18n"
 import { globalTeamId } from "types/teams"
-import { StorageTeamNavId } from "pages/cfg/team/[id]/components/Layout"
+import { StorageTeamNavId } from "pages/cfg/team/components/Layout"
 import customColors from "theme/colors"
 export let gnavigate
 
@@ -111,7 +111,7 @@ const Container = (props: Props) => {
 
   const bottomNavs = [
     { title: t.new, icon: "FaPlus", baseUrl: ReserveUrls.New, url: `${ReserveUrls.New}/dashboard`, isActive: asPath.startsWith(ReserveUrls.New) },
-    { title: t.configuration, icon: "FaCog", baseUrl: ReserveUrls.Config, url: `${ReserveUrls.Config}/team/${storage.get(StorageTeamNavId) ?? globalTeamId}/datasources`, isActive: asPath.startsWith(ReserveUrls.Config) },
+    { title: t.configuration, icon: "FaCog", baseUrl: ReserveUrls.Config, url: `${ReserveUrls.Config}/team/datasources`, isActive: asPath.startsWith(ReserveUrls.Config) },
   ]
   config.showAlertIcon && bottomNavs.push({ title: t.alert, icon: "FaBell", baseUrl: ReserveUrls.Alerts, url: `${ReserveUrls.Alerts}`, isActive: asPath.startsWith(ReserveUrls.Alerts) })
   bottomNavs.push({ title: t1.search, icon: "FaBuromobelexperte", baseUrl: ReserveUrls.Search, url: `${ReserveUrls.Search}`, isActive: asPath.startsWith(ReserveUrls.Search) })
@@ -208,7 +208,7 @@ const Container = (props: Props) => {
                   </VStack>
                   {session && !sidemenu?.some(nav => nav.dashboardId != HomeDashboardId) && <>
                     <Divider mt={miniMode ? 2 : 3} />
-                    <Box mt={miniMode ? 2 : 3}><NavItem text={t1.newItem} url={`/cfg/team/${session.user.sidemenu}/sidemenu`} miniMode={miniMode} icon="FaPlus" /></Box>
+                    <Box mt={miniMode ? 2 : 3}><NavItem text={t1.newItem} url={`/cfg/team/sidemenu`} miniMode={miniMode} icon="FaPlus" /></Box>
                   </>}
                 </Flex>
                 <Flex id="sidemenu-bottom" flexDir="column" pt="10px" pb="2" alignItems={miniMode ? "center" : "left"} color={textColor}   >

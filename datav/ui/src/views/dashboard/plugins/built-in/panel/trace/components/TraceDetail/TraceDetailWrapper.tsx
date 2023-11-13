@@ -21,7 +21,7 @@ import {  scrollBy, scrollTo } from './scroll/scrollPage';
 import React from "react";
 import { getDatasource } from "utils/datasource"
 import { useStore } from "@nanostores/react"
-import { $datasources, $teamDatasources } from "src/views/datasource/store"
+import { $datasources } from "src/views/datasource/store"
 import { useSearchParam } from "react-use"
 import traceData from '../../mocks/traces.json'
 import { DatasourceTypeJaeger } from "../../../../datasource/jaeger/types"
@@ -34,14 +34,6 @@ import { DataFormat } from "types/format"
 const TraceDetailWrapper = ({id,dsId}) => {
     const [trace, setTrace] = useState<Trace>(null)
     const [scrollManager, setScrollManager] = useState(null)
-    const teamId = useSearchParam("teamId")
-    const teams = useStore($teamDatasources)
-    useEffect(() => {
-        if (teams) {
-            const dss = teams[teamId] ?? [] 
-            $datasources.set(dss)
-        }
-    },[teamId,teams])
 
     const datasources = useStore($datasources)
     const datasource = getDatasource(dsId, datasources)

@@ -151,8 +151,8 @@
   "sidebar": {
     "dashboard": "仪表盘",
     "search": "搜索",
-    "selectSidemenu": "选择侧菜单",
-    "selectSideMenuTips": "你想使用哪个团队的侧面菜单栏?",
+    "selectTeam": "选择团队",
+    "selectTeamTips": "选择一个团队",
     "themeChange": "当前主题 - ",
     "accountSetting": "个人设置",
     "adminPanel": "网站管理",

@@ -131,9 +131,9 @@ func QueryTeamMember(ctx context.Context, teamId int64, userId int64) (*TeamMemb
 	return member, nil
 }
 
-func QueryVisibleTeamsByUserId(ctx context.Context, userId int64) ([]int64, error) {
+func QueryVisibleTeamsByUserId(ctx context.Context, tenantId int64, userId int64) ([]int64, error) {
 	membersMap := make(map[int64]bool)
-	rows, err := db.Conn.QueryContext(ctx, "SELECT team_id from team_member WHERE user_id=?", userId)
+	rows, err := db.Conn.QueryContext(ctx, "SELECT team_id from team_member WHERE tenant_id = ? and user_id=?", tenantId, userId)
 	if err != nil && err != sql.ErrNoRows {
 		return nil, err
 	}
@@ -148,7 +148,7 @@ func QueryVisibleTeamsByUserId(ctx context.Context, userId int64) ([]int64, erro
 		membersMap[m] = true
 	}
 
-	rows, err = db.Conn.QueryContext(ctx, "SELECT id from team WHERE is_public=?", true)
+	rows, err = db.Conn.QueryContext(ctx, "SELECT id from team WHERE tenant_id = ? and is_public=?", tenantId, true)
 	if err != nil && err != sql.ErrNoRows {
 		return nil, err
 	}
@@ -163,11 +163,10 @@ func QueryVisibleTeamsByUserId(ctx context.Context, userId int64) ([]int64, erro
 		membersMap[m] = true
 	}
 
-	members := make([]int64, len(membersMap))
+	members := make([]int64, 0, len(membersMap))
 	for v := range membersMap {
 		members = append(members, v)
 	}
-
 	return members, nil
 }
 
@@ -191,16 +190,17 @@ const (
 
 type SideMenu struct {
 	TeamId   int64       `json:"teamId"`
-	IsPublic bool        `json:"isPublic"`
 	TeamName string      `json:"teamName"`
 	Brief    string      `json:"brief"`
 	Data     interface{} `json:"data"`
 }
 
-func QuerySideMenu(ctx context.Context, id int64, teamId int64) (*SideMenu, error) {
-	menu := &SideMenu{}
+func QuerySideMenu(ctx context.Context, id int64) (*SideMenu, error) {
+	menu := &SideMenu{
+		TeamId: id,
+	}
 	var rawJson []byte
-	err := db.Conn.QueryRowContext(ctx, "SELECT team_id,is_public,brief,data from sidemenu WHERE id=? or team_id=?", id, teamId).Scan(&menu.TeamId, &menu.IsPublic, &menu.Brief, &rawJson)
+	err := db.Conn.QueryRowContext(ctx, "SELECT sidemenu from team WHERE id=?", id).Scan(&rawJson)
 	if err != nil {
 		return nil, err
 	}

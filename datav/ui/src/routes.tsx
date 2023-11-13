@@ -18,21 +18,21 @@ import AccountSetting from "src/pages/account/Setting";
 import NewDashboardPage from "pages/new/Dashboard";
 import NewDatasourcePage from "src/pages/new/Datasource";
 import ImportDashboardPage from "src/pages/new/Import";
-import TeamsPage from "pages/cfg/Teams";
-import TeamDashboardsPage from "src/pages/cfg/team/[id]/Dashboards";
-import TeamMembersPage from "src/pages/cfg/team/[id]/Members";
-import TeamSettingPage from "src/pages/cfg/team/[id]/Setting";
-import TeamSidemenuPage from "src/pages/cfg/team/[id]/Sidemenu";
+import TeamsPage from "pages/admin/TenantTeams";
+import TeamDashboardsPage from "src/pages/cfg/team/Dashboards";
+import TeamMembersPage from "src/pages/cfg/team/Members";
+import TeamSettingPage from "src/pages/cfg/team/Setting";
+import TeamSidemenuPage from "src/pages/cfg/team/Sidemenu";
 import TestPage from "src/pages/Test";
 import loadable from '@loadable/component';
 import PageContainer from "layouts/PageContainer";
 import AdminPage from "src/pages/admin/AuditLogs";
 import GithubLogin from "src/pages/GithubLogin";
 import  AdminTenants  from "pages/admin/Tenants";
-import TeamLayout from "src/pages/cfg/team/[id]/components/Layout";
+import TeamLayout from "src/pages/cfg/team/components/Layout";
 import AdminUsers from "pages/admin/Users";
-import TeamDatasources from "pages/cfg/team/[id]/Datasources";
-import TeamVariablesPage from "pages/cfg/team/[id]/Variables";
+import TeamDatasources from "pages/cfg/team/Datasources";
+import TeamVariablesPage from "pages/cfg/team/Variables";
 import IframeExamplesPage from "pages/examples/Iframe";
 import AdminTenantUsers from "pages/admin/TenantUsers";
 
@@ -49,37 +49,33 @@ const teamPageContainer = ele => {
 }
 
 const cfgRoutes = [
-  {
-    path: "/cfg/teams",
-    element: pageContainer(<TeamsPage />),
-  },
     {
-    path: "/cfg/team/:id/datasources",
+    path: "/cfg/team/datasources",
     //@ts-ignore
     element: pageContainer(teamPageContainer(<TeamDatasources />)),
   },
   {
-    path: "/cfg/team/:id/variables",
+    path: "/cfg/team/variables",
     //@ts-ignore
     element: pageContainer(teamPageContainer(<TeamVariablesPage />)),
   },
   {
-    path: "/cfg/team/:id/dashboards",
+    path: "/cfg/team/dashboards",
     //@ts-ignore
     element: pageContainer(teamPageContainer(<TeamDashboardsPage />)),
   },
   {
-    path: "/cfg/team/:id/members",
+    path: "/cfg/team/members",
     //@ts-ignore
     element: pageContainer(teamPageContainer(<TeamMembersPage />)),
   },
   {
-    path: "/cfg/team/:id/setting",
+    path: "/cfg/team/setting",
     //@ts-ignore
     element: pageContainer(teamPageContainer(<TeamSettingPage />)),
   },
   {
-    path: "/cfg/team/:id/sidemenu",
+    path: "/cfg/team/sidemenu",
     //@ts-ignore
     element: pageContainer(teamPageContainer(<TeamSidemenuPage />)),
   },
@@ -116,6 +112,10 @@ const adminRoutes = [
   {
     path: "/admin/tenant/users",
     element: pageContainer(<AdminTenantUsers />),
+  },
+  {
+    path: "/admin/tenant/teams",
+    element: pageContainer(<TeamsPage />),
   },
 ]
 

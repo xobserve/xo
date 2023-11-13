@@ -23,7 +23,7 @@ interface Props {
 
 const CardSelect = ({title,children}:Props) => {
     return (
-        <Card>
+        <Card p="2">
             <CardHeader pb="2" p="1" fontWeight="550" fontSize="0.9rem">{title}</CardHeader>
             <CardBody pt="0" p="1">
                 <Stack divider={<StackDivider />} spacing='1'>
@@ -45,7 +45,7 @@ interface ItemProps {
 
 export const CardSelectItem = ({ children,selected=false, onClick }:ItemProps) => {
     return (
-        <Box className={`hover-bg ${selected ? 'highlight-bg' : ''}`} p="1" cursor="pointer" onClick={onClick}>
+        <Box className={`hover-bg ${selected ? 'highlight-bg' : ''}`} p="1" cursor="pointer" onClick={onClick} borderRadius={2}> 
             {children}
         </Box>)
 }

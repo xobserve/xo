@@ -23,30 +23,30 @@ import React, { useEffect, useState } from "react"
 import { FaAlignLeft } from "react-icons/fa"
 import { MobileVerticalBreakpoint } from "src/data/constants"
 import { sidebarMsg } from "src/i18n/locales/en"
-import { SideMenu } from "types/teams"
+import {  Team } from "types/teams"
 import { requestApi } from "utils/axios/request"
 
-const UserSidemenus = ({miniMode}) => {
+const SelectUserTeam = ({miniMode}) => {
     const t1 = useStore(sidebarMsg)
     const toast = useToast()
     const {session} = useSession()
-    const [sidemenus, setSidemenus] = useState<SideMenu[]>([])
+    const [teams, setTeams] = useState<Team[]>([])
     useEffect(() => {
         load()
     }, [])
 
     const load = async () => {
-        const res = await requestApi.get("/team/sidemenus/forUser")
-        setSidemenus(res.data)
+        const res = await requestApi.get("/team/for/user")
+        setTeams(res.data)
     }
 
-    const selectSidemenu = async (teamId) => {
-        if (teamId === session.user.sidemenu) {
+    const selectTeam = async (teamId) => {
+        if (teamId === session.user.currentTeam) {
             return 
         }
-        await requestApi.post(`/team/sidemenu/select/${teamId}`)
+        await requestApi.post(`/team/select/${teamId}`)
         toast({
-            title: "Sidemenu selected, reloading...",
+            title: "Team selected, reloading...",
             status: "success",
             duration: 3000,
             isClosable: true,
@@ -71,7 +71,7 @@ const UserSidemenus = ({miniMode}) => {
                         _focus={{ border: null }}
                         icon={<FaAlignLeft />}
                     /> : <FaAlignLeft fontSize="1em"/>}
-                    {!miniMode && <Text fontSize="1em">{t1.selectSidemenu}</Text>}
+                    {!miniMode && <Text fontSize="1em">{t1.selectTeam}</Text>}
                     </HStack>
                
                 </PopoverTrigger>
@@ -79,14 +79,14 @@ const UserSidemenus = ({miniMode}) => {
                 <PopoverContent width="fit-content" minWidth="120px" border="null" pl="1">
 
                     <PopoverBody>
-                        <CardSelect title={t1.selectSideMenuTips}>
-                            {sidemenus.map(sidemenu => 
-                                <CardSelectItem key={sidemenu.teamId} selected={session?.user.sidemenu == sidemenu.teamId} onClick={() => selectSidemenu(sidemenu.teamId)}>
+                        <CardSelect title={t1.selectTeamTips}>
+                            {teams.map(team => 
+                                <CardSelectItem key={team.id} selected={session?.user.currentTeam == team.id} onClick={() => selectTeam(team.id)}>
                                     <Text fontSize="1em" fontWeight="550">
-                                        {sidemenu.teamName}
+                                        {team.name}
                                     </Text>
                                     <Text pt='1' fontSize='0.9em'>
-                                        {sidemenu.brief}
+                                        {team.brief}
                                     </Text>
                                 </CardSelectItem>
                             )}
@@ -100,4 +100,4 @@ const UserSidemenus = ({miniMode}) => {
     )
 }
 
-export default UserSidemenus
+export default SelectUserTeam

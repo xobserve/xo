@@ -18,17 +18,18 @@ import useSession from "hooks/use-session"
 import Page from "layouts/page/Page"
 import { useEffect, useState } from "react"
 import { FaCog } from "react-icons/fa"
-import { cfgLinks } from "src/data/nav-links"
+import { tenantLinks } from "src/data/nav-links"
 import ReserveUrls from "src/data/reserve-urls"
-import { Team } from "types/teams"
 import { requestApi } from "utils/axios/request"
 import { useNavigate } from "react-router-dom"
 import { commonMsg } from "src/i18n/locales/en"
 import { useStore } from "@nanostores/react"
 import { $teams } from "src/views/team/store"
+import { locale } from "src/i18n/i18n"
 
 const TeamsPage = () => {
     const t = useStore(commonMsg)
+    const lang = useStore(locale)
     const { session } = useSession()
     const toast = useToast()
     const navigate = useNavigate()
@@ -53,8 +54,22 @@ const TeamsPage = () => {
         $teams.set([...teams])
     }
 
+    const manageTeam = async (teamId) => {
+        await requestApi.post(`/team/select/${teamId}`)
+        toast({
+            title: "Sidemenu selected, reloading...",
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+        })
+
+        setTimeout(() => {
+            navigate("/cfg/team/datasources")
+        }, 1000)
+    }
+
     return <>
-        <Page title={t.configuration} subTitle={t.manageItem({name: t.team})} icon={<FaCog />} tabs={cfgLinks} isLoading={teams === null}>
+        <Page title={lang == "en" ? "Tenant Admin" : "租户管理"} subTitle={t.manageItem({ name: t.team })} icon={<FaCog />} tabs={tenantLinks}>
             <Flex justifyContent="space-between">
                 <Box></Box>
                 <Button size="sm" onClick={onOpen}>{t.newItem({name: t.team})}</Button>
@@ -81,7 +96,7 @@ const TeamsPage = () => {
                                 <Td>{team.memberCount}</Td>
                                 <Td>{team.isPublic ? "true" : "false"}</Td>
                                 <Td>{team.createdBy} {session?.user?.id == team.createdById && <Tag>You</Tag>}</Td>
-                                <Td><Button variant="ghost" size="sm" px="0" onClick={() => navigate(`${ReserveUrls.Config}/team/${team.id}/members`)}>{t.manage}</Button></Td>
+                                <Td><Button variant="ghost" size="sm" px="0" onClick={() => manageTeam(team.id)}>{t.manage}</Button></Td>
                             </Tr>
                         })}
                     </Tbody>

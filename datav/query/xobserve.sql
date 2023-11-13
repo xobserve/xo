@@ -12,10 +12,10 @@ CREATE TABLE IF NOT EXISTS user (
     email VARCHAR(255),
     last_seen_at DATETIME,
     is_diabled BOOL NOT NULL DEFAULT false,
-    sidemenu INTEGER DEFAULT 1,
     come_from VARCHAR(32) DEFAULT 'local',
     visit_count INTEGER DEFAULT 0,
-    current_tenant INTEGER NOT NULL,
+    current_tenant INTEGER DEFAULT 0,
+    current_team INTEGER DEFAULT 0,
     data MEDIUMTEXT,
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL
@@ -28,6 +28,7 @@ CREATE TABLE IF NOT EXISTS tenant (
     name VARCHAR(255) NOT NULL UNIQUE,
     owner_id INTEGER NOT NULL,
     data MEDIUMTEXT,
+    is_public BOOL DEFAULT false,
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL
 );
@@ -63,18 +64,21 @@ CREATE TABLE IF NOT EXISTS team (
     allow_global BOOL DEFAULT true,
     created_by INTEGER NOT NULL,
     data MEDIUMTEXT,
-    tenant INTEGER NOT NULL,
+    tenant_id INTEGER NOT NULL,
+    sidemenu MEDIUMTEXT NOT NULL,
+    sync_users BOOL DEFAULT false,
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL
 );
 
 CREATE INDEX team_name ON team (name);
-CREATE INDEX team_tenant ON team (tenant);
+CREATE INDEX team_tenant ON team (tenant_id);
 CREATE INDEX team_created_by ON team (created_by);
 
 
 CREATE TABLE IF NOT EXISTS team_member (
     id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    tenant_id INTEGER NOT NULL,
     team_id INTEGER NOT NULL,
     user_id INTEGER NOT NULL,
     role VARCHAR(10) DEFAULT 'Viewer',
@@ -82,23 +86,10 @@ CREATE TABLE IF NOT EXISTS team_member (
     updated DATETIME NOT NULL
 );
 
+CREATE INDEX team_member_tenant_id ON team_member (tenant_id);
 CREATE INDEX team_member_team_id ON team_member (team_id);
-
 CREATE INDEX team_member_user_id ON team_member (user_id);
-
 CREATE UNIQUE INDEX team_member_team_user_id ON team_member (team_id, user_id);
-
-CREATE TABLE IF NOT EXISTS sidemenu (
-    id INTEGER PRIMARY KEY AUTO_INCREMENT,
-    team_id INTEGER  NOT NULL,
-    is_public BOOL NOT NULL,
-    brief VARCHAR(255) DEFAUlT '',
-    data MEDIUMTEXT NOT NULL,
-    created_by INTEGER NOT NULL,
-    created DATETIME NOT NULL,
-    updated DATETIME NOT NULL
-);
-CREATE UNIQUE INDEX sidemenu_team_id ON sidemenu  (team_id);
 
 CREATE TABLE IF NOT EXISTS variable (
     id INTEGER PRIMARY KEY AUTO_INCREMENT,
@@ -179,13 +170,13 @@ CREATE TABLE IF NOT EXISTS audit_logs (
     op_type VARCHAR(32) NOT NULL,
     target_id VARCHAR(64),
     data MEDIUMTEXT,
-    tenant INTEGER NOT NULL,
+    tenant_id INTEGER NOT NULL,
     created DATETIME NOT NULL
 );
 
 CREATE INDEX  audit_logs_op_id ON audit_logs (op_id);
 CREATE INDEX  audit_logs_op_type ON audit_logs (op_type);
-CREATE INDEX  audit_logs_tenant ON audit_logs (tenant);
+CREATE INDEX  audit_logs_tenant ON audit_logs (tenant_id);
 
 CREATE TABLE IF NOT EXISTS annotation (
     id  INTEGER PRIMARY KEY AUTO_INCREMENT,

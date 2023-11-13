@@ -102,8 +102,8 @@ type Config struct {
 	Observability Observability
 
 	Tenant struct {
-		Enable            bool `yaml:"enable"`
-		SyncUserToDefault bool `yaml:"sync_user_to_default"`
+		Enable           bool `yaml:"enable"`
+		SyncWebsiteUsers bool `yaml:"sync_user_to_default"`
 	}
 }
 
