@@ -13,6 +13,7 @@
 
 import React from "react"
 import { Box, Card, CardBody, CardHeader, Stack, StackDivider } from "@chakra-ui/react"
+import { isEmpty } from "utils/validate"
 
 
 
@@ -23,10 +24,10 @@ interface Props {
 
 const CardSelect = ({title,children}:Props) => {
     return (
-        <Card p="2">
-            <CardHeader pb="2" p="1" fontWeight="550" fontSize="0.9rem">{title}</CardHeader>
+        <Card>
+            {!isEmpty(title) && <CardHeader pb="2" p="1" fontWeight="550" fontSize="0.9rem">{title}</CardHeader>}
             <CardBody pt="0" p="1">
-                <Stack divider={<StackDivider />} spacing='1'>
+                <Stack divider={<StackDivider />} spacing='0'>
                     {children}
                 </Stack>
             </CardBody>

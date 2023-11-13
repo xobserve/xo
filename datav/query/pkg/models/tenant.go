@@ -76,9 +76,9 @@ func QueryTenant(ctx context.Context, tenantId int64) (*Tenant, error) {
 	return tenant, nil
 }
 
-func QueryTenantsByUserId(userId int64) ([]int64, error) {
-	tenants := make([]int64, 0)
-	rows, err := db.Conn.Query("SELECT tenant_id FROM tenant_user WHERE user_id=? ORDER BY tenant_id", userId)
+func QueryTenantsByUserId(userId int64) ([]*Tenant, error) {
+	tenants := make([]*Tenant, 0)
+	rows, err := db.Conn.Query("SELECT tenant_user.tenant_id,tenant.name FROM tenant_user INNER JOIN tenant ON tenant_user.tenant_id = tenant.id  WHERE user_id=? ORDER BY tenant_user.tenant_id", userId)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return tenants, nil
@@ -87,13 +87,13 @@ func QueryTenantsByUserId(userId int64) ([]int64, error) {
 	}
 	defer rows.Close()
 	for rows.Next() {
-		var tenantId int64
-		err := rows.Scan(&tenantId)
+		tenant := &Tenant{}
+		err := rows.Scan(&tenant.Id, &tenant.Name)
 		if err != nil {
 			return nil, err
 		}
 
-		tenants = append(tenants, tenantId)
+		tenants = append(tenants, tenant)
 	}
 
 	return tenants, nil

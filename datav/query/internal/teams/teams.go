@@ -600,7 +600,7 @@ func UpdateAllowGlobal(c *gin.Context) {
 	c.JSON(200, common.RespSuccess(nil))
 }
 
-func SelectTeamForUser(c *gin.Context) {
+func SwitchTeam(c *gin.Context) {
 	userId := user.CurrentUserId(c)
 	teamId := c.Param("teamId")
 

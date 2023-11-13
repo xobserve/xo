@@ -120,7 +120,7 @@ func (s *Server) Start() error {
 		r.DELETE("/team/leave/:id", MustLogin(), teams.LeaveTeam)
 		r.GET("/team/sidemenu/:id", teams.GetSideMenu)
 		r.POST("/team/sidemenu", MustLogin(), teams.UpdateSideMenu)
-		r.POST("/team/select/:teamId", MustLogin(), teams.SelectTeamForUser)
+		r.POST("/team/switch/:teamId", MustLogin(), teams.SwitchTeam)
 		r.POST("/team/allowGlobal", MustLogin(), teams.UpdateAllowGlobal)
 		r.GET("/team/for/user", teams.GetTeamsForUser)
 
@@ -170,6 +170,7 @@ func (s *Server) Start() error {
 		r.POST("/tenant/user", MustLogin(), tenant.SubmitTenantUser)
 		r.DELETE("/tenant/user/:id", MustLogin(), tenant.DeleteTenantUser)
 		r.GET("/tenant/user/in/:username", tenant.GetTenantsUserIn)
+		r.POST("/tenant/switch/:id", MustLogin(), tenant.SwitchTenant)
 
 		// proxy apis
 		r.Any("/proxy/:id/*path", proxy.ProxyDatasource)

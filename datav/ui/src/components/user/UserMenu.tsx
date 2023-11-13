@@ -37,8 +37,9 @@ import { Link, useLocation, useNavigate } from "react-router-dom"
 import { localeSetting, locale } from "src/i18n/i18n"
 import { useStore } from "@nanostores/react"
 import { commonMsg, sidebarMsg } from "src/i18n/locales/en"
-import SelectUserTeam from "components/team/SelectUserTeam"
+import SelectUserTeam from "components/user/SelectUserTeam"
 import { ColorModeSwitcher } from "src/components/ColorModeSwitcher"
+import SelectUserTenant from "./SelectUserTenant"
 
 const UserMenu = ({ miniMode }) => {
     const t = useStore(commonMsg)
@@ -104,6 +105,8 @@ const UserMenu = ({ miniMode }) => {
                         <MenuItem width="100%"><Box width="100%"><ColorModeSwitcher miniMode={false} /></Box></MenuItem>
                         <MenuItem width="100%" onClick={() => changeLang()} icon={<FaFont fontSize="1em" />}>{t1.currentLang} - {locale.get() == "en" ? "English" : "简体中文"}</MenuItem>
                         {session && <>
+                            <MenuDivider />
+                            <MenuItem mt="2px" width="100%">    <SelectUserTenant miniMode={false} /></MenuItem>
                             <MenuItem mt="2px" width="100%">    <SelectUserTeam miniMode={false} /></MenuItem>
                             <MenuDivider />
                             <Link to={`/account/setting`}><MenuItem width="100%" icon={<FaRegSun fontSize="1em" />}>{t1.accountSetting}</MenuItem></Link>

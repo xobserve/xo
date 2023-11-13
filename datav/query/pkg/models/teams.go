@@ -168,6 +168,7 @@ func QueryVisibleTeamsByUserId(ctx context.Context, tenantId int64, userId int64
 	for v := range membersMap {
 		members = append(members, v)
 	}
+
 	return members, nil
 }
 

@@ -44,9 +44,9 @@ const SelectUserTeam = ({miniMode}) => {
         if (teamId === session.user.currentTeam) {
             return 
         }
-        await requestApi.post(`/team/select/${teamId}`)
+        await requestApi.post(`/team/switch/${teamId}`)
         toast({
-            title: "Team selected, reloading...",
+            title: "Team swiched, reloading...",
             status: "success",
             duration: 3000,
             isClosable: true,
@@ -71,7 +71,7 @@ const SelectUserTeam = ({miniMode}) => {
                         _focus={{ border: null }}
                         icon={<FaAlignLeft />}
                     /> : <FaAlignLeft fontSize="1em"/>}
-                    {!miniMode && <Text fontSize="1em">{t1.selectTeam}</Text>}
+                    {!miniMode && <Text fontSize="1em">{t1.selectTeam} - {teams.find(t => t.id == session?.user.currentTeam)?.name}</Text>}
                     </HStack>
                
                 </PopoverTrigger>
@@ -79,14 +79,11 @@ const SelectUserTeam = ({miniMode}) => {
                 <PopoverContent width="fit-content" minWidth="120px" border="null" pl="1">
 
                     <PopoverBody>
-                        <CardSelect title={t1.selectTeamTips}>
+                        <CardSelect title="">
                             {teams.map(team => 
                                 <CardSelectItem key={team.id} selected={session?.user.currentTeam == team.id} onClick={() => selectTeam(team.id)}>
-                                    <Text fontSize="1em" fontWeight="550">
+                                    <Text fontSize="1em" fontWeight="550" px="2" py="1">
                                         {team.name}
-                                    </Text>
-                                    <Text pt='1' fontSize='0.9em'>
-                                        {team.brief}
                                     </Text>
                                 </CardSelectItem>
                             )}

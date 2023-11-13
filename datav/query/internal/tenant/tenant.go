@@ -3,6 +3,8 @@ package tenant
 import (
 	"context"
 	"database/sql"
+	"errors"
+	"fmt"
 	"sort"
 	"strconv"
 	"time"
@@ -313,7 +315,7 @@ func AddUserToTenant(userId int64, tenantId int64, role models.RoleType, tx *sql
 }
 
 func GetTenantsUserIn(c *gin.Context) {
-	tenants := make([]int64, 0)
+	tenants := make([]*models.Tenant, 0)
 
 	username := c.Param("username")
 	u, err := models.QueryUserByName(c.Request.Context(), username)
@@ -330,4 +332,42 @@ func GetTenantsUserIn(c *gin.Context) {
 	}
 
 	c.JSON(200, common.RespSuccess(tenants))
+}
+
+func SwitchTenant(c *gin.Context) {
+	userId := user.CurrentUserId(c)
+	tenantId, _ := strconv.ParseInt(c.Param("id"), 10, 64)
+	if tenantId == 0 {
+		c.JSON(400, common.RespError(e.ParamInvalid))
+		return
+	}
+
+	err := SetTenantForUser(c.Request.Context(), tenantId, userId)
+	if err != nil {
+		logger.Warn("switch tenant error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+
+	c.JSON(200, common.RespSuccess(nil))
+}
+
+func SetTenantForUser(ctx context.Context, tenantId int64, userId int64) error {
+	teams, err := models.QueryVisibleTeamsByUserId(ctx, tenantId, userId)
+	if err != nil {
+		return err
+	}
+
+	if len(teams) == 0 {
+		return errors.New("you are not in any team now")
+	}
+
+	_, err = db.Conn.ExecContext(ctx, "UPDATE user SET current_tenant=?, current_team=? WHERE id=?", tenantId, teams[0], userId)
+	if err != nil {
+		return err
+	}
+
+	fmt.Println("here221111:", tenantId, userId, teams[0])
+
+	return nil
 }

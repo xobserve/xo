@@ -95,7 +95,7 @@ func login(user *models.User, c *gin.Context) {
 			return
 		}
 
-		user.CurrentTenant = tenants[0]
+		user.CurrentTenant = tenants[0].Id
 	}
 
 	if user.CurrentTeam == 0 {

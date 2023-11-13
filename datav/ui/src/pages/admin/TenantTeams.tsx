@@ -55,9 +55,9 @@ const TeamsPage = () => {
     }
 
     const manageTeam = async (teamId) => {
-        await requestApi.post(`/team/select/${teamId}`)
+        await requestApi.post(`/team/switch/${teamId}`)
         toast({
-            title: "Sidemenu selected, reloading...",
+            title: "Team switched, reloading...",
             status: "success",
             duration: 3000,
             isClosable: true,
