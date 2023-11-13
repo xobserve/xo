@@ -82,7 +82,6 @@ const ImportDashboardPage = () => {
         
         delete dash.id 
         delete dash.ownedBy
-        dash.ownedBy = globalTeamId
         setDashboard(dash)
     }
 
@@ -92,7 +91,7 @@ const ImportDashboardPage = () => {
                 <FormItem title='Meta json'>
                     <Textarea rows={8} onBlur={e => onMetaChange(e.currentTarget.value)}></Textarea>
                 </FormItem>
-                {dashboard && <FormItem title={t1.belongTeam}>
+                {/* {dashboard && <FormItem title={t1.belongTeam}>
                     <Box sx={{
                         '.chakra-select': {
                             paddingLeft: '15px'
@@ -104,7 +103,7 @@ const ImportDashboardPage = () => {
                             </option>)}
                         </Select>
                     </Box>
-                </FormItem>}
+                </FormItem>} */}
                 <Button width="fit-content" onClick={importDashboard} size="sm">{t.submit}</Button>
             </VStack>
         </Page>

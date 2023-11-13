@@ -190,7 +190,7 @@ CREATE UNIQUE INDEX IF NOT EXISTS  dashboard_id_version ON dashboard_history (da
 
 
 
-CREATE UNIQUE INDEX IF NOT EXISTS  datasource_name ON datasource (name);
+CREATE UNIQUE INDEX IF NOT EXISTS  datasource_name ON datasource (team_id,name);
 CREATE INDEX IF NOT EXISTS datasource_team ON datasource (team_id);
 
 

@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Menu, MenuButton, MenuItem, MenuList, useColorModeValue } from "@chakra-ui/react";
+import { Menu, MenuButton, MenuItem, MenuList, useColorModeValue, useToast } from "@chakra-ui/react";
 import IconButton from "src/components/button/IconButton";
 import { PanelAdd } from "src/components/icons/PanelAdd";
 import { initPanel, initRowPanel } from "src/data/panel/initPanel";
@@ -20,6 +20,7 @@ import { useStore } from "@nanostores/react";
 import { dashboardMsg } from "src/i18n/locales/en";
 import { $copiedPanel } from "./store/dashboard";
 import { isEmpty } from "utils/validate";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
     dashboard: Dashboard
@@ -29,8 +30,8 @@ interface Props {
 const AddPanel = ({ dashboard, onChange }: Props) => {
     const t1 = useStore(dashboardMsg)
     const copiedPanel = useStore($copiedPanel)
-
-
+    const toast = useToast()
+    const navigate = useNavigate()
 
 
 
@@ -44,8 +45,18 @@ const AddPanel = ({ dashboard, onChange }: Props) => {
             newPanel = initRowPanel(id)
         } else {
             newPanel = initPanel(id)
+            if (!newPanel.datasource.id) {
+                toast({
+                    title: "Please create a datasource first..",
+                    status: "warning",
+                    duration: 3000,
+                    isClosable: true,
+                })
+                return
+            }
         }
 
+      
         // scroll to top after adding panel
         const dashGrid = document.getElementById("dashboard-scroll-top")
         dashGrid.scrollIntoView({ behavior: "smooth", block: "center" })

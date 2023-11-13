@@ -216,11 +216,12 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
 
     // combine variables which defined separately in dashboard and global
     const setDashboardVariables = (dash: Dashboard, team: Team) => {
-
         const dashVars = cloneDeep(dash.data.variables)
         initVariableSelected(dashVars)
 
-        $variables.set([...$variables.get(), ...dashVars])
+        const globalVars = $variables.get().filter(v => !v.id.toString().startsWith("d-"))
+
+        $variables.set([...globalVars, ...dashVars])
     }
 
     const onDashbardChange = useCallback(f => {

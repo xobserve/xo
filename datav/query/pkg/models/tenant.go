@@ -167,3 +167,17 @@ func QueryTenantPublicTeamIds(tenantId int64) ([]int64, error) {
 
 	return teamIds, nil
 }
+
+func IsUserInTenant(userId, tenantId int64) (bool, error) {
+	var id int64
+	err := db.Conn.QueryRow(`SELECT id FROM tenant_user WHERE tenant_id=? and user_id=?`, tenantId, userId).Scan(&id)
+	if err != nil && err != sql.ErrNoRows {
+		return false, err
+	}
+
+	if id == 0 {
+		return false, nil
+	}
+
+	return true, nil
+}

@@ -155,6 +155,16 @@ func QueryUserByName(ctx context.Context, username string) (*User, error) {
 	return user, nil
 }
 
+func QueryUserIdByName(username string) (int64, error) {
+	var id int64
+	err := db.Conn.QueryRow(`SELECT id FROM user WHERE username=?`, username).Scan(&id)
+	if err != nil {
+		return 0, err
+	}
+
+	return id, nil
+}
+
 type GithubUser struct {
 	ID       int64  `json:"id"`
 	Avatar   string `json:"avatar_url"`

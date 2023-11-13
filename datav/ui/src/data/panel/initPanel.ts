@@ -12,11 +12,13 @@
 // limitations under the License.
 import { Panel, PanelDatasource, PanelTypeRow } from "types/dashboard";
 import { initPanelStyles } from "./initStyles";
-import { DatasourceMaxDataPoints, DatasourceMinInterval, InitTestDataDatasourceId } from "../constants";
+import { DatasourceMaxDataPoints, DatasourceMinInterval } from "../constants";
 import { builtinPanelPlugins } from "src/views/dashboard/plugins/built-in/plugins";
 import { externalPanelPlugins } from "src/views/dashboard/plugins/external/plugins";
 import { PanelTypeGraph } from "src/views/dashboard/plugins/built-in/panel/graph/types";
-import { initTimeRange } from "components/DatePicker/TimePicker";
+import { $datasources } from "src/views/datasource/store";
+import { DatasourceTypeTestData } from "src/views/dashboard/plugins/built-in/datasource/testdata/types";
+import { first } from "lodash";
 
 export const initPanelType = PanelTypeGraph
 export const initPanel = (id?) => {
@@ -44,13 +46,13 @@ export const initPanel = (id?) => {
             type: "variable",
             value: ""
         },
-        enableScopeTime: false, 
+        enableScopeTime: false,
         scopeTime: null
     }
 
     if (id) {
-        p.id = id,
-            p.title = `New panel ${id}`
+        p.id = id
+        p.title = `New panel ${id}`
     }
 
     return p
@@ -58,7 +60,7 @@ export const initPanel = (id?) => {
 
 
 export const initRowPanel = (id) => {
-    const p  = {
+    const p = {
         id: id,
         title: "New row",
         desc: "",
@@ -71,7 +73,7 @@ export const initRowPanel = (id) => {
 }
 
 export const initDatasource: PanelDatasource = {
-    id: InitTestDataDatasourceId,
+    id: $datasources.get().find(ds => ds.type == DatasourceTypeTestData)?.id ?? first($datasources.get())?.id,
     queryOptions: {
         minInterval: DatasourceMinInterval,
         maxDataPoints: DatasourceMaxDataPoints

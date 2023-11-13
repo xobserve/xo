@@ -18,7 +18,7 @@ import { Variable } from "./variable"
 export interface Dashboard {
     id: string
     title: string
-    ownedBy: number
+    ownedBy?: number
     visibleTo: "team" | "all"
     ownerName?:string
     data: DashboardData

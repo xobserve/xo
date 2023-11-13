@@ -22,13 +22,10 @@ import { FaPlus } from "react-icons/fa"
 import { initDashboard } from "src/data/dashboard"
 import { newLinks } from "src/data/nav-links"
 import { Dashboard } from "types/dashboard"
-import { Team } from "types/teams"
 import { requestApi } from "utils/axios/request"
 import { useNavigate } from "react-router-dom"
 import { commonMsg, newMsg } from "src/i18n/locales/en"
 import { useStore } from "@nanostores/react"
-import { useSearchParam } from "react-use"
-import { $teams } from "src/views/team/store"
 
 
 const NewDashboardPage = () => {
@@ -36,9 +33,7 @@ const NewDashboardPage = () => {
     const t1 = useStore(newMsg)
     const toast = useToast()
     const navigate = useNavigate()
-    const team = useSearchParam('team') 
-    const [dashboard, setDashboard] = useState<Dashboard>(initDashboard(Number(team)))
-    const teams = useStore($teams)
+    const [dashboard, setDashboard] = useState<Dashboard>(initDashboard())
 
 
     const addDashboard = async () => {
@@ -72,7 +67,7 @@ const NewDashboardPage = () => {
                             setDashboard(cloneDeep(dashboard))
                         }} />
                     </FormItem>
-                    <FormItem title={t1.belongTeam}>
+                    {/* <FormItem title={t1.belongTeam}>
                         <Box sx={{
                             '.chakra-select': {
                                 paddingLeft: '15px'
@@ -84,7 +79,7 @@ const NewDashboardPage = () => {
                                 </option>)}
                             </Select>
                         </Box>
-                    </FormItem>
+                    </FormItem> */}
                     <Button width="fit-content" onClick={addDashboard}>{t.submit}</Button>
                 </FormSection>
             </Form>

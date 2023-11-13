@@ -251,11 +251,6 @@ func AddTeamMembers(c *gin.Context) {
 	members := req.Members
 	role := req.Role
 
-	if req.TeamId == models.GlobalTeamId {
-		c.JSON(400, common.RespError("There is no need to add members to global team"))
-		return
-	}
-
 	if req.TeamId == 0 || len(members) == 0 || !role.IsValid() {
 		c.JSON(400, common.RespError(e.ParamInvalid))
 		return
@@ -280,37 +275,34 @@ func AddTeamMembers(c *gin.Context) {
 		return
 	}
 
-	// check team exists
-	var id int64
-	err = db.Conn.QueryRowContext(c.Request.Context(), "SELECT id FROM team WHERE id=?", req.TeamId).Scan(&id)
-	if err != nil && err != sql.ErrNoRows {
+	team, err := models.QueryTeam(c.Request.Context(), req.TeamId, "")
+	if err != nil {
 		logger.Warn("get team error", "error", err)
 		c.JSON(500, common.RespInternalError())
 		return
 	}
 
-	if id != req.TeamId {
-		c.JSON(400, common.RespError(e.TeamNotExist))
-		return
-	}
-
 	memberIds := make([]int64, 0)
-	// check user exists
+	// check whether user is in current tenant
 	for _, member := range members {
-		var id int64
-		err := db.Conn.QueryRowContext(c.Request.Context(), "SELECT id FROM user WHERE username=?", member).Scan(&id)
-		if err != nil && err != sql.ErrNoRows {
-			logger.Warn("get user error", "error", err)
+		memberId, err := models.QueryUserIdByName(member)
+		if err != nil {
+			logger.Warn("Get user id by name error", "error", err)
 			c.JSON(500, common.RespInternalError())
 			return
 		}
-
-		if id == 0 {
-			c.JSON(400, common.RespError(e.UserNotExist+", please create user first in admin page /admin/users"))
+		inTenant, err := models.IsUserInTenant(memberId, team.TenantId)
+		if err != nil {
+			logger.Warn("check user in tenant error", "error", err)
+			c.JSON(500, common.RespInternalError())
+			return
+		}
+		if !inTenant {
+			c.JSON(400, common.RespError(fmt.Sprintf("user %s is not in current tenant", member)))
 			return
 		}
 
-		memberIds = append(memberIds, id)
+		memberIds = append(memberIds, memberId)
 	}
 
 	now := time.Now()

@@ -325,6 +325,15 @@ func AddNewTeam(c *gin.Context) {
 		return
 	}
 
+	// create testdata datasource
+	_, err = tx.Exec(`INSERT INTO datasource (name,type,url,team_id,created,updated) VALUES (?,?,?,?,?,?)`,
+		"TestData", models.DatasourceTestData, "", id, now, now)
+	if err != nil {
+		logger.Warn("init team datasource error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+
 	err = tx.Commit()
 	if err != nil {
 		logger.Warn("commit sql transaction error", "error", err)

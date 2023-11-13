@@ -104,9 +104,9 @@ const TeamSettings = (props: { team: Team }) => {
         </FormSection>
         <Button width="fit-content" size="sm" onClick={updateTeam} >{t.submit}</Button>
 
-        <FormSection title={t1.allowGlobal } desc={t1.allowGlobalTips} spacing={2}>
+        {/* <FormSection title={t1.allowGlobal } desc={t1.allowGlobalTips} spacing={2}>
             <Switch isDisabled={team.id == globalTeamId} isChecked={team.allowGlobal} onChange={e => { changeAllowGlobal(e.currentTarget.checked) }} />
-        </FormSection>
+        </FormSection> */}
 
         <FormSection title={t.dangeSection}>
           <HStack>

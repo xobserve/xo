@@ -107,7 +107,7 @@ func SaveDashboard(c *gin.Context) {
 	}
 	if !isUpdate {
 		_, err := db.Conn.ExecContext(c.Request.Context(), `INSERT INTO dashboard (id,title, team_id,visible_to, created_by,tags, data,created,updated) VALUES (?,?,?,?,?,?,?,?,?)`,
-			dash.Id, dash.Title, dash.OwnedBy, dash.VisibleTo, dash.CreatedBy, tags, jsonData, dash.Created, dash.Updated)
+			dash.Id, dash.Title, u.CurrentTeam, dash.VisibleTo, dash.CreatedBy, tags, jsonData, dash.Created, dash.Updated)
 		if err != nil {
 			if e.IsErrUniqueConstraint(err) {
 				c.JSON(409, common.RespError("dashboard id already exists"))

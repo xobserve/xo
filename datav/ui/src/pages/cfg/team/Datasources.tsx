@@ -16,7 +16,6 @@ import { Button, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, 
 import { Form } from "src/components/form/Form"
 import { isEmpty } from "lodash"
 import { useEffect, useRef, useState } from "react"
-import { InitTestDataDatasourceId } from "src/data/constants"
 import ReserveUrls from "src/data/reserve-urls"
 import DatasourceEditor from "src/views/datasource/Editor"
 import { Datasource } from "types/datasource"
@@ -174,13 +173,13 @@ const DatasourceCard = ({ ds, selectedDs, plugin, onEdit, onDelete, t }) => {
                     <Text fontWeight="550">{ds.name}</Text>
                     {!plugin && <Tag colorScheme="red" size="sm">{ds.type} plugin not installed</Tag>}
                 </HStack>
-                <Text textStyle="annotation" mt="1">{ds.type}  {!isEmpty(ds.url) && ` · ` + ds.url} {ds.id == InitTestDataDatasourceId && <Tag size="sm" ml="1"> default</Tag>}</Text>
+                <Text textStyle="annotation" mt="1">{ds.type}  {!isEmpty(ds.url) && ` · ` + ds.url}</Text>
             </Box>
         </HStack>
 
-        {ds.id != InitTestDataDatasourceId && <HStack spacing={1}>
+        <HStack spacing={1}>
             <Button size="sm" variant="ghost" onClick={onEdit}>{t.edit}</Button>
             <Button size="sm" variant="ghost" colorScheme="orange" onClick={onDelete}>{t.delete}</Button>
-        </HStack>}
+        </HStack>
     </Flex>
 }

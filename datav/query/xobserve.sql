@@ -153,7 +153,7 @@ CREATE TABLE IF NOT EXISTS datasource (
 );
 
 
-CREATE UNIQUE INDEX  datasource_name ON datasource (name);
+CREATE UNIQUE INDEX  datasource_name ON datasource (team_id, name);
 CREATE INDEX  datasource_team ON datasource (team_id);
 
 CREATE TABLE IF NOT EXISTS star_dashboard (
