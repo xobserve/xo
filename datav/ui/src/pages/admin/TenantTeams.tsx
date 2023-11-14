@@ -70,13 +70,13 @@ const TeamsPage = () => {
     }
 
     return <>
-        <Page title={lang == "en" ? "Tenant Admin" : "租户管理"} subTitle={t.manageItem({ name: t.team })} icon={<FaCog />} tabs={tenantLinks}>
+        <Page title={lang == "en" ? `Tenant Admin - ${session?.user.tenantName}` : `租户管理 - ${session?.user.tenantName}`} subTitle={t.manageItem({ name: t.team })} icon={<FaCog />} tabs={tenantLinks}>
             <Flex justifyContent="space-between">
                 <Box></Box>
                 <Button size="sm" onClick={onOpen}>{t.newItem({name: t.team})}</Button>
             </Flex>
             <TableContainer>
-                <Table variant="simple" className="color-border-table">
+                <Table variant="simple" className="color-border-table" size="sm">
                     <Thead>
                         <Tr>
                             <Th>Id</Th>

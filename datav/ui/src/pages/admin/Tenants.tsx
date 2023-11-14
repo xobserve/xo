@@ -86,6 +86,7 @@ export const AdminTenants = memo(() => {
             <Table variant="simple" size="sm" className="color-border-table">
                 <Thead>
                     <Tr>
+                        <Th>ID</Th>
                         <Th>{t.name}</Th>
                         <Th>Owner</Th>
                         <Th>{t.created}</Th>
@@ -94,6 +95,7 @@ export const AdminTenants = memo(() => {
                 <Tbody>
                     {tenants.map(tenant => {
                         return <Tr key={tenant.id}>
+                                <Td>{tenant.id}</Td>
                             <Td>{tenant.name}</Td>
                             <Td>
                                 <HStack>

@@ -25,7 +25,6 @@ export interface User {
     avatar: string
     name: string
     role: Role
-    tenantRole: Role
     email: string
     created: string
     password?: string
@@ -33,5 +32,7 @@ export interface User {
     data?: Record<string, any>
     currentTenant?: number
     currentTeam?: number
+    tenantName?: string
+    tenantRole?: Role
     lastSeenAt?: string
 }

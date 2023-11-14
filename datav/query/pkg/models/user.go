@@ -39,22 +39,23 @@ type Session struct {
 }
 
 type User struct {
-	Id            int64      `json:"id"`
-	Username      string     `json:"username"`
-	Name          string     `json:"name"`
-	Email         *string    `json:"email"`
-	Mobile        string     `json:"mobile"`
-	Role          RoleType   `json:"role"`
-	LastSeenAt    *time.Time `json:"lastSeenAt,omitempty"`
-	Created       time.Time  `json:"created,omitempty"`
-	Updated       time.Time  `json:"updated,omitempty"`
-	Visits        int        `json:"visits,omitempty"`
-	CurrentTenant int64      `json:"currentTenant,omitempty"`
-	TenantRole    RoleType   `json:"tenantRole"`
-	CurrentTeam   int64      `json:"currentTeam,omitempty"`
-	Data          *UserData  `json:"data,omitempty"`
-	Salt          string     `json:"-"`
-	Password      string     `json:"-"`
+	Id                int64      `json:"id"`
+	Username          string     `json:"username"`
+	Name              string     `json:"name"`
+	Email             *string    `json:"email"`
+	Mobile            string     `json:"mobile"`
+	Role              RoleType   `json:"role"`
+	LastSeenAt        *time.Time `json:"lastSeenAt,omitempty"`
+	Created           time.Time  `json:"created,omitempty"`
+	Updated           time.Time  `json:"updated,omitempty"`
+	Visits            int        `json:"visits,omitempty"`
+	CurrentTenant     int64      `json:"currentTenant,omitempty"`
+	CurrentTenantName string     `json:"tenantName,omitempty"`
+	CurrentTenantRole RoleType   `json:"tenantRole"`
+	CurrentTeam       int64      `json:"currentTeam,omitempty"`
+	Data              *UserData  `json:"data,omitempty"`
+	Salt              string     `json:"-"`
+	Password          string     `json:"-"`
 }
 
 type Users []*User
@@ -125,10 +126,15 @@ func QueryUserById(ctx context.Context, id int64) (*User, error) {
 	}
 
 	if err == nil {
-		user.TenantRole = tenantUser.Role
-
+		user.CurrentTenantRole = tenantUser.Role
 	}
 
+	tenant, err := QueryTenant(ctx, user.CurrentTenant)
+	if err != nil {
+		return user, err
+	}
+
+	user.CurrentTenantName = tenant.Name
 	return user, nil
 }
 

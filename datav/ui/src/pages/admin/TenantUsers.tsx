@@ -101,7 +101,7 @@ const AdminTenantUsers = () => {
     }
 
     return <>
-        <Page title={lang == "en" ? "Tenant Admin" : "租户管理"} subTitle={t.manageItem({ name: t.members })} icon={<FaCog />} tabs={tenantLinks} isLoading={users === null}>
+        <Page title={lang == "en" ? `Tenant Admin - ${session?.user.tenantName}` : `租户管理 - ${session?.user.tenantName}`} subTitle={t.manageItem({ name: t.members })} icon={<FaCog />} tabs={tenantLinks} isLoading={users === null}>
             <Flex justifyContent="space-between">
                 <Box></Box>
                 <Button size="sm" onClick={onAddUser}>{t.addItem({ name: t.members })}</Button>
@@ -111,6 +111,7 @@ const AdminTenantUsers = () => {
                 <Table variant="simple" size="sm" className="color-border-table">
                     <Thead>
                         <Tr>
+                            <Th>ID</Th>
                             <Th>{t.userName}</Th>
                             <Th>{t.role}</Th>
                             <Th>{t.joined}</Th>
@@ -120,6 +121,7 @@ const AdminTenantUsers = () => {
                     <Tbody>
                         {users?.map(user => {
                             return <Tr key={user.id}>
+                                <Td>{user.id}</Td>
                                 <Td>
                                     <HStack>
                                         <span>

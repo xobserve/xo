@@ -180,12 +180,12 @@ func SubmitTenantUser(c *gin.Context) {
 
 	if req.Role.IsAdmin() {
 		// only super admin can delete admin in tenant
-		if !u.TenantRole.IsSuperAdmin() {
+		if !u.CurrentTenantRole.IsSuperAdmin() {
 			c.JSON(403, common.RespError("Only super admin can submit admin member"))
 			return
 		}
 	} else {
-		if !u.TenantRole.IsAdmin() {
+		if !u.CurrentTenantRole.IsAdmin() {
 			c.JSON(403, common.RespError(e.NoPermission))
 			return
 		}
@@ -258,12 +258,12 @@ func DeleteTenantUser(c *gin.Context) {
 
 	if tenantUser.Role.IsAdmin() {
 		// only super admin can delete admin in tenant
-		if !u.TenantRole.IsSuperAdmin() {
+		if !u.CurrentTenantRole.IsSuperAdmin() {
 			c.JSON(403, common.RespError(e.NoPermission))
 			return
 		}
 	} else {
-		if !u.TenantRole.IsAdmin() {
+		if !u.CurrentTenantRole.IsAdmin() {
 			c.JSON(403, common.RespError(e.NoPermission))
 			return
 		}

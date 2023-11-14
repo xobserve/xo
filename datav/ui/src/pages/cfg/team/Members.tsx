@@ -118,6 +118,7 @@ const TeamMembers = ({ team }: { team: Team }) => {
                 <Table variant="simple" className="color-border-table">
                     <Thead>
                         <Tr>
+                            <Th>ID</Th>
                             <Th>{t.userName}</Th>
                             <Th>{t.role}</Th>
                             <Th>{t.joined}</Th>
@@ -127,6 +128,7 @@ const TeamMembers = ({ team }: { team: Team }) => {
                     <Tbody>
                         {members.map(member => {
                             return <Tr key={member.id}>
+                                <Td>{member.id}</Td>
                                 <Td>{member.username}</Td>
                                 <Td>{member.role}</Td>
                                 <Td>{moment(member.created).fromNow()}</Td>

@@ -189,6 +189,7 @@ const AdminUsers = () => {
                 <Table variant="simple" size="sm" className="color-border-table">
                     <Thead>
                         <Tr>
+                            <Th>ID</Th>
                             <Th>{t.userName}</Th>
                             <Th>{t.nickname}</Th>
                             <Th>{t.email}</Th>
@@ -202,6 +203,7 @@ const AdminUsers = () => {
                     <Tbody>
                         {users?.map(user => {
                             return <Tr key={user.id}>
+                                <Td>{user.id}</Td>
                                 <Td>
                                     <HStack>
                                         <span>
