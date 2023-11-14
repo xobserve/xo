@@ -18,14 +18,14 @@ import Page from "layouts/page/Page"
 import { isEmpty } from "lodash"
 import { useEffect, useState } from "react"
 import { FaPlus } from "react-icons/fa"
-import { newLinks } from "src/data/nav-links"
 import { Dashboard } from "types/dashboard"
 import { globalTeamId, Team } from "types/teams"
 import { requestApi } from "utils/axios/request"
 import { isJSON } from "utils/is"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { commonMsg, newMsg } from "src/i18n/locales/en"
 import { useStore } from "@nanostores/react"
+import { getNewLinks } from "./links"
 
 const ImportDashboardPage = () => {
     const t = useStore(commonMsg)
@@ -33,16 +33,11 @@ const ImportDashboardPage = () => {
     const toast = useToast()
     const navigate = useNavigate()
     const [dashboard, setDashboard] = useState<Dashboard>(null)
-    const [teams, setTeams] = useState<Team[]>([])
 
-    useEffect(() => {
-        load()
-    }, [])
 
-    const load = async () => {
-        const res = await requestApi.get("teams/all")
-        setTeams(res.data)
-    }
+    const teamId = useParams().teamId
+    const newLinks = getNewLinks(teamId)
+
 
     const importDashboard = async () => {
         const res = await requestApi.post("/dashboard/save", {dashboard,changes: "Imported from json"})

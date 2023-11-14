@@ -21,7 +21,6 @@ import { cloneDeep } from "lodash"
 import moment from "moment"
 import { useEffect, useRef, useState } from "react"
 import { FaCog } from "react-icons/fa"
-import { adminLinks } from "src/data/nav-links"
 import { Role, SuperAdminId } from "types/role"
 import { User } from "types/user"
 import { requestApi } from "utils/axios/request"
@@ -29,6 +28,8 @@ import isEmail from "validator/lib/isEmail"
 import { useStore } from "@nanostores/react"
 import { websiteAdmin, commonMsg } from "src/i18n/locales/en"
 import { isEmpty } from "utils/validate"
+import { useParams } from "react-router-dom"
+import { getAdminLinks } from "./links"
 
 const AdminUsers = () => {
     const t = useStore(commonMsg)
@@ -39,6 +40,9 @@ const AdminUsers = () => {
     useEffect(() => {
         load()
     }, [])
+
+    const teamId = useParams().teamId
+    const adminLinks = getAdminLinks(teamId)
 
     const [userInEdit, setUserInEdit] = useState<User>()
     const [password, setPassword] = useState<string>('')
@@ -171,6 +175,8 @@ const AdminUsers = () => {
         })
         load()
     }
+
+   
 
     return <>
         <Page title={t1.websiteAdmin} subTitle={t.manageItem({ name: t.user })} icon={<FaCog />} tabs={adminLinks} isLoading={users === null}>

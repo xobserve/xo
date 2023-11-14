@@ -18,14 +18,13 @@ import useSession from "hooks/use-session"
 import Page from "layouts/page/Page"
 import { useEffect, useState } from "react"
 import { FaCog } from "react-icons/fa"
-import { tenantLinks } from "src/data/nav-links"
-import ReserveUrls from "src/data/reserve-urls"
 import { requestApi } from "utils/axios/request"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { commonMsg } from "src/i18n/locales/en"
 import { useStore } from "@nanostores/react"
 import { $teams } from "src/views/team/store"
 import { locale } from "src/i18n/i18n"
+import { getTenantLinks } from "./links"
 
 const TeamsPage = () => {
     const t = useStore(commonMsg)
@@ -37,6 +36,8 @@ const TeamsPage = () => {
     const [teamDesc, setTeamDesc] = useState<string>("")
     const teams = useStore($teams)
 
+    const teamId = useParams().teamId
+    const tenantLinks = getTenantLinks(teamId)
 
     const { isOpen, onOpen, onClose } = useDisclosure()
 

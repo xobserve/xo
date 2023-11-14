@@ -20,12 +20,12 @@ import { cloneDeep } from "lodash"
 import { useEffect, useState } from "react"
 import { FaPlus } from "react-icons/fa"
 import { initDashboard } from "src/data/dashboard"
-import { newLinks } from "src/data/nav-links"
 import { Dashboard } from "types/dashboard"
 import { requestApi } from "utils/axios/request"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { commonMsg, newMsg } from "src/i18n/locales/en"
 import { useStore } from "@nanostores/react"
+import { getNewLinks } from "./links"
 
 
 const NewDashboardPage = () => {
@@ -34,7 +34,8 @@ const NewDashboardPage = () => {
     const toast = useToast()
     const navigate = useNavigate()
     const [dashboard, setDashboard] = useState<Dashboard>(initDashboard())
-
+    const teamId = useParams().teamId
+    const newLinks = getNewLinks(teamId)
 
     const addDashboard = async () => {
         const res = await requestApi.post("/dashboard/save", { dashboard, changes: "Newly created" })

@@ -21,7 +21,6 @@ import { cloneDeep } from "lodash"
 import moment from "moment"
 import { useEffect, useRef, useState } from "react"
 import { FaCog } from "react-icons/fa"
-import { adminLinks, tenantLinks } from "src/data/nav-links"
 import { Role, SuperAdminId } from "types/role"
 import { User } from "types/user"
 import { requestApi } from "utils/axios/request"
@@ -31,6 +30,8 @@ import { websiteAdmin, commonMsg } from "src/i18n/locales/en"
 import { isEmpty } from "utils/validate"
 import { locale } from "src/i18n/i18n"
 import { EditorInputItem } from "components/editor/EditorItem"
+import { useParams } from "react-router-dom"
+import { getTenantLinks } from "./links"
 
 const AdminTenantUsers = () => {
     const t = useStore(commonMsg)
@@ -39,10 +40,14 @@ const AdminTenantUsers = () => {
     const { session } = useSession()
     const toast = useToast()
     const [users, setUsers] = useState<User[]>(null)
+
+    const teamId = useParams().teamId
+    const tenantLinks = getTenantLinks(teamId)
+
     useEffect(() => {
         load()
     }, [])
-
+    
     const [userInEdit, setUserInEdit] = useState<User>()
     const [userInDelete, setUserInDelete] = useState<User>(null)
 

@@ -15,7 +15,7 @@
 // 1. teams which the user is a member of 
 // 2. teams whose sidemenu has been set to public
 
-import { Heading, HStack, IconButton, Popover, PopoverBody, PopoverContent, PopoverTrigger,  Portal,  Text, useMediaQuery, useToast } from "@chakra-ui/react"
+import { HStack, IconButton, Popover, PopoverBody, PopoverContent, PopoverTrigger,  Portal,  Text, useMediaQuery, useToast } from "@chakra-ui/react"
 import { useStore } from "@nanostores/react"
 import CardSelect, { CardSelectItem } from "src/components/cards/CardSelect"
 import useSession from "hooks/use-session"
@@ -25,12 +25,16 @@ import { MobileVerticalBreakpoint } from "src/data/constants"
 import { sidebarMsg } from "src/i18n/locales/en"
 import {  Team } from "types/teams"
 import { requestApi } from "utils/axios/request"
+import { isEmpty } from "utils/validate"
+import { useParams } from "react-router-dom"
 
 const SelectUserTeam = ({miniMode}) => {
     const t1 = useStore(sidebarMsg)
     const toast = useToast()
     const {session} = useSession()
     const [teams, setTeams] = useState<Team[]>([])
+    const currentTeamId = useParams().teamId
+
     useEffect(() => {
         load()
     }, [])
@@ -52,7 +56,12 @@ const SelectUserTeam = ({miniMode}) => {
             isClosable: true,
         })
         setTimeout(() => {
-            window.location.reload()
+            if (isEmpty(teamId)) {
+                window.location.reload()
+            } else {
+                const path = window.location.pathname
+                window.location.href =  path.replace(`/${currentTeamId}/`, `/${teamId}/`)
+            }
         }, 1000)
     }
 

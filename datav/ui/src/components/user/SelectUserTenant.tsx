@@ -25,12 +25,15 @@ import { MobileVerticalBreakpoint } from "src/data/constants"
 import { sidebarMsg } from "src/i18n/locales/en"
 import { requestApi } from "utils/axios/request"
 import { Tenant } from "types/tenant"
+import { useParams } from "react-router-dom"
+import { isEmpty } from "utils/validate"
 
 const SelectUserTenant = ({ miniMode }) => {
     const t1 = useStore(sidebarMsg)
     const toast = useToast()
     const { session } = useSession()
     const [tenants, setTenants] = useState<Tenant[]>([])
+    const teamId = useParams().teamId
     useEffect(() => {
         if (session) {
             load()
@@ -46,16 +49,22 @@ const SelectUserTenant = ({ miniMode }) => {
         if (tenantId === session.user.currentTenant) {
             return
         }
-        await requestApi.post(`/tenant/switch/${tenantId}`)
+        const res = await requestApi.post(`/tenant/switch/${tenantId}`)
+        const newTeamId = res.data 
+        setTimeout(() => {
+            if (isEmpty(teamId)) {
+                window.location.reload()
+            } else {
+                const path = window.location.pathname
+                window.location.href =  path.replace(`/${teamId}/`, `/${newTeamId}/`)
+            }
+        }, 1000)
         toast({
             title: "Tenant switched, reloading...",
             status: "success",
             duration: 3000,
             isClosable: true,
         })
-        setTimeout(() => {
-            window.location.reload()
-        }, 1000)
     }
 
     const [isMobileScreen] = useMediaQuery(MobileVerticalBreakpoint)

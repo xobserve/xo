@@ -18,9 +18,8 @@ import useSession from "hooks/use-session";
 import Page from "layouts/page/Page"
 import React, { useEffect, useState } from "react";
 import { FaUserAlt } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { MobileVerticalBreakpoint } from "src/data/constants";
-import { accountLinks } from "src/data/nav-links";
 import { accountSettingMsg, commonMsg } from "src/i18n/locales/en";
 import { requestApi } from "utils/axios/request";
 import { isEmpty } from "utils/validate";
@@ -30,6 +29,7 @@ import { getColorThemeValues } from "utils/theme";
 import { EditorNumberItem } from "components/editor/EditorItem";
 import storage from "utils/localStorage";
 import { UserDataStorageKey } from "src/data/storage-keys";
+import { getAccountLinks } from "./links";
 
 const AccountSetting = () => {
     const t = useStore(commonMsg)
@@ -48,6 +48,9 @@ const AccountSetting = () => {
     const [name, setName] = useState('')
     const [themeColor, setThemeColor] = useState('')
     const [themeFontsize, setThemeFontsize] = useState(null)
+
+    const teamId = useParams().teamId
+    const accountLinks = getAccountLinks(teamId)
 
     useEffect(() => {
         if (session) {

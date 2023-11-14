@@ -4,7 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"errors"
-	"fmt"
 	"sort"
 	"strconv"
 	"time"
@@ -342,32 +341,30 @@ func SwitchTenant(c *gin.Context) {
 		return
 	}
 
-	err := SetTenantForUser(c.Request.Context(), tenantId, userId)
+	teamId, err := SetTenantForUser(c.Request.Context(), tenantId, userId)
 	if err != nil {
 		logger.Warn("switch tenant error", "error", err)
 		c.JSON(500, common.RespInternalError())
 		return
 	}
 
-	c.JSON(200, common.RespSuccess(nil))
+	c.JSON(200, common.RespSuccess(teamId))
 }
 
-func SetTenantForUser(ctx context.Context, tenantId int64, userId int64) error {
+func SetTenantForUser(ctx context.Context, tenantId int64, userId int64) (int64, error) {
 	teams, err := models.QueryVisibleTeamsByUserId(ctx, tenantId, userId)
 	if err != nil {
-		return err
+		return 0, err
 	}
 
 	if len(teams) == 0 {
-		return errors.New("you are not in any team now")
+		return 0, errors.New("you are not in any team now")
 	}
 
 	_, err = db.Conn.ExecContext(ctx, "UPDATE user SET current_tenant=?, current_team=? WHERE id=?", tenantId, teams[0], userId)
 	if err != nil {
-		return err
+		return 0, err
 	}
 
-	fmt.Println("here221111:", tenantId, userId, teams[0])
-
-	return nil
+	return teams[0], nil
 }

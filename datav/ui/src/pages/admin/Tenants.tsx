@@ -14,7 +14,6 @@
 import { useStore } from "@nanostores/react"
 import Page from "layouts/page/Page"
 import React, { memo, useEffect, useState } from "react"
-import { adminLinks } from "src/data/nav-links"
 import { commonMsg, websiteAdmin } from "src/i18n/locales/en"
 import { Box, Button, Flex, HStack, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Table, TableContainer, Tag, Tbody, Td, Th, Thead, Tr, useDisclosure, useToast } from "@chakra-ui/react"
 
@@ -27,6 +26,8 @@ import { Form, FormSection } from "components/form/Form"
 import FormItem from "components/form/Item"
 import { cloneDeep } from "lodash"
 import { isEmpty } from "utils/validate"
+import { useParams } from "react-router-dom"
+import { getAdminLinks } from "./links"
 
 export const AdminTenants = memo(() => {
     const { session } = useSession()
@@ -37,10 +38,14 @@ export const AdminTenants = memo(() => {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [tempTenant, setTempTenant] = useState<Partial<Tenant>>(null)
 
+    const teamId = useParams().teamId
+    const adminLinks = getAdminLinks(teamId)
+    
     useEffect(() => {
         load()
     }, [])
 
+    
     const load = async () => {
         const res = await requestApi.get("/tenant/list/all")
         setTenants(res.data)

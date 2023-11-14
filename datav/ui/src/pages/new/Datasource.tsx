@@ -15,13 +15,14 @@ import React from "react"
 import { FormSection } from "src/components/form/Form"
 import Page from "layouts/page/Page"
 import { FaPlus } from "react-icons/fa"
-import { newLinks } from "src/data/nav-links"
 import DatasourceEditor from "src/views/datasource/Editor"
 import { Datasource } from "types/datasource"
 import { commonMsg, newMsg } from "src/i18n/locales/en"
 import { useStore } from "@nanostores/react"
 import { globalTeamId } from "types/teams"
 import { DatasourceTypePrometheus } from "src/views/dashboard/plugins/built-in/datasource/prometheus/types"
+import { useParams } from "react-router-dom"
+import { getNewLinks } from "./links"
 
 const initDatasource: Datasource = {
     id: 0,
@@ -35,6 +36,10 @@ const initDatasource: Datasource = {
 const NewDatasourcePage = () => {
     const t = useStore(commonMsg)
     const t1 = useStore(newMsg)
+
+    const teamId = useParams().teamId
+    const newLinks = getNewLinks(teamId)
+
     return <>
         <Page title={t.new} subTitle={t1.subTitle} icon={<FaPlus />} tabs={newLinks}>
             <FormSection maxW="500px" title={t1.dsInfo}>

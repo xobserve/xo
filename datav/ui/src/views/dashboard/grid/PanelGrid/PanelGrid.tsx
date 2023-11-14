@@ -335,7 +335,7 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
     const panelInnerHeight = isEmpty(panel.title) ? height : panelBodyHeight// 10px padding top and bottom of panel body
     const panelInnerWidth = width // 10px padding left and right of panel body
 
-    console.log("panel grid rendered, panel data: ", panelData)
+    // console.log("panel grid rendered, panel data: ", panelData)
     const data = useMemo(() => {
         const d = cloneDeep(panelData)
         let res = d

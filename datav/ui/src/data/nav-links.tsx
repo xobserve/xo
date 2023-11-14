@@ -33,50 +33,9 @@ export const navLinks: Route[] = [
 ]
 
 
-export const accountLinks = [
-    {
-        title: 'user',
-        url: '/account/setting',
-        baseUrl: '/account/setting',
-        icon: <FaUserEdit />
-    }
-]
 
-export const adminLinks = [
-    {
-        title: 'auditLog',
-        url: '/admin/audit',
-        baseUrl: '/admin/audit',
-        icon: <MdOutlineAdminPanelSettings />
-    },
-    {
-        title: 'tenant',
-        url: '/admin/tenants',
-        baseUrl: '/admin/tenants',
-        icon: <FaUser />
-    },
-    {
-        title: 'user',
-        url: '/admin/users',
-        baseUrl: '/admin/users',
-        icon: <FaUserCog />
-    },
-]
 
-export const tenantLinks = [
-    {
-        title: 'members',
-        url: '/admin/tenant/users',
-        baseUrl: '/admin/tenant/users',
-        icon: <FaUserCog />
-    },
-    {
-        title: 'team',
-        url: '/admin/tenant/teams',
-        baseUrl: '/admin/tenant/teams',
-        icon: <FaUsers />
-    },
-]
+
 
 export const cfgLinks = [
     {
@@ -88,23 +47,3 @@ export const cfgLinks = [
 ]
 
 
-export const newLinks = [
-    {
-        title: 'NewDashboard',
-        url: '/new/dashboard',
-        baseUrl: '/new/dashboard',
-        // icon: <FaUsersCog />
-    },
-    {
-        title: 'ImportDashboard',
-        url: '/new/import',
-        baseUrl: '/new/import',
-        // icon: <FaUsersCog />
-    },
-    {
-        title: 'NewDatasource',
-        url: '/new/datasource',
-        baseUrl: '/new/datasource',
-        // icon: <FaUsersCog />
-    },
-]

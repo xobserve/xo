@@ -36,7 +36,7 @@ import { useStore } from "@nanostores/react"
 import { commonMsg, sidebarMsg } from "src/i18n/locales/en"
 import useSession from "hooks/use-session"
 import useFullscreen from "hooks/useFullscreen"
-import { Link, useLocation } from "react-router-dom"
+import { Link, useLocation, useParams } from "react-router-dom"
 import storage from "utils/localStorage"
 import { SidemenuMinimodeKey } from "src/data/storage-keys"
 import ReserveUrls from "src/data/reserve-urls"
@@ -85,6 +85,8 @@ const Container = (props: Props) => {
   const [miniMode, setMiniMode] = useState(storage.get(SidemenuMinimodeKey) ?? true)
   const fullscreen = useFullscreen()
   const [onHover, setOnHover] = useState(false)
+  const teamId = useParams().teamId
+  const teamPath = isEmpty(teamId) ? "" : `/${teamId}`
 
   sidemenu?.forEach(nav => {
     try {
@@ -110,10 +112,10 @@ const Container = (props: Props) => {
   }
 
   const bottomNavs = [
-    { title: t.new, icon: "FaPlus", baseUrl: ReserveUrls.New, url: `${ReserveUrls.New}/dashboard`, isActive: asPath.startsWith(ReserveUrls.New) },
-    { title: t.configuration, icon: "FaCog", baseUrl: ReserveUrls.Config, url: `${ReserveUrls.Config}/team/datasources`, isActive: asPath.startsWith(ReserveUrls.Config) },
+    { title: t.new, icon: "FaPlus", baseUrl: teamPath + ReserveUrls.New, url: `${teamPath}${ReserveUrls.New}/dashboard`, isActive: asPath.startsWith(teamPath + ReserveUrls.New) },
+    { title: t.configuration, icon: "FaCog", baseUrl: teamPath + ReserveUrls.Config, url: `${teamPath}${ReserveUrls.Config}/team/datasources`, isActive: asPath.startsWith(teamPath + ReserveUrls.Config) },
   ]
-  config.showAlertIcon && bottomNavs.push({ title: t.alert, icon: "FaBell", baseUrl: ReserveUrls.Alerts, url: `${ReserveUrls.Alerts}`, isActive: asPath.startsWith(ReserveUrls.Alerts) })
+  // config.showAlertIcon && bottomNavs.push({ title: t.alert, icon: "FaBell", baseUrl: teamPath + ReserveUrls.Alerts, url: `${teamPath}${ReserveUrls.Alerts}`, isActive: asPath.startsWith(teamPath + ReserveUrls.Alerts) })
   bottomNavs.push({ title: t1.search, icon: "FaBuromobelexperte", baseUrl: ReserveUrls.Search, url: `${ReserveUrls.Search}`, isActive: asPath.startsWith(ReserveUrls.Search) })
 
   const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
@@ -243,7 +245,7 @@ const Container = (props: Props) => {
                 size="xs"
               />
               <Portal>
-                <MenuList fontSize="0.9rem" py="0" zIndex={1000}>
+                <MenuList  py="0" zIndex={1000}>
                   {sidemenu?.map((link) => {
                     const Icon = Icons[link.icon]
                     return <Link key={link.url} to={link.children?.length > 0 ? link.children[0].url : link.url}>
@@ -267,7 +269,7 @@ const Container = (props: Props) => {
                       if (Icon) {
                         if (nav.url == ReserveUrls.Search) {
                           return <MenuItem key={nav.url}  >
-                            <Search key={nav.url} title={nav.title} miniMode={false} sideWidth={sideWidth} />
+                            <Search key={nav.url} title={nav.title} miniMode={false} sideWidth={sideWidth} fontSize={navSize} />
                           </MenuItem>
                         } else {
                           return <Link key={nav.url} to={nav.url}>

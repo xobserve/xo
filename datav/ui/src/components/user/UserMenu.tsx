@@ -33,18 +33,25 @@ import { FaRegSun, FaUserAlt, FaSignOutAlt, FaStar, FaSignInAlt, FaFont } from "
 
 
 import { isAdmin } from "types/role"
-import { Link, useLocation, useNavigate } from "react-router-dom"
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom"
 import { localeSetting, locale } from "src/i18n/i18n"
 import { useStore } from "@nanostores/react"
 import { commonMsg, sidebarMsg } from "src/i18n/locales/en"
 import SelectUserTeam from "components/user/SelectUserTeam"
 import { ColorModeSwitcher } from "src/components/ColorModeSwitcher"
 import SelectUserTenant from "./SelectUserTenant"
+import { isEmpty } from "utils/validate"
 
 const UserMenu = ({ miniMode }) => {
     const t = useStore(commonMsg)
     const t1 = useStore(sidebarMsg)
     const { session, logout } = useSession()
+
+    const teamId = useParams().teamId
+    let teamPath = ''
+    if (!isEmpty(teamId)) {
+        teamPath = `/${teamId}`
+    }
 
     const toast = useToast()
     const navigate = useNavigate()
@@ -94,13 +101,13 @@ const UserMenu = ({ miniMode }) => {
                 }
                 <Portal>
                     <MenuList zIndex={1000} fontSize="1em">
-                        <Link to={session ? `/account/setting` : null}><MenuItem  py="2px" cursor="default" bg="transparent" _hover={{bg: "transparent"}}  icon={<FaUserAlt fontSize="1em" />} >
+                        <Link to={session ? `${teamPath}/account/setting` : null}><MenuItem  py="2px" cursor="default" bg="transparent" _hover={{bg: "transparent"}}  icon={<FaUserAlt fontSize="1em" />} >
                             <Text>{session?.user.name ?? "xobserve guest"}</Text>
                             {session && <Text>{session.user.username}</Text>}
                         </MenuItem></Link>
                         <MenuDivider /> 
-                        {session && isAdmin(session.user.role) && <><Link to={`/admin/users`}><MenuItem width="100%" icon={<FaStar fontSize="1em" />} >{t1.adminPanel}</MenuItem></Link></>}
-                        {session && <><Link to={`/admin/tenant/users`}><MenuItem width="100%" icon={<FaStar fontSize="1em" />} >{t1.tenantAdmin}</MenuItem></Link><MenuDivider /></>}
+                        {session && isAdmin(session.user.role) && <><Link to={`${teamPath}/admin/users`}><MenuItem width="100%" icon={<FaStar fontSize="1em" />} >{t1.adminPanel}</MenuItem></Link></>}
+                        {session && <><Link to={`${teamPath}/admin/tenant/users`}><MenuItem width="100%" icon={<FaStar fontSize="1em" />} >{t1.tenantAdmin}</MenuItem></Link><MenuDivider /></>}
 
                         <MenuItem width="100%"><Box width="100%"><ColorModeSwitcher miniMode={false} /></Box></MenuItem>
                         <MenuItem width="100%" onClick={() => changeLang()} icon={<FaFont fontSize="1em" />}>{t1.currentLang} - {locale.get() == "en" ? "English" : "简体中文"}</MenuItem>
@@ -109,7 +116,7 @@ const UserMenu = ({ miniMode }) => {
                             <MenuItem mt="2px" width="100%">    <SelectUserTenant miniMode={false} /></MenuItem>
                             <MenuItem mt="2px" width="100%">    <SelectUserTeam miniMode={false} /></MenuItem>
                             <MenuDivider />
-                            <Link to={`/account/setting`}><MenuItem width="100%" icon={<FaRegSun fontSize="1em" />}>{t1.accountSetting}</MenuItem></Link>
+                            <Link to={`${teamPath}/account/setting`}><MenuItem width="100%" icon={<FaRegSun fontSize="1em" />}>{t1.accountSetting}</MenuItem></Link>
                             <MenuItem width="100%" onClick={() => logout()} icon={<FaSignOutAlt fontSize="1em" />}>{t.logout}</MenuItem>
                         </>}
                     </MenuList>

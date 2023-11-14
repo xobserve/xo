@@ -28,7 +28,7 @@ import loadable from '@loadable/component';
 import PageContainer from "layouts/PageContainer";
 import AdminPage from "src/pages/admin/AuditLogs";
 import GithubLogin from "src/pages/GithubLogin";
-import  AdminTenants  from "pages/admin/Tenants";
+import AdminTenants from "pages/admin/Tenants";
 import TeamLayout from "src/pages/cfg/team/components/Layout";
 import AdminUsers from "pages/admin/Users";
 import TeamDatasources from "pages/cfg/team/Datasources";
@@ -48,118 +48,125 @@ const teamPageContainer = ele => {
   return <TeamLayout>{ele}</TeamLayout>
 }
 
-const cfgRoutes = [
+
+export const getRoutes = (enableTenant=false) => {
+  let teamId = ''
+  if (enableTenant) {
+     teamId = `/:teamId`
+  }
+
+  const cfgRoutes = [
     {
-    path: "/cfg/team/datasources",
-    //@ts-ignore
-    element: pageContainer(teamPageContainer(<TeamDatasources />)),
-  },
-  {
-    path: "/cfg/team/variables",
-    //@ts-ignore
-    element: pageContainer(teamPageContainer(<TeamVariablesPage />)),
-  },
-  {
-    path: "/cfg/team/dashboards",
-    //@ts-ignore
-    element: pageContainer(teamPageContainer(<TeamDashboardsPage />)),
-  },
-  {
-    path: "/cfg/team/members",
-    //@ts-ignore
-    element: pageContainer(teamPageContainer(<TeamMembersPage />)),
-  },
-  {
-    path: "/cfg/team/setting",
-    //@ts-ignore
-    element: pageContainer(teamPageContainer(<TeamSettingPage />)),
-  },
-  {
-    path: "/cfg/team/sidemenu",
-    //@ts-ignore
-    element: pageContainer(teamPageContainer(<TeamSidemenuPage />)),
-  },
-]
+      path: `${teamId}/cfg/team/datasources`,
+      //@ts-ignore
+      element: pageContainer(teamPageContainer(<TeamDatasources />)),
+    },
+    {
+      path: `${teamId}/cfg/team/variables`,
+      //@ts-ignore
+      element: pageContainer(teamPageContainer(<TeamVariablesPage />)),
+    },
+    {
+      path: `${teamId}/cfg/team/dashboards`,
+      //@ts-ignore
+      element: pageContainer(teamPageContainer(<TeamDashboardsPage />)),
+    },
+    {
+      path: `${teamId}/cfg/team/members`,
+      //@ts-ignore
+      element: pageContainer(teamPageContainer(<TeamMembersPage />)),
+    },
+    {
+      path: `${teamId}/cfg/team/setting`,
+      //@ts-ignore
+      element: pageContainer(teamPageContainer(<TeamSettingPage />)),
+    },
+    {
+      path: `${teamId}/cfg/team/sidemenu`,
+      //@ts-ignore
+      element: pageContainer(teamPageContainer(<TeamSidemenuPage />)),
+    },
+  ]
 
-const newRoutes = [
-  {
-    path: "/new/dashboard",
-    element: pageContainer(<NewDashboardPage />),
-  },
-  {
-    path: "/new/datasource",
-    element: pageContainer(<NewDatasourcePage />),
-  },
-  {
-    path: "/new/import",
-    element: pageContainer(<ImportDashboardPage />),
-  },
-]
+  const newRoutes = [
+    {
+      path: `${teamId}/new/dashboard`,
+      element: pageContainer(<NewDashboardPage />),
+    },
+    {
+      path: `${teamId}/new/datasource`,
+      element: pageContainer(<NewDatasourcePage />),
+    },
+    {
+      path: `${teamId}/new/import`,
+      element: pageContainer(<ImportDashboardPage />),
+    },
+  ]
 
-const adminRoutes = [
-  {
-    path: "/admin/audit",
-    element: pageContainer(<AdminPage />),
-  },
-  {
-    path: "/admin/tenants",
-    element: pageContainer(<AdminTenants />),
-  },
-  {
-    path: "/admin/users",
-    element: pageContainer(<AdminUsers />),
-  },
-  {
-    path: "/admin/tenant/users",
-    element: pageContainer(<AdminTenantUsers />),
-  },
-  {
-    path: "/admin/tenant/teams",
-    element: pageContainer(<TeamsPage />),
-  },
-]
-
-export const routes = [
-  // {
-  //   path: "/",
-  //   Component: () => {
-  //     return <div><Navigate replace to="/home"/></div>
-  //   }
-  // },
-  {
-    path: "/account/setting",
-    element: pageContainer(<AccountSetting />),
-  },
-  ...newRoutes,
-  ...cfgRoutes,
-  ...adminRoutes,
-  {
-    path: "/*", 
-    element: pageContainer(<DashboardPage />),
-  },
-  {
-    path: "*",
-    element: pageContainer(<NotFoundPage />),
-  },
-  {
-    path: "/trace/:id/:datasourceId",
-    element: <TracePage />,
-  },
-  {
-    path: "/test",
-    element: <TestPage />
-  },
-  {
-    path: "/examples/iframe",
-    element: <IframeExamplesPage />
-  },
-  {
-    path: "/login",
-    element: <Login />,
-  },
-  {
-    path: "/login/github",
-    element: <GithubLogin />,
-  },
-]
+  const adminRoutes = [
+    {
+      path: `${teamId}/admin/audit`,
+      element: pageContainer(<AdminPage />),
+    },
+    {
+      path: `${teamId}/admin/tenants`,
+      element: pageContainer(<AdminTenants />),
+    },
+    {
+      path: `${teamId}/admin/users`,
+      element: pageContainer(<AdminUsers />),
+    },
+    {
+      path: `${teamId}/admin/tenant/users`,
+      element: pageContainer(<AdminTenantUsers />),
+    },
+    {
+      path: `${teamId}/admin/tenant/teams`,
+      element: pageContainer(<TeamsPage />),
+    },
+  ]
+  return [
+    // {
+    //   path: "/",
+    //   Component: () => {
+    //     return <div><Navigate replace to="/home"/></div>
+    //   }
+    // },
+    {
+      path: `${teamId}/account/setting`,
+      element: pageContainer(<AccountSetting />),
+    },
+    ...newRoutes,
+    ...cfgRoutes,
+    ...adminRoutes,
+    {
+      path: `${teamId}/:dashboardId`,
+      element: pageContainer(<DashboardPage />),
+    },
+    {
+      path: "*",
+      element: <NotFoundPage />,
+    },
+    {
+      path: `${teamId}/trace/:id/:datasourceId`,
+      element: <TracePage />,
+    },
+    {
+      path: "/test",
+      element: <TestPage />
+    },
+    {
+      path: "/examples/iframe",
+      element: <IframeExamplesPage />
+    },
+    {
+      path: "/login",
+      element: <Login />,
+    },
+    {
+      path: "/login/github",
+      element: <GithubLogin />,
+    },
+  ]
+}
 

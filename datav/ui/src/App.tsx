@@ -24,11 +24,10 @@ import { requestApi } from 'utils/axios/request'
 import { $config, UIConfig } from 'src/data/configs/config'
 import { initVariableSelected } from './views/variables/SelectVariable'
 import AntdWrapper from 'src/components/AntdWrapper'
-import { routes } from './routes';
+import { getRoutes } from './routes';
 import { initColors } from 'utils/colors';
 import {  $variables } from './views/variables/store';
 import { $datasources } from './views/datasource/store';
-import { concat } from 'lodash';
 import { $teams } from './views/team/store';
 import useSession from 'hooks/use-session';
 import storage from 'utils/localStorage';
@@ -95,7 +94,7 @@ const AppView = () => {
 }
 
 
-  const router = createBrowserRouter(routes);
+  const router = createBrowserRouter(getRoutes(true));
 
   return (
     <>
