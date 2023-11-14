@@ -22,9 +22,9 @@ import { Box, HStack, Select, Text } from "@chakra-ui/react"
 import { $teams } from "src/views/team/store"
 import {  $variables } from "src/views/variables/store"
 import SelectVariables from "src/views/variables/SelectVariable"
-import useSession from "hooks/use-session"
 import { isEmpty } from "utils/validate"
 import { useParams } from "react-router-dom"
+import { $config } from "src/data/configs/config"
 
 const getTeamSubLinks = (teamId) => {
     let teamPath = ''
@@ -49,14 +49,14 @@ export const StorageTeamNavId = "team-nav-id"
 
 const TeamLayout = ({ children }: Props) => {
     const t1 = useStore(cfgTeam)
-    const { session } = useSession()
-    const id = session?.user.currentTeam.toString()
+    const config = useStore($config)
+    const id = config.currentTeam.toString()
     
     const teamId = useParams().teamId
     const tabLinks: Route[] = getTeamSubLinks(teamId)
 
     const teams = useStore($teams)
-    const team = teams?.find(t => t.id.toString() == id)
+    const team = teams?.find(t => t.id.toString() == (teamId ?? id))
     const vars = useStore($variables)
 
     return <>

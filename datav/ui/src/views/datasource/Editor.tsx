@@ -16,15 +16,14 @@ import { Datasource } from "types/datasource"
 import { useImmer } from "use-immer"
 import { requestApi } from "utils/axios/request"
 import FormItem from "src/components/form/Item"
-import React, { useState } from "react";
+import React from "react";
 import { useStore } from "@nanostores/react"
 import { commonMsg, newMsg } from "src/i18n/locales/en"
-import { $teams } from "../team/store"
-import { useSearchParam } from "react-use"
 import { FormSection } from "components/form/Form"
 import { externalDatasourcePlugins } from "../dashboard/plugins/external/plugins"
 import { builtinDatasourcePlugins } from "../dashboard/plugins/built-in/plugins"
 import { isPluginDisabled } from "utils/plugins"
+import { useParams } from "react-router-dom"
 
 interface Props {
     ds: Datasource
@@ -37,7 +36,8 @@ const DatasourceEditor = ({ ds, onChange = null, teamEditable = true }: Props) =
     const t1 = useStore(newMsg)
     const toast = useToast()
     const [datasource, setDatasource] = useImmer<Datasource>(ds)
-
+    const teamId = useParams().teamId
+    const teamPath = isEmpty(teamId) ? "" : `/${teamId}`
 
     const plugin = builtinDatasourcePlugins[datasource.type] ?? externalDatasourcePlugins[datasource.type]
     const isExternalPlugin = isEmpty(builtinDatasourcePlugins[datasource.type])
@@ -54,7 +54,7 @@ const DatasourceEditor = ({ ds, onChange = null, teamEditable = true }: Props) =
 
         if (ds.id == 0) {
             setTimeout(() => {
-                location.href = (`/cfg/team/datasources`)
+                location.href = (`${teamPath}/cfg/team/datasources`)
             }, 1000)
         } else {
             onChange()

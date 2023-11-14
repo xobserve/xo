@@ -18,7 +18,6 @@
 import { HStack, IconButton, Popover, PopoverBody, PopoverContent, PopoverTrigger,  Portal,  Text, useMediaQuery, useToast } from "@chakra-ui/react"
 import { useStore } from "@nanostores/react"
 import CardSelect, { CardSelectItem } from "src/components/cards/CardSelect"
-import useSession from "hooks/use-session"
 import React, { useEffect, useState } from "react"
 import { FaAlignLeft } from "react-icons/fa"
 import { MobileVerticalBreakpoint } from "src/data/constants"
@@ -27,11 +26,12 @@ import {  Team } from "types/teams"
 import { requestApi } from "utils/axios/request"
 import { isEmpty } from "utils/validate"
 import { useParams } from "react-router-dom"
+import { $config } from "src/data/configs/config"
 
 const SelectUserTeam = ({miniMode}) => {
     const t1 = useStore(sidebarMsg)
     const toast = useToast()
-    const {session} = useSession()
+    const config = useStore($config)
     const [teams, setTeams] = useState<Team[]>([])
     const currentTeamId = useParams().teamId
 
@@ -45,7 +45,7 @@ const SelectUserTeam = ({miniMode}) => {
     }
 
     const selectTeam = async (teamId) => {
-        if (teamId === session.user.currentTeam) {
+        if (teamId === config?.currentTeam) {
             return 
         }
         await requestApi.post(`/team/switch/${teamId}`)
@@ -80,7 +80,7 @@ const SelectUserTeam = ({miniMode}) => {
                         _focus={{ border: null }}
                         icon={<FaAlignLeft />}
                     /> : <FaAlignLeft fontSize="1em"/>}
-                    {!miniMode && <Text fontSize="1em">{t1.selectTeam} - {teams.find(t => t.id == session?.user.currentTeam)?.name}</Text>}
+                    {!miniMode && <Text fontSize="1em">{t1.selectTeam} - {teams.find(t => t.id == config?.currentTeam)?.name}</Text>}
                     </HStack>
                
                 </PopoverTrigger>
@@ -90,7 +90,7 @@ const SelectUserTeam = ({miniMode}) => {
                     <PopoverBody>
                         <CardSelect title="">
                             {teams.map(team => 
-                                <CardSelectItem key={team.id} selected={session?.user.currentTeam == team.id} onClick={() => selectTeam(team.id)}>
+                                <CardSelectItem key={team.id} selected={config?.currentTeam == team.id} onClick={() => selectTeam(team.id)}>
                                     <Text fontSize="1em" fontWeight="550" px="2" py="1">
                                         {team.name}
                                     </Text>

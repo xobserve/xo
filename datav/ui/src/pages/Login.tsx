@@ -12,7 +12,7 @@
 // limitations under the License.
 import React from 'react'
 import { useCallback } from "react";
-import type { Container, Engine } from "tsparticles-engine";
+import type {  Engine } from "tsparticles-engine";
 import Particles from "react-particles";
 import { loadFull } from "tsparticles";
 import useSession from "hooks/use-session"
@@ -22,12 +22,12 @@ import { requestApi } from 'utils/axios/request';
 import storage from 'utils/localStorage';
 import { Box, Button, Heading, HStack, Image, Input, useColorModeValue, useMediaQuery } from '@chakra-ui/react';
 import { saveToken } from 'utils/axios/getToken';
-import { useNavigate } from 'react-router-dom';
 import { useStore } from '@nanostores/react';
 import { commonMsg } from 'src/i18n/locales/en';
 import { FaGithub } from 'react-icons/fa';
 import { $config } from 'src/data/configs/config';
 import { MobileBreakpoint } from 'src/data/constants';
+import { Session } from 'types/user';
 
 // login page
 function Login() {
@@ -37,11 +37,11 @@ function Login() {
         await loadFull(engine);
     }, []);
 
-    const navigate = useNavigate()
     const [username, setUsername] = React.useState('')
     const [password, setPassword] = React.useState('')
-    const { useLogin } = useSession()
+    const {useLogin} = useSession()
 
+  
     const onFinish = async () => {
         const res = await requestApi.post(
             '/login',
@@ -49,7 +49,8 @@ function Login() {
                 username: username,
                 password: password
             })
-        saveToken(res.data.token)
+        const sess: Session = res.data
+        saveToken(sess.token)
         useLogin()
         setTimeout(() => {
             const oldPage = storage.get('current-page')
@@ -57,7 +58,7 @@ function Login() {
                 storage.remove('current-page')
                 window.location.href = oldPage
             } else {
-                window.location.href = '/'
+                window.location.href = `/`
             }
         }, 200)
     };

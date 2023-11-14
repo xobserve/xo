@@ -140,7 +140,11 @@ export const getRoutes = (enableTenant=false) => {
     ...cfgRoutes,
     ...adminRoutes,
     {
-      path: `${teamId}/:dashboardId`,
+      path: `${teamId}/*`,
+      element: pageContainer(<DashboardPage />),
+    },
+    {
+      path: `/`,
       element: pageContainer(<DashboardPage />),
     },
     {
@@ -152,11 +156,11 @@ export const getRoutes = (enableTenant=false) => {
       element: <TracePage />,
     },
     {
-      path: "/test",
+      path: `${teamId}/test`,
       element: <TestPage />
     },
     {
-      path: "/examples/iframe",
+      path: `${teamId}/examples/iframe`,
       element: <IframeExamplesPage />
     },
     {

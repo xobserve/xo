@@ -30,7 +30,6 @@ import { ThresholdsMode } from "types/threshold"
 import { findOverride, findOverrideRule, findRuleInOverride } from "utils/dashboard/panel"
 import { BarRules } from "./OverridesEditor"
 import { commonInteractionEvent, genDynamicFunction } from "utils/dashboard/dynamicCall"
-import { useNavigate } from "react-router-dom"
 import { getTimeFormatForChart } from "utils/format"
 
 
@@ -46,7 +45,6 @@ const BarChart = memo((props: Props) => {
     const options = panel.plugins.bar
     const [chart, setChart] = useState<echarts.ECharts>(null)
     const { colorMode } = useColorMode()
-    const navigate = useNavigate()
     useEffect(() => {
         if (chart) {
             chart.on('click', function (event) {

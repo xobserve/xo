@@ -20,7 +20,7 @@ import ReserveUrls from "src/data/reserve-urls"
 import DatasourceEditor from "src/views/datasource/Editor"
 import { Datasource } from "types/datasource"
 import { requestApi } from "utils/axios/request"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { useStore } from "@nanostores/react"
 import { cfgDatasourceMsg, commonMsg } from "src/i18n/locales/en"
 import { Team } from "types/teams"
@@ -35,12 +35,15 @@ const TeamDatasources = ({ team }: { team: Team }) => {
     const navigate = useNavigate()
     const [datasources, setDatasources] = useState<Datasource[]>(null)
     const [datasource, setDatasource] = useState<Datasource>(null)
+    const teamId = useParams().teamId
+    const teamPath = isEmpty(teamId) ? "" : `/${teamId}`
+
     useEffect(() => {
         load()
     }, [])
 
     const load = async () => {
-        const res = await requestApi.get(`/datasource/all`)
+        const res = await requestApi.get(`/datasource/all${teamId ? `?teamId=${teamId}` : ''}`)
         setDatasources(res.data)
     }
 
@@ -89,18 +92,18 @@ const TeamDatasources = ({ team }: { team: Team }) => {
     })
 
     const getPlugin = (ds: Datasource) => {
-        const p =  builtinDatasourcePlugins[ds.type] ?? externalDatasourcePlugins[ds.type]
-        return p 
+        const p = builtinDatasourcePlugins[ds.type] ?? externalDatasourcePlugins[ds.type]
+        return p
     }
 
     return <>
         <Box>
             <Flex justifyContent="space-between" alignItems="end">
                 <Text>{t.builtIn}</Text>
-                <Button size="sm" onClick={() => navigate(ReserveUrls.New + `/datasource?teamId=${team.id}`)}>{t.newItem({ name: t.datasource })}</Button>
+                <Button size="sm" onClick={() => navigate(teamPath + ReserveUrls.New + `/datasource?teamId=${team.id}`)}>{t.newItem({ name: t.datasource })}</Button>
             </Flex>
 
-            {datasources ?<VStack alignItems="left" spacing={2} mt="3">
+            {datasources ? <VStack alignItems="left" spacing={2} mt="3">
                 {
                     builtInDatasources?.map(ds => {
                         return <DatasourceCard ds={ds} selectedDs={datasource} plugin={getPlugin(ds)} t={t} onEdit={() => { setDatasource(ds); onOpen() }} onDelete={() => { onAlertOpen(); setDatasource(ds) }} />
@@ -112,7 +115,7 @@ const TeamDatasources = ({ team }: { team: Team }) => {
                         return <DatasourceCard ds={ds} selectedDs={datasource} plugin={getPlugin(ds)} t={t} onEdit={() => { setDatasource(ds); onOpen() }} onDelete={() => { onAlertOpen(); setDatasource(ds) }} />
                     })
                 }
-            </VStack> : <Loading style={{marginTop: '50px'}}/>}
+            </VStack> : <Loading style={{ marginTop: '50px' }} />}
         </Box>
         <Modal isOpen={isOpen} onClose={onEditClose}>
             <ModalOverlay />

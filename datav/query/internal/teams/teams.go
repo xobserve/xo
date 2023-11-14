@@ -35,35 +35,56 @@ import (
 var logger = colorlog.RootLogger.New("logger", "teams")
 
 func GetTeams(c *gin.Context) {
-	teams := make(models.Teams, 0)
+	teamId, _ := strconv.ParseInt(c.Query("teamId"), 10, 64)
 
 	u := user.CurrentUser(c)
 	var tenantId int64
-	if u != nil {
-		tenantId = u.CurrentTenant
+	var err error
+	if teamId == 0 {
+		if u != nil {
+			tenantId = u.CurrentTenant
+		} else {
+			tenantId = models.DefaultTenantId
+		}
 	} else {
-		tenantId = models.DefaultTenantId
+		tenantId, err = models.QueryTenantIdByTeamId(c.Request.Context(), teamId)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				c.JSON(400, common.RespError(e.TeamNotExist))
+				return
+			}
+			logger.Warn("get tenant id by team id error", "error", err)
+			c.JSON(500, common.RespInternalError())
+			return
+		}
 	}
 
+	teams, err := GetTeamsByTenantId(c.Request.Context(), tenantId, u)
+	if err != nil {
+		logger.Warn("get teams error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+
+	c.JSON(200, common.RespSuccess(teams))
+}
+
+func GetTeamsByTenantId(ctx context.Context, tenantId int64, u *models.User) (models.Teams, error) {
+	teams := make(models.Teams, 0)
 	q := fmt.Sprintf(`SELECT id,name,brief,allow_global,is_public,created_by FROM team WHERE tenant_id='%d'`, tenantId)
 
-	fmt.Println("here3333:", tenantId)
 	if u == nil {
 		q = fmt.Sprintf("%s AND is_public=true", q)
 	} else {
 		// user can see the teams he is in
 		if !u.Role.IsAdmin() {
-			userId := user.CurrentUserId(c)
-			members, err := models.QueryVisibleTeamsByUserId(c.Request.Context(), tenantId, userId)
+			members, err := models.QueryVisibleTeamsByUserId(ctx, tenantId, u.Id)
 			if err != nil {
-				logger.Warn("get all teams error", "error", err)
-				c.JSON(500, common.RespInternalError())
-				return
+				return nil, err
 			}
 
 			if len(members) == 0 {
-				c.JSON(200, common.RespSuccess(teams))
-				return
+				return teams, nil
 			}
 
 			if len(members) == 1 {
@@ -86,11 +107,9 @@ func GetTeams(c *gin.Context) {
 		}
 	}
 
-	rows, err := db.Conn.QueryContext(c.Request.Context(), q)
+	rows, err := db.Conn.QueryContext(ctx, q)
 	if err != nil {
-		logger.Warn("get all teams error", "error", err)
-		c.JSON(500, common.RespInternalError())
-		return
+		return nil, err
 	}
 	defer rows.Close()
 	for rows.Next() {
@@ -101,18 +120,18 @@ func GetTeams(c *gin.Context) {
 			continue
 		}
 
-		user, _ := models.QueryUserById(c.Request.Context(), team.CreatedById)
+		user, _ := models.QueryUserById(ctx, team.CreatedById)
 		team.CreatedBy = user.Username
 
 		count := 0
-		err = db.Conn.QueryRowContext(c.Request.Context(), "SELECT count(*) FROM team_member WHERE team_id=?", team.Id).Scan(&count)
+		err = db.Conn.QueryRowContext(ctx, "SELECT count(*) FROM team_member WHERE team_id=?", team.Id).Scan(&count)
 		if err != nil {
 			logger.Warn("select team member count error", "error", err)
 		}
 
 		team.MemberCount = count
 		if u != nil {
-			member, _ := models.QueryTeamMember(c.Request.Context(), team.Id, u.Id)
+			member, _ := models.QueryTeamMember(ctx, team.Id, u.Id)
 			if member != nil && member.Id != 0 {
 				team.CurrentUserRole = member.Role
 			}
@@ -125,9 +144,8 @@ func GetTeams(c *gin.Context) {
 
 	sort.Sort(teams)
 
-	c.JSON(200, common.RespSuccess(teams))
+	return teams, nil
 }
-
 func GetTeam(c *gin.Context) {
 	id, _ := strconv.ParseInt(strings.TrimSpace(c.Param("id")), 10, 64)
 	if id == 0 {
@@ -644,7 +662,7 @@ func GetTeamsForUser(c *gin.Context) {
 			teams = append(teams, team)
 		}
 	} else {
-		_, teamId, err := models.GetUserTenantAndTeamId(nil)
+		_, teamId, err := models.GetUserTenantAndTeamId(c.Request.Context(), nil)
 		if err != nil {
 			logger.Warn("query teams for user error", "error", err)
 			c.JSON(500, common.RespInternalError())

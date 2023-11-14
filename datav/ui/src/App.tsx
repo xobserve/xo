@@ -11,12 +11,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { useColorMode } from '@chakra-ui/react'
+import { useColorMode, useToast } from '@chakra-ui/react'
 import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { createStandaloneToast } from '@chakra-ui/toast'
 import CommonStyles from "src/theme/common.styles"
 import BaiduMap from 'src/components/BaiduMap'
@@ -26,7 +26,7 @@ import { initVariableSelected } from './views/variables/SelectVariable'
 import AntdWrapper from 'src/components/AntdWrapper'
 import { getRoutes } from './routes';
 import { initColors } from 'utils/colors';
-import {  $variables } from './views/variables/store';
+import { $variables } from './views/variables/store';
 import { $datasources } from './views/datasource/store';
 import { $teams } from './views/team/store';
 import useSession from 'hooks/use-session';
@@ -36,7 +36,7 @@ import { UserDataStorageKey } from './data/storage-keys';
 
 const { ToastContainer } = createStandaloneToast()
 
-export let canvasCtx;                                                                                                                                                                                                                                                                                                                                                ``
+export let canvasCtx; ``
 
 
 export let appInitialized = false
@@ -45,10 +45,35 @@ const AppView = () => {
   const { colorMode } = useColorMode()
   initColors(colorMode)
 
-
   const [cfg, setConfig] = useState<UIConfig>($config.get())
   canvasCtx = document.createElement('canvas').getContext('2d')!;
-  const {session} = useSession()
+  const { session } = useSession()
+  const toast = useToast()
+  const teamPath = useMemo(() => {
+    let firstIndex;
+    let secondIndex;
+    let i = 0;
+    for (const c of location.pathname) {
+      if (c == '/') {
+        if (firstIndex === undefined) {
+          firstIndex = i;
+          i++
+          continue
+        }
+
+        if (secondIndex === undefined) {
+          secondIndex = i
+          break
+        }
+      }
+      i++
+    }
+
+    const teamPath = location.pathname.slice(firstIndex + 1, secondIndex)
+    return teamPath
+  }, [location.pathname])
+
+  const teamId = Number(teamPath)
   useEffect(() => {
     const firstPageLoading = document.getElementById('first-page-loading');
     if (firstPageLoading) {
@@ -63,42 +88,61 @@ const AppView = () => {
     bodyStyle.background = null
   }, [])
 
+
   useEffect(() => {
     if (session) {
       if (session.user.data) {
         storage.set(UserDataStorageKey, session.user.data)
       }
     }
-  },[session])
+  }, [session])
 
   const loadConfig = async () => {
-    const r0 = requestApi.get(`/datasource/all`)
-    const r = requestApi.get("/config/ui")
-    const r1 = requestApi.get("/teams/all")
+    const res = await requestApi.get(`/config/ui${isNaN(teamId) ? '' : `?teamId=${teamId}`}`)
 
-    const res1 = await Promise.all([r0, r])
+    const cfg: UIConfig = res.data.config
+    if (cfg.currentTeam != teamId && location.pathname != "" && location.pathname != "/") {
+      toast({
+        title: `You are not in team ${teamId}, redirecting to team ${cfg.currentTeam}...`,
+        status: "warning",
+        duration: 3000,
+        isClosable: true,
+      })
 
-    $teams.set((await r1).data)
+      let newPath
+      if (location.pathname == "" || location.pathname == "/") {
+        newPath = `/${cfg.currentTeam}`
+      } else {
+        newPath = location.pathname.replace(`/${teamPath}`, `/${cfg.currentTeam}`)
+      }
+      setTimeout(() => {
+        window.location.href = newPath
+      }, 1500)
+      return 
+    }
 
-    $datasources.set(res1[0].data)
 
-    const res = res1[1]
-    const cfg = res.data.config
-    cfg.sidemenu = cfg.sidemenu.data.filter((item) => !item.hidden)
+    $teams.set(res.data.teams)
+
+
+    $datasources.set(res.data.datasources)
+
+   
+    cfg.sidemenu = (cfg.sidemenu as any).data.filter((item) => !item.hidden)
     setConfig(cfg)
     $config.set(cfg)
 
 
     initVariableSelected(res.data.vars)
     $variables.set(res.data.vars)
-}
+  }
 
 
   const router = createBrowserRouter(getRoutes(true));
 
   return (
     <>
-      {<>
+      {cfg && <>
         <AntdWrapper>
           <RouterProvider router={router} />
         </AntdWrapper>

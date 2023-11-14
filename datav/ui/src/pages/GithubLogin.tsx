@@ -5,9 +5,10 @@ import storage from "utils/localStorage"
 import useSession from "hooks/use-session"
 import { useNavigate } from "react-router-dom"
 import { useSearchParam } from "react-use"
+import { $config } from "src/data/configs/config"
 
 const GithubLogin = () => {
-    const {useLogin} = useSession()
+    const {session, useLogin} = useSession()
     const navigate = useNavigate()
     const code = useSearchParam("code")
 
@@ -30,7 +31,12 @@ const GithubLogin = () => {
                 storage.remove('current-page')
                 location.href = oldPage
             } else {
-                location.href = '/'
+                const sidemenu = $config.get().sidemenu
+                if (sidemenu && sidemenu.length > 0) {
+                    window.location.href = `/${res.data.user.currentTeam}` + sidemenu[0].url
+                } else {
+                    window.location.href = `/${res.data.user.currentTeam}/home`
+                }
             }
         }, 200)
     }

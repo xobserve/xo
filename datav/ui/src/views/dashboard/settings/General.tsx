@@ -22,7 +22,7 @@ import { useStore } from "@nanostores/react"
 import { commonMsg, dashboardSettingMsg } from "src/i18n/locales/en"
 import ColorTag from "../../../components/ColorTag"
 import { requestApi } from "utils/axios/request"
-import { useNavigate } from "react-router"
+import { useNavigate,useParams } from "react-router-dom"
 import { MobileBreakpoint } from "src/data/constants"
 import RadionButtons from "components/RadioButtons"
 
@@ -44,7 +44,7 @@ const GeneralSettings = ({ dashboard, onChange }: Props) => {
     const [desc, setDesc] = useState(dashboard.data.description)
     const [hidingVars, setHidingVars] = useState(dashboard.data.hidingVars)
     const [tag, setTag] = useState('')
-
+    const teamId = useParams().teamId
     const addTag = () => {
         if (dashboard.tags?.length >= 5) {
             toast({
@@ -74,7 +74,7 @@ const GeneralSettings = ({ dashboard, onChange }: Props) => {
         })
 
         setTimeout(() => {
-            navigate(`/cfg/team/dashboards`)
+            navigate(`/${teamId}/cfg/team/dashboards`)
         }, 500)
     }
 

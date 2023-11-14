@@ -19,7 +19,6 @@ import { isEmpty } from "lodash"
 import { useEffect, useState } from "react"
 import { FaPlus } from "react-icons/fa"
 import { Dashboard } from "types/dashboard"
-import { globalTeamId, Team } from "types/teams"
 import { requestApi } from "utils/axios/request"
 import { isJSON } from "utils/is"
 import { useNavigate, useParams } from "react-router-dom"
@@ -40,6 +39,7 @@ const ImportDashboardPage = () => {
 
 
     const importDashboard = async () => {
+        dashboard.title = dashboard.title + " (Imported)"
         const res = await requestApi.post("/dashboard/save", {dashboard,changes: "Imported from json"})
         toast({
             title: t1.importToast,
@@ -49,7 +49,7 @@ const ImportDashboardPage = () => {
         })
 
         setTimeout(() => {
-            navigate(`/${res.data}`)
+            navigate(`/${teamId}/${res.data}`)
         }, 1000)
     }
 

@@ -18,7 +18,7 @@ import moment from "moment"
 import React, { useEffect, useRef, useState } from "react"
 import { cfgTeam, commonMsg } from "src/i18n/locales/en"
 import { Role } from "types/role"
-import { globalTeamId, Team, TeamMember } from "types/teams"
+import { Team, TeamMember } from "types/teams"
 import { requestApi } from "utils/axios/request"
 import Loading from "src/components/loading/Loading"
 import { useNavigate } from "react-router-dom"
@@ -30,7 +30,6 @@ const TeamMembers = ({ team }: { team: Team }) => {
     const t = useStore(commonMsg)
     const t1 = useStore(cfgTeam)
     const toast = useToast()
-    const navigate = useNavigate()
     const [members, setMembers] = useState<TeamMember[]>(null)
     const [memberInEdit, setMemberInEdit] = useState<TeamMember>(null)
 
@@ -85,13 +84,8 @@ const TeamMembers = ({ team }: { team: Team }) => {
     }
 
     const onAddMemberOpen = () => {
-        if (team.id != globalTeamId) {
             setMemberInEdit({ role: Role.Viewer } as any)
             onAddOpen()
-            return 
-        }
-
-        navigate("/admin/users")
     }
 
     const addMember = async () => {
@@ -177,7 +171,7 @@ const TeamMembers = ({ team }: { team: Team }) => {
                         <Text mt="2">{t1.addMemberTips}</Text>
                         <Button mt="2" as={Link} href="/admin/users" target="_blank" variant="outline" colorScheme="blue">{t.newItem({ name: t.user })}</Button>
                     </Alert>
-                {team.id != globalTeamId && <>
+                <>
                 <ModalBody>
                     <Text>{t.userName}</Text>
                     <Input mt="3" width="300px" value={memberInEdit.username} onChange={e => { memberInEdit.username = e.currentTarget.value.trim(); setMemberInEdit({ ...memberInEdit }) }} />
@@ -198,7 +192,7 @@ const TeamMembers = ({ team }: { team: Team }) => {
                     </Button>
                     <Button variant='ghost' onClick={addMember}>{t.submit}</Button>
                 </ModalFooter>
-                </>}
+                </>
             </ModalContent>}
         </Modal>
 

@@ -14,7 +14,7 @@
 import { useStore } from "@nanostores/react"
 import React, { memo } from "react"
 import { useEffect, useState } from "react"
-import { useLocation, useNavigate } from "react-router-dom"
+import { useLocation, useNavigate, useParams } from "react-router-dom"
 import { dashboardMsg } from "src/i18n/locales/en"
 import DashboardWrapper from "src/views/dashboard/Dashboard"
 import NotFoundPage from "../NotFound"
@@ -23,6 +23,7 @@ import { $config } from "src/data/configs/config"
 import { Box } from "@chakra-ui/react"
 import Loading from "components/loading/Loading"
 import { first } from "lodash"
+import { isEmpty } from "utils/validate"
 
 
 interface Props {
@@ -36,25 +37,36 @@ const DashboardPage = memo(({ sideWidth }: Props) => {
     const location = useLocation()
     const [dashboardId, setDashboardId] = useState<string>(null)
     const [error, setError] = useState(null)
+    const teamId = useParams().teamId
+
+
     useEffect(() => {
+        const teamPath = `/${teamId ?? config.currentTeam}`
         if (location && config.sidemenu) {
+            if (!isEmpty(teamId) &&  isNaN(Number(teamId))) {
+                setError("Invailid team id")
+                return
+            }
+            
+            let path = location.pathname.replace(`/${teamId}`, '')
             setError(null)
-            if (location.pathname == "/") {
+            if (path == '' || path == '/') {
                 const m = first(config.sidemenu)
                 if (m) {
                     if (!m.children) {
-                        navigate(m.url)
+                        navigate(teamPath + m.url)
                     } else {
                         const child = first(m.children)
-                        if (child) navigate(child.url)
+                        if (child) navigate(teamPath + child.url)
                     }
+                } else {
+                    setError(t1.noDashboardExist)
                 }
-            }
-            else if (location.pathname == '/alert') {
+                return
+            } else if (path == '/alert') {
                 setDashboardId(AlertDashbordId)
             } else {
                 setDashboardId(null)
-                let path = location.pathname;
                 // if rawId  starts with 'd-', then it's a dashboard id
                 // otherwise, it's just a pathname defined in team's sidemenu, we need to get the real dashboard id
                 if (path.startsWith('/d-')) {

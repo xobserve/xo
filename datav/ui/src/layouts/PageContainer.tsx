@@ -198,11 +198,11 @@ const Container = (props: Props) => {
                     {sidemenu?.map((link, index) => {
                       return <Box key={link.url} >
                         <Box>
-                          <NavItem isActive={miniMode ? asPath.startsWith(link.url) : asPath == link.url} key={index} text={link.title} icon={link.icon} miniMode={miniMode} fontWeight={500} url={link.children?.length > 0 ? link.children[0].url : link.url} children={link.children} />
+                          <NavItem isActive={miniMode ? asPath.startsWith(teamPath +  link.url) : asPath == teamPath + link.url} key={index} text={link.title} icon={link.icon} miniMode={miniMode} fontWeight={500} url={link.children?.length > 0 ? teamPath + link.children[0].url : teamPath + link.url} children={link.children} />
                         </Box>
                         {
                           !miniMode && link.children && link.children.map((child, index) => {
-                            return <Box mt="7px" ml={childMarginLeft + 'px'}><NavItem isActive={asPath == child.url} key={index} text={child.title} miniMode={miniMode} url={child.url}  /></Box>
+                            return <Box mt="7px" ml={childMarginLeft + 'px'}><NavItem isActive={asPath == teamPath + child.url} key={index} text={child.title} miniMode={miniMode} url={teamPath + child.url}  /></Box>
                           })
                         }
                       </Box>
@@ -210,7 +210,7 @@ const Container = (props: Props) => {
                   </VStack>
                   {session && !sidemenu?.some(nav => nav.dashboardId != HomeDashboardId) && <>
                     <Divider mt={miniMode ? 2 : 3} />
-                    <Box mt={miniMode ? 2 : 3}><NavItem text={t1.newItem} url={`/cfg/team/sidemenu`} miniMode={miniMode} icon="FaPlus" /></Box>
+                    <Box mt={miniMode ? 2 : 3}><NavItem text={t1.newItem} url={`${teamPath}/cfg/team/sidemenu`} miniMode={miniMode} icon="FaPlus" /></Box>
                   </>}
                 </Flex>
                 <Flex id="sidemenu-bottom" flexDir="column" pt="10px" pb="2" alignItems={miniMode ? "center" : "left"} color={textColor}   >
@@ -306,6 +306,9 @@ const NavItem = ({ text, icon = null, miniMode, fontWeight = 400, fontSize = cus
   const Icon = Icons[icon]
   const textColor = useColorModeValue("gray.500", "whiteAlpha.800")
   const { pathname: asPath } = useLocation()
+  const teamId = useParams().teamId
+  const teamPath = isEmpty(teamId) ? "" : `/${teamId}`
+
   return (
     <PopoverTooltip
       trigger={miniMode ? "hover" : null}
@@ -324,11 +327,11 @@ const NavItem = ({ text, icon = null, miniMode, fontWeight = 400, fontSize = cus
         </Link>
       </Box>}
       showHeaderBorder={children?.length > 0}
-      headerComponent={<Link to={children?.length > 0 ? children[0].url : url}><Text fontSize={fontSize}>{text}</Text></Link>}
+      headerComponent={<Link to={children?.length > 0 ? teamPath + children[0].url : url}><Text fontSize={fontSize}>{text}</Text></Link>}
       bodyComponent={children?.length > 0 && <VStack alignItems="left" spacing="3" py="2" fontSize={fontSize}>
         {children?.length > 0 && children.map(subLink =>
-          <Link to={subLink.url} key={subLink.url}>
-            <Text color={asPath == subLink.url ? useColorModeValue("brand.500", "brand.200") : textColor}>{subLink.title}</Text>
+          <Link to={teamPath +  subLink.url} key={subLink.url}>
+            <Text color={asPath == teamPath + subLink.url ? useColorModeValue("brand.500", "brand.200") : textColor}>{subLink.title}</Text>
           </Link>
         )}
       </VStack>}

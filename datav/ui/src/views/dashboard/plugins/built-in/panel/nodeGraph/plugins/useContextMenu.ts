@@ -13,13 +13,11 @@
 import G6 from "@antv/g6";
 import { useToast } from "@chakra-ui/react";
 import { isFunction } from "lodash";
-import { useNavigate } from "react-router-dom";
 import { NodeGraphSettings } from "../types";
 import { commonInteractionEvent, genDynamicFunction } from "utils/dashboard/dynamicCall";
 
 const useContextMenu = (settings: NodeGraphSettings) => {
   const toast = useToast()
-  const navigate = useNavigate()
   const contextMenu = new G6.Menu({
     getContent(evt) {
       let header;

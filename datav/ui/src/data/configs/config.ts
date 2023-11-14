@@ -33,10 +33,13 @@ const config: UIConfig = {
     sidemenu: null,
     observability: {
         enable: false
+    },
+    tenant: {
+        enable: false
     }
 };
 
-export const $config = atom<UIConfig>(config)
+export const $config = atom<UIConfig>(null)
 
 export interface UIConfig {
     appName?: string
@@ -58,4 +61,9 @@ export interface UIConfig {
     observability?: {
         enable: boolean
     }
+    tenant?: {
+        enable: boolean
+    }
+    currentTenant?: number
+    currentTeam?: number
 }

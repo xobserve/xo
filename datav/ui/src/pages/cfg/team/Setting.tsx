@@ -19,7 +19,7 @@ import { cloneDeep } from "lodash"
 import { useRef, useState } from "react"
 import { Team, globalTeamId } from "types/teams"
 import { requestApi } from "utils/axios/request"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { useStore } from "@nanostores/react"
 import { cfgTeam, commonMsg } from "src/i18n/locales/en"
 import { $teams } from "src/views/team/store"
@@ -30,7 +30,7 @@ const TeamSettings = (props: { team: Team }) => {
   const [team, setTeam] = useState<Team>(props.team)
   const navigate = useNavigate()
   const toast = useToast()
-
+  const teamId = useParams().teamId
 
 
 
@@ -60,7 +60,7 @@ const TeamSettings = (props: { team: Team }) => {
     const teams = $teams.get().filter(t => t.id != team.id)
     $teams.set(teams)
     setTimeout(() => {
-      navigate(`/cfg/teams`)
+      navigate(`/`)
     }, 1000)
   }
 
@@ -74,7 +74,7 @@ const TeamSettings = (props: { team: Team }) => {
     })
 
     setTimeout(() => {
-      navigate(`/cfg/teams`)
+      navigate(`/`) 
     }, 1000)
   }
 

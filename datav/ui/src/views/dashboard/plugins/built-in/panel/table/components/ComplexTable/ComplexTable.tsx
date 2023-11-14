@@ -27,7 +27,6 @@ import moment from 'moment';
 import { ThresholdsConfig, ThresholdsMode } from 'types/threshold';
 import { getThreshold } from 'src/views/dashboard/plugins/components/Threshold/utils';
 import lodash from 'lodash'
-import { useNavigate } from 'react-router-dom';
 import { isEmpty } from 'utils/validate';
 import BarGauge from 'src/components/BarGauge/BarGauge';
 import { measureText } from 'utils/measureText';
@@ -47,7 +46,6 @@ interface Props {
 const storagePageKey = "tablePage"
 const ComplexTable = memo((props: Props) => {
   const toast = useToast()
-  const navigate = useNavigate()
   const { colorMode } = useColorMode()
 
   const { dashboardId, panel } = props

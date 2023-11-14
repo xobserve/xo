@@ -252,7 +252,7 @@ func UpdateOwnedBy(c *gin.Context) {
 	}
 
 	// check if the new owner is a valid team
-	if !models.IsTeamExist(c.Request.Context(), dash.OwnedBy, "") {
+	if !models.IsTeamExist(c.Request.Context(), dash.OwnedBy) {
 		c.JSON(400, common.RespError("targe team is not exist"))
 		return
 	}

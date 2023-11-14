@@ -148,25 +148,38 @@ func SaveDatasource(c *gin.Context) {
 }
 
 func GetDatasources(c *gin.Context) {
-	dss := make([]*models.Datasource, 0)
-
-	var rows *sql.Rows
+	teamId, _ := strconv.ParseInt(c.Query("teamId"), 10, 64)
 	var err error
 
-	u := user.CurrentUser(c)
-	_, teamId, err := models.GetUserTenantAndTeamId(u)
+	if teamId == 0 {
+		u := user.CurrentUser(c)
+		_, teamId, err = models.GetUserTenantAndTeamId(c.Request.Context(), u)
+		if err != nil {
+			logger.Warn("get datasource error", "error", err)
+			c.JSON(http.StatusInternalServerError, common.RespInternalError())
+			return
+		}
+	}
+
+	dss, err := GetDatasourcesByTeamId(c.Request.Context(), teamId)
 	if err != nil {
 		logger.Warn("get datasource error", "error", err)
 		c.JSON(http.StatusInternalServerError, common.RespInternalError())
 		return
 	}
 
-	rows, err = db.Conn.QueryContext(c.Request.Context(), "SELECT id,name,type,url,team_id,data, created FROM datasource WHERE team_id=?", teamId)
+	c.JSON(http.StatusOK, common.RespSuccess(dss))
+}
+
+func GetDatasourcesByTeamId(ctx context.Context, teamId int64) ([]*models.Datasource, error) {
+	dss := make([]*models.Datasource, 0)
+
+	var rows *sql.Rows
+
+	rows, err := db.Conn.QueryContext(ctx, "SELECT id,name,type,url,team_id,data, created FROM datasource WHERE team_id=?", teamId)
 
 	if err != nil {
-		logger.Warn("get datasource error", "error", err)
-		c.JSON(http.StatusInternalServerError, common.RespInternalError())
-		return
+		return nil, err
 	}
 	defer rows.Close()
 	for rows.Next() {
@@ -174,25 +187,20 @@ func GetDatasources(c *gin.Context) {
 		var rawdata []byte
 		err := rows.Scan(&ds.Id, &ds.Name, &ds.Type, &ds.URL, &ds.TeamId, &rawdata, &ds.Created)
 		if err != nil {
-			logger.Warn("get datasource error", "error", err)
-			c.JSON(http.StatusInternalServerError, common.RespInternalError())
-			return
+			return nil, err
 		}
 		if rawdata != nil {
 			err = json.Unmarshal(rawdata, &ds.Data)
 			if err != nil {
-				logger.Warn("Error decode datasource data", "error", err, "data", rawdata)
-				c.JSON(http.StatusInternalServerError, common.RespInternalError())
-				continue
+				return nil, err
 			}
 		}
 
 		dss = append(dss, ds)
 	}
 
-	c.JSON(http.StatusOK, common.RespSuccess(dss))
+	return dss, nil
 }
-
 func DeleteDatasource(c *gin.Context) {
 	id, _ := strconv.ParseInt(c.Param("id"), 10, 64)
 

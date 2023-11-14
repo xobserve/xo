@@ -288,6 +288,7 @@ export const newMsg = i18n("new", {
 
 export const dashboardMsg = i18n("dashboard", {
   "notFound": "Dashboard not found, maybe 1. invalid dashboard id(url) 2. you have chosen a wrong team",
+  "noDashboardExist": "There is no item in sidemenu, please link a dashboard to sidemenu",
   "headerTeamTips": "the team which current dashboard belongs to",
   "refreshOnce": "refresh just once",
   "refreshInterval": "refresh with interval",

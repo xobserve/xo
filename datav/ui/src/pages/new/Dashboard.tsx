@@ -47,7 +47,7 @@ const NewDashboardPage = () => {
         })
 
         setTimeout(() => {
-            navigate(`/${res.data}`)
+            navigate(`/${teamId}/${res.data}`)
         }, 1000)
     }
 

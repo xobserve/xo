@@ -23,7 +23,7 @@ import DashboardSettings from "./settings/DashboardSettings"
 import Fullscreen from "src/components/Fullscreen"
 import useFullscreen from "hooks/useFullscreen"
 import DatePicker from "src/components/DatePicker/DatePicker"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { useStore } from "@nanostores/react";
 import { dashboardMsg } from "src/i18n/locales/en";
 import DashboardShare from "./DashboardShare";
@@ -44,7 +44,7 @@ const DashboardHeader = memo(({ dashboard, onChange, sideWidth }: HeaderProps) =
     const t1 = useStore(dashboardMsg)
     const navigate = useNavigate()
     const fullscreen = useFullscreen()
-
+    const teamId = useParams().teamId
 
     const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
     const [dvars, gvars] = catelogVariables(vars, dashboard)
@@ -69,7 +69,7 @@ const DashboardHeader = memo(({ dashboard, onChange, sideWidth }: HeaderProps) =
                     <Flex justifyContent="space-between" >
                         <HStack textStyle={isLargeScreen ? "title" : null} pl={isLargeScreen ? 0 : "17px"}>
                             {isLargeScreen && <>
-                                <Tooltip label={t1.headerTeamTips}><Box cursor="pointer" onClick={() => navigate(`${ReserveUrls.Config}/team/${dashboard.ownedBy}/members`)}>{dashboard.ownerName}</Box></Tooltip>
+                                <Tooltip label={t1.headerTeamTips}><Box cursor="pointer" onClick={() => navigate(`/${teamId}/cfg/team/members`)}>{dashboard.ownerName}</Box></Tooltip>
                                 <Box>/</Box>
                             </>}
                             <Box>{dashboard.title}</Box>

@@ -24,8 +24,8 @@ export const getAdminLinks = (teamId) => {
         },
         {
             title: 'user',
-            url: `/${teamId}/admin/users`,
-            baseUrl: `/${teamId}/admin/users`,
+            url: `${teamPath}/admin/users`,
+            baseUrl: `${teamPath}/admin/users`,
             icon: <FaUserCog />
         },
     ]
@@ -36,7 +36,7 @@ export const getTenantLinks = (teamId) => {
     if (!isEmpty(teamId)) {
         teamPath = `/${teamId}`
     }
-    
+
     return [
         {
             title: 'members',

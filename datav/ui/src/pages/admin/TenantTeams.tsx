@@ -65,7 +65,7 @@ const TeamsPage = () => {
         })
 
         setTimeout(() => {
-            navigate("/cfg/team/datasources")
+            navigate(`/${teamId}/cfg/team/datasources`)
         }, 1000)
     }
 
@@ -96,7 +96,7 @@ const TeamsPage = () => {
                                 <Td>{t[team.role] }</Td>
                                 <Td>{team.memberCount}</Td>
                                 <Td>{team.isPublic ? "true" : "false"}</Td>
-                                <Td>{team.createdBy} {session?.user?.id == team.createdById && <Tag>You</Tag>}</Td>
+                                <Td>{team.createdBy} {session?.user?.id == team.createdById && <Tag size="sm">You</Tag>}</Td>
                                 <Td><Button variant="ghost" size="sm" px="0" onClick={() => manageTeam(team.id)}>{t.manage}</Button></Td>
                             </Tr>
                         })}

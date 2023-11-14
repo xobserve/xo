@@ -181,7 +181,7 @@ type GithubUser struct {
 	Location string `json:"location"`
 }
 
-func GetUserTenantAndTeamId(u *User) (int64, int64, error) {
+func GetUserTenantAndTeamId(ctx context.Context, u *User) (int64, int64, error) {
 	var tenantId int64
 	if u == nil {
 		tenantId = DefaultTenantId

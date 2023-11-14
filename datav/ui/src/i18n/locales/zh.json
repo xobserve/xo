@@ -269,7 +269,8 @@
     "testDsFailed": "测试失败"
   },
   "dashboard": {
-    "notFound": "仪表盘不存在，有可能 1. 错误的仪表盘 id (url) 2. 你选择了错误的团队左侧菜单",
+    "notFound": "仪表盘不存在，有可能 1. 错误的仪表盘 id (url) 2. 你选择了错误的团队",
+  "noDashboardExist": "侧边栏没有导航项，请将仪表盘链接到侧边栏，然后再访问",
     "headerTeamTips": "当前仪表盘归属的团队",
     "refreshOnce": "立即刷新仪表盘",
     "refreshInterval": "定期刷新",

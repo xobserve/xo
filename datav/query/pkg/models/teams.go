@@ -98,10 +98,9 @@ func QueryTeamNameById(ctx context.Context, id int64) (string, error) {
 	return name, nil
 }
 
-func IsTeamExist(ctx context.Context, id int64, name string) bool {
+func IsTeamExist(ctx context.Context, id int64) bool {
 	var qid int64
-	err := db.Conn.QueryRowContext(ctx, `SELECT id FROM team WHERE id=? or name=?`,
-		id, name).Scan(&qid)
+	err := db.Conn.QueryRowContext(ctx, `SELECT id FROM team WHERE id=?`, id).Scan(&qid)
 	if err != nil {
 		return false
 	}

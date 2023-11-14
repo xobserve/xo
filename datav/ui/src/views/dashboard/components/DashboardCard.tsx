@@ -15,7 +15,7 @@ import { Box, Flex, HStack, Highlight, Tag, Text, useOutsideClick } from "@chakr
 import ColorTag from "src/components/ColorTag"
 import CopyToClipboard from "src/components/CopyToClipboard"
 import React, { useRef, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { Dashboard } from "types/dashboard"
 import { Team } from "types/teams"
 import { getDashboardLink } from "utils/dashboard/dashboard"
@@ -43,6 +43,8 @@ const DashboardCard = ({ dashboard, owner, query, onClick, starred, session }: P
     const navigate = useNavigate()
     const [weight, setWeight] = useState(null)
     const ref = useRef()
+    const teamId = useParams().teamId
+
     useOutsideClick({
         ref: ref,
         handler: () => setWeight(null),
@@ -66,7 +68,7 @@ const DashboardCard = ({ dashboard, owner, query, onClick, starred, session }: P
         >
             <Box>
                 <Flex alignItems="center" cursor="pointer" onClick={() => {
-                        navigate(getDashboardLink(dashboard.id))
+                        navigate(`/${teamId}` + getDashboardLink(dashboard.id))
                         onClick && onClick()
                     }}>
                     <Text><Highlight query={query ?? ""} styles={{ bg: 'var(--chakra-colors-brand-100)' }} >{dashboard.title}</Highlight></Text>

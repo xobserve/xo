@@ -76,6 +76,16 @@ func QueryTenant(ctx context.Context, tenantId int64) (*Tenant, error) {
 	return tenant, nil
 }
 
+func QueryTenantIdByTeamId(ctx context.Context, teamId int64) (int64, error) {
+	var tenantId int64
+	err := db.Conn.QueryRowContext(ctx, `SELECT  tenant_id FROM team WHERE id=?`, teamId).Scan(&tenantId)
+	if err != nil {
+		return 0, err
+	}
+
+	return tenantId, nil
+}
+
 func QueryTenantsByUserId(userId int64) ([]*Tenant, error) {
 	tenants := make([]*Tenant, 0)
 	rows, err := db.Conn.Query("SELECT tenant_user.tenant_id,tenant.name FROM tenant_user INNER JOIN tenant ON tenant_user.tenant_id = tenant.id  WHERE user_id=? ORDER BY tenant_user.tenant_id", userId)

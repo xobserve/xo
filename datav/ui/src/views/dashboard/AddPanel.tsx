@@ -20,7 +20,6 @@ import { useStore } from "@nanostores/react";
 import { dashboardMsg } from "src/i18n/locales/en";
 import { $copiedPanel } from "./store/dashboard";
 import { isEmpty } from "utils/validate";
-import { useNavigate } from "react-router-dom";
 
 interface Props {
     dashboard: Dashboard
@@ -31,7 +30,6 @@ const AddPanel = ({ dashboard, onChange }: Props) => {
     const t1 = useStore(dashboardMsg)
     const copiedPanel = useStore($copiedPanel)
     const toast = useToast()
-    const navigate = useNavigate()
 
 
 

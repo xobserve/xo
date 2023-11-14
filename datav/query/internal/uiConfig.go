@@ -15,15 +15,19 @@ package internal
 import (
 	"bytes"
 	"database/sql"
+	"errors"
 	"fmt"
 	"io"
 	"log"
 	"net/http"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
+	"github.com/xObserve/xObserve/query/internal/datasource"
+	"github.com/xObserve/xObserve/query/internal/teams"
 	"github.com/xObserve/xObserve/query/internal/user"
 	"github.com/xObserve/xObserve/query/internal/variables"
 	"github.com/xObserve/xObserve/query/pkg/common"
@@ -46,6 +50,9 @@ type UIConfig struct {
 	Plugins *Plugins `json:"plugins"`
 
 	Observability *config.Observability `json:"observability"`
+	Tenant        *Tenant               `json:"tenant"`
+	CurrentTenant int64                 `json:"currentTenant"`
+	CurrentTeam   int64                 `json:"currentTeam"`
 }
 
 type Plugins struct {
@@ -60,8 +67,12 @@ type Echarts struct {
 	EnableBaiduMap bool   `json:"enableBaiduMap"`
 	BaiduMapAK     string `json:"baiduMapAK"`
 }
+type Tenant struct {
+	Enable bool `json:"enable"`
+}
 
 func getUIConfig(c *gin.Context) {
+	teamId, _ := strconv.ParseInt(c.Query("teamId"), 10, 64)
 	echarts := Echarts{
 		EnableBaiduMap: config.Data.Panel.Echarts.EnableBaiduMap,
 		BaiduMapAK:     config.Data.Panel.Echarts.BaiduMapAK,
@@ -70,6 +81,11 @@ func getUIConfig(c *gin.Context) {
 	panel := Panel{
 		Echarts: echarts,
 	}
+
+	tenant := Tenant{
+		Enable: config.Data.Tenant.Enable,
+	}
+
 	cfg := &UIConfig{
 		AppName:           config.Data.Common.AppName,
 		RepoUrl:           config.Data.Common.RepoUrl,
@@ -79,11 +95,74 @@ func getUIConfig(c *gin.Context) {
 		GithubOAuthToken:  config.Data.User.GithubOAuthToken,
 		Plugins:           (*Plugins)(&config.Data.Plugins),
 		Observability:     &config.Data.Observability,
+		Tenant:            &tenant,
 	}
 
 	// query sidemenu
-	u := user.CurrentUser(c)
-	_, teamId, err := models.GetUserTenantAndTeamId(u)
+	var tenantId int64
+	var err error
+	queryTeam := false
+	if teamId == 0 {
+		u := user.CurrentUser(c)
+		if u == nil {
+			tenantId = models.DefaultTenantId
+		} else {
+			tenantId = u.CurrentTenant
+		}
+
+		if u != nil {
+			teamId = u.CurrentTeam
+			teamExist := models.IsTeamExist(c.Request.Context(), teamId)
+			if !teamExist {
+				queryTeam = true
+			}
+		} else {
+			queryTeam = true
+		}
+	} else {
+		teamExist := models.IsTeamExist(c.Request.Context(), teamId)
+		if !teamExist {
+			u := user.CurrentUser(c)
+			if u != nil {
+				tenantId = u.CurrentTenant
+				teamId = u.CurrentTeam
+				teamExist := models.IsTeamExist(c.Request.Context(), teamId)
+				if !teamExist {
+					queryTeam = true
+				}
+			} else {
+				tenantId = models.DefaultTenantId
+				queryTeam = true
+			}
+		} else {
+			tenantId, err = models.QueryTenantIdByTeamId(c.Request.Context(), teamId)
+			if err != nil {
+				if err == sql.ErrNoRows {
+					c.JSON(400, common.RespError(e.TeamNotExist))
+					return
+				}
+				logger.Warn("query tenant id by team id error", "error", err)
+				c.JSON(500, common.RespError(err.Error()))
+				return
+			}
+		}
+	}
+	if queryTeam {
+		teams, err := models.QueryTenantPublicTeamIds(tenantId)
+		if err != nil {
+			logger.Warn("query tenant public team ids error", "error", err)
+			c.JSON(500, common.RespError(e.Internal))
+			return
+		}
+
+		if len(teams) == 0 {
+			c.JSON(400, common.RespError(errors.New("you are not in any team now").Error()))
+			return
+		}
+
+		teamId = teams[0]
+	}
+
 	if err != nil {
 		logger.Warn("get user tenant and team id error", "error", err)
 		c.JSON(500, common.RespError(err.Error()))
@@ -99,6 +178,8 @@ func getUIConfig(c *gin.Context) {
 		}
 	}
 	cfg.Sidemenu = menu
+	cfg.CurrentTeam = teamId
+	cfg.CurrentTenant = tenantId
 
 	vars, err := variables.GetVariables(c.Request.Context(), teamId)
 	if err != nil {
@@ -107,9 +188,25 @@ func getUIConfig(c *gin.Context) {
 		return
 	}
 
+	u := user.CurrentUser(c)
+	teams, err := teams.GetTeamsByTenantId(c.Request.Context(), tenantId, u)
+	if err != nil {
+		logger.Warn("get teams by tenant id error", "error", err)
+		c.JSON(500, common.RespError(e.Internal))
+		return
+	}
+	datasources, err := datasource.GetDatasourcesByTeamId(c.Request.Context(), teamId)
+	if err != nil {
+		logger.Warn("get datasources by team id error", "error", err)
+		c.JSON(500, common.RespError(e.Internal))
+		return
+	}
+
 	c.JSON(http.StatusOK, common.RespSuccess(map[string]interface{}{
-		"config": cfg,
-		"vars":   vars,
+		"config":      cfg,
+		"vars":        vars,
+		"teams":       teams,
+		"datasources": datasources,
 	}))
 }
 

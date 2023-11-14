@@ -27,10 +27,12 @@ import { requestApi } from "utils/axios/request"
 import { Tenant } from "types/tenant"
 import { useParams } from "react-router-dom"
 import { isEmpty } from "utils/validate"
+import { $config } from "src/data/configs/config"
 
 const SelectUserTenant = ({ miniMode }) => {
     const t1 = useStore(sidebarMsg)
     const toast = useToast()
+    const config = useStore($config)
     const { session } = useSession()
     const [tenants, setTenants] = useState<Tenant[]>([])
     const teamId = useParams().teamId
@@ -46,7 +48,7 @@ const SelectUserTenant = ({ miniMode }) => {
     }
 
     const selectTenant = async (tenantId) => {
-        if (tenantId === session.user.currentTenant) {
+        if (tenantId === config.currentTenant) {
             return
         }
         const res = await requestApi.post(`/tenant/switch/${tenantId}`)
@@ -82,7 +84,7 @@ const SelectUserTenant = ({ miniMode }) => {
                             _focus={{ border: null }}
                             icon={<FaAlignLeft />}
                         /> : <FaAlignLeft fontSize="1em" />}
-                        {!miniMode && <Text fontSize="1em">{t1.selectTenant} - {tenants.find(t => t.id == session?.user.currentTenant)?.name}</Text>}
+                        {!miniMode && <Text fontSize="1em">{t1.selectTenant} - {tenants.find(t => t.id == config.currentTenant)?.name}</Text>}
                     </HStack>
 
                 </PopoverTrigger>
@@ -91,7 +93,7 @@ const SelectUserTenant = ({ miniMode }) => {
                         <PopoverBody>
                             <CardSelect title="">
                                 {tenants.map(tenant =>
-                                    <CardSelectItem key={tenant.id} selected={session?.user.currentTenant == tenant.id} onClick={() => selectTenant(tenant.id)}>
+                                    <CardSelectItem key={tenant.id} selected={config.currentTenant == tenant.id} onClick={() => selectTenant(tenant.id)}>
                                         <Text fontSize="1em" fontWeight="550" px="2" py="1">
                                             {tenant.name}
                                         </Text>
