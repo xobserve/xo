@@ -21,7 +21,6 @@ import { Role } from "types/role"
 import { Team, TeamMember } from "types/teams"
 import { requestApi } from "utils/axios/request"
 import Loading from "src/components/loading/Loading"
-import { useNavigate } from "react-router-dom"
 
 
 
@@ -49,7 +48,7 @@ const TeamMembers = ({ team }: { team: Team }) => {
     }
 
     const editTeamMember = (m) => {
-        setMemberInEdit(m)
+        setMemberInEdit(cloneDeep(m))
         onOpen()
     }
 
@@ -66,6 +65,10 @@ const TeamMembers = ({ team }: { team: Team }) => {
             duration: 3000,
             isClosable: true,
         })
+        const member = members.find(m => m.id == memberInEdit.id)
+        member.role = memberInEdit.role
+        setMembers(cloneDeep(members))
+
         setMemberInEdit(null)
         onClose()
     }
@@ -144,10 +147,11 @@ const TeamMembers = ({ team }: { team: Team }) => {
                 <ModalCloseButton />
                 <ModalBody>
                     <Text>Role in team</Text>
-                    <RadioGroup mt="3" onChange={(v) => { memberInEdit.role = v as Role; setMemberInEdit(cloneDeep(memberInEdit)) }} value={memberInEdit.role}>
+                    <RadioGroup mt="3" onChange={(v) => { memberInEdit.role = v as Role; setMemberInEdit(cloneDeep(memberInEdit)) }} value={memberInEdit.role} isDisabled={memberInEdit.role == Role.SUPER_ADMIN}>
                         <Stack direction='row'>
                             <Radio value={Role.Viewer}>{Role.Viewer}</Radio>
                             <Radio value={Role.ADMIN}>{Role.ADMIN}</Radio>
+                            {memberInEdit.role == Role.SUPER_ADMIN && <Radio value={Role.SUPER_ADMIN}>{Role.SUPER_ADMIN}</Radio>}
                         </Stack>
                     </RadioGroup>
                 </ModalBody>

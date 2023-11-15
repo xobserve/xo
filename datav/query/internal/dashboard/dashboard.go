@@ -55,19 +55,6 @@ func SaveDashboard(c *gin.Context) {
 		dash.Id = "d-" + utils.GenerateShortUID()
 		dash.CreatedBy = u.Id
 		dash.Created = &now
-
-		if !u.Role.IsAdmin() {
-			isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), dash.OwnedBy, u.Id)
-			if err != nil {
-				logger.Error("check team admin error", "error", err)
-				c.JSON(500, common.RespInternalError())
-				return
-			}
-			if !isTeamAdmin {
-				c.JSON(403, common.RespError(e.NoPermission))
-				return
-			}
-		}
 	} else {
 		belongs, err := models.QueryDashboardBelongsTo(c.Request.Context(), dash.Id)
 		if err != nil {
@@ -76,18 +63,19 @@ func SaveDashboard(c *gin.Context) {
 			return
 		}
 
-		if !u.Role.IsAdmin() {
-			isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), belongs, u.Id)
-			if err != nil {
-				logger.Error("check team admin error", "error", err)
-				c.JSON(500, common.RespInternalError())
-				return
-			}
-			if !isTeamAdmin {
-				c.JSON(403, common.RespError(e.NoPermission))
-				return
-			}
-		}
+		dash.OwnedBy = belongs
+	}
+
+	isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), dash.OwnedBy, u.Id)
+
+	if err != nil {
+		logger.Error("check team admin error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+	if !isTeamAdmin {
+		c.JSON(403, common.RespError(e.NeedTeamAdmin))
+		return
 	}
 
 	dash.Updated = &now
@@ -213,31 +201,6 @@ func getVisitInfo(c *gin.Context, u *models.User) string {
 	}
 
 	return c.ClientIP()
-}
-
-func DeleteDashboard(c *gin.Context) {
-	id := c.Param("id")
-	if id == "" {
-		c.JSON(400, common.RespError(e.ParamInvalid))
-		return
-	}
-
-	for _, rid := range models.ReservedDashboardId {
-		if id == rid {
-			c.JSON(400, common.RespError("reserved dashboard can not be deleted"))
-			return
-		}
-	}
-
-	// delete dashboard
-	_, err := db.Conn.ExecContext(c.Request.Context(), "DELETE FROM dashboard WHERE id=?", id)
-	if err != nil {
-		logger.Warn("delete dashboard error", "error", err)
-		c.JSON(500, common.RespError(e.Internal))
-		return
-	}
-
-	c.JSON(200, common.RespSuccess(nil))
 }
 
 func UpdateOwnedBy(c *gin.Context) {
@@ -451,17 +414,15 @@ func Delete(c *gin.Context) {
 		return
 	}
 
-	if !u.Role.IsAdmin() {
-		isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), dash.OwnedBy, u.Id)
-		if err != nil {
-			logger.Error("check team admin error", "error", err)
-			c.JSON(500, common.RespInternalError())
-			return
-		}
-		if !isTeamAdmin {
-			c.JSON(403, common.RespError(e.NoPermission))
-			return
-		}
+	isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), dash.OwnedBy, u.Id)
+	if err != nil {
+		logger.Error("check team admin error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+	if !isTeamAdmin {
+		c.JSON(403, common.RespError(e.NeedTeamAdmin))
+		return
 	}
 
 	tx, err := db.Conn.Begin()

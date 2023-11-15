@@ -345,22 +345,47 @@ func DeleteTeamMember(c *gin.Context) {
 		return
 	}
 
-	// only team admin can do this
-	if !u.Role.IsAdmin() {
-		isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), teamId, u.Id)
-		if err != nil {
-			logger.Warn("check team admin error", "error", err)
-			c.JSON(500, common.RespInternalError())
-			return
-		}
+	member, err := models.QueryTeamMember(c.Request.Context(), teamId, memberId)
+	if err != nil {
+		logger.Warn("query team member error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
 
-		if !isTeamAdmin {
-			c.JSON(403, common.RespError(e.NoPermission))
+	if member.Id == 0 {
+		c.JSON(400, common.RespError("member not exist"))
+		return
+	}
+
+	operator, err := models.QueryTeamMember(c.Request.Context(), teamId, u.Id)
+	if err != nil {
+		logger.Warn("query team member error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+	if operator.Id == 0 {
+		c.JSON(400, common.RespError("You are not in current team"))
+		return
+	}
+
+	if member.Role == models.ROLE_SUPER_ADMIN {
+		c.JSON(400, common.RespError("cannot delete super admin"))
+		return
+	}
+
+	if member.Role == models.ROLE_ADMIN {
+		if operator.Role != models.ROLE_SUPER_ADMIN {
+			c.JSON(400, common.RespError("only super admin can delete admin"))
 			return
 		}
 	}
 
-	_, err := db.Conn.ExecContext(c.Request.Context(), "DELETE FROM team_member where team_id=? and user_id=?", teamId, memberId)
+	if !operator.Role.IsAdmin() {
+		c.JSON(403, common.RespError(e.NoPermission))
+		return
+	}
+
+	_, err = db.Conn.ExecContext(c.Request.Context(), "DELETE FROM team_member where team_id=? and user_id=?", teamId, memberId)
 	if err != nil {
 		logger.Warn("delete team member error", "error", err)
 		c.JSON(500, common.RespInternalError())
@@ -380,21 +405,19 @@ func UpdateTeam(c *gin.Context) {
 	}
 
 	u := user.CurrentUser(c)
-	if !u.Role.IsAdmin() {
-		isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), team.Id, u.Id)
-		if err != nil {
-			logger.Warn("check team admin error", "error", err)
-			c.JSON(500, common.RespInternalError())
-			return
-		}
-
-		if !isTeamAdmin {
-			c.JSON(403, common.RespError(e.NoPermission))
-			return
-		}
+	isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), team.Id, u.Id)
+	if err != nil {
+		logger.Warn("check team admin error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
 	}
 
-	_, err := db.Conn.ExecContext(c.Request.Context(), "UPDATE team SET name=?, is_public=? WHERE id=?", team.Name, team.IsPublic, team.Id)
+	if !isTeamAdmin {
+		c.JSON(403, common.RespError(e.NoPermission))
+		return
+	}
+
+	_, err = db.Conn.ExecContext(c.Request.Context(), "UPDATE team SET name=?, is_public=? WHERE id=?", team.Name, team.IsPublic, team.Id)
 	if err != nil {
 		logger.Warn("update team error", "error", err)
 		c.JSON(500, common.RespInternalError())
@@ -405,44 +428,61 @@ func UpdateTeam(c *gin.Context) {
 }
 
 func UpdateTeamMember(c *gin.Context) {
-	member := &models.TeamMember{}
-	c.Bind(&member)
+	req := &models.TeamMember{}
+	c.Bind(&req)
 
-	if member.TeamId == 0 || member.Id == 0 || !member.Role.IsValid() {
+	if req.TeamId == 0 || req.Id == 0 || !req.Role.IsValid() {
 		c.JSON(400, common.RespError(e.ParamInvalid))
 		return
 	}
 
-	team, err := models.QueryTeam(c.Request.Context(), member.TeamId, "")
-	if err != nil {
-		if err == sql.ErrNoRows {
-			c.JSON(400, common.RespError(e.TeamNotExist))
-			return
-		}
-		c.JSON(500, common.RespInternalError())
-		return
-	}
-
 	u := user.CurrentUser(c)
-	if member.Id == u.Id {
+	if req.Id == u.Id {
 		c.JSON(400, common.RespError("cannot change your own role"))
 		return
 	}
 
-	if !u.Role.IsAdmin() {
-		isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), team.Id, u.Id)
-		if err != nil {
-			logger.Warn("check team admin error", "error", err)
-			c.JSON(500, common.RespInternalError())
-			return
-		}
+	member, err := models.QueryTeamMember(c.Request.Context(), req.TeamId, req.Id)
+	if err != nil {
+		logger.Warn("query team member error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
 
-		if !isTeamAdmin {
-			c.JSON(403, common.RespError(e.NoPermission))
+	if member.Id == 0 {
+		c.JSON(400, common.RespError("member not exist"))
+		return
+	}
+
+	operator, err := models.QueryTeamMember(c.Request.Context(), req.TeamId, u.Id)
+	if err != nil {
+		logger.Warn("query team member error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+	if operator.Id == 0 {
+		c.JSON(400, common.RespError("You are not in current team"))
+		return
+	}
+
+	if req.Role == models.ROLE_SUPER_ADMIN {
+		c.JSON(400, common.RespError("cannot change role to super admin"))
+		return
+	}
+
+	if req.Role == models.ROLE_ADMIN || member.Role == models.ROLE_ADMIN {
+		if operator.Role != models.ROLE_SUPER_ADMIN {
+			c.JSON(400, common.RespError("only super admin can change role  admin"))
 			return
 		}
 	}
-	_, err = db.Conn.ExecContext(c.Request.Context(), "UPDATE team_member SET role=?,updated=? WHERE team_id=? and user_id=?", member.Role, time.Now(), member.TeamId, member.Id)
+
+	if !operator.Role.IsAdmin() {
+		c.JSON(403, common.RespError(e.NoPermission))
+		return
+	}
+
+	_, err = db.Conn.ExecContext(c.Request.Context(), "UPDATE team_member SET role=?,updated=? WHERE team_id=? and user_id=?", req.Role, time.Now(), req.TeamId, req.Id)
 	if err != nil {
 		logger.Warn("update team member error", "error", err)
 		c.JSON(500, common.RespInternalError())
@@ -462,7 +502,14 @@ func DeleteTeam(c *gin.Context) {
 
 	u := user.CurrentUser(c)
 
-	if !models.IsSuperAdmin(u.Id) {
+	operator, err := models.QueryTeamMember(c.Request.Context(), teamId, u.Id)
+	if err != nil {
+		logger.Warn("query team member error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+
+	if !operator.Role.IsSuperAdmin() {
 		c.JSON(403, common.RespError("Only super admin can do this"))
 		return
 	}
@@ -509,9 +556,21 @@ func DeleteTeam(c *gin.Context) {
 		c.JSON(500, common.RespInternalError())
 	}
 
-	_, err = tx.ExecContext(c.Request.Context(), "DELETE FROM sidemenu WHERE team_id=?", teamId)
+	_, err = tx.ExecContext(c.Request.Context(), "DELETE FROM variable WHERE team_id=?", teamId)
 	if err != nil {
-		logger.Warn("delete team sidemenu error", "error", err)
+		logger.Warn("delete team variables error", "error", err)
+		c.JSON(500, common.RespInternalError())
+	}
+
+	_, err = tx.ExecContext(c.Request.Context(), "DELETE FROM dashboard WHERE team_id=?", teamId)
+	if err != nil {
+		logger.Warn("delete team dashboards error", "error", err)
+		c.JSON(500, common.RespInternalError())
+	}
+
+	_, err = tx.ExecContext(c.Request.Context(), "DELETE FROM datasource WHERE team_id=?", teamId)
+	if err != nil {
+		logger.Warn("delete team datasources error", "error", err)
 		c.JSON(500, common.RespInternalError())
 	}
 

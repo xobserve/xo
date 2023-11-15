@@ -12,12 +12,12 @@
 // limitations under the License.
 
 import React from "react"
-import { Box, Button, Input, Select, Text, useToast, VStack } from "@chakra-ui/react"
+import {  Button, Input,  useToast } from "@chakra-ui/react"
 import { Form, FormSection } from "src/components/form/Form"
 import FormItem from "src/components/form/Item"
 import Page from "layouts/page/Page"
 import { cloneDeep } from "lodash"
-import { useEffect, useState } from "react"
+import {  useState } from "react"
 import { FaPlus } from "react-icons/fa"
 import { initDashboard } from "src/data/dashboard"
 import { Dashboard } from "types/dashboard"
@@ -38,7 +38,8 @@ const NewDashboardPage = () => {
     const newLinks = getNewLinks(teamId)
 
     const addDashboard = async () => {
-        const res = await requestApi.post("/dashboard/save", { dashboard, changes: "Newly created" })
+
+        const res = await requestApi.post("/dashboard/save", {dashboard:{...dashboard,ownedBy:Number(teamId)} ,  changes: "Newly created" })
         toast({
             title: t1.dashToast,
             status: "success",

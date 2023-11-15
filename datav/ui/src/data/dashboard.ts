@@ -1,4 +1,3 @@
-import { isNaN } from "lodash";
 import { Dashboard, DashboardLayout } from "types/dashboard";
 import { PanelBorderType } from "types/panel/styles";
 import { Role } from "types/role";
@@ -6,7 +5,7 @@ import { Role } from "types/role";
 export const HomeDashboardId = "d-home"
 export const AlertDashbordId = "d-alert"
 
-export const initDashboard = (team?): Dashboard => {
+export const initDashboard = (): Dashboard => {
     return {
         id: "",
         title: "New dashboard",

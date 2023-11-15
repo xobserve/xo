@@ -52,22 +52,20 @@ func UpdateSideMenu(c *gin.Context) {
 
 	u := user.CurrentUser(c)
 	// only team admin can do this
-	if !u.Role.IsAdmin() {
-		isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), menu.TeamId, u.Id)
-		if err != nil {
-			logger.Warn("check team admin error", "error", err)
-			c.JSON(500, common.RespInternalError())
-			return
-		}
+	isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), menu.TeamId, u.Id)
+	if err != nil {
+		logger.Warn("check team admin error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
 
-		if !isTeamAdmin {
-			c.JSON(403, common.RespError(e.NoPermission))
-			return
-		}
+	if !isTeamAdmin {
+		c.JSON(403, common.RespError(e.NeedTeamAdmin))
+		return
 	}
 
 	data, _ := json.Marshal(menu.Data)
-	_, err := db.Conn.ExecContext(c.Request.Context(), "UPDATE team SET sidemenu=?,updated=? WHERE id=?", data, time.Now(), menu.TeamId)
+	_, err = db.Conn.ExecContext(c.Request.Context(), "UPDATE team SET sidemenu=?,updated=? WHERE id=?", data, time.Now(), menu.TeamId)
 	if err != nil {
 		logger.Error("update sidemenu error", "error", err)
 		c.JSON(500, common.RespInternalError())
