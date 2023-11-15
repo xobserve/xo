@@ -107,7 +107,10 @@ const UserMenu = ({ miniMode }) => {
                         <Link to={session ? `${teamPath}/account/setting` : null}><MenuItem  py="2px" cursor="default" bg="transparent" _hover={{bg: "transparent"}}  icon={<FaUserAlt fontSize="1em" />} >
                             <Text>{session?.user.username ?? "Guest"}</Text>
                             {session &&
-                                <Text textStyle="annotation">{config.tenantRole}</Text>}
+                                <HStack spacing={1}>
+                                <Text textStyle="annotation">{config.tenantName} - </Text>   
+                                <Text textStyle="annotation">{config.tenantRole}</Text>
+                                </HStack>}
                         </MenuItem></Link>
                         <MenuDivider /> 
                         {session && isAdmin(session.user.role) && <><Link to={`${teamPath}/admin/users`}><MenuItem width="100%" icon={<FaStar fontSize="1em" />} >{t1.adminPanel}</MenuItem></Link></>}

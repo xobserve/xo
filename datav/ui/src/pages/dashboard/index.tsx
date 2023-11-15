@@ -39,7 +39,6 @@ const DashboardPage = memo(({ sideWidth }: Props) => {
     const [error, setError] = useState(null)
     const teamId = useParams().teamId
 
-
     useEffect(() => {
         const teamPath = `/${teamId ?? config.currentTeam}`
         if (location && config.sidemenu) {
@@ -47,7 +46,7 @@ const DashboardPage = memo(({ sideWidth }: Props) => {
                 setError("Invailid team id")
                 return
             }
-            
+
             let path = location.pathname.replace(`/${teamId}`, '')
             setError(null)
             if (path == '' || path == '/') {
@@ -60,6 +59,7 @@ const DashboardPage = memo(({ sideWidth }: Props) => {
                         if (child) navigate(teamPath + child.url)
                     }
                 } else {
+                    navigate(`/${config.currentTeam}`)
                     setError(t1.noDashboardExist)
                 }
                 return

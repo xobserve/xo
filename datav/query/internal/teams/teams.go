@@ -281,11 +281,6 @@ func AddTeamMembers(c *gin.Context) {
 		return
 	}
 
-	if u.CurrentTenant == 0 {
-		c.JSON(400, common.RespError("You must select a tenant first"))
-		return
-	}
-
 	// only global admin and team admin can do this
 	if !u.Role.IsAdmin() && !isTeamAdmin {
 		c.JSON(403, common.RespError(e.NoPermission))
@@ -588,38 +583,27 @@ func SetTeamForUser(ctx context.Context, teamId string, userId int64) error {
 }
 
 func GetTeamsForUser(c *gin.Context) {
+	tenantId, _ := strconv.ParseInt(c.Query("tenantId"), 10, 64)
+	if tenantId == 0 {
+		c.JSON(400, common.RespError(e.ParamInvalid))
+		return
+	}
+
 	u := user.CurrentUser(c)
 	teams := make([]*models.Team, 0)
-	if u != nil {
-		teamIds, err := models.QueryVisibleTeamsByUserId(c.Request.Context(), u.CurrentTenant, u.Id)
-		if err != nil {
-			logger.Warn("query teams for user error", "error", err)
-			c.JSON(500, common.RespInternalError())
-			return
-		}
 
-		for _, id := range teamIds {
-			team, err := models.QueryTeam(c.Request.Context(), id, "")
-			if err != nil {
-				logger.Warn("query team error", "error", err)
-				continue
-			}
+	teamIds, err := models.QueryVisibleTeamsByUserId(c.Request.Context(), tenantId, u.Id)
+	if err != nil {
+		logger.Warn("query teams for user error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
 
-			teams = append(teams, team)
-		}
-	} else {
-		_, teamId, err := models.GetUserTenantAndTeamId(c.Request.Context(), nil)
-		if err != nil {
-			logger.Warn("query teams for user error", "error", err)
-			c.JSON(500, common.RespInternalError())
-			return
-		}
-
-		team, err := models.QueryTeam(c.Request.Context(), teamId, "")
+	for _, id := range teamIds {
+		team, err := models.QueryTeam(c.Request.Context(), id, "")
 		if err != nil {
 			logger.Warn("query team error", "error", err)
-			c.JSON(500, common.RespInternalError())
-			return
+			continue
 		}
 
 		teams = append(teams, team)

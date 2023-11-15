@@ -88,18 +88,15 @@ func SaveDatasource(c *gin.Context) {
 
 	u := user.CurrentUser(c)
 	ds.TeamId = u.CurrentTeam
-	// only admin or team admin can do this
-	if !u.Role.IsAdmin() {
-		isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), ds.TeamId, u.Id)
-		if err != nil {
-			logger.Warn("Error query team admin", "error", err)
-			c.JSON(500, common.RespError(e.Internal))
-			return
-		}
-		if !isTeamAdmin {
-			c.JSON(403, common.RespError(e.NoPermission))
-			return
-		}
+	isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), ds.TeamId, u.Id)
+	if err != nil {
+		logger.Warn("Error query team admin", "error", err)
+		c.JSON(500, common.RespError(e.Internal))
+		return
+	}
+	if !isTeamAdmin {
+		c.JSON(403, common.RespError("Only team admin can do this"))
+		return
 	}
 
 	now := time.Now()
@@ -222,17 +219,15 @@ func DeleteDatasource(c *gin.Context) {
 	}
 
 	u := user.CurrentUser((c))
-	if !u.Role.IsAdmin() {
-		isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), ds.TeamId, u.Id)
-		if err != nil {
-			logger.Warn("Error query team admin", "error", err)
-			c.JSON(500, common.RespError(e.Internal))
-			return
-		}
-		if !isTeamAdmin {
-			c.JSON(403, common.RespError(e.NoPermission))
-			return
-		}
+	isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), ds.TeamId, u.Id)
+	if err != nil {
+		logger.Warn("Error query team admin", "error", err)
+		c.JSON(500, common.RespError(e.Internal))
+		return
+	}
+	if !isTeamAdmin {
+		c.JSON(403, common.RespError("Only team admin can do this"))
+		return
 	}
 
 	_, err = db.Conn.ExecContext(c.Request.Context(), "DELETE FROM datasource WHERE id=?", id)

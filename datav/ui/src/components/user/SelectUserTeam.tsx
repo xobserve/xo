@@ -40,7 +40,7 @@ const SelectUserTeam = ({miniMode}) => {
     }, [])
 
     const load = async () => {
-        const res = await requestApi.get("/team/for/user")
+        const res = await requestApi.get(`/team/for/user?tenantId=${config.currentTenant}`)
         setTeams(res.data)
     }
 
@@ -80,7 +80,7 @@ const SelectUserTeam = ({miniMode}) => {
                         _focus={{ border: null }}
                         icon={<FaAlignLeft />}
                     /> : <FaAlignLeft fontSize="1em"/>}
-                    {!miniMode && <Text fontSize="1em">{t1.selectTeam} - {teams.find(t => t.id == config?.currentTeam)?.name}</Text>}
+                    {!miniMode && <Text fontSize="1em">{t1.selectTeam} - {teams.find(t => t.id == config.currentTeam)?.name}</Text>}
                     </HStack>
                
                 </PopoverTrigger>
