@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS sessions (
 
 CREATE TABLE IF NOT EXISTS team (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name VARCHAR(255) NOT NULL UNIQUE,
+    name VARCHAR(255) NOT NULL,
     brief VARCHAR(255) DEFAUlT '',
     is_public BOOL DEFAULT false,
     created_by INTEGER NOT NULL,
@@ -167,7 +167,7 @@ CREATE INDEX IF NOT EXISTS tenant_user_tenant_id ON tenant_user (tenant_id);
 CREATE INDEX IF NOT EXISTS tenant_user_user_id ON tenant_user (user_id);
 CREATE UNIQUE INDEX IF NOT EXISTS tenant_user_tenant_user_id ON tenant_user (tenant_id, user_id);
 
-CREATE INDEX IF NOT EXISTS team_name ON team (name);
+CREATE UNIQUE INDEX IF NOT EXISTS team_name ON team (tenant_id,name);
 CREATE INDEX IF NOT EXISTS team_tenant ON team (tenant_id);
 CREATE INDEX IF NOT EXISTS team_created_by ON team (created_by);
 
@@ -178,7 +178,7 @@ CREATE INDEX IF NOT EXISTS team_member_user_id ON team_member (user_id);
 CREATE UNIQUE INDEX IF NOT EXISTS team_member_team_user_id ON team_member (team_id, user_id);
 
 
-CREATE UNIQUE INDEX IF NOT EXISTS variable_name ON variable (name);
+CREATE UNIQUE INDEX IF NOT EXISTS variable_name ON variable (team_id, name);
 CREATE INDEX IF NOT EXISTS variable_team ON variable (team_id);
 
 CREATE INDEX IF NOT EXISTS  dashboard_team_id ON dashboard (team_id);

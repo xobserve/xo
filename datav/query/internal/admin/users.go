@@ -13,7 +13,6 @@
 package admin
 
 import (
-	"encoding/json"
 	"net/http"
 	"sort"
 	"strconv"
@@ -287,40 +286,21 @@ func AddNewTeam(c *gin.Context) {
 	}
 
 	now := time.Now()
-
 	tx, err := db.Conn.Begin()
 	if err != nil {
-		logger.Warn("new team error", "error", err)
+		logger.Warn("create team error", "error", err)
 		c.JSON(500, common.RespInternalError())
 		return
 	}
 	defer tx.Rollback()
 
-	sidemenu, _ := json.Marshal([]map[string]interface{}{})
-
-	res, err := tx.ExecContext(c.Request.Context(), "INSERT INTO team (tenant_id,name,brief,created_by,sidemenu,created,updated) VALUES (?,?,?,?,?,?,?)",
-		u.CurrentTenant, req.Name, req.Brief, u.Id, sidemenu, now, now)
+	id, err := models.CreateTeam(c.Request.Context(), tx, u, req.Name, req.Brief)
 	if err != nil {
-		logger.Warn("new team error", "error", err)
-		c.JSON(500, common.RespInternalError())
-		return
-	}
-
-	id, _ := res.LastInsertId()
-
-	// insert self as first team member
-	_, err = tx.ExecContext(c.Request.Context(), "INSERT INTO team_member (tenant_id,team_id,user_id,role,created,updated) VALUES (?,?,?,?,?,?)", u.CurrentTenant, id, u.Id, models.ROLE_SUPER_ADMIN, now, now)
-	if err != nil {
-		logger.Warn("insert team member error", "error", err)
-		c.JSON(500, common.RespInternalError())
-		return
-	}
-
-	// create testdata datasource
-	_, err = tx.Exec(`INSERT INTO datasource (name,type,url,team_id,created,updated) VALUES (?,?,?,?,?,?)`,
-		"TestData", models.DatasourceTestData, "", id, now, now)
-	if err != nil {
-		logger.Warn("init team datasource error", "error", err)
+		if e.IsErrUniqueConstraint(err) {
+			c.JSON(400, common.RespError("team name already exist"))
+			return
+		}
+		logger.Warn("create team error", "error", err)
 		c.JSON(500, common.RespInternalError())
 		return
 	}

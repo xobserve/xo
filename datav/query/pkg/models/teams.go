@@ -240,3 +240,32 @@ func IsTeamVisibleToUser(ctx context.Context, teamId int64, userId int64) (bool,
 
 	return false, nil
 }
+
+func CreateTeam(ctx context.Context, tx *sql.Tx, u *User, name string, brief string) (int64, error) {
+	now := time.Now()
+
+	sidemenu, _ := json.Marshal([]map[string]interface{}{})
+
+	res, err := tx.ExecContext(ctx, "INSERT INTO team (tenant_id,name,brief,created_by,sidemenu,created,updated) VALUES (?,?,?,?,?,?,?)",
+		u.CurrentTenant, name, brief, u.Id, sidemenu, now, now)
+	if err != nil {
+		return 0, err
+	}
+
+	id, _ := res.LastInsertId()
+
+	// insert self as first team member
+	_, err = tx.ExecContext(ctx, "INSERT INTO team_member (tenant_id,team_id,user_id,role,created,updated) VALUES (?,?,?,?,?,?)", u.CurrentTenant, id, u.Id, ROLE_SUPER_ADMIN, now, now)
+	if err != nil {
+		return 0, err
+	}
+
+	// create testdata datasource
+	_, err = tx.Exec(`INSERT INTO datasource (name,type,url,team_id,created,updated) VALUES (?,?,?,?,?,?)`,
+		"TestData", DatasourceTestData, "", id, now, now)
+	if err != nil {
+		return 0, err
+	}
+
+	return id, nil
+}

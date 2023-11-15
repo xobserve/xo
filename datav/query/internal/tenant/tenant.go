@@ -83,6 +83,10 @@ func CreateTenant(c *gin.Context) {
 
 	res, err := tx.ExecContext(c.Request.Context(), `INSERT INTO tenant (name,owner_id,created,updated) VALUES (?,?,?,?)`, req.Name, u.Id, now, now)
 	if err != nil {
+		if e.IsErrUniqueConstraint(err) {
+			c.JSON(400, common.RespError("tenant already exist"))
+			return
+		}
 		logger.Warn("Error create tenant", "error", err)
 		c.JSON(500, common.RespInternalError())
 		return
@@ -94,6 +98,15 @@ func CreateTenant(c *gin.Context) {
 		id, u.Id, models.ROLE_SUPER_ADMIN, now, now)
 	if err != nil {
 		logger.Warn("Error create tenant user", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+
+	// create default team
+	u.CurrentTenant = id
+	_, err = models.CreateTeam(c.Request.Context(), tx, u, models.DefaultTeamName, "default team")
+	if err != nil {
+		logger.Warn("Error create default team", "error", err)
 		c.JSON(500, common.RespInternalError())
 		return
 	}
