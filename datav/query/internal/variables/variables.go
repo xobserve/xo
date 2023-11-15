@@ -53,17 +53,15 @@ func AddNewVariable(c *gin.Context) {
 
 	u := user.CurrentUser(c)
 	// only admin or team admin can do this
-	if !u.Role.IsAdmin() {
-		isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), v.TeamId, u.Id)
-		if err != nil {
-			logger.Warn("Error query team admin", "error", err)
-			c.JSON(500, common.RespError(e.Internal))
-			return
-		}
-		if !isTeamAdmin {
-			c.JSON(403, common.RespError(e.NoPermission))
-			return
-		}
+	isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), v.TeamId, u.Id)
+	if err != nil {
+		logger.Warn("Error query team admin", "error", err)
+		c.JSON(500, common.RespError(e.Internal))
+		return
+	}
+	if !isTeamAdmin {
+		c.JSON(403, common.RespError(e.NeedTeamAdmin))
+		return
 	}
 
 	now := time.Now()
@@ -161,17 +159,15 @@ func DeleteVariable(c *gin.Context) {
 	}
 
 	u := user.CurrentUser((c))
-	if !u.Role.IsAdmin() {
-		isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), teamId, u.Id)
-		if err != nil {
-			logger.Warn("Error query team admin", "error", err)
-			c.JSON(500, common.RespError(e.Internal))
-			return
-		}
-		if !isTeamAdmin {
-			c.JSON(403, common.RespError(e.NoPermission))
-			return
-		}
+	isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), teamId, u.Id)
+	if err != nil {
+		logger.Warn("Error query team admin", "error", err)
+		c.JSON(500, common.RespError(e.Internal))
+		return
+	}
+	if !isTeamAdmin {
+		c.JSON(403, common.RespError(e.NoPermission))
+		return
 	}
 
 	_, err = db.Conn.ExecContext(c.Request.Context(), "DELETE FROM variable WHERE id=?", id)

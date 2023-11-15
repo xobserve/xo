@@ -226,7 +226,7 @@ func DeleteDatasource(c *gin.Context) {
 		return
 	}
 	if !isTeamAdmin {
-		c.JSON(403, common.RespError("Only team admin can do this"))
+		c.JSON(403, common.RespError(e.NeedTeamAdmin))
 		return
 	}
 

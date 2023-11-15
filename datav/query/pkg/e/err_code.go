@@ -28,6 +28,7 @@ const (
 	Malicious          = "malicious"
 	UserNotExist       = "user not exist"
 	PasswordIncorrect  = "password incorrect"
+	NeedTeamAdmin      = "Only team admin can do this"
 	DB                 = "数据库异常"
 	Internal           = "服务器内部错误"
 	NeedLogin          = "你需要登录"
