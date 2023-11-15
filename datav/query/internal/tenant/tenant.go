@@ -122,13 +122,18 @@ func CreateTenant(c *gin.Context) {
 
 func QueryTenantUsers(c *gin.Context) {
 	u := user.CurrentUser(c)
-
-	var tenantId int64
-	if u != nil {
-		tenantId = u.CurrentTenant
-	} else {
-		tenantId = models.DefaultTenantId
+	tenantId, _ := strconv.ParseInt(c.Param("tenantId"), 10, 64)
+	in, err := models.IsUserInTenant(u.Id, tenantId)
+	if err != nil {
+		logger.Warn("query user in tenant error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
 	}
+	if !in {
+		c.JSON(403, common.RespError("you are not in this tenant"))
+		return
+	}
+
 	rows, err := db.Conn.Query("SELECT user_id, role, created FROM tenant_user WHERE tenant_id=?", tenantId)
 	if err != nil {
 		logger.Warn("Error get all tenant users", "error", err)
@@ -161,7 +166,7 @@ func QueryTenantUsers(c *gin.Context) {
 func SubmitTenantUser(c *gin.Context) {
 	u := user.CurrentUser(c)
 
-	req := &models.TenantUser{}
+	req := &models.User{}
 	c.Bind(&req)
 
 	if req.Username == "" || !req.Role.IsValid() {
@@ -191,14 +196,25 @@ func SubmitTenantUser(c *gin.Context) {
 		return
 	}
 
+	tenantRole, err := models.QueryTenantRoleByUserId(c.Request.Context(), req.CurrentTenant, u.Id)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			c.JSON(400, common.RespError("user not in tenant"))
+			return
+		}
+		logger.Warn("query target user error when add user to tenant", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+
 	if req.Role.IsAdmin() {
 		// only super admin can delete admin in tenant
-		if !u.CurrentTenantRole.IsSuperAdmin() {
+		if !tenantRole.IsSuperAdmin() {
 			c.JSON(403, common.RespError("Only super admin can submit admin member"))
 			return
 		}
 	} else {
-		if !u.CurrentTenantRole.IsAdmin() {
+		if !tenantRole.IsAdmin() {
 			c.JSON(403, common.RespError(e.NoPermission))
 			return
 		}
@@ -215,7 +231,7 @@ func SubmitTenantUser(c *gin.Context) {
 		}
 		defer tx.Rollback()
 
-		err = AddUserToTenant(targetUser.Id, u.CurrentTenant, req.Role, tx, c.Request.Context())
+		err = AddUserToTenant(targetUser.Id, req.CurrentTenant, req.Role, tx, c.Request.Context())
 		if err != nil {
 			if e.IsErrUniqueConstraint(err) {
 				c.JSON(400, common.RespError("user already in tenant"))
@@ -235,7 +251,7 @@ func SubmitTenantUser(c *gin.Context) {
 	} else {
 		// update
 		_, err = db.Conn.ExecContext(c.Request.Context(), "UPDATE tenant_user SET role=?,updated=? WHERE tenant_id=? AND user_id=?",
-			req.Role, now, u.CurrentTenant, targetUser.Id)
+			req.Role, now, req.CurrentTenant, targetUser.Id)
 		if err != nil {
 			logger.Warn("update tenant user error", "error", err)
 			c.JSON(500, common.RespInternalError())
@@ -245,18 +261,23 @@ func SubmitTenantUser(c *gin.Context) {
 }
 
 func DeleteTenantUser(c *gin.Context) {
-	targetUserId, _ := strconv.ParseInt(c.Param("id"), 10, 64)
+	targetUserId, _ := strconv.ParseInt(c.Param("userId"), 10, 64)
 	if targetUserId == 0 {
 		c.JSON(400, common.RespError(e.ParamInvalid))
 		return
 	}
 
-	u := user.CurrentUser(c)
+	tenantId, _ := strconv.ParseInt(c.Param("tenantId"), 10, 64)
+	if tenantId == 0 {
+		c.JSON(400, common.RespError(e.ParamInvalid))
+		return
+	}
 
-	tenantUser, err := models.QueryTenantUser(c.Request.Context(), u.CurrentTenant, targetUserId)
+	u := user.CurrentUser(c)
+	tenantUser, err := models.QueryTenantUser(c.Request.Context(), tenantId, targetUserId)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			c.JSON(400, common.RespError(e.UserNotExist))
+			c.JSON(400, common.RespError("user not in tenant"))
 			return
 		}
 		logger.Warn("query target user error when delete user", "error", err)
@@ -269,20 +290,31 @@ func DeleteTenantUser(c *gin.Context) {
 		return
 	}
 
+	tenantRole, err := models.QueryTenantRoleByUserId(c.Request.Context(), tenantId, u.Id)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			c.JSON(400, common.RespError("you are not in this tenant"))
+			return
+		}
+		logger.Warn("query tenant role by user id error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+
 	if tenantUser.Role.IsAdmin() {
 		// only super admin can delete admin in tenant
-		if !u.CurrentTenantRole.IsSuperAdmin() {
+		if !tenantRole.IsSuperAdmin() {
 			c.JSON(403, common.RespError(e.NoPermission))
 			return
 		}
 	} else {
-		if !u.CurrentTenantRole.IsAdmin() {
+		if !tenantRole.IsAdmin() {
 			c.JSON(403, common.RespError(e.NoPermission))
 			return
 		}
 	}
 
-	_, err = db.Conn.ExecContext(c.Request.Context(), `DELETE FROM tenant_user WHERE tenant_id=? AND user_id=? AND role!=?`, u.CurrentTenant, targetUserId, models.ROLE_SUPER_ADMIN)
+	_, err = db.Conn.ExecContext(c.Request.Context(), `DELETE FROM tenant_user WHERE tenant_id=? AND user_id=? AND role!=?`, tenantId, targetUserId, models.ROLE_SUPER_ADMIN)
 	if err != nil {
 		logger.Warn("delete tenant user error", "error", err)
 		c.JSON(500, common.RespInternalError())
@@ -357,7 +389,7 @@ func SwitchTenant(c *gin.Context) {
 	teamId, err := SetTenantForUser(c.Request.Context(), tenantId, userId)
 	if err != nil {
 		logger.Warn("switch tenant error", "error", err)
-		c.JSON(500, common.RespInternalError())
+		c.JSON(500, common.RespError(err.Error()))
 		return
 	}
 
@@ -365,16 +397,18 @@ func SwitchTenant(c *gin.Context) {
 }
 
 func SetTenantForUser(ctx context.Context, tenantId int64, userId int64) (int64, error) {
+	var teamId int64
 	teams, err := models.QueryVisibleTeamsByUserId(ctx, tenantId, userId)
 	if err != nil {
 		return 0, err
 	}
 
 	if len(teams) == 0 {
-		return 0, errors.New("you are not in any team now")
+		return 0, errors.New("you are not in any team of this tenant")
 	}
 
-	_, err = db.Conn.ExecContext(ctx, "UPDATE user SET current_tenant=?, current_team=? WHERE id=?", tenantId, teams[0], userId)
+	teamId = teams[0]
+	_, err = db.Conn.ExecContext(ctx, "UPDATE user SET current_tenant=?, current_team=? WHERE id=?", tenantId, teamId, userId)
 	if err != nil {
 		return 0, err
 	}

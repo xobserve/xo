@@ -14,7 +14,6 @@
 import React from "react"
 import { Button, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useDisclosure, AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Modal, ModalBody, ModalCloseButton, ModalContent, HStack, ModalHeader, ModalOverlay, Text, RadioGroup, Stack, Radio, useToast, VStack, Box, Input, Flex, Tag } from "@chakra-ui/react"
 import { Form, FormSection } from "src/components/form/Form"
-import FormItem from "src/components/form/Item"
 import useSession from "hooks/use-session"
 import Page from "layouts/page/Page"
 import { cloneDeep } from "lodash"
@@ -32,6 +31,7 @@ import { locale } from "src/i18n/i18n"
 import { EditorInputItem } from "components/editor/EditorItem"
 import { useParams } from "react-router-dom"
 import { getTenantLinks } from "./links"
+import { $config } from "src/data/configs/config"
 
 const AdminTenantUsers = () => {
     const t = useStore(commonMsg)
@@ -40,7 +40,7 @@ const AdminTenantUsers = () => {
     const { session } = useSession()
     const toast = useToast()
     const [users, setUsers] = useState<User[]>(null)
-
+    const config = useStore($config)
     const teamId = useParams().teamId
     const tenantLinks = getTenantLinks(teamId)
 
@@ -58,7 +58,7 @@ const AdminTenantUsers = () => {
     const cancelRef = useRef()
 
     const load = async () => {
-        const res = await requestApi.get("/tenant/users")
+        const res = await requestApi.get(`/tenant/users/${config.currentTenant}`)
         setUsers(res.data)
     }
 
@@ -70,7 +70,7 @@ const AdminTenantUsers = () => {
 
 
     const onDeleteUser = async () => {
-        await requestApi.delete(`/tenant/user/${userInDelete.id}`)
+        await requestApi.delete(`/tenant/user/${userInDelete.id}/${config.currentTenant}`)
         toast({
             title: t.isDeleted({ name: t.user }),
             status: "success",
@@ -89,7 +89,7 @@ const AdminTenantUsers = () => {
     }
 
     const onSubmitUser = async () => {
-        await requestApi.post(`/tenant/user`, userInEdit)
+        await requestApi.post(`/tenant/user`, {...userInEdit,currentTenant: config.currentTenant})
         toast({
             title: t.isUpdated({ name: t1.userRole }),
             status: "success",
@@ -101,7 +101,7 @@ const AdminTenantUsers = () => {
     }
 
     return <>
-        <Page title={lang == "en" ? `Tenant Admin - ${session?.user.tenantName}` : `租户管理 - ${session?.user.tenantName}`} subTitle={t.manageItem({ name: t.members })} icon={<FaCog />} tabs={tenantLinks} isLoading={users === null}>
+        <Page title={lang == "en" ? `Tenant Admin - ${config.tenantName}` : `租户管理 - ${config.tenantName}`} subTitle={t.manageItem({ name: t.members })} icon={<FaCog />} tabs={tenantLinks} isLoading={users === null}>
             <Flex justifyContent="space-between">
                 <Box></Box>
                 <Button size="sm" onClick={onAddUser}>{t.addItem({ name: t.members })}</Button>

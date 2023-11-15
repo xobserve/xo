@@ -115,7 +115,7 @@ requestApi.interceptors.response.use(
           toast({
             id: id,
             // title: `请求错误`,
-            description: message,
+            description: JSON.parse(message).message,
             status: "error",
             duration: 3000,
             isClosable: true,

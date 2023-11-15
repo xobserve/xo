@@ -16,7 +16,7 @@ import { Form } from "src/components/form/Form"
 import FormItem from "src/components/form/Item"
 import useSession from "hooks/use-session"
 import Page from "layouts/page/Page"
-import { useEffect, useState } from "react"
+import {  useState } from "react"
 import { FaCog } from "react-icons/fa"
 import { requestApi } from "utils/axios/request"
 import { useNavigate, useParams } from "react-router-dom"
@@ -25,6 +25,7 @@ import { useStore } from "@nanostores/react"
 import { $teams } from "src/views/team/store"
 import { locale } from "src/i18n/i18n"
 import { getTenantLinks } from "./links"
+import { $config } from "src/data/configs/config"
 
 const TeamsPage = () => {
     const t = useStore(commonMsg)
@@ -35,6 +36,7 @@ const TeamsPage = () => {
     const [teamName, setTeamName] = useState<string>("")
     const [teamDesc, setTeamDesc] = useState<string>("")
     const teams = useStore($teams)
+    const config = useStore($config)
 
     const teamId = useParams().teamId
     const tenantLinks = getTenantLinks(teamId)
@@ -42,7 +44,7 @@ const TeamsPage = () => {
     const { isOpen, onOpen, onClose } = useDisclosure()
 
     const addTeam = async () => {
-        const res = await requestApi.post("/team/new", { name: teamName.trim(),brief: teamDesc.trim()})
+        const res = await requestApi.post("/team/new", { name: teamName.trim(),brief: teamDesc.trim(), tenantId: config.currentTenant})
         onClose()
         toast({
             title: t.isAdded({name: t.team}),
@@ -70,7 +72,7 @@ const TeamsPage = () => {
     }
 
     return <>
-        <Page title={lang == "en" ? `Tenant Admin - ${session?.user.tenantName}` : `租户管理 - ${session?.user.tenantName}`} subTitle={t.manageItem({ name: t.team })} icon={<FaCog />} tabs={tenantLinks}>
+        <Page title={lang == "en" ? `Tenant Admin - ${config.tenantName}` : `租户管理 - ${config.tenantName}`} subTitle={t.manageItem({ name: t.team })} icon={<FaCog />} tabs={tenantLinks}>
             <Flex justifyContent="space-between">
                 <Box></Box>
                 <Button size="sm" onClick={onOpen}>{t.newItem({name: t.team})}</Button>

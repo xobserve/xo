@@ -191,3 +191,17 @@ func IsUserInTenant(userId, tenantId int64) (bool, error) {
 
 	return true, nil
 }
+
+func QueryPublicTenant() int64 {
+	return DefaultTenantId
+}
+
+func QueryTenantRoleByUserId(ctx context.Context, tenantId, userId int64) (RoleType, error) {
+	var role RoleType
+	err := db.Conn.QueryRowContext(ctx, `SELECT role FROM tenant_user WHERE tenant_id=? and user_id=?`, tenantId, userId).Scan(&role)
+	if err != nil {
+		return ROLE_VIEWER, err
+	}
+
+	return role, nil
+}

@@ -24,7 +24,8 @@ import {
     Text,
     HStack,
     Box,
-    Portal
+    Portal,
+    Divider
 } from "@chakra-ui/react"
 import useSession from "hooks/use-session"
 import storage from "utils/localStorage"
@@ -41,6 +42,7 @@ import SelectUserTeam from "components/user/SelectUserTeam"
 import { ColorModeSwitcher } from "src/components/ColorModeSwitcher"
 import SelectUserTenant from "./SelectUserTenant"
 import { isEmpty } from "utils/validate"
+import { $config } from "src/data/configs/config"
 
 const UserMenu = ({ miniMode }) => {
     const t = useStore(commonMsg)
@@ -54,6 +56,7 @@ const UserMenu = ({ miniMode }) => {
     }
 
     const toast = useToast()
+    const config = useStore($config)
     const navigate = useNavigate()
     const location = useLocation()
     const login = () => {
@@ -102,8 +105,9 @@ const UserMenu = ({ miniMode }) => {
                 <Portal>
                     <MenuList zIndex={1000} fontSize="1em">
                         <Link to={session ? `${teamPath}/account/setting` : null}><MenuItem  py="2px" cursor="default" bg="transparent" _hover={{bg: "transparent"}}  icon={<FaUserAlt fontSize="1em" />} >
-                            <Text>{session?.user.name ?? "xobserve guest"}</Text>
-                            {session && <Text>{session.user.username}</Text>}
+                            <Text>{session?.user.username ?? "Guest"}</Text>
+                            {session &&
+                                <Text textStyle="annotation">{config.tenantRole}</Text>}
                         </MenuItem></Link>
                         <MenuDivider /> 
                         {session && isAdmin(session.user.role) && <><Link to={`${teamPath}/admin/users`}><MenuItem width="100%" icon={<FaStar fontSize="1em" />} >{t1.adminPanel}</MenuItem></Link></>}

@@ -163,9 +163,6 @@ const AdminUsers = () => {
     }
 
     const updateUserRole = async (v) => {
-        userInEdit.role = v as Role;
-        setUserInEdit(cloneDeep(userInEdit))
-
         await requestApi.post(`/admin/user/role`, { id: userInEdit.id, role: v })
         toast({
             title: t.isUpdated({ name: t1.userRole }),
@@ -173,6 +170,8 @@ const AdminUsers = () => {
             duration: 3000,
             isClosable: true,
         })
+        userInEdit.role = v as Role;
+        setUserInEdit(cloneDeep(userInEdit))
         load()
     }
 

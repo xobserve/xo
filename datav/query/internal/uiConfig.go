@@ -51,8 +51,12 @@ type UIConfig struct {
 
 	Observability *config.Observability `json:"observability"`
 	Tenant        *Tenant               `json:"tenant"`
-	CurrentTenant int64                 `json:"currentTenant"`
-	CurrentTeam   int64                 `json:"currentTeam"`
+
+	// user tenant relative
+	CurrentTenant int64           `json:"currentTenant"`
+	TenantName    string          `json:"tenantName"`
+	CurrentTeam   int64           `json:"currentTeam"`
+	TenantRole    models.RoleType `json:"tenantRole"`
 }
 
 type Plugins struct {
@@ -102,8 +106,8 @@ func getUIConfig(c *gin.Context) {
 	var tenantId int64
 	var err error
 	queryTeam := false
+	u := user.CurrentUser(c)
 	if teamId == 0 {
-		u := user.CurrentUser(c)
 		if u == nil {
 			tenantId = models.DefaultTenantId
 		} else {
@@ -122,7 +126,6 @@ func getUIConfig(c *gin.Context) {
 	} else {
 		teamExist := models.IsTeamExist(c.Request.Context(), teamId)
 		if !teamExist {
-			u := user.CurrentUser(c)
 			if u != nil {
 				tenantId = u.CurrentTenant
 				teamId = u.CurrentTeam
@@ -181,6 +184,14 @@ func getUIConfig(c *gin.Context) {
 	cfg.CurrentTeam = teamId
 	cfg.CurrentTenant = tenantId
 
+	// query tenant name
+	tenant1, err := models.QueryTenant(c.Request.Context(), tenantId)
+	if err != nil {
+		logger.Warn("query tenant error", "error", err)
+		c.JSON(500, common.RespError(e.Internal))
+		return
+	}
+	cfg.TenantName = tenant1.Name
 	vars, err := variables.GetVariables(c.Request.Context(), teamId)
 	if err != nil {
 		logger.Warn("query variables error", "error", err)
@@ -188,7 +199,22 @@ func getUIConfig(c *gin.Context) {
 		return
 	}
 
-	u := user.CurrentUser(c)
+	if u != nil {
+		tenantUser, err := models.QueryTenantUser(c.Request.Context(), tenantId, u.Id)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				c.JSON(400, common.RespError("you are not in this tenant"))
+				return
+			}
+			logger.Warn("query tenant user error", "error", err)
+			c.JSON(500, common.RespError(e.Internal))
+			return
+		}
+		cfg.TenantRole = tenantUser.Role
+	} else {
+		cfg.TenantRole = models.ROLE_GUEST
+	}
+
 	teams, err := teams.GetTeamsByTenantId(c.Request.Context(), tenantId, u)
 	if err != nil {
 		logger.Warn("get teams by tenant id error", "error", err)

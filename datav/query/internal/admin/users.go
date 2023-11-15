@@ -120,7 +120,7 @@ func AddNewUser(c *gin.Context) {
 	// only superadmin can add Admin Role
 	if req.Role.IsAdmin() {
 		if !models.IsSuperAdmin(u.Id) {
-			c.JSON(403, common.RespError(e.NoPermission))
+			c.JSON(403, common.RespError("Only super admin can add admin role"))
 			return
 		}
 	}
@@ -194,6 +194,11 @@ func UpdateUserRole(c *gin.Context) {
 
 	u := user.CurrentUser(c)
 
+	if req.Id == u.Id {
+		c.JSON(400, common.RespError("you cant change your own role"))
+		return
+	}
+
 	if req.Role == models.ROLE_ADMIN {
 		if !u.Role.IsSuperAdmin() {
 			c.JSON(403, common.RespError("only superadmin can set admin"))
@@ -264,61 +269,4 @@ func DeleteUser(c *gin.Context) {
 
 	WriteAuditLog(c.Request.Context(), currentUser.Id, AuditDeleteUser, strconv.FormatInt(userId, 10), targetUser)
 	c.JSON(200, nil)
-}
-
-type AddNewTeamModel struct {
-	Name  string `json:"name"`
-	Brief string `json:"brief"`
-}
-
-func AddNewTeam(c *gin.Context) {
-	req := &AddNewTeamModel{}
-	c.Bind(&req)
-	if req.Name == "" {
-		c.JSON(400, common.RespError(e.ParamInvalid))
-		return
-	}
-
-	u := user.CurrentUser(c)
-	if !u.Role.IsAdmin() {
-		c.JSON(403, common.RespError(e.NoPermission))
-		return
-	}
-
-	now := time.Now()
-	tx, err := db.Conn.Begin()
-	if err != nil {
-		logger.Warn("create team error", "error", err)
-		c.JSON(500, common.RespInternalError())
-		return
-	}
-	defer tx.Rollback()
-
-	id, err := models.CreateTeam(c.Request.Context(), tx, u, req.Name, req.Brief)
-	if err != nil {
-		if e.IsErrUniqueConstraint(err) {
-			c.JSON(400, common.RespError("team name already exist"))
-			return
-		}
-		logger.Warn("create team error", "error", err)
-		c.JSON(500, common.RespInternalError())
-		return
-	}
-
-	err = tx.Commit()
-	if err != nil {
-		logger.Warn("commit sql transaction error", "error", err)
-		c.JSON(500, common.RespInternalError())
-		return
-	}
-
-	c.JSON(200, common.RespSuccess(&models.Team{
-		Id:          id,
-		Name:        req.Name,
-		Brief:       req.Brief,
-		CreatedBy:   u.Username,
-		Created:     now,
-		Updated:     now,
-		MemberCount: 1,
-	}))
 }

@@ -26,7 +26,6 @@ import { sidebarMsg } from "src/i18n/locales/en"
 import { requestApi } from "utils/axios/request"
 import { Tenant } from "types/tenant"
 import { useParams } from "react-router-dom"
-import { isEmpty } from "utils/validate"
 import { $config } from "src/data/configs/config"
 import { selectTenant } from "utils/tenant"
 

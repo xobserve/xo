@@ -32,7 +32,5 @@ export interface User {
     data?: Record<string, any>
     currentTenant?: number
     currentTeam?: number
-    tenantName?: string
-    tenantRole?: Role
     lastSeenAt?: string
 }

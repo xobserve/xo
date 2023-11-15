@@ -14,6 +14,7 @@ import { MenuItem } from "types/teams";
 
 
 import { atom } from 'nanostores'
+import { Role } from "types/role";
 
 
 
@@ -65,5 +66,7 @@ export interface UIConfig {
         enable: boolean
     }
     currentTenant?: number
+    tenantName?: string
+    tenantRole?: Role
     currentTeam?: number
 }

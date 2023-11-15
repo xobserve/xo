@@ -25,7 +25,7 @@ export const selectTenant = async (tenantId:number, teamId:string, config:UIConf
                 window.location.href = path.replace(`/${teamId}/`, `/${newTeamId}/`)
             }
         } else {
-             gnavigate(`/${newTeamId}` +  url)
+            window.location.href = (`/${newTeamId}` +  url)
         }
       
     }, 1000)

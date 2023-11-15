@@ -115,7 +115,7 @@ func (s *Server) Start() error {
 		r.POST("/team/add/member", MustLogin(), teams.AddTeamMembers)
 		r.DELETE("/team/member/:teamId/:memberId", MustLogin(), teams.DeleteTeamMember)
 		r.POST("/team/update", MustLogin(), teams.UpdateTeam)
-		r.POST("/team/new", MustLogin(), admin.AddNewTeam)
+		r.POST("/team/new", MustLogin(), teams.AddNewTeam)
 		r.DELETE("/team/:id", MustLogin(), teams.DeleteTeam)
 		r.DELETE("/team/leave/:id", MustLogin(), teams.LeaveTeam)
 		r.GET("/team/sidemenu/:id", teams.GetSideMenu)
@@ -165,9 +165,9 @@ func (s *Server) Start() error {
 		// tenant apis
 		r.GET("/tenant/list/all", MustLogin(), tenant.QueryTenants)
 		r.POST("/tenant/create", MustLogin(), tenant.CreateTenant)
-		r.GET(("/tenant/users"), tenant.QueryTenantUsers)
+		r.GET(("/tenant/users/:tenantId"), MustLogin(), tenant.QueryTenantUsers)
 		r.POST("/tenant/user", MustLogin(), tenant.SubmitTenantUser)
-		r.DELETE("/tenant/user/:id", MustLogin(), tenant.DeleteTenantUser)
+		r.DELETE("/tenant/user/:userId/:tenantId", MustLogin(), tenant.DeleteTenantUser)
 		r.GET("/tenant/user/in/:username", tenant.GetTenantsUserIn)
 		r.POST("/tenant/switch/:id", MustLogin(), tenant.SwitchTenant)
 

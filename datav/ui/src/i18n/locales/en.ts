@@ -162,12 +162,12 @@ export const miscMsg = i18n("misc", {
 export const sidebarMsg = i18n("sidebar", {
   "dashboard": "Dashboards",
   "search": "Search",
-  "selectTeam": "Switch Team",
-  "selectTenant": "Switch Tenant",
+  "selectTeam": "Current Team",
+  "selectTenant": "Current Tenant",
   "themeChange": "Current theme - ",
   "accountSetting": "User",
-  "adminPanel": "Website admin",
-  "tenantAdmin": "Tenant admin",
+  "adminPanel": "Website manage",
+  "tenantAdmin": "Tenant manage",
   "currentLang": "Current Lang",
   "newItem": "Add new item",
 })

@@ -43,7 +43,7 @@ func GetTeams(c *gin.Context) {
 		if u != nil {
 			tenantId = u.CurrentTenant
 		} else {
-			tenantId = models.DefaultTenantId
+			tenantId = models.QueryPublicTenant()
 		}
 	} else {
 		tenantId, err = models.QueryTenantIdByTeamId(c.Request.Context(), teamId)
@@ -626,4 +626,74 @@ func GetTeamsForUser(c *gin.Context) {
 	}
 
 	c.JSON(200, common.RespSuccess(teams))
+}
+
+type AddNewTeamModel struct {
+	Name     string `json:"name"`
+	Brief    string `json:"brief"`
+	TenantId int64  `json:"tenantId"`
+}
+
+func AddNewTeam(c *gin.Context) {
+	req := &AddNewTeamModel{}
+	c.Bind(&req)
+	if req.Name == "" {
+		c.JSON(400, common.RespError(e.ParamInvalid))
+		return
+	}
+
+	u := user.CurrentUser(c)
+	tenantRole, err := models.QueryTenantRoleByUserId(c.Request.Context(), req.TenantId, u.Id)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			c.JSON(400, common.RespError("user not in tenant"))
+			return
+		}
+		logger.Warn("query target user error when add user to tenant", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+
+	if !tenantRole.IsAdmin() {
+		c.JSON(403, common.RespError(e.NoPermission))
+		return
+	}
+
+	now := time.Now()
+	tx, err := db.Conn.Begin()
+	if err != nil {
+		logger.Warn("create team error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+	defer tx.Rollback()
+
+	u.CurrentTenant = req.TenantId
+	id, err := models.CreateTeam(c.Request.Context(), tx, u, req.Name, req.Brief)
+	if err != nil {
+		if e.IsErrUniqueConstraint(err) {
+			c.JSON(400, common.RespError("team name already exist"))
+			return
+		}
+		logger.Warn("create team error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+
+	err = tx.Commit()
+	if err != nil {
+		logger.Warn("commit sql transaction error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+
+	c.JSON(200, common.RespSuccess(&models.Team{
+		Id:          id,
+		Name:        req.Name,
+		Brief:       req.Brief,
+		CreatedBy:   u.Username,
+		Created:     now,
+		Updated:     now,
+		MemberCount: 1,
+	}))
 }
