@@ -117,7 +117,7 @@ export const AdminTenants = memo(() => {
                             </Td>
                             <Td>{moment(tenant.created).fromNow()}</Td>
                             <Td>
-                                <Button size="sm" variant="ghost" onClick={() => selectTenant(tenant.id, teamId, config, toast)}>View</Button>
+                                <Button size="sm" variant="ghost" onClick={() => selectTenant(tenant.id, teamId, config, toast, "/admin/tenant/users")}>View</Button>
                             </Td>
                         </Tr>
                     })}
