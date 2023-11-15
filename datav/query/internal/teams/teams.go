@@ -479,6 +479,20 @@ func DeleteTeam(c *gin.Context) {
 		return
 	}
 
+	// check tenant has more than one team
+	var teamCount int
+	err = db.Conn.QueryRow("SELECT count(*) FROM team WHERE tenant_id=?", t.TenantId).Scan(&teamCount)
+	if err != nil {
+		logger.Warn("query team count error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+
+	if teamCount <= 1 {
+		c.JSON(400, common.RespError("tenant must have at least one team"))
+		return
+	}
+
 	tx, err := db.Conn.Begin()
 	if err != nil {
 		logger.Warn("start sql transaction error", "error", err)
