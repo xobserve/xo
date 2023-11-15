@@ -96,8 +96,8 @@ type UserData struct {
 func QueryUserById(ctx context.Context, id int64) (*User, error) {
 	user := &User{}
 	var data []byte
-	err := db.Conn.QueryRowContext(ctx, `SELECT id,username,name,email,mobile,password,salt,data,current_tenant,current_team,last_seen_at,created FROM user WHERE id=?`,
-		id).Scan(&user.Id, &user.Username, &user.Name, &user.Email, &user.Mobile, &user.Password, &user.Salt, &data, &user.CurrentTenant, &user.CurrentTeam, &user.LastSeenAt, &user.Created)
+	err := db.Conn.QueryRowContext(ctx, `SELECT id,username,name,email,mobile,role,password,salt,data,current_tenant,current_team,last_seen_at,created FROM user WHERE id=?`,
+		id).Scan(&user.Id, &user.Username, &user.Name, &user.Email, &user.Mobile, &user.Role, &user.Password, &user.Salt, &data, &user.CurrentTenant, &user.CurrentTeam, &user.LastSeenAt, &user.Created)
 	if err != nil && err != sql.ErrNoRows {
 		return user, err
 	}
@@ -112,13 +112,6 @@ func QueryUserById(ctx context.Context, id int64) (*User, error) {
 	if user.Id == 0 {
 		return user, nil
 	}
-
-	globalMember, err := QueryTeamMember(ctx, GlobalTeamId, user.Id)
-	if err != nil {
-		return user, err
-	}
-
-	user.Role = globalMember.Role
 
 	tenantUser, err := QueryTenantUser(ctx, user.CurrentTenant, user.Id)
 	if err != nil && err != sql.ErrNoRows {
@@ -141,8 +134,8 @@ func QueryUserById(ctx context.Context, id int64) (*User, error) {
 func QueryUserByName(ctx context.Context, username string) (*User, error) {
 	user := &User{}
 	var data []byte
-	err := db.Conn.QueryRowContext(ctx, `SELECT id,username,name,email,mobile,password,salt,data,current_tenant,current_team, last_seen_at FROM user WHERE username=?`,
-		username).Scan(&user.Id, &user.Username, &user.Name, &user.Email, &user.Mobile, &user.Password, &user.Salt, &data, &user.CurrentTenant, &user.CurrentTeam, &user.LastSeenAt)
+	err := db.Conn.QueryRowContext(ctx, `SELECT id,username,name,email,mobile,role,password,salt,data,current_tenant,current_team, last_seen_at FROM user WHERE username=?`,
+		username).Scan(&user.Id, &user.Username, &user.Name, &user.Email, &user.Mobile, &user.Role, &user.Password, &user.Salt, &data, &user.CurrentTenant, &user.CurrentTeam, &user.LastSeenAt)
 	if err != nil && err != sql.ErrNoRows {
 		return user, err
 	}

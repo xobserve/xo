@@ -31,7 +31,7 @@ import (
 )
 
 func GetUsers(c *gin.Context) {
-	rows, err := db.Conn.QueryContext(c.Request.Context(), `SELECT id,username,name,email,mobile,last_seen_at,created,visit_count FROM user`)
+	rows, err := db.Conn.QueryContext(c.Request.Context(), `SELECT id,username,name,email,mobile,role,last_seen_at,created,visit_count FROM user`)
 	if err != nil {
 		logger.Warn("get all users error", "error", err)
 		c.JSON(500, common.RespInternalError())
@@ -43,22 +43,10 @@ func GetUsers(c *gin.Context) {
 
 	for rows.Next() {
 		user := &models.User{}
-		err := rows.Scan(&user.Id, &user.Username, &user.Name, &user.Email, &user.Mobile, &user.LastSeenAt, &user.Created, &user.Visits)
+		err := rows.Scan(&user.Id, &user.Username, &user.Name, &user.Email, &user.Mobile, &user.Role, &user.LastSeenAt, &user.Created, &user.Visits)
 		if err != nil {
 			logger.Warn("get all users scan error", "error", err)
 			continue
-		}
-
-		if user.Id == models.SuperAdminId {
-			user.Role = models.ROLE_SUPER_ADMIN
-		} else {
-			globalMember, err := models.QueryTeamMember(c.Request.Context(), models.GlobalTeamId, user.Id)
-			if err != nil {
-				logger.Warn("get all users team member error", "error", err)
-				continue
-			}
-
-			user.Role = globalMember.Role
 		}
 
 		users = append(users, user)
@@ -155,8 +143,8 @@ func AddNewUser(c *gin.Context) {
 		tenantId = models.DefaultTenantId
 	}
 
-	res, err := tx.ExecContext(c.Request.Context(), "INSERT INTO user (username,password,salt,email,current_tenant,created,updated) VALUES (?,?,?,?,?,?,?)",
-		req.Username, encodedPW, salt, req.Email, tenantId, now, now)
+	res, err := tx.ExecContext(c.Request.Context(), "INSERT INTO user (username,password,salt,email,role,current_tenant,created,updated) VALUES (?,?,?,?,?,?,?,?)",
+		req.Username, encodedPW, salt, req.Email, req.Role, tenantId, now, now)
 	if err != nil {
 		logger.Warn("new user error", "error", err)
 		c.JSON(500, common.RespInternalError())
@@ -206,13 +194,21 @@ func UpdateUserRole(c *gin.Context) {
 	}
 
 	u := user.CurrentUser(c)
-	if !models.IsSuperAdmin(u.Id) {
-		c.JSON(403, common.RespError("only superadmin can update user role"))
-		return
+
+	if req.Role == models.ROLE_ADMIN {
+		if !u.Role.IsSuperAdmin() {
+			c.JSON(403, common.RespError("only superadmin can set admin"))
+			return
+		}
+	} else {
+		if !u.Role.IsAdmin() {
+			c.JSON(403, common.RespError(e.NoPermission))
+			return
+		}
 	}
 
-	_, err := db.Conn.Exec("UPDATE team_member SET role=? WHERE team_id=? AND user_id=?",
-		req.Role, models.GlobalTeamId, req.Id)
+	_, err := db.Conn.Exec("UPDATE user SET role=? WHERE id=?",
+		req.Role, req.Id)
 
 	if err != nil {
 		logger.Warn("update user role error", "error", err)
@@ -284,11 +280,6 @@ func AddNewTeam(c *gin.Context) {
 		return
 	}
 
-	if req.Name == models.GlobalTeamName {
-		c.JSON(400, common.RespError("name is already used for global team"))
-		return
-	}
-
 	u := user.CurrentUser(c)
 	if !u.Role.IsAdmin() {
 		c.JSON(403, common.RespError(e.NoPermission))
@@ -318,7 +309,7 @@ func AddNewTeam(c *gin.Context) {
 	id, _ := res.LastInsertId()
 
 	// insert self as first team member
-	_, err = tx.ExecContext(c.Request.Context(), "INSERT INTO team_member (tenant_id,team_id,user_id,role,created,updated) VALUES (?,?,?,?,?,?)", u.CurrentTenant, id, u.Id, models.ROLE_ADMIN, now, now)
+	_, err = tx.ExecContext(c.Request.Context(), "INSERT INTO team_member (tenant_id,team_id,user_id,role,created,updated) VALUES (?,?,?,?,?,?)", u.CurrentTenant, id, u.Id, models.ROLE_SUPER_ADMIN, now, now)
 	if err != nil {
 		logger.Warn("insert team member error", "error", err)
 		c.JSON(500, common.RespInternalError())

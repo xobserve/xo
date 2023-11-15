@@ -164,15 +164,6 @@ func initTables() error {
 	adminPW = pw
 
 	now := time.Now()
-	// insert init data
-	// CREATE TABLE IF NOT EXISTS tenant_user (
-	// 	id INTEGER PRIMARY KEY AUTOINCREMENT,
-	// 	tenant_id INTEGER NOT NULL,
-	// 	user_id INTEGER NOT NULL,
-	// 	role VARCHAR(10) DEFAULT 'Viewer',
-	// 	created DATETIME NOT NULL,
-	// 	updated DATETIME NOT NULL
-	// );
 	_, err = db.Conn.Exec(`INSERT INTO tenant (id,name,nickname,owner_id, data ,created,updated) VALUES (?,?,?,?,?,?,?)`,
 		models.DefaultTenantId, models.DefaultTenant, models.DefaultTenant, models.SuperAdminId, "{}", now, now)
 	if err != nil && !e.IsErrUniqueConstraint(err) {
@@ -187,8 +178,8 @@ func initTables() error {
 		return err
 	}
 
-	_, err = db.Conn.Exec(`INSERT INTO user (id,username,password,salt,email,created,updated) VALUES (?,?,?,?,?,?,?)`,
-		models.SuperAdminId, models.SuperAdminUsername, adminPW, adminSalt, "", now, now)
+	_, err = db.Conn.Exec(`INSERT INTO user (id,username,password,salt,role,email,created,updated) VALUES (?,?,?,?,?,?,?,?)`,
+		models.SuperAdminId, models.SuperAdminUsername, adminPW, adminSalt, models.ROLE_SUPER_ADMIN, "", now, now)
 	if err != nil && !e.IsErrUniqueConstraint(err) {
 		logger.Crit("init super admin error", "error:", err)
 		return err
@@ -201,14 +192,14 @@ func initTables() error {
 	}
 
 	_, err = db.Conn.Exec(`INSERT INTO team (id,name,is_public,created_by,tenant_id,sidemenu,created,updated) VALUES (?,?,?,?,?,?,?,?)`,
-		models.GlobalTeamId, models.GlobalTeamName, true, models.SuperAdminId, models.DefaultTenantId, menuStr, now, now)
+		models.DefaultTeamId, models.DefaultTeamName, true, models.SuperAdminId, models.DefaultTenantId, menuStr, now, now)
 	if err != nil && !e.IsErrUniqueConstraint(err) {
 		logger.Crit("init global team error", "error:", err)
 		return err
 	}
 
 	_, err = db.Conn.Exec(`INSERT INTO team_member (tenant_id,team_id,user_id,role,created,updated) VALUES (?,?,?,?,?,?)`,
-		models.DefaultTenantId, models.GlobalTeamId, models.SuperAdminId, models.ROLE_ADMIN, now, now)
+		models.DefaultTenantId, models.DefaultTeamId, models.SuperAdminId, models.ROLE_SUPER_ADMIN, now, now)
 	if err != nil && !e.IsErrUniqueConstraint(err) {
 		logger.Crit("init global team member error", "error:", err)
 		return err
@@ -230,7 +221,7 @@ func initTables() error {
 
 	// insert Test Data dataousrce
 	_, err = db.Conn.Exec(`INSERT INTO datasource (id,name,type,url,team_id,created,updated) VALUES (?,?,?,?,?,?,?)`,
-		models.InitTestDataDatasourceId, "TestData", models.DatasourceTestData, "", models.GlobalTeamId, now, now)
+		models.InitTestDataDatasourceId, "TestData", models.DatasourceTestData, "", models.DefaultTeamId, now, now)
 	if err != nil && !e.IsErrUniqueConstraint(err) {
 		logger.Crit("init testdata datasource  error", "error:", err)
 		return err

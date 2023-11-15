@@ -207,15 +207,6 @@ func LoginGithub(c *gin.Context) {
 			return
 		}
 
-		// add user to global team
-		_, err = tx.ExecContext(c.Request.Context(), "INSERT INTO team_member (team_id,user_id,role,created,updated) VALUES (?,?,?,?,?)",
-			models.GlobalTeamId, id, models.ROLE_VIEWER, now, now)
-		if err != nil {
-			logger.Warn("new user error", "error", err)
-			c.JSON(500, common.RespInternalError())
-			return
-		}
-
 		err = tx.Commit()
 		if err != nil {
 			logger.Warn("commit sql transaction error", "error", err)

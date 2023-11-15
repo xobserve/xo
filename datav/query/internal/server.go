@@ -121,7 +121,6 @@ func (s *Server) Start() error {
 		r.GET("/team/sidemenu/:id", teams.GetSideMenu)
 		r.POST("/team/sidemenu", MustLogin(), teams.UpdateSideMenu)
 		r.POST("/team/switch/:teamId", MustLogin(), teams.SwitchTeam)
-		r.POST("/team/allowGlobal", MustLogin(), teams.UpdateAllowGlobal)
 		r.GET("/team/for/user", teams.GetTeamsForUser)
 
 		// variable apis

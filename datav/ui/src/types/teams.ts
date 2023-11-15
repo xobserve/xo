@@ -12,7 +12,6 @@
 // limitations under the License.
 import { Role } from "./role"
 
-export const globalTeamId = 1
 
 export interface Team {
     id : number 
@@ -23,7 +22,6 @@ export interface Team {
     createdById?: number
     memberCount?: number
     role?: Role
-    allowGlobal?: boolean
 }
 
 export interface TeamMember {

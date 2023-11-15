@@ -16,7 +16,6 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"net/http"
 	"sort"
 	"strconv"
 	"strings"
@@ -71,7 +70,7 @@ func GetTeams(c *gin.Context) {
 
 func GetTeamsByTenantId(ctx context.Context, tenantId int64, u *models.User) (models.Teams, error) {
 	teams := make(models.Teams, 0)
-	q := fmt.Sprintf(`SELECT id,name,brief,allow_global,is_public,created_by FROM team WHERE tenant_id='%d'`, tenantId)
+	q := fmt.Sprintf(`SELECT id,name,brief,is_public,created_by FROM team WHERE tenant_id='%d'`, tenantId)
 
 	if u == nil {
 		q = fmt.Sprintf("%s AND is_public=true", q)
@@ -114,7 +113,7 @@ func GetTeamsByTenantId(ctx context.Context, tenantId int64, u *models.User) (mo
 	defer rows.Close()
 	for rows.Next() {
 		team := &models.Team{}
-		err := rows.Scan(&team.Id, &team.Name, &team.Brief, &team.AllowGlobal, &team.IsPublic, &team.CreatedById)
+		err := rows.Scan(&team.Id, &team.Name, &team.Brief, &team.IsPublic, &team.CreatedById)
 		if err != nil {
 			logger.Warn("get all users scan error", "error", err)
 			continue
@@ -345,12 +344,6 @@ func DeleteTeamMember(c *gin.Context) {
 		return
 	}
 
-	// cannot delete member in global team
-	if teamId == models.GlobalTeamId {
-		c.JSON(400, common.RespError("cannot delete member in global team"))
-		return
-	}
-
 	u := user.CurrentUser(c)
 	if memberId == u.Id {
 		c.JSON(400, common.RespError("cannot delete yourself"))
@@ -391,11 +384,6 @@ func UpdateTeam(c *gin.Context) {
 		return
 	}
 
-	if team.Id == models.GlobalTeamId {
-		c.JSON(400, common.RespError("global team cannot be updated"))
-		return
-	}
-
 	u := user.CurrentUser(c)
 	if !u.Role.IsAdmin() {
 		isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), team.Id, u.Id)
@@ -427,11 +415,6 @@ func UpdateTeamMember(c *gin.Context) {
 
 	if member.TeamId == 0 || member.Id == 0 || !member.Role.IsValid() {
 		c.JSON(400, common.RespError(e.ParamInvalid))
-		return
-	}
-
-	if member.TeamId == models.GlobalTeamId && member.Id == models.SuperAdminId {
-		c.JSON(400, common.RespError("super admin's role can't be changed in global team"))
 		return
 	}
 
@@ -489,11 +472,6 @@ func DeleteTeam(c *gin.Context) {
 		return
 	}
 
-	if teamId == models.GlobalTeamId {
-		c.JSON(400, common.RespError("global team can't be deleted"))
-		return
-	}
-
 	t, err := models.QueryTeam(c.Request.Context(), teamId, "")
 	if err != nil {
 		logger.Warn("query team error", "error", err)
@@ -547,11 +525,6 @@ func LeaveTeam(c *gin.Context) {
 		return
 	}
 
-	if teamId == models.GlobalTeamId {
-		c.JSON(400, common.RespError("global team can't be left"))
-		return
-	}
-
 	u := user.CurrentUser(c)
 	isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), teamId, u.Id)
 	if err != nil {
@@ -570,47 +543,6 @@ func LeaveTeam(c *gin.Context) {
 	_, err = db.Conn.ExecContext(c.Request.Context(), "DELETE FROM team_member where team_id=? and user_id=?", teamId, userId)
 	if err != nil {
 		logger.Warn("leave team  error", "error", err)
-		c.JSON(500, common.RespInternalError())
-		return
-	}
-
-	c.JSON(200, common.RespSuccess(nil))
-}
-
-type UpdateAllowGlobalReq struct {
-	TeamId      int64 `json:"teamId"`
-	AllowGlobal bool  `json:"allowGlobal"`
-}
-
-func UpdateAllowGlobal(c *gin.Context) {
-	req := &UpdateAllowGlobalReq{}
-	err := c.Bind(&req)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, common.RespError(e.ParamInvalid))
-		return
-	}
-
-	fmt.Println(req)
-	if req.TeamId == 0 {
-		c.JSON(400, common.RespError(e.ParamInvalid))
-		return
-	}
-
-	if req.TeamId == models.GlobalTeamId {
-		c.JSON(400, common.RespError("You cant change this opiton for global team"))
-		return
-	}
-
-	u := user.CurrentUser(c)
-
-	if !u.Role.IsAdmin() {
-		c.JSON(403, common.RespError("Only global admin can do this"))
-		return
-	}
-
-	_, err = db.Conn.ExecContext(c.Request.Context(), "UPDATE team SET allow_global = ? WHERE id = ?", req.AllowGlobal, req.TeamId)
-	if err != nil {
-		logger.Warn("update team  error", "error", err)
 		c.JSON(500, common.RespInternalError())
 		return
 	}

@@ -28,10 +28,13 @@ import { cloneDeep } from "lodash"
 import { isEmpty } from "utils/validate"
 import { useParams } from "react-router-dom"
 import { getAdminLinks } from "./links"
+import { $config } from "src/data/configs/config"
+import { selectTenant } from "utils/tenant"
 
 export const AdminTenants = memo(() => {
     const { session } = useSession()
     const toast = useToast()
+    const config = useStore($config)
     const t = useStore(commonMsg)
     const t1 = useStore(websiteAdmin)
     const [tenants, setTenants] = useState<Tenant[]>([])
@@ -40,12 +43,12 @@ export const AdminTenants = memo(() => {
 
     const teamId = useParams().teamId
     const adminLinks = getAdminLinks(teamId)
-    
+
     useEffect(() => {
         load()
     }, [])
 
-    
+
     const load = async () => {
         const res = await requestApi.get("/tenant/list/all")
         setTenants(res.data)
@@ -77,6 +80,7 @@ export const AdminTenants = memo(() => {
         load()
         onClose()
     }
+
     return <Page title={t1.websiteAdmin} subTitle={t.manageItem({ name: t.tenant })} icon={<FaUser />} tabs={adminLinks}>
         <Flex justifyContent="space-between">
             <Box></Box>
@@ -90,13 +94,20 @@ export const AdminTenants = memo(() => {
                         <Th>{t.name}</Th>
                         <Th>Owner</Th>
                         <Th>{t.created}</Th>
+                        <Th>{t.action}</Th>
                     </Tr>
                 </Thead>
                 <Tbody>
                     {tenants.map(tenant => {
                         return <Tr key={tenant.id}>
-                                <Td>{tenant.id}</Td>
-                            <Td>{tenant.name}</Td>
+                            <Td>{tenant.id}</Td>
+                            <Td>
+                                <HStack>
+                                    <span>
+                                        {tenant.name}
+                                    </span>  {config.currentTenant == tenant.id && <Tag size={"sm"}>Current</Tag>}
+                                </HStack>
+                            </Td>
                             <Td>
                                 <HStack>
                                     <span>
@@ -105,6 +116,9 @@ export const AdminTenants = memo(() => {
                                 </HStack>
                             </Td>
                             <Td>{moment(tenant.created).fromNow()}</Td>
+                            <Td>
+                                <Button size="sm" variant="ghost" onClick={() => selectTenant(tenant.id, teamId, config, toast)}>View</Button>
+                            </Td>
                         </Tr>
                     })}
                 </Tbody>

@@ -166,33 +166,31 @@ func GetDashboard(c *gin.Context) {
 
 	}
 
-	if dash.OwnedBy != models.GlobalTeamId {
-		isTeamPublic, err := models.IsTeamPublic(c.Request.Context(), dash.OwnedBy)
+	isTeamPublic, err := models.IsTeamPublic(c.Request.Context(), dash.OwnedBy)
 
-		if err != nil {
-			log.WithTrace(traceCtx).Warn("Error check isTeamPublic", zap.String("user", getVisitInfo(c, u)), zap.Error(err))
-			c.JSON(500, common.RespError(e.Internal))
+	if err != nil {
+		log.WithTrace(traceCtx).Warn("Error check isTeamPublic", zap.String("user", getVisitInfo(c, u)), zap.Error(err))
+		c.JSON(500, common.RespError(e.Internal))
+		return
+	}
+
+	if !isTeamPublic && dash.VisibleTo != "all" {
+		if u == nil {
+			c.JSON(http.StatusForbidden, common.RespError("you are not the team menber to view this dashboard"))
 			return
 		}
 
-		if !isTeamPublic && dash.VisibleTo != "all" {
-			if u == nil {
-				c.JSON(http.StatusForbidden, common.RespError("you are not the team menber to view this dashboard"))
+		if !u.Role.IsAdmin() {
+			member, err := models.QueryTeamMember(c.Request.Context(), dash.OwnedBy, u.Id)
+			if err != nil {
+				log.WithTrace(traceCtx).Warn("Error query team member", zap.String("username", u.Username), zap.Error(err))
+				c.JSON(500, common.RespError(e.Internal))
 				return
 			}
-
-			if !u.Role.IsAdmin() {
-				member, err := models.QueryTeamMember(c.Request.Context(), dash.OwnedBy, u.Id)
-				if err != nil {
-					log.WithTrace(traceCtx).Warn("Error query team member", zap.String("username", u.Username), zap.Error(err))
-					c.JSON(500, common.RespError(e.Internal))
-					return
-				}
-				if member.Id == 0 {
-					log.WithTrace(traceCtx).Warn("Error no permission", zap.String("username", u.Username), zap.Error(err))
-					c.JSON(http.StatusForbidden, common.RespError("you are not the team menber to view this dashboard"))
-					return
-				}
+			if member.Id == 0 {
+				log.WithTrace(traceCtx).Warn("Error no permission", zap.String("username", u.Username), zap.Error(err))
+				c.JSON(http.StatusForbidden, common.RespError("you are not the team menber to view this dashboard"))
+				return
 			}
 		}
 	}

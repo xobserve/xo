@@ -2,7 +2,6 @@ import { isNaN } from "lodash";
 import { Dashboard, DashboardLayout } from "types/dashboard";
 import { PanelBorderType } from "types/panel/styles";
 import { Role } from "types/role";
-import { globalTeamId } from "types/teams";
 
 export const HomeDashboardId = "d-home"
 export const AlertDashbordId = "d-alert"
@@ -52,7 +51,6 @@ export const initDashboard = (team?): Dashboard => {
                 enableRole: Role.ADMIN
             }
         },
-        ownedBy: (team == 0 || isNaN(team)) ? globalTeamId :  team ,
         weight: 0
     }
 }

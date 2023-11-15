@@ -19,7 +19,6 @@ import DatasourceEditor from "src/views/datasource/Editor"
 import { Datasource } from "types/datasource"
 import { commonMsg, newMsg } from "src/i18n/locales/en"
 import { useStore } from "@nanostores/react"
-import { globalTeamId } from "types/teams"
 import { DatasourceTypePrometheus } from "src/views/dashboard/plugins/built-in/datasource/prometheus/types"
 import { useParams } from "react-router-dom"
 import { getNewLinks } from "./links"
@@ -29,7 +28,6 @@ const initDatasource: Datasource = {
     name: '',
     url: null,
     type: DatasourceTypePrometheus,
-    teamId: globalTeamId,
     data: {}
 }
 

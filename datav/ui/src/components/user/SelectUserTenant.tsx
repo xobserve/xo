@@ -28,6 +28,7 @@ import { Tenant } from "types/tenant"
 import { useParams } from "react-router-dom"
 import { isEmpty } from "utils/validate"
 import { $config } from "src/data/configs/config"
+import { selectTenant } from "utils/tenant"
 
 const SelectUserTenant = ({ miniMode }) => {
     const t1 = useStore(sidebarMsg)
@@ -47,27 +48,6 @@ const SelectUserTenant = ({ miniMode }) => {
         setTenants(res.data)
     }
 
-    const selectTenant = async (tenantId) => {
-        if (tenantId === config.currentTenant) {
-            return
-        }
-        const res = await requestApi.post(`/tenant/switch/${tenantId}`)
-        const newTeamId = res.data 
-        setTimeout(() => {
-            if (isEmpty(teamId)) {
-                window.location.reload()
-            } else {
-                const path = window.location.pathname
-                window.location.href =  path.replace(`/${teamId}/`, `/${newTeamId}/`)
-            }
-        }, 1000)
-        toast({
-            title: "Tenant switched, reloading...",
-            status: "success",
-            duration: 3000,
-            isClosable: true,
-        })
-    }
 
     const [isMobileScreen] = useMediaQuery(MobileVerticalBreakpoint)
     return (
@@ -93,7 +73,7 @@ const SelectUserTenant = ({ miniMode }) => {
                         <PopoverBody>
                             <CardSelect title="">
                                 {tenants.map(tenant =>
-                                    <CardSelectItem key={tenant.id} selected={config.currentTenant == tenant.id} onClick={() => selectTenant(tenant.id)}>
+                                    <CardSelectItem key={tenant.id} selected={config.currentTenant == tenant.id} onClick={() => selectTenant(tenant.id, teamId, config, toast)}>
                                         <Text fontSize="1em" fontWeight="550" px="2" py="1">
                                             {tenant.name}
                                         </Text>

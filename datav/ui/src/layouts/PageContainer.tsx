@@ -52,8 +52,6 @@ import { MobileBreakpoint } from "src/data/constants"
 import { HamburgerIcon } from "@chakra-ui/icons"
 import CustomScrollbar from "src/components/CustomScrollbar/CustomScrollbar"
 import { locale } from "src/i18n/i18n"
-import { globalTeamId } from "types/teams"
-import { StorageTeamNavId } from "pages/cfg/team/components/Layout"
 import customColors from "theme/colors"
 export let gnavigate
 

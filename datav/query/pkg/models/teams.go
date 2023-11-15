@@ -23,8 +23,8 @@ import (
 
 // dont change !
 const (
-	GlobalTeamId   = 1
-	GlobalTeamName = "global"
+	DefaultTeamId   = 1
+	DefaultTeamName = "default"
 )
 
 var InitTeamMenu = []map[string]interface{}{
@@ -47,7 +47,6 @@ type Team struct {
 	Updated         time.Time `json:"updated,omitempty"`
 	MemberCount     int       `json:"memberCount,omitempty"`
 	CurrentUserRole RoleType  `json:"role,omitempty"`
-	AllowGlobal     bool      `json:"allowGlobal"` // allow using global team resources
 	TenantId        int64     `json:"tenantId,omitempty"`
 }
 
@@ -78,8 +77,8 @@ func (s TeamMembers) Less(i, j int) bool {
 
 func QueryTeam(ctx context.Context, id int64, name string) (*Team, error) {
 	team := &Team{}
-	err := db.Conn.QueryRowContext(ctx, `SELECT id,name,is_public,allow_global,created_by,tenant_id,created,updated FROM team WHERE id=? or name=?`,
-		id, name).Scan(&team.Id, &team.Name, &team.IsPublic, &team.AllowGlobal, &team.CreatedById, &team.TenantId, &team.Created, &team.Updated)
+	err := db.Conn.QueryRowContext(ctx, `SELECT id,name,is_public,created_by,tenant_id,created,updated FROM team WHERE id=? or name=?`,
+		id, name).Scan(&team.Id, &team.Name, &team.IsPublic, &team.CreatedById, &team.TenantId, &team.Created, &team.Updated)
 	if err != nil {
 		return nil, err
 	}
@@ -221,10 +220,6 @@ func IsTeamPublic(ctx context.Context, id int64) (bool, error) {
 }
 
 func IsTeamVisibleToUser(ctx context.Context, teamId int64, userId int64) (bool, error) {
-	if teamId == GlobalTeamId {
-		return true, nil
-	}
-
 	isPublic, err := IsTeamPublic(ctx, teamId)
 	if err != nil {
 		return false, err
