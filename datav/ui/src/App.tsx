@@ -45,10 +45,35 @@ const AppView = () => {
   const { colorMode } = useColorMode()
   initColors(colorMode)
 
-  const [cfg, setConfig] = useState<UIConfig>($config.get())
   canvasCtx = document.createElement('canvas').getContext('2d')!;
   const { session } = useSession()
   const toast = useToast()
+
+  useEffect(() => {
+    const firstPageLoading = document.getElementById('first-page-loading');
+    if (firstPageLoading) {
+      firstPageLoading.style.display = "none"
+    }
+
+    loadConfig()
+    // we add background color in index.html to make loading screen shows the same color as the app pages
+    // but we need to remove it after the App is loaded, otherwise the bg color in index.html will override the bg color in App ,
+    // especilally when we changed the color mode, but the bg color will never change
+    let bodyStyle = document.body.style
+    bodyStyle.background = null
+  }, [])
+
+
+  useEffect(() => {
+    if (session) {
+      if (session.user.data) {
+        storage.set(UserDataStorageKey, session.user.data)
+      }
+    }
+  }, [session])
+
+  const [cfg, setConfig] = useState<UIConfig>($config.get())
+
   const teamPath = useMemo(() => {
     let firstIndex;
     let secondIndex;
@@ -74,67 +99,40 @@ const AppView = () => {
   }, [location.pathname])
 
   const teamId = Number(teamPath)
-  useEffect(() => {
-    const firstPageLoading = document.getElementById('first-page-loading');
-    if (firstPageLoading) {
-      firstPageLoading.style.display = "none"
-    }
-
-    loadConfig()
-    // we add background color in index.html to make loading screen shows the same color as the app pages
-    // but we need to remove it after the App is loaded, otherwise the bg color in index.html will override the bg color in App ,
-    // especilally when we changed the color mode, but the bg color will never change
-    let bodyStyle = document.body.style
-    bodyStyle.background = null
-  }, [])
 
 
-  useEffect(() => {
-    if (session) {
-      if (session.user.data) {
-        storage.set(UserDataStorageKey, session.user.data)
-      }
-    }
-  }, [session])
+
+
 
   const loadConfig = async () => {
     const res = await requestApi.get(`/config/ui${isNaN(teamId) ? '' : `?teamId=${teamId}`}`)
 
-    const cfg: UIConfig = res.data.config
+    const cfg: UIConfig = res.data
     if (cfg.currentTeam != teamId && location.pathname != "" && location.pathname != "/") {
       toast({
-        title: `You are not in team ${teamId}, redirecting to team ${cfg.currentTeam}...`,
+        title: `You have no privilege to view team ${teamPath}, please visit root path to navigate to your current team`,
         status: "warning",
-        duration: 3000,
+        duration: 5000,
         isClosable: true,
       })
 
-      let newPath
-      if (location.pathname == "" || location.pathname == "/") {
-        newPath = `/${cfg.currentTeam}`
-      } else {
-        newPath = location.pathname.replace(`/${teamPath}`, `/${cfg.currentTeam}`)
-      }
-      setTimeout(() => {
-        window.location.href = newPath
-      }, 1500)
+      // let newPath
+      // if (location.pathname == "" || location.pathname == "/") {
+      //   newPath = `/${cfg.currentTeam}`
+      // } else {
+      //   newPath = location.pathname.replace(`/${teamPath}`, `/${cfg.currentTeam}`)
+      // }
+      // setTimeout(() => {
+      //   window.location.href = newPath
+      // }, 1500)
       return 
     }
 
-
-    $teams.set(res.data.teams)
-
-
-    $datasources.set(res.data.datasources)
 
    
     cfg.sidemenu = (cfg.sidemenu as any).data.filter((item) => !item.hidden)
     setConfig(cfg)
     $config.set(cfg)
-
-
-    initVariableSelected(res.data.vars)
-    $variables.set(res.data.vars)
   }
 
 

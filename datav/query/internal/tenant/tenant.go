@@ -123,14 +123,15 @@ func CreateTenant(c *gin.Context) {
 func QueryTenantUsers(c *gin.Context) {
 	u := user.CurrentUser(c)
 	tenantId, _ := strconv.ParseInt(c.Param("tenantId"), 10, 64)
-	in, err := models.IsUserInTenant(u.Id, tenantId)
+	tenantUser, err := models.QueryTenantUser(c.Request.Context(), tenantId, u.Id)
 	if err != nil {
 		logger.Warn("query user in tenant error", "error", err)
 		c.JSON(500, common.RespInternalError())
 		return
 	}
-	if !in {
-		c.JSON(403, common.RespError("you are not in this tenant"))
+
+	if !tenantUser.Role.IsAdmin() {
+		c.JSON(403, common.RespError(e.NeedTenantAdmin))
 		return
 	}
 
@@ -360,15 +361,15 @@ func AddUserToTenant(userId int64, tenantId int64, role models.RoleType, tx *sql
 
 func GetTenantsUserIn(c *gin.Context) {
 	tenants := make([]*models.Tenant, 0)
+	var err error
 
-	username := c.Param("username")
-	u, err := models.QueryUserByName(c.Request.Context(), username)
-	if err != nil || u.Id == 0 {
+	userId, _ := strconv.ParseInt(c.Param("id"), 10, 64)
+	if userId == 0 {
 		c.JSON(200, common.RespSuccess(tenants))
 		return
 	}
 
-	tenants, err = models.QueryTenantsByUserId(u.Id)
+	tenants, err = models.QueryTenantsByUserId(userId)
 	if err != nil {
 		logger.Warn("query tenants by user id error", "error", err)
 		c.JSON(500, common.RespInternalError())

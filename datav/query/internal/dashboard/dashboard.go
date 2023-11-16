@@ -17,22 +17,24 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"math/rand"
 	"net/http"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/xObserve/xObserve/query/internal/admin"
+	"github.com/xObserve/xObserve/query/internal/datasource"
+	"github.com/xObserve/xObserve/query/internal/teams"
 	"github.com/xObserve/xObserve/query/internal/user"
+	"github.com/xObserve/xObserve/query/internal/variables"
 	"github.com/xObserve/xObserve/query/pkg/colorlog"
 	"github.com/xObserve/xObserve/query/pkg/common"
 	"github.com/xObserve/xObserve/query/pkg/config"
 	"github.com/xObserve/xObserve/query/pkg/db"
 	"github.com/xObserve/xObserve/query/pkg/e"
-	"github.com/xObserve/xObserve/query/pkg/log"
 	"github.com/xObserve/xObserve/query/pkg/models"
 	"github.com/xObserve/xObserve/query/pkg/utils"
-	"go.uber.org/zap"
 )
 
 var logger = colorlog.RootLogger.New("logger", "dashboard")
@@ -95,7 +97,7 @@ func SaveDashboard(c *gin.Context) {
 	}
 	if !isUpdate {
 		_, err := db.Conn.ExecContext(c.Request.Context(), `INSERT INTO dashboard (id,title, team_id,visible_to, created_by,tags, data,created,updated) VALUES (?,?,?,?,?,?,?,?,?)`,
-			dash.Id, dash.Title, u.CurrentTeam, dash.VisibleTo, dash.CreatedBy, tags, jsonData, dash.Created, dash.Updated)
+			dash.Id, dash.Title, dash.OwnedBy, dash.VisibleTo, dash.CreatedBy, tags, jsonData, dash.Created, dash.Updated)
 		if err != nil {
 			if e.IsErrUniqueConstraint(err) {
 				c.JSON(409, common.RespError("dashboard id already exists"))
@@ -126,60 +128,89 @@ func SaveDashboard(c *gin.Context) {
 }
 
 func GetDashboard(c *gin.Context) {
-	id := c.Param("id")
 	u := user.CurrentUser(c)
-	traceCtx := c.Request.Context()
+	dash, err := getDashboard(c, u)
+	if err != nil {
+		logger.Warn("get dashboard error", "error", err)
+		c.JSON(400, common.RespError(err.Error()))
+		return
+	}
 
-	// log.WithTrace(traceCtx).Info("Start to get dashboard", zap.String("id", id), zap.String("username", u.Username))
+	c.JSON(200, common.RespSuccess(dash))
+}
+
+func GetDashboardConfig(c *gin.Context) {
+	u := user.CurrentUser(c)
+	dash, err := getDashboard(c, u)
+	if err != nil {
+		logger.Warn("get dashboard error", "error", err)
+		c.JSON(400, common.RespError(err.Error()))
+		return
+	}
+
+	vars, err := variables.GetTeamVariables(c.Request.Context(), dash.OwnedBy)
+	if err != nil {
+		logger.Warn("query variables error", "error", err)
+		c.JSON(500, common.RespError(e.Internal))
+		return
+	}
+
+	tenantId, err := models.QueryTenantIdByTeamId(c.Request.Context(), dash.OwnedBy)
+	if err != nil {
+		logger.Warn("query tenant id by team id error", "error", err)
+		c.JSON(500, common.RespError(e.Internal))
+		return
+	}
+
+	teams, err := teams.GetVisibleTeamsByTenantId(c.Request.Context(), tenantId, u)
+	if err != nil {
+		logger.Warn("get teams by tenant id error", "error", err)
+		c.JSON(500, common.RespError(e.Internal))
+		return
+	}
+
+	datasources, err := datasource.GetDatasourcesByTeamId(c.Request.Context(), dash.OwnedBy)
+	if err != nil {
+		logger.Warn("get datasources by team id error", "error", err)
+		c.JSON(500, common.RespError(e.Internal))
+		return
+	}
+
+	c.JSON(200, common.RespSuccess(map[string]interface{}{
+		"dashboard":   dash,
+		"teams":       teams,
+		"datasources": datasources,
+		"variables":   vars,
+	}))
+}
+
+func getDashboard(c *gin.Context, u *models.User) (*models.Dashboard, error) {
+	id := c.Param("id")
 
 	dash, err := models.QueryDashboard(c.Request.Context(), id)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			log.WithTrace(traceCtx).Warn("Error query dashbaord", zap.String("user", getVisitInfo(c, u)), zap.Error(err))
-			c.JSON(404, common.RespError(fmt.Sprintf("dashboard id `%s` not found", id)))
-			return
+			return nil, fmt.Errorf("dashboard id `%s` not found", id)
 		}
-		log.WithTrace(traceCtx).Warn("Error query dashbaord", zap.String("user", getVisitInfo(c, u)), zap.Error(err))
-		c.JSON(500, common.RespError(e.Internal))
-		return
-	}
-
-	if config.Data.SelfMonitoring.MockErrorLogs {
-		r := rand.Intn(100)
-		if r > 70 {
-			log.WithTrace(traceCtx).Warn("Mock a warn msg for query dashbaord", zap.String("user", getVisitInfo(c, u)), zap.Error(errors.New("nothing happend, just mock a warn msg")))
-		} else if r > 35 {
-			log.WithTrace(traceCtx).Error("Mock a error msg for query dashbaord", zap.String("user", getVisitInfo(c, u)), zap.Error(errors.New("nothing happend, just mock a error msg")))
-		}
-
+		return nil, fmt.Errorf("query dashboard error" + err.Error())
 	}
 
 	isTeamPublic, err := models.IsTeamPublic(c.Request.Context(), dash.OwnedBy)
-
 	if err != nil {
-		log.WithTrace(traceCtx).Warn("Error check isTeamPublic", zap.String("user", getVisitInfo(c, u)), zap.Error(err))
-		c.JSON(500, common.RespError(e.Internal))
-		return
+		return nil, fmt.Errorf("query team public error" + err.Error())
 	}
 
 	if !isTeamPublic && dash.VisibleTo != "all" {
 		if u == nil {
-			c.JSON(http.StatusForbidden, common.RespError("you are not the team menber to view this dashboard"))
-			return
+			return nil, errors.New("you are not the team menber to view this dashboard")
 		}
 
-		if !u.Role.IsAdmin() {
-			member, err := models.QueryTeamMember(c.Request.Context(), dash.OwnedBy, u.Id)
-			if err != nil {
-				log.WithTrace(traceCtx).Warn("Error query team member", zap.String("username", u.Username), zap.Error(err))
-				c.JSON(500, common.RespError(e.Internal))
-				return
-			}
-			if member.Id == 0 {
-				log.WithTrace(traceCtx).Warn("Error no permission", zap.String("username", u.Username), zap.Error(err))
-				c.JSON(http.StatusForbidden, common.RespError("you are not the team menber to view this dashboard"))
-				return
-			}
+		member, err := models.QueryTeamMember(c.Request.Context(), dash.OwnedBy, u.Id)
+		if err != nil {
+			return nil, fmt.Errorf("query team member error" + err.Error())
+		}
+		if member.Id == 0 {
+			return nil, errors.New("you are not the team menber to view this dashboard")
 		}
 	}
 
@@ -190,17 +221,7 @@ func GetDashboard(c *gin.Context) {
 	dash.Editable = true
 	dash.OwnerName = teamName
 
-	log.WithTrace(traceCtx).Info("Get dashboard", zap.String("id", dash.Id), zap.String("title", dash.Title), zap.String("user", getVisitInfo(c, u)), zap.String("ip", c.ClientIP()))
-
-	c.JSON(200, common.RespSuccess(dash))
-}
-
-func getVisitInfo(c *gin.Context, u *models.User) string {
-	if u != nil {
-		return u.Username
-	}
-
-	return c.ClientIP()
+	return dash, nil
 }
 
 func UpdateOwnedBy(c *gin.Context) {
@@ -281,10 +302,32 @@ func GetTeamDashboards(c *gin.Context) {
 	c.JSON(200, common.RespSuccess(dashboards))
 }
 
-func GetSimpleList(c *gin.Context) {
-	dashboards := make([]*models.Dashboard, 0)
+func Search(c *gin.Context) {
+	tenantId, _ := strconv.ParseInt(c.Param("tenantId"), 10, 64)
+	if tenantId == 0 {
+		c.JSON(400, common.RespError(e.ParamInvalid))
+		return
+	}
 
-	rows, err := db.Conn.QueryContext(c.Request.Context(), "SELECT dashboard.id,dashboard.title, dashboard.team_id,team.name,dashboard.visible_to, dashboard.tags, dashboard.weight FROM dashboard INNER JOIN team ON dashboard.team_id = team.id ORDER BY dashboard.weight DESC,dashboard.created DESC")
+	var userId int64
+	u := user.CurrentUser(c)
+	if u != nil {
+		userId = u.Id
+	}
+
+	teams, err := models.QueryVisibleTeamsByUserId(c.Request.Context(), tenantId, userId)
+	if err != nil {
+		logger.Warn("query visible teams error", "error", err)
+		c.JSON(500, common.RespError(e.Internal))
+		return
+	}
+	dashboards := make([]*models.Dashboard, 0)
+	teamIds := make([]string, 0)
+	for _, team := range teams {
+		teamIds = append(teamIds, strconv.FormatInt(team, 10))
+	}
+
+	rows, err := db.Conn.QueryContext(c.Request.Context(), fmt.Sprintf("SELECT dashboard.id,dashboard.title, dashboard.team_id,team.name,dashboard.visible_to, dashboard.tags, dashboard.weight FROM dashboard INNER JOIN team ON dashboard.team_id = team.id WHERE dashboard.team_id in ('%s') ORDER BY dashboard.weight DESC,dashboard.created DESC", strings.Join(teamIds, "','")))
 	if err != nil {
 		logger.Warn("query simple dashboards error", "error", err)
 		c.JSON(500, common.RespError(e.Internal))

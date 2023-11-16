@@ -12,19 +12,17 @@
 // limitations under the License.
 
 import Page from "layouts/page/Page"
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { Route } from "types/route"
 import { FaAlignLeft, FaCog, FaConnectdevelop, FaTerminal, FaUserFriends } from "react-icons/fa"
 import { MdOutlineDashboard } from "react-icons/md"
 import { useStore } from "@nanostores/react"
 import { cfgTeam } from "src/i18n/locales/en"
 import { Box, HStack, Select, Text } from "@chakra-ui/react"
-import { $teams } from "src/views/team/store"
-import {  $variables } from "src/views/variables/store"
-import SelectVariables from "src/views/variables/SelectVariable"
 import { isEmpty } from "utils/validate"
-import { useParams } from "react-router-dom"
 import { $config } from "src/data/configs/config"
+import { requestApi } from "utils/axios/request"
+import { Team } from "types/teams"
 
 const getTeamSubLinks = (teamId) => {
     let teamPath = ''
@@ -50,14 +48,17 @@ export const StorageTeamNavId = "team-nav-id"
 const TeamLayout = ({ children }: Props) => {
     const t1 = useStore(cfgTeam)
     const config = useStore($config)
-    const id = config.currentTeam.toString()
-    
-    const teamId = useParams().teamId
-    const tabLinks: Route[] = getTeamSubLinks(teamId)
+    const [team, setTeam] = useState<Team>(null)
+    useEffect(() => {
+        load()
+    },[])
 
-    const teams = useStore($teams)
-    const team = teams?.find(t => t.id.toString() == (teamId ?? id))
-    const vars = useStore($variables)
+    const tabLinks: Route[] = getTeamSubLinks(config.currentTeam)
+
+    const load = async () => {
+        const res = await requestApi.get(`/team/byId/${config.currentTeam}`)
+        setTeam(res.data)
+    }
 
     return <>
         <Page
@@ -71,7 +72,6 @@ const TeamLayout = ({ children }: Props) => {
                 {team && React.cloneElement(children, { team })}
             </Box>
         </Page>
-        <Box visibility="hidden"><SelectVariables variables={vars} /></Box>
     </>
 }
 

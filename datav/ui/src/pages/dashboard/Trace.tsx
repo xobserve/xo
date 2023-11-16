@@ -19,6 +19,7 @@ import TraceDetailWrapper from "src/views/dashboard/plugins/built-in/panel/trace
 
 const TracePage = () => {
     const params = useParams()
+
     return (params.id && params.datasourceId && <TraceDetailWrapper id={params.id} dsId={params.datasourceId}/>)
 }
 

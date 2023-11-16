@@ -160,7 +160,7 @@ type GithubUser struct {
 func GetUserTenantAndTeamId(ctx context.Context, u *User) (int64, int64, error) {
 	var tenantId int64
 	if u == nil {
-		tenantId = DefaultTenantId
+		tenantId = QueryPublicTenant()
 	} else {
 		tenantId = u.CurrentTenant
 	}

@@ -74,7 +74,7 @@ export default PageContainer
 const Container = (props: Props) => {
   const { children } = props
   const config = useStore($config)
-  const sidemenu = cloneDeep(config.sidemenu)
+  const sidemenu = cloneDeep(config?.sidemenu) ?? []
   const { session } = useSession()
   const { pathname: asPath } = useLocation()
   const t = useStore(commonMsg)
@@ -223,8 +223,8 @@ const Container = (props: Props) => {
 
                     <Divider />
                     {/* <Box color={textColor}><ColorModeSwitcher miniMode={miniMode} /></Box> */}
-                    {!isEmpty(config.repoUrl) && <Box><NavItem text="Github" icon="FaGithub" miniMode={miniMode} url={config.repoUrl} /></Box>}
-                    <UserMenu miniMode={miniMode} />
+                    {!isEmpty(config?.repoUrl) && <Box><NavItem text="Github" icon="FaGithub" miniMode={miniMode} url={config.repoUrl} /></Box>}
+                    {config && <UserMenu miniMode={miniMode} />}
                   </VStack>
 
                 </Flex>
@@ -281,7 +281,7 @@ const Container = (props: Props) => {
 
                     <Divider />
                   </>
-                  {!isEmpty(config.repoUrl) && <Link to={config.repoUrl}>
+                  {!isEmpty(config?.repoUrl) && <Link to={config.repoUrl}>
                     <MenuItem icon={<Icons.FaGithub />}>
                       Github
                     </MenuItem></Link>}

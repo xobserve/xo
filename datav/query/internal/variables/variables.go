@@ -79,7 +79,7 @@ func AddNewVariable(c *gin.Context) {
 	c.JSON(200, common.RespSuccess(nil))
 }
 
-func GetVariables(ctx context.Context, teamId int64) ([]*models.Variable, error) {
+func GetTeamVariables(ctx context.Context, teamId int64) ([]*models.Variable, error) {
 	var rows *sql.Rows
 	var err error
 	vars := []*models.Variable{}
@@ -210,4 +210,30 @@ func getVariableTeamId(ctx context.Context, id int64) (int64, error) {
 	}
 
 	return teamId, nil
+}
+
+func QueryTeamVariables(c *gin.Context) {
+	teamId, _ := strconv.ParseInt(c.Query("teamId"), 10, 64)
+	u := user.CurrentUser(c)
+
+	member, err := models.QueryTeamMember(c.Request.Context(), teamId, u.Id)
+	if err != nil {
+		logger.Warn("query team member error", "error", err)
+		c.JSON(500, common.RespError(e.Internal))
+		return
+	}
+
+	if member.Id == 0 {
+		c.JSON(403, common.RespError(e.NotTeamMember))
+		return
+	}
+
+	vars, err := GetTeamVariables(c.Request.Context(), teamId)
+	if err != nil {
+		logger.Warn("query variables error", "error", err)
+		c.JSON(500, common.RespError(e.Internal))
+		return
+	}
+
+	c.JSON(200, common.RespSuccess(vars))
 }

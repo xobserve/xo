@@ -54,7 +54,7 @@ const EditPanelQuery = (props: Props) => {
             if (panelDs?.type == newDs.type) {
                 panel.datasource = { ...panel.datasource, id: id }
             } else {
-                panel.datasource = { ...initDatasource, id: id }
+                panel.datasource = { ...initDatasource(), id: id }
             }
 
         })

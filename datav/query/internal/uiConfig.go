@@ -15,7 +15,6 @@ package internal
 import (
 	"bytes"
 	"database/sql"
-	"errors"
 	"fmt"
 	"io"
 	"log"
@@ -26,10 +25,7 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/xObserve/xObserve/query/internal/datasource"
-	"github.com/xObserve/xObserve/query/internal/teams"
 	"github.com/xObserve/xObserve/query/internal/user"
-	"github.com/xObserve/xObserve/query/internal/variables"
 	"github.com/xObserve/xObserve/query/pkg/common"
 	"github.com/xObserve/xObserve/query/pkg/config"
 	"github.com/xObserve/xObserve/query/pkg/e"
@@ -159,11 +155,34 @@ func getUIConfig(c *gin.Context) {
 		}
 
 		if len(teams) == 0 {
-			c.JSON(400, common.RespError(errors.New("you are not in any team now").Error()))
-			return
-		}
+			userInTeams, err := models.QueryTeamsUserIn(c.Request.Context(), u.Id)
+			if err != nil {
+				logger.Warn("query teams user in error", "error", err)
+				c.JSON(500, common.RespError(e.Internal))
+				return
+			}
 
-		teamId = teams[0]
+			if len(userInTeams) == 0 {
+				c.JSON(400, common.RespError("you are not in any team now, please contact admin for help"))
+				return
+			}
+
+			teamId = userInTeams[0]
+			team, err := models.QueryTeam(c.Request.Context(), teamId, "")
+			if err != nil {
+				if err == sql.ErrNoRows {
+					c.JSON(400, common.RespError(e.TeamNotExist))
+					return
+				}
+				logger.Warn("query team error", "error", err)
+				c.JSON(500, common.RespError(e.Internal))
+				return
+			}
+
+			tenantId = team.TenantId
+		} else {
+			teamId = teams[0]
+		}
 	}
 
 	if err != nil {
@@ -192,13 +211,6 @@ func getUIConfig(c *gin.Context) {
 		return
 	}
 	cfg.TenantName = tenant1.Name
-	vars, err := variables.GetVariables(c.Request.Context(), teamId)
-	if err != nil {
-		logger.Warn("query variables error", "error", err)
-		c.JSON(500, common.RespError(e.Internal))
-		return
-	}
-
 	if u != nil {
 		tenantUser, err := models.QueryTenantUser(c.Request.Context(), tenantId, u.Id)
 		if err != nil {
@@ -215,25 +227,7 @@ func getUIConfig(c *gin.Context) {
 		cfg.TenantRole = models.ROLE_GUEST
 	}
 
-	teams, err := teams.GetTeamsByTenantId(c.Request.Context(), tenantId, u)
-	if err != nil {
-		logger.Warn("get teams by tenant id error", "error", err)
-		c.JSON(500, common.RespError(e.Internal))
-		return
-	}
-	datasources, err := datasource.GetDatasourcesByTeamId(c.Request.Context(), teamId)
-	if err != nil {
-		logger.Warn("get datasources by team id error", "error", err)
-		c.JSON(500, common.RespError(e.Internal))
-		return
-	}
-
-	c.JSON(http.StatusOK, common.RespSuccess(map[string]interface{}{
-		"config":      cfg,
-		"vars":        vars,
-		"teams":       teams,
-		"datasources": datasources,
-	}))
+	c.JSON(http.StatusOK, common.RespSuccess(cfg))
 }
 
 // overrideApiServerAddrInLocalUI is used to override api server address in local ui automatically

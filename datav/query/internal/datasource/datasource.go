@@ -87,8 +87,29 @@ func SaveDatasource(c *gin.Context) {
 	}
 
 	u := user.CurrentUser(c)
-	ds.TeamId = u.CurrentTeam
-	isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), ds.TeamId, u.Id)
+
+	now := time.Now()
+	data, err := json.Marshal(ds.Data)
+	if err != nil {
+		logger.Warn("Error encode datasource data", "error", err)
+		c.JSON(500, common.RespError(e.Internal))
+		return
+	}
+
+	var teamId int64
+	if ds.Id == 0 {
+		teamId = ds.TeamId
+	} else {
+		datasource, err := GetDatasource(c.Request.Context(), ds.Id)
+		if err != nil {
+			logger.Warn("Error query datasource", "error", err)
+			c.JSON(500, common.RespInternalError())
+			return
+		}
+		teamId = datasource.TeamId
+	}
+
+	isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), teamId, u.Id)
 	if err != nil {
 		logger.Warn("Error query team admin", "error", err)
 		c.JSON(500, common.RespError(e.Internal))
@@ -96,14 +117,6 @@ func SaveDatasource(c *gin.Context) {
 	}
 	if !isTeamAdmin {
 		c.JSON(403, common.RespError("Only team admin can do this"))
-		return
-	}
-
-	now := time.Now()
-	data, err := json.Marshal(ds.Data)
-	if err != nil {
-		logger.Warn("Error encode datasource data", "error", err)
-		c.JSON(500, common.RespError(e.Internal))
 		return
 	}
 
@@ -124,10 +137,6 @@ func SaveDatasource(c *gin.Context) {
 		ds.Id = id
 
 	} else {
-		if ds.Id == models.InitTestDataDatasourceId {
-			c.JSON(http.StatusForbidden, common.RespError("default testdata datasource cannot be edit"))
-			return
-		}
 		// update
 		_, err = db.Conn.ExecContext(c.Request.Context(), "UPDATE datasource SET name=?,type=?,url=?,data=?,updated=? WHERE id=?", ds.Name, ds.Type, ds.URL, data, now, ds.Id)
 		if err != nil {
@@ -261,4 +270,21 @@ func GetDatasource(ctx context.Context, id int64) (*models.Datasource, error) {
 
 func GetDatasourcesFromCache() map[int64]*models.Datasource {
 	return datasources
+}
+
+func GetDatasourceById(c *gin.Context) {
+	id, _ := strconv.ParseInt(c.Param("id"), 10, 64)
+	if id == 0 {
+		c.JSON(http.StatusBadRequest, common.RespError("bad datasource id"))
+		return
+	}
+
+	ds, err := GetDatasource(c.Request.Context(), id)
+	if err != nil {
+		logger.Warn("Error query datasource", "error", err)
+		c.JSON(500, common.RespError(e.Internal))
+		return
+	}
+
+	c.JSON(http.StatusOK, common.RespSuccess(ds))
 }

@@ -21,7 +21,6 @@ import { Team } from "types/teams"
 import { getDashboardLink } from "utils/dashboard/dashboard"
 import DashboardStar from "./DashboardStar"
 import { Divider, InputNumber } from "antd"
-import { EditorNumberItem } from "src/components/editor/EditorItem"
 import { requestApi } from "utils/axios/request"
 import { dispatch } from "use-bus"
 import { OnDashboardWeightChangeEvent } from "src/data/bus-events"
@@ -43,7 +42,6 @@ const DashboardCard = ({ dashboard, owner, query, onClick, starred, session }: P
     const navigate = useNavigate()
     const [weight, setWeight] = useState(null)
     const ref = useRef()
-    const teamId = useParams().teamId
 
     useOutsideClick({
         ref: ref,
@@ -68,7 +66,7 @@ const DashboardCard = ({ dashboard, owner, query, onClick, starred, session }: P
         >
             <Box>
                 <Flex alignItems="center" cursor="pointer" onClick={() => {
-                        navigate(`/${teamId}` + getDashboardLink(dashboard.id))
+                        navigate(`/${dashboard.ownedBy}` + getDashboardLink(dashboard.id))
                         onClick && onClick()
                     }}>
                     <Text><Highlight query={query ?? ""} styles={{ bg: 'var(--chakra-colors-brand-100)' }} >{dashboard.title}</Highlight></Text>

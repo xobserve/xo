@@ -33,44 +33,77 @@ import (
 
 var logger = colorlog.RootLogger.New("logger", "teams")
 
-func GetTeams(c *gin.Context) {
-	teamId, _ := strconv.ParseInt(c.Query("teamId"), 10, 64)
+var basicTeamQuery = `SELECT id,name,brief,is_public,created_by FROM team WHERE tenant_id='%d'`
 
+func GetTenantTeams(c *gin.Context) {
+	tenantId, _ := strconv.ParseInt(c.Param("tenantId"), 10, 64)
+	ctx := c.Request.Context()
 	u := user.CurrentUser(c)
-	var tenantId int64
-	var err error
-	if teamId == 0 {
-		if u != nil {
-			tenantId = u.CurrentTenant
-		} else {
-			tenantId = models.QueryPublicTenant()
-		}
-	} else {
-		tenantId, err = models.QueryTenantIdByTeamId(c.Request.Context(), teamId)
-		if err != nil {
-			if err == sql.ErrNoRows {
-				c.JSON(400, common.RespError(e.TeamNotExist))
-				return
-			}
-			logger.Warn("get tenant id by team id error", "error", err)
-			c.JSON(500, common.RespInternalError())
+
+	tenantUser, err := models.QueryTenantUser(ctx, tenantId, u.Id)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			c.JSON(400, common.RespError(e.NotTenantUser))
 			return
 		}
-	}
-
-	teams, err := GetTeamsByTenantId(c.Request.Context(), tenantId, u)
-	if err != nil {
-		logger.Warn("get teams error", "error", err)
+		logger.Warn("query tenant user error", "error", err)
 		c.JSON(500, common.RespInternalError())
 		return
 	}
 
+	if !tenantUser.Role.IsAdmin() {
+		c.JSON(403, common.RespError(e.NeedTenantAdmin))
+		return
+	}
+
+	q := fmt.Sprintf(basicTeamQuery, tenantId)
+	rows, err := db.Conn.QueryContext(ctx, q)
+	if err != nil {
+		logger.Warn("get all users error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+	defer rows.Close()
+
+	teams := make(models.Teams, 0)
+	for rows.Next() {
+		team := &models.Team{}
+		err := rows.Scan(&team.Id, &team.Name, &team.Brief, &team.IsPublic, &team.CreatedById)
+		if err != nil {
+			logger.Warn("get all users scan error", "error", err)
+			continue
+		}
+
+		user, _ := models.QueryUserById(ctx, team.CreatedById)
+		team.CreatedBy = user.Username
+
+		count := 0
+		err = db.Conn.QueryRowContext(ctx, "SELECT count(*) FROM team_member WHERE team_id=?", team.Id).Scan(&count)
+		if err != nil {
+			logger.Warn("select team member count error", "error", err)
+		}
+
+		team.MemberCount = count
+		if u != nil {
+			member, _ := models.QueryTeamMember(ctx, team.Id, u.Id)
+			if member != nil && member.Id != 0 {
+				team.CurrentUserRole = member.Role
+			}
+		} else {
+			team.CurrentUserRole = models.ROLE_VIEWER
+		}
+
+		teams = append(teams, team)
+	}
+
+	sort.Sort(teams)
+
 	c.JSON(200, common.RespSuccess(teams))
 }
 
-func GetTeamsByTenantId(ctx context.Context, tenantId int64, u *models.User) (models.Teams, error) {
+func GetVisibleTeamsByTenantId(ctx context.Context, tenantId int64, u *models.User) (models.Teams, error) {
 	teams := make(models.Teams, 0)
-	q := fmt.Sprintf(`SELECT id,name,brief,is_public,created_by FROM team WHERE tenant_id='%d'`, tenantId)
+	q := fmt.Sprintf(basicTeamQuery, tenantId)
 
 	if u == nil {
 		q = fmt.Sprintf("%s AND is_public=true", q)

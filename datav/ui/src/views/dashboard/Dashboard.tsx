@@ -11,9 +11,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Box, Divider, Flex, useColorMode, useMediaQuery } from "@chakra-ui/react"
-import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react"
 import { Dashboard, Panel, PanelTypeRow } from "types/dashboard"
-import { requestApi } from "utils/axios/request"
 import DashboardHeader from "src/views/dashboard/DashboardHeader"
 import DashboardGrid from "src/views/dashboard/grid/DashboardGrid"
 import { clone, cloneDeep, concat, defaultsDeep, find, findIndex, orderBy } from "lodash"
@@ -61,18 +60,50 @@ setAutoFreeze(false)
 // generally these pages are defined in:
 // 1. team's side menu, asscessed by a specific url path
 // 2. dashboard page, accessed by a dashboard id
-const DashboardWrapper = ({ dashboardId, sideWidth }) => {
+const DashboardWrapper = ({ rawDashboard, sideWidth }) => {
     const vars = useStore($variables)
     const [dashboard, setDashboard] = useImmer<Dashboard>(null)
     const { setColorMode, colorMode, toggleColorMode } = useColorMode()
     // const [gVariables, setGVariables] = useState<Variable[]>([])
     const fullscreen = useFullscreen()
     const toolbar = useSearchParam("toolbar")
-    useEffect(() => {
+
+    const initDash = (dash) => {
+        dash.data.panels.forEach((panel: Panel) => {
+            // console.log("33333 before",cloneDeep(panel.plugins))
+            if (panel.type != PanelTypeRow) {
+                panel = defaultsDeep(panel, delete initPanel().plugins[initPanelType])
+                const plugin = builtinPanelPlugins[panel.type] ?? externalPanelPlugins[panel.type]
+                if (plugin) {
+                    panel.plugins[panel.type] = defaultsDeep(panel.plugins[panel.type], plugin.settings.initOptions)
+                }
+                panel.styles = defaultsDeep(panel.styles, initPanelStyles)
+            }
+            // console.log("33333 after",cloneDeep(panel.plugins[panel.type]),cloneDeep(panel.overrides))
+        })
+
+        const d1 = defaultsDeep(dash, initDashboard())
+        return d1
+    }
+
+    // combine variables which defined separately in dashboard and global
+    const setDashboardVariables = (dash: Dashboard, team: Team) => {
+        const dashVars = cloneDeep(dash.data.variables)
+        initVariableSelected(dashVars)
+
+        const globalVars = $variables.get().filter(v => !v.id.toString().startsWith("d-"))
+
+        $variables.set([...globalVars, ...dashVars])
+    }
+
+    useLayoutEffect(() => {
         updateTimeToNewest()
-        if (!dashboard) {
-            load()
-        }
+        const dash: Dashboard = initDash(rawDashboard)
+        const team = $teams.get().find(t => t.id == dash.ownedBy)
+        unstable_batchedUpdates(() => {
+            setDashboardVariables(rawDashboard, team)
+            setDashboard(cloneDeep(dash))
+        })
         return () => {
             // for (const k of Array.from(prevQueries.keys())) {
             //     prevQueries.delete(k)
@@ -88,7 +119,6 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
             }
         }
     }, [])
-
 
     useBus(
         (e) => { return e.type == SetDashboardEvent },
@@ -184,49 +214,14 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
                 bodyStyle.backgroundSize = "cover"
             }
         }
-    },[colorMode])
+    }, [colorMode])
 
-    const load = async () => {
-        const res = await requestApi.get(`/dashboard/byId/${dashboardId}`)
-        const dash: Dashboard = initDash(res.data)
-        const team = $teams.get().find(t => t.id == dash.ownedBy)
-        unstable_batchedUpdates(() => {
-            setDashboardVariables(res.data, team)
-            setDashboard(cloneDeep(dash))
-        })
-    }
 
-    const initDash = (dash) => {
-        dash.data.panels.forEach((panel: Panel) => {
-            // console.log("33333 before",cloneDeep(panel.plugins))
-            if (panel.type != PanelTypeRow) {
-                panel = defaultsDeep(panel, delete initPanel().plugins[initPanelType])
-                const plugin = builtinPanelPlugins[panel.type] ?? externalPanelPlugins[panel.type]
-                if (plugin) {
-                    panel.plugins[panel.type] = defaultsDeep(panel.plugins[panel.type], plugin.settings.initOptions)
-                }
-                panel.styles = defaultsDeep(panel.styles, initPanelStyles)
-            }
-            // console.log("33333 after",cloneDeep(panel.plugins[panel.type]),cloneDeep(panel.overrides))
-        })
-
-        const d1 = defaultsDeep(dash, initDashboard())
-        return d1
-    }
-
-    // combine variables which defined separately in dashboard and global
-    const setDashboardVariables = (dash: Dashboard, team: Team) => {
-        const dashVars = cloneDeep(dash.data.variables)
-        initVariableSelected(dashVars)
-
-        const globalVars = $variables.get().filter(v => !v.id.toString().startsWith("d-"))
-
-        $variables.set([...globalVars, ...dashVars])
-    }
 
     const onDashbardChange = useCallback(f => {
         setDashboard(f)
     }, [])
+    
 
     const hidingVars = dashboard?.data?.hidingVars?.toLowerCase().split(',')
     const visibleVars = vars.filter(v => {
@@ -275,7 +270,7 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
 
     const [isLargeScreen] = useMediaQuery('(min-width: 600px)')
     const [dvars, gvars] = catelogVariables(vars, dashboard)
-  
+
     return (<>
         {dashboard ? <Box className="dashboard-container" px={fullscreen ? 0 : (isLargeScreen ? 2 : 3)} width="100%" minHeight="100vh" maxHeight="100vh" overflowY="auto" position="relative">
             {/* <Decoration decoration={dashboard.data.styles.decoration}/> */}
@@ -290,7 +285,7 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
                 <DashboardBorder key={fullscreen.toString()} border={dashboard.data.styles.border} />
                 <Box id="dashboard-scroll-top"></Box>
                 {fullscreen && toolbar == "on" && <Flex maxW={`calc(100% - ${10}px)`} id="fullscreen-toolbar" alignItems="center" gap="3">
-                    <Box minWidth="fit-content"><DatePicker showTime showIcon={false}/></Box>
+                    <Box minWidth="fit-content"><DatePicker showTime showIcon={false} /></Box>
                     <CustomScrollbar hideVerticalTrack>
                         <Flex justifyContent="space-between" >
                             <SelectVariables variables={dvars} />

@@ -23,14 +23,6 @@ import { DatasourceTypePrometheus } from "src/views/dashboard/plugins/built-in/d
 import { useParams } from "react-router-dom"
 import { getNewLinks } from "./links"
 
-const initDatasource: Datasource = {
-    id: 0,
-    name: '',
-    url: null,
-    type: DatasourceTypePrometheus,
-    data: {}
-}
-
 const NewDatasourcePage = () => {
     const t = useStore(commonMsg)
     const t1 = useStore(newMsg)
@@ -38,6 +30,15 @@ const NewDatasourcePage = () => {
     const teamId = useParams().teamId
     const newLinks = getNewLinks(teamId)
 
+    const initDatasource: Datasource = {
+        id: 0,
+        name: '',
+        url: null,
+        type: DatasourceTypePrometheus,
+        data: {},
+        teamId: Number(teamId),
+    }
+    
     return <>
         <Page title={t.new} subTitle={t1.subTitle} icon={<FaPlus />} tabs={newLinks}>
             <FormSection maxW="500px" title={t1.dsInfo}>

@@ -13,11 +13,12 @@ const DefaultTenant = "default"
 const DefaultTenantId = 1
 
 type Tenant struct {
-	Id      int64     `json:"id"`
-	Name    string    `json:"name"`
-	OwnerId int64     `json:"ownerId"`
-	Owner   string    `json:"owner"`
-	Created time.Time `json:"created"`
+	Id       int64     `json:"id"`
+	Name     string    `json:"name"`
+	OwnerId  int64     `json:"ownerId"`
+	Owner    string    `json:"owner"`
+	NumTeams int       `json:"numTeams"`
+	Created  time.Time `json:"created"`
 }
 
 type Tenants []*Tenant
@@ -102,6 +103,8 @@ func QueryTenantsByUserId(userId int64) ([]*Tenant, error) {
 		if err != nil {
 			return nil, err
 		}
+
+		db.Conn.QueryRow("SELECT count(*) FROM team_member WHERE user_id=? and tenant_id=?", userId, tenant.Id).Scan(&tenant.NumTeams)
 
 		tenants = append(tenants, tenant)
 	}

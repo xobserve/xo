@@ -24,7 +24,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/xObserve/xObserve/query/internal/admin"
 	"github.com/xObserve/xObserve/query/internal/annotation"
-	"github.com/xObserve/xObserve/query/internal/api"
 	"github.com/xObserve/xObserve/query/internal/cache"
 	"github.com/xObserve/xObserve/query/internal/dashboard"
 	"github.com/xObserve/xObserve/query/internal/datasource"
@@ -107,7 +106,6 @@ func (s *Server) Start() error {
 		r.POST("/account/updateData", CheckLogin(), user.UpdateUserData)
 
 		// teams apis
-		r.GET("/teams/all", otelPlugin, teams.GetTeams)
 		r.GET("/team/byId/:id", CheckLogin(), teams.GetTeam)
 		r.GET("/team/byDashId/:id", CheckLogin(), teams.GetTeamByDashId)
 		r.GET("/team/:id/members", CheckLogin(), teams.GetTeamMembers)
@@ -125,16 +123,17 @@ func (s *Server) Start() error {
 
 		// variable apis
 		r.POST("/variable/new", MustLogin(), variables.AddNewVariable)
-		r.GET("/variable/all", otelPlugin, api.GetVariables)
+		r.GET("/variable/team", MustLogin(), otelPlugin, variables.QueryTeamVariables)
 		r.POST("/variable/update", MustLogin(), variables.UpdateVariable)
 		r.DELETE("/variable/:id", MustLogin(), variables.DeleteVariable)
 
 		// dashboard apis
 		r.GET("/dashboard/byId/:id", CheckLogin(), otelPlugin, dashboard.GetDashboard)
+		r.GET("/dashboard/config/:id", CheckLogin(), otelPlugin, dashboard.GetDashboardConfig)
 		r.POST("/dashboard/save", MustLogin(), otelPlugin, dashboard.SaveDashboard)
 		r.GET("/dashboard/team/:id", CheckLogin(), dashboard.GetTeamDashboards)
 		r.GET("/dashboard/history/:id", CheckLogin(), otelPlugin, dashboard.GetHistory)
-		r.GET("/dashboard/simpleList", CheckLogin(), otelPlugin, dashboard.GetSimpleList)
+		r.GET("/dashboard/search/:tenantId", CheckLogin(), otelPlugin, dashboard.Search)
 		r.POST("/dashboard/star/:id", MustLogin(), dashboard.Star)
 		r.POST("/dashboard/unstar/:id", MustLogin(), dashboard.UnStar)
 		r.GET("/dashboard/starred", CheckLogin(), dashboard.GetAllStarred)
@@ -160,6 +159,7 @@ func (s *Server) Start() error {
 		r.POST("/datasource/save", MustLogin(), datasource.SaveDatasource)
 		r.GET("/datasource/all", otelPlugin, datasource.GetDatasources)
 		r.DELETE("/datasource/:id", MustLogin(), datasource.DeleteDatasource)
+		r.GET("/datasource/byId/:id", datasource.GetDatasourceById)
 		r.GET("/datasource/test", proxy.TestDatasource)
 
 		// tenant apis
@@ -168,8 +168,9 @@ func (s *Server) Start() error {
 		r.GET(("/tenant/users/:tenantId"), MustLogin(), tenant.QueryTenantUsers)
 		r.POST("/tenant/user", MustLogin(), tenant.SubmitTenantUser)
 		r.DELETE("/tenant/user/:userId/:tenantId", MustLogin(), tenant.DeleteTenantUser)
-		r.GET("/tenant/user/in/:username", tenant.GetTenantsUserIn)
+		r.GET("/tenant/user/in/:id", tenant.GetTenantsUserIn)
 		r.POST("/tenant/switch/:id", MustLogin(), tenant.SwitchTenant)
+		r.GET("/tenant/teams/:tenantId", MustLogin(), otelPlugin, teams.GetTenantTeams)
 
 		// proxy apis
 		r.Any("/proxy/:id/*path", proxy.ProxyDatasource)

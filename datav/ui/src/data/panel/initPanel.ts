@@ -31,7 +31,7 @@ export const initPanel = (id?) => {
         plugins: {
             [initPanelType]: plugin.settings.initOptions
         },
-        datasource: initDatasource,
+        datasource: initDatasource(),
         styles: initPanelStyles,
         overrides: [],
         valueMapping: null,
@@ -72,19 +72,21 @@ export const initRowPanel = (id) => {
     return p
 }
 
-export const initDatasource: PanelDatasource = {
-    id: $datasources.get().find(ds => ds.type == DatasourceTypeTestData)?.id ?? first($datasources.get())?.id,
-    queryOptions: {
-        minInterval: DatasourceMinInterval,
-        maxDataPoints: DatasourceMaxDataPoints
-    },
-    queries: [
-        {
-            id: 65,
-            metrics: "",
-            legend: "",
-            visible: true,
-            data: {}
-        }
-    ]
-}
+export const initDatasource = () => {
+    return {
+        id: $datasources.get().find(ds => ds.type == DatasourceTypeTestData)?.id ?? first($datasources.get())?.id,
+        queryOptions: {
+            minInterval: DatasourceMinInterval,
+            maxDataPoints: DatasourceMaxDataPoints
+        },
+        queries: [
+            {
+                id: 65,
+                metrics: "",
+                legend: "",
+                visible: true,
+                data: {}
+            }
+        ]
+    }
+} 

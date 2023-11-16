@@ -35,6 +35,7 @@ import { $teams } from "../team/store"
 import { last } from "lodash"
 import { useStore } from "@nanostores/react"
 import { commonMsg, searchMsg } from "src/i18n/locales/en"
+import { $config } from "src/data/configs/config"
 
 interface Props {
     title: string
@@ -48,6 +49,7 @@ const Search = memo((props: Props) => {
     const t = useStore(commonMsg)
     const t1 = useStore(searchMsg)
     const location = useLocation()
+    const config = useStore($config)
     const [query, setQuery] = useState<string>(null)
     const [caseSensitive, setCaseSensitive] = useState<boolean>(false)
     const [rawDashboards, setRawDashboards] = useState<Dashboard[]>(null)
@@ -58,11 +60,11 @@ const Search = memo((props: Props) => {
     const [filterStarred, setFilterStarred] = useState<boolean>(false)
     const [starredDashIds, setStarredDashIds] = useState<Set<string>>(new Set())
     const [layout, setLayout] = useState<"teams" | "list" | "tags">("teams")
-
+    
     useBus(
         OnDashboardWeightChangeEvent,
         (e) => {
-            requestApi.get(`/dashboard/simpleList`).then(res => {
+            requestApi.get(`/dashboard/search/${config.currentTenant}`).then(res => {
                 setRawDashboards(res.data)
             })
         },
@@ -83,7 +85,7 @@ const Search = memo((props: Props) => {
         }
         onOpen()
         if (!rawDashboards) {
-            const r1 = requestApi.get(`/dashboard/simpleList`)
+            const r1 = requestApi.get(`/dashboard/search/${config.currentTenant}`)
             const r2 = requestApi.get(`/dashboard/starred`)
             const res = await Promise.all([r1, r2])
 

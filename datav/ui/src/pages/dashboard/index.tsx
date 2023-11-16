@@ -12,23 +12,32 @@
 // limitations under the License.
 
 import { useStore } from "@nanostores/react"
-import React, { memo } from "react"
+import React, { memo, useMemo } from "react"
 import { useEffect, useState } from "react"
 import { useLocation, useNavigate, useParams } from "react-router-dom"
 import { dashboardMsg } from "src/i18n/locales/en"
 import DashboardWrapper from "src/views/dashboard/Dashboard"
 import NotFoundPage from "../NotFound"
 import { AlertDashbordId } from "src/data/dashboard"
-import { $config } from "src/data/configs/config"
-import { Box } from "@chakra-ui/react"
+import { $config, UIConfig } from "src/data/configs/config"
+import { Box, useToast } from "@chakra-ui/react"
 import Loading from "components/loading/Loading"
 import { first } from "lodash"
 import { isEmpty } from "utils/validate"
+import { Dashboard } from "types/dashboard"
+import { requestApi } from "utils/axios/request"
+import { $teams } from "src/views/team/store"
+import { $datasources } from "src/views/datasource/store"
+import { initVariableSelected } from "src/views/variables/SelectVariable"
+import { $variables } from "src/views/variables/store"
+
 
 
 interface Props {
     sideWidth: number
 }
+
+
 // page for dispaly dashboard
 const DashboardPage = memo(({ sideWidth }: Props) => {
     const config = useStore($config)
@@ -38,11 +47,12 @@ const DashboardPage = memo(({ sideWidth }: Props) => {
     const [dashboardId, setDashboardId] = useState<string>(null)
     const [error, setError] = useState(null)
     const teamId = useParams().teamId
+    const [dashboard, setDashboard] = useState<Dashboard>(null)
 
     useEffect(() => {
         const teamPath = `/${teamId ?? config.currentTeam}`
         if (location && config.sidemenu) {
-            if (!isEmpty(teamId) &&  isNaN(Number(teamId))) {
+            if (!isEmpty(teamId) && isNaN(Number(teamId))) {
                 setError("Invailid team id")
                 return
             }
@@ -79,6 +89,11 @@ const DashboardPage = memo(({ sideWidth }: Props) => {
         }
     }, [location.pathname, config])
 
+    useEffect(() => {
+        if (dashboardId) {
+            loadDashboardConfig()
+        }
+    },[dashboardId])
     const load = path => {
         let menuitem;
         for (const item of config.sidemenu) {
@@ -108,16 +123,25 @@ const DashboardPage = memo(({ sideWidth }: Props) => {
         setDashboardId(menuitem.dashboardId)
     }
 
+
+    const loadDashboardConfig = async () => {
+        const res = await requestApi.get(`/dashboard/config/${dashboardId}`)
+        $teams.set(res.data.teams)
+        $datasources.set(res.data.datasources)
+        initVariableSelected(res.data.variables)
+        $variables.set(res.data.variables)
+        setDashboard(res.data.dashboard)
+    }
+
     return (
         <>
-            {dashboardId && <DashboardWrapper key={dashboardId} sideWidth={sideWidth} dashboardId={dashboardId} />}
+            {dashboard && <DashboardWrapper key={dashboardId} sideWidth={sideWidth} rawDashboard={dashboard} />}
             {error && <NotFoundPage message={error} />}
-            {!dashboardId && !error && <Box position="fixed" top="50vh" left="50vw"><Loading /></Box>}
+            {!dashboard && !error && <Box position="fixed" top="50vh" left="50vw"><Loading /></Box>}
         </>
     )
 })
 
 export default DashboardPage
-
 
 

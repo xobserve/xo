@@ -192,8 +192,8 @@ const DashboardSave = ({ dashboard }: Props) => {
                         </MenuButton>
                     </Tooltip>
                     <MenuList>
-                        <MenuItem fontSize={"0.9rem"} onClick={onSaveOpen}>{t.save}</MenuItem>
-                        <MenuItem fontSize={"0.9rem"}  onClick={onViewHistory}>{t1.viewHistory}</MenuItem>
+                        <MenuItem  onClick={onSaveOpen}>{t.save}</MenuItem>
+                        <MenuItem  onClick={onViewHistory}>{t1.viewHistory}</MenuItem>
                     </MenuList>
                 </Menu>
 

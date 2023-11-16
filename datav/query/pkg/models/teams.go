@@ -269,3 +269,23 @@ func CreateTeam(ctx context.Context, tx *sql.Tx, u *User, name string, brief str
 
 	return id, nil
 }
+
+func QueryTeamsUserIn(ctx context.Context, userId int64) ([]int64, error) {
+	members := make([]int64, 0)
+	rows, err := db.Conn.QueryContext(ctx, "SELECT team_id from team_member WHERE user_id=? ORDER BY team_id", userId)
+	if err != nil && err != sql.ErrNoRows {
+		return nil, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var m int64
+		err := rows.Scan(&m)
+		if err != nil {
+			return nil, err
+		}
+
+		members = append(members, m)
+	}
+
+	return members, nil
+}

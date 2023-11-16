@@ -45,8 +45,10 @@ const AdminTenantUsers = () => {
     const tenantLinks = getTenantLinks(teamId)
 
     useEffect(() => {
-        load()
-    }, [])
+        if (config) {
+            load()
+        }
+    }, [config])
     
     const [userInEdit, setUserInEdit] = useState<User>()
     const [userInDelete, setUserInDelete] = useState<User>(null)
@@ -101,7 +103,7 @@ const AdminTenantUsers = () => {
     }
 
     return <>
-        <Page title={lang == "en" ? `Tenant Admin - ${config.tenantName}` : `租户管理 - ${config.tenantName}`} subTitle={t.manageItem({ name: t.members })} icon={<FaCog />} tabs={tenantLinks} isLoading={users === null}>
+        <Page title={lang == "en" ? `Tenant Admin - ${config?.tenantName}` : `租户管理 - ${config?.tenantName}`} subTitle={t.manageItem({ name: t.members })} icon={<FaCog />} tabs={tenantLinks} isLoading={users === null}>
             <Flex justifyContent="space-between">
                 <Box></Box>
                 <Button size="sm" onClick={onAddUser}>{t.addItem({ name: t.members })}</Button>

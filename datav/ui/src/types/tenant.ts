@@ -3,5 +3,6 @@ export interface Tenant {
     name: string
     ownerId: number
     owner: string
+    numTeams: number
     created: string
 }

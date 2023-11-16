@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import React from "react"
+import React, { useEffect } from "react"
 import { Button, Table, TableContainer, Tag, Tbody, Td, Th, Thead, Tr, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure,  Input, Flex, Box, useToast } from "@chakra-ui/react"
 import { Form } from "src/components/form/Form"
 import FormItem from "src/components/form/Item"
@@ -26,6 +26,7 @@ import { $teams } from "src/views/team/store"
 import { locale } from "src/i18n/i18n"
 import { getTenantLinks } from "./links"
 import { $config } from "src/data/configs/config"
+import { Team } from "types/teams"
 
 const TeamsPage = () => {
     const t = useStore(commonMsg)
@@ -35,13 +36,24 @@ const TeamsPage = () => {
     const navigate = useNavigate()
     const [teamName, setTeamName] = useState<string>("")
     const [teamDesc, setTeamDesc] = useState<string>("")
-    const teams = useStore($teams)
+    const [teams, setTeams] = useState<Team[]>([])
     const config = useStore($config)
 
     const teamId = useParams().teamId
     const tenantLinks = getTenantLinks(teamId)
 
     const { isOpen, onOpen, onClose } = useDisclosure()
+
+    useEffect(() => {
+        if (config) {
+            load()
+        }
+    },[config])
+    const load = async () => {
+        const res = await requestApi.get(`/tenant/teams/${config.currentTenant}`)
+        setTeams(res.data)
+    }
+
 
     const addTeam = async () => {
         const res = await requestApi.post("/team/new", { name: teamName.trim(),brief: teamDesc.trim(), tenantId: config.currentTenant})
@@ -72,7 +84,7 @@ const TeamsPage = () => {
     }
 
     return <>
-        <Page title={lang == "en" ? `Tenant Admin - ${config.tenantName}` : `租户管理 - ${config.tenantName}`} subTitle={t.manageItem({ name: t.team })} icon={<FaCog />} tabs={tenantLinks}>
+        <Page title={lang == "en" ? `Tenant Admin - ${config?.tenantName}` : `租户管理 - ${config?.tenantName}`} subTitle={t.manageItem({ name: t.team })} icon={<FaCog />} tabs={tenantLinks}>
             <Flex justifyContent="space-between">
                 <Box></Box>
                 <Button size="sm" onClick={onOpen}>{t.newItem({name: t.team})}</Button>

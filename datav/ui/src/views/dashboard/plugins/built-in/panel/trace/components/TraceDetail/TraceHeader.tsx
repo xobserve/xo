@@ -33,10 +33,11 @@ import { Dashboard, Panel } from "types/dashboard"
 import { requestApi } from "utils/axios/request"
 import { isEmpty } from "utils/validate"
 import { commonInteractionEvent, genDynamicFunction } from "utils/dashboard/dynamicCall"
-import { isFunction } from "lodash"
-import { $teamVariables, $variables } from "src/views/variables/store"
+import { cloneDeep, isFunction } from "lodash"
 import { getShortTraceId } from "../../utils/trace"
 import { PanelType } from "../../../xobserveTrace/types"
+import { initVariableSelected } from "src/views/variables/SelectVariable"
+import { $variables } from "src/views/variables/store"
 
 interface Props {
     trace: Trace
@@ -74,11 +75,11 @@ const TraceDetailHeader = ({ trace, viewRange, updateNextViewRangeTime, updateVi
     const loadDashboard = async (id) => {
         const res = await requestApi.get(`/dashboard/byId/${id}`)
         const dashboard: Dashboard = res.data
+        const dashVars = cloneDeep(dashboard.data.variables)
+        initVariableSelected(dashVars)
+        $variables.set([...$variables.get(), ...dashVars])
         const p = dashboard.data.panels.find(p => p.id.toString() == panelId)
         if (p) setPanel(p)
-
-        const gVars = $teamVariables.get()[dashboard.ownedBy] ?? []
-        $variables.set([...gVars])
     }
     const onSearchChange = (v) => {
         setSearch(v)

@@ -26,7 +26,7 @@ import { initVariable } from "src/data/variable"
 import { Variable, VariableQueryType, VariableRefresh } from "types/variable"
 import { useImmer } from "use-immer"
 import { requestApi } from "utils/axios/request"
-import { queryVariableValues } from "src/views/variables/SelectVariable"
+import SelectVariables, { initVariableSelected, queryVariableValues } from "src/views/variables/SelectVariable"
 import storage from "utils/localStorage"
 import { VariableManuallyChangedKey } from "src/data/storage-keys"
 import { dispatch } from "use-bus"
@@ -42,6 +42,7 @@ import { Team } from "types/teams"
 import { externalDatasourcePlugins } from "src/views/dashboard/plugins/external/plugins"
 import Loading from "components/loading/Loading"
 import { builtinDatasourcePlugins } from "src/views/dashboard/plugins/built-in/plugins"
+import { $variables } from "src/views/variables/store"
 
 
 
@@ -65,8 +66,13 @@ const TeamVariablesPage = ({team}:{team:Team})  => {
     }, [])
 
     const load = async () => {
-        const res = await requestApi.get(`/variable/all?teamId=${team.id}`)
+        const res = await requestApi.get(`/variable/team?teamId=${team.id}`)
+        initVariableSelected(res.data)
         setVariables(res.data)
+        $variables.set(res.data)
+        
+        const res1 = await requestApi.get(`/datasource/all?teamId=${team.id}`)
+        $datasources.set(res1.data)
     }
 
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -165,6 +171,7 @@ const TeamVariablesPage = ({team}:{team:Team})  => {
             removeParamFromUrl(['editVar'])
             onClose()
         }} isOpen={isOpen} onSubmit={editMode ? editVariable : addVariable} isGlobal />}
+        {variables && <Box visibility="hidden"><SelectVariables variables={variables} /></Box>}
     </>
 }
 

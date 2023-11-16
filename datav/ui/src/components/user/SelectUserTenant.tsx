@@ -15,7 +15,7 @@
 // 1. teams which the user is a member of 
 // 2. teams whose sidemenu has been set to public
 
-import { Heading, HStack, IconButton, Popover, PopoverBody, PopoverContent, PopoverTrigger, Portal, Text, useMediaQuery, useToast } from "@chakra-ui/react"
+import { Flex, Heading, HStack, IconButton, Popover, PopoverBody, PopoverContent, PopoverTrigger, Portal, Text, useMediaQuery, useToast } from "@chakra-ui/react"
 import { useStore } from "@nanostores/react"
 import CardSelect, { CardSelectItem } from "src/components/cards/CardSelect"
 import useSession from "hooks/use-session"
@@ -43,7 +43,7 @@ const SelectUserTenant = ({ miniMode }) => {
     }, [session])
 
     const load = async () => {
-        const res = await requestApi.get(`/tenant/user/in/${session.user.username}`)
+        const res = await requestApi.get(`/tenant/user/in/${session.user.id}`)
         setTenants(res.data)
     }
 
@@ -73,9 +73,14 @@ const SelectUserTenant = ({ miniMode }) => {
                             <CardSelect title="">
                                 {tenants.map(tenant =>
                                     <CardSelectItem key={tenant.id} selected={config.currentTenant == tenant.id} onClick={() => selectTenant(tenant.id, teamId, config, toast)}>
-                                        <Text fontSize="1em" fontWeight="550" px="2" py="1">
-                                            {tenant.name}
-                                        </Text>
+                                        <Flex width="200px" alignItems="center" fontSize="1em" fontWeight="550" px="2" py="1" justifyContent="space-between">
+                                            <Text  >
+                                                {tenant.name}
+                                            </Text>
+                                            <Text opacity={0.7} fontWeight={400}>
+                                                {tenant.numTeams} teams
+                                            </Text>
+                                        </Flex>
                                     </CardSelectItem>
                                 )}
                             </CardSelect>

@@ -17,12 +17,11 @@ import { queryJaegerTrace } from "../../../../datasource/jaeger/query_runner"
 import TraceDetail from "./TraceDetail"
 import transformTraceData from "../../utils/transform-trace-data"
 import ScrollManager from "./scroll/scrollManager"
-import {  scrollBy, scrollTo } from './scroll/scrollPage';
+import { scrollBy, scrollTo } from './scroll/scrollPage';
 import React from "react";
 import { getDatasource } from "utils/datasource"
 import { useStore } from "@nanostores/react"
 import { $datasources } from "src/views/datasource/store"
-import { useSearchParam } from "react-use"
 import traceData from '../../mocks/traces.json'
 import { DatasourceTypeJaeger } from "../../../../datasource/jaeger/types"
 import { DatasourceTypeTestData } from "../../../../datasource/testdata/types"
@@ -30,25 +29,42 @@ import { builtinDatasourcePlugins } from "../../../../plugins"
 import { externalDatasourcePlugins } from "src/views/dashboard/plugins/external/plugins"
 import { getCurrentTimeRange } from "components/DatePicker/TimePicker"
 import { DataFormat } from "types/format"
+import { requestApi } from "utils/axios/request"
+import { $config } from "src/data/configs/config"
+import { $variables } from "src/views/variables/store"
+import { initVariableSelected } from "src/views/variables/SelectVariable"
 
-const TraceDetailWrapper = ({id,dsId}) => {
+const TraceDetailWrapper = ({ id, dsId }) => {
     const [trace, setTrace] = useState<Trace>(null)
     const [scrollManager, setScrollManager] = useState(null)
 
     const datasources = useStore($datasources)
     const datasource = getDatasource(dsId, datasources)
-    
+    const config = useStore($config)
     useEffect(() => {
+        load()
         let bodyStyle = document.body.style
         setTimeout(() => {
-        bodyStyle.fontSize = 16 + "px!important"
+            bodyStyle.fontSize = 16 + "px!important"
+        }, 100)
+    }, [])
 
-        },100)
-    },[])
+    const load = async () => {
+        const r1 = await requestApi.get(`/datasource/byId/${dsId}`)
+        const r2 = await requestApi.get(`/variable/team?teamId=${config.currentTeam}`)
+        const res = await Promise.all([r1, r2])
+
+        $datasources.set([res[0].data])
+        initVariableSelected(res[1].data)
+        $variables.set(res[1].data)
+        // const r2 = 
+
+
+    }
     useEffect(() => {
         if (datasource?.type) {
-            load()
-        }   
+            loadTrace()
+        }
 
 
         return () => {
@@ -60,14 +76,14 @@ const TraceDetailWrapper = ({id,dsId}) => {
                 });
             }
         }
-    },[datasource])
+    }, [datasource])
 
-    const load = async () => {
+    const loadTrace = async () => {
         let data
         switch (datasource?.type) {
             case DatasourceTypeJaeger:
                 const res = await queryJaegerTrace(dsId, id)
-             
+
                 if (res.length > 0) {
                     data = transformTraceData(res[0])
                 }
@@ -101,7 +117,7 @@ const TraceDetailWrapper = ({id,dsId}) => {
     }
 
     return (<>
-        {trace && scrollManager && <TraceDetail trace={trace} scrollManager={scrollManager}/>}
+        {trace && scrollManager && <TraceDetail trace={trace} scrollManager={scrollManager} />}
     </>)
 }
 

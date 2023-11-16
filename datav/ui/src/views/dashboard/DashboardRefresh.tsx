@@ -64,7 +64,7 @@ const DashboardRefresh = () => {
                 paddingLeft: "0px !important"
             }
         }}>
-            <Select popupMatchSelectWidth={false} bordered={false} value={refresh} onChange={(v) => onRereshChange(v)} options={[REFRESH_OFF,'2s', '5s','10s','30s', '1m','5m','10m'].map(v => ({value:v,label:v}))}/>
+            <Select popupMatchSelectWidth={false} bordered={false} value={refresh} onChange={(v) => onRereshChange(v)} options={[REFRESH_OFF,'2s', '5s','10s','30s', '1m'].map(v => ({value:v,label:v}))}/>
         </Box>
     </>)
 }
