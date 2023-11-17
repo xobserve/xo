@@ -41,8 +41,7 @@ export const AdminTenants = memo(() => {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [tempTenant, setTempTenant] = useState<Partial<Tenant>>(null)
 
-    const teamId = useParams().teamId
-    const adminLinks = getAdminLinks(teamId)
+    const adminLinks = getAdminLinks(config.currentTeam)
 
     useEffect(() => {
         load()
@@ -117,7 +116,7 @@ export const AdminTenants = memo(() => {
                             </Td>
                             <Td>{moment(tenant.created).fromNow()}</Td>
                             <Td>
-                                <Button size="sm" variant="ghost" onClick={() => selectTenant(tenant.id, teamId, config, toast, "/admin/tenant/users")}>View</Button>
+                                <Button size="sm" variant="ghost" onClick={() => selectTenant(tenant.id, config.currentTeam.toString(), config, toast, "/admin/tenant/users")}>View</Button>
                             </Td>
                         </Tr>
                     })}

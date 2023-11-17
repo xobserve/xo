@@ -1,6 +1,6 @@
 
 import React from "react"
-import { FaUser, FaUserCog, FaUsers } from "react-icons/fa"
+import { FaCog, FaUser, FaUserCog, FaUsers } from "react-icons/fa"
 import { MdOutlineAdminPanelSettings } from "react-icons/md"
 import { isEmpty } from "utils/validate"
 
@@ -49,6 +49,12 @@ export const getTenantLinks = (teamId) => {
             url: `${teamPath}/admin/tenant/teams`,
             baseUrl: `${teamPath}/admin/tenant/teams`,
             icon: <FaUsers />
+        },
+        {
+            title: 'settings',
+            url: `${teamPath}/admin/tenant/setting`,
+            baseUrl: `${teamPath}/admin/tenant/setting`,
+            icon: <FaCog />
         },
     ]
 }

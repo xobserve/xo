@@ -12,7 +12,7 @@
 // limitations under the License.
 
 import React from "react"
-import { Button, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useDisclosure, AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Modal, ModalBody, ModalCloseButton, ModalContent, HStack, ModalHeader, ModalOverlay, Text, RadioGroup, Stack, Radio, useToast, VStack, Box, Input, Flex, Tag } from "@chakra-ui/react"
+import { Button, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useDisclosure, AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Modal, ModalBody, ModalCloseButton, ModalContent, HStack, ModalHeader, ModalOverlay, Text, RadioGroup, Stack, Radio, useToast, VStack, Box, Input, Flex, Tag, Accordion, AccordionItem, AccordionButton, AccordionPanel, AccordionIcon, StackDivider } from "@chakra-ui/react"
 import { Form, FormSection } from "src/components/form/Form"
 import FormItem from "src/components/form/Item"
 import useSession from "hooks/use-session"
@@ -28,28 +28,34 @@ import isEmail from "validator/lib/isEmail"
 import { useStore } from "@nanostores/react"
 import { websiteAdmin, commonMsg } from "src/i18n/locales/en"
 import { isEmpty } from "utils/validate"
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { getAdminLinks } from "./links"
+import { Tenant } from "types/tenant"
+import ColorTag from "components/ColorTag"
+import { $config } from "src/data/configs/config"
 
 const AdminUsers = () => {
     const t = useStore(commonMsg)
     const t1 = useStore(websiteAdmin)
     const { session } = useSession()
     const toast = useToast()
+    const navigate = useNavigate()
     const [users, setUsers] = useState<User[]>(null)
     useEffect(() => {
         load()
     }, [])
 
-    const teamId = useParams().teamId
-    const adminLinks = getAdminLinks(teamId)
+    const config = useStore($config)
+    const adminLinks = getAdminLinks(config.currentTeam)
 
     const [userInEdit, setUserInEdit] = useState<User>()
     const [password, setPassword] = useState<string>('')
+    const [userDetail, setUserDetail] = useState<{ user: User; tenants: Tenant[] }>(null)
 
     const { isOpen, onOpen, onClose } = useDisclosure()
     const { isOpen: isAlertOpen, onOpen: onAlertOpen, onClose: onAlertClose } = useDisclosure()
     const { isOpen: isAddOpen, onOpen: onAddOpen, onClose: onAddClose } = useDisclosure()
+    const { isOpen: isDetailOpen, onOpen: onDetailOpen, onClose: onDetailClose } = useDisclosure()
 
     const cancelRef = useRef()
 
@@ -175,7 +181,14 @@ const AdminUsers = () => {
         load()
     }
 
-   
+    const viewDetail = async (user: User) => {
+        const res = await requestApi.get(`/user/detail?id=${user.id}`)
+        setUserDetail({
+            user: user,
+            tenants: res.data
+        })
+        onDetailOpen()
+    }
 
     return <>
         <Page title={t1.websiteAdmin} subTitle={t.manageItem({ name: t.user })} icon={<FaCog />} tabs={adminLinks} isLoading={users === null}>
@@ -201,7 +214,7 @@ const AdminUsers = () => {
                     </Thead>
                     <Tbody>
                         {users?.map(user => {
-                            return <Tr key={user.id}>
+                            return <Tr key={user.id} className={(userDetail?.user.id == user.id || userInEdit?.id == user.id) && "highlight-bg"}>
                                 <Td>{user.id}</Td>
                                 <Td>
                                     <HStack>
@@ -216,8 +229,9 @@ const AdminUsers = () => {
                                 <Td>{moment(user.created).fromNow()}</Td>
                                 <Td>{user.lastSeenAt && moment(user.lastSeenAt).fromNow()}</Td>
                                 <Th>{user.visits ?? 0}</Th>
-                                <Td>
+                                <Td >
                                     <Button variant="ghost" size="sm" px="0" onClick={() => editUser(user)}>{t.edit}</Button>
+                                    <Button variant="ghost" size="sm" px="0" ml="1" onClick={() => viewDetail(user)}>{t.detail}</Button>
                                 </Td>
                             </Tr>
                         })}
@@ -329,6 +343,34 @@ const AdminUsers = () => {
                 </AlertDialogContent>
             </AlertDialogOverlay>
         </AlertDialog>
+        <Modal isOpen={isDetailOpen} onClose={() => { setUserDetail(null); onDetailClose() }}>
+            <ModalOverlay />
+            {userDetail && <ModalContent>
+                <ModalCloseButton />
+                <ModalBody py="4">
+                    <Text fontWeight={550}>The tenants and teams that user `{userDetail.user.username}` is in: </Text>
+                    <Accordion mt="4" defaultIndex={userDetail.tenants.map((_, i) => i)} allowMultiple>
+                        <VStack alignItems="left" divider={<StackDivider />}>
+                            {
+                                userDetail.tenants.map(tenant => <>
+
+                                    <Flex justifyContent="space-between">
+                                        <Text>{tenant.name}</Text>
+                                        <HStack>
+                                            {
+                                                tenant.teams?.map(team => <Box cursor="pointer" onClick={() => navigate(`/${config.currentTeam}/cfg/team/members`)}>
+                                                    <ColorTag name={team.name} />
+                                                </Box>)
+                                            }
+                                        </HStack>
+                                    </Flex>
+                                </>)
+                            }
+                        </VStack>
+                    </Accordion>
+                </ModalBody>
+            </ModalContent>}
+        </Modal>
     </>
 }
 

@@ -68,7 +68,7 @@ func UpdateUserPassword(c *gin.Context) {
 	req := &UpdateUserPasswordModel{}
 	c.Bind(&req)
 
-	u := user.CurrentUser(c)
+	u := c.MustGet("currentUser").(*models.User)
 	if !u.Role.IsAdmin() {
 		c.JSON(http.StatusForbidden, common.RespError("no permission"))
 		return
@@ -110,7 +110,7 @@ func AddNewUser(c *gin.Context) {
 		return
 	}
 
-	u := user.CurrentUser(c)
+	u := c.MustGet("currentUser").(*models.User)
 
 	if !u.Role.IsAdmin() {
 		c.JSON(403, common.RespError(e.NoPermission))
@@ -192,7 +192,7 @@ func UpdateUserRole(c *gin.Context) {
 		return
 	}
 
-	u := user.CurrentUser(c)
+	u := c.MustGet("currentUser").(*models.User)
 
 	if req.Id == u.Id {
 		c.JSON(400, common.RespError("you cant change your own role"))
@@ -230,13 +230,13 @@ func DeleteUser(c *gin.Context) {
 		return
 	}
 
-	currentUser := user.CurrentUser(c)
-	if userId == currentUser.Id {
+	u := c.MustGet("currentUser").(*models.User)
+	if userId == u.Id {
 		c.JSON(400, common.RespError("you cant delete yourself"))
 		return
 	}
 
-	if !models.IsSuperAdmin(currentUser.Id) {
+	if !models.IsSuperAdmin(u.Id) {
 		c.JSON(403, common.RespError("only superadmin can delete user"))
 		return
 	}
@@ -267,6 +267,6 @@ func DeleteUser(c *gin.Context) {
 		return
 	}
 
-	WriteAuditLog(c.Request.Context(), currentUser.Id, AuditDeleteUser, strconv.FormatInt(userId, 10), targetUser)
+	WriteAuditLog(c.Request.Context(), u.Id, AuditDeleteUser, strconv.FormatInt(userId, 10), targetUser)
 	c.JSON(200, nil)
 }

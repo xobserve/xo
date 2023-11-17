@@ -4,12 +4,12 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"fmt"
 	"sort"
 	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/xObserve/xObserve/query/internal/user"
 	"github.com/xObserve/xObserve/query/pkg/colorlog"
 	"github.com/xObserve/xObserve/query/pkg/common"
 	"github.com/xObserve/xObserve/query/pkg/db"
@@ -20,7 +20,7 @@ import (
 var logger = colorlog.RootLogger.New("logger", "tenant")
 
 func QueryTenants(c *gin.Context) {
-	u := user.CurrentUser(c)
+	u := c.MustGet("currentUser").(*models.User)
 
 	if !u.Role.IsAdmin() {
 		c.JSON(403, common.RespError(e.NoPermission))
@@ -56,7 +56,7 @@ func QueryTenants(c *gin.Context) {
 }
 
 func CreateTenant(c *gin.Context) {
-	u := user.CurrentUser(c)
+	u := c.MustGet("currentUser").(*models.User)
 
 	if !u.Role.IsAdmin() {
 		c.JSON(403, common.RespError(e.NoPermission))
@@ -121,7 +121,7 @@ func CreateTenant(c *gin.Context) {
 }
 
 func QueryTenantUsers(c *gin.Context) {
-	u := user.CurrentUser(c)
+	u := c.MustGet("currentUser").(*models.User)
 	tenantId, _ := strconv.ParseInt(c.Param("tenantId"), 10, 64)
 	tenantUser, err := models.QueryTenantUser(c.Request.Context(), tenantId, u.Id)
 	if err != nil {
@@ -165,7 +165,7 @@ func QueryTenantUsers(c *gin.Context) {
 }
 
 func SubmitTenantUser(c *gin.Context) {
-	u := user.CurrentUser(c)
+	u := c.MustGet("currentUser").(*models.User)
 
 	req := &models.User{}
 	c.Bind(&req)
@@ -274,7 +274,8 @@ func DeleteTenantUser(c *gin.Context) {
 		return
 	}
 
-	u := user.CurrentUser(c)
+	u := c.MustGet("currentUser").(*models.User)
+
 	tenantUser, err := models.QueryTenantUser(c.Request.Context(), tenantId, targetUserId)
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -363,13 +364,8 @@ func GetTenantsUserIn(c *gin.Context) {
 	tenants := make([]*models.Tenant, 0)
 	var err error
 
-	userId, _ := strconv.ParseInt(c.Param("id"), 10, 64)
-	if userId == 0 {
-		c.JSON(200, common.RespSuccess(tenants))
-		return
-	}
-
-	tenants, err = models.QueryTenantsByUserId(userId)
+	u := c.MustGet("currentUser").(*models.User)
+	tenants, err = models.QueryTenantsByUserId(c.Request.Context(), u.Id)
 	if err != nil {
 		logger.Warn("query tenants by user id error", "error", err)
 		c.JSON(500, common.RespInternalError())
@@ -380,14 +376,14 @@ func GetTenantsUserIn(c *gin.Context) {
 }
 
 func SwitchTenant(c *gin.Context) {
-	userId := user.CurrentUserId(c)
+	u := c.MustGet("currentUser").(*models.User)
 	tenantId, _ := strconv.ParseInt(c.Param("id"), 10, 64)
 	if tenantId == 0 {
 		c.JSON(400, common.RespError(e.ParamInvalid))
 		return
 	}
 
-	teamId, err := SetTenantForUser(c.Request.Context(), tenantId, userId)
+	teamId, err := SetTenantForUser(c.Request.Context(), tenantId, u.Id)
 	if err != nil {
 		logger.Warn("switch tenant error", "error", err)
 		c.JSON(500, common.RespError(err.Error()))
@@ -415,4 +411,59 @@ func SetTenantForUser(ctx context.Context, tenantId int64, userId int64) (int64,
 	}
 
 	return teams[0], nil
+}
+
+func GetTenant(c *gin.Context) {
+	tenantId, _ := strconv.ParseInt(c.Param("id"), 10, 64)
+	if tenantId == 0 {
+		c.JSON(400, common.RespError(e.ParamInvalid))
+		return
+	}
+
+	tenant, err := models.QueryTenant(c.Request.Context(), tenantId)
+	if err != nil {
+		logger.Warn("query tenant by id error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+
+	c.JSON(200, common.RespSuccess(tenant))
+}
+
+func UpdateTenant(c *gin.Context) {
+	req := &models.Tenant{}
+	c.Bind(&req)
+
+	if req.Name == "" {
+		c.JSON(400, common.RespError(e.ParamInvalid))
+		return
+	}
+
+	u := c.MustGet("currentUser").(*models.User)
+	tenantUser, err := models.QueryTenantUser(c.Request.Context(), req.Id, u.Id)
+	if err != nil {
+		logger.Warn("query user in tenant error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+
+	if !tenantUser.Role.IsAdmin() {
+		c.JSON(403, common.RespError(e.NeedTenantAdmin))
+		return
+	}
+
+	now := time.Now()
+
+	_, err = db.Conn.ExecContext(c.Request.Context(), "UPDATE tenant SET name=?,is_public=?, updated=? WHERE id=?", req.Name, req.IsPublic, now, req.Id)
+	if err != nil {
+		if e.IsErrUniqueConstraint(err) {
+			c.JSON(400, common.RespError(fmt.Sprintf("tenant `%s` already exist", req.Name)))
+			return
+		}
+		logger.Warn("update tenant error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+
+	c.JSON(200, common.RespSuccess(nil))
 }

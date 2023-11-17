@@ -35,6 +35,7 @@ import TeamDatasources from "pages/cfg/team/Datasources";
 import TeamVariablesPage from "pages/cfg/team/Variables";
 import IframeExamplesPage from "pages/examples/Iframe";
 import AdminTenantUsers from "pages/admin/TenantUsers";
+import TenantSetting from "pages/admin/TenantSetting";
 
 
 const DashboardPage = loadable(() => import('src/pages/dashboard/index'));
@@ -123,6 +124,10 @@ export const getRoutes = (enableTenant=false) => {
     {
       path: `${teamId}/admin/tenant/teams`,
       element: pageContainer(<TeamsPage />),
+    },
+    {
+      path: `${teamId}/admin/tenant/setting`,
+      element: pageContainer(<TenantSetting />),
     },
   ]
   return [

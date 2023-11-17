@@ -101,13 +101,12 @@ func (s *Server) Start() error {
 		r.POST("/login/github", user.LoginGithub)
 		r.POST("/logout", user.Logout)
 		r.GET("/user/session", user.GetSession)
-		r.POST("/account/password", CheckLogin(), user.UpdateUserPassword)
-		r.POST("/account/info", CheckLogin(), user.UpdateUserInfo)
-		r.POST("/account/updateData", CheckLogin(), user.UpdateUserData)
-
+		r.POST("/account/password", MustLogin(), user.UpdateUserPassword)
+		r.POST("/account/info", MustLogin(), user.UpdateUserInfo)
+		r.POST("/account/updateData", MustLogin(), user.UpdateUserData)
+		r.GET("/user/detail", MustLogin(), user.GetUserDetail)
 		// teams apis
 		r.GET("/team/byId/:id", CheckLogin(), teams.GetTeam)
-		r.GET("/team/byDashId/:id", CheckLogin(), teams.GetTeamByDashId)
 		r.GET("/team/:id/members", CheckLogin(), teams.GetTeamMembers)
 		r.POST("/team/member", MustLogin(), teams.UpdateTeamMember)
 		r.POST("/team/add/member", MustLogin(), teams.AddTeamMembers)
@@ -116,10 +115,10 @@ func (s *Server) Start() error {
 		r.POST("/team/new", MustLogin(), teams.AddNewTeam)
 		r.DELETE("/team/:id", MustLogin(), teams.DeleteTeam)
 		r.DELETE("/team/leave/:id", MustLogin(), teams.LeaveTeam)
-		r.GET("/team/sidemenu/:id", teams.GetSideMenu)
+		r.GET("/team/sidemenu/:id", CheckLogin(), teams.GetSideMenu)
 		r.POST("/team/sidemenu", MustLogin(), teams.UpdateSideMenu)
 		r.POST("/team/switch/:teamId", MustLogin(), teams.SwitchTeam)
-		r.GET("/team/for/user", teams.GetTeamsForUser)
+		r.GET("/team/user/is/in", CheckLogin(), teams.GetTeamsForUser)
 
 		// variable apis
 		r.POST("/variable/new", MustLogin(), variables.AddNewVariable)
@@ -157,9 +156,9 @@ func (s *Server) Start() error {
 		r.GET("/admin/auditlogs", CheckLogin(), admin.QueryAuditLogs)
 		// datasource apis
 		r.POST("/datasource/save", MustLogin(), datasource.SaveDatasource)
-		r.GET("/datasource/all", otelPlugin, datasource.GetDatasources)
+		r.GET("/datasource/all", CheckLogin(), otelPlugin, datasource.GetDatasources)
 		r.DELETE("/datasource/:id", MustLogin(), datasource.DeleteDatasource)
-		r.GET("/datasource/byId/:id", datasource.GetDatasourceById)
+		r.GET("/datasource/byId/:id", MustLogin(), datasource.GetDatasourceById)
 		r.GET("/datasource/test", proxy.TestDatasource)
 
 		// tenant apis
@@ -168,10 +167,11 @@ func (s *Server) Start() error {
 		r.GET(("/tenant/users/:tenantId"), MustLogin(), tenant.QueryTenantUsers)
 		r.POST("/tenant/user", MustLogin(), tenant.SubmitTenantUser)
 		r.DELETE("/tenant/user/:userId/:tenantId", MustLogin(), tenant.DeleteTenantUser)
-		r.GET("/tenant/user/in/:id", tenant.GetTenantsUserIn)
+		r.GET("/tenant/user/is/in", MustLogin(), tenant.GetTenantsUserIn)
 		r.POST("/tenant/switch/:id", MustLogin(), tenant.SwitchTenant)
 		r.GET("/tenant/teams/:tenantId", MustLogin(), otelPlugin, teams.GetTenantTeams)
-
+		r.GET("/tenant/byId/:id", MustLogin(), tenant.GetTenant)
+		r.POST("/tenant/update", MustLogin(), tenant.UpdateTenant)
 		// proxy apis
 		r.Any("/proxy/:id/*path", proxy.ProxyDatasource)
 		r.Any("/proxy/:id", proxy.ProxyDatasource)
@@ -266,17 +266,19 @@ func Cors() gin.HandlerFunc {
 // When disabled, unauthorized users will be rediret to login page
 func CheckLogin() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		u := user.CurrentUser(c)
+		c.Set("currentUser", u)
 		if config.Data.User.AllowAnonymous {
 			c.Next()
 			return
 		}
 
-		logined := user.IsLogin(c)
-		if !logined {
+		if u == nil {
 			c.JSON(http.StatusUnauthorized, common.RespError(e.NoPermission))
 			c.Abort()
 			return
 		}
+
 		c.Next()
 	}
 }
@@ -284,8 +286,9 @@ func CheckLogin() gin.HandlerFunc {
 // APIS cannot be accessed by anonymous users, give user a not-login tips
 func MustLogin() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		logined := user.IsLogin(c)
-		if !logined {
+		u := user.CurrentUser(c)
+		c.Set("currentUser", u)
+		if u == nil {
 			c.JSON(http.StatusForbidden, common.RespError(e.NoPermission))
 			c.Abort()
 			return

@@ -20,7 +20,6 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/xObserve/xObserve/query/internal/user"
 	"github.com/xObserve/xObserve/query/pkg/colorlog"
 	"github.com/xObserve/xObserve/query/pkg/common"
 	"github.com/xObserve/xObserve/query/pkg/db"
@@ -51,7 +50,7 @@ func AddNewVariable(c *gin.Context) {
 		return
 	}
 
-	u := user.CurrentUser(c)
+	u := c.MustGet("currentUser").(*models.User)
 	// only admin or team admin can do this
 	isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), v.TeamId, u.Id)
 	if err != nil {
@@ -122,7 +121,7 @@ func UpdateVariable(c *gin.Context) {
 		return
 	}
 
-	u := user.CurrentUser(c)
+	u := c.MustGet("currentUser").(*models.User)
 	// only admin can do this
 	if !u.Role.IsAdmin() {
 		c.JSON(403, common.RespError(e.NoPermission))
@@ -158,7 +157,7 @@ func DeleteVariable(c *gin.Context) {
 		return
 	}
 
-	u := user.CurrentUser((c))
+	u := c.MustGet("currentUser").(*models.User)
 	isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), teamId, u.Id)
 	if err != nil {
 		logger.Warn("Error query team admin", "error", err)
@@ -214,7 +213,7 @@ func getVariableTeamId(ctx context.Context, id int64) (int64, error) {
 
 func QueryTeamVariables(c *gin.Context) {
 	teamId, _ := strconv.ParseInt(c.Query("teamId"), 10, 64)
-	u := user.CurrentUser(c)
+	u := c.MustGet("currentUser").(*models.User)
 
 	member, err := models.QueryTeamMember(c.Request.Context(), teamId, u.Id)
 	if err != nil {

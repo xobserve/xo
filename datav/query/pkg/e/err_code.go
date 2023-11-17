@@ -28,6 +28,7 @@ const (
 	Malicious          = "malicious"
 	UserNotExist       = "user not exist"
 	PasswordIncorrect  = "password incorrect"
+	NeedWebsiteAdmin   = "Only website admin can do this"
 	NeedTeamAdmin      = "Only team admin can do this"
 	NeedTenantAdmin    = "Only tenant admin can do this"
 	NotTeamMember      = "You are not a member of this team"

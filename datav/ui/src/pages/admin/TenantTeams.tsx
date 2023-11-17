@@ -39,8 +39,7 @@ const TeamsPage = () => {
     const [teams, setTeams] = useState<Team[]>([])
     const config = useStore($config)
 
-    const teamId = useParams().teamId
-    const tenantLinks = getTenantLinks(teamId)
+    const tenantLinks = getTenantLinks(config.currentTeam)
 
     const { isOpen, onOpen, onClose } = useDisclosure()
 

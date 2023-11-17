@@ -40,7 +40,7 @@ const SelectUserTeam = ({miniMode}) => {
     }, [])
 
     const load = async () => {
-        const res = await requestApi.get(`/team/for/user?tenantId=${config.currentTenant}`)
+        const res = await requestApi.get(`/team/user/is/in?tenantId=${config.currentTenant}`)
         setTeams(res.data)
     }
 

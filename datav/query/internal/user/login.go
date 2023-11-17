@@ -83,7 +83,7 @@ func login(user *models.User, c *gin.Context) {
 	}
 
 	if user.CurrentTenant == 0 {
-		tenants, err := models.QueryTenantsByUserId(user.Id)
+		tenants, err := models.QueryTenantsByUserId(c.Request.Context(), user.Id)
 		if err != nil {
 			logger.Warn("Error query user tenants", "error", err)
 			c.JSON(500, common.RespInternalError())

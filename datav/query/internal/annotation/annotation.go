@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/xObserve/xObserve/query/internal/user"
 	"github.com/xObserve/xObserve/query/pkg/colorlog"
 	"github.com/xObserve/xObserve/query/pkg/common"
 	"github.com/xObserve/xObserve/query/pkg/db"
@@ -64,7 +63,7 @@ func SetAnnotation(c *gin.Context) {
 		return
 	}
 
-	u := user.CurrentUser(c)
+	u := c.MustGet("currentUser").(*models.User)
 	if enableRole != models.ROLE_VIEWER {
 		if !u.Role.IsAdmin() {
 			isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), dash.OwnedBy, u.Id)
@@ -153,7 +152,7 @@ func RemoveAnnotation(c *gin.Context) {
 	namespace := c.Param("namespace")
 	id := c.Param("id")
 
-	u := user.CurrentUser(c)
+	u := c.MustGet("currentUser").(*models.User)
 	if !u.Role.IsAdmin() {
 		ownedBy, err := models.QueryDashboardBelongsTo(c.Request.Context(), namespace)
 		if err != nil {
@@ -194,7 +193,7 @@ func RemoveGroupAnnotations(c *gin.Context) {
 		return
 	}
 
-	u := user.CurrentUser(c)
+	u := c.MustGet("currentUser").(*models.User)
 	if !u.Role.IsAdmin() {
 		ownedBy, err := models.QueryDashboardBelongsTo(c.Request.Context(), namespace)
 		if err != nil {

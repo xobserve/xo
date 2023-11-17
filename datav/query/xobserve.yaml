@@ -116,3 +116,5 @@ observability:
     ## you can collect metrics, traces and logs into xobserve, and view them through observability plugins
     ## please visit https://xobserve.io/docs/observability for more info
     enable: true
+
+    

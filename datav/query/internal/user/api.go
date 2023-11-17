@@ -42,7 +42,7 @@ func UpdateUserPassword(c *gin.Context) {
 		return
 	}
 
-	u := CurrentUser(c)
+	u := c.MustGet("currentUser").(*models.User)
 
 	// check old password matched
 	// super admin can set password without old password
@@ -69,7 +69,8 @@ func UpdateUserInfo(c *gin.Context) {
 	targetUser := &models.User{}
 	c.Bind(&targetUser)
 
-	u := CurrentUser(c)
+	u := c.MustGet("currentUser").(*models.User)
+
 	if u.Role.IsAdmin() || u.Id == targetUser.Id {
 		err := updateUserInfo(c.Request.Context(), targetUser)
 		if err != nil {

@@ -16,10 +16,12 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/xObserve/xObserve/query/pkg/colorlog"
+	"github.com/xObserve/xObserve/query/pkg/common"
 	"github.com/xObserve/xObserve/query/pkg/db"
 	"github.com/xObserve/xObserve/query/pkg/e"
 	"github.com/xObserve/xObserve/query/pkg/models"
@@ -78,4 +80,50 @@ func updateUserData(id int64, data *models.UserData, ctx context.Context) *e.Err
 	}
 
 	return nil
+}
+
+func GetUserDetail(c *gin.Context) {
+	id, _ := strconv.ParseInt(c.Query("id"), 10, 64)
+	if id == 0 {
+		c.JSON(http.StatusBadRequest, common.RespError("bad user id"))
+		return
+	}
+
+	tenantId, _ := strconv.ParseInt(c.Query("tenantId"), 10, 64)
+
+	u := c.MustGet("currentUser").(*models.User)
+	if !u.Role.IsAdmin() {
+		c.JSON(http.StatusForbidden, common.RespError(e.NeedWebsiteAdmin))
+		return
+	}
+
+	var tenants []*models.Tenant
+	if tenantId == 0 {
+		// query tenants user in
+		var err error
+		tenants, err = models.QueryTenantsUserIn(c.Request.Context(), id)
+		if err != nil {
+			logger.Warn("query tenants user in error", "error", err)
+			c.JSON(http.StatusInternalServerError, common.RespInternalError())
+			return
+		}
+	} else {
+		tenants = []*models.Tenant{
+			{
+				Id: tenantId,
+			},
+		}
+	}
+	for _, tenant := range tenants {
+		teams, err := models.QueryTeamsUserInTenant(c.Request.Context(), tenant.Id, id)
+		if err != nil {
+			logger.Warn("query teams user in tenant error", "error", err)
+			c.JSON(http.StatusInternalServerError, common.RespInternalError())
+			return
+		}
+
+		tenant.Teams = teams
+	}
+
+	c.JSON(http.StatusOK, common.RespSuccess(tenants))
 }

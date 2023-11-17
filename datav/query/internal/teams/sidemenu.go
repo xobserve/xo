@@ -20,7 +20,6 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/xObserve/xObserve/query/internal/user"
 	"github.com/xObserve/xObserve/query/pkg/common"
 	"github.com/xObserve/xObserve/query/pkg/db"
 	"github.com/xObserve/xObserve/query/pkg/e"
@@ -31,6 +30,23 @@ func GetSideMenu(c *gin.Context) {
 	teamId, _ := strconv.ParseInt(c.Param("id"), 10, 64)
 	if teamId == 0 {
 		c.JSON(400, common.RespError(e.ParamInvalid))
+		return
+	}
+
+	u := c.MustGet("currentUser").(*models.User)
+	var userId int64
+	if u != nil {
+		userId = u.Id
+	}
+
+	visible, err := models.IsTeamVisibleToUser(c.Request.Context(), teamId, userId)
+	if err != nil {
+		logger.Warn("check team visible error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+	if !visible {
+		c.JSON(403, common.RespError(e.NoPermission))
 		return
 	}
 
@@ -50,7 +66,7 @@ func UpdateSideMenu(c *gin.Context) {
 	menu := &models.SideMenu{}
 	c.Bind(&menu)
 
-	u := user.CurrentUser(c)
+	u := c.MustGet("currentUser").(*models.User)
 	// only team admin can do this
 	isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), menu.TeamId, u.Id)
 	if err != nil {

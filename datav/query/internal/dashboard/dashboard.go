@@ -26,7 +26,6 @@ import (
 	"github.com/xObserve/xObserve/query/internal/admin"
 	"github.com/xObserve/xObserve/query/internal/datasource"
 	"github.com/xObserve/xObserve/query/internal/teams"
-	"github.com/xObserve/xObserve/query/internal/user"
 	"github.com/xObserve/xObserve/query/internal/variables"
 	"github.com/xObserve/xObserve/query/pkg/colorlog"
 	"github.com/xObserve/xObserve/query/pkg/common"
@@ -40,7 +39,7 @@ import (
 var logger = colorlog.RootLogger.New("logger", "dashboard")
 
 func SaveDashboard(c *gin.Context) {
-	u := user.CurrentUser(c)
+	u := c.MustGet("currentUser").(*models.User)
 	req := &models.DashboardHistory{}
 	err := c.Bind(&req)
 	if err != nil {
@@ -128,7 +127,7 @@ func SaveDashboard(c *gin.Context) {
 }
 
 func GetDashboard(c *gin.Context) {
-	u := user.CurrentUser(c)
+	u := c.MustGet("currentUser").(*models.User)
 	dash, err := getDashboard(c, u)
 	if err != nil {
 		logger.Warn("get dashboard error", "error", err)
@@ -140,7 +139,7 @@ func GetDashboard(c *gin.Context) {
 }
 
 func GetDashboardConfig(c *gin.Context) {
-	u := user.CurrentUser(c)
+	u := c.MustGet("currentUser").(*models.User)
 	dash, err := getDashboard(c, u)
 	if err != nil {
 		logger.Warn("get dashboard error", "error", err)
@@ -247,7 +246,7 @@ func UpdateOwnedBy(c *gin.Context) {
 		return
 	}
 
-	u := user.CurrentUser(c)
+	u := c.MustGet("currentUser").(*models.User)
 	// constrains need to be satisfied:
 	// 1. current user must be the admin of the team which dashboard originally belongs to
 	isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), ownedBy, u.Id)
@@ -272,9 +271,26 @@ func UpdateOwnedBy(c *gin.Context) {
 }
 
 func GetTeamDashboards(c *gin.Context) {
-	teamId := c.Param("id")
-	if teamId == "" {
+	teamId, _ := strconv.ParseInt(c.Param("id"), 10, 64)
+	if teamId == 0 {
 		c.JSON(400, common.RespError(e.ParamInvalid))
+		return
+	}
+
+	u := c.MustGet("currentUser").(*models.User)
+	var userId int64
+	if u != nil {
+		userId = u.Id
+	}
+
+	visible, err := models.IsTeamVisibleToUser(c.Request.Context(), teamId, userId)
+	if err != nil {
+		logger.Warn("check team visible error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+	if !visible {
+		c.JSON(403, common.RespError(e.NoPermission))
 		return
 	}
 
@@ -310,7 +326,7 @@ func Search(c *gin.Context) {
 	}
 
 	var userId int64
-	u := user.CurrentUser(c)
+	u := c.MustGet("currentUser").(*models.User)
 	if u != nil {
 		userId = u.Id
 	}
@@ -360,7 +376,7 @@ func Search(c *gin.Context) {
 
 func Star(c *gin.Context) {
 	id := c.Param("id")
-	u := user.CurrentUser(c)
+	u := c.MustGet("currentUser").(*models.User)
 	_, err := db.Conn.ExecContext(c.Request.Context(), "INSERT INTO star_dashboard (user_id, dashboard_id, created) VALUES (?,?,?)", u.Id, id, time.Now())
 	if err != nil {
 		logger.Warn("star dashboard", "error", err)
@@ -373,7 +389,7 @@ func Star(c *gin.Context) {
 
 func UnStar(c *gin.Context) {
 	id := c.Param("id")
-	u := user.CurrentUser(c)
+	u := c.MustGet("currentUser").(*models.User)
 	_, err := db.Conn.ExecContext(c.Request.Context(), "DELETE FROM star_dashboard WHERE user_id=? and dashboard_id=?", u.Id, id)
 	if err != nil {
 		logger.Warn("unstar dashboard", "error", err)
@@ -386,7 +402,7 @@ func UnStar(c *gin.Context) {
 
 func GetStarred(c *gin.Context) {
 	id := c.Param("id")
-	u := user.CurrentUser(c)
+	u := c.MustGet("currentUser").(*models.User)
 	if u == nil {
 		c.JSON(http.StatusOK, common.RespSuccess(false))
 		return
@@ -405,7 +421,7 @@ func GetStarred(c *gin.Context) {
 func GetAllStarred(c *gin.Context) {
 	starredList := make([]string, 0)
 
-	u := user.CurrentUser(c)
+	u := c.MustGet("currentUser").(*models.User)
 	if u == nil {
 		c.JSON(http.StatusOK, common.RespSuccess(starredList))
 		return
@@ -441,7 +457,7 @@ func Delete(c *gin.Context) {
 	}
 
 	id := c.Param("id")
-	u := user.CurrentUser(c)
+	u := c.MustGet("currentUser").(*models.User)
 
 	for _, rid := range models.ReservedDashboardId {
 		if id == rid {
@@ -523,7 +539,7 @@ func UpdateWeight(c *gin.Context) {
 		return
 	}
 
-	u := user.CurrentUser(c)
+	u := c.MustGet("currentUser").(*models.User)
 	if !u.Role.IsAdmin() {
 		c.JSON(403, common.RespError(e.NoPermission))
 		return

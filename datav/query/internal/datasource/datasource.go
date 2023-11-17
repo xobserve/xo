@@ -22,7 +22,6 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/xObserve/xObserve/query/internal/user"
 	"github.com/xObserve/xObserve/query/pkg/colorlog"
 	"github.com/xObserve/xObserve/query/pkg/common"
 	"github.com/xObserve/xObserve/query/pkg/db"
@@ -86,7 +85,7 @@ func SaveDatasource(c *gin.Context) {
 		return
 	}
 
-	u := user.CurrentUser(c)
+	u := c.MustGet("currentUser").(*models.User)
 
 	now := time.Now()
 	data, err := json.Marshal(ds.Data)
@@ -158,7 +157,7 @@ func GetDatasources(c *gin.Context) {
 	var err error
 
 	if teamId == 0 {
-		u := user.CurrentUser(c)
+		u := c.MustGet("currentUser").(*models.User)
 		_, teamId, err = models.GetUserTenantAndTeamId(c.Request.Context(), u)
 		if err != nil {
 			logger.Warn("get datasource error", "error", err)
@@ -227,7 +226,7 @@ func DeleteDatasource(c *gin.Context) {
 		return
 	}
 
-	u := user.CurrentUser((c))
+	u := c.MustGet("currentUser").(*models.User)
 	isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), ds.TeamId, u.Id)
 	if err != nil {
 		logger.Warn("Error query team admin", "error", err)

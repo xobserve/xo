@@ -20,6 +20,7 @@ import ErrorOkChart from "src/views/dashboard/plugins/components/charts/ErrorOkC
 import { addParamToUrl } from "utils/url"
 import { useSearchParam } from "react-use"
 import InputSelect from "components/select/InputSelect"
+import { $config } from "src/data/configs/config"
 
 interface Props {
     dashboardId: string
@@ -45,7 +46,7 @@ const TraceSearchResult = (props: Props) => {
     const initGroupby = useSearchParam("groupby")
     const [aggregate, setAggregate] = useState(initAggregate ?? aggregateFunctions[0].value)
     const [groupby, setGroupby] = useState(initGroupby ?? null)
-
+    const config = useStore($config)
 
 
     useEffect(() => {
@@ -106,7 +107,7 @@ const TraceSearchResult = (props: Props) => {
 
     const onTraceClick = (trace) => {
         if (ds) {
-            window.open(`/trace/${trace.traceID}/${ds.id}?dashboardId=${dashboardId}&panelId=${panel.id}&teamId=${teamId}`)
+            window.open(`/${config.currentTeam}/trace/${trace.traceID}/${ds.id}?dashboardId=${dashboardId}&panelId=${panel.id}&teamId=${teamId}`)
         }
     }
 

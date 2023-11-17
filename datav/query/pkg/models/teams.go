@@ -289,3 +289,23 @@ func QueryTeamsUserIn(ctx context.Context, userId int64) ([]int64, error) {
 
 	return members, nil
 }
+
+func QueryTeamsUserInTenant(ctx context.Context, tenantId, userId int64) ([]*Team, error) {
+	teams := make([]*Team, 0)
+	rows, err := db.Conn.QueryContext(ctx, "SELECT team_member.team_id, team.name from team_member INNER JOIN team ON team_member.team_id=team.id WHERE team_member.user_id=? and team_member.tenant_id=? ORDER BY team_member.team_id", userId, tenantId)
+	if err != nil && err != sql.ErrNoRows {
+		return nil, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		team := &Team{}
+		err := rows.Scan(&team.Id, &team.Name)
+		if err != nil {
+			return nil, err
+		}
+
+		teams = append(teams, team)
+	}
+
+	return teams, nil
+}

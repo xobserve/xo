@@ -38,7 +38,7 @@ var basicTeamQuery = `SELECT id,name,brief,is_public,created_by FROM team WHERE 
 func GetTenantTeams(c *gin.Context) {
 	tenantId, _ := strconv.ParseInt(c.Param("tenantId"), 10, 64)
 	ctx := c.Request.Context()
-	u := user.CurrentUser(c)
+	u := c.MustGet("currentUser").(*models.User)
 
 	tenantUser, err := models.QueryTenantUser(ctx, tenantId, u.Id)
 	if err != nil {
@@ -185,6 +185,23 @@ func GetTeam(c *gin.Context) {
 		return
 	}
 
+	u := c.MustGet("currentUser").(*models.User)
+	var userId int64
+	if u != nil {
+		userId = u.Id
+	}
+
+	visible, err := models.IsTeamVisibleToUser(c.Request.Context(), id, userId)
+	if err != nil {
+		logger.Warn("check team visible error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+	if !visible {
+		c.JSON(403, common.RespError(e.NoPermission))
+		return
+	}
+
 	team, err := models.QueryTeam(c.Request.Context(), id, "")
 	if err != nil {
 		if err != sql.ErrNoRows {
@@ -238,6 +255,23 @@ func GetTeamMembers(c *gin.Context) {
 	id, _ := strconv.ParseInt(c.Param("id"), 10, 64)
 	if id == 0 {
 		c.JSON(400, common.RespError(e.ParamInvalid))
+		return
+	}
+
+	u := c.MustGet("currentUser").(*models.User)
+	var userId int64
+	if u != nil {
+		userId = u.Id
+	}
+
+	visible, err := models.IsTeamVisibleToUser(c.Request.Context(), id, userId)
+	if err != nil {
+		logger.Warn("check team visible error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+	if !visible {
+		c.JSON(403, common.RespError(e.NoPermission))
 		return
 	}
 
@@ -306,7 +340,7 @@ func AddTeamMembers(c *gin.Context) {
 		return
 	}
 
-	u := user.CurrentUser(c)
+	u := c.MustGet("currentUser").(*models.User)
 	isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), req.TeamId, u.Id)
 	if err != nil {
 		logger.Warn("check team admin error", "error", err)
@@ -372,7 +406,7 @@ func DeleteTeamMember(c *gin.Context) {
 		return
 	}
 
-	u := user.CurrentUser(c)
+	u := c.MustGet("currentUser").(*models.User)
 	if memberId == u.Id {
 		c.JSON(400, common.RespError("cannot delete yourself"))
 		return
@@ -436,8 +470,7 @@ func UpdateTeam(c *gin.Context) {
 		c.JSON(400, common.RespError(e.ParamInvalid))
 		return
 	}
-
-	u := user.CurrentUser(c)
+	u := c.MustGet("currentUser").(*models.User)
 	isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), team.Id, u.Id)
 	if err != nil {
 		logger.Warn("check team admin error", "error", err)
@@ -469,7 +502,7 @@ func UpdateTeamMember(c *gin.Context) {
 		return
 	}
 
-	u := user.CurrentUser(c)
+	u := c.MustGet("currentUser").(*models.User)
 	if req.Id == u.Id {
 		c.JSON(400, common.RespError("cannot change your own role"))
 		return
@@ -533,7 +566,7 @@ func DeleteTeam(c *gin.Context) {
 		return
 	}
 
-	u := user.CurrentUser(c)
+	u := c.MustGet("currentUser").(*models.User)
 
 	operator, err := models.QueryTeamMember(c.Request.Context(), teamId, u.Id)
 	if err != nil {
@@ -626,7 +659,7 @@ func LeaveTeam(c *gin.Context) {
 		return
 	}
 
-	u := user.CurrentUser(c)
+	u := c.MustGet("currentUser").(*models.User)
 	isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), teamId, u.Id)
 	if err != nil {
 		logger.Warn("check team admin error", "error", err)
@@ -652,10 +685,10 @@ func LeaveTeam(c *gin.Context) {
 }
 
 func SwitchTeam(c *gin.Context) {
-	userId := user.CurrentUserId(c)
+	u := c.MustGet("currentUser").(*models.User)
 	teamId := c.Param("teamId")
 
-	err := SetTeamForUser(c.Request.Context(), teamId, userId)
+	err := SetTeamForUser(c.Request.Context(), teamId, u.Id)
 	if err != nil {
 		logger.Warn("update side menu error", "error", err)
 		c.JSON(500, common.RespInternalError())
@@ -681,7 +714,7 @@ func GetTeamsForUser(c *gin.Context) {
 		return
 	}
 
-	u := user.CurrentUser(c)
+	u := c.MustGet("currentUser").(*models.User)
 	teams := make([]*models.Team, 0)
 
 	teamIds, err := models.QueryVisibleTeamsByUserId(c.Request.Context(), tenantId, u.Id)
@@ -718,7 +751,7 @@ func AddNewTeam(c *gin.Context) {
 		return
 	}
 
-	u := user.CurrentUser(c)
+	u := c.MustGet("currentUser").(*models.User)
 	tenantRole, err := models.QueryTenantRoleByUserId(c.Request.Context(), req.TenantId, u.Id)
 	if err != nil {
 		if err == sql.ErrNoRows {

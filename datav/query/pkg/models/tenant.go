@@ -17,7 +17,9 @@ type Tenant struct {
 	Name     string    `json:"name"`
 	OwnerId  int64     `json:"ownerId"`
 	Owner    string    `json:"owner"`
+	IsPublic bool      `json:"isPublic"`
 	NumTeams int       `json:"numTeams"`
+	Teams    []*Team   `json:"teams,omitempty"`
 	Created  time.Time `json:"created"`
 }
 
@@ -69,7 +71,7 @@ func QueryTenant(ctx context.Context, tenantId int64) (*Tenant, error) {
 	tenant := &Tenant{
 		Id: tenantId,
 	}
-	err := db.Conn.QueryRowContext(ctx, `SELECT  name,owner_id,created FROM tenant WHERE id=?`, tenantId).Scan(&tenant.Name, &tenant.OwnerId, &tenant.Created)
+	err := db.Conn.QueryRowContext(ctx, `SELECT  name,owner_id,is_public,created FROM tenant WHERE id=?`, tenantId).Scan(&tenant.Name, &tenant.OwnerId, &tenant.IsPublic, &tenant.Created)
 	if err != nil {
 		return nil, err
 	}
@@ -87,9 +89,22 @@ func QueryTenantIdByTeamId(ctx context.Context, teamId int64) (int64, error) {
 	return tenantId, nil
 }
 
-func QueryTenantsByUserId(userId int64) ([]*Tenant, error) {
+func QueryTenantsByUserId(ctx context.Context, userId int64) ([]*Tenant, error) {
+	tenants, err := QueryTenantsUserIn(ctx, userId)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, tenant := range tenants {
+		db.Conn.QueryRow("SELECT count(*) FROM team_member WHERE user_id=? and tenant_id=?", userId, tenant.Id).Scan(&tenant.NumTeams)
+	}
+
+	return tenants, nil
+}
+
+func QueryTenantsUserIn(ctx context.Context, userId int64) ([]*Tenant, error) {
 	tenants := make([]*Tenant, 0)
-	rows, err := db.Conn.Query("SELECT tenant_user.tenant_id,tenant.name FROM tenant_user INNER JOIN tenant ON tenant_user.tenant_id = tenant.id  WHERE user_id=? ORDER BY tenant_user.tenant_id", userId)
+	rows, err := db.Conn.QueryContext(ctx, "SELECT tenant_user.tenant_id,tenant.name FROM tenant_user INNER JOIN tenant ON tenant_user.tenant_id = tenant.id  WHERE user_id=? ORDER BY tenant_user.tenant_id", userId)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return tenants, nil
@@ -103,8 +118,6 @@ func QueryTenantsByUserId(userId int64) ([]*Tenant, error) {
 		if err != nil {
 			return nil, err
 		}
-
-		db.Conn.QueryRow("SELECT count(*) FROM team_member WHERE user_id=? and tenant_id=?", userId, tenant.Id).Scan(&tenant.NumTeams)
 
 		tenants = append(tenants, tenant)
 	}

@@ -43,7 +43,7 @@ const SelectUserTenant = ({ miniMode }) => {
     }, [session])
 
     const load = async () => {
-        const res = await requestApi.get(`/tenant/user/in/${session.user.id}`)
+        const res = await requestApi.get(`/tenant/user/is/in`)
         setTenants(res.data)
     }
 
