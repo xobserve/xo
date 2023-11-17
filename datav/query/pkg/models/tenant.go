@@ -71,7 +71,7 @@ func QueryTenant(ctx context.Context, tenantId int64) (*Tenant, error) {
 	tenant := &Tenant{
 		Id: tenantId,
 	}
-	err := db.Conn.QueryRowContext(ctx, `SELECT  name,owner_id,is_public,created FROM tenant WHERE id=?`, tenantId).Scan(&tenant.Name, &tenant.OwnerId, &tenant.IsPublic, &tenant.Created)
+	err := db.Conn.QueryRowContext(ctx, `SELECT  name,is_public,created FROM tenant WHERE id=?`, tenantId).Scan(&tenant.Name, &tenant.IsPublic, &tenant.Created)
 	if err != nil {
 		return nil, err
 	}
@@ -220,4 +220,14 @@ func QueryTenantRoleByUserId(ctx context.Context, tenantId, userId int64) (RoleT
 	}
 
 	return role, nil
+}
+
+func QueryTenantOwner(ctx context.Context, tenantId int64) (*User, error) {
+	user := &User{}
+	err := db.Conn.QueryRowContext(ctx, `SELECT tenant_user.user_id,user.username FROM tenant_user INNER JOIN user ON user.id=tenant_user.user_id WHERE tenant_user.tenant_id=? and tenant_user.role=?`, tenantId, ROLE_SUPER_ADMIN).Scan(&user.Id, &user.Username)
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
 }

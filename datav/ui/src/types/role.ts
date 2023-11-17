@@ -21,3 +21,7 @@ export const SuperAdminId = 1
 export function isAdmin(role) {
     return role === Role.ADMIN || role === Role.SUPER_ADMIN
 }
+
+export function isSuperAdmin(role) {
+    return  role === Role.SUPER_ADMIN
+}

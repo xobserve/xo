@@ -29,7 +29,6 @@ CREATE TABLE IF NOT EXISTS tenant (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name VARCHAR(255) NOT NULL UNIQUE,
     nickname VARCHAR(255) DEFAULT '',
-    owner_id INTEGER NOT NULL,
     data MEDIUMTEXT,
     is_public BOOL DEFAULT false,
     created DATETIME NOT NULL,
@@ -161,7 +160,6 @@ const SqliteIndex = `
 CREATE INDEX IF NOT EXISTS user_username ON user (username);
 
 CREATE INDEX IF NOT EXISTS tenant_name ON tenant (name);
-CREATE INDEX IF NOT EXISTS tenant_owner ON tenant (owner_id);
 
 CREATE INDEX IF NOT EXISTS tenant_user_tenant_id ON tenant_user (tenant_id);
 CREATE INDEX IF NOT EXISTS tenant_user_user_id ON tenant_user (user_id);

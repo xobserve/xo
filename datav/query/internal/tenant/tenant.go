@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"net/http"
 	"sort"
 	"strconv"
 	"time"
@@ -27,7 +28,7 @@ func QueryTenants(c *gin.Context) {
 		return
 	}
 
-	rows, err := db.Conn.QueryContext(c.Request.Context(), `SELECT id,name,owner_id,created FROM tenant`)
+	rows, err := db.Conn.QueryContext(c.Request.Context(), `SELECT id,name,created FROM tenant`)
 	if err != nil {
 		logger.Warn("Error get all tenants", "error", err)
 		c.JSON(500, common.RespInternalError())
@@ -39,15 +40,15 @@ func QueryTenants(c *gin.Context) {
 
 	for rows.Next() {
 		tenant := &models.Tenant{}
-		err := rows.Scan(&tenant.Id, &tenant.Name, &tenant.OwnerId, &tenant.Created)
+		err := rows.Scan(&tenant.Id, &tenant.Name, &tenant.Created)
 		if err != nil {
 			logger.Warn("get all users scan error", "error", err)
 			continue
 		}
 
-		owner, _ := models.QueryUserById(c.Request.Context(), tenant.OwnerId)
+		owner, _ := models.QueryTenantOwner(c.Request.Context(), tenant.Id)
 		tenant.Owner = owner.Username
-
+		tenant.OwnerId = owner.Id
 		tenants = append(tenants, tenant)
 	}
 
@@ -81,7 +82,7 @@ func CreateTenant(c *gin.Context) {
 	}
 	defer tx.Rollback()
 
-	res, err := tx.ExecContext(c.Request.Context(), `INSERT INTO tenant (name,owner_id,created,updated) VALUES (?,?,?,?)`, req.Name, u.Id, now, now)
+	res, err := tx.ExecContext(c.Request.Context(), `INSERT INTO tenant (name,created,updated) VALUES (?,?,?)`, req.Name, now, now)
 	if err != nil {
 		if e.IsErrUniqueConstraint(err) {
 			c.JSON(400, common.RespError("tenant already exist"))
@@ -466,4 +467,91 @@ func UpdateTenant(c *gin.Context) {
 	}
 
 	c.JSON(200, common.RespSuccess(nil))
+}
+
+func TransferTenant(c *gin.Context) {
+	tenantId, _ := strconv.ParseInt(c.Param("tenantId"), 10, 64)
+	if tenantId == 0 {
+		c.JSON(http.StatusBadRequest, common.RespError(e.ParamInvalid))
+		return
+	}
+	transferTo := c.Param("username")
+
+	u := c.MustGet("currentUser").(*models.User)
+
+	operator, err := models.QueryTenantUser(c.Request.Context(), tenantId, u.Id)
+	if err != nil {
+		logger.Warn("update tenant error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+
+	// only superadmin can transfer tenant
+	if !operator.Role.IsSuperAdmin() {
+		c.JSON(403, common.RespError("Only tenant super admin can do this"))
+		return
+	}
+
+	// get transfer to user
+	transferToUser, err := models.QueryUserByName(c.Request.Context(), transferTo)
+	if err != nil {
+		logger.Warn("query user by name error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+	if transferToUser.Id == 0 {
+		c.JSON(400, common.RespError("user not exist"))
+		return
+	}
+
+	// can't transfer to self
+	if transferToUser.Id == u.Id {
+		c.JSON(400, common.RespError("can't transfer to yourself"))
+		return
+	}
+
+	// must transfer to a tenant user
+	_, err = models.QueryTenantUser(c.Request.Context(), tenantId, transferToUser.Id)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			c.JSON(400, common.RespError("the user which you want to transfer to is not in tenant"))
+			return
+		}
+		logger.Warn("query tenant user error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+
+	// transfer
+	tx, err := db.Conn.Begin()
+	if err != nil {
+		logger.Warn("transfer tenant error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+	defer tx.Rollback()
+
+	now := time.Now()
+	// set target user to super admin
+	_, err = tx.ExecContext(c.Request.Context(), "UPDATE tenant_user SET role=?,updated=? WHERE tenant_id=? AND user_id=?", models.ROLE_SUPER_ADMIN, now, tenantId, transferToUser.Id)
+	if err != nil {
+		logger.Warn("transfer tenant error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+
+	//set self to admin
+	_, err = tx.ExecContext(c.Request.Context(), "UPDATE tenant_user SET role=?,updated=? WHERE tenant_id=? AND user_id=?", models.ROLE_ADMIN, now, tenantId, u.Id)
+	if err != nil {
+		logger.Warn("transfer tenant error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+
+	err = tx.Commit()
+	if err != nil {
+		logger.Warn("commit sql transaction error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
 }

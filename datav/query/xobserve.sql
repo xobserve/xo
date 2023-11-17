@@ -27,14 +27,12 @@ CREATE INDEX user_username ON user (username);
 CREATE TABLE IF NOT EXISTS tenant (
     id INTEGER PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL UNIQUE,
-    owner_id INTEGER NOT NULL,
     data MEDIUMTEXT,
     is_public BOOL DEFAULT false,
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL
 );
 CREATE INDEX tenant_name ON tenant (name);
-CREATE INDEX tenant_owner ON tenant (owner_id);
 
 
 CREATE TABLE IF NOT EXISTS tenant_user (

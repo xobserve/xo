@@ -15,7 +15,7 @@ import { useStore } from "@nanostores/react"
 import Page from "layouts/page/Page"
 import React, { memo, useEffect, useRef, useState } from "react"
 import { cfgTeam, commonMsg } from "src/i18n/locales/en"
-import { Input, AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, useDisclosure, Box, Button, useToast, HStack, Switch } from "@chakra-ui/react"
+import { Input, AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, useDisclosure, Box, Button, useToast, HStack, Switch, Modal, ModalBody, ModalCloseButton, ModalContent, ModalOverlay, ModalHeader, Text } from "@chakra-ui/react"
 
 import { requestApi } from "utils/axios/request"
 import { FaUser } from "react-icons/fa"
@@ -27,6 +27,8 @@ import { getTenantLinks } from "./links"
 import { $config } from "src/data/configs/config"
 import { locale } from "src/i18n/i18n"
 import { useNavigate } from "react-router-dom"
+import { isAdmin, isSuperAdmin } from "types/role"
+import { isEmpty } from "utils/validate"
 
 export const TenantSetting = memo(() => {
     const config = useStore($config)
@@ -36,7 +38,9 @@ export const TenantSetting = memo(() => {
     const [tenant, setTenant] = useState<Tenant>(null)
     const { isOpen, onOpen, onClose } = useDisclosure()
     const { isOpen: isLeaveOpen, onOpen: onLeaveOpen, onClose: onLeaveClose } = useDisclosure()
-    const [tempTenant, setTempTenant] = useState<Partial<Tenant>>(null)
+    const { isOpen: isTransferOpen, onOpen: onTransferOpen, onClose: onTransferClose } = useDisclosure()
+
+    const [transferTo, setTransferTo] = useState<string>(null)
     const cancelRef = useRef()
     const toast = useToast()
     const navigate = useNavigate()
@@ -83,6 +87,30 @@ export const TenantSetting = memo(() => {
         }, 1000)
     }
 
+    const transferTenant = async () => {
+        if (isEmpty(transferTo)) {
+            toast({
+                title: t.isReqiiured({ name: t.userName }),
+                status: "error",
+                duration: 3000,
+                isClosable: true,
+            })
+            return
+        }
+
+        await requestApi.post(`/tenant/transfer/${config.currentTenant}/${transferTo}`)
+        toast({
+            title: t1.leaveTeam,
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+        })
+
+        // setTimeout(() => {
+        //     window.location.reload()
+        // }, 1000)
+    }
+
     const updateTenant = async () => {
         await requestApi.post(`/tenant/update`, tenant)
         toast({
@@ -108,12 +136,12 @@ export const TenantSetting = memo(() => {
                     <Button width="fit-content" size="sm" onClick={updateTenant} >{t.submit}</Button>
 
 
-                    <FormSection title={t.dangeSection}>
-                        <HStack>
-                            <Button width="fit-content" variant="outline" onClick={onLeaveOpen} colorScheme="orange">Leave Tenant</Button>
+                    {isSuperAdmin(config.tenantRole) && <FormSection title={t.dangeSection}>
+                        <HStack spacing={2}>
+                            <Button width="fit-content" variant="outline" onClick={onTransferOpen} colorScheme="orange">{t1.transferTenant}</Button>
                             <Button width="fit-content" onClick={onOpen} colorScheme="red">{t.deleteItem({ name: t.tenant })}</Button>
                         </HStack>
-                    </FormSection>
+                    </FormSection>}
                 </Form>
             </Box>
 
@@ -152,24 +180,39 @@ export const TenantSetting = memo(() => {
                 <AlertDialogOverlay>
                     {tenant && <AlertDialogContent>
                         <AlertDialogHeader fontSize='lg' fontWeight='bold'>
-                            {t1.leaveTenant} - {tenant.name}
+                            {t1.transferTenant} - {tenant.name}
                         </AlertDialogHeader>
 
                         <AlertDialogBody>
-                            {t.deleteAlert}
+                            {t1.transferAlert}
+                            <Text mt="2" fontWeight={550}>{t1.transferAlertTips}</Text>
                         </AlertDialogBody>
 
                         <AlertDialogFooter>
-                            <Button ref={cancelRef} onClick={onLeaveClose}>
+                            <Button ref={cancelRef} variant="unstyled" onClick={onLeaveClose}>
                                 {t.cancel}
                             </Button>
-                            <Button colorScheme='orange' onClick={leaveTenant} ml={3}>
-                                {t1.leaveTenant}
+                            <Button colorScheme='orange' onDoubleClick={transferTenant} ml={3}>
+                                {t.submit}
                             </Button>
                         </AlertDialogFooter>
                     </AlertDialogContent>}
                 </AlertDialogOverlay>
             </AlertDialog>
+
+            <Modal isOpen={isTransferOpen} onClose={() => { setTransferTo(null); onTransferClose() }}>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>{t1.transferTitle}</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody py="4">
+                        <FormSection title={t.userName}>
+                            <Input value={transferTo} onChange={e => setTransferTo(e.currentTarget.value)}/>
+                        </FormSection>
+                        <Button mt="2" colorScheme="orange" onClick={onLeaveOpen}>{t.submit}</Button>
+                    </ModalBody>
+                </ModalContent>
+            </Modal>
         </>}
     </Page >
 })

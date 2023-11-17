@@ -172,6 +172,8 @@ func (s *Server) Start() error {
 		r.GET("/tenant/teams/:tenantId", MustLogin(), otelPlugin, teams.GetTenantTeams)
 		r.GET("/tenant/byId/:id", MustLogin(), tenant.GetTenant)
 		r.POST("/tenant/update", MustLogin(), tenant.UpdateTenant)
+		r.POST("/tenant/transfer/:tenantId/:username", MustLogin(), tenant.TransferTenant)
+
 		// proxy apis
 		r.Any("/proxy/:id/*path", proxy.ProxyDatasource)
 		r.Any("/proxy/:id", proxy.ProxyDatasource)
