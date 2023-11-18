@@ -122,13 +122,13 @@ const TeamSettings = (props: { team: Team }) => {
 
 
         <FormSection title={t.dangeSection}>
-          {isSuperAdmin(config.teamRole) &&
+          {isSuperAdmin(config.teamRole) ?
             <HStack>
               <Button width="fit-content" variant="outline" onClick={onTransferOpen} colorScheme="orange">{t1.transferTenant}</Button>
               <Button width="fit-content" onClick={onOpen} colorScheme="red">{t.deleteItem({ name: t.team })}</Button>
               {/* <Button width="fit-content" onClick={onLeaveOpen} colorScheme="orange">Leave team</Button> */}
-            </HStack>}
-          {config.teamRole == Role.ADMIN && <Button width="fit-content" onClick={onLeaveOpen} colorScheme="orange">{t1.leaveTeam}</Button>}
+            </HStack>
+          : <Button width="fit-content" onClick={onLeaveOpen} colorScheme="red">{t1.leaveTeam}</Button>}
         </FormSection>
       </Form>
     </Box>

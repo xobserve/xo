@@ -39,7 +39,7 @@ export const TenantSetting = memo(() => {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const { isOpen: isLeaveOpen, onOpen: onLeaveOpen, onClose: onLeaveClose } = useDisclosure()
     const { isOpen: isTransferOpen, onOpen: onTransferOpen, onClose: onTransferClose } = useDisclosure()
-  const { isOpen: isTransferAlertOpen, onOpen: onTransferAlertOpen, onClose: onTransferAlertClose } = useDisclosure()
+    const { isOpen: isTransferAlertOpen, onOpen: onTransferAlertOpen, onClose: onTransferAlertClose } = useDisclosure()
 
     const [transferTo, setTransferTo] = useState<string>(null)
     const cancelRef = useRef()
@@ -75,7 +75,7 @@ export const TenantSetting = memo(() => {
     }
 
     const leaveTenant = async () => {
-        await requestApi.delete(`/tenant/leave/${tenant.id}`)
+        await requestApi.post(`/tenant/leave/${tenant.id}`)
         toast({
             title: t1.leaveTeam,
             status: "success",
@@ -137,14 +137,41 @@ export const TenantSetting = memo(() => {
                     <Button width="fit-content" size="sm" onClick={updateTenant} >{t.submit}</Button>
 
 
-                    {isSuperAdmin(config.tenantRole) && <FormSection title={t.dangeSection}>
-                        <HStack spacing={2}>
+                    <FormSection title={t.dangeSection}>
+                        {isSuperAdmin(config.tenantRole) ? <HStack spacing={2}>
                             <Button width="fit-content" variant="outline" onClick={onTransferOpen} colorScheme="orange">{t1.transferTenant}</Button>
                             <Button width="fit-content" onClick={onOpen} colorScheme="red">{t.deleteItem({ name: t.tenant })}</Button>
-                        </HStack>
-                    </FormSection>}
+                        </HStack> :
+                            <Button width="fit-content" onClick={onLeaveOpen} colorScheme="red">{t1.leaveTenant}</Button>}
+                    </FormSection>
                 </Form>
             </Box>
+            <AlertDialog
+                isOpen={isLeaveOpen}
+                onClose={onLeaveClose}
+                leastDestructiveRef={cancelRef}
+            >
+                <AlertDialogOverlay>
+                    {tenant && <AlertDialogContent>
+                        <AlertDialogHeader fontSize='lg' fontWeight='bold'>
+                            {t1.leaveTeam} - {tenant.name}
+                        </AlertDialogHeader>
+
+                        <AlertDialogBody>
+                            {t.deleteAlert}
+                        </AlertDialogBody>
+
+                        <AlertDialogFooter>
+                            <Button ref={cancelRef} onClick={onLeaveClose}>
+                                {t.cancel}
+                            </Button>
+                            <Button colorScheme='orange' onClick={leaveTenant} ml={3}>
+                                {t1.leaveTenant}
+                            </Button>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>}
+                </AlertDialogOverlay>
+            </AlertDialog>
 
             <AlertDialog
                 isOpen={isOpen}
@@ -190,7 +217,7 @@ export const TenantSetting = memo(() => {
                         </AlertDialogBody>
 
                         <AlertDialogFooter>
-                            <Button ref={cancelRef} variant="unstyled" onClick={onLeaveClose}>
+                            <Button ref={cancelRef} variant="unstyled" onClick={onTransferAlertClose}>
                                 {t.cancel}
                             </Button>
                             <Button colorScheme='orange' onDoubleClick={transferTenant} ml={3}>
@@ -208,7 +235,7 @@ export const TenantSetting = memo(() => {
                     <ModalCloseButton />
                     <ModalBody py="4">
                         <FormSection title={t.userName}>
-                            <Input value={transferTo} onChange={e => setTransferTo(e.currentTarget.value)}/>
+                            <Input value={transferTo} onChange={e => setTransferTo(e.currentTarget.value)} />
                         </FormSection>
                         <Button mt="2" colorScheme="orange" onClick={onTransferAlertOpen}>{t.submit}</Button>
                     </ModalBody>

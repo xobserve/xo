@@ -555,3 +555,35 @@ func TransferTenant(c *gin.Context) {
 		return
 	}
 }
+
+func LeaveTenant(c *gin.Context) {
+	tenantId, _ := strconv.ParseInt(c.Param("id"), 10, 64)
+	if tenantId == 0 {
+		c.JSON(400, common.RespError(e.ParamInvalid))
+		return
+	}
+
+	u := c.MustGet("currentUser").(*models.User)
+	tenantUser, err := models.QueryTenantUser(c.Request.Context(), tenantId, u.Id)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			c.JSON(400, common.RespError("you not in tenant"))
+			return
+		}
+		logger.Warn("query tenant user error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+
+	if tenantUser.Role.IsSuperAdmin() {
+		c.JSON(400, common.RespError("team super admin can't leave team, please transfer team to other member first"))
+		return
+	}
+
+	_, err = db.Conn.ExecContext(c.Request.Context(), "DELETE FROM tenant_user where tenant_id=? and user_id=?", tenantId, u.Id)
+	if err != nil {
+		logger.Warn("leave tenant  error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+}

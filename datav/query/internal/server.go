@@ -175,6 +175,7 @@ func (s *Server) Start() error {
 		r.GET("/tenant/byId/:id", MustLogin(), tenant.GetTenant)
 		r.POST("/tenant/update", MustLogin(), tenant.UpdateTenant)
 		r.POST("/tenant/transfer/:tenantId/:username", MustLogin(), tenant.TransferTenant)
+		r.POST("/tenant/leave/:id", MustLogin(), tenant.LeaveTenant)
 
 		// proxy apis
 		r.Any("/proxy/:id/*path", proxy.ProxyDatasource)
