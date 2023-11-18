@@ -40,7 +40,7 @@ func GetTenantTeams(c *gin.Context) {
 	ctx := c.Request.Context()
 	u := c.MustGet("currentUser").(*models.User)
 
-	tenantUser, err := models.QueryTenantUser(ctx, tenantId, u.Id)
+	_, err := models.QueryTenantUser(ctx, tenantId, u.Id)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			c.JSON(400, common.RespError(e.NotTenantUser))
@@ -48,11 +48,6 @@ func GetTenantTeams(c *gin.Context) {
 		}
 		logger.Warn("query tenant user error", "error", err)
 		c.JSON(500, common.RespInternalError())
-		return
-	}
-
-	if !tenantUser.Role.IsAdmin() {
-		c.JSON(403, common.RespError(e.NeedTenantAdmin))
 		return
 	}
 

@@ -114,7 +114,7 @@ const UserMenu = ({ miniMode }) => {
                         </MenuItem></Link>
                         <MenuDivider /> 
                         {session && isAdmin(session.user.role) && <><Link to={`${teamPath}/admin/users`}><MenuItem width="100%" icon={<FaStar fontSize="1em" />} >{t1.adminPanel}</MenuItem></Link><MenuDivider /></>}
-                        {session && isAdmin(config.tenantRole) &&<><Link to={`${teamPath}/admin/tenant/users`}><MenuItem width="100%" icon={<FaStar fontSize="1em" />} >{t1.tenantAdmin}</MenuItem></Link><MenuDivider /></>}
+                        {session &&<><Link to={`${teamPath}/admin/tenant/users`}><MenuItem width="100%" icon={<FaStar fontSize="1em" />} >{t1.tenantAdmin}</MenuItem></Link><MenuDivider /></>}
 
                         <MenuItem width="100%"><Box width="100%"><ColorModeSwitcher miniMode={false} /></Box></MenuItem>
                         <MenuItem width="100%" onClick={() => changeLang()} icon={<FaFont fontSize="1em" />}>{t1.currentLang} - {locale.get() == "en" ? "English" : "简体中文"}</MenuItem>

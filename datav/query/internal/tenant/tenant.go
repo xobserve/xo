@@ -124,15 +124,14 @@ func CreateTenant(c *gin.Context) {
 func QueryTenantUsers(c *gin.Context) {
 	u := c.MustGet("currentUser").(*models.User)
 	tenantId, _ := strconv.ParseInt(c.Param("tenantId"), 10, 64)
-	tenantUser, err := models.QueryTenantUser(c.Request.Context(), tenantId, u.Id)
+	_, err := models.QueryTenantUser(c.Request.Context(), tenantId, u.Id)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			c.JSON(400, common.RespError("you not in tenant"))
+			return
+		}
 		logger.Warn("query user in tenant error", "error", err)
 		c.JSON(500, common.RespInternalError())
-		return
-	}
-
-	if !tenantUser.Role.IsAdmin() {
-		c.JSON(403, common.RespError(e.NeedTenantAdmin))
 		return
 	}
 
@@ -317,9 +316,31 @@ func DeleteTenantUser(c *gin.Context) {
 		}
 	}
 
-	_, err = db.Conn.ExecContext(c.Request.Context(), `DELETE FROM tenant_user WHERE tenant_id=? AND user_id=? AND role!=?`, tenantId, targetUserId, models.ROLE_SUPER_ADMIN)
+	tx, err := db.Conn.Begin()
 	if err != nil {
-		logger.Warn("delete tenant user error", "error", err)
+		logger.Warn("leave tenant error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+	defer tx.Rollback()
+
+	_, err = tx.ExecContext(c.Request.Context(), "DELETE FROM tenant_user where tenant_id=? and user_id=?", tenantId, targetUserId)
+	if err != nil {
+		logger.Warn("leave tenant  error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+
+	_, err = tx.ExecContext(c.Request.Context(), "DELETE FROM team_member where tenant_id=? and user_id=?", tenantId, targetUserId)
+	if err != nil {
+		logger.Warn("leave team  error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+
+	err = tx.Commit()
+	if err != nil {
+		logger.Warn("commit sql transaction error", "error", err)
 		c.JSON(500, common.RespInternalError())
 		return
 	}
@@ -580,9 +601,31 @@ func LeaveTenant(c *gin.Context) {
 		return
 	}
 
-	_, err = db.Conn.ExecContext(c.Request.Context(), "DELETE FROM tenant_user where tenant_id=? and user_id=?", tenantId, u.Id)
+	tx, err := db.Conn.Begin()
+	if err != nil {
+		logger.Warn("leave tenant error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+	defer tx.Rollback()
+
+	_, err = tx.ExecContext(c.Request.Context(), "DELETE FROM tenant_user where tenant_id=? and user_id=?", tenantId, u.Id)
 	if err != nil {
 		logger.Warn("leave tenant  error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+
+	_, err = tx.ExecContext(c.Request.Context(), "DELETE FROM team_member where tenant_id=? and user_id=?", tenantId, u.Id)
+	if err != nil {
+		logger.Warn("leave team  error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+
+	err = tx.Commit()
+	if err != nil {
+		logger.Warn("commit sql transaction error", "error", err)
 		c.JSON(500, common.RespInternalError())
 		return
 	}

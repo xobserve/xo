@@ -164,7 +164,7 @@ func getUIConfig(c *gin.Context) {
 			}
 
 			if len(userInTeams) == 0 {
-				c.JSON(400, common.RespError("you are not in any team now, please contact admin for help"))
+				c.JSON(400, common.RespError("you are not in any team now"))
 				return
 			}
 
