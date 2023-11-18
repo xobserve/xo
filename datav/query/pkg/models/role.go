@@ -15,7 +15,6 @@ package models
 type RoleType string
 
 const (
-	ROLE_GUEST       = "Guest"
 	ROLE_VIEWER      = "Viewer"
 	ROLE_ADMIN       = "Admin"
 	ROLE_SUPER_ADMIN = "SuperAdmin"

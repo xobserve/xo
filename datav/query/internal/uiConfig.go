@@ -53,6 +53,7 @@ type UIConfig struct {
 	TenantName    string          `json:"tenantName"`
 	CurrentTeam   int64           `json:"currentTeam"`
 	TenantRole    models.RoleType `json:"tenantRole"`
+	TeamRole      models.RoleType `json:"teamRole"`
 }
 
 type Plugins struct {
@@ -224,7 +225,24 @@ func getUIConfig(c *gin.Context) {
 		}
 		cfg.TenantRole = tenantUser.Role
 	} else {
-		cfg.TenantRole = models.ROLE_GUEST
+		cfg.TenantRole = models.ROLE_VIEWER
+	}
+
+	// query team role
+	if u != nil {
+		teamUser, err := models.QueryTeamMember(c.Request.Context(), teamId, u.Id)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				c.JSON(400, common.RespError("you are not in this team"))
+				return
+			}
+			logger.Warn("query team user error", "error", err)
+			c.JSON(500, common.RespError(e.Internal))
+			return
+		}
+		cfg.TeamRole = teamUser.Role
+	} else {
+		cfg.TeamRole = models.ROLE_VIEWER
 	}
 
 	c.JSON(http.StatusOK, common.RespSuccess(cfg))

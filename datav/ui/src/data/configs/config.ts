@@ -69,4 +69,5 @@ export interface UIConfig {
     tenantName?: string
     tenantRole?: Role
     currentTeam?: number
+    teamRole?: Role
 }

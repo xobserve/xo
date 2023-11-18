@@ -12,7 +12,7 @@
 // limitations under the License.
 
 import React from "react"
-import { Box, Button, Input, useDisclosure, useToast, VStack, AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, HStack, FormLabel, Switch } from "@chakra-ui/react"
+import { Box, Button, Input, useDisclosure, useToast, VStack, AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, HStack, FormLabel, Switch, Modal, ModalBody, ModalCloseButton, ModalContent, ModalOverlay, ModalHeader, Text } from "@chakra-ui/react"
 import { Form, FormSection } from "src/components/form/Form"
 import FormItem from "src/components/form/Item"
 import { cloneDeep } from "lodash"
@@ -23,6 +23,9 @@ import { useNavigate, useParams } from "react-router-dom"
 import { useStore } from "@nanostores/react"
 import { cfgTeam, commonMsg } from "src/i18n/locales/en"
 import { $teams } from "src/views/team/store"
+import { isSuperAdmin } from "types/role"
+import { $config } from "src/data/configs/config"
+import { isEmpty } from "utils/validate"
 
 const TeamSettings = (props: { team: Team }) => {
   const t = useStore(commonMsg)
@@ -30,12 +33,14 @@ const TeamSettings = (props: { team: Team }) => {
   const [team, setTeam] = useState<Team>(props.team)
   const navigate = useNavigate()
   const toast = useToast()
-  const teamId = useParams().teamId
+  const config = useStore($config)
 
-
-
+  const [transferTo, setTransferTo] = useState<string>(null)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { isOpen: isLeaveOpen, onOpen: onLeaveOpen, onClose: onLeaveClose } = useDisclosure()
+  const { isOpen: isTransferOpen, onOpen: onTransferOpen, onClose: onTransferClose } = useDisclosure()
+  const { isOpen: isTransferAlertOpen, onOpen: onTransferAlertOpen, onClose: onTransferAlertClose } = useDisclosure()
+
   const cancelRef = useRef()
 
   const updateTeam = async () => {
@@ -74,11 +79,33 @@ const TeamSettings = (props: { team: Team }) => {
     })
 
     setTimeout(() => {
-      navigate(`/`) 
+      navigate(`/`)
     }, 1000)
   }
 
+  const transferTeam = async () => {
+    if (isEmpty(transferTo)) {
+        toast({
+            title: t.isReqiiured({ name: t.userName }),
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+        })
+        return
+    }
 
+    await requestApi.post(`/team/transfer/${config.currentTeam}/${transferTo}`)
+    toast({
+        title: t.success,
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+    })
+
+    setTimeout(() => {
+        window.location.reload()
+    }, 1000)
+}
 
   return <>
     <Box>
@@ -94,12 +121,13 @@ const TeamSettings = (props: { team: Team }) => {
         <Button width="fit-content" size="sm" onClick={updateTeam} >{t.submit}</Button>
 
 
-        <FormSection title={t.dangeSection}>
-          <HStack>
+        {isSuperAdmin(config.teamRole) &&<FormSection title={t.dangeSection}>
+           <HStack>
+            <Button width="fit-content" variant="outline" onClick={onTransferOpen} colorScheme="orange">{t1.transferTenant}</Button>
             <Button width="fit-content" onClick={onOpen} colorScheme="red">{t.deleteItem({ name: t.team })}</Button>
             {/* <Button width="fit-content" onClick={onLeaveOpen} colorScheme="orange">Leave team</Button> */}
           </HStack>
-        </FormSection>
+        </FormSection>}
       </Form>
     </Box>
 
@@ -156,6 +184,47 @@ const TeamSettings = (props: { team: Team }) => {
         </AlertDialogContent>}
       </AlertDialogOverlay>
     </AlertDialog>
+    <Modal isOpen={isTransferOpen} onClose={() => { setTransferTo(null); onTransferClose() }}>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>{t1.transferTitle}</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody py="4">
+          <FormSection title={t.userName}>
+            <Input value={transferTo} onChange={e => setTransferTo(e.currentTarget.value)} />
+          </FormSection>
+          <Button mt="2" colorScheme="orange" onClick={onTransferAlertOpen}>{t.submit}</Button>
+        </ModalBody>
+      </ModalContent>
+    </Modal>
+    <AlertDialog
+      isOpen={isTransferAlertOpen}
+      onClose={onTransferAlertClose}
+      leastDestructiveRef={cancelRef}
+    >
+      <AlertDialogOverlay>
+        {team && <AlertDialogContent>
+          <AlertDialogHeader fontSize='lg' fontWeight='bold'>
+            {t1.transferTeam} `{team.name}` to user `{transferTo}`
+          </AlertDialogHeader>
+
+          <AlertDialogBody>
+            {t1.transferAlert}
+            <Text mt="2" fontWeight={550}>{t1.transferAlertTips}</Text>
+          </AlertDialogBody>
+
+          <AlertDialogFooter>
+            <Button ref={cancelRef} variant="unstyled" onClick={onTransferAlertClose}>
+              {t.cancel}
+            </Button>
+            <Button colorScheme='orange' onDoubleClick={transferTeam} ml={3}>
+              {t.submit}
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>}
+      </AlertDialogOverlay>
+    </AlertDialog>
+
   </>
 }
 

@@ -246,6 +246,7 @@ export const cfgTeam = i18n("cfgTeam", {
   "leaveTeam": "Leave Team",
   "leaveTenant": "Leave Tenant",
   "transferTenant": "Transfer Tenant",
+  "transferTeam": "Transfer Team",
   "transferTitle": "Transfer tenant to another tenant user",
   "transferAlert": "Are you sure to transfer tenant? You can't undo this action afterwards.",
   "transferAlertTips": "Please double click on Submit button to confirm",

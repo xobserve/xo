@@ -16,6 +16,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"net/http"
 	"sort"
 	"strconv"
 	"strings"
@@ -805,4 +806,91 @@ func AddNewTeam(c *gin.Context) {
 		Updated:     now,
 		MemberCount: 1,
 	}))
+}
+
+func TransferTeam(c *gin.Context) {
+	teamId, _ := strconv.ParseInt(c.Param("teamId"), 10, 64)
+	if teamId == 0 {
+		c.JSON(http.StatusBadRequest, common.RespError(e.ParamInvalid))
+		return
+	}
+	transferTo := c.Param("username")
+
+	u := c.MustGet("currentUser").(*models.User)
+
+	operator, err := models.QueryTeamMember(c.Request.Context(), teamId, u.Id)
+	if err != nil {
+		logger.Warn("get team user error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+
+	// only superadmin can transfer tenant
+	if !operator.Role.IsSuperAdmin() {
+		c.JSON(403, common.RespError("Only team super admin can do this"))
+		return
+	}
+
+	// get transfer to user
+	transferToUser, err := models.QueryUserByName(c.Request.Context(), transferTo)
+	if err != nil {
+		logger.Warn("query user by name error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+	if transferToUser.Id == 0 {
+		c.JSON(400, common.RespError("user not exist"))
+		return
+	}
+
+	// can't transfer to self
+	if transferToUser.Id == u.Id {
+		c.JSON(400, common.RespError("can't transfer to yourself"))
+		return
+	}
+
+	// must transfer to a team user
+	member, err := models.QueryTeamMember(c.Request.Context(), teamId, transferToUser.Id)
+	if err != nil {
+		logger.Warn("query team user error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+
+	if member.Id == 0 {
+		c.JSON(400, common.RespError("the user which you want to transfer to is not in team"))
+		return
+	}
+	// transfer
+	tx, err := db.Conn.Begin()
+	if err != nil {
+		logger.Warn("transfer team error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+	defer tx.Rollback()
+
+	now := time.Now()
+	// set target user to super admin
+	_, err = tx.ExecContext(c.Request.Context(), "UPDATE team_member SET role=?,updated=? WHERE team_id=? AND user_id=?", models.ROLE_SUPER_ADMIN, now, teamId, transferToUser.Id)
+	if err != nil {
+		logger.Warn("transfer team error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+
+	//set self to admin
+	_, err = tx.ExecContext(c.Request.Context(), "UPDATE team_member SET role=?,updated=? WHERE team_id=? AND user_id=?", models.ROLE_ADMIN, now, teamId, u.Id)
+	if err != nil {
+		logger.Warn("transfer team error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+
+	err = tx.Commit()
+	if err != nil {
+		logger.Warn("commit sql transaction error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
 }

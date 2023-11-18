@@ -105,6 +105,7 @@ func (s *Server) Start() error {
 		r.POST("/account/info", MustLogin(), user.UpdateUserInfo)
 		r.POST("/account/updateData", MustLogin(), user.UpdateUserData)
 		r.GET("/user/detail", MustLogin(), user.GetUserDetail)
+
 		// teams apis
 		r.GET("/team/byId/:id", CheckLogin(), teams.GetTeam)
 		r.GET("/team/:id/members", CheckLogin(), teams.GetTeamMembers)
@@ -119,6 +120,7 @@ func (s *Server) Start() error {
 		r.POST("/team/sidemenu", MustLogin(), teams.UpdateSideMenu)
 		r.POST("/team/switch/:teamId", MustLogin(), teams.SwitchTeam)
 		r.GET("/team/user/is/in", CheckLogin(), teams.GetTeamsForUser)
+		r.POST("/team/transfer/:teamId/:username", MustLogin(), teams.TransferTeam)
 
 		// variable apis
 		r.POST("/variable/new", MustLogin(), variables.AddNewVariable)
