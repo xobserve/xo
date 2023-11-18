@@ -115,12 +115,12 @@ func (s *Server) Start() error {
 		r.POST("/team/update", MustLogin(), teams.UpdateTeam)
 		r.POST("/team/new", MustLogin(), teams.AddNewTeam)
 		r.DELETE("/team/:id", MustLogin(), teams.DeleteTeam)
-		r.DELETE("/team/leave/:id", MustLogin(), teams.LeaveTeam)
 		r.GET("/team/sidemenu/:id", CheckLogin(), teams.GetSideMenu)
 		r.POST("/team/sidemenu", MustLogin(), teams.UpdateSideMenu)
 		r.POST("/team/switch/:teamId", MustLogin(), teams.SwitchTeam)
 		r.GET("/team/user/is/in", CheckLogin(), teams.GetTeamsForUser)
 		r.POST("/team/transfer/:teamId/:username", MustLogin(), teams.TransferTeam)
+		r.POST("/team/leave/:id", MustLogin(), teams.LeaveTeam)
 
 		// variable apis
 		r.POST("/variable/new", MustLogin(), variables.AddNewVariable)

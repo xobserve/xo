@@ -23,7 +23,7 @@ import { useNavigate, useParams } from "react-router-dom"
 import { useStore } from "@nanostores/react"
 import { cfgTeam, commonMsg } from "src/i18n/locales/en"
 import { $teams } from "src/views/team/store"
-import { isSuperAdmin } from "types/role"
+import { Role, isSuperAdmin } from "types/role"
 import { $config } from "src/data/configs/config"
 import { isEmpty } from "utils/validate"
 
@@ -70,7 +70,7 @@ const TeamSettings = (props: { team: Team }) => {
   }
 
   const leaveTeam = async () => {
-    await requestApi.delete(`/team/leave/${team.id}`)
+    await requestApi.post(`/team/leave/${team.id}`)
     toast({
       title: t1.leaveTeam,
       status: "success",
@@ -85,27 +85,27 @@ const TeamSettings = (props: { team: Team }) => {
 
   const transferTeam = async () => {
     if (isEmpty(transferTo)) {
-        toast({
-            title: t.isReqiiured({ name: t.userName }),
-            status: "error",
-            duration: 3000,
-            isClosable: true,
-        })
-        return
+      toast({
+        title: t.isReqiiured({ name: t.userName }),
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      })
+      return
     }
 
     await requestApi.post(`/team/transfer/${config.currentTeam}/${transferTo}`)
     toast({
-        title: t.success,
-        status: "success",
-        duration: 3000,
-        isClosable: true,
+      title: t.success,
+      status: "success",
+      duration: 3000,
+      isClosable: true,
     })
 
     setTimeout(() => {
-        window.location.reload()
+      window.location.reload()
     }, 1000)
-}
+  }
 
   return <>
     <Box>
@@ -121,13 +121,15 @@ const TeamSettings = (props: { team: Team }) => {
         <Button width="fit-content" size="sm" onClick={updateTeam} >{t.submit}</Button>
 
 
-        {isSuperAdmin(config.teamRole) &&<FormSection title={t.dangeSection}>
-           <HStack>
-            <Button width="fit-content" variant="outline" onClick={onTransferOpen} colorScheme="orange">{t1.transferTenant}</Button>
-            <Button width="fit-content" onClick={onOpen} colorScheme="red">{t.deleteItem({ name: t.team })}</Button>
-            {/* <Button width="fit-content" onClick={onLeaveOpen} colorScheme="orange">Leave team</Button> */}
-          </HStack>
-        </FormSection>}
+        <FormSection title={t.dangeSection}>
+          {isSuperAdmin(config.teamRole) &&
+            <HStack>
+              <Button width="fit-content" variant="outline" onClick={onTransferOpen} colorScheme="orange">{t1.transferTenant}</Button>
+              <Button width="fit-content" onClick={onOpen} colorScheme="red">{t.deleteItem({ name: t.team })}</Button>
+              {/* <Button width="fit-content" onClick={onLeaveOpen} colorScheme="orange">Leave team</Button> */}
+            </HStack>}
+          {config.teamRole == Role.ADMIN && <Button width="fit-content" onClick={onLeaveOpen} colorScheme="orange">{t1.leaveTeam}</Button>}
+        </FormSection>
       </Form>
     </Box>
 

@@ -24,7 +24,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/xObserve/xObserve/query/internal/admin"
-	"github.com/xObserve/xObserve/query/internal/user"
 	"github.com/xObserve/xObserve/query/pkg/colorlog"
 	"github.com/xObserve/xObserve/query/pkg/common"
 	"github.com/xObserve/xObserve/query/pkg/db"
@@ -661,28 +660,30 @@ func LeaveTeam(c *gin.Context) {
 	}
 
 	u := c.MustGet("currentUser").(*models.User)
-	isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), teamId, u.Id)
+	member, err := models.QueryTeamMember(c.Request.Context(), teamId, u.Id)
 	if err != nil {
 		logger.Warn("check team admin error", "error", err)
 		c.JSON(500, common.RespInternalError())
 		return
 	}
 
-	// if user is team admin, can't leave team, he must degrade to normal member first
-	if isTeamAdmin {
-		c.JSON(400, common.RespError("team admin can't leave team, please degrade to normal member first"))
+	if member.Id == 0 {
+		c.JSON(400, common.RespError("You are not in current team"))
 		return
 	}
 
-	userId := user.CurrentUserId(c)
-	_, err = db.Conn.ExecContext(c.Request.Context(), "DELETE FROM team_member where team_id=? and user_id=?", teamId, userId)
+	// if user is team admin, can't leave team, he must degrade to normal member first
+	if member.Role.IsSuperAdmin() {
+		c.JSON(400, common.RespError("team super admin can't leave team, please transfer team to other member first"))
+		return
+	}
+
+	_, err = db.Conn.ExecContext(c.Request.Context(), "DELETE FROM team_member where team_id=? and user_id=?", teamId, u.Id)
 	if err != nil {
 		logger.Warn("leave team  error", "error", err)
 		c.JSON(500, common.RespInternalError())
 		return
 	}
-
-	c.JSON(200, common.RespSuccess(nil))
 }
 
 func SwitchTeam(c *gin.Context) {
