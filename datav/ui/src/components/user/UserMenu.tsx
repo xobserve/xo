@@ -108,8 +108,8 @@ const UserMenu = ({ miniMode }) => {
                             <Text>{session?.user.username ?? "Guest"}</Text>
                             {session &&
                                 <HStack spacing={1}>
-                                <Text textStyle="annotation">{config.tenantName} - </Text>   
-                                <Text textStyle="annotation">{config.tenantRole}</Text>
+                                <Text textStyle="annotation">{config?.tenantName} - </Text>   
+                                <Text textStyle="annotation">{config?.tenantRole}</Text>
                                 </HStack>}
                         </MenuItem></Link>
                         <MenuDivider /> 
@@ -120,8 +120,8 @@ const UserMenu = ({ miniMode }) => {
                         <MenuItem width="100%" onClick={() => changeLang()} icon={<FaFont fontSize="1em" />}>{t1.currentLang} - {locale.get() == "en" ? "English" : "简体中文"}</MenuItem>
                         {session && <>
                             <MenuDivider />
-                            <MenuItem mt="2px" width="100%">    <SelectUserTenant miniMode={false} /></MenuItem>
-                            <MenuItem mt="2px" width="100%">    <SelectUserTeam miniMode={false} /></MenuItem>
+                            {config && <MenuItem mt="2px" width="100%">    <SelectUserTenant miniMode={false} /></MenuItem>}
+                            {config && <MenuItem mt="2px" width="100%">    <SelectUserTeam miniMode={false} /></MenuItem>}
                             <MenuDivider />
                             <Link to={`${teamPath}/account/setting`}><MenuItem width="100%" icon={<FaRegSun fontSize="1em" />}>{t1.accountSetting}</MenuItem></Link>
                             <MenuItem width="100%" onClick={() => logout()} icon={<FaSignOutAlt fontSize="1em" />}>{t.logout}</MenuItem>

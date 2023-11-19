@@ -63,7 +63,7 @@ func GetTenantTeams(c *gin.Context) {
 	teams := make(models.Teams, 0)
 	for rows.Next() {
 		team := &models.Team{}
-		err := rows.Scan(&team.Id, &team.Name, &team.Brief, &team.IsPublic, &team.CreatedById)
+		err := rows.Scan(&team.Id, &team.Name, &team.Brief, &team.CreatedById)
 		if err != nil {
 			logger.Warn("get all users scan error", "error", err)
 			continue

@@ -23,7 +23,7 @@ import (
 
 const HomeDashboardId = "d-home"
 const AlertDashbordId = "d-alert"
-const DashboardPrefix = "d-"
+const DashboardIdPrefix = "d-"
 
 // you mustn't change the id of home dashboarda, is's reversed
 var ReservedDashboardId = []string{HomeDashboardId, AlertDashbordId}

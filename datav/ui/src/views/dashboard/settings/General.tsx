@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Button, Divider, HStack, Input, Select, Switch, Tag, TagCloseButton, TagLabel, useDisclosure, useMediaQuery, useToast } from "@chakra-ui/react"
+import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Button, Divider, HStack, Input, Select, Switch, Tag, TagCloseButton, TagLabel, Text, useDisclosure, useMediaQuery, useToast } from "@chakra-ui/react"
 import { EditorNumberItem } from "src/components/editor/EditorItem"
 import { Form, FormSection } from "src/components/form/Form"
 import FormItem from "src/components/form/Item"
@@ -86,6 +86,9 @@ const GeneralSettings = ({ dashboard, onChange }: Props) => {
             }
         }}>
             <FormSection title={t.basicSetting} spacing={1}>
+                <FormItem title="Dashboard id" alignItems="center">
+                    <Text fontWeight={550}>{dashboard.id}</Text>
+                </FormItem>
                 <FormItem title={t.title} >
                     <Input value={title} onChange={e => setTitle(e.currentTarget.value)} onBlur={() => onChange((draft: Dashboard) => { draft.title = title })} />
                 </FormItem>
@@ -93,7 +96,7 @@ const GeneralSettings = ({ dashboard, onChange }: Props) => {
                     <Input value={desc} onChange={e => setDesc(e.currentTarget.value)} onBlur={() => onChange((draft: Dashboard) => { draft.data.description = desc })} placeholder={t.inputTips({ name: t.description })} />
                 </FormItem>
                 <FormItem title={t1.visibleTo} desc="Controls who can see this dashboard">
-                    <RadionButtons options={[{ label: "Team", value: "team" }, { label: "All", value: "all" }]} value={dashboard.visibleTo} onChange={v => onChange((draft: Dashboard) => {
+                    <RadionButtons options={[{ label: "Team", value: "team" },{ label: "Tenant", value: "tenant" }, { label: "All", value: "all" }]} value={dashboard.visibleTo} onChange={v => onChange((draft: Dashboard) => {
                         draft.visibleTo = v
                     })} />
                 </FormItem>

@@ -224,7 +224,7 @@ const Container = (props: Props) => {
                     <Divider />
                     {/* <Box color={textColor}><ColorModeSwitcher miniMode={miniMode} /></Box> */}
                     {!isEmpty(config?.repoUrl) && <Box><NavItem text="Github" icon="FaGithub" miniMode={miniMode} url={config.repoUrl} /></Box>}
-                    {config && <UserMenu miniMode={miniMode} />}
+                    {<UserMenu miniMode={miniMode} />}
                   </VStack>
 
                 </Flex>

@@ -27,8 +27,9 @@ func GetDashboardConfig(c *gin.Context) {
 
 	var dashboard *models.Dashboard
 	var sidemenu *models.SideMenu
-	if strings.HasPrefix(path, models.DashboardPrefix) {
-		dash, err := models.QueryDashboard(c.Request.Context(), path)
+	if strings.HasPrefix(path, "/"+models.DashboardIdPrefix) {
+		id := path[1:]
+		dash, err := models.QueryDashboard(c.Request.Context(), id)
 		if err != nil {
 			if err == sql.ErrNoRows {
 				c.JSON(400, common.RespError(fmt.Sprintf("dashboard %s not exist", path)))
@@ -97,7 +98,7 @@ func GetDashboardConfig(c *gin.Context) {
 		dash, err := models.QueryDashboard(c.Request.Context(), dashId)
 		if err != nil {
 			if err == sql.ErrNoRows {
-				c.JSON(400, common.RespError(fmt.Sprintf("the dashboard in path %s not exist", path)))
+				c.JSON(400, common.RespError(fmt.Sprintf("dashboard of team %d not exist", teamId)))
 				return
 			}
 			logger.Warn("get dashboard error", "error", err)
@@ -105,6 +106,11 @@ func GetDashboardConfig(c *gin.Context) {
 			return
 		}
 		dashboard = dash
+	}
+
+	if u == nil && (dashboard.VisibleTo == models.TeamVisible || dashboard.VisibleTo == models.TenantVisible) {
+		c.JSON(400, common.RespError("you have to sign in to view this dashboard"))
+		return
 	}
 
 	if dashboard.VisibleTo == models.TeamVisible {
@@ -142,7 +148,19 @@ func GetDashboardConfig(c *gin.Context) {
 		return
 	}
 
-	teams, err := teams.GetVisibleTeamsByTenantId(c.Request.Context(), tenantId, u)
+	var teamList models.Teams
+	if u != nil {
+		teamList, err = teams.GetVisibleTeamsByTenantId(c.Request.Context(), tenantId, u)
+	} else {
+		team, err := models.QueryTeam(c.Request.Context(), dashboard.OwnedBy, "")
+		if err != nil {
+			logger.Warn("query team error", "error", err)
+			c.JSON(500, common.RespError(e.Internal))
+			return
+		}
+		teamList = models.Teams([]*models.Team{team})
+	}
+
 	if err != nil {
 		logger.Warn("get teams by tenant id error", "error", err)
 		c.JSON(500, common.RespError(e.Internal))
@@ -164,7 +182,7 @@ func GetDashboardConfig(c *gin.Context) {
 	c.JSON(200, common.RespSuccess(map[string]interface{}{
 		"cfg":         cfg,
 		"dashboard":   dashboard,
-		"teams":       teams,
+		"teams":       teamList,
 		"datasources": datasources,
 		"variables":   vars,
 		"path":        path,

@@ -139,13 +139,13 @@ func (s *Server) Start() error {
 		r.POST("/dashboard/star/:id", MustLogin(), dashboard.Star)
 		r.POST("/dashboard/unstar/:id", MustLogin(), dashboard.UnStar)
 		r.GET("/dashboard/starred", CheckLogin(), dashboard.GetAllStarred)
-		r.GET("/dashboard/starred/:id", CheckLogin(), dashboard.GetStarred)
+		r.GET("/dashboard/starred/:id", dashboard.GetStarred)
 		r.DELETE("/dashboard/:id", MustLogin(), dashboard.Delete)
 		r.POST("/dashboard/weight", MustLogin(), dashboard.UpdateWeight)
 
 		// annotation
 		r.POST("/annotation", MustLogin(), annotation.SetAnnotation)
-		r.GET("/annotation/:namespace", CheckLogin(), annotation.QueryNamespaceAnnotations)
+		r.GET("/annotation/:namespace", annotation.QueryNamespaceAnnotations)
 		r.DELETE("/annotation/:namespace/:id", MustLogin(), annotation.RemoveAnnotation)
 		r.DELETE("/annotation/group/:namespace/:group/:expires", MustLogin(), annotation.RemoveGroupAnnotations)
 
@@ -280,7 +280,7 @@ func CheckLogin() gin.HandlerFunc {
 		// }
 
 		if u == nil {
-			c.JSON(http.StatusUnauthorized, common.RespError(e.NoPermission))
+			c.JSON(http.StatusForbidden, common.RespError(e.NoPermission))
 			c.Abort()
 			return
 		}

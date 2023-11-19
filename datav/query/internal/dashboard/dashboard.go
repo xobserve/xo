@@ -24,6 +24,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/xObserve/xObserve/query/internal/admin"
+	"github.com/xObserve/xObserve/query/internal/user"
 	"github.com/xObserve/xObserve/query/pkg/colorlog"
 	"github.com/xObserve/xObserve/query/pkg/common"
 	"github.com/xObserve/xObserve/query/pkg/config"
@@ -354,7 +355,7 @@ func UnStar(c *gin.Context) {
 
 func GetStarred(c *gin.Context) {
 	id := c.Param("id")
-	u := c.MustGet("currentUser").(*models.User)
+	u := user.CurrentUser(c)
 	if u == nil {
 		c.JSON(http.StatusOK, common.RespSuccess(false))
 		return

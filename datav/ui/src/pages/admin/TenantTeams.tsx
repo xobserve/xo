@@ -78,7 +78,7 @@ const TeamsPage = () => {
         })
 
         setTimeout(() => {
-            navigate(`/${teamId}/cfg/team/datasources`)
+            window.location.href = `/${teamId}/cfg/team/datasources`
         }, 1000)
     }
 
