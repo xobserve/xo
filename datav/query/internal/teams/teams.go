@@ -33,7 +33,7 @@ import (
 
 var logger = colorlog.RootLogger.New("logger", "teams")
 
-var basicTeamQuery = `SELECT id,name,brief,is_public,created_by FROM team WHERE tenant_id='%d'`
+var basicTeamQuery = `SELECT id,name,brief,created_by FROM team WHERE tenant_id='%d'`
 
 func GetTenantTeams(c *gin.Context) {
 	tenantId, _ := strconv.ParseInt(c.Param("tenantId"), 10, 64)
@@ -97,79 +97,83 @@ func GetTenantTeams(c *gin.Context) {
 }
 
 func GetVisibleTeamsByTenantId(ctx context.Context, tenantId int64, u *models.User) (models.Teams, error) {
-	teams := make(models.Teams, 0)
-	q := fmt.Sprintf(basicTeamQuery, tenantId)
-
-	if u == nil {
-		q = fmt.Sprintf("%s AND is_public=true", q)
-	} else {
-		// user can see the teams he is in
-		if !u.Role.IsAdmin() {
-			members, err := models.QueryVisibleTeamsByUserId(ctx, tenantId, u.Id)
-			if err != nil {
-				return nil, err
-			}
-
-			if len(members) == 0 {
-				return teams, nil
-			}
-
-			if len(members) == 1 {
-				q = fmt.Sprintf("%s AND id = '%d'", q, members[0])
-			} else {
-				for i, m := range members {
-					if i == 0 {
-						q = fmt.Sprintf("%s AND id in ('%d'", q, m)
-						continue
-					}
-
-					if i == len(members)-1 {
-						q = fmt.Sprintf("%s,'%d')", q, m)
-						continue
-					}
-
-					q = fmt.Sprintf("%s,'%d'", q, m)
-				}
-			}
-		}
-	}
-
-	rows, err := db.Conn.QueryContext(ctx, q)
+	teams, err := models.QueryTeamsUserInTenant(ctx, tenantId, u.Id)
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
-	for rows.Next() {
-		team := &models.Team{}
-		err := rows.Scan(&team.Id, &team.Name, &team.Brief, &team.IsPublic, &team.CreatedById)
-		if err != nil {
-			logger.Warn("get all users scan error", "error", err)
-			continue
-		}
+	// teams := make(models.Teams, 0)
+	// q := fmt.Sprintf(basicTeamQuery, tenantId)
 
-		user, _ := models.QueryUserById(ctx, team.CreatedById)
-		team.CreatedBy = user.Username
+	// if u == nil {
+	// 	q = fmt.Sprintf("%s AND is_public=true", q)
+	// } else {
+	// 	// user can see the teams he is in
+	// 	if !u.Role.IsAdmin() {
+	// 		members, err := models.QueryVisibleTeamsByUserId(ctx, tenantId, u.Id)
+	// 		if err != nil {
+	// 			return nil, err
+	// 		}
 
-		count := 0
-		err = db.Conn.QueryRowContext(ctx, "SELECT count(*) FROM team_member WHERE team_id=?", team.Id).Scan(&count)
-		if err != nil {
-			logger.Warn("select team member count error", "error", err)
-		}
+	// 		if len(members) == 0 {
+	// 			return teams, nil
+	// 		}
 
-		team.MemberCount = count
-		if u != nil {
-			member, _ := models.QueryTeamMember(ctx, team.Id, u.Id)
-			if member != nil && member.Id != 0 {
-				team.CurrentUserRole = member.Role
-			}
-		} else {
-			team.CurrentUserRole = models.ROLE_VIEWER
-		}
+	// 		if len(members) == 1 {
+	// 			q = fmt.Sprintf("%s AND id = '%d'", q, members[0])
+	// 		} else {
+	// 			for i, m := range members {
+	// 				if i == 0 {
+	// 					q = fmt.Sprintf("%s AND id in ('%d'", q, m)
+	// 					continue
+	// 				}
 
-		teams = append(teams, team)
-	}
+	// 				if i == len(members)-1 {
+	// 					q = fmt.Sprintf("%s,'%d')", q, m)
+	// 					continue
+	// 				}
 
-	sort.Sort(teams)
+	// 				q = fmt.Sprintf("%s,'%d'", q, m)
+	// 			}
+	// 		}
+	// 	}
+	// }
+
+	// rows, err := db.Conn.QueryContext(ctx, q)
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// defer rows.Close()
+	// for rows.Next() {
+	// 	team := &models.Team{}
+	// 	err := rows.Scan(&team.Id, &team.Name, &team.Brief, &team.IsPublic, &team.CreatedById)
+	// 	if err != nil {
+	// 		logger.Warn("get all users scan error", "error", err)
+	// 		continue
+	// 	}
+
+	// 	user, _ := models.QueryUserById(ctx, team.CreatedById)
+	// 	team.CreatedBy = user.Username
+
+	// 	count := 0
+	// 	err = db.Conn.QueryRowContext(ctx, "SELECT count(*) FROM team_member WHERE team_id=?", team.Id).Scan(&count)
+	// 	if err != nil {
+	// 		logger.Warn("select team member count error", "error", err)
+	// 	}
+
+	// 	team.MemberCount = count
+	// 	if u != nil {
+	// 		member, _ := models.QueryTeamMember(ctx, team.Id, u.Id)
+	// 		if member != nil && member.Id != 0 {
+	// 			team.CurrentUserRole = member.Role
+	// 		}
+	// 	} else {
+	// 		team.CurrentUserRole = models.ROLE_VIEWER
+	// 	}
+
+	// 	teams = append(teams, team)
+	// }
+
+	sort.Sort(models.Teams(teams))
 
 	return teams, nil
 }

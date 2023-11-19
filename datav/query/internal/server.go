@@ -35,6 +35,7 @@ import (
 	"github.com/xObserve/xObserve/query/internal/task"
 	"github.com/xObserve/xObserve/query/internal/teams"
 	"github.com/xObserve/xObserve/query/internal/tenant"
+	"github.com/xObserve/xObserve/query/internal/uiconfig"
 	"github.com/xObserve/xObserve/query/internal/user"
 	"github.com/xObserve/xObserve/query/internal/variables"
 	"github.com/xObserve/xObserve/query/pkg/colorlog"
@@ -82,7 +83,7 @@ func (s *Server) Start() error {
 
 	go task.Init()
 	go cache.Init()
-	go overrideApiServerAddrInLocalUI()
+	go uiconfig.OverrideApiServerAddrInLocalUI()
 
 	go func() {
 		router := gin.New()
@@ -94,7 +95,8 @@ func (s *Server) Start() error {
 		otelPlugin := otelgin.Middleware(config.Data.Common.AppName)
 		// r.Use(otelPlugin)
 		// global config
-		r.GET("/config/ui", getUIConfig)
+		r.GET("/config/ui", uiconfig.GetTenantConfig)
+		r.GET("/config/dashboard", otelPlugin, uiconfig.GetDashboardConfig)
 
 		// user apis
 		r.POST("/login", user.Login)
@@ -130,7 +132,6 @@ func (s *Server) Start() error {
 
 		// dashboard apis
 		r.GET("/dashboard/byId/:id", CheckLogin(), otelPlugin, dashboard.GetDashboard)
-		r.GET("/dashboard/config/:id", CheckLogin(), otelPlugin, dashboard.GetDashboardConfig)
 		r.POST("/dashboard/save", MustLogin(), otelPlugin, dashboard.SaveDashboard)
 		r.GET("/dashboard/team/:id", CheckLogin(), dashboard.GetTeamDashboards)
 		r.GET("/dashboard/history/:id", CheckLogin(), otelPlugin, dashboard.GetHistory)
@@ -273,10 +274,10 @@ func CheckLogin() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		u := user.CurrentUser(c)
 		c.Set("currentUser", u)
-		if config.Data.User.AllowAnonymous {
-			c.Next()
-			return
-		}
+		// if config.Data.User.AllowAnonymous {
+		// 	c.Next()
+		// 	return
+		// }
 
 		if u == nil {
 			c.JSON(http.StatusUnauthorized, common.RespError(e.NoPermission))

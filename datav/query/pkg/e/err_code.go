@@ -25,28 +25,21 @@ func New(status int, msg string) *Error {
 }
 
 const (
-	Malicious          = "malicious"
-	UserNotExist       = "user not exist"
-	PasswordIncorrect  = "password incorrect"
-	NeedWebsiteAdmin   = "Only website admin can do this"
-	NeedTeamAdmin      = "Only team admin can do this"
-	NeedTenantAdmin    = "Only tenant admin can do this"
-	NotTeamMember      = "You are not a member of this team"
-	NotTenantUser      = "You are not a member of this tenant"
-	DB                 = "数据库异常"
-	Internal           = "服务器内部错误"
-	NeedLogin          = "你需要登录"
-	NoEditorPermission = "只有编辑角色才能执行此操作"
-	ParamInvalid       = "请求参数不正确"
-	NotFound           = "目标不存在"
-	NoPermission       = "no permission"
-	NoAdminPermission  = "你需要管理员权限"
-	BadRequest         = "非法操作"
-	AlreadyExist       = "目标已经存在"
-
-	// 标签类
-	TagNotExist   = "标签不存在"
-	DisabledByTag = "你的文章已经被禁，请在创作中心中，点击文章标题旁的标签，申请解封"
+	Malicious         = "malicious"
+	UserNotExist      = "user not exist"
+	PasswordIncorrect = "password incorrect"
+	NeedWebsiteAdmin  = "only website admin can do this"
+	NeedTeamAdmin     = "only team admin can do this"
+	NeedTenantAdmin   = "only tenant admin can do this"
+	NotTeamMember     = "you are not a member of this team"
+	NotTenantUser     = "you are not a member of this tenant"
+	Internal          = "server Internal Error"
+	NeedLogin         = "you need login"
+	ParamInvalid      = "request param is not valid"
+	NotFound          = "target not exist目标不存在"
+	NoPermission      = "no permission"
+	BadRequest        = "bad request"
+	AlreadyExist      = "target already exist"
 
 	// Teams
 	TeamNotExist = "team not exist"

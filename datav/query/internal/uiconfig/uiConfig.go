@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-package internal
+package uiconfig
 
 import (
 	"bytes"
@@ -26,11 +26,14 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/xObserve/xObserve/query/internal/user"
+	"github.com/xObserve/xObserve/query/pkg/colorlog"
 	"github.com/xObserve/xObserve/query/pkg/common"
 	"github.com/xObserve/xObserve/query/pkg/config"
 	"github.com/xObserve/xObserve/query/pkg/e"
 	"github.com/xObserve/xObserve/query/pkg/models"
 )
+
+var logger = colorlog.RootLogger.New("logger", "uiconfig")
 
 type UIConfig struct {
 	AppName       string `json:"appName"`
@@ -72,45 +75,29 @@ type Tenant struct {
 	Enable bool `json:"enable"`
 }
 
-func getUIConfig(c *gin.Context) {
+func GetTenantConfig(c *gin.Context) {
 	teamId, _ := strconv.ParseInt(c.Query("teamId"), 10, 64)
-	echarts := Echarts{
-		EnableBaiduMap: config.Data.Panel.Echarts.EnableBaiduMap,
-		BaiduMapAK:     config.Data.Panel.Echarts.BaiduMapAK,
-	}
 
-	panel := Panel{
-		Echarts: echarts,
-	}
+	cfg := GetBasicConfig()
 
-	tenant := Tenant{
-		Enable: config.Data.Tenant.Enable,
+	basic := c.Query("basic")
+	if basic == "true" {
+		c.JSON(http.StatusOK, common.RespSuccess(cfg))
+		return
 	}
-
-	cfg := &UIConfig{
-		AppName:           config.Data.Common.AppName,
-		RepoUrl:           config.Data.Common.RepoUrl,
-		Panel:             panel,
-		ShowAlertIcon:     config.Data.Sidemenu.ShowAlertIcon,
-		EnableGithubLogin: config.Data.User.EnableGithubLogin,
-		GithubOAuthToken:  config.Data.User.GithubOAuthToken,
-		Plugins:           (*Plugins)(&config.Data.Plugins),
-		Observability:     &config.Data.Observability,
-		Tenant:            &tenant,
-	}
-
 	// query sidemenu
 	var tenantId int64
 	var err error
 	queryTeam := false
 	u := user.CurrentUser(c)
+	// 先查询用户所在的 tenants 和 teams count
+	// 其次根据传入的 teamId 找到合适的 tennant id 和 team id
 	if teamId == 0 {
 		if u == nil {
 			tenantId = models.DefaultTenantId
 		} else {
 			tenantId = u.CurrentTenant
 		}
-
 		if u != nil {
 			teamId = u.CurrentTeam
 			teamExist := models.IsTeamExist(c.Request.Context(), teamId)
@@ -248,8 +235,37 @@ func getUIConfig(c *gin.Context) {
 	c.JSON(http.StatusOK, common.RespSuccess(cfg))
 }
 
+func GetBasicConfig() *UIConfig {
+	echarts := Echarts{
+		EnableBaiduMap: config.Data.Panel.Echarts.EnableBaiduMap,
+		BaiduMapAK:     config.Data.Panel.Echarts.BaiduMapAK,
+	}
+
+	panel := Panel{
+		Echarts: echarts,
+	}
+
+	tenant := Tenant{
+		Enable: config.Data.Tenant.Enable,
+	}
+
+	cfg := &UIConfig{
+		AppName:           config.Data.Common.AppName,
+		RepoUrl:           config.Data.Common.RepoUrl,
+		Panel:             panel,
+		ShowAlertIcon:     config.Data.Sidemenu.ShowAlertIcon,
+		EnableGithubLogin: config.Data.User.EnableGithubLogin,
+		GithubOAuthToken:  config.Data.User.GithubOAuthToken,
+		Plugins:           (*Plugins)(&config.Data.Plugins),
+		Observability:     &config.Data.Observability,
+		Tenant:            &tenant,
+	}
+
+	return cfg
+}
+
 // overrideApiServerAddrInLocalUI is used to override api server address in local ui automatically
-func overrideApiServerAddrInLocalUI() {
+func OverrideApiServerAddrInLocalUI() {
 	root := config.Data.Server.UiStaticPath
 	filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
 		paths := strings.Split(path, "/")

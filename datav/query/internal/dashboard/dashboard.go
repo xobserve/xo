@@ -24,9 +24,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/xObserve/xObserve/query/internal/admin"
-	"github.com/xObserve/xObserve/query/internal/datasource"
-	"github.com/xObserve/xObserve/query/internal/teams"
-	"github.com/xObserve/xObserve/query/internal/variables"
 	"github.com/xObserve/xObserve/query/pkg/colorlog"
 	"github.com/xObserve/xObserve/query/pkg/common"
 	"github.com/xObserve/xObserve/query/pkg/config"
@@ -128,7 +125,7 @@ func SaveDashboard(c *gin.Context) {
 
 func GetDashboard(c *gin.Context) {
 	u := c.MustGet("currentUser").(*models.User)
-	dash, err := getDashboard(c, u)
+	dash, err := QueryDashboard(c, u)
 	if err != nil {
 		logger.Warn("get dashboard error", "error", err)
 		c.JSON(400, common.RespError(err.Error()))
@@ -138,52 +135,7 @@ func GetDashboard(c *gin.Context) {
 	c.JSON(200, common.RespSuccess(dash))
 }
 
-func GetDashboardConfig(c *gin.Context) {
-	u := c.MustGet("currentUser").(*models.User)
-	dash, err := getDashboard(c, u)
-	if err != nil {
-		logger.Warn("get dashboard error", "error", err)
-		c.JSON(400, common.RespError(err.Error()))
-		return
-	}
-
-	vars, err := variables.GetTeamVariables(c.Request.Context(), dash.OwnedBy)
-	if err != nil {
-		logger.Warn("query variables error", "error", err)
-		c.JSON(500, common.RespError(e.Internal))
-		return
-	}
-
-	tenantId, err := models.QueryTenantIdByTeamId(c.Request.Context(), dash.OwnedBy)
-	if err != nil {
-		logger.Warn("query tenant id by team id error", "error", err)
-		c.JSON(500, common.RespError(e.Internal))
-		return
-	}
-
-	teams, err := teams.GetVisibleTeamsByTenantId(c.Request.Context(), tenantId, u)
-	if err != nil {
-		logger.Warn("get teams by tenant id error", "error", err)
-		c.JSON(500, common.RespError(e.Internal))
-		return
-	}
-
-	datasources, err := datasource.GetDatasourcesByTeamId(c.Request.Context(), dash.OwnedBy)
-	if err != nil {
-		logger.Warn("get datasources by team id error", "error", err)
-		c.JSON(500, common.RespError(e.Internal))
-		return
-	}
-
-	c.JSON(200, common.RespSuccess(map[string]interface{}{
-		"dashboard":   dash,
-		"teams":       teams,
-		"datasources": datasources,
-		"variables":   vars,
-	}))
-}
-
-func getDashboard(c *gin.Context, u *models.User) (*models.Dashboard, error) {
+func QueryDashboard(c *gin.Context, u *models.User) (*models.Dashboard, error) {
 	id := c.Param("id")
 
 	dash, err := models.QueryDashboard(c.Request.Context(), id)
@@ -196,7 +148,7 @@ func getDashboard(c *gin.Context, u *models.User) (*models.Dashboard, error) {
 
 	isTeamPublic, err := models.IsTeamPublic(c.Request.Context(), dash.OwnedBy)
 	if err != nil {
-		return nil, fmt.Errorf("query team public error" + err.Error())
+		return nil, fmt.Errorf("query team public error: %w", err)
 	}
 
 	if !isTeamPublic && dash.VisibleTo != "all" {
@@ -206,7 +158,7 @@ func getDashboard(c *gin.Context, u *models.User) (*models.Dashboard, error) {
 
 		member, err := models.QueryTeamMember(c.Request.Context(), dash.OwnedBy, u.Id)
 		if err != nil {
-			return nil, fmt.Errorf("query team member error" + err.Error())
+			return nil, fmt.Errorf("query team member error: %w", err)
 		}
 		if member.Id == 0 {
 			return nil, errors.New("you are not the team menber to view this dashboard")

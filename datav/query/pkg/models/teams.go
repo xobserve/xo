@@ -192,7 +192,15 @@ type SideMenu struct {
 	TeamId   int64       `json:"teamId"`
 	TeamName string      `json:"teamName"`
 	Brief    string      `json:"brief"`
-	Data     interface{} `json:"data"`
+	Data     []*MenuItem `json:"data"`
+}
+
+type MenuItem struct {
+	Url         string      `json:"url"`
+	Title       string      `json:"title"`
+	DashboardId string      `json:"dashboardId"`
+	Icon        string      `json:"icon,omitempty"`
+	Children    interface{} `json:"children"`
 }
 
 func QuerySideMenu(ctx context.Context, id int64) (*SideMenu, error) {

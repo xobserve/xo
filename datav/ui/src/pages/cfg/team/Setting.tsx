@@ -114,9 +114,9 @@ const TeamSettings = (props: { team: Team }) => {
           <FormItem title={t.itemName({ name: t.team })} labelWidth="150px">
             <Input placeholder="******" value={team.name} onChange={e => { team.name = e.currentTarget.value; setTeam(cloneDeep(team)) }} />
           </FormItem>
-          <FormItem title={t1.isPublic} desc={t1.isPublicTips} labelWidth="150px" alignItems="center">
+          {/* <FormItem title={t1.isPublic} desc={t1.isPublicTips} labelWidth="150px" alignItems="center">
             <Switch isChecked={team.isPublic} onChange={e => { team.isPublic = e.currentTarget.checked; setTeam(cloneDeep(team)) }} />
-          </FormItem>
+          </FormItem> */}
         </FormSection>
         <Button width="fit-content" size="sm" onClick={updateTeam} >{t.submit}</Button>
 
@@ -124,7 +124,7 @@ const TeamSettings = (props: { team: Team }) => {
         <FormSection title={t.dangeSection}>
           {isSuperAdmin(config.teamRole) ?
             <HStack>
-              <Button width="fit-content" variant="outline" onClick={onTransferOpen} colorScheme="orange">{t1.transferTenant}</Button>
+              <Button width="fit-content" variant="outline" onClick={onTransferOpen} colorScheme="orange">{t1.transferTeam}</Button>
               <Button width="fit-content" onClick={onOpen} colorScheme="red">{t.deleteItem({ name: t.team })}</Button>
               {/* <Button width="fit-content" onClick={onLeaveOpen} colorScheme="orange">Leave team</Button> */}
             </HStack>

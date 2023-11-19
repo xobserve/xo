@@ -130,9 +130,9 @@ export const TenantSetting = memo(() => {
                         <FormItem title={t.itemName({ name: t.tenant })} labelWidth="150px">
                             <Input placeholder="******" value={tenant.name} onChange={e => { tenant.name = e.currentTarget.value; setTenant(cloneDeep(tenant)) }} />
                         </FormItem>
-                        <FormItem title={t1.isPublic} desc={t1.isPublicTips} labelWidth="150px" alignItems="center">
+                        {/* <FormItem title={t1.isPublic} desc={t1.isPublicTips} labelWidth="150px" alignItems="center">
                             <Switch isChecked={tenant.isPublic} onChange={e => { tenant.isPublic = e.currentTarget.checked; setTenant(cloneDeep(tenant)) }} />
-                        </FormItem>
+                        </FormItem> */}
                     </FormSection>
                     <Button width="fit-content" size="sm" onClick={updateTenant} >{t.submit}</Button>
 

@@ -33,115 +33,48 @@ import { $variables } from "src/views/variables/store"
 
 
 
+
 interface Props {
+    dashboard?: Dashboard
     sideWidth: number
 }
 
+const DashboardPageWrapper = memo(({ sideWidth }: Props) => {
+    const teamId0 = Number(useParams().teamId)
+    const teamId = isNaN(teamId0) ? 0 : teamId0
+    let path = location.pathname.replace(`/${teamId}`, '')
 
-// page for dispaly dashboard
-const DashboardPage = memo(({ sideWidth }: Props) => {
-    const config = useStore($config)
-    const navigate = useNavigate()
-    const t1 = useStore(dashboardMsg)
-    const location = useLocation()
-    const [dashboardId, setDashboardId] = useState<string>(null)
-    const [error, setError] = useState(null)
-    const teamId = useParams().teamId
     const [dashboard, setDashboard] = useState<Dashboard>(null)
+    const [error, setError] = useState<string>(null)
 
     useEffect(() => {
-        const teamPath = `/${teamId ?? config.currentTeam}`
-        if (location && config.sidemenu) {
-            if (!isEmpty(teamId) && isNaN(Number(teamId))) {
-                setError("Invailid team id")
-                return
-            }
+        loadConfig(path)
+    }, [])
 
-            let path = location.pathname.replace(`/${teamId}`, '')
-            setError(null)
-            if (path == '' || path == '/') {
-                const m = first(config.sidemenu)
-                if (m) {
-                    if (!m.children) {
-                        navigate(teamPath + m.url)
-                    } else {
-                        const child = first(m.children)
-                        if (child) navigate(teamPath + child.url)
-                    }
-                } else {
-                    navigate(`/${config.currentTeam}`)
-                    setError(t1.noDashboardExist)
-                }
-                return
-            } else if (path == '/alert') {
-                setDashboardId(AlertDashbordId)
-            } else {
-                setDashboardId(null)
-                // if rawId  starts with 'd-', then it's a dashboard id
-                // otherwise, it's just a pathname defined in team's sidemenu, we need to get the real dashboard id
-                if (path.startsWith('/d-')) {
-                    setDashboardId(path.substring(1))
-                } else {
-                    load(path)
-                }
-            }
-
-        }
-    }, [location.pathname, config])
-
-    useEffect(() => {
-        if (dashboardId) {
-            loadDashboardConfig()
-        }
-    },[dashboardId])
-    const load = path => {
-        let menuitem;
-        for (const item of config.sidemenu) {
-            if (item.url == path) {
-                menuitem = item
-            } else {
-                if (item.children) {
-                    for (const child of item.children) {
-                        if (child.url == path) {
-                            menuitem = child
-                            break
-                        }
-                    }
-                }
-            }
-
-            if (menuitem) break
-        }
-
-
-
-        if (!menuitem) {
-            setError(t1.notFound)
-            return
-        }
-
-        setDashboardId(menuitem.dashboardId)
-    }
-
-
-    const loadDashboardConfig = async () => {
-        const res = await requestApi.get(`/dashboard/config/${dashboardId}`)
+    const loadConfig = async (path) => {
+        const res = await requestApi.get(`/config/dashboard?teamId=${teamId}&path=${path}`)
+        const cfg = res.data.cfg
+        cfg.sidemenu = (cfg.sidemenu as any).data.filter((item) => !item.hidden)
+        $config.set(cfg)
         $teams.set(res.data.teams)
         $datasources.set(res.data.datasources)
         initVariableSelected(res.data.variables)
         $variables.set(res.data.variables)
         setDashboard(res.data.dashboard)
+        if (res.data.path != path) {
+            window.history.replaceState(null, null, "/" + res.data.cfg.currentTeam + res.data.path)
+        }
     }
-
-    return (
-        <>
-            {dashboard && <DashboardWrapper key={dashboardId} sideWidth={sideWidth} rawDashboard={dashboard} />}
-            {error && <NotFoundPage message={error} />}
-            {!dashboard && !error && <Box position="fixed" top="50vh" left="50vw"><Loading /></Box>}
-        </>
-    )
+    return (<>
+        {dashboard && <DashboardWrapper key={dashboard.id} sideWidth={sideWidth} rawDashboard={dashboard} />}
+        {error && <NotFoundPage message={error} />}
+        {!dashboard && !error && <Box position="fixed" top="50vh" left="50vw"><Loading /></Box>}
+    </>)
 })
 
-export default DashboardPage
+export default DashboardPageWrapper
+
+
+
 
 

@@ -36,10 +36,16 @@ import TeamVariablesPage from "pages/cfg/team/Variables";
 import IframeExamplesPage from "pages/examples/Iframe";
 import AdminTenantUsers from "pages/admin/TenantUsers";
 import TenantSetting from "pages/admin/TenantSetting";
+import CommonConfig from "./components/configloader/CommonConfig";
+import BasicConfig from "components/configloader/BasicConfig";
 
 
 const DashboardPage = loadable(() => import('src/pages/dashboard/index'));
 const TracePage = loadable(() => import('src/pages/dashboard/Trace'));
+
+const commonConfig = ele => {
+  return <CommonConfig>{ele}</CommonConfig>
+}
 
 const pageContainer = ele => {
   return <PageContainer>{ele}</PageContainer>
@@ -60,74 +66,74 @@ export const getRoutes = (enableTenant=false) => {
     {
       path: `${teamId}/cfg/team/datasources`,
       //@ts-ignore
-      element: pageContainer(teamPageContainer(<TeamDatasources />)),
+      element: commonConfig(pageContainer(teamPageContainer(<TeamDatasources />))),
     },
     {
       path: `${teamId}/cfg/team/variables`,
       //@ts-ignore
-      element: pageContainer(teamPageContainer(<TeamVariablesPage />)),
+      element: commonConfig(pageContainer(teamPageContainer(<TeamVariablesPage />))),
     },
     {
       path: `${teamId}/cfg/team/dashboards`,
       //@ts-ignore
-      element: pageContainer(teamPageContainer(<TeamDashboardsPage />)),
+      element: commonConfig(pageContainer(teamPageContainer(<TeamDashboardsPage />))),
     },
     {
       path: `${teamId}/cfg/team/members`,
       //@ts-ignore
-      element: pageContainer(teamPageContainer(<TeamMembersPage />)),
+      element: commonConfig(pageContainer(teamPageContainer(<TeamMembersPage />))),
     },
     {
       path: `${teamId}/cfg/team/setting`,
       //@ts-ignore
-      element: pageContainer(teamPageContainer(<TeamSettingPage />)),
+      element: commonConfig(pageContainer(teamPageContainer(<TeamSettingPage />))),
     },
     {
       path: `${teamId}/cfg/team/sidemenu`,
       //@ts-ignore
-      element: pageContainer(teamPageContainer(<TeamSidemenuPage />)),
+      element: commonConfig(pageContainer(teamPageContainer(<TeamSidemenuPage />))),
     },
   ]
 
   const newRoutes = [
     {
       path: `${teamId}/new/dashboard`,
-      element: pageContainer(<NewDashboardPage />),
+      element: commonConfig(pageContainer(<NewDashboardPage />)),
     },
     {
       path: `${teamId}/new/datasource`,
-      element: pageContainer(<NewDatasourcePage />),
+      element: commonConfig(pageContainer(<NewDatasourcePage />)),
     },
     {
       path: `${teamId}/new/import`,
-      element: pageContainer(<ImportDashboardPage />),
+      element: commonConfig(pageContainer(<ImportDashboardPage />)),
     },
   ]
 
   const adminRoutes = [
     {
       path: `${teamId}/admin/audit`,
-      element: pageContainer(<AdminPage />),
+      element: commonConfig(pageContainer(<AdminPage />)),
     },
     {
       path: `${teamId}/admin/tenants`,
-      element: pageContainer(<AdminTenants />),
+      element: commonConfig(pageContainer(<AdminTenants />)),
     },
     {
       path: `${teamId}/admin/users`,
-      element: pageContainer(<AdminUsers />),
+      element: commonConfig(pageContainer(<AdminUsers />)),
     },
     {
       path: `${teamId}/admin/tenant/users`,
-      element: pageContainer(<AdminTenantUsers />),
+      element: commonConfig(pageContainer(<AdminTenantUsers />)),
     },
     {
       path: `${teamId}/admin/tenant/teams`,
-      element: pageContainer(<TeamsPage />),
+      element: commonConfig(pageContainer(<TeamsPage />)),
     },
     {
       path: `${teamId}/admin/tenant/setting`,
-      element: pageContainer(<TenantSetting />),
+      element: commonConfig(pageContainer(<TenantSetting />)),
     },
   ]
   return [
@@ -139,7 +145,7 @@ export const getRoutes = (enableTenant=false) => {
     // },
     {
       path: `${teamId}/account/setting`,
-      element: pageContainer(<AccountSetting />),
+      element: commonConfig(pageContainer(<AccountSetting />)),
     },
     ...newRoutes,
     ...cfgRoutes,
@@ -158,7 +164,7 @@ export const getRoutes = (enableTenant=false) => {
     },
     {
       path: `${teamId}/trace/:id/:datasourceId`,
-      element: <TracePage />,
+      element: commonConfig(<TracePage />),
     },
     {
       path: `${teamId}/test`,
@@ -170,11 +176,11 @@ export const getRoutes = (enableTenant=false) => {
     },
     {
       path: "/login",
-      element: <Login />,
+      element: <BasicConfig><Login /></BasicConfig>,
     },
     {
       path: "/login/github",
-      element: <GithubLogin />,
+      element: <BasicConfig><GithubLogin /></BasicConfig>,
     },
   ]
 }

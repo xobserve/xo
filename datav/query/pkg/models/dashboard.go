@@ -23,9 +23,16 @@ import (
 
 const HomeDashboardId = "d-home"
 const AlertDashbordId = "d-alert"
+const DashboardPrefix = "d-"
 
 // you mustn't change the id of home dashboarda, is's reversed
 var ReservedDashboardId = []string{HomeDashboardId, AlertDashbordId}
+
+const (
+	TeamVisible   = "team"
+	TenantVisible = "tenant"
+	AllVisible    = "all"
+)
 
 type Dashboard struct {
 	Id       string `json:"id"`
