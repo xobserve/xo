@@ -16,6 +16,7 @@ import (
 	"context"
 	"database/sql"
 	"encoding/json"
+	"errors"
 	"time"
 
 	"github.com/xObserve/xObserve/query/pkg/db"
@@ -116,12 +117,8 @@ func QueryTeamMember(ctx context.Context, teamId int64, userId int64) (*TeamMemb
 	member.Role = ROLE_VIEWER
 	err := db.Conn.QueryRowContext(ctx, `SELECT role FROM team_member WHERE team_id=? and user_id=?`,
 		teamId, userId).Scan(&member.Role)
-	if err != nil && err != sql.ErrNoRows {
-		return member, err
-	}
-
-	if err == sql.ErrNoRows {
-		return member, nil
+	if err != nil {
+		return nil, err
 	}
 
 	member.Id = userId
@@ -173,6 +170,9 @@ func QueryVisibleTeamsByUserId(ctx context.Context, tenantId int64, userId int64
 func IsTeamAdmin(ctx context.Context, teamId, userId int64) (bool, error) {
 	teamMember, err := QueryTeamMember(ctx, teamId, userId)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			return false, errors.New("not team member")
+		}
 		return false, err
 	}
 
@@ -237,16 +237,16 @@ func IsTeamVisibleToUser(ctx context.Context, teamId int64, userId int64) (bool,
 		return true, nil
 	}
 
-	member, err := QueryTeamMember(ctx, teamId, userId)
+	_, err = QueryTeamMember(ctx, teamId, userId)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			return false, nil
+		}
 		return false, err
 	}
 
-	if member.Id != 0 {
-		return true, nil
-	}
+	return true, nil
 
-	return false, nil
 }
 
 func CreateTeam(ctx context.Context, tx *sql.Tx, u *User, name string, brief string) (int64, error) {

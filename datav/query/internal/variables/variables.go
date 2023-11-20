@@ -215,15 +215,15 @@ func QueryTeamVariables(c *gin.Context) {
 	teamId, _ := strconv.ParseInt(c.Query("teamId"), 10, 64)
 	u := c.MustGet("currentUser").(*models.User)
 
-	member, err := models.QueryTeamMember(c.Request.Context(), teamId, u.Id)
+	// check user is in this team
+	_, err := models.QueryTeamMember(c.Request.Context(), teamId, u.Id)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			c.JSON(403, common.RespError(e.NotTeamMember))
+			return
+		}
 		logger.Warn("query team member error", "error", err)
 		c.JSON(500, common.RespError(e.Internal))
-		return
-	}
-
-	if member.Id == 0 {
-		c.JSON(403, common.RespError(e.NotTeamMember))
 		return
 	}
 

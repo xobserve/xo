@@ -69,28 +69,6 @@ type UserData struct {
 	ThemeFontsize int    `json:"themeFontsize,omitempty"`
 }
 
-// func QueryUser(id int64, username string, email string) (*User, error) {
-// 	user := &User{}
-// 	err := db.Conn.QueryRow(`SELECT id,username,name,email,mobile,password,salt,last_seen_at FROM user WHERE id=? or username=? or email=?`,
-// 		id, username, email).Scan(&user.Id, &user.Username, &user.Name, &user.Email, &user.Mobile, &user.Password, &user.Salt, &user.LastSeenAt)
-// 	if err != nil && err != sql.ErrNoRows {
-// 		return user, err
-// 	}
-
-// 	if user.Id == 0 {
-// 		return user, nil
-// 	}
-
-// 	globalMember, err := QueryTeamMember(GlobalTeamId, user.Id)
-// 	if err != nil {
-// 		return user, err
-// 	}
-
-// 	user.Role = globalMember.Role
-
-// 	return user, nil
-// }
-
 func QueryUserById(ctx context.Context, id int64) (*User, error) {
 	user := &User{}
 	var data []byte

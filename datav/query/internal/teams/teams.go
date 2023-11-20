@@ -81,7 +81,7 @@ func GetTenantTeams(c *gin.Context) {
 		team.MemberCount = count
 		if u != nil {
 			member, _ := models.QueryTeamMember(ctx, team.Id, u.Id)
-			if member != nil && member.Id != 0 {
+			if member != nil {
 				team.CurrentUserRole = member.Role
 			}
 		} else {
@@ -163,7 +163,7 @@ func GetVisibleTeamsByTenantId(ctx context.Context, tenantId int64, u *models.Us
 	// 	team.MemberCount = count
 	// 	if u != nil {
 	// 		member, _ := models.QueryTeamMember(ctx, team.Id, u.Id)
-	// 		if member != nil && member.Id != 0 {
+	// 		if member != nil {
 	// 			team.CurrentUserRole = member.Role
 	// 		}
 	// 	} else {
@@ -313,6 +313,10 @@ func GetTeamMember(c *gin.Context) {
 
 	member, err := models.QueryTeamMember(c.Request.Context(), teamId, userId)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			c.JSON(400, common.RespError("member not exist"))
+			return
+		}
 		logger.Warn("get team member error", "error", err)
 		c.JSON(500, common.RespInternalError())
 		return
@@ -413,24 +417,23 @@ func DeleteTeamMember(c *gin.Context) {
 
 	member, err := models.QueryTeamMember(c.Request.Context(), teamId, memberId)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			c.JSON(400, common.RespError("member not exist"))
+			return
+		}
 		logger.Warn("query team member error", "error", err)
 		c.JSON(500, common.RespInternalError())
-		return
-	}
-
-	if member.Id == 0 {
-		c.JSON(400, common.RespError("member not exist"))
 		return
 	}
 
 	operator, err := models.QueryTeamMember(c.Request.Context(), teamId, u.Id)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			c.JSON(400, common.RespError("You are not in current team"))
+			return
+		}
 		logger.Warn("query team member error", "error", err)
 		c.JSON(500, common.RespInternalError())
-		return
-	}
-	if operator.Id == 0 {
-		c.JSON(400, common.RespError("You are not in current team"))
 		return
 	}
 
@@ -509,24 +512,23 @@ func UpdateTeamMember(c *gin.Context) {
 
 	member, err := models.QueryTeamMember(c.Request.Context(), req.TeamId, req.Id)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			c.JSON(400, common.RespError("member not exist"))
+			return
+		}
 		logger.Warn("query team member error", "error", err)
 		c.JSON(500, common.RespInternalError())
-		return
-	}
-
-	if member.Id == 0 {
-		c.JSON(400, common.RespError("member not exist"))
 		return
 	}
 
 	operator, err := models.QueryTeamMember(c.Request.Context(), req.TeamId, u.Id)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			c.JSON(400, common.RespError("You are not in current team"))
+			return
+		}
 		logger.Warn("query team member error", "error", err)
 		c.JSON(500, common.RespInternalError())
-		return
-	}
-	if operator.Id == 0 {
-		c.JSON(400, common.RespError("You are not in current team"))
 		return
 	}
 
@@ -569,6 +571,10 @@ func DeleteTeam(c *gin.Context) {
 
 	operator, err := models.QueryTeamMember(c.Request.Context(), teamId, u.Id)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			c.JSON(400, common.RespError("You are not in current team"))
+			return
+		}
 		logger.Warn("query team member error", "error", err)
 		c.JSON(500, common.RespInternalError())
 		return
@@ -661,13 +667,12 @@ func LeaveTeam(c *gin.Context) {
 	u := c.MustGet("currentUser").(*models.User)
 	member, err := models.QueryTeamMember(c.Request.Context(), teamId, u.Id)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			c.JSON(400, common.RespError("You are not in current team"))
+			return
+		}
 		logger.Warn("check team admin error", "error", err)
 		c.JSON(500, common.RespInternalError())
-		return
-	}
-
-	if member.Id == 0 {
-		c.JSON(400, common.RespError("You are not in current team"))
 		return
 	}
 
@@ -820,6 +825,10 @@ func TransferTeam(c *gin.Context) {
 
 	operator, err := models.QueryTeamMember(c.Request.Context(), teamId, u.Id)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			c.JSON(400, common.RespError("You are not in current team"))
+			return
+		}
 		logger.Warn("get team user error", "error", err)
 		c.JSON(500, common.RespInternalError())
 		return
@@ -850,17 +859,17 @@ func TransferTeam(c *gin.Context) {
 	}
 
 	// must transfer to a team user
-	member, err := models.QueryTeamMember(c.Request.Context(), teamId, transferToUser.Id)
+	_, err = models.QueryTeamMember(c.Request.Context(), teamId, transferToUser.Id)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			c.JSON(400, common.RespError("the user which you want to transfer to is not in team"))
+			return
+		}
 		logger.Warn("query team user error", "error", err)
 		c.JSON(500, common.RespInternalError())
 		return
 	}
 
-	if member.Id == 0 {
-		c.JSON(400, common.RespError("the user which you want to transfer to is not in team"))
-		return
-	}
 	// transfer
 	tx, err := db.Conn.Begin()
 	if err != nil {

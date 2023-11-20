@@ -122,15 +122,14 @@ func GetDashboardConfig(c *gin.Context) {
 
 	if dashboard.VisibleTo == models.TeamVisible {
 		// check user is in team
-		member, err := models.QueryTeamMember(c.Request.Context(), teamId, u.Id)
+		_, err := models.QueryTeamMember(c.Request.Context(), teamId, u.Id)
 		if err != nil {
+			if err == sql.ErrNoRows {
+				c.JSON(403, common.RespError(e.NotTeamMember))
+				return
+			}
 			logger.Warn("query team member error", "error", err)
 			c.JSON(500, common.RespError(err.Error()))
-			return
-		}
-
-		if member.Id == 0 {
-			c.JSON(403, common.RespError(e.NotTeamMember))
 			return
 		}
 	} else if dashboard.VisibleTo == models.TenantVisible {
