@@ -49,11 +49,9 @@ func loadSession(ctx context.Context, sid string) *models.Session {
 
 	user, err := models.QueryUserById(ctx, userid)
 	if err != nil {
-		logger.Warn("query user error", "error", err)
-		return nil
-	}
-
-	if user.Id == 0 {
+		if err != sql.ErrNoRows {
+			logger.Warn("query user error", "error", err)
+		}
 		return nil
 	}
 

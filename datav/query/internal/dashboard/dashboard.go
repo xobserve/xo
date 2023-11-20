@@ -152,13 +152,14 @@ func QueryDashboard(c *gin.Context, u *models.User) (*models.Dashboard, error) {
 			return nil, errors.New("you are not the team menber to view this dashboard")
 		}
 
-		member, err := models.QueryTeamMember(c.Request.Context(), dash.OwnedBy, u.Id)
+		_, err := models.QueryTeamMember(c.Request.Context(), dash.OwnedBy, u.Id)
 		if err != nil {
+			if err == sql.ErrNoRows {
+				return nil, errors.New("you are not the team menber to view this dashboard")
+			}
 			return nil, fmt.Errorf("query team member error: %w", err)
 		}
-		if member.Id == 0 {
-			return nil, errors.New("you are not the team menber to view this dashboard")
-		}
+
 	} else if dash.VisibleTo == models.TenantVisible {
 		tenantId, err := models.QueryTenantIdByTeamId(c.Request.Context(), dash.OwnedBy)
 		if err != nil {

@@ -14,7 +14,6 @@ package models
 
 import (
 	"context"
-	"database/sql"
 	"encoding/json"
 	"errors"
 	"time"
@@ -74,19 +73,15 @@ func QueryUserById(ctx context.Context, id int64) (*User, error) {
 	var data []byte
 	err := db.Conn.QueryRowContext(ctx, `SELECT id,username,name,email,mobile,role,password,salt,data,current_tenant,current_team,last_seen_at,created FROM user WHERE id=?`,
 		id).Scan(&user.Id, &user.Username, &user.Name, &user.Email, &user.Mobile, &user.Role, &user.Password, &user.Salt, &data, &user.CurrentTenant, &user.CurrentTeam, &user.LastSeenAt, &user.Created)
-	if err != nil && err != sql.ErrNoRows {
-		return user, err
+	if err != nil {
+		return nil, err
 	}
 
 	if data != nil {
 		err := json.Unmarshal(data, &user.Data)
 		if err != nil {
-			return user, err
+			return nil, err
 		}
-	}
-
-	if user.Id == 0 {
-		return user, nil
 	}
 
 	return user, nil
@@ -97,19 +92,15 @@ func QueryUserByName(ctx context.Context, username string) (*User, error) {
 	var data []byte
 	err := db.Conn.QueryRowContext(ctx, `SELECT id,username,name,email,mobile,role,password,salt,data,current_tenant,current_team, last_seen_at FROM user WHERE username=?`,
 		username).Scan(&user.Id, &user.Username, &user.Name, &user.Email, &user.Mobile, &user.Role, &user.Password, &user.Salt, &data, &user.CurrentTenant, &user.CurrentTeam, &user.LastSeenAt)
-	if err != nil && err != sql.ErrNoRows {
-		return user, err
+	if err != nil {
+		return nil, err
 	}
 
 	if data != nil {
 		err := json.Unmarshal(data, &user.Data)
 		if err != nil {
-			return user, err
+			return nil, err
 		}
-	}
-
-	if user.Id == 0 {
-		return user, nil
 	}
 
 	return user, nil

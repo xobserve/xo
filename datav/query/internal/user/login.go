@@ -13,6 +13,7 @@
 package user
 
 import (
+	"database/sql"
 	"encoding/json"
 	"fmt"
 
@@ -49,13 +50,12 @@ func Login(c *gin.Context) {
 
 	user, err := models.QueryUserByName(c.Request.Context(), username)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			c.JSON(400, common.RespError(e.UserNotExist))
+			return
+		}
 		logger.Warn("query user error", "error", err)
 		c.JSON(500, common.RespInternalError())
-		return
-	}
-
-	if user.Id == 0 {
-		c.JSON(400, common.RespError(e.UserNotExist))
 		return
 	}
 
@@ -173,13 +173,13 @@ func LoginGithub(c *gin.Context) {
 
 	// query user by username
 	user, err := models.QueryUserByName(c.Request.Context(), githubUser.Username)
-	if err != nil {
+	if err != nil && err != sql.ErrNoRows {
 		logger.Warn("query user error", "error", err)
 		c.JSON(500, common.RespInternalError())
 		return
 	}
 
-	if user.Id == 0 {
+	if err == sql.ErrNoRows {
 		// create user
 		salt, _ := utils.GetRandomString(10)
 		encodedPW, _ := utils.EncodePassword("", salt)

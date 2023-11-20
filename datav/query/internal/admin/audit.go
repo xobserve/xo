@@ -29,7 +29,10 @@ func QueryAuditLogs(c *gin.Context) {
 			logger.Warn("scan audit logs error", "error", err)
 			continue
 		}
-		log.Operator, _ = models.QueryUserById(c.Request.Context(), log.OpId)
+		log.Operator, err = models.QueryUserById(c.Request.Context(), log.OpId)
+		if err != nil {
+			logger.Warn("query user error", "error", err)
+		}
 		log.Data = string(rawData)
 		logs = append(logs, log)
 	}

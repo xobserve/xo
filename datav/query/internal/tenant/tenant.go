@@ -153,7 +153,9 @@ func QueryTenantUsers(c *gin.Context) {
 		}
 
 		user, _ := models.QueryUserById(c.Request.Context(), tenantUser.Id)
-		tenantUser.Username = user.Username
+		if user != nil {
+			tenantUser.Username = user.Username
+		}
 		tenantUser.RoleSortWeight = models.RoleSortWeight(tenantUser.Role)
 
 		tenantUsers = append(tenantUsers, tenantUser)
@@ -177,13 +179,12 @@ func SubmitTenantUser(c *gin.Context) {
 
 	targetUser, err := models.QueryUserByName(c.Request.Context(), req.Username)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			c.JSON(400, common.RespError(e.UserNotExist))
+			return
+		}
 		logger.Warn("query target user error when submit user", "error", err)
 		c.JSON(500, common.RespInternalError())
-		return
-	}
-
-	if targetUser.Id == 0 {
-		c.JSON(400, common.RespError(e.UserNotExist))
 		return
 	}
 
@@ -516,12 +517,12 @@ func TransferTenant(c *gin.Context) {
 	// get transfer to user
 	transferToUser, err := models.QueryUserByName(c.Request.Context(), transferTo)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			c.JSON(400, common.RespError("user not exist"))
+			return
+		}
 		logger.Warn("query user by name error", "error", err)
 		c.JSON(500, common.RespInternalError())
-		return
-	}
-	if transferToUser.Id == 0 {
-		c.JSON(400, common.RespError("user not exist"))
 		return
 	}
 

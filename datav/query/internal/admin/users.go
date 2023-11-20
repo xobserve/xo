@@ -13,6 +13,7 @@
 package admin
 
 import (
+	"database/sql"
 	"net/http"
 	"sort"
 	"strconv"
@@ -76,6 +77,10 @@ func UpdateUserPassword(c *gin.Context) {
 
 	targetUser, err := models.QueryUserById(c.Request.Context(), req.Id)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			c.JSON(http.StatusBadRequest, common.RespError(e.UserNotExist))
+			return
+		}
 		c.JSON(http.StatusInternalServerError, common.RespInternalError())
 		return
 	}
@@ -243,13 +248,12 @@ func DeleteUser(c *gin.Context) {
 
 	targetUser, err := models.QueryUserById(c.Request.Context(), userId)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			c.JSON(400, common.RespError(e.UserNotExist))
+			return
+		}
 		logger.Warn("query target user error when delete user", "error", err)
 		c.JSON(500, common.RespInternalError())
-		return
-	}
-
-	if targetUser.Id == 0 {
-		c.JSON(400, common.RespError(e.UserNotExist))
 		return
 	}
 

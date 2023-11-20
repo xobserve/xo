@@ -70,7 +70,9 @@ func GetTenantTeams(c *gin.Context) {
 		}
 
 		user, _ := models.QueryUserById(ctx, team.CreatedById)
-		team.CreatedBy = user.Username
+		if user != nil {
+			team.CreatedBy = user.Username
+		}
 
 		count := 0
 		err = db.Conn.QueryRowContext(ctx, "SELECT count(*) FROM team_member WHERE team_id=?", team.Id).Scan(&count)
@@ -291,7 +293,9 @@ func GetTeamMembers(c *gin.Context) {
 		}
 
 		u, _ := models.QueryUserById(c.Request.Context(), member.Id)
-		member.Username = u.Username
+		if u != nil {
+			member.Username = u.Username
+		}
 		member.RoleSortWeight = models.RoleSortWeight(member.Role)
 		member.TeamId = id
 		members = append(members, member)
@@ -843,12 +847,12 @@ func TransferTeam(c *gin.Context) {
 	// get transfer to user
 	transferToUser, err := models.QueryUserByName(c.Request.Context(), transferTo)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			c.JSON(400, common.RespError("user not exist"))
+			return
+		}
 		logger.Warn("query user by name error", "error", err)
 		c.JSON(500, common.RespInternalError())
-		return
-	}
-	if transferToUser.Id == 0 {
-		c.JSON(400, common.RespError("user not exist"))
 		return
 	}
 
