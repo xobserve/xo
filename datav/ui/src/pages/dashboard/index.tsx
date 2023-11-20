@@ -53,6 +53,10 @@ const DashboardPageWrapper = memo(({ sideWidth }: Props) => {
 
     const loadConfig = async (path) => {
         const res = await requestApi.get(`/config/dashboard?teamId=${teamId}&path=${path}`)
+        if (res.data.reload) {
+            window.location.href = res.data.path
+            return 
+        }
         const cfg = res.data.cfg
         cfg.sidemenu = (cfg.sidemenu as any).data.filter((item) => !item.hidden)
         $config.set(cfg)

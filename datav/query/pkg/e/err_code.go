@@ -40,6 +40,7 @@ const (
 	NoPermission      = "no permission"
 	BadRequest        = "bad request"
 	AlreadyExist      = "target already exist"
+	UnsignUserError   = "unsignin user can't visit root path"
 
 	// Teams
 	TeamNotExist = "team not exist"

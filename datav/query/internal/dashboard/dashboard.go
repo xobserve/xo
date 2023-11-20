@@ -147,12 +147,7 @@ func QueryDashboard(c *gin.Context, u *models.User) (*models.Dashboard, error) {
 		return nil, fmt.Errorf("query dashboard error" + err.Error())
 	}
 
-	isTeamPublic, err := models.IsTeamPublic(c.Request.Context(), dash.OwnedBy)
-	if err != nil {
-		return nil, fmt.Errorf("query team public error: %w", err)
-	}
-
-	if !isTeamPublic && dash.VisibleTo != "all" {
+	if dash.VisibleTo == models.TeamVisible {
 		if u == nil {
 			return nil, errors.New("you are not the team menber to view this dashboard")
 		}
@@ -164,14 +159,22 @@ func QueryDashboard(c *gin.Context, u *models.User) (*models.Dashboard, error) {
 		if member.Id == 0 {
 			return nil, errors.New("you are not the team menber to view this dashboard")
 		}
-	}
+	} else if dash.VisibleTo == models.TenantVisible {
+		tenantId, err := models.QueryTenantIdByTeamId(c.Request.Context(), dash.OwnedBy)
+		if err != nil {
+			return nil, fmt.Errorf("query tenant id error: %w", err)
+		}
 
-	teamName, _ := models.QueryTeamNameById(c.Request.Context(), dash.OwnedBy)
-	if teamName == "" {
-		teamName = "not_found"
+		// check user is in tenant
+		in, err := models.IsUserInTenant(u.Id, tenantId)
+		if err != nil {
+			return nil, fmt.Errorf("check user in tenant error: %w", err)
+		}
+
+		if !in {
+			return nil, errors.New("you are not the tenant menber to view this dashboard")
+		}
 	}
-	dash.Editable = true
-	dash.OwnerName = teamName
 
 	return dash, nil
 }

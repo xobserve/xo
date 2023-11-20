@@ -10,7 +10,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/xObserve/xObserve/query/internal/datasource"
-	"github.com/xObserve/xObserve/query/internal/teams"
 	"github.com/xObserve/xObserve/query/internal/user"
 	"github.com/xObserve/xObserve/query/internal/variables"
 	"github.com/xObserve/xObserve/query/pkg/common"
@@ -24,6 +23,7 @@ func GetDashboardConfig(c *gin.Context) {
 	var tenantId int64
 	var teamId int64
 	u := user.CurrentUser(c)
+	cfg := GetBasicConfig()
 
 	var dashboard *models.Dashboard
 	var sidemenu *models.SideMenu
@@ -63,8 +63,11 @@ func GetDashboardConfig(c *gin.Context) {
 		var err error
 		tenantId, teamId, err = getUserRealTeam(teamId0, u, c.Request.Context())
 		if err != nil {
-			logger.Warn("get user real team error", "error", err)
-			c.JSON(500, common.RespError(err.Error()))
+			if err.Error() == e.UnsignUserError {
+				c.JSON(401, common.RespError(e.UnsignUserError))
+				return
+			}
+			c.JSON(400, common.RespError(err.Error()))
 			return
 		}
 
@@ -78,7 +81,11 @@ func GetDashboardConfig(c *gin.Context) {
 		}
 		menuItems := sidemenu.Data
 		if len(menuItems) == 0 {
-			c.JSON(400, common.RespError("No dashboards in sidemenu"))
+			c.JSON(200, common.RespSuccess(map[string]interface{}{
+				"cfg":    cfg,
+				"path":   fmt.Sprintf("/%d/cfg/team/sidemenu", teamId),
+				"reload": true,
+			}))
 			return
 		}
 
@@ -148,24 +155,13 @@ func GetDashboardConfig(c *gin.Context) {
 		return
 	}
 
-	var teamList models.Teams
-	if u != nil {
-		teamList, err = teams.GetVisibleTeamsByTenantId(c.Request.Context(), tenantId, u)
-	} else {
-		team, err := models.QueryTeam(c.Request.Context(), dashboard.OwnedBy, "")
-		if err != nil {
-			logger.Warn("query team error", "error", err)
-			c.JSON(500, common.RespError(e.Internal))
-			return
-		}
-		teamList = models.Teams([]*models.Team{team})
-	}
-
+	team, err := models.QueryTeam(c.Request.Context(), dashboard.OwnedBy, "")
 	if err != nil {
-		logger.Warn("get teams by tenant id error", "error", err)
+		logger.Warn("query team error", "error", err)
 		c.JSON(500, common.RespError(e.Internal))
 		return
 	}
+	teamList := models.Teams([]*models.Team{team})
 
 	datasources, err := datasource.GetDatasourcesByTeamId(c.Request.Context(), dashboard.OwnedBy)
 	if err != nil {
@@ -174,10 +170,50 @@ func GetDashboardConfig(c *gin.Context) {
 		return
 	}
 
-	cfg := GetBasicConfig()
 	cfg.CurrentTenant = tenantId
 	cfg.CurrentTeam = teamId
 	cfg.Sidemenu = sidemenu
+
+	// query tenant name
+	tenant1, err := models.QueryTenant(c.Request.Context(), tenantId)
+	if err != nil {
+		logger.Warn("query tenant error", "error", err)
+		c.JSON(500, common.RespError(e.Internal))
+		return
+	}
+	cfg.TenantName = tenant1.Name
+	if u != nil {
+		tenantUser, err := models.QueryTenantUser(c.Request.Context(), tenantId, u.Id)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				c.JSON(400, common.RespError("you are not in this tenant"))
+				return
+			}
+			logger.Warn("query tenant user error", "error", err)
+			c.JSON(500, common.RespError(e.Internal))
+			return
+		}
+		cfg.TenantRole = tenantUser.Role
+	} else {
+		cfg.TenantRole = models.ROLE_VIEWER
+	}
+
+	// query team role
+	if u != nil {
+		teamUser, err := models.QueryTeamMember(c.Request.Context(), teamId, u.Id)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				c.JSON(400, common.RespError("you are not in this team"))
+				return
+			}
+			logger.Warn("query team user error", "error", err)
+			c.JSON(500, common.RespError(e.Internal))
+			return
+		}
+		cfg.TeamRole = teamUser.Role
+	} else {
+		cfg.TeamRole = models.ROLE_VIEWER
+	}
 
 	c.JSON(200, common.RespSuccess(map[string]interface{}{
 		"cfg":         cfg,
@@ -195,7 +231,7 @@ func getUserRealTeam(teamId0 int64, u *models.User, ctx context.Context) (int64,
 
 	if teamId0 == 0 {
 		if u == nil {
-			return 0, 0, errors.New("unsignin user can't visit root path")
+			return 0, 0, errors.New(e.UnsignUserError)
 		} else {
 			tenantId = u.CurrentTenant
 			in, err := models.IsUserInTenant(u.Id, tenantId)
@@ -208,6 +244,7 @@ func getUserRealTeam(teamId0 int64, u *models.User, ctx context.Context) (int64,
 				if err != nil {
 					return 0, 0, fmt.Errorf("query tenants user in error: %w", err)
 				}
+
 				if len(tenants) == 0 {
 					return 0, 0, errors.New("you are not in any tenant now")
 				}
@@ -219,7 +256,7 @@ func getUserRealTeam(teamId0 int64, u *models.User, ctx context.Context) (int64,
 				}
 			}
 
-			teams, err := models.QueryTenantTeamIds(tenantId)
+			teams, err := models.QueryTeamsUserInTenant(ctx, tenantId, u.Id)
 			if err != nil {
 				return 0, 0, fmt.Errorf("query tenant team ids error: %w", err)
 			}
@@ -228,7 +265,7 @@ func getUserRealTeam(teamId0 int64, u *models.User, ctx context.Context) (int64,
 				return 0, 0, errors.New("you are not in any team now")
 			}
 
-			teamId = teams[0]
+			teamId = teams[0].Id
 		}
 	} else {
 		// check team id exist

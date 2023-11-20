@@ -79,6 +79,7 @@ const UserMenu = ({ miniMode }) => {
     }
 
     const isActive = window.location.pathname.startsWith('/account/')
+
     return (
         <>
 
@@ -106,7 +107,7 @@ const UserMenu = ({ miniMode }) => {
                     <MenuList zIndex={1000} fontSize="1em">
                         <Link to={session ? `${teamPath}/account/setting` : null}><MenuItem  py="2px" cursor="default" bg="transparent" _hover={{bg: "transparent"}}  icon={<FaUserAlt fontSize="1em" />} >
                             <Text>{session?.user.username ?? "Guest"}</Text>
-                            {session &&
+                            {config &&
                                 <HStack spacing={1}>
                                 <Text textStyle="annotation">{config?.tenantName} - </Text>   
                                 <Text textStyle="annotation">{config?.tenantRole}</Text>

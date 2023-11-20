@@ -77,6 +77,14 @@ func QueryDashboard(ctx context.Context, id string) (*Dashboard, error) {
 	}
 	dash.Tags = tags
 
+	teamName, _ := QueryTeamNameById(ctx, dash.OwnedBy)
+	if teamName == "" {
+		teamName = "not_found"
+	}
+	dash.OwnerName = teamName
+
+	dash.Editable = true
+
 	dash.Id = id
 	return dash, nil
 }

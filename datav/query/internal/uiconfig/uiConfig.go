@@ -88,94 +88,10 @@ func GetTenantConfig(c *gin.Context) {
 	// query sidemenu
 	var tenantId int64
 	var err error
-	queryTeam := false
 	u := user.CurrentUser(c)
-	// 先查询用户所在的 tenants 和 teams count
-	// 其次根据传入的 teamId 找到合适的 tennant id 和 team id
-	if teamId == 0 {
-		if u == nil {
-			tenantId = models.DefaultTenantId
-		} else {
-			tenantId = u.CurrentTenant
-		}
-		if u != nil {
-			teamId = u.CurrentTeam
-			teamExist := models.IsTeamExist(c.Request.Context(), teamId)
-			if !teamExist {
-				queryTeam = true
-			}
-		} else {
-			queryTeam = true
-		}
-	} else {
-		teamExist := models.IsTeamExist(c.Request.Context(), teamId)
-		if !teamExist {
-			if u != nil {
-				tenantId = u.CurrentTenant
-				teamId = u.CurrentTeam
-				teamExist := models.IsTeamExist(c.Request.Context(), teamId)
-				if !teamExist {
-					queryTeam = true
-				}
-			} else {
-				tenantId = models.DefaultTenantId
-				queryTeam = true
-			}
-		} else {
-			tenantId, err = models.QueryTenantIdByTeamId(c.Request.Context(), teamId)
-			if err != nil {
-				if err == sql.ErrNoRows {
-					c.JSON(400, common.RespError(e.TeamNotExist))
-					return
-				}
-				logger.Warn("query tenant id by team id error", "error", err)
-				c.JSON(500, common.RespError(err.Error()))
-				return
-			}
-		}
-	}
-	if queryTeam {
-		teams, err := models.QueryTenantPublicTeamIds(tenantId)
-		if err != nil {
-			logger.Warn("query tenant public team ids error", "error", err)
-			c.JSON(500, common.RespError(e.Internal))
-			return
-		}
-
-		if len(teams) == 0 {
-			userInTeams, err := models.QueryTeamsUserIn(c.Request.Context(), u.Id)
-			if err != nil {
-				logger.Warn("query teams user in error", "error", err)
-				c.JSON(500, common.RespError(e.Internal))
-				return
-			}
-
-			if len(userInTeams) == 0 {
-				c.JSON(400, common.RespError("you are not in any team now"))
-				return
-			}
-
-			teamId = userInTeams[0]
-			team, err := models.QueryTeam(c.Request.Context(), teamId, "")
-			if err != nil {
-				if err == sql.ErrNoRows {
-					c.JSON(400, common.RespError(e.TeamNotExist))
-					return
-				}
-				logger.Warn("query team error", "error", err)
-				c.JSON(500, common.RespError(e.Internal))
-				return
-			}
-
-			tenantId = team.TenantId
-		} else {
-			teamId = teams[0]
-		}
-	}
-
+	tenantId, teamId, err = getUserRealTeam(teamId, user.CurrentUser(c), c.Request.Context())
 	if err != nil {
-		logger.Warn("get user tenant and team id error", "error", err)
-		c.JSON(500, common.RespError(err.Error()))
+		c.JSON(400, common.RespError(err.Error()))
 		return
 	}
 
