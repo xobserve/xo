@@ -164,8 +164,8 @@ func initTables() error {
 	adminPW = pw
 
 	now := time.Now()
-	_, err = db.Conn.Exec(`INSERT INTO tenant (id,name,nickname,owner_id, data ,created,updated) VALUES (?,?,?,?,?,?,?)`,
-		models.DefaultTenantId, models.DefaultTenant, models.DefaultTenant, models.SuperAdminId, "{}", now, now)
+	_, err = db.Conn.Exec(`INSERT INTO tenant (id,name,nickname, data ,created,updated) VALUES (?,?,?,?,?,?)`,
+		models.DefaultTenantId, models.DefaultTenant, models.DefaultTenant, "{}", now, now)
 	if err != nil && !e.IsErrUniqueConstraint(err) {
 		logger.Crit("init super admin error", "error:", err)
 		return err

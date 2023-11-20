@@ -11,19 +11,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { useStore } from "@nanostores/react"
-import React, { memo, useMemo } from "react"
+import React, { memo } from "react"
 import { useEffect, useState } from "react"
-import { useLocation, useNavigate, useParams } from "react-router-dom"
-import { dashboardMsg } from "src/i18n/locales/en"
+import { useNavigate, useParams } from "react-router-dom"
 import DashboardWrapper from "src/views/dashboard/Dashboard"
 import NotFoundPage from "../NotFound"
-import { AlertDashbordId } from "src/data/dashboard"
-import { $config, UIConfig } from "src/data/configs/config"
-import { Box, useToast } from "@chakra-ui/react"
+import { $config } from "src/data/configs/config"
+import { Box } from "@chakra-ui/react"
 import Loading from "components/loading/Loading"
-import { first } from "lodash"
-import { isEmpty } from "utils/validate"
 import { Dashboard } from "types/dashboard"
 import { requestApi } from "utils/axios/request"
 import { $teams } from "src/views/team/store"
@@ -43,7 +38,7 @@ const DashboardPageWrapper = memo(({ sideWidth }: Props) => {
     const teamId0 = Number(useParams().teamId)
     const teamId = isNaN(teamId0) ? 0 : teamId0
     let path = location.pathname.replace(`/${teamId}`, '')
-
+    const navigate = useNavigate()
     const [dashboard, setDashboard] = useState<Dashboard>(null)
     const [error, setError] = useState<string>(null)
 
@@ -66,7 +61,7 @@ const DashboardPageWrapper = memo(({ sideWidth }: Props) => {
         $variables.set(res.data.variables)
         setDashboard(res.data.dashboard)
         if (res.data.path != path) {
-            window.history.replaceState(null, null, "/" + res.data.cfg.currentTeam + res.data.path)
+            navigate("/" + res.data.cfg.currentTeam + res.data.path)
         }
     }
     return (<>
