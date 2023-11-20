@@ -14,3 +14,8 @@ package common
 
 const Success = "success"
 const Error = "error"
+
+const (
+	StatusDeleted = 1
+	StatusOK      = 0
+)

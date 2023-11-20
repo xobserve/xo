@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS user (
     current_tenant INTEGER DEFAULT 0,
     current_team INTEGER DEFAULT 0,
     data MEDIUMTEXT,
+    status TINYINT DEFAULT 0,
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL
 );
@@ -31,6 +32,7 @@ CREATE TABLE IF NOT EXISTS tenant (
     nickname VARCHAR(255) DEFAULT '',
     data MEDIUMTEXT,
     is_public BOOL DEFAULT false,
+    status TINYINT DEFAULT 0,
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL
 );
@@ -59,6 +61,7 @@ CREATE TABLE IF NOT EXISTS team (
     tenant_id INTEGER NOT NULL,
     sidemenu MEDIUMTEXT NOT NULL,
     sync_users BOOL DEFAULT false,
+    status TINYINT DEFAULT 0,
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL
 );
@@ -101,6 +104,7 @@ CREATE TABLE IF NOT EXISTS dashboard (
     tags TEXT,
     data MEDIUMTEXT NOT NULL,
     weight SMALLINT DEFAULT 0,
+    status TINYINT DEFAULT 0,
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL
 );
