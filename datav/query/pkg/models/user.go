@@ -49,6 +49,7 @@ type User struct {
 	Visits        int        `json:"visits,omitempty"`
 	CurrentTenant int64      `json:"currentTenant,omitempty"`
 	CurrentTeam   int64      `json:"currentTeam,omitempty"`
+	Status        int        `json:"status"` // 0: normal, 1: deleted
 	Data          *UserData  `json:"data,omitempty"`
 	Salt          string     `json:"-"`
 	Password      string     `json:"-"`
@@ -70,8 +71,8 @@ type UserData struct {
 func QueryUserById(ctx context.Context, id int64) (*User, error) {
 	user := &User{}
 	var data []byte
-	err := db.Conn.QueryRowContext(ctx, `SELECT id,username,name,email,mobile,role,password,salt,data,current_tenant,current_team,last_seen_at,created FROM user WHERE id=?`,
-		id).Scan(&user.Id, &user.Username, &user.Name, &user.Email, &user.Mobile, &user.Role, &user.Password, &user.Salt, &data, &user.CurrentTenant, &user.CurrentTeam, &user.LastSeenAt, &user.Created)
+	err := db.Conn.QueryRowContext(ctx, `SELECT id,username,name,email,mobile,role,password,salt,data,current_tenant,current_team,status, last_seen_at,created FROM user WHERE id=?`,
+		id).Scan(&user.Id, &user.Username, &user.Name, &user.Email, &user.Mobile, &user.Role, &user.Password, &user.Salt, &data, &user.CurrentTenant, &user.CurrentTeam, &user.Status, &user.LastSeenAt, &user.Created)
 	if err != nil {
 		return nil, err
 	}
@@ -89,8 +90,8 @@ func QueryUserById(ctx context.Context, id int64) (*User, error) {
 func QueryUserByName(ctx context.Context, username string) (*User, error) {
 	user := &User{}
 	var data []byte
-	err := db.Conn.QueryRowContext(ctx, `SELECT id,username,name,email,mobile,role,password,salt,data,current_tenant,current_team, last_seen_at FROM user WHERE username=?`,
-		username).Scan(&user.Id, &user.Username, &user.Name, &user.Email, &user.Mobile, &user.Role, &user.Password, &user.Salt, &data, &user.CurrentTenant, &user.CurrentTeam, &user.LastSeenAt)
+	err := db.Conn.QueryRowContext(ctx, `SELECT id,username,name,email,mobile,role,password,salt,data,current_tenant,current_team,status, last_seen_at FROM user WHERE username=?`,
+		username).Scan(&user.Id, &user.Username, &user.Name, &user.Email, &user.Mobile, &user.Role, &user.Password, &user.Salt, &data, &user.CurrentTenant, &user.CurrentTeam, &user.Status, &user.LastSeenAt)
 	if err != nil {
 		return nil, err
 	}

@@ -60,6 +60,7 @@ CREATE TABLE IF NOT EXISTS sessions (
     sid VARCHAR(255) PRIMARY KEY,
     user_id INTEGER
 );
+CREATE INDEX sessions_userid ON sessions (user_id);
 
 CREATE TABLE IF NOT EXISTS team (
     id INTEGER PRIMARY KEY AUTO_INCREMENT,

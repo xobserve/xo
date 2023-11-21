@@ -28,3 +28,8 @@ export enum ComparisonOperation {
     NEQ = 'neq',
   }
   
+
+  export enum AvailableStatus {
+    OK = 0,
+    DELETE = 1,
+  }

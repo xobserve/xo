@@ -33,6 +33,7 @@ import { getAdminLinks } from "./links"
 import { Tenant } from "types/tenant"
 import ColorTag from "components/ColorTag"
 import { $config } from "src/data/configs/config"
+import { AvailableStatus } from "types/misc"
 
 const AdminUsers = () => {
     const t = useStore(commonMsg)
@@ -190,6 +191,17 @@ const AdminUsers = () => {
         onDetailOpen()
     }
 
+    const restoreUser = async (user: User) => {
+        await requestApi.post(`/admin/user/restore/${user.id}`)
+        toast({
+            title: t.isUpdated({ name: t.user }),
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+        })
+        load()
+    }
+
     return <>
         <Page title={t1.websiteAdmin} subTitle={t.manageItem({ name: t.user })} icon={<FaCog />} tabs={adminLinks} isLoading={users === null}>
             <Flex justifyContent="space-between">
@@ -209,6 +221,7 @@ const AdminUsers = () => {
                             <Th>{t.joined}</Th>
                             <Th>Last seen at</Th>
                             <Th>Visit count</Th>
+                            <Th>Status</Th>
                             <Th>{t.action}</Th>
                         </Tr>
                     </Thead>
@@ -229,10 +242,14 @@ const AdminUsers = () => {
                                 <Td>{moment(user.created).fromNow()}</Td>
                                 <Td>{user.lastSeenAt && moment(user.lastSeenAt).fromNow()}</Td>
                                 <Th>{user.visits ?? 0}</Th>
+                                <Th><Text className={user.status === AvailableStatus.DELETE && "error-text"}>{user.status === AvailableStatus.OK ? "OK" : "Deleted"}</Text></Th>
                                 <Td >
-                                    <Button variant="ghost" size="sm" px="0" onClick={() => editUser(user)}>{t.edit}</Button>
-                                    <Button variant="ghost" size="sm" px="0" ml="1" onClick={() => viewDetail(user)}>{t.detail}</Button>
-                                </Td>
+
+                                    <Button variant="ghost" size="sm" px="0" onClick={() => viewDetail(user)}>{t.detail}</Button>
+                                    {user.status === AvailableStatus.DELETE ?
+                                        <Button  size="xs" variant="outline"   ml="2" onClick={() => restoreUser(user)}>Restore</Button>
+                                        :
+                                        <Button variant="ghost" size="sm" px="0"  ml="1" onClick={() => editUser(user)}>{t.edit}</Button>}                                </Td>
                             </Tr>
                         })}
                     </Tbody>

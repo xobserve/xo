@@ -155,7 +155,8 @@ func (s *Server) Start() error {
 		r.POST("/admin/user/password", MustLogin(), admin.UpdateUserPassword)
 		r.POST("/admin/user/new", MustLogin(), admin.AddNewUser)
 		r.POST("/admin/user/role", MustLogin(), admin.UpdateUserRole)
-		r.DELETE("/admin/user/:id", MustLogin(), admin.DeleteUser)
+		r.DELETE("/admin/user/:id", MustLogin(), admin.MarkUserAsDeleted)
+		r.POST("/admin/user/restore/:id", MustLogin(), admin.RestoreUser)
 		r.GET("/admin/auditlogs", CheckLogin(), admin.QueryAuditLogs)
 
 		// datasource apis

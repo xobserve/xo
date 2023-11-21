@@ -75,6 +75,10 @@ func Login(c *gin.Context) {
 }
 
 func login(user *models.User, c *gin.Context) {
+	if user.Status == common.StatusDeleted {
+		c.JSON(http.StatusForbidden, common.RespError(e.UserBeenDeleted))
+		return
+	}
 	if config.Data.User.EnableMultiLogin {
 		lastSid := getToken(c)
 		deleteSession(c.Request.Context(), lastSid)

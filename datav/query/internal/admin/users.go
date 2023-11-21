@@ -14,6 +14,7 @@ package admin
 
 import (
 	"database/sql"
+	"fmt"
 	"net/http"
 	"sort"
 	"strconv"
@@ -31,7 +32,7 @@ import (
 )
 
 func GetUsers(c *gin.Context) {
-	rows, err := db.Conn.QueryContext(c.Request.Context(), `SELECT id,username,name,email,mobile,role,last_seen_at,created,visit_count FROM user`)
+	rows, err := db.Conn.QueryContext(c.Request.Context(), `SELECT id,username,name,email,mobile,role,status,last_seen_at,created,visit_count FROM user`)
 	if err != nil {
 		logger.Warn("get all users error", "error", err)
 		c.JSON(500, common.RespInternalError())
@@ -43,7 +44,7 @@ func GetUsers(c *gin.Context) {
 
 	for rows.Next() {
 		user := &models.User{}
-		err := rows.Scan(&user.Id, &user.Username, &user.Name, &user.Email, &user.Mobile, &user.Role, &user.LastSeenAt, &user.Created, &user.Visits)
+		err := rows.Scan(&user.Id, &user.Username, &user.Name, &user.Email, &user.Mobile, &user.Role, &user.Status, &user.LastSeenAt, &user.Created, &user.Visits)
 		if err != nil {
 			logger.Warn("get all users scan error", "error", err)
 			continue
@@ -168,8 +169,6 @@ func AddNewUser(c *gin.Context) {
 
 	err = tx.Commit()
 	if err != nil {
-		logger.Warn("commit sql transaction error", "error", err)
-		c.JSON(500, common.RespInternalError())
 		return
 	}
 
@@ -228,7 +227,7 @@ func UpdateUserRole(c *gin.Context) {
 	c.JSON(200, common.RespSuccess(nil))
 }
 
-func DeleteUser(c *gin.Context) {
+func MarkUserAsDeleted(c *gin.Context) {
 	userId, _ := strconv.ParseInt(c.Param("id"), 10, 64)
 	if userId == 0 {
 		c.JSON(400, common.RespError(e.ParamInvalid))
@@ -257,20 +256,84 @@ func DeleteUser(c *gin.Context) {
 		return
 	}
 
-	_, err = db.Conn.Exec("DELETE FROM user WHERE id=?", userId)
+	_, err = db.Conn.Exec("UPDATE user SET status=? WHERE id=?", common.StatusDeleted, userId)
 	if err != nil {
 		logger.Warn("delete user error", "error", err)
 		c.JSON(500, common.RespInternalError())
 		return
 	}
 
-	_, err = db.Conn.Exec("DELETE FROM team_member WHERE user_id=?", userId)
+	_, err = db.Conn.Exec("DELETE FROM sessions WHERE user_id=?", userId)
 	if err != nil {
-		logger.Warn("delete team member error", "error", err)
+		logger.Warn("delete user session error", "error", err)
 		c.JSON(500, common.RespInternalError())
 		return
 	}
 
 	WriteAuditLog(c.Request.Context(), u.Id, AuditDeleteUser, strconv.FormatInt(userId, 10), targetUser)
 	c.JSON(200, nil)
+}
+
+func RestoreUser(c *gin.Context) {
+	userId, _ := strconv.ParseInt(c.Param("id"), 10, 64)
+	if userId == 0 {
+		c.JSON(400, common.RespError(e.ParamInvalid))
+		return
+	}
+
+	u := c.MustGet("currentUser").(*models.User)
+	if userId == u.Id {
+		c.JSON(400, common.RespError("you cant delete yourself"))
+		return
+	}
+
+	if !models.IsSuperAdmin(u.Id) {
+		c.JSON(403, common.RespError("only superadmin can delete user"))
+		return
+	}
+
+	targetUser, err := models.QueryUserById(c.Request.Context(), userId)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			c.JSON(400, common.RespError(e.UserNotExist))
+			return
+		}
+		logger.Warn("query target user error when delete user", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+
+	_, err = db.Conn.Exec("UPDATE user SET status=? WHERE id=?", common.StatusOK, userId)
+	if err != nil {
+		logger.Warn("delete user error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+
+	WriteAuditLog(c.Request.Context(), u.Id, AuditRestoreUser, strconv.FormatInt(userId, 10), targetUser)
+}
+
+func DeleteUser(userId int64) error {
+	tx, err := db.Conn.Begin()
+	if err != nil {
+		return fmt.Errorf("new user error: %w", err)
+	}
+	defer tx.Rollback()
+
+	_, err = db.Conn.Exec("DELETE FROM user WHERE id=?", userId)
+	if err != nil {
+		return fmt.Errorf("delete user error: %w", err)
+	}
+
+	_, err = db.Conn.Exec("DELETE FROM team_member WHERE user_id=?", userId)
+	if err != nil {
+		return fmt.Errorf("delete team member error: %w", err)
+	}
+
+	err = tx.Commit()
+	if err != nil {
+		return fmt.Errorf("commit sql transaction error: %w", err)
+	}
+
+	return nil
 }

@@ -48,4 +48,5 @@ const (
 
 	// users
 	UsernameOrPasswordEmpty = "user name or password empty"
+	UserBeenDeleted         = "user has been logically deleted"
 )

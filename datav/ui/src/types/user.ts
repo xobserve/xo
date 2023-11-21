@@ -10,6 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+import { AvailableStatus } from "./misc"
 import { Role } from "./role"
 
 export interface Session {
@@ -33,4 +34,5 @@ export interface User {
     currentTenant?: number
     currentTeam?: number
     lastSeenAt?: string
+    status?: AvailableStatus
 }

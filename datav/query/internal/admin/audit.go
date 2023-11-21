@@ -43,6 +43,7 @@ func QueryAuditLogs(c *gin.Context) {
 const (
 	AuditDeleteDashboard  = "dashboard.delete"
 	AuditDeleteUser       = "user.delete"
+	AuditRestoreUser      = "user.restore"
 	AuditEditUser         = "user.edit"
 	AuditDeleteTeam       = "team.delete"
 	AuditEditTeam         = "team.edit"
