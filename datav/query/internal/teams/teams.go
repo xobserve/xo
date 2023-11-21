@@ -15,6 +15,7 @@ package teams
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
 	"net/http"
 	"sort"
@@ -33,8 +34,6 @@ import (
 
 var logger = colorlog.RootLogger.New("logger", "teams")
 
-var basicTeamQuery = `SELECT id,name,brief,created_by FROM team WHERE tenant_id='%d'`
-
 func GetTenantTeams(c *gin.Context) {
 	tenantId, _ := strconv.ParseInt(c.Param("tenantId"), 10, 64)
 	ctx := c.Request.Context()
@@ -51,8 +50,7 @@ func GetTenantTeams(c *gin.Context) {
 		return
 	}
 
-	q := fmt.Sprintf(basicTeamQuery, tenantId)
-	rows, err := db.Conn.QueryContext(ctx, q)
+	rows, err := db.Conn.QueryContext(ctx, `SELECT id,name,brief,created_by FROM team WHERE tenant_id=? and status!=?`, tenantId, common.StatusDeleted)
 	if err != nil {
 		logger.Warn("get all users error", "error", err)
 		c.JSON(500, common.RespInternalError())
@@ -192,17 +190,6 @@ func GetTeam(c *gin.Context) {
 		userId = u.Id
 	}
 
-	visible, err := models.IsTeamVisibleToUser(c.Request.Context(), id, userId)
-	if err != nil {
-		logger.Warn("check team visible error", "error", err)
-		c.JSON(500, common.RespInternalError())
-		return
-	}
-	if !visible {
-		c.JSON(403, common.RespError(e.NoPermission))
-		return
-	}
-
 	team, err := models.QueryTeam(c.Request.Context(), id, "")
 	if err != nil {
 		if err != sql.ErrNoRows {
@@ -212,6 +199,22 @@ func GetTeam(c *gin.Context) {
 		}
 
 		c.JSON(200, common.RespSuccess(models.Team{}))
+		return
+	}
+
+	if team.Status == common.StatusDeleted {
+		c.JSON(400, common.RespError(e.TeamBeenDeleted))
+		return
+	}
+
+	visible, err := models.IsTeamVisibleToUser(c.Request.Context(), id, userId)
+	if err != nil {
+		logger.Warn("check team visible error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+	if !visible {
+		c.JSON(403, common.RespError(e.NoPermission))
 		return
 	}
 
@@ -393,7 +396,7 @@ func AddTeamMembers(c *gin.Context) {
 
 	now := time.Now()
 	for _, memberId := range memberIds {
-		_, err := db.Conn.ExecContext(c.Request.Context(), "INSERT INTO team_member (tenant_id,team_id,user_id,role,created,updated) VALUES (?,?,?,?,?,?)", u.CurrentTenant, req.TeamId, memberId, role, now, now)
+		_, err := db.Conn.ExecContext(c.Request.Context(), "INSERT INTO team_member (tenant_id,team_id,user_id,role,created,updated) VALUES (?,?,?,?,?,?)", team.TenantId, req.TeamId, memberId, role, now, now)
 		if err != nil {
 			logger.Warn("add team member error", "error", err)
 			c.JSON(500, common.RespInternalError())
@@ -563,7 +566,7 @@ func UpdateTeamMember(c *gin.Context) {
 	c.JSON(200, common.RespSuccess(nil))
 }
 
-func DeleteTeam(c *gin.Context) {
+func MarkDeleted(c *gin.Context) {
 	teamId, _ := strconv.ParseInt(c.Param("id"), 10, 64)
 
 	if teamId == 0 {
@@ -598,7 +601,7 @@ func DeleteTeam(c *gin.Context) {
 
 	// check tenant has more than one team
 	var teamCount int
-	err = db.Conn.QueryRow("SELECT count(*) FROM team WHERE tenant_id=?", t.TenantId).Scan(&teamCount)
+	err = db.Conn.QueryRow("SELECT count(*) FROM team WHERE tenant_id=? and status!=?", t.TenantId, common.StatusDeleted).Scan(&teamCount)
 	if err != nil {
 		logger.Warn("query team count error", "error", err)
 		c.JSON(500, common.RespInternalError())
@@ -610,55 +613,57 @@ func DeleteTeam(c *gin.Context) {
 		return
 	}
 
-	tx, err := db.Conn.Begin()
+	_, err = db.Conn.ExecContext(c.Request.Context(), "UPDATE team SET status=?,statusUpdated=? WHERE id=?", common.StatusDeleted, time.Now(), teamId)
 	if err != nil {
-		logger.Warn("start sql transaction error", "error", err)
-		c.JSON(500, common.RespInternalError())
-		return
-	}
-	defer tx.Rollback()
-
-	_, err = tx.ExecContext(c.Request.Context(), "DELETE FROM team WHERE id=?", teamId)
-	if err != nil {
-		logger.Warn("delete team  error", "error", err)
-		c.JSON(500, common.RespInternalError())
-		return
-	}
-
-	_, err = tx.ExecContext(c.Request.Context(), "DELETE FROM team_member WHERE team_id=?", teamId)
-	if err != nil {
-		logger.Warn("delete team member error", "error", err)
-		c.JSON(500, common.RespInternalError())
-	}
-
-	_, err = tx.ExecContext(c.Request.Context(), "DELETE FROM variable WHERE team_id=?", teamId)
-	if err != nil {
-		logger.Warn("delete team variables error", "error", err)
-		c.JSON(500, common.RespInternalError())
-	}
-
-	_, err = tx.ExecContext(c.Request.Context(), "DELETE FROM dashboard WHERE team_id=?", teamId)
-	if err != nil {
-		logger.Warn("delete team dashboards error", "error", err)
-		c.JSON(500, common.RespInternalError())
-	}
-
-	_, err = tx.ExecContext(c.Request.Context(), "DELETE FROM datasource WHERE team_id=?", teamId)
-	if err != nil {
-		logger.Warn("delete team datasources error", "error", err)
-		c.JSON(500, common.RespInternalError())
-	}
-
-	err = tx.Commit()
-	if err != nil {
-		logger.Warn("commit sql transaction error", "error", err)
+		logger.Warn("set team to deleted error", "error", err)
 		c.JSON(500, common.RespInternalError())
 		return
 	}
 
 	admin.WriteAuditLog(c.Request.Context(), u.Id, admin.AuditDeleteTeam, strconv.FormatInt(teamId, 10), t)
+}
 
-	c.JSON(200, common.RespSuccess(nil))
+func DeleteTeam(ctx context.Context, teamId int64) error {
+
+	tx, err := db.Conn.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	_, err = tx.ExecContext(ctx, "DELETE FROM team WHERE id=?", teamId)
+	if err != nil {
+		return errors.New("delete team error:" + err.Error())
+	}
+
+	_, err = tx.ExecContext(ctx, "DELETE FROM team_member WHERE team_id=?", teamId)
+	if err != nil {
+		logger.Warn("delete team member error", "error", err)
+		return errors.New("delete team member error:" + err.Error())
+	}
+
+	_, err = tx.ExecContext(ctx, "DELETE FROM variable WHERE team_id=?", teamId)
+	if err != nil {
+		logger.Warn("delete team variables error", "error", err)
+		return errors.New("delete team variables error:" + err.Error())
+	}
+
+	_, err = tx.ExecContext(ctx, "DELETE FROM dashboard WHERE team_id=?", teamId)
+	if err != nil {
+		return errors.New("delete team dashboards error:" + err.Error())
+	}
+
+	_, err = tx.ExecContext(ctx, "DELETE FROM datasource WHERE team_id=?", teamId)
+	if err != nil {
+		return errors.New("delete team datasources error:" + err.Error())
+	}
+
+	err = tx.Commit()
+	if err != nil {
+		return errors.New("commit sql transaction error:" + err.Error())
+	}
+
+	return nil
 }
 
 func LeaveTeam(c *gin.Context) {
@@ -727,21 +732,23 @@ func GetTeamsForUser(c *gin.Context) {
 	u := c.MustGet("currentUser").(*models.User)
 	teams := make([]*models.Team, 0)
 
-	teamIds, err := models.QueryVisibleTeamsByUserId(c.Request.Context(), tenantId, u.Id)
+	teams0, err := models.QueryTeamsUserInTenant(c.Request.Context(), tenantId, u.Id)
 	if err != nil {
 		logger.Warn("query teams for user error", "error", err)
 		c.JSON(500, common.RespInternalError())
 		return
 	}
 
-	for _, id := range teamIds {
-		team, err := models.QueryTeam(c.Request.Context(), id, "")
+	for _, t := range teams0 {
+		team, err := models.QueryTeam(c.Request.Context(), t.Id, "")
 		if err != nil {
 			logger.Warn("query team error", "error", err)
 			continue
 		}
 
-		teams = append(teams, team)
+		if team.Status == common.StatusOK {
+			teams = append(teams, team)
+		}
 	}
 
 	c.JSON(200, common.RespSuccess(teams))

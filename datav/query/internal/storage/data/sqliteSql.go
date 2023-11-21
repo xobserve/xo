@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS user (
     current_team INTEGER DEFAULT 0,
     data MEDIUMTEXT,
     status TINYINT DEFAULT 0,
+    statusUpdated DATETIME,
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL
 );
@@ -33,6 +34,7 @@ CREATE TABLE IF NOT EXISTS tenant (
     data MEDIUMTEXT,
     is_public BOOL DEFAULT false,
     status TINYINT DEFAULT 0,
+    statusUpdated DATETIME,
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL
 );
@@ -62,6 +64,7 @@ CREATE TABLE IF NOT EXISTS team (
     sidemenu MEDIUMTEXT NOT NULL,
     sync_users BOOL DEFAULT false,
     status TINYINT DEFAULT 0,
+    statusUpdated DATETIME,
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL
 );
@@ -105,6 +108,7 @@ CREATE TABLE IF NOT EXISTS dashboard (
     data MEDIUMTEXT NOT NULL,
     weight SMALLINT DEFAULT 0,
     status TINYINT DEFAULT 0,
+    statusUpdated DATETIME,
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL
 );
@@ -162,14 +166,17 @@ CREATE TABLE IF NOT EXISTS annotation (
 
 const SqliteIndex = `
 CREATE INDEX IF NOT EXISTS user_username ON user (username);
+CREATE INDEX IF NOT EXISTS user_status ON user (status);
 
 CREATE INDEX IF NOT EXISTS tenant_name ON tenant (name);
+CREATE INDEX IF NOT EXISTS tenant_status ON tenant (status);
 
 CREATE INDEX IF NOT EXISTS tenant_user_tenant_id ON tenant_user (tenant_id);
 CREATE INDEX IF NOT EXISTS tenant_user_user_id ON tenant_user (user_id);
 CREATE UNIQUE INDEX IF NOT EXISTS tenant_user_tenant_user_id ON tenant_user (tenant_id, user_id);
 
 CREATE UNIQUE INDEX IF NOT EXISTS team_name ON team (tenant_id,name);
+CREATE INDEX IF NOT EXISTS team_status ON team (status);
 CREATE INDEX IF NOT EXISTS team_tenant ON team (tenant_id);
 CREATE INDEX IF NOT EXISTS team_created_by ON team (created_by);
 
@@ -184,6 +191,7 @@ CREATE UNIQUE INDEX IF NOT EXISTS variable_name ON variable (team_id, name);
 CREATE INDEX IF NOT EXISTS variable_team ON variable (team_id);
 
 CREATE INDEX IF NOT EXISTS  dashboard_team_id ON dashboard (team_id);
+CREATE INDEX IF NOT EXISTS  dashboard_status ON dashboard (status);
 CREATE INDEX IF NOT EXISTS  dashboard_visible_to ON dashboard (visible_to);
 CREATE INDEX IF NOT EXISTS  dashboard_created_by ON dashboard (created_by);
 

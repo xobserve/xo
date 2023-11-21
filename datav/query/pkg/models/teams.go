@@ -19,6 +19,7 @@ import (
 	"errors"
 	"time"
 
+	"github.com/xObserve/xObserve/query/pkg/common"
 	"github.com/xObserve/xObserve/query/pkg/db"
 )
 
@@ -49,6 +50,7 @@ type Team struct {
 	MemberCount     int       `json:"memberCount,omitempty"`
 	CurrentUserRole RoleType  `json:"role,omitempty"`
 	TenantId        int64     `json:"tenantId,omitempty"`
+	Status          int       `json:"status,omitempty"` // 0: normal, 1: deleted
 }
 
 type Teams []*Team
@@ -78,8 +80,8 @@ func (s TeamMembers) Less(i, j int) bool {
 
 func QueryTeam(ctx context.Context, id int64, name string) (*Team, error) {
 	team := &Team{}
-	err := db.Conn.QueryRowContext(ctx, `SELECT id,name,is_public,created_by,tenant_id,created,updated FROM team WHERE id=? or name=?`,
-		id, name).Scan(&team.Id, &team.Name, &team.IsPublic, &team.CreatedById, &team.TenantId, &team.Created, &team.Updated)
+	err := db.Conn.QueryRowContext(ctx, `SELECT id,name,is_public,created_by,tenant_id,status,created,updated FROM team WHERE id=? or name=?`,
+		id, name).Scan(&team.Id, &team.Name, &team.IsPublic, &team.CreatedById, &team.TenantId, &team.Status, &team.Created, &team.Updated)
 	if err != nil {
 		return nil, err
 	}
@@ -228,16 +230,7 @@ func IsTeamPublic(ctx context.Context, id int64) (bool, error) {
 }
 
 func IsTeamVisibleToUser(ctx context.Context, teamId int64, userId int64) (bool, error) {
-	isPublic, err := IsTeamPublic(ctx, teamId)
-	if err != nil {
-		return false, err
-	}
-
-	if isPublic {
-		return true, nil
-	}
-
-	_, err = QueryTeamMember(ctx, teamId, userId)
+	_, err := QueryTeamMember(ctx, teamId, userId)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return false, nil
@@ -246,6 +239,24 @@ func IsTeamVisibleToUser(ctx context.Context, teamId int64, userId int64) (bool,
 	}
 
 	return true, nil
+
+}
+
+func IsTeamDeleted(ctx context.Context, teamId int64) (bool, error) {
+	var status int
+	err := db.Conn.QueryRowContext(ctx, "SELECT status from team WHERE id=?", teamId).Scan(&status)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return false, errors.New("team not found")
+		}
+		return false, err
+	}
+
+	if status == common.StatusDeleted {
+		return true, nil
+	}
+
+	return false, nil
 
 }
 

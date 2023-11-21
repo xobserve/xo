@@ -43,7 +43,8 @@ const (
 	UnsignUserError   = "unsignin user can't visit root path"
 
 	// Teams
-	TeamNotExist = "team not exist"
+	TeamNotExist    = "team not exist"
+	TeamBeenDeleted = "team has been logically deleted"
 
 	// users
 	UsernameOrPasswordEmpty = "user name or password empty"

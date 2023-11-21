@@ -154,16 +154,17 @@ func SaveDatasource(c *gin.Context) {
 
 func GetDatasources(c *gin.Context) {
 	teamId, _ := strconv.ParseInt(c.Query("teamId"), 10, 64)
-	var err error
+	u := c.MustGet("currentUser").(*models.User)
 
-	if teamId == 0 {
-		u := c.MustGet("currentUser").(*models.User)
-		_, teamId, err = models.GetUserTenantAndTeamId(c.Request.Context(), u)
-		if err != nil {
-			logger.Warn("get datasource error", "error", err)
-			c.JSON(http.StatusInternalServerError, common.RespInternalError())
+	_, err := models.QueryTeamMember(c.Request.Context(), teamId, u.Id)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			c.JSON(400, common.RespError("you are not in this team"))
 			return
 		}
+		logger.Warn("query team member error", "error", err)
+		c.JSON(500, common.RespError(e.Internal))
+		return
 	}
 
 	dss, err := GetDatasourcesByTeamId(c.Request.Context(), teamId)

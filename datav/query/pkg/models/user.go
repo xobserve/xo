@@ -15,7 +15,6 @@ package models
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"time"
 
 	"github.com/xObserve/xObserve/query/pkg/db"
@@ -124,31 +123,4 @@ type GithubUser struct {
 	Tagline  string `json:"bio"`
 	Website  string `json:"blog"`
 	Location string `json:"location"`
-}
-
-func GetUserTenantAndTeamId(ctx context.Context, u *User) (int64, int64, error) {
-	var tenantId int64
-	if u == nil {
-		tenantId = QueryPublicTenant()
-	} else {
-		tenantId = u.CurrentTenant
-	}
-
-	var teamId int64
-	if u != nil {
-		teamId = u.CurrentTeam
-	} else {
-		teams, err := QueryTenantPublicTeamIds(tenantId)
-		if err != nil {
-			return 0, 0, err
-		}
-
-		if len(teams) == 0 {
-			return 0, 0, errors.New("there is no public team for you to view in current tenant")
-		}
-
-		teamId = teams[0]
-	}
-
-	return tenantId, teamId, nil
 }

@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/xObserve/xObserve/query/pkg/common"
 	"github.com/xObserve/xObserve/query/pkg/db"
 )
 
@@ -150,30 +151,7 @@ func QueryPublicTenants() ([]int64, error) {
 
 func QueryTenantTeamIds(tenantId int64) ([]int64, error) {
 	teamIds := make([]int64, 0)
-	rows, err := db.Conn.Query("SELECT id FROM team WHERE tenant_id=?", tenantId)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			return teamIds, nil
-		}
-		return nil, err
-	}
-	defer rows.Close()
-	for rows.Next() {
-		var teamId int64
-		err := rows.Scan(&teamId)
-		if err != nil {
-			return nil, err
-		}
-
-		teamIds = append(teamIds, teamId)
-	}
-
-	return teamIds, nil
-}
-
-func QueryTenantPublicTeamIds(tenantId int64) ([]int64, error) {
-	teamIds := make([]int64, 0)
-	rows, err := db.Conn.Query("SELECT id FROM team WHERE tenant_id=? and is_public=true", tenantId)
+	rows, err := db.Conn.Query("SELECT id FROM team WHERE tenant_id=? and status!=?", tenantId, common.StatusDeleted)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return teamIds, nil

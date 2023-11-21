@@ -19,11 +19,13 @@ CREATE TABLE IF NOT EXISTS user (
     current_team INTEGER DEFAULT 0,
     data MEDIUMTEXT,
     status TINYINT DEFAULT 0,
+    statusUpdated DATETIME,
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL
 );
 
 CREATE INDEX user_username ON user (username);
+CREATE INDEX user_status ON user (status);
 
 CREATE TABLE IF NOT EXISTS tenant (
     id INTEGER PRIMARY KEY AUTO_INCREMENT,
@@ -31,10 +33,12 @@ CREATE TABLE IF NOT EXISTS tenant (
     data MEDIUMTEXT,
     is_public BOOL DEFAULT false,
     status TINYINT DEFAULT 0,
+    statusUpdated DATETIME,
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL
 );
 CREATE INDEX tenant_name ON tenant (name);
+CREATE INDEX tenant_status ON tenant (status);
 
 
 CREATE TABLE IF NOT EXISTS tenant_user (
@@ -68,12 +72,14 @@ CREATE TABLE IF NOT EXISTS team (
     sidemenu MEDIUMTEXT NOT NULL,
     sync_users BOOL DEFAULT false,
     status TINYINT DEFAULT 0,
+    statusUpdated DATETIME,
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL
 );
 
 CREATE UNIQUE INDEX team_name ON team (tenant_id, name);
 CREATE INDEX team_tenant ON team (tenant_id);
+CREATE INDEX team_status ON team (status);
 CREATE INDEX team_created_by ON team (created_by);
 
 
@@ -123,13 +129,14 @@ CREATE TABLE IF NOT EXISTS dashboard (
     data MEDIUMTEXT NOT NULL,
     weight TINYINT DEFAULT 0,
     status TINYINT DEFAULT 0,
+    statusUpdated DATETIME,
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL
 );
 
 
 CREATE INDEX  dashboard_team_id ON dashboard (team_id);
-
+CREATE INDEX  dashboard_status ON dashboard (status);
 CREATE INDEX  dashboard_created_by ON dashboard (created_by);
 
 CREATE TABLE IF NOT EXISTS dashboard_history (

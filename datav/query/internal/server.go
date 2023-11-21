@@ -116,7 +116,7 @@ func (s *Server) Start() error {
 		r.DELETE("/team/member/:teamId/:memberId", MustLogin(), teams.DeleteTeamMember)
 		r.POST("/team/update", MustLogin(), teams.UpdateTeam)
 		r.POST("/team/new", MustLogin(), teams.AddNewTeam)
-		r.DELETE("/team/:id", MustLogin(), teams.DeleteTeam)
+		r.DELETE("/team/:id", MustLogin(), teams.MarkDeleted)
 		r.GET("/team/sidemenu/:id", CheckLogin(), teams.GetSideMenu)
 		r.POST("/team/sidemenu", MustLogin(), teams.UpdateSideMenu)
 		r.POST("/team/switch/:teamId", MustLogin(), teams.SwitchTeam)
@@ -157,6 +157,7 @@ func (s *Server) Start() error {
 		r.POST("/admin/user/role", MustLogin(), admin.UpdateUserRole)
 		r.DELETE("/admin/user/:id", MustLogin(), admin.DeleteUser)
 		r.GET("/admin/auditlogs", CheckLogin(), admin.QueryAuditLogs)
+
 		// datasource apis
 		r.POST("/datasource/save", MustLogin(), datasource.SaveDatasource)
 		r.GET("/datasource/all", CheckLogin(), otelPlugin, datasource.GetDatasources)

@@ -160,6 +160,11 @@ func GetDashboardConfig(c *gin.Context) {
 		c.JSON(500, common.RespError(e.Internal))
 		return
 	}
+	if team.Status == common.StatusDeleted {
+		c.JSON(400, common.RespError(e.TeamBeenDeleted))
+		return
+	}
+
 	teamList := models.Teams([]*models.Team{team})
 
 	datasources, err := datasource.GetDatasourcesByTeamId(c.Request.Context(), dashboard.OwnedBy)
@@ -261,7 +266,7 @@ func getUserRealTeam(teamId0 int64, u *models.User, ctx context.Context) (int64,
 			}
 
 			if len(teams) == 0 {
-				return 0, 0, errors.New("you are not in any team now")
+				return 0, 0, fmt.Errorf("you are not in any team now of tenant: %d", tenantId)
 			}
 
 			teamId = teams[0].Id
