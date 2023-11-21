@@ -17,10 +17,13 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"time"
 
+	storageData "github.com/xObserve/xObserve/query/internal/storage/data"
 	"github.com/xObserve/xObserve/query/pkg/common"
 	"github.com/xObserve/xObserve/query/pkg/db"
+	"github.com/xObserve/xObserve/query/pkg/e"
 )
 
 // dont change !
@@ -28,15 +31,6 @@ const (
 	DefaultTeamId   = 1
 	DefaultTeamName = "default"
 )
-
-var InitTeamMenu = []map[string]interface{}{
-	{
-		"title":       "Home",
-		"url":         "/home",
-		"icon":        "FaHome",
-		"dashboardId": HomeDashboardId,
-	},
-}
 
 type Team struct {
 	Id              int64     `json:"id"`
@@ -260,13 +254,11 @@ func IsTeamDeleted(ctx context.Context, teamId int64) (bool, error) {
 
 }
 
-func CreateTeam(ctx context.Context, tx *sql.Tx, u *User, name string, brief string) (int64, error) {
+func CreateTeam(ctx context.Context, tx *sql.Tx, tenantId int64, userId int64, name string, brief string) (int64, error) {
 	now := time.Now()
 
-	sidemenu, _ := json.Marshal([]map[string]interface{}{})
-
-	res, err := tx.ExecContext(ctx, "INSERT INTO team (tenant_id,name,brief,created_by,sidemenu,created,updated) VALUES (?,?,?,?,?,?,?)",
-		u.CurrentTenant, name, brief, u.Id, sidemenu, now, now)
+	res, err := tx.ExecContext(ctx, "INSERT INTO team (tenant_id,name,brief,created_by,created,updated) VALUES (?,?,?,?,?,?)",
+		tenantId, name, brief, userId, now, now)
 	if err != nil {
 		return 0, err
 	}
@@ -274,16 +266,41 @@ func CreateTeam(ctx context.Context, tx *sql.Tx, u *User, name string, brief str
 	id, _ := res.LastInsertId()
 
 	// insert self as first team member
-	_, err = tx.ExecContext(ctx, "INSERT INTO team_member (tenant_id,team_id,user_id,role,created,updated) VALUES (?,?,?,?,?,?)", u.CurrentTenant, id, u.Id, ROLE_SUPER_ADMIN, now, now)
+	_, err = tx.ExecContext(ctx, "INSERT INTO team_member (tenant_id,team_id,user_id,role,created,updated) VALUES (?,?,?,?,?,?)", tenantId, id, userId, ROLE_SUPER_ADMIN, now, now)
 	if err != nil {
 		return 0, err
 	}
 
 	// create testdata datasource
-	_, err = tx.Exec(`INSERT INTO datasource (name,type,url,team_id,created,updated) VALUES (?,?,?,?,?,?)`,
+	_, err = tx.ExecContext(ctx, `INSERT INTO datasource (name,type,url,team_id,created,updated) VALUES (?,?,?,?,?,?)`,
 		"TestData", DatasourceTestData, "", id, now, now)
 	if err != nil {
 		return 0, err
+	}
+
+	// insert home dashboard
+	d, err := ImportFromJSON(tx, storageData.HomeDashboard, id, userId)
+	if err != nil && !e.IsErrUniqueConstraint(err) {
+		return 0, fmt.Errorf("init home dashboard error: %w", err)
+	}
+
+	// init sidemenu
+	initSidemenu := []map[string]interface{}{
+		{
+			"title":       "Home",
+			"url":         "/home",
+			"icon":        "FaHome",
+			"dashboardId": d.Id,
+		},
+	}
+	menuStr, err := json.Marshal(initSidemenu)
+	if err != nil {
+		return 0, fmt.Errorf("json encode default menu error: %w", err)
+	}
+
+	_, err = tx.ExecContext(ctx, "UPDATE team SET sidemenu=? WHERE id=?", menuStr, id)
+	if err != nil {
+		return 0, fmt.Errorf("update team sidemenu error: %w", err)
 	}
 
 	return id, nil

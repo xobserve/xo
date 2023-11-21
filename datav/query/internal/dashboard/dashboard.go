@@ -416,13 +416,6 @@ func Delete(c *gin.Context) {
 	id := c.Param("id")
 	u := c.MustGet("currentUser").(*models.User)
 
-	for _, rid := range models.ReservedDashboardId {
-		if id == rid {
-			c.JSON(400, common.RespError("reserved dashboard can not be deleted"))
-			return
-		}
-	}
-
 	dash, err := models.QueryDashboard(c.Request.Context(), id)
 	if err != nil {
 		logger.Warn("query dash belongs to error", "error", err)

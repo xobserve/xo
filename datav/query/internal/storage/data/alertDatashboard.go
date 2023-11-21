@@ -2,10 +2,8 @@ package storageData
 
 const AlertDashboard = `
 {
-    "id": "d-alert",
     "title": "Alert",
     "editable": true,
-    "ownedBy": 1,
     "tags": [],
     "data": {
         "allowPanelsOverlap": false,

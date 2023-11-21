@@ -2,10 +2,8 @@ package storageData
 
 var HomeDashboard = `
 {
-    "id":  "d-home",
     "title": "Home Dashboard",
     "editable": true,
-    "ownedBy": 1,
     "tags": [],
     "data": {
         "allowPanelsOverlap": false,

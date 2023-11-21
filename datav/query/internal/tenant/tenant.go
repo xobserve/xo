@@ -104,8 +104,7 @@ func CreateTenant(c *gin.Context) {
 	}
 
 	// create default team
-	u.CurrentTenant = id
-	_, err = models.CreateTeam(c.Request.Context(), tx, u, models.DefaultTeamName, "default team")
+	_, err = models.CreateTeam(c.Request.Context(), tx, id, u.Id, models.DefaultTeamName, "default team")
 	if err != nil {
 		logger.Warn("Error create default team", "error", err)
 		c.JSON(500, common.RespInternalError())

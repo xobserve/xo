@@ -794,8 +794,7 @@ func AddNewTeam(c *gin.Context) {
 	}
 	defer tx.Rollback()
 
-	u.CurrentTenant = req.TenantId
-	id, err := models.CreateTeam(c.Request.Context(), tx, u, req.Name, req.Brief)
+	id, err := models.CreateTeam(c.Request.Context(), tx, req.TenantId, u.Id, req.Name, req.Brief)
 	if err != nil {
 		if e.IsErrUniqueConstraint(err) {
 			c.JSON(400, common.RespError("team name already exist"))

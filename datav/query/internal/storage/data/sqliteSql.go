@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS team (
     created_by INTEGER NOT NULL,
     data MEDIUMTEXT,
     tenant_id INTEGER NOT NULL,
-    sidemenu MEDIUMTEXT NOT NULL,
+    sidemenu MEDIUMTEXT,
     sync_users BOOL DEFAULT false,
     status TINYINT DEFAULT 0,
     statusUpdated DATETIME,
@@ -107,8 +107,6 @@ CREATE TABLE IF NOT EXISTS dashboard (
     tags TEXT,
     data MEDIUMTEXT NOT NULL,
     weight SMALLINT DEFAULT 0,
-    status TINYINT DEFAULT 0,
-    statusUpdated DATETIME,
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL
 );
@@ -191,7 +189,6 @@ CREATE UNIQUE INDEX IF NOT EXISTS variable_name ON variable (team_id, name);
 CREATE INDEX IF NOT EXISTS variable_team ON variable (team_id);
 
 CREATE INDEX IF NOT EXISTS  dashboard_team_id ON dashboard (team_id);
-CREATE INDEX IF NOT EXISTS  dashboard_status ON dashboard (status);
 CREATE INDEX IF NOT EXISTS  dashboard_visible_to ON dashboard (visible_to);
 CREATE INDEX IF NOT EXISTS  dashboard_created_by ON dashboard (created_by);
 

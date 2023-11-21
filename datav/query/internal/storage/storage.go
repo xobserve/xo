@@ -13,8 +13,8 @@
 package storage
 
 import (
+	"context"
 	"database/sql"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"os"
@@ -22,7 +22,6 @@ import (
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/xObserve/xObserve/query/internal/dashboard"
 	storageData "github.com/xObserve/xObserve/query/internal/storage/data"
 	"github.com/xObserve/xObserve/query/pkg/colorlog"
 	"github.com/xObserve/xObserve/query/pkg/config"
@@ -163,67 +162,44 @@ func initTables() error {
 
 	adminPW = pw
 
+	tx, err := db.Conn.Begin()
+	if err != nil {
+		logger.Crit("new transaction error", "error", err)
+		return err
+	}
+	defer tx.Rollback()
+
 	now := time.Now()
-	_, err = db.Conn.Exec(`INSERT INTO tenant (id,name,nickname, data ,created,updated) VALUES (?,?,?,?,?,?)`,
+	_, err = tx.Exec(`INSERT INTO tenant (id,name,nickname, data ,created,updated) VALUES (?,?,?,?,?,?)`,
 		models.DefaultTenantId, models.DefaultTenant, models.DefaultTenant, "{}", now, now)
 	if err != nil && !e.IsErrUniqueConstraint(err) {
 		logger.Crit("init super admin error", "error:", err)
 		return err
 	}
 
-	_, err = db.Conn.Exec(`INSERT INTO tenant_user (tenant_id,user_id,role, created,updated) VALUES (?,?,?,?,?)`,
+	_, err = tx.Exec(`INSERT INTO tenant_user (tenant_id,user_id,role, created,updated) VALUES (?,?,?,?,?)`,
 		models.DefaultTenantId, models.SuperAdminId, models.ROLE_SUPER_ADMIN, now, now)
 	if err != nil && !e.IsErrUniqueConstraint(err) {
 		logger.Crit("init super admin error", "error:", err)
 		return err
 	}
 
-	_, err = db.Conn.Exec(`INSERT INTO user (id,username,password,salt,role,email,created,updated) VALUES (?,?,?,?,?,?,?,?)`,
+	_, err = tx.Exec(`INSERT INTO user (id,username,password,salt,role,email,created,updated) VALUES (?,?,?,?,?,?,?,?)`,
 		models.SuperAdminId, models.SuperAdminUsername, adminPW, adminSalt, models.ROLE_SUPER_ADMIN, "", now, now)
 	if err != nil && !e.IsErrUniqueConstraint(err) {
 		logger.Crit("init super admin error", "error:", err)
 		return err
 	}
 
-	menuStr, err := json.Marshal(models.InitTeamMenu)
+	_, err = models.CreateTeam(context.Background(), tx, models.DefaultTenantId, models.SuperAdminId, models.DefaultTeamName, "")
+	if err != nil && !e.IsErrUniqueConstraint(err) {
+		logger.Crit("create team error", "error:", err)
+		return err
+	}
+
+	err = tx.Commit()
 	if err != nil {
-		logger.Crit("json encode default menu error ", "error:", err)
-		return err
-	}
-
-	_, err = db.Conn.Exec(`INSERT INTO team (id,name,created_by,tenant_id,sidemenu,created,updated) VALUES (?,?,?,?,?,?,?)`,
-		models.DefaultTeamId, models.DefaultTeamName, models.SuperAdminId, models.DefaultTenantId, menuStr, now, now)
-	if err != nil && !e.IsErrUniqueConstraint(err) {
-		logger.Crit("init global team error", "error:", err)
-		return err
-	}
-
-	_, err = db.Conn.Exec(`INSERT INTO team_member (tenant_id,team_id,user_id,role,created,updated) VALUES (?,?,?,?,?,?)`,
-		models.DefaultTenantId, models.DefaultTeamId, models.SuperAdminId, models.ROLE_SUPER_ADMIN, now, now)
-	if err != nil && !e.IsErrUniqueConstraint(err) {
-		logger.Crit("init global team member error", "error:", err)
-		return err
-	}
-
-	// insert home dashboard
-	_, err = dashboard.ImportFromJSON(storageData.HomeDashboard, models.SuperAdminId)
-	if err != nil && !e.IsErrUniqueConstraint(err) {
-		logger.Crit("init home dashboard error", "error:", err)
-		return err
-	}
-
-	// insert alert dashboard
-	_, err = dashboard.ImportFromJSON(storageData.AlertDashboard, models.SuperAdminId)
-	if err != nil && !e.IsErrUniqueConstraint(err) {
-		logger.Crit("init home dashboard error", "error:", err)
-		return err
-	}
-
-	// insert Test Data dataousrce
-	_, err = db.Conn.Exec(`INSERT INTO datasource (id,name,type,url,team_id,created,updated) VALUES (?,?,?,?,?,?,?)`,
-		models.InitTestDataDatasourceId, "TestData", models.DatasourceTestData, "", models.DefaultTeamId, now, now)
-	if err != nil && !e.IsErrUniqueConstraint(err) {
-		logger.Crit("init testdata datasource  error", "error:", err)
+		logger.Crit("commit sql transaction error", "error", err)
 		return err
 	}
 
