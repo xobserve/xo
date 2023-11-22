@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   IconButton,
   Menu,
@@ -47,6 +47,9 @@ import { ColorModeSwitcher } from 'src/components/ColorModeSwitcher'
 import SelectUserTenant from './SelectUserTenant'
 import { isEmpty } from 'utils/validate'
 import { $config } from 'src/data/configs/config'
+import { Team } from 'types/teams'
+import { requestApi } from 'utils/axios/request'
+import { Tenant } from 'types/tenant'
 
 const UserMenu = ({ miniMode }) => {
   const t = useStore(commonMsg)
@@ -68,6 +71,27 @@ const UserMenu = ({ miniMode }) => {
     navigate('/login')
   }
 
+  const [tenants, setTenants] = useState<Tenant[]>([])
+  const [teams, setTeams] = useState<Team[]>([])
+
+  useEffect(() => {
+    if (config) {
+      loadTeams()
+      loadTenants()
+    }
+  }, [config])
+
+  const loadTeams = async () => {
+    const res = await requestApi.get(
+      `/team/user/is/in?tenantId=${config?.currentTenant}`,
+    )
+    setTeams(res.data)
+  }
+
+  const loadTenants = async () => {
+    const res = await requestApi.get(`/tenant/user/is/in`)
+    setTenants(res.data)
+  }
   const changeLang = () => {
     const newLang = locale.get() == 'en' ? 'zh' : 'en'
     localeSetting.set(newLang)
@@ -159,13 +183,13 @@ const UserMenu = ({ miniMode }) => {
                 {
                   <MenuItem mt='2px' width='100%'>
                     {' '}
-                    <SelectUserTenant miniMode={false} />
+                    <SelectUserTenant miniMode={false} tenants={tenants} />
                   </MenuItem>
                 }
                 {
                   <MenuItem mt='2px' width='100%'>
                     {' '}
-                    <SelectUserTeam miniMode={false} />
+                    <SelectUserTeam miniMode={false} teams={teams} />
                   </MenuItem>
                 }
                 <MenuDivider />

@@ -121,6 +121,9 @@ func QueryTenantsUserIn(ctx context.Context, userId int64) ([]*Tenant, error) {
 			return nil, err
 		}
 
+		if tenant.Status == common.StatusDeleted {
+			continue
+		}
 		tenants = append(tenants, tenant)
 	}
 
