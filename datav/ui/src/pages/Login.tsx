@@ -12,7 +12,7 @@
 // limitations under the License.
 import React from 'react'
 import { useCallback } from "react";
-import type {  Engine } from "tsparticles-engine";
+import type { Engine } from "tsparticles-engine";
 import Particles from "react-particles";
 import { loadFull } from "tsparticles";
 import useSession from "hooks/use-session"
@@ -20,7 +20,7 @@ import useSession from "hooks/use-session"
 
 import { requestApi } from 'utils/axios/request';
 import storage from 'utils/localStorage';
-import { Box, Button, Heading, HStack, Image, Input, useColorModeValue, useMediaQuery } from '@chakra-ui/react';
+import { Box, Button, Heading, HStack, Image, Input, Modal, ModalBody, ModalContent, ModalOverlay, useColorModeValue, useDisclosure, useMediaQuery } from '@chakra-ui/react';
 import { saveToken } from 'utils/axios/getToken';
 import { useStore } from '@nanostores/react';
 import { commonMsg } from 'src/i18n/locales/en';
@@ -28,9 +28,12 @@ import { FaGithub } from 'react-icons/fa';
 import { $config } from 'src/data/configs/config';
 import { MobileBreakpoint } from 'src/data/constants';
 import { Session } from 'types/user';
+import { isAdmin } from 'types/role';
 
 // login page
 function Login() {
+    const { isOpen, onOpen, onClose } = useDisclosure()
+
     const config = useStore($config)
     const t = useStore(commonMsg)
     const particlesInit = useCallback(async (engine: Engine) => {
@@ -39,9 +42,9 @@ function Login() {
 
     const [username, setUsername] = React.useState('')
     const [password, setPassword] = React.useState('')
-    const {useLogin} = useSession()
+    const { useLogin } = useSession()
 
-  
+
     const onFinish = async () => {
         const res = await requestApi.post(
             '/login',
@@ -52,6 +55,15 @@ function Login() {
         const sess: Session = res.data
         saveToken(sess.token)
         useLogin()
+        if (isAdmin(sess.user.role)) {
+            onOpen()
+        } else {
+            visitWebsite()
+        }
+
+    };
+
+    const visitWebsite = () => {
         setTimeout(() => {
             const oldPage = storage.get('current-page')
             if (oldPage) {
@@ -61,10 +73,16 @@ function Login() {
                 window.location.href = `/`
             }
         }, 200)
-    };
+    }
+
+    const visitAdmin = () => {
+        setTimeout(() => {
+            window.location.href = '/admin/tenants'
+        }, 200)
+    }
 
     const loginGithub = () => {
-       window.location.href = `https://github.com/login/oauth/authorize?client_id=${config.githubOAuthToken}`
+        window.location.href = `https://github.com/login/oauth/authorize?client_id=${config.githubOAuthToken}`
     }
 
     const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
@@ -151,10 +169,10 @@ function Login() {
                         <Image src="/logo.png" className="rotate-image" alt="" height={isLargeScreen ? "160px" : "80px"} width={isLargeScreen ? "160px" : "80px"} marginLeft="-10px" />
                         <Box fontSize="26px" color="white" fontWeight="bold">xObserve</Box>
                     </Box>
-                    <Box textAlign="center" width={isLargeScreen ? "50%" : "70%"}  backgroundColor={useColorModeValue("hsla(0, 0%, 100%, 0.2)", "hsla(0, 0%, 100%, 0.2)")} p="12">
+                    <Box textAlign="center" width={isLargeScreen ? "50%" : "70%"} backgroundColor={useColorModeValue("hsla(0, 0%, 100%, 0.2)", "hsla(0, 0%, 100%, 0.2)")} p="12">
                         <Heading size="lg" color={"white"}>Welcome</Heading>
                         <Input borderWidth={0} value={username} onChange={e => setUsername(e.currentTarget.value)} placeholder={window.location.href.indexOf("play.xObserve.io") >= 0 ? "guest" : 'username'} mt="10" />
-                        <Input borderWidth={0}  value={password} type="password" onChange={e => setPassword(e.currentTarget.value)} placeholder={window.location.href.indexOf("play.xObserve.io") >= 0 ? "guest" : 'password'} mt="6" onKeyPress={e => {
+                        <Input borderWidth={0} value={password} type="password" onChange={e => setPassword(e.currentTarget.value)} placeholder={window.location.href.indexOf("play.xObserve.io") >= 0 ? "guest" : 'password'} mt="6" onKeyPress={e => {
                             if (e.key === 'Enter') {
                                 onFinish()
                             }
@@ -164,6 +182,16 @@ function Login() {
                     </Box>
                 </HStack>
             </Box>
+
+            <Modal isOpen={isOpen} onClose={onClose}>
+                <ModalOverlay />
+                <ModalContent top="20%">
+                    <ModalBody py="8">
+                        <Button colorScheme="twitter" width="100%" _hover={{ background: null }} onClick={visitWebsite}>Website page</Button>
+                        <Button colorScheme="gray" width="100%" mt="3" onClick={visitAdmin}>Admin page</Button>
+                    </ModalBody>
+                </ModalContent>
+            </Modal>
         </>
     );
 }

@@ -19,21 +19,19 @@ import Page from "layouts/page/Page"
 import {  useState } from "react"
 import { FaCog } from "react-icons/fa"
 import { requestApi } from "utils/axios/request"
-import { useNavigate, useParams } from "react-router-dom"
 import { commonMsg } from "src/i18n/locales/en"
 import { useStore } from "@nanostores/react"
 import { $teams } from "src/views/team/store"
 import { locale } from "src/i18n/i18n"
-import { getTenantLinks } from "./links"
 import { $config } from "src/data/configs/config"
 import { Team } from "types/teams"
+import { getTenantLinks } from "./links"
 
 const TeamsPage = () => {
     const t = useStore(commonMsg)
     const lang = useStore(locale)
     const { session } = useSession()
     const toast = useToast()
-    const navigate = useNavigate()
     const [teamName, setTeamName] = useState<string>("")
     const [teamDesc, setTeamDesc] = useState<string>("")
     const [teams, setTeams] = useState<Team[]>([])

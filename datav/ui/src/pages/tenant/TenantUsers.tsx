@@ -27,11 +27,11 @@ import { useStore } from "@nanostores/react"
 import { websiteAdmin, commonMsg } from "src/i18n/locales/en"
 import { locale } from "src/i18n/i18n"
 import { EditorInputItem } from "components/editor/EditorItem"
-import { useNavigate, useParams } from "react-router-dom"
-import { getTenantLinks } from "./links"
+import { useNavigate } from "react-router-dom"
 import { $config } from "src/data/configs/config"
 import { Team } from "types/teams"
 import ColorTag from "components/ColorTag"
+import { getTenantLinks } from "./links"
 
 const AdminTenantUsers = () => {
     const navigate = useNavigate()

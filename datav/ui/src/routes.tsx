@@ -18,7 +18,7 @@ import AccountSetting from "src/pages/account/Setting";
 import NewDashboardPage from "pages/new/Dashboard";
 import NewDatasourcePage from "src/pages/new/Datasource";
 import ImportDashboardPage from "src/pages/new/Import";
-import TeamsPage from "pages/admin/TenantTeams";
+import TeamsPage from "pages/tenant/TenantTeams";
 import TeamDashboardsPage from "src/pages/cfg/team/Dashboards";
 import TeamMembersPage from "src/pages/cfg/team/Members";
 import TeamSettingPage from "src/pages/cfg/team/Setting";
@@ -34,8 +34,8 @@ import AdminUsers from "pages/admin/Users";
 import TeamDatasources from "pages/cfg/team/Datasources";
 import TeamVariablesPage from "pages/cfg/team/Variables";
 import IframeExamplesPage from "pages/examples/Iframe";
-import AdminTenantUsers from "pages/admin/TenantUsers";
-import TenantSetting from "pages/admin/TenantSetting";
+import AdminTenantUsers from "pages/tenant/TenantUsers";
+import TenantSetting from "pages/tenant/TenantSetting";
 import CommonConfig from "./components/configloader/CommonConfig";
 import BasicConfig from "components/configloader/BasicConfig";
 
@@ -122,20 +122,24 @@ export const getRoutes = (enableTenant=false) => {
     {
       path: `${teamId}/admin/users`,
       element: commonConfig(pageContainer(<AdminUsers />)),
-    },
+    }
+  ]
+
+  const tenantRoutes = [
     {
-      path: `${teamId}/admin/tenant/users`,
+      path: `${teamId}/tenant/users`,
       element: commonConfig(pageContainer(<AdminTenantUsers />)),
     },
     {
-      path: `${teamId}/admin/tenant/teams`,
+      path: `${teamId}/tenant/teams`,
       element: commonConfig(pageContainer(<TeamsPage />)),
     },
     {
-      path: `${teamId}/admin/tenant/setting`,
+      path: `${teamId}/tenant/setting`,
       element: commonConfig(pageContainer(<TenantSetting />)),
-    },
+    }
   ]
+  
   return [
     // {
     //   path: "/",
@@ -150,6 +154,7 @@ export const getRoutes = (enableTenant=false) => {
     ...newRoutes,
     ...cfgRoutes,
     ...adminRoutes,
+    ...tenantRoutes,
     {
       path: `${teamId}/*`,
       element: pageContainer(<DashboardPage />),

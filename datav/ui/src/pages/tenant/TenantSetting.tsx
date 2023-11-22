@@ -23,12 +23,12 @@ import { Tenant } from "types/tenant"
 import { Form, FormSection } from "components/form/Form"
 import FormItem from "components/form/Item"
 import { cloneDeep } from "lodash"
-import { getTenantLinks } from "./links"
 import { $config } from "src/data/configs/config"
 import { locale } from "src/i18n/i18n"
 import { useNavigate } from "react-router-dom"
-import { isAdmin, isSuperAdmin } from "types/role"
+import { isSuperAdmin } from "types/role"
 import { isEmpty } from "utils/validate"
+import { getTenantLinks } from "./links"
 
 export const TenantSetting = memo(() => {
     const config = useStore($config)
