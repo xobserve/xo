@@ -42,6 +42,9 @@ const (
 	AlreadyExist      = "target already exist"
 	UnsignUserError   = "unsignin user can't visit root path"
 
+	// Tenant
+	TenantNotExist = "tenant not exist"
+
 	// Teams
 	TeamNotExist    = "team not exist"
 	TeamBeenDeleted = "team has been logically deleted"

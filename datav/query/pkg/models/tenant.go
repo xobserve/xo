@@ -22,6 +22,7 @@ type Tenant struct {
 	NumTeams int       `json:"numTeams"`
 	Teams    []*Team   `json:"teams,omitempty"`
 	Created  time.Time `json:"created"`
+	Status   int       `json:"status"`
 }
 
 type Tenants []*Tenant
@@ -72,7 +73,7 @@ func QueryTenant(ctx context.Context, tenantId int64) (*Tenant, error) {
 	tenant := &Tenant{
 		Id: tenantId,
 	}
-	err := db.Conn.QueryRowContext(ctx, `SELECT  name,is_public,created FROM tenant WHERE id=?`, tenantId).Scan(&tenant.Name, &tenant.IsPublic, &tenant.Created)
+	err := db.Conn.QueryRowContext(ctx, `SELECT  name,is_public,created FROM tenant WHERE id=? and status!=?`, tenantId, common.StatusDeleted).Scan(&tenant.Name, &tenant.IsPublic, &tenant.Created)
 	if err != nil {
 		return nil, err
 	}
@@ -105,7 +106,7 @@ func QueryTenantsByUserId(ctx context.Context, userId int64) ([]*Tenant, error) 
 
 func QueryTenantsUserIn(ctx context.Context, userId int64) ([]*Tenant, error) {
 	tenants := make([]*Tenant, 0)
-	rows, err := db.Conn.QueryContext(ctx, "SELECT tenant_user.tenant_id,tenant.name FROM tenant_user INNER JOIN tenant ON tenant_user.tenant_id = tenant.id  WHERE user_id=? ORDER BY tenant_user.tenant_id", userId)
+	rows, err := db.Conn.QueryContext(ctx, "SELECT tenant_user.tenant_id,tenant.name,tenant.status FROM tenant_user INNER JOIN tenant ON tenant_user.tenant_id = tenant.id  WHERE user_id=? ORDER BY tenant_user.tenant_id", userId)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return tenants, nil
@@ -115,7 +116,7 @@ func QueryTenantsUserIn(ctx context.Context, userId int64) ([]*Tenant, error) {
 	defer rows.Close()
 	for rows.Next() {
 		tenant := &Tenant{}
-		err := rows.Scan(&tenant.Id, &tenant.Name)
+		err := rows.Scan(&tenant.Id, &tenant.Name, &tenant.Status)
 		if err != nil {
 			return nil, err
 		}
@@ -208,4 +209,18 @@ func QueryTenantOwner(ctx context.Context, tenantId int64) (*User, error) {
 	}
 
 	return user, nil
+}
+
+func IsTenantExist(ctx context.Context, id int64) bool {
+	var qid int64
+	err := db.Conn.QueryRowContext(ctx, `SELECT id FROM tenant WHERE id=? and status !=?`, id, common.StatusDeleted).Scan(&qid)
+	if err != nil {
+		return false
+	}
+
+	if qid == id {
+		return true
+	}
+
+	return false
 }

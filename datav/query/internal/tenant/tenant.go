@@ -630,3 +630,34 @@ func LeaveTenant(c *gin.Context) {
 		return
 	}
 }
+
+func MarkDeleted(c *gin.Context) {
+	tenantId, _ := strconv.ParseInt(c.Param("id"), 10, 64)
+	if tenantId == 0 {
+		c.JSON(http.StatusBadRequest, common.RespError(e.ParamInvalid))
+		return
+	}
+
+	u := c.MustGet("currentUser").(*models.User)
+
+	operator, err := models.QueryTenantUser(c.Request.Context(), tenantId, u.Id)
+	if err != nil {
+		logger.Warn("update tenant error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+
+	// only superadmin can delete tenant
+	if !operator.Role.IsSuperAdmin() {
+		c.JSON(403, common.RespError("Only tenant super admin can do this"))
+		return
+	}
+
+	_, err = db.Conn.ExecContext(c.Request.Context(), "UPDATE tenant SET status=? WHERE id=?", common.StatusDeleted, tenantId)
+	if err != nil {
+		logger.Warn("update tenant error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+
+}

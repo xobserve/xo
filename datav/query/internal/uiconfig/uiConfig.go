@@ -110,6 +110,10 @@ func GetTenantConfig(c *gin.Context) {
 	// query tenant name
 	tenant1, err := models.QueryTenant(c.Request.Context(), tenantId)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			c.JSON(400, common.RespError(e.TenantNotExist))
+			return
+		}
 		logger.Warn("query tenant error", "error", err)
 		c.JSON(500, common.RespError(e.Internal))
 		return

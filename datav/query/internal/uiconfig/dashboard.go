@@ -181,6 +181,10 @@ func GetDashboardConfig(c *gin.Context) {
 	// query tenant name
 	tenant1, err := models.QueryTenant(c.Request.Context(), tenantId)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			c.JSON(400, common.RespError(e.TenantNotExist))
+			return
+		}
 		logger.Warn("query tenant error", "error", err)
 		c.JSON(500, common.RespError(e.Internal))
 		return
@@ -243,7 +247,7 @@ func getUserRealTeam(teamId0 int64, u *models.User, ctx context.Context) (int64,
 				return 0, 0, fmt.Errorf("check user in tenant error: %w", err)
 			}
 
-			if !in {
+			if !in || !models.IsTenantExist(ctx, tenantId) {
 				tenants, err := models.QueryTenantsByUserId(ctx, u.Id)
 				if err != nil {
 					return 0, 0, fmt.Errorf("query tenants user in error: %w", err)
@@ -253,7 +257,7 @@ func getUserRealTeam(teamId0 int64, u *models.User, ctx context.Context) (int64,
 					return 0, 0, errors.New("you are not in any tenant now")
 				}
 				for _, t := range tenants {
-					if t.NumTeams > 0 {
+					if t.NumTeams > 0 && t.Status != common.StatusDeleted {
 						tenantId = t.Id
 						break
 					}
