@@ -63,7 +63,7 @@ const SelectUserTenant = ({ miniMode }) => {
                             _focus={{ border: null }}
                             icon={<FaAlignLeft />}
                         /> : <FaAlignLeft fontSize="1em" />}
-                        {!miniMode && <Text fontSize="1em">{t1.selectTenant} - {tenants.find(t => t.id == config.currentTenant)?.name}</Text>}
+                        {!miniMode && <Text fontSize="1em">{t1.selectTenant} - {tenants.find(t => t.id == config?.currentTenant)?.name}</Text>}
                     </HStack>
 
                 </PopoverTrigger>
@@ -72,7 +72,7 @@ const SelectUserTenant = ({ miniMode }) => {
                         <PopoverBody>
                             <CardSelect title="">
                                 {tenants.map(tenant =>
-                                    <CardSelectItem key={tenant.id} selected={config.currentTenant == tenant.id} onClick={() => selectTenant(tenant.id, teamId, config, toast)}>
+                                    <CardSelectItem key={tenant.id} selected={config?.currentTenant == tenant.id} onClick={() => selectTenant(tenant.id, teamId, config, toast)}>
                                         <Flex width="200px" alignItems="center" fontSize="1em" fontWeight="550" px="2" py="1" justifyContent="space-between">
                                             <Text  >
                                                 {tenant.name}

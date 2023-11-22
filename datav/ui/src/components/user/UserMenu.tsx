@@ -121,8 +121,8 @@ const UserMenu = ({ miniMode }) => {
                         <MenuItem width="100%" onClick={() => changeLang()} icon={<FaFont fontSize="1em" />}>{t1.currentLang} - {locale.get() == "en" ? "English" : "简体中文"}</MenuItem>
                         {session && <>
                             <MenuDivider />
-                            {config && <MenuItem mt="2px" width="100%">    <SelectUserTenant miniMode={false} /></MenuItem>}
-                            {config && <MenuItem mt="2px" width="100%">    <SelectUserTeam miniMode={false} /></MenuItem>}
+                            {<MenuItem mt="2px" width="100%">    <SelectUserTenant miniMode={false} /></MenuItem>}
+                            {<MenuItem mt="2px" width="100%">    <SelectUserTeam miniMode={false} /></MenuItem>}
                             <MenuDivider />
                             <Link to={`${teamPath}/account/setting`}><MenuItem width="100%" icon={<FaRegSun fontSize="1em" />}>{t1.accountSetting}</MenuItem></Link>
                             <MenuItem width="100%" onClick={() => logout()} icon={<FaSignOutAlt fontSize="1em" />}>{t.logout}</MenuItem>

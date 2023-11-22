@@ -4,7 +4,7 @@ import { isEmpty } from "./validate"
 import { CreateToastFnReturn } from "@chakra-ui/react"
 
 export const selectTenant = async (tenantId:number, teamId:string, config:UIConfig, toast: CreateToastFnReturn, url?: string) => {
-    if (tenantId === config.currentTenant) {
+    if (tenantId === config?.currentTenant) {
         toast({
             title: "Already in this tenant",
             status: "info",
