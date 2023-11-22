@@ -8,10 +8,18 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/xObserve/xObserve/query/pkg/common"
 	"github.com/xObserve/xObserve/query/pkg/db"
+	"github.com/xObserve/xObserve/query/pkg/e"
 	"github.com/xObserve/xObserve/query/pkg/models"
 )
 
 func QueryAuditLogs(c *gin.Context) {
+	u := c.MustGet("currentUser").(*models.User)
+
+	if !u.Role.IsAdmin() {
+		c.JSON(403, common.RespError(e.NoPermission))
+		return
+	}
+
 	rows, err := db.Conn.QueryContext(c.Request.Context(), "SELECT op_id,op_type,target_id,data,created FROM audit_logs ORDER BY created DESC")
 	if err != nil {
 		logger.Warn("query audit logs error", "error", err)

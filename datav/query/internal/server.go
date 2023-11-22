@@ -180,6 +180,7 @@ func (s *Server) Start() error {
 		r.POST("/tenant/transfer/:tenantId/:username", MustLogin(), tenant.TransferTenant)
 		r.POST("/tenant/leave/:id", MustLogin(), tenant.LeaveTenant)
 		r.DELETE("/tenant/:id", MustLogin(), tenant.MarkDeleted)
+
 		// proxy apis
 		r.Any("/proxy/:id/*path", proxy.ProxyDatasource)
 		r.Any("/proxy/:id", proxy.ProxyDatasource)

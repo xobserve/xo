@@ -32,6 +32,13 @@ import (
 )
 
 func GetUsers(c *gin.Context) {
+	u := c.MustGet("currentUser").(*models.User)
+
+	if !u.Role.IsAdmin() {
+		c.JSON(403, common.RespError(e.NoPermission))
+		return
+	}
+
 	rows, err := db.Conn.QueryContext(c.Request.Context(), `SELECT id,username,name,email,mobile,role,status,last_seen_at,created,visit_count FROM user`)
 	if err != nil {
 		logger.Warn("get all users error", "error", err)
