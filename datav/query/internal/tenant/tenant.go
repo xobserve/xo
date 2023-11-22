@@ -28,7 +28,7 @@ func QueryTenants(c *gin.Context) {
 		return
 	}
 
-	rows, err := db.Conn.QueryContext(c.Request.Context(), `SELECT id,name,created FROM tenant`)
+	rows, err := db.Conn.QueryContext(c.Request.Context(), `SELECT id,name,status,created FROM tenant`)
 	if err != nil {
 		logger.Warn("Error get all tenants", "error", err)
 		c.JSON(500, common.RespInternalError())
@@ -40,7 +40,7 @@ func QueryTenants(c *gin.Context) {
 
 	for rows.Next() {
 		tenant := &models.Tenant{}
-		err := rows.Scan(&tenant.Id, &tenant.Name, &tenant.Created)
+		err := rows.Scan(&tenant.Id, &tenant.Name, &tenant.Status, &tenant.Created)
 		if err != nil {
 			logger.Warn("get all users scan error", "error", err)
 			continue
@@ -653,11 +653,32 @@ func MarkDeleted(c *gin.Context) {
 		return
 	}
 
-	_, err = db.Conn.ExecContext(c.Request.Context(), "UPDATE tenant SET status=? WHERE id=?", common.StatusDeleted, tenantId)
+	_, err = db.Conn.ExecContext(c.Request.Context(), "UPDATE tenant SET status=?,statusUpdated=? WHERE id=?", common.StatusDeleted, time.Now(), tenantId)
 	if err != nil {
 		logger.Warn("update tenant error", "error", err)
 		c.JSON(500, common.RespInternalError())
 		return
 	}
+}
 
+func RestoreTenant(c *gin.Context) {
+	tenantId, _ := strconv.ParseInt(c.Param("id"), 10, 64)
+	if tenantId == 0 {
+		c.JSON(http.StatusBadRequest, common.RespError(e.ParamInvalid))
+		return
+	}
+
+	u := c.MustGet("currentUser").(*models.User)
+
+	if !u.Role.IsSuperAdmin() {
+		c.JSON(403, common.RespError("Only tenant super admin can do this"))
+		return
+	}
+
+	_, err := db.Conn.ExecContext(c.Request.Context(), "UPDATE tenant SET status=?,statusUpdated=? WHERE id=?", common.StatusOK, time.Now(), tenantId)
+	if err != nil {
+		logger.Warn("restore tenant error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
 }

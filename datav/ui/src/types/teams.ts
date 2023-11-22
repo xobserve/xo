@@ -10,40 +10,41 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Role } from "./role"
-
+import { AvailableStatus } from './misc'
+import { Role } from './role'
 
 export interface Team {
-    id : number 
-    name: string
-    isPublic?: boolean
-    brief?: string
-    createdBy?: string
-    createdById?: number
-    memberCount?: number
-    role?: Role
+  id: number
+  name: string
+  isPublic?: boolean
+  brief?: string
+  createdBy?: string
+  createdById?: number
+  memberCount?: number
+  status?: AvailableStatus
+  role?: Role
 }
 
 export interface TeamMember {
-    id: number 
-    teamId?: number
-    username: string 
-    created: string 
-    role: Role 
+  id: number
+  teamId?: number
+  username: string
+  created: string
+  role: Role
 }
 
 export interface SideMenu {
-    teamId : number
-    isPublic?: boolean
-    teamName? : string
-    brief? : string
-    data: MenuItem[]
+  teamId: number
+  isPublic?: boolean
+  teamName?: string
+  brief?: string
+  data: MenuItem[]
 }
 
 export interface MenuItem {
-    url: string
-    title: string
-    dashboardId: string
-    icon?: string
-    children?: MenuItem[]
+  url: string
+  title: string
+  dashboardId: string
+  icon?: string
+  children?: MenuItem[]
 }

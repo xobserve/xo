@@ -50,7 +50,7 @@ func GetTenantTeams(c *gin.Context) {
 		return
 	}
 
-	rows, err := db.Conn.QueryContext(ctx, `SELECT id,name,brief,created_by FROM team WHERE tenant_id=? and status!=?`, tenantId, common.StatusDeleted)
+	rows, err := db.Conn.QueryContext(ctx, `SELECT id,name,brief,status,created_by FROM team WHERE tenant_id=?`, tenantId)
 	if err != nil {
 		logger.Warn("get all users error", "error", err)
 		c.JSON(500, common.RespInternalError())
@@ -61,7 +61,7 @@ func GetTenantTeams(c *gin.Context) {
 	teams := make(models.Teams, 0)
 	for rows.Next() {
 		team := &models.Team{}
-		err := rows.Scan(&team.Id, &team.Name, &team.Brief, &team.CreatedById)
+		err := rows.Scan(&team.Id, &team.Name, &team.Brief, &team.Status, &team.CreatedById)
 		if err != nil {
 			logger.Warn("get all users scan error", "error", err)
 			continue
@@ -621,6 +621,53 @@ func MarkDeleted(c *gin.Context) {
 	}
 
 	admin.WriteAuditLog(c.Request.Context(), u.Id, admin.AuditDeleteTeam, strconv.FormatInt(teamId, 10), t)
+}
+
+func RestoreTeam(c *gin.Context) {
+	teamId, _ := strconv.ParseInt(c.Param("id"), 10, 64)
+
+	if teamId == 0 {
+		c.JSON(400, common.RespError(e.ParamInvalid))
+		return
+	}
+
+	u := c.MustGet("currentUser").(*models.User)
+
+	t, err := models.QueryTeam(c.Request.Context(), teamId, "")
+	if err != nil {
+		if err == sql.ErrNoRows {
+			c.JSON(400, common.RespError(e.TeamNotExist))
+			return
+		}
+		logger.Warn("query team error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+
+	operator, err := models.QueryTenantUser(c.Request.Context(), t.TenantId, u.Id)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			c.JSON(400, common.RespError("You are not in current team"))
+			return
+		}
+		logger.Warn("query team member error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+
+	if !operator.Role.IsSuperAdmin() {
+		c.JSON(403, common.RespError("Only super admin can do this"))
+		return
+	}
+
+	_, err = db.Conn.ExecContext(c.Request.Context(), "UPDATE team SET status=?,statusUpdated=? WHERE id=?", common.StatusOK, time.Now(), teamId)
+	if err != nil {
+		logger.Warn("set team to ok error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+
+	admin.WriteAuditLog(c.Request.Context(), u.Id, admin.AuditRestoreTeam, strconv.FormatInt(teamId, 10), t)
 }
 
 func DeleteTeam(ctx context.Context, teamId int64) error {

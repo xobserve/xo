@@ -17,7 +17,6 @@
 
 import {
   Flex,
-  Heading,
   HStack,
   IconButton,
   Popover,

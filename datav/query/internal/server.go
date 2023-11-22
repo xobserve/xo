@@ -108,22 +108,6 @@ func (s *Server) Start() error {
 		r.POST("/account/updateData", MustLogin(), user.UpdateUserData)
 		r.GET("/user/detail", MustLogin(), user.GetUserDetail)
 
-		// teams apis
-		r.GET("/team/byId/:id", CheckLogin(), teams.GetTeam)
-		r.GET("/team/:id/members", CheckLogin(), teams.GetTeamMembers)
-		r.POST("/team/member", MustLogin(), teams.UpdateTeamMember)
-		r.POST("/team/add/member", MustLogin(), teams.AddTeamMembers)
-		r.DELETE("/team/member/:teamId/:memberId", MustLogin(), teams.DeleteTeamMember)
-		r.POST("/team/update", MustLogin(), teams.UpdateTeam)
-		r.POST("/team/new", MustLogin(), teams.AddNewTeam)
-		r.DELETE("/team/:id", MustLogin(), teams.MarkDeleted)
-		r.GET("/team/sidemenu/:id", CheckLogin(), teams.GetSideMenu)
-		r.POST("/team/sidemenu", MustLogin(), teams.UpdateSideMenu)
-		r.POST("/team/switch/:teamId", MustLogin(), teams.SwitchTeam)
-		r.GET("/team/user/is/in", CheckLogin(), teams.GetTeamsForUser)
-		r.POST("/team/transfer/:teamId/:username", MustLogin(), teams.TransferTeam)
-		r.POST("/team/leave/:id", MustLogin(), teams.LeaveTeam)
-
 		// variable apis
 		r.POST("/variable/new", MustLogin(), variables.AddNewVariable)
 		r.GET("/variable/team", MustLogin(), otelPlugin, variables.QueryTeamVariables)
@@ -180,6 +164,24 @@ func (s *Server) Start() error {
 		r.POST("/tenant/transfer/:tenantId/:username", MustLogin(), tenant.TransferTenant)
 		r.POST("/tenant/leave/:id", MustLogin(), tenant.LeaveTenant)
 		r.DELETE("/tenant/:id", MustLogin(), tenant.MarkDeleted)
+		r.POST("/tenant/restore/:id", MustLogin(), tenant.RestoreTenant)
+
+		// teams apis
+		r.GET("/team/byId/:id", CheckLogin(), teams.GetTeam)
+		r.GET("/team/:id/members", CheckLogin(), teams.GetTeamMembers)
+		r.POST("/team/member", MustLogin(), teams.UpdateTeamMember)
+		r.POST("/team/add/member", MustLogin(), teams.AddTeamMembers)
+		r.DELETE("/team/member/:teamId/:memberId", MustLogin(), teams.DeleteTeamMember)
+		r.POST("/team/update", MustLogin(), teams.UpdateTeam)
+		r.POST("/team/new", MustLogin(), teams.AddNewTeam)
+		r.DELETE("/team/:id", MustLogin(), teams.MarkDeleted)
+		r.POST("/team/restore/:id", MustLogin(), teams.RestoreTeam)
+		r.GET("/team/sidemenu/:id", CheckLogin(), teams.GetSideMenu)
+		r.POST("/team/sidemenu", MustLogin(), teams.UpdateSideMenu)
+		r.POST("/team/switch/:teamId", MustLogin(), teams.SwitchTeam)
+		r.GET("/team/user/is/in", CheckLogin(), teams.GetTeamsForUser)
+		r.POST("/team/transfer/:teamId/:username", MustLogin(), teams.TransferTeam)
+		r.POST("/team/leave/:id", MustLogin(), teams.LeaveTeam)
 
 		// proxy apis
 		r.Any("/proxy/:id/*path", proxy.ProxyDatasource)

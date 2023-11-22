@@ -54,6 +54,7 @@ const (
 	AuditRestoreUser      = "user.restore"
 	AuditEditUser         = "user.edit"
 	AuditDeleteTeam       = "team.delete"
+	AuditRestoreTeam      = "team.restore"
 	AuditEditTeam         = "team.edit"
 	AuditEditDatasource   = "datasource.edit"
 	AuditDeleteDatasource = "datasource.delete"

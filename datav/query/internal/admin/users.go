@@ -263,7 +263,7 @@ func MarkUserAsDeleted(c *gin.Context) {
 		return
 	}
 
-	_, err = db.Conn.Exec("UPDATE user SET status=? WHERE id=?", common.StatusDeleted, userId)
+	_, err = db.Conn.Exec("UPDATE user SET status=?,statusUpdated=? WHERE id=?", common.StatusDeleted, time.Now(), userId)
 	if err != nil {
 		logger.Warn("delete user error", "error", err)
 		c.JSON(500, common.RespInternalError())
@@ -310,7 +310,7 @@ func RestoreUser(c *gin.Context) {
 		return
 	}
 
-	_, err = db.Conn.Exec("UPDATE user SET status=? WHERE id=?", common.StatusOK, userId)
+	_, err = db.Conn.Exec("UPDATE user SET status=?,statusUpdated=? WHERE id=?", common.StatusOK, time.Now(), userId)
 	if err != nil {
 		logger.Warn("delete user error", "error", err)
 		c.JSON(500, common.RespInternalError())
