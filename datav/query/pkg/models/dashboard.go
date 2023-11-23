@@ -16,6 +16,7 @@ import (
 	"context"
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"time"
 
 	"github.com/xObserve/xObserve/query/pkg/db"
@@ -158,4 +159,28 @@ func ImportFromJSON(tx *sql.Tx, raw string, teamId int64, userId int64) (*Dashbo
 	}
 
 	return dash, nil
+}
+
+func DeleteDashboard(ctx context.Context, id string, tx *sql.Tx) error {
+	_, err := tx.ExecContext(ctx, "DELETE FROM dashboard WHERE id=?", id)
+	if err != nil {
+		return fmt.Errorf("delete dashboard error: %w", err)
+	}
+
+	_, err = tx.ExecContext(ctx, "DELETE FROM star_dashboard WHERE dashboard_id=?", id)
+	if err != nil {
+		return fmt.Errorf("delete dashboard star error: %w", err)
+	}
+
+	_, err = tx.ExecContext(ctx, "DELETE FROM dashboard_history WHERE dashboard_id=?", id)
+	if err != nil {
+		return fmt.Errorf("delete dashboard history error: %w", err)
+	}
+
+	_, err = tx.ExecContext(ctx, "DELETE FROM annotation WHERE namespace_id=?", id)
+	if err != nil {
+		return fmt.Errorf("delete dashboard annotations error: %w", err)
+	}
+
+	return nil
 }

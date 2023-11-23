@@ -2,6 +2,7 @@ package task
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/xObserve/xObserve/query/internal/admin"
@@ -19,7 +20,7 @@ func Init() {
 	for {
 		now := time.Now()
 		hour := now.Hour()
-		if hour == 3 {
+		if hour == 13 {
 			// delete annotations
 			expires := now.Add(-1 * time.Duration(config.Data.Task.CleanAnnotations) * time.Hour * 24)
 
@@ -31,10 +32,39 @@ func Init() {
 				logger.Info("Task: remove annotations", "count", n)
 			}
 
-			expires = now.Add(-1 * time.Duration(config.Data.Task.DeleteAfterDays) * time.Hour * 24)
+			expires = now.Add(-1 * time.Duration(config.Data.Task.DeleteAfterDays) * time.Second * 24)
+
+			// delete tenants
+			rows, err := db.Conn.Query("SELECT id FROM tenant WHERE status=? and statusUpdated < ?", common.StatusDeleted, expires)
+			if err != nil {
+				logger.Error("task: query tenant", "error", err)
+			} else {
+				tenantIds := make([]int64, 0)
+				for rows.Next() {
+					var tenantId int64
+					err := rows.Scan(&tenantId)
+					if err != nil {
+						logger.Error("task: scan tenant", "error", err)
+						continue
+					}
+
+					tenantIds = append(tenantIds, tenantId)
+				}
+				rows.Close()
+				for _, tenantId := range tenantIds {
+					err := tenant.DeleteTenant(tenantId)
+					if err != nil {
+						logger.Error("task: delete tenant", "error", err)
+					}
+				}
+
+				if len(tenantIds) > 0 {
+					logger.Info("Task: remove tenants", "tenantIds", tenantIds)
+				}
+			}
 
 			// delete teams
-			rows, err := db.Conn.Query("SELECT id FROM team WHERE status=? and statusUpdated < ?", common.StatusDeleted, expires)
+			rows, err = db.Conn.Query("SELECT id FROM team WHERE status=? and statusUpdated < ?", common.StatusDeleted, expires)
 			if err != nil {
 				logger.Error("task: query team", "error", err)
 			} else {
@@ -50,6 +80,7 @@ func Init() {
 					teamIds = append(teamIds, teamId)
 				}
 				rows.Close()
+				fmt.Println("here33333:", teamIds)
 				for _, teamId := range teamIds {
 					tx, err := db.Conn.Begin()
 					if err != nil {
@@ -69,7 +100,9 @@ func Init() {
 					}
 				}
 
-				logger.Info("Task: remove teams", "teamIds", teamIds)
+				if len(teamIds) > 0 {
+					logger.Info("Task: remove teams", "teamIds", teamIds)
+				}
 			}
 
 			// delete users
@@ -96,35 +129,11 @@ func Init() {
 					}
 				}
 
-				logger.Info("Task: remove users", "userIds", userIds)
+				if len(userIds) > 0 {
+					logger.Info("Task: remove users", "userIds", userIds)
+				}
 			}
 
-			// delete tenants
-			rows, err = db.Conn.Query("SELECT id FROM tenant WHERE status=? and statusUpdated < ?", common.StatusDeleted, expires)
-			if err != nil {
-				logger.Error("task: query tenant", "error", err)
-			} else {
-				tenantIds := make([]int64, 0)
-				for rows.Next() {
-					var tenantId int64
-					err := rows.Scan(&tenantId)
-					if err != nil {
-						logger.Error("task: scan tenant", "error", err)
-						continue
-					}
-
-					tenantIds = append(tenantIds, tenantId)
-				}
-				rows.Close()
-				for _, tenantId := range tenantIds {
-					err := tenant.DeleteTenant(tenantId)
-					if err != nil {
-						logger.Error("task: delete tenant", "error", err)
-					}
-				}
-
-				logger.Info("Task: remove tenants", "tenantIds", tenantIds)
-			}
 		}
 
 		time.Sleep(1 * time.Hour)

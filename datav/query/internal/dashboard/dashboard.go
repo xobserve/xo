@@ -442,24 +442,10 @@ func Delete(c *gin.Context) {
 	}
 	defer tx.Rollback()
 
-	_, err = tx.ExecContext(c.Request.Context(), "DELETE FROM dashboard WHERE id=?", id)
+	err = models.DeleteDashboard(c.Request.Context(), id, tx)
 	if err != nil {
-		logger.Warn("delete dashboard erorr", "error", err)
-		c.JSON(500, common.RespError(e.Internal))
-		return
-	}
-
-	_, err = tx.ExecContext(c.Request.Context(), "DELETE FROM star_dashboard WHERE dashboard_id=?", id)
-	if err != nil {
-		logger.Warn("delete dashboard star erorr", "error", err)
-		c.JSON(500, common.RespError(e.Internal))
-		return
-	}
-
-	_, err = tx.ExecContext(c.Request.Context(), "DELETE FROM annotation WHERE namespace_id=?", id)
-	if err != nil {
-		logger.Warn("delete dashboard annotations erorr", "error", err)
-		c.JSON(500, common.RespError(e.Internal))
+		logger.Warn("delete dashboard error", "error", err)
+		c.JSON(400, common.RespError(err.Error()))
 		return
 	}
 

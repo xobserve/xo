@@ -347,29 +347,54 @@ func QueryTeamsUserInTenant(ctx context.Context, tenantId, userId int64) ([]*Tea
 }
 
 func DeleteTeam(ctx context.Context, teamId int64, tx *sql.Tx) error {
-	_, err := tx.ExecContext(ctx, "DELETE FROM team WHERE id=?", teamId)
-	if err != nil {
-		return errors.New("delete team error:" + err.Error())
-	}
-
-	_, err = tx.ExecContext(ctx, "DELETE FROM team_member WHERE team_id=?", teamId)
-	if err != nil {
-		return errors.New("delete team member error:" + err.Error())
-	}
-
-	_, err = tx.ExecContext(ctx, "DELETE FROM variable WHERE team_id=?", teamId)
+	// delete team variables
+	_, err := tx.ExecContext(ctx, "DELETE FROM variable WHERE team_id=?", teamId)
 	if err != nil {
 		return errors.New("delete team variables error:" + err.Error())
 	}
 
+	// delete team dashboards
+	dashIds := make([]string, 0)
+	rows, err := tx.QueryContext(ctx, "SELECT id FROM dashboard WHERE team_id=?", teamId)
+	if err != nil {
+		return errors.New("query team dashboards error:" + err.Error())
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var id string
+		err := rows.Scan(&id)
+		if err != nil {
+			return errors.New("scan team dashboards error:" + err.Error())
+		}
+		dashIds = append(dashIds, id)
+	}
+	for _, id := range dashIds {
+		err = DeleteDashboard(ctx, id, tx)
+		if err != nil {
+			return errors.New("delete team dashboard error:" + err.Error())
+		}
+	}
 	_, err = tx.ExecContext(ctx, "DELETE FROM dashboard WHERE team_id=?", teamId)
 	if err != nil {
 		return errors.New("delete team dashboards error:" + err.Error())
 	}
 
+	// delete team datasources
 	_, err = tx.ExecContext(ctx, "DELETE FROM datasource WHERE team_id=?", teamId)
 	if err != nil {
 		return errors.New("delete team datasources error:" + err.Error())
+	}
+
+	// delete team members
+	_, err = tx.ExecContext(ctx, "DELETE FROM team_member WHERE team_id=?", teamId)
+	if err != nil {
+		return errors.New("delete team member error:" + err.Error())
+	}
+
+	//delete team
+	_, err = tx.ExecContext(ctx, "DELETE FROM team WHERE id=?", teamId)
+	if err != nil {
+		return errors.New("delete team error:" + err.Error())
 	}
 
 	return nil

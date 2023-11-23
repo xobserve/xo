@@ -31,5 +31,3 @@ const (
 	DatasourceExternalHttp = "external-http"
 	DatasourceTestData     = "testdata"
 )
-
-const InitTestDataDatasourceId = 1
