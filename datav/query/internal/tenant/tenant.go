@@ -684,5 +684,41 @@ func RestoreTenant(c *gin.Context) {
 }
 
 func DeleteTenant(tenantId int64) error {
+	tx, err := db.Conn.Begin()
+	if err != nil {
+		return fmt.Errorf("start sql tx in delete tenant error: %w", err)
+	}
+	defer tx.Rollback()
+
+	// delete tenant teams
+	teamIds, err := models.QueryTenantAllTeamIds(tenantId)
+	if err != nil {
+		return fmt.Errorf("query tenant all team ids error: %w", err)
+	}
+
+	for _, teamId := range teamIds {
+		err = models.DeleteTeam(context.Background(), teamId, tx)
+		if err != nil {
+			logger.Error("task: delete team", "error", err)
+		}
+	}
+
+	// delete tenant users
+	_, err = tx.Exec("DELETE FROM tenant_user WHERE tenant_id=?", tenantId)
+	if err != nil {
+		return fmt.Errorf("delete tenant user error: %w", err)
+	}
+
+	// delete tenant
+	_, err = tx.Exec("DELETE FROM tenant WHERE id=?", tenantId)
+	if err != nil {
+		return fmt.Errorf("delete tenant error: %w", err)
+	}
+
+	err = tx.Commit()
+	if err != nil {
+		return fmt.Errorf("commit sql tx in delete tenant error: %w", err)
+	}
+
 	return nil
 }

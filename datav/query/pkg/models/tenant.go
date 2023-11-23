@@ -176,6 +176,29 @@ func QueryTenantTeamIds(tenantId int64) ([]int64, error) {
 	return teamIds, nil
 }
 
+func QueryTenantAllTeamIds(tenantId int64) ([]int64, error) {
+	teamIds := make([]int64, 0)
+	rows, err := db.Conn.Query("SELECT id FROM team WHERE tenant_id=?", tenantId)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return teamIds, nil
+		}
+		return nil, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var teamId int64
+		err := rows.Scan(&teamId)
+		if err != nil {
+			return nil, err
+		}
+
+		teamIds = append(teamIds, teamId)
+	}
+
+	return teamIds, nil
+}
+
 func IsUserInTenant(userId, tenantId int64) (bool, error) {
 	var id int64
 	err := db.Conn.QueryRow(`SELECT id FROM tenant_user WHERE tenant_id=? and user_id=?`, tenantId, userId).Scan(&id)

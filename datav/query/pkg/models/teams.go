@@ -345,3 +345,32 @@ func QueryTeamsUserInTenant(ctx context.Context, tenantId, userId int64) ([]*Tea
 
 	return teams, nil
 }
+
+func DeleteTeam(ctx context.Context, teamId int64, tx *sql.Tx) error {
+	_, err := tx.ExecContext(ctx, "DELETE FROM team WHERE id=?", teamId)
+	if err != nil {
+		return errors.New("delete team error:" + err.Error())
+	}
+
+	_, err = tx.ExecContext(ctx, "DELETE FROM team_member WHERE team_id=?", teamId)
+	if err != nil {
+		return errors.New("delete team member error:" + err.Error())
+	}
+
+	_, err = tx.ExecContext(ctx, "DELETE FROM variable WHERE team_id=?", teamId)
+	if err != nil {
+		return errors.New("delete team variables error:" + err.Error())
+	}
+
+	_, err = tx.ExecContext(ctx, "DELETE FROM dashboard WHERE team_id=?", teamId)
+	if err != nil {
+		return errors.New("delete team dashboards error:" + err.Error())
+	}
+
+	_, err = tx.ExecContext(ctx, "DELETE FROM datasource WHERE team_id=?", teamId)
+	if err != nil {
+		return errors.New("delete team datasources error:" + err.Error())
+	}
+
+	return nil
+}

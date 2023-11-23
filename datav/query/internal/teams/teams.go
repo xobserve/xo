@@ -15,7 +15,6 @@ package teams
 import (
 	"context"
 	"database/sql"
-	"errors"
 	"fmt"
 	"net/http"
 	"sort"
@@ -668,49 +667,6 @@ func RestoreTeam(c *gin.Context) {
 	}
 
 	admin.WriteAuditLog(c.Request.Context(), u.Id, admin.AuditRestoreTeam, strconv.FormatInt(teamId, 10), t)
-}
-
-func DeleteTeam(ctx context.Context, teamId int64) error {
-
-	tx, err := db.Conn.Begin()
-	if err != nil {
-		return err
-	}
-	defer tx.Rollback()
-
-	_, err = tx.ExecContext(ctx, "DELETE FROM team WHERE id=?", teamId)
-	if err != nil {
-		return errors.New("delete team error:" + err.Error())
-	}
-
-	_, err = tx.ExecContext(ctx, "DELETE FROM team_member WHERE team_id=?", teamId)
-	if err != nil {
-		logger.Warn("delete team member error", "error", err)
-		return errors.New("delete team member error:" + err.Error())
-	}
-
-	_, err = tx.ExecContext(ctx, "DELETE FROM variable WHERE team_id=?", teamId)
-	if err != nil {
-		logger.Warn("delete team variables error", "error", err)
-		return errors.New("delete team variables error:" + err.Error())
-	}
-
-	_, err = tx.ExecContext(ctx, "DELETE FROM dashboard WHERE team_id=?", teamId)
-	if err != nil {
-		return errors.New("delete team dashboards error:" + err.Error())
-	}
-
-	_, err = tx.ExecContext(ctx, "DELETE FROM datasource WHERE team_id=?", teamId)
-	if err != nil {
-		return errors.New("delete team datasources error:" + err.Error())
-	}
-
-	err = tx.Commit()
-	if err != nil {
-		return errors.New("commit sql transaction error:" + err.Error())
-	}
-
-	return nil
 }
 
 func LeaveTeam(c *gin.Context) {

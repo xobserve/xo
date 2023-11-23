@@ -5,12 +5,12 @@ import (
 	"time"
 
 	"github.com/xObserve/xObserve/query/internal/admin"
-	"github.com/xObserve/xObserve/query/internal/teams"
 	"github.com/xObserve/xObserve/query/internal/tenant"
 	"github.com/xObserve/xObserve/query/pkg/colorlog"
 	"github.com/xObserve/xObserve/query/pkg/common"
 	"github.com/xObserve/xObserve/query/pkg/config"
 	"github.com/xObserve/xObserve/query/pkg/db"
+	"github.com/xObserve/xObserve/query/pkg/models"
 )
 
 var logger = colorlog.RootLogger.New("logger", "task")
@@ -51,9 +51,21 @@ func Init() {
 				}
 				rows.Close()
 				for _, teamId := range teamIds {
-					err := teams.DeleteTeam(context.Background(), teamId)
+					tx, err := db.Conn.Begin()
 					if err != nil {
+						logger.Error("task: begin sql transaction", "error", err)
+						continue
+					}
+
+					err = models.DeleteTeam(context.Background(), teamId, tx)
+					if err != nil {
+						tx.Rollback()
 						logger.Error("task: delete team", "error", err)
+					}
+
+					err = tx.Commit()
+					if err != nil {
+						logger.Error("task: commit sql transaction", "error", err)
 					}
 				}
 
