@@ -58,6 +58,11 @@ task:
     # annotations created longer than this will be auto deleted
     # default is 90 days
     clean_annotations: 90
+    # when tenant/team/user is deleted logically, it will be throughly deleted from disk after X days
+    delete_after_days: 3
+    enable_user_delete: true
+    enable_tenant_delete: true
+    enable_team_delete: true
 
 
 

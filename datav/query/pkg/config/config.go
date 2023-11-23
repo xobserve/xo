@@ -87,7 +87,11 @@ type Config struct {
 	}
 
 	Task struct {
-		CleanAnnotations int `yaml:"clean_annotations"`
+		CleanAnnotations   int  `yaml:"clean_annotations"`
+		DeleteAfterDays    int  `yaml:"delete_after_days"`
+		EnableUserDelete   bool `yaml:"enable_user_delete"`
+		EnableTenantDelete bool `yaml:"enable_tenant_delete"`
+		EnableTeamDelete   bool `yaml:"enable_team_delete"`
 	}
 
 	SelfMonitoring struct {

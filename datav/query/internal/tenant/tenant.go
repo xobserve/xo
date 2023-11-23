@@ -682,3 +682,7 @@ func RestoreTenant(c *gin.Context) {
 		return
 	}
 }
+
+func DeleteTenant(tenantId int64) error {
+	return nil
+}
