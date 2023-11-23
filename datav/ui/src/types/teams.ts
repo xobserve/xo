@@ -23,6 +23,7 @@ export interface Team {
   memberCount?: number
   status?: AvailableStatus
   role?: Role
+  syncUsers?: boolean
 }
 
 export interface TeamMember {

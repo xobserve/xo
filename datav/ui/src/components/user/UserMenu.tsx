@@ -75,11 +75,11 @@ const UserMenu = ({ miniMode }) => {
   const [teams, setTeams] = useState<Team[]>([])
 
   useEffect(() => {
-    if (config) {
+    if (config && session) {
       loadTeams()
       loadTenants()
     }
-  }, [config])
+  }, [config, session])
 
   const loadTeams = async () => {
     const res = await requestApi.get(

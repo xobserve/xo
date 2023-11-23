@@ -393,12 +393,11 @@ func AddTeamMembers(c *gin.Context) {
 		memberIds = append(memberIds, memberId)
 	}
 
-	now := time.Now()
 	for _, memberId := range memberIds {
-		_, err := db.Conn.ExecContext(c.Request.Context(), "INSERT INTO team_member (tenant_id,team_id,user_id,role,created,updated) VALUES (?,?,?,?,?,?)", team.TenantId, req.TeamId, memberId, role, now, now)
+		err = AddTeamMember(c.Request.Context(), team.TenantId, req.TeamId, memberId, role)
 		if err != nil {
 			logger.Warn("add team member error", "error", err)
-			c.JSON(500, common.RespInternalError())
+			c.JSON(400, common.RespError(err.Error()))
 			return
 		}
 	}
@@ -406,6 +405,15 @@ func AddTeamMembers(c *gin.Context) {
 	c.JSON(200, common.RespSuccess(nil))
 }
 
+func AddTeamMember(ctx context.Context, tenantId int64, teamId int64, userId int64, role models.RoleType) error {
+	now := time.Now()
+	_, err := db.Conn.ExecContext(ctx, "INSERT INTO team_member (tenant_id,team_id,user_id,role,created,updated) VALUES (?,?,?,?,?,?)", tenantId, teamId, userId, role, now, now)
+	if err != nil {
+		return fmt.Errorf("add team member error: %w", err)
+	}
+
+	return nil
+}
 func DeleteTeamMember(c *gin.Context) {
 	teamId, _ := strconv.ParseInt(c.Param("teamId"), 10, 64)
 	memberId, _ := strconv.ParseInt(c.Param("memberId"), 10, 64)
@@ -491,7 +499,44 @@ func UpdateTeam(c *gin.Context) {
 		return
 	}
 
-	_, err = db.Conn.ExecContext(c.Request.Context(), "UPDATE team SET name=?, is_public=? WHERE id=?", team.Name, team.IsPublic, team.Id)
+	oldTeam, err := models.QueryTeam(c.Request.Context(), team.Id, "")
+	if err != nil {
+		logger.Warn("query team error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+
+	now := time.Now()
+	if !oldTeam.SyncUsers && team.SyncUsers {
+		var tenantUsers []int64
+		rows, err := db.Conn.QueryContext(c.Request.Context(), "SELECT user_id FROM tenant_user WHERE tenant_id=?", oldTeam.TenantId)
+		if err != nil {
+			logger.Warn("query tenant users error", "error", err)
+			c.JSON(500, common.RespInternalError())
+			return
+		}
+		defer rows.Close()
+		for rows.Next() {
+			var userId int64
+			err := rows.Scan(&userId)
+			if err != nil {
+				logger.Warn("scan tenant users error", "error", err)
+				continue
+			}
+			tenantUsers = append(tenantUsers, userId)
+		}
+
+		for _, userId := range tenantUsers {
+			err = AddTeamMember(c.Request.Context(), oldTeam.TenantId, oldTeam.Id, userId, models.ROLE_VIEWER)
+			if err != nil && !e.IsErrUniqueConstraint(err) {
+				logger.Warn("add team member error", "error", err)
+				c.JSON(400, common.RespError(err.Error()))
+				return
+			}
+		}
+
+	}
+	_, err = db.Conn.ExecContext(c.Request.Context(), "UPDATE team SET name=?, sync_users=?, updated=? WHERE id=?", team.Name, team.SyncUsers, now, team.Id)
 	if err != nil {
 		logger.Warn("update team error", "error", err)
 		c.JSON(500, common.RespInternalError())

@@ -209,16 +209,15 @@ func GetDashboardConfig(c *gin.Context) {
 	// query team role
 	if u != nil {
 		teamUser, err := models.QueryTeamMember(c.Request.Context(), teamId, u.Id)
-		if err != nil {
-			if err == sql.ErrNoRows {
-				c.JSON(400, common.RespError("you are not in this team"))
-				return
-			}
+		if err != nil && err != sql.ErrNoRows {
 			logger.Warn("query team user error", "error", err)
 			c.JSON(500, common.RespError(e.Internal))
 			return
 		}
-		cfg.TeamRole = teamUser.Role
+		if teamUser != nil {
+			cfg.TeamRole = teamUser.Role
+
+		}
 	} else {
 		cfg.TeamRole = models.ROLE_VIEWER
 	}

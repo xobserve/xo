@@ -373,7 +373,7 @@ func AddUserToTenant(userId int64, tenantId int64, role models.RoleType, tx *sql
 
 	for _, teamId := range teamIds {
 		_, err = tx.ExecContext(ctx, ("INSERT INTO team_member (tenant_id,team_id,user_id,role,created,updated) VALUES (?,?,?,?,?,?)"),
-			tenantId, teamId, userId, role, now, now)
+			tenantId, teamId, userId, models.ROLE_VIEWER, now, now)
 		if err != nil {
 			return err
 		}
@@ -383,11 +383,8 @@ func AddUserToTenant(userId int64, tenantId int64, role models.RoleType, tx *sql
 }
 
 func GetTenantsUserIn(c *gin.Context) {
-	tenants := make([]*models.Tenant, 0)
-	var err error
-
 	u := c.MustGet("currentUser").(*models.User)
-	tenants, err = models.QueryTenantsByUserId(c.Request.Context(), u.Id)
+	tenants, err := models.QueryTenantsByUserId(c.Request.Context(), u.Id)
 	if err != nil {
 		logger.Warn("query tenants by user id error", "error", err)
 		c.JSON(500, common.RespInternalError())
@@ -496,6 +493,12 @@ func TransferTenant(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, common.RespError(e.ParamInvalid))
 		return
 	}
+
+	if tenantId == models.DefaultTenantId {
+		c.JSON(400, common.RespError("can not transfer default tenant to other user"))
+		return
+	}
+
 	transferTo := c.Param("username")
 
 	u := c.MustGet("currentUser").(*models.User)
@@ -585,6 +588,11 @@ func LeaveTenant(c *gin.Context) {
 	}
 
 	u := c.MustGet("currentUser").(*models.User)
+	if tenantId == models.DefaultTenantId && u.Id == models.SuperAdminId {
+		c.JSON(400, common.RespError("admin user cant leave default tenant"))
+		return
+	}
+
 	tenantUser, err := models.QueryTenantUser(c.Request.Context(), tenantId, u.Id)
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -638,6 +646,11 @@ func MarkDeleted(c *gin.Context) {
 		return
 	}
 
+	if tenantId == models.DefaultTenantId {
+		c.JSON(400, common.RespError("can not delete default tenant"))
+		return
+	}
+
 	u := c.MustGet("currentUser").(*models.User)
 
 	operator, err := models.QueryTenantUser(c.Request.Context(), tenantId, u.Id)
@@ -684,6 +697,10 @@ func RestoreTenant(c *gin.Context) {
 }
 
 func DeleteTenant(tenantId int64) error {
+	if tenantId == models.DefaultTenantId {
+		return fmt.Errorf("can not delete default tenant")
+	}
+
 	tx, err := db.Conn.Begin()
 	if err != nil {
 		return fmt.Errorf("start sql tx in delete tenant error: %w", err)
