@@ -2,10 +2,8 @@ package task
 
 import (
 	"context"
-	"fmt"
 	"time"
 
-	"github.com/xObserve/xObserve/query/internal/admin"
 	"github.com/xObserve/xObserve/query/internal/tenant"
 	"github.com/xObserve/xObserve/query/pkg/colorlog"
 	"github.com/xObserve/xObserve/query/pkg/common"
@@ -80,7 +78,6 @@ func Init() {
 					teamIds = append(teamIds, teamId)
 				}
 				rows.Close()
-				fmt.Println("here33333:", teamIds)
 				for _, teamId := range teamIds {
 					tx, err := db.Conn.Begin()
 					if err != nil {
@@ -123,9 +120,19 @@ func Init() {
 				}
 				rows.Close()
 				for _, userId := range userIds {
-					err := admin.DeleteUser(userId)
+					tx, err := db.Conn.Begin()
+					if err != nil {
+						logger.Error("task: begin sql transaction", "error", err)
+						continue
+					}
+					err = models.DeleteUser(userId, tx)
 					if err != nil {
 						logger.Error("task: delete user", "error", err)
+						tx.Rollback()
+					}
+					err = tx.Commit()
+					if err != nil {
+						logger.Error("task: commit sql transaction", "error", err)
 					}
 				}
 

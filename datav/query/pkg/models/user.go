@@ -14,7 +14,9 @@ package models
 
 import (
 	"context"
+	"database/sql"
 	"encoding/json"
+	"fmt"
 	"time"
 
 	"github.com/xObserve/xObserve/query/pkg/db"
@@ -124,4 +126,33 @@ type GithubUser struct {
 	Tagline  string `json:"bio"`
 	Website  string `json:"blog"`
 	Location string `json:"location"`
+}
+
+func DeleteUser(userId int64, tx *sql.Tx) error {
+	_, err := tx.Exec("DELETE FROM user WHERE id=?", userId)
+	if err != nil {
+		return fmt.Errorf("delete user error: %w", err)
+	}
+
+	_, err = tx.Exec("DELETE FROM tenant_user WHERE user_id=?", userId)
+	if err != nil {
+		return fmt.Errorf("delete team member error: %w", err)
+	}
+
+	_, err = tx.Exec("DELETE FROM team_member WHERE user_id=?", userId)
+	if err != nil {
+		return fmt.Errorf("delete team member error: %w", err)
+	}
+
+	_, err = tx.Exec("DELETE FROM sessions WHERE user_id=?", userId)
+	if err != nil {
+		return fmt.Errorf("delete session error: %w", err)
+	}
+
+	_, err = tx.Exec("DELETE FROM star_dashboard WHERE user_id=?", userId)
+	if err != nil {
+		return fmt.Errorf("delete star dashboard error: %w", err)
+	}
+
+	return nil
 }

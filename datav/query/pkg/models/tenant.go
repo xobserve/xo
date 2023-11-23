@@ -14,15 +14,16 @@ const DefaultTenant = "default"
 const DefaultTenantId = 1
 
 type Tenant struct {
-	Id       int64     `json:"id"`
-	Name     string    `json:"name"`
-	OwnerId  int64     `json:"ownerId"`
-	Owner    string    `json:"owner"`
-	IsPublic bool      `json:"isPublic"`
-	NumTeams int       `json:"numTeams"`
-	Teams    []*Team   `json:"teams,omitempty"`
-	Created  time.Time `json:"created"`
-	Status   int       `json:"status"`
+	Id          int64     `json:"id"`
+	Name        string    `json:"name"`
+	OwnerId     int64     `json:"ownerId"`
+	Owner       string    `json:"owner"`
+	IsPublic    bool      `json:"isPublic"`
+	NumTeams    int       `json:"numTeams"`
+	Teams       []*Team   `json:"teams,omitempty"`
+	Created     time.Time `json:"created"`
+	Status      int       `json:"status"`
+	CurrentRole RoleType  `json:"-"`
 }
 
 type Tenants []*Tenant
@@ -106,7 +107,7 @@ func QueryTenantsByUserId(ctx context.Context, userId int64) ([]*Tenant, error) 
 
 func QueryTenantsUserIn(ctx context.Context, userId int64) ([]*Tenant, error) {
 	tenants := make([]*Tenant, 0)
-	rows, err := db.Conn.QueryContext(ctx, "SELECT tenant_user.tenant_id,tenant.name,tenant.status FROM tenant_user INNER JOIN tenant ON tenant_user.tenant_id = tenant.id  WHERE user_id=? ORDER BY tenant_user.tenant_id", userId)
+	rows, err := db.Conn.QueryContext(ctx, "SELECT tenant_user.tenant_id,tenant_user.role,tenant.name,tenant.status FROM tenant_user INNER JOIN tenant ON tenant_user.tenant_id = tenant.id  WHERE user_id=? ORDER BY tenant_user.tenant_id", userId)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return tenants, nil
@@ -116,7 +117,7 @@ func QueryTenantsUserIn(ctx context.Context, userId int64) ([]*Tenant, error) {
 	defer rows.Close()
 	for rows.Next() {
 		tenant := &Tenant{}
-		err := rows.Scan(&tenant.Id, &tenant.Name, &tenant.Status)
+		err := rows.Scan(&tenant.Id, &tenant.CurrentRole, &tenant.Name, &tenant.Status)
 		if err != nil {
 			return nil, err
 		}

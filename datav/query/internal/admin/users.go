@@ -14,7 +14,6 @@ package admin
 
 import (
 	"database/sql"
-	"fmt"
 	"net/http"
 	"sort"
 	"strconv"
@@ -263,6 +262,20 @@ func MarkUserAsDeleted(c *gin.Context) {
 		return
 	}
 
+	// user must not be in any tenant
+	tenants, err := models.QueryTenantsUserIn(c.Request.Context(), userId)
+	if err != nil {
+		logger.Warn("query user tenants error", "error", err)
+		c.JSON(400, common.RespError(err.Error()))
+		return
+	}
+	for _, tenant := range tenants {
+		if tenant.CurrentRole == models.ROLE_SUPER_ADMIN {
+			c.JSON(400, common.RespError("user is still in some tenants as super admin"))
+			return
+		}
+	}
+
 	_, err = db.Conn.Exec("UPDATE user SET status=?,statusUpdated=? WHERE id=?", common.StatusDeleted, time.Now(), userId)
 	if err != nil {
 		logger.Warn("delete user error", "error", err)
@@ -318,29 +331,4 @@ func RestoreUser(c *gin.Context) {
 	}
 
 	WriteAuditLog(c.Request.Context(), u.Id, AuditRestoreUser, strconv.FormatInt(userId, 10), targetUser)
-}
-
-func DeleteUser(userId int64) error {
-	tx, err := db.Conn.Begin()
-	if err != nil {
-		return fmt.Errorf("new user error: %w", err)
-	}
-	defer tx.Rollback()
-
-	_, err = db.Conn.Exec("DELETE FROM user WHERE id=?", userId)
-	if err != nil {
-		return fmt.Errorf("delete user error: %w", err)
-	}
-
-	_, err = db.Conn.Exec("DELETE FROM team_member WHERE user_id=?", userId)
-	if err != nil {
-		return fmt.Errorf("delete team member error: %w", err)
-	}
-
-	err = tx.Commit()
-	if err != nil {
-		return fmt.Errorf("commit sql transaction error: %w", err)
-	}
-
-	return nil
 }
