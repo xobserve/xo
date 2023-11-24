@@ -111,6 +111,8 @@ export const commonMsg = i18n('common', {
   error: 'Error',
   compore: 'Compare',
   duration: 'Duration',
+  startTime: 'Start time',
+  endTime: 'End time',
   alert: 'Alert',
   transform: 'Transform',
   valueSettings: 'Value settings',
