@@ -22,6 +22,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/xObserve/xObserve/query/internal/acl"
 	"github.com/xObserve/xObserve/query/pkg/colorlog"
 	"github.com/xObserve/xObserve/query/pkg/common"
 	"github.com/xObserve/xObserve/query/pkg/db"
@@ -108,14 +109,9 @@ func SaveDatasource(c *gin.Context) {
 		teamId = datasource.TeamId
 	}
 
-	isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), teamId, u.Id)
+	err = acl.CanEditTeam(c.Request.Context(), teamId, u.Id)
 	if err != nil {
-		logger.Warn("Error query team admin", "error", err)
-		c.JSON(500, common.RespError(e.Internal))
-		return
-	}
-	if !isTeamAdmin {
-		c.JSON(403, common.RespError("Only team admin can do this"))
+		c.JSON(403, common.RespError(err.Error()))
 		return
 	}
 
@@ -228,14 +224,9 @@ func DeleteDatasource(c *gin.Context) {
 	}
 
 	u := c.MustGet("currentUser").(*models.User)
-	isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), ds.TeamId, u.Id)
+	err = acl.CanEditTeam(c.Request.Context(), ds.TeamId, u.Id)
 	if err != nil {
-		logger.Warn("Error query team admin", "error", err)
-		c.JSON(500, common.RespError(e.Internal))
-		return
-	}
-	if !isTeamAdmin {
-		c.JSON(403, common.RespError(e.NeedTeamAdmin))
+		c.JSON(403, common.RespError(err.Error()))
 		return
 	}
 

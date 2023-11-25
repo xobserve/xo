@@ -1,16 +1,13 @@
 package annotation
 
 import (
-	"context"
-	"database/sql"
 	"encoding/json"
-	"errors"
-	"fmt"
 	"net/http"
 	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/xObserve/xObserve/query/internal/acl"
 	"github.com/xObserve/xObserve/query/pkg/colorlog"
 	"github.com/xObserve/xObserve/query/pkg/common"
 	"github.com/xObserve/xObserve/query/pkg/db"
@@ -41,14 +38,9 @@ func SetAnnotation(c *gin.Context) {
 		return
 	}
 	u := c.MustGet("currentUser").(*models.User)
-	canEdit, err := canUserEdit(c.Request.Context(), anno.NamespaceId, u)
+	err = acl.CanEditAnnotation(c.Request.Context(), anno.NamespaceId, u)
 	if err != nil {
 		c.JSON(400, common.RespError(err.Error()))
-		return
-	}
-
-	if !canEdit {
-		c.JSON(http.StatusForbidden, common.RespError("no permission"))
 		return
 	}
 
@@ -125,14 +117,9 @@ func RemoveAnnotation(c *gin.Context) {
 	id := c.Param("id")
 
 	u := c.MustGet("currentUser").(*models.User)
-	canEdit, err := canUserEdit(c.Request.Context(), namespace, u)
+	err := acl.CanEditAnnotation(c.Request.Context(), namespace, u)
 	if err != nil {
 		c.JSON(400, common.RespError(err.Error()))
-		return
-	}
-
-	if !canEdit {
-		c.JSON(http.StatusForbidden, common.RespError("no permission"))
 		return
 	}
 
@@ -156,21 +143,16 @@ func RemoveGroupAnnotations(c *gin.Context) {
 	}
 
 	u := c.MustGet("currentUser").(*models.User)
-	ownedBy, err := models.QueryDashboardBelongsTo(c.Request.Context(), namespace)
+	dash, err := models.QueryDashboard(c.Request.Context(), namespace)
 	if err != nil {
 		logger.Warn("query dashboard err", "error", err)
 		c.JSON(http.StatusInternalServerError, common.RespError("query dashboard err"))
 		return
 	}
-	isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), ownedBy, u.Id)
-	if err != nil {
-		logger.Warn("check team admin err", "error", err)
-		c.JSON(http.StatusInternalServerError, common.RespError("check team admin err"))
-		return
-	}
 
-	if !isTeamAdmin {
-		c.JSON(http.StatusForbidden, common.RespError("no permission"))
+	err = acl.CanEditDashboard(c.Request.Context(), dash, u)
+	if err != nil {
+		c.JSON(http.StatusForbidden, common.RespError(err.Error()))
 		return
 	}
 
@@ -183,43 +165,4 @@ func RemoveGroupAnnotations(c *gin.Context) {
 	}
 
 	c.JSON(200, common.RespSuccess(nil))
-}
-
-func canUserEdit(ctx context.Context, dashboardId string, u *models.User) (bool, error) {
-	dash, err := models.QueryDashboard(ctx, dashboardId)
-	if err != nil {
-		return false, fmt.Errorf("query dashboard error: %w", err)
-	}
-
-	enableAnnotation, err := dash.Data.Get("annotation").Get("enable").Bool()
-	if err != nil {
-		return false, fmt.Errorf("get annotation enable err: %w", err)
-	}
-
-	if !enableAnnotation {
-		return false, errors.New("dashboard annotation disabled")
-	}
-
-	enableRole, err := dash.Data.Get("annotation").Get("enableRole").String()
-	if err != nil {
-		return false, fmt.Errorf("get annotation enable role err: %w", err)
-	}
-
-	teamMember, err := models.QueryTeamMember(ctx, dash.OwnedBy, u.Id)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			return false, errors.New(e.NotTeamMember)
-		}
-
-		return false, fmt.Errorf("query team member err: %w", err)
-	}
-
-	if enableRole == models.ROLE_ADMIN {
-		if !teamMember.Role.IsAdmin() {
-			return false, errors.New(e.NeedTeamAdmin)
-		}
-	}
-
-	return true, nil
-
 }

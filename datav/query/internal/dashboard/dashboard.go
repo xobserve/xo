@@ -23,6 +23,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/xObserve/xObserve/query/internal/acl"
 	"github.com/xObserve/xObserve/query/internal/admin"
 	"github.com/xObserve/xObserve/query/internal/user"
 	"github.com/xObserve/xObserve/query/pkg/colorlog"
@@ -65,15 +66,9 @@ func SaveDashboard(c *gin.Context) {
 		dash.OwnedBy = belongs
 	}
 
-	isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), dash.OwnedBy, u.Id)
-
+	err = acl.CanEditDashboard(c.Request.Context(), dash, u)
 	if err != nil {
-		logger.Error("check team admin error", "error", err)
-		c.JSON(500, common.RespInternalError())
-		return
-	}
-	if !isTeamAdmin {
-		c.JSON(403, common.RespError(e.NeedTeamAdmin))
+		c.JSON(400, common.RespError(err.Error()))
 		return
 	}
 
@@ -180,53 +175,6 @@ func QueryDashboard(c *gin.Context, u *models.User) (*models.Dashboard, error) {
 	return dash, nil
 }
 
-func UpdateOwnedBy(c *gin.Context) {
-	dash := &models.Dashboard{}
-	c.Bind(&dash)
-
-	if dash.Id == "" || dash.OwnedBy == 0 {
-		c.JSON(400, common.RespError(e.ParamInvalid))
-		return
-	}
-
-	// check if the new owner is a valid team
-	if !models.IsTeamExist(c.Request.Context(), dash.OwnedBy) {
-		c.JSON(400, common.RespError("targe team is not exist"))
-		return
-	}
-
-	// query the team which dashboard originally belongs to
-	ownedBy, err := models.QueryDashboardBelongsTo(c.Request.Context(), dash.Id)
-	if err != nil {
-		logger.Warn("query dashboard belongs to error", "error", err)
-		c.JSON(500, common.RespInternalError())
-		return
-	}
-
-	u := c.MustGet("currentUser").(*models.User)
-	// constrains need to be satisfied:
-	// 1. current user must be the admin of the team which dashboard originally belongs to
-	isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), ownedBy, u.Id)
-	if err != nil {
-		logger.Error("check team admin error", "error", err)
-		c.JSON(500, common.RespInternalError())
-		return
-	}
-	if !isTeamAdmin {
-		c.JSON(403, common.RespError(e.NoPermission))
-		return
-	}
-
-	_, err = db.Conn.ExecContext(c.Request.Context(), "UPDATE dashboard SET team_id=? WHERE id=?", dash.OwnedBy, dash.Id)
-	if err != nil {
-		logger.Warn("update dashboard ownedBy error", "error", err)
-		c.JSON(500, common.RespInternalError())
-		return
-	}
-
-	c.JSON(200, common.RespSuccess(nil))
-}
-
 func GetTeamDashboards(c *gin.Context) {
 	teamId, _ := strconv.ParseInt(c.Param("id"), 10, 64)
 	if teamId == 0 {
@@ -240,14 +188,9 @@ func GetTeamDashboards(c *gin.Context) {
 		userId = u.Id
 	}
 
-	visible, err := models.IsTeamVisibleToUser(c.Request.Context(), teamId, userId)
+	err := acl.CanViewTeam(c.Request.Context(), teamId, userId)
 	if err != nil {
-		logger.Warn("check team visible error", "error", err)
-		c.JSON(500, common.RespInternalError())
-		return
-	}
-	if !visible {
-		c.JSON(403, common.RespError(e.NoPermission))
+		c.JSON(403, common.RespError(err.Error()))
 		return
 	}
 
@@ -282,13 +225,13 @@ func Search(c *gin.Context) {
 		return
 	}
 
-	var userId int64
 	u := c.MustGet("currentUser").(*models.User)
-	if u != nil {
-		userId = u.Id
+	if err := acl.CanViewTenant(c.Request.Context(), tenantId, u.Id); err != nil {
+		c.JSON(403, common.RespError(err.Error()))
+		return
 	}
 
-	teams, err := models.QueryVisibleTeamsByUserId(c.Request.Context(), tenantId, userId)
+	teams, err := models.QueryVisibleTeamsByUserId(c.Request.Context(), tenantId, u.Id)
 	if err != nil {
 		logger.Warn("query visible teams error", "error", err)
 		c.JSON(500, common.RespError(e.Internal))
@@ -423,14 +366,9 @@ func Delete(c *gin.Context) {
 		return
 	}
 
-	isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), dash.OwnedBy, u.Id)
+	err = acl.CanEditDashboard(c.Request.Context(), dash, u)
 	if err != nil {
-		logger.Error("check team admin error", "error", err)
-		c.JSON(500, common.RespInternalError())
-		return
-	}
-	if !isTeamAdmin {
-		c.JSON(403, common.RespError(e.NeedTeamAdmin))
+		c.JSON(400, common.RespError(err.Error()))
 		return
 	}
 
@@ -475,9 +413,24 @@ func UpdateWeight(c *gin.Context) {
 		return
 	}
 
+	teamId, err := models.QueryDashboardBelongsTo(c.Request.Context(), req.Id)
+	if err != nil {
+		logger.Warn("query dashboard belongs to error", "error", err)
+		c.JSON(500, common.RespError(e.Internal))
+		return
+	}
+
+	tenantId, err := models.QueryTenantIdByTeamId(c.Request.Context(), teamId)
+	if err != nil {
+		logger.Warn("query tenant id error", "error", err)
+		c.JSON(500, common.RespError(e.Internal))
+		return
+	}
+
 	u := c.MustGet("currentUser").(*models.User)
-	if !u.Role.IsAdmin() {
-		c.JSON(403, common.RespError(e.NoPermission))
+	err = acl.CanEditTenant(c.Request.Context(), tenantId, u.Id)
+	if err != nil {
+		c.JSON(403, common.RespError(err.Error()))
 		return
 	}
 

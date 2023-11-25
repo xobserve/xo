@@ -20,6 +20,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/xObserve/xObserve/query/internal/acl"
 	"github.com/xObserve/xObserve/query/pkg/common"
 	"github.com/xObserve/xObserve/query/pkg/db"
 	"github.com/xObserve/xObserve/query/pkg/e"
@@ -68,15 +69,9 @@ func UpdateSideMenu(c *gin.Context) {
 
 	u := c.MustGet("currentUser").(*models.User)
 	// only team admin can do this
-	isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), menu.TeamId, u.Id)
+	err := acl.CanEditTeam(c.Request.Context(), menu.TeamId, u.Id)
 	if err != nil {
-		logger.Warn("check team admin error", "error", err)
-		c.JSON(500, common.RespInternalError())
-		return
-	}
-
-	if !isTeamAdmin {
-		c.JSON(403, common.RespError(e.NeedTeamAdmin))
+		c.JSON(403, common.RespError(err.Error()))
 		return
 	}
 

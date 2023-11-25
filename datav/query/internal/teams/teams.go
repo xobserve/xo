@@ -23,6 +23,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/xObserve/xObserve/query/internal/acl"
 	"github.com/xObserve/xObserve/query/internal/admin"
 	"github.com/xObserve/xObserve/query/pkg/colorlog"
 	"github.com/xObserve/xObserve/query/pkg/common"
@@ -206,48 +207,9 @@ func GetTeam(c *gin.Context) {
 		return
 	}
 
-	visible, err := models.IsTeamVisibleToUser(c.Request.Context(), id, userId)
+	err = acl.CanViewTeam(c.Request.Context(), team.Id, userId)
 	if err != nil {
-		logger.Warn("check team visible error", "error", err)
-		c.JSON(500, common.RespInternalError())
-		return
-	}
-	if !visible {
-		c.JSON(403, common.RespError(e.NoPermission))
-		return
-	}
-
-	c.JSON(200, common.RespSuccess(team))
-}
-
-func GetTeamByDashId(c *gin.Context) {
-	id := strings.TrimSpace(c.Param("id"))
-	if id == "" {
-		c.JSON(400, common.RespError(e.ParamInvalid))
-		return
-	}
-
-	teamId, err := models.QueryDashboardBelongsTo(c.Request.Context(), id)
-	if err != nil {
-		if err != sql.ErrNoRows {
-			logger.Warn("get team  error", "error", err)
-			c.JSON(500, common.RespInternalError())
-			return
-		}
-
-		c.JSON(400, common.RespError(e.ParamInvalid))
-		return
-	}
-
-	team, err := models.QueryTeam(c.Request.Context(), teamId, "")
-	if err != nil {
-		if err != sql.ErrNoRows {
-			logger.Warn("get team  error", "error", err)
-			c.JSON(500, common.RespInternalError())
-			return
-		}
-
-		c.JSON(200, common.RespSuccess(models.Team{}))
+		c.JSON(403, common.RespError(err.Error()))
 		return
 	}
 
@@ -267,14 +229,9 @@ func GetTeamMembers(c *gin.Context) {
 		userId = u.Id
 	}
 
-	visible, err := models.IsTeamVisibleToUser(c.Request.Context(), id, userId)
+	err := acl.CanViewTeam(c.Request.Context(), id, userId)
 	if err != nil {
-		logger.Warn("check team visible error", "error", err)
-		c.JSON(500, common.RespInternalError())
-		return
-	}
-	if !visible {
-		c.JSON(403, common.RespError(e.NoPermission))
+		c.JSON(403, common.RespError(err.Error()))
 		return
 	}
 
@@ -308,29 +265,6 @@ func GetTeamMembers(c *gin.Context) {
 	c.JSON(200, common.RespSuccess(members))
 }
 
-func GetTeamMember(c *gin.Context) {
-	teamId, _ := strconv.ParseInt(c.Param("teamId"), 10, 64)
-	userId, _ := strconv.ParseInt(c.Param("userId"), 10, 64)
-
-	if teamId == 0 || userId == 0 {
-		c.JSON(400, common.RespError(e.ParamInvalid))
-		return
-	}
-
-	member, err := models.QueryTeamMember(c.Request.Context(), teamId, userId)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			c.JSON(400, common.RespError("member not exist"))
-			return
-		}
-		logger.Warn("get team member error", "error", err)
-		c.JSON(500, common.RespInternalError())
-		return
-	}
-
-	c.JSON(200, common.RespSuccess(member))
-}
-
 type AddMemberReq struct {
 	TeamId  int64           `json:"teamId"`
 	Members []string        `json:"members"`
@@ -350,16 +284,10 @@ func AddTeamMembers(c *gin.Context) {
 	}
 
 	u := c.MustGet("currentUser").(*models.User)
-	isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), req.TeamId, u.Id)
-	if err != nil {
-		logger.Warn("check team admin error", "error", err)
-		c.JSON(500, common.RespInternalError())
-		return
-	}
 
-	// only global admin and team admin can do this
-	if !u.Role.IsAdmin() && !isTeamAdmin {
-		c.JSON(403, common.RespError(e.NoPermission))
+	err := acl.CanEditTeam(c.Request.Context(), req.TeamId, u.Id)
+	if err != nil {
+		c.JSON(403, common.RespError(err.Error()))
 		return
 	}
 

@@ -20,6 +20,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/xObserve/xObserve/query/internal/acl"
 	"github.com/xObserve/xObserve/query/pkg/colorlog"
 	"github.com/xObserve/xObserve/query/pkg/common"
 	"github.com/xObserve/xObserve/query/pkg/db"
@@ -52,14 +53,9 @@ func AddNewVariable(c *gin.Context) {
 
 	u := c.MustGet("currentUser").(*models.User)
 	// only admin or team admin can do this
-	isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), v.TeamId, u.Id)
+	err = acl.CanEditTeam(c.Request.Context(), v.TeamId, u.Id)
 	if err != nil {
-		logger.Warn("Error query team admin", "error", err)
-		c.JSON(500, common.RespError(e.Internal))
-		return
-	}
-	if !isTeamAdmin {
-		c.JSON(403, common.RespError(e.NeedTeamAdmin))
+		c.JSON(403, common.RespError(err.Error()))
 		return
 	}
 
@@ -158,14 +154,9 @@ func DeleteVariable(c *gin.Context) {
 	}
 
 	u := c.MustGet("currentUser").(*models.User)
-	isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), teamId, u.Id)
+	err = acl.CanEditTeam(c.Request.Context(), teamId, u.Id)
 	if err != nil {
-		logger.Warn("Error query team admin", "error", err)
-		c.JSON(500, common.RespError(e.Internal))
-		return
-	}
-	if !isTeamAdmin {
-		c.JSON(403, common.RespError(e.NoPermission))
+		c.JSON(403, common.RespError(err.Error()))
 		return
 	}
 
