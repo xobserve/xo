@@ -3,7 +3,6 @@ package ot
 import (
 	"context"
 	"errors"
-	"fmt"
 	"time"
 
 	"github.com/xObserve/xObserve/query/pkg/colorlog"
@@ -116,7 +115,7 @@ func newExporter(exporterType string) (sdktrace.SpanExporter, error) {
 			stdouttrace.WithPrettyPrint(),
 		)
 	default:
-		return nil, fmt.Errorf("unrecognized exporter type %s", exporterType)
+		return nil, nil
 	}
 
 	return exporter, err

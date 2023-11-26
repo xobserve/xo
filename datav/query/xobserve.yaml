@@ -95,8 +95,8 @@ sidemenu:
 
 #################################### Self monitoring ##############################
 selfmonitoring:
-    mock_error_logs: true
-        # OpenTelemetry exporter support otlp or stdout
+    enable: false
+    # OpenTelemetry exporter support otlp or stdout
     otlp_exportor: otlp
     # OpenTelemetry collector endpoint eq: jaeger collector endpoint    
     otlp_endpoint: 

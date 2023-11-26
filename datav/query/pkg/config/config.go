@@ -95,9 +95,8 @@ type Config struct {
 	}
 
 	SelfMonitoring struct {
-		MockErrorLogs bool   `yaml:"mock_error_logs"`
-		OtlpExportor  string `yaml:"otlp_exportor"`
-		OtlpEndpoint  string `yaml:"otlp_endpoint"`
+		OtlpExportor string `yaml:"otlp_exportor"`
+		OtlpEndpoint string `yaml:"otlp_endpoint"`
 	}
 	Plugins struct {
 		DisablePanels      []string `yaml:"disable_panels"`

@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
+  <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,84 +8,93 @@
     <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mapbox-gl/1.13.0/mapbox-gl.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mapbox-gl/1.13.0/mapbox-gl.js"></script> -->
     <style>
-        .svgLoader {
-            animation: spin 2s linear infinite;
-            margin: auto;
+      .svgLoader {
+        animation: spin 2s linear infinite;
+        margin: auto;
+      }
+
+      #first-page-loading {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        font-size: 16px !important;
+        font-weight: 500 !important;
+        z-index: -1;
+        /* background-color: #1A202C */
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
         }
 
-        #first-page-loading {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            font-size: 16px !important;
-            font-weight: 500 !important;
-            z-index: -1;
-            /* background-color: #1A202C */
+        100% {
+          transform: rotate(360deg);
         }
-
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
-        }
+      }
     </style>
     <script type="text/javascript">
-        // Single Page Apps for GitHub Pages
-        // MIT License
-        // https://github.com/rafgraph/spa-github-pages
-        // This script checks to see if a redirect is present in the query string,
-        // converts it back into the correct url and adds it to the
-        // browser's history using window.history.replaceState(...),
-        // which won't cause the browser to attempt to load the new url.
-        // When the single page app is loaded further down in this file,
-        // the correct url will be waiting in the browser's history for
-        // the single page app to route accordingly.
-        (function (l) {
-            if (l.search[1] === '/') {
-                var decoded = l.search.slice(1).split('&').map(function (s) {
-                    return s.replace(/~and~/g, '&')
-                }).join('?');
-                window.history.replaceState(null, null,
-                    l.pathname.slice(0, -1) + decoded + l.hash
-                );
-            }
-        }(window.location))
+      // Single Page Apps for GitHub Pages
+      // MIT License
+      // https://github.com/rafgraph/spa-github-pages
+      // This script checks to see if a redirect is present in the query string,
+      // converts it back into the correct url and adds it to the
+      // browser's history using window.history.replaceState(...),
+      // which won't cause the browser to attempt to load the new url.
+      // When the single page app is loaded further down in this file,
+      // the correct url will be waiting in the browser's history for
+      // the single page app to route accordingly.
+      ;(function (l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search
+            .slice(1)
+            .split('&')
+            .map(function (s) {
+              return s.replace(/~and~/g, '&')
+            })
+            .join('?')
+          window.history.replaceState(
+            null,
+            null,
+            l.pathname.slice(0, -1) + decoded + l.hash,
+          )
+        }
+      })(window.location)
     </script>
-</head>
+  </head>
 
-<body>
+  <body>
     <div id="first-page-loading">
-        <div><img class="svgLoader" src="/logo.png" width="60px" height="60px" /></div>
-        <div style="color: rgb(0, 181, 216);">Loading JS/CSS and website Configs...</div>
+      <div>
+        <img class="svgLoader" src="/logo.png" width="60px" height="60px" />
+      </div>
+      <div style="color: rgb(0, 181, 216)">
+        Loading JS/CSS and website Configs...
+      </div>
     </div>
     <div id="root"></div>
     <script type="module" src="/src/index.tsx"></script>
     <script>
-        const colorMode = localStorage.getItem("chakra-ui-color-mode")
-        if (colorMode === "dark") {
-            document.body.style.backgroundColor = "#1A202C"
-        } else {
-            document.body.style.backgroundColor = "#fff"
-        }
+      const colorMode = localStorage.getItem('chakra-ui-color-mode')
+      if (colorMode === 'dark') {
+        document.body.style.backgroundColor = '#1A202C'
+      } else {
+        document.body.style.backgroundColor = '#fff'
+      }
 
-        const url = window.location.href
-        if (url.indexOf("embed=true") >= 0) {
-            const firstPageLoading = document.getElementById('first-page-loading');
-            if (firstPageLoading) {
-                firstPageLoading.style.display = "none"
-            }
+      const url = window.location.href
+      if (url.indexOf('embed=true') >= 0) {
+        const firstPageLoading = document.getElementById('first-page-loading')
+        if (firstPageLoading) {
+          firstPageLoading.style.display = 'none'
         }
+      }
     </script>
-</body>
-
+  </body>
 </html>
