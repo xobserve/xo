@@ -35,19 +35,8 @@ func GetSideMenu(c *gin.Context) {
 	}
 
 	u := c.MustGet("currentUser").(*models.User)
-	var userId int64
-	if u != nil {
-		userId = u.Id
-	}
-
-	visible, err := models.IsTeamVisibleToUser(c.Request.Context(), teamId, userId)
-	if err != nil {
-		logger.Warn("check team visible error", "error", err)
-		c.JSON(500, common.RespInternalError())
-		return
-	}
-	if !visible {
-		c.JSON(403, common.RespError(e.NoPermission))
+	if err := acl.CanViewTeam(c.Request.Context(), teamId, u.Id); err != nil {
+		c.JSON(403, common.RespError(err.Error()))
 		return
 	}
 

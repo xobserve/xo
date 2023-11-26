@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/xObserve/xObserve/query/internal/acl"
 	"github.com/xObserve/xObserve/query/pkg/colorlog"
 	"github.com/xObserve/xObserve/query/pkg/common"
 	"github.com/xObserve/xObserve/query/pkg/db"
@@ -23,8 +24,8 @@ var logger = colorlog.RootLogger.New("logger", "tenant")
 func QueryTenants(c *gin.Context) {
 	u := c.MustGet("currentUser").(*models.User)
 
-	if !u.Role.IsAdmin() {
-		c.JSON(403, common.RespError(e.NoPermission))
+	if err := acl.CanViewWebsite(u); err != nil {
+		c.JSON(http.StatusForbidden, common.RespError(err.Error()))
 		return
 	}
 
@@ -59,8 +60,8 @@ func QueryTenants(c *gin.Context) {
 func CreateTenant(c *gin.Context) {
 	u := c.MustGet("currentUser").(*models.User)
 
-	if !u.Role.IsAdmin() {
-		c.JSON(403, common.RespError(e.NoPermission))
+	if err := acl.CanEditWebsite(u); err != nil {
+		c.JSON(http.StatusForbidden, common.RespError(err.Error()))
 		return
 	}
 
@@ -122,15 +123,10 @@ func CreateTenant(c *gin.Context) {
 
 func QueryTenantUsers(c *gin.Context) {
 	u := c.MustGet("currentUser").(*models.User)
+
 	tenantId, _ := strconv.ParseInt(c.Param("tenantId"), 10, 64)
-	_, err := models.QueryTenantUser(c.Request.Context(), tenantId, u.Id)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			c.JSON(400, common.RespError("you not in tenant"))
-			return
-		}
-		logger.Warn("query user in tenant error", "error", err)
-		c.JSON(500, common.RespInternalError())
+	if err := acl.CanViewTenant(c.Request.Context(), tenantId, u.Id); err != nil {
+		c.JSON(http.StatusForbidden, common.RespError(err.Error()))
 		return
 	}
 
@@ -459,21 +455,13 @@ func UpdateTenant(c *gin.Context) {
 	}
 
 	u := c.MustGet("currentUser").(*models.User)
-	tenantUser, err := models.QueryTenantUser(c.Request.Context(), req.Id, u.Id)
-	if err != nil {
-		logger.Warn("query user in tenant error", "error", err)
-		c.JSON(500, common.RespInternalError())
-		return
-	}
-
-	if !tenantUser.Role.IsAdmin() {
-		c.JSON(403, common.RespError(e.NeedTenantAdmin))
+	if err := acl.CanEditTenant(c.Request.Context(), req.Id, u.Id); err != nil {
+		c.JSON(http.StatusForbidden, common.RespError(err.Error()))
 		return
 	}
 
 	now := time.Now()
-
-	_, err = db.Conn.ExecContext(c.Request.Context(), "UPDATE tenant SET name=?,is_public=?, updated=? WHERE id=?", req.Name, req.IsPublic, now, req.Id)
+	_, err := db.Conn.ExecContext(c.Request.Context(), "UPDATE tenant SET name=?,is_public=?, updated=? WHERE id=?", req.Name, req.IsPublic, now, req.Id)
 	if err != nil {
 		if e.IsErrUniqueConstraint(err) {
 			c.JSON(400, common.RespError(fmt.Sprintf("tenant `%s` already exist", req.Name)))

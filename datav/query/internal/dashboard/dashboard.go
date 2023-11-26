@@ -277,7 +277,23 @@ func Search(c *gin.Context) {
 func Star(c *gin.Context) {
 	id := c.Param("id")
 	u := c.MustGet("currentUser").(*models.User)
-	_, err := db.Conn.ExecContext(c.Request.Context(), "INSERT INTO star_dashboard (user_id, dashboard_id, created) VALUES (?,?,?)", u.Id, id, time.Now())
+	teamId, err := models.QueryDashboardBelongsTo(c.Request.Context(), id)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			c.JSON(404, common.RespError(e.TeamNotExist))
+			return
+		}
+		logger.Warn("query dashboard belongs to error", "error", err)
+		c.JSON(500, common.RespError(e.Internal))
+		return
+	}
+
+	if err := acl.CanViewTeam(c.Request.Context(), teamId, u.Id); err != nil {
+		c.JSON(403, common.RespError(err.Error()))
+		return
+	}
+
+	_, err = db.Conn.ExecContext(c.Request.Context(), "INSERT INTO star_dashboard (user_id, dashboard_id, created) VALUES (?,?,?)", u.Id, id, time.Now())
 	if err != nil {
 		logger.Warn("star dashboard", "error", err)
 		c.JSON(500, common.RespError(e.Internal))
