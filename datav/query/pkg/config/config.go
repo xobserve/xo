@@ -95,7 +95,7 @@ type Config struct {
 	}
 
 	SelfMonitoring struct {
-		OtlpExportor string `yaml:"otlp_exportor"`
+		OtlpExportor string `yaml:"otlp_exporter"`
 		OtlpEndpoint string `yaml:"otlp_endpoint"`
 	}
 	Plugins struct {

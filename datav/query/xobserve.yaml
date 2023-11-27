@@ -95,9 +95,8 @@ sidemenu:
 
 #################################### Self monitoring ##############################
 selfmonitoring:
-    enable: false
     # OpenTelemetry exporter support otlp or stdout
-    otlp_exportor: otlp
+    otlp_exportor: 
     # OpenTelemetry collector endpoint eq: jaeger collector endpoint    
     otlp_endpoint: 
     
