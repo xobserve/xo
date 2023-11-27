@@ -102,7 +102,7 @@ func connectDatabase(tc *sdktrace.TracerProvider) error {
 		}
 		driver, _ := otelsql.Register("sqlite3",
 			otelsql.TraceQueryWithArgs(),
-			otelsql.AllowRoot(),
+			// otelsql.AllowRoot(),
 			otelsql.WithTracerProvider(tc),
 			otelsql.WithSystem(semconv.DBSystemSqlite),
 		)
