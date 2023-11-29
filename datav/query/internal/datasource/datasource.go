@@ -77,7 +77,7 @@ func InitDatasources() {
 		time.Sleep(time.Second * 10)
 	}
 }
-func SaveDatasource(c *gin.Context) {
+func CreateDatasource(c *gin.Context) {
 	ds := &models.Datasource{}
 	err := c.Bind(&ds)
 	if err != nil {
@@ -96,56 +96,80 @@ func SaveDatasource(c *gin.Context) {
 		return
 	}
 
-	var teamId int64
-	if ds.Id == 0 {
-		teamId = ds.TeamId
-	} else {
-		datasource, err := GetDatasource(c.Request.Context(), ds.Id)
-		if err != nil {
-			logger.Warn("Error query datasource", "error", err)
-			c.JSON(500, common.RespInternalError())
-			return
-		}
-		teamId = datasource.TeamId
-	}
-
-	err = acl.CanEditTeam(c.Request.Context(), teamId, u.Id)
+	err = acl.CanEditTeam(c.Request.Context(), ds.TeamId, u.Id)
 	if err != nil {
 		c.JSON(403, common.RespError(err.Error()))
 		return
 	}
 
+	var res sql.Result
 	if ds.Id == 0 {
-		// create
-		res, err := db.Conn.ExecContext(c.Request.Context(), "INSERT INTO datasource (name,type,url,team_id,data,created,updated) VALUES (?,?,?,?,?,?,?)", ds.Name, ds.Type, ds.URL, ds.TeamId, data, now, now)
-		if err != nil {
-			if e.IsErrUniqueConstraint(err) {
-				c.JSON(http.StatusBadRequest, common.RespError("name alread exist"))
-				return
-			}
-			logger.Warn("insert datasource error", "error", err)
-			c.JSON(http.StatusInternalServerError, common.RespInternalError())
-			return
-		}
-
-		id, _ := res.LastInsertId()
-		ds.Id = id
-
+		res, err = db.Conn.ExecContext(c.Request.Context(), "INSERT INTO datasource (name,type,url,team_id,data,created,updated) VALUES (?,?,?,?,?,?,?)", ds.Name, ds.Type, ds.URL, ds.TeamId, data, now, now)
 	} else {
-		// update
-		_, err = db.Conn.ExecContext(c.Request.Context(), "UPDATE datasource SET name=?,type=?,url=?,data=?,updated=? WHERE id=?", ds.Name, ds.Type, ds.URL, data, now, ds.Id)
-		if err != nil {
-			if e.IsErrUniqueConstraint(err) {
-				c.JSON(http.StatusBadRequest, common.RespError("name alread exist"))
-				return
-			}
-			logger.Warn("insert datasource error", "error", err)
-			c.JSON(http.StatusInternalServerError, common.RespInternalError())
+		res, err = db.Conn.ExecContext(c.Request.Context(), "INSERT INTO datasource (id, name,type,url,team_id,data,created,updated) VALUES (?,?,?,?,?,?,?,?)", ds.Id, ds.Name, ds.Type, ds.URL, ds.TeamId, data, now, now)
+	}
+	if err != nil {
+		if e.IsErrUniqueConstraint(err) {
+			c.JSON(http.StatusBadRequest, common.RespError("id or name alread exist"))
 			return
 		}
+		logger.Warn("insert datasource error", "error", err)
+		c.JSON(http.StatusInternalServerError, common.RespInternalError())
+		return
 	}
 
+	id, _ := res.LastInsertId()
+	ds.Id = id
+
 	c.JSON(http.StatusOK, common.RespSuccess(ds.Id))
+}
+
+func UpdateDatasource(c *gin.Context) {
+	ds := &models.Datasource{}
+	err := c.Bind(&ds)
+	if err != nil {
+		logger.Warn("save datasource request data error", "error", err)
+		c.JSON(http.StatusBadRequest, common.RespError(err.Error()))
+		return
+	}
+
+	u := c.MustGet("currentUser").(*models.User)
+
+	now := time.Now()
+	data, err := json.Marshal(ds.Data)
+	if err != nil {
+		logger.Warn("Error encode datasource data", "error", err)
+		c.JSON(500, common.RespError(e.Internal))
+		return
+	}
+
+	datasource, err := GetDatasource(c.Request.Context(), ds.Id)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			c.JSON(400, common.RespError("datasource not found"))
+			return
+		}
+		logger.Warn("Error query datasource", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+
+	err = acl.CanEditTeam(c.Request.Context(), datasource.TeamId, u.Id)
+	if err != nil {
+		c.JSON(403, common.RespError(err.Error()))
+		return
+	}
+
+	_, err = db.Conn.ExecContext(c.Request.Context(), "UPDATE datasource SET name=?,type=?,url=?,data=?,updated=? WHERE id=?", ds.Name, ds.Type, ds.URL, data, now, ds.Id)
+	if err != nil {
+		if e.IsErrUniqueConstraint(err) {
+			c.JSON(http.StatusBadRequest, common.RespError("name alread exist"))
+			return
+		}
+		logger.Warn("insert datasource error", "error", err)
+		c.JSON(http.StatusInternalServerError, common.RespInternalError())
+		return
+	}
 }
 
 func GetDatasources(c *gin.Context) {
