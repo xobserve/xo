@@ -49,7 +49,7 @@ xObserve offers a wide range of features, including:
 
 7. **Programmability**: Empowers developers with powerful programmability and customization options. For instance, Datav agent supports using WebAssembly to develop your own plugins and data processing pipelines.
 
-8. **Community**: Comes with a permissive open-source license, extensive documentation, and rapid community support response.
+8. **Community**: Comes with extensive documentations, and rapid community support response.
 
 ## Quick start & Documentation
 
