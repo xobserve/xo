@@ -212,9 +212,15 @@ const TracePanel = (props: PanelProps) => {
 
 export function convTagsLogfmt(tags) {
   if (!tags) {
-    return ''
+    return null
   }
-
   const data = logfmtParser.parse(tags)
+  Object.keys(data).forEach((key) => {
+    const value = data[key]
+    // make sure all values are strings
+    if (typeof value !== 'string') {
+      data[key] = String(value)
+    }
+  })
   return JSON.stringify(data)
 }
