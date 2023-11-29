@@ -1,47 +1,48 @@
 // Copyright (c) 2017 Uber Technologies, Inc.
 //
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
 
-import React from 'react';
+import React from 'react'
 import './index.css'
-import AccordianKeyValues from './AccordianKeyValues';
-import AccordianLogs from './AccordianLogs';
-import AccordianReferences from './AccordianReferences';
-import AccordianText from './AccordianText';
-import DetailState from './DetailState';
+import AccordianKeyValues from './AccordianKeyValues'
+import AccordianLogs from './AccordianLogs'
+import AccordianReferences from './AccordianReferences'
+import AccordianText from './AccordianText'
+import DetailState from './DetailState'
 
-import { TNil } from 'types/misc';
-import { KeyValuePair, SpanLink, SpanLog, TraceSpan } from 'src/views/dashboard/plugins/built-in/panel/trace/types/trace';
+import { TNil } from 'types/misc'
+import {
+  KeyValuePair,
+  SpanLink,
+  SpanLog,
+  TraceSpan,
+} from 'src/views/dashboard/plugins/built-in/panel/trace/types/trace'
 
-import { formatDuration } from 'utils/date';
-import { Box, Divider, Flex, HStack, Text, useMediaQuery } from '@chakra-ui/react';
-import LabeledList from 'src/components/LabelList';
-import { MobileBreakpoint } from 'src/data/constants';
-import { isEmpty } from 'utils/validate';
+import { formatDuration } from 'utils/date'
+import {
+  Box,
+  Divider,
+  Flex,
+  HStack,
+  Text,
+  useMediaQuery,
+} from '@chakra-ui/react'
+import LabeledList from 'src/components/LabelList'
+import { MobileBreakpoint } from 'src/data/constants'
+import { isEmpty } from 'utils/validate'
 
 type SpanDetailProps = {
-  detailState: DetailState;
-  linksGetter: ((links: KeyValuePair[], index: number) => SpanLink[]) | TNil;
-  logItemToggle: (spanID: string, log: SpanLog) => void;
-  logsToggle: (spanID: string) => void;
-  processToggle: (spanID: string) => void;
-  span: TraceSpan;
-  tagsToggle: (spanID: string) => void;
-  traceStartTime: number;
-  warningsToggle: (spanID: string) => void;
-  referencesToggle: (spanID: string) => void;
-  focusSpan: (uiFind: string) => void;
-};
+  detailState: DetailState
+  linksGetter: ((links: KeyValuePair[], index: number) => SpanLink[]) | TNil
+  logItemToggle: (spanID: string, log: SpanLog) => void
+  logsToggle: (spanID: string) => void
+  processToggle: (spanID: string) => void
+  span: TraceSpan
+  tagsToggle: (spanID: string) => void
+  traceStartTime: number
+  warningsToggle: (spanID: string) => void
+  referencesToggle: (spanID: string) => void
+  focusSpan: (uiFind: string) => void
+}
 
 export default function SpanDetail(props: SpanDetailProps) {
   const {
@@ -56,10 +57,28 @@ export default function SpanDetail(props: SpanDetailProps) {
     warningsToggle,
     referencesToggle,
     focusSpan,
-  } = props;
-  const { isTagsOpen, isProcessOpen, logs: logsState, isWarningsOpen, isReferencesOpen } = detailState;
-  const { operationName, process, duration, relativeStartTime, spanID, logs,resources,attributes, tags,events, warnings, references } =
-    span;
+  } = props
+  const {
+    isTagsOpen,
+    isProcessOpen,
+    logs: logsState,
+    isWarningsOpen,
+    isReferencesOpen,
+  } = detailState
+  const {
+    operationName,
+    process,
+    duration,
+    relativeStartTime,
+    spanID,
+    logs,
+    resources,
+    attributes,
+    tags,
+    events,
+    warnings,
+    references,
+  } = span
   const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
   const overviewItems = [
     isLargeScreen && {
@@ -77,72 +96,84 @@ export default function SpanDetail(props: SpanDetailProps) {
       label: 'Relative start time:',
       value: formatDuration(relativeStartTime),
     },
-  ];
-  const deepLinkCopyText = `${window.location.origin}${window.location.pathname}?uiFind=${spanID}`;
-
+  ]
+  const deepLinkCopyText = `${window.location.origin}${window.location.pathname}?uiFind=${spanID}`
 
   return (
     <div>
-      <Flex justifyContent="space-between" alignItems="center" pt="0" pb="2">
+      <Flex justifyContent='space-between' alignItems='center' pt='0' pb='2'>
         <HStack>
-          <Text textStyle={isLargeScreen ? "subTitle" : null} minWidth="fit-content">{operationName}</Text>
-          <Text opacity="0.7" mb="-2px">{spanID}</Text>
+          <Text
+            textStyle={isLargeScreen ? 'subTitle' : null}
+            minWidth='fit-content'
+          >
+            {operationName}
+          </Text>
+          <Text opacity='0.7' mb='-2px'>
+            {spanID}
+          </Text>
         </HStack>
         <LabeledList
-          dividerClassName="SpanDetail--divider"
+          dividerClassName='SpanDetail--divider'
           items={overviewItems}
         />
       </Flex>
-      <Divider className="SpanDetail--divider" />
+      <Divider className='SpanDetail--divider' />
       <Box mt={isLargeScreen ? 3 : 1}>
         <div>
-          {!isEmpty(tags) && <AccordianKeyValues
-            data={tags}
-            label="Tags"
-            linksGetter={linksGetter}
-            isOpen={isTagsOpen}
-            onToggle={() => tagsToggle(spanID)}
-          />}
-          {!isEmpty(attributes) && <AccordianKeyValues
-            data={attributes}
-            label="Attributes"
-            linksGetter={linksGetter}
-            isOpen={isTagsOpen}
-            onToggle={() => tagsToggle(spanID)}
-          />}
-          {!isEmpty(resources) && <AccordianKeyValues
-            data={resources}
-            label="Resources"
-            linksGetter={linksGetter}
-            isOpen={isTagsOpen}
-            onToggle={() => tagsToggle(spanID)}
-          />}
+          {!isEmpty(tags) && (
+            <AccordianKeyValues
+              data={tags}
+              label='Tags'
+              linksGetter={linksGetter}
+              isOpen={isTagsOpen}
+              onToggle={() => tagsToggle(spanID)}
+            />
+          )}
+          {!isEmpty(attributes) && (
+            <AccordianKeyValues
+              data={attributes}
+              label='Attributes'
+              linksGetter={linksGetter}
+              isOpen={isTagsOpen}
+              onToggle={() => tagsToggle(spanID)}
+            />
+          )}
+          {!isEmpty(resources) && (
+            <AccordianKeyValues
+              data={resources}
+              label='Resources'
+              linksGetter={linksGetter}
+              isOpen={isTagsOpen}
+              onToggle={() => tagsToggle(spanID)}
+            />
+          )}
           {process.tags && (
             <AccordianKeyValues
               data={process.tags}
-              label="Process"
+              label='Process'
               linksGetter={linksGetter}
               isOpen={isProcessOpen}
               onToggle={() => processToggle(spanID)}
             />
           )}
         </div>
-        { (
+        {
           <AccordianLogs
             linksGetter={linksGetter}
-            logs={isEmpty(logs) ?  events as any : logs}
+            logs={isEmpty(logs) ? (events as any) : logs}
             isOpen={logsState.isOpen}
             openedItems={logsState.openedItems}
             onToggle={() => logsToggle(spanID)}
-            onItemToggle={logItem => logItemToggle(spanID, logItem)}
+            onItemToggle={(logItem) => logItemToggle(spanID, logItem)}
             timestamp={traceStartTime}
           />
-        )}
+        }
         {warnings && warnings.length > 0 && (
           <AccordianText
-            className="AccordianWarnings"
-            headerClassName="AccordianWarnings--header"
-            label={<span className="AccordianWarnings--label">Warnings</span>}
+            className='AccordianWarnings'
+            headerClassName='AccordianWarnings--header'
+            label={<span className='AccordianWarnings--label'>Warnings</span>}
             data={warnings}
             isOpen={isWarningsOpen}
             onToggle={() => warningsToggle(spanID)}
@@ -168,5 +199,5 @@ export default function SpanDetail(props: SpanDetailProps) {
         </small> */}
       </Box>
     </div>
-  );
+  )
 }

@@ -1,31 +1,32 @@
-import { css, cx } from '@emotion/css';
-import React, { RefCallback, useCallback, useEffect, useRef } from 'react';
-import Scrollbars, { positionValues } from 'react-custom-scrollbars-2';
+// Copyright 2023 xObserve.io Team
 
+import { css, cx } from '@emotion/css'
+import React, { RefCallback, useCallback, useEffect, useRef } from 'react'
+import Scrollbars, { positionValues } from 'react-custom-scrollbars-2'
 
-import { ScrollIndicators } from './ScrollIndicators';
-import { useExtraStyles } from 'hooks/useExtraTheme';
-import { useColorMode } from '@chakra-ui/react';
-import customColors from 'theme/colors';
+import { ScrollIndicators } from './ScrollIndicators'
+import { useExtraStyles } from 'hooks/useExtraTheme'
+import { useColorMode } from '@chakra-ui/react'
+import customColors from 'theme/colors'
 
-export type ScrollbarPosition = positionValues;
+export type ScrollbarPosition = positionValues
 
 interface Props {
-  className?: string;
-  testId?: string;
-  autoHide?: boolean;
-  autoHideTimeout?: number;
-  autoHeightMax?: string;
-  hideTracksWhenNotNeeded?: boolean;
-  hideHorizontalTrack?: boolean;
-  hideVerticalTrack?: boolean;
-  scrollRefCallback?: RefCallback<HTMLDivElement>;
-  scrollTop?: number;
-  setScrollTop?: (position: ScrollbarPosition) => void;
-  showScrollIndicators?: boolean;
-  autoHeightMin?: number | string;
-  updateAfterMountMs?: number;
-  onScroll?: React.UIEventHandler;
+  className?: string
+  testId?: string
+  autoHide?: boolean
+  autoHideTimeout?: number
+  autoHeightMax?: string
+  hideTracksWhenNotNeeded?: boolean
+  hideHorizontalTrack?: boolean
+  hideVerticalTrack?: boolean
+  scrollRefCallback?: RefCallback<HTMLDivElement>
+  scrollTop?: number
+  setScrollTop?: (position: ScrollbarPosition) => void
+  showScrollIndicators?: boolean
+  autoHeightMin?: number | string
+  updateAfterMountMs?: number
+  onScroll?: React.UIEventHandler
 }
 
 /**
@@ -49,20 +50,22 @@ const CustomScrollbar = ({
   onScroll,
   children,
 }: React.PropsWithChildren<Props>) => {
-  const ref = useRef<Scrollbars & { view: HTMLDivElement; update: () => void }>(null);
-  const styles = useExtraStyles(getStyles);
+  const ref = useRef<Scrollbars & { view: HTMLDivElement; update: () => void }>(
+    null,
+  )
+  const styles = useExtraStyles(getStyles)
 
   useEffect(() => {
     if (ref.current && scrollRefCallback) {
-      scrollRefCallback(ref.current.view);
+      scrollRefCallback(ref.current.view)
     }
-  }, [ref, scrollRefCallback]);
+  }, [ref, scrollRefCallback])
 
   useEffect(() => {
     if (ref.current && scrollTop != null) {
-      ref.current.scrollTop(scrollTop);
+      ref.current.scrollTop(scrollTop)
     }
-  }, [scrollTop]);
+  }, [scrollTop])
 
   /**
    * Special logic for doing a update a few milliseconds after mount to check for
@@ -70,58 +73,74 @@ const CustomScrollbar = ({
    */
   useEffect(() => {
     if (!updateAfterMountMs) {
-      return;
+      return
     }
     setTimeout(() => {
-      const scrollbar = ref.current;
+      const scrollbar = ref.current
       if (scrollbar?.update) {
-        scrollbar.update();
+        scrollbar.update()
       }
-    }, updateAfterMountMs);
-  }, [updateAfterMountMs]);
+    }, updateAfterMountMs)
+  }, [updateAfterMountMs])
 
-  function renderTrack(className: string, hideTrack: boolean | undefined, passedProps: JSX.IntrinsicElements['div']) {
+  function renderTrack(
+    className: string,
+    hideTrack: boolean | undefined,
+    passedProps: JSX.IntrinsicElements['div'],
+  ) {
     if (passedProps.style && hideTrack) {
-      passedProps.style.display = 'none';
+      passedProps.style.display = 'none'
     }
 
-    return <div {...passedProps} className={className} />;
+    return <div {...passedProps} className={className} />
   }
 
   const renderTrackHorizontal = useCallback(
     (passedProps: JSX.IntrinsicElements['div']) => {
-      return renderTrack('track-horizontal', hideHorizontalTrack, passedProps);
+      return renderTrack('track-horizontal', hideHorizontalTrack, passedProps)
     },
-    [hideHorizontalTrack]
-  );
+    [hideHorizontalTrack],
+  )
 
   const renderTrackVertical = useCallback(
     (passedProps: JSX.IntrinsicElements['div']) => {
-      return renderTrack('track-vertical', hideVerticalTrack, passedProps);
+      return renderTrack('track-vertical', hideVerticalTrack, passedProps)
     },
-    [hideVerticalTrack]
-  );
+    [hideVerticalTrack],
+  )
 
-  const renderThumbHorizontal = useCallback((passedProps: JSX.IntrinsicElements['div']) => {
-    return <div {...passedProps} className="thumb-horizontal" />;
-  }, []);
+  const renderThumbHorizontal = useCallback(
+    (passedProps: JSX.IntrinsicElements['div']) => {
+      return <div {...passedProps} className='thumb-horizontal' />
+    },
+    [],
+  )
 
-  const renderThumbVertical = useCallback((passedProps: JSX.IntrinsicElements['div']) => {
-    return <div {...passedProps} className="thumb-vertical" />;
-  }, []);
+  const renderThumbVertical = useCallback(
+    (passedProps: JSX.IntrinsicElements['div']) => {
+      return <div {...passedProps} className='thumb-vertical' />
+    },
+    [],
+  )
 
-  const renderView = useCallback((passedProps: JSX.IntrinsicElements['div']) => {
-    // fixes issues of visibility on safari and ios devices
-    if (passedProps.style && passedProps.style['WebkitOverflowScrolling'] === 'touch') {
-      passedProps.style['WebkitOverflowScrolling'] = 'auto';
-    }
+  const renderView = useCallback(
+    (passedProps: JSX.IntrinsicElements['div']) => {
+      // fixes issues of visibility on safari and ios devices
+      if (
+        passedProps.style &&
+        passedProps.style['WebkitOverflowScrolling'] === 'touch'
+      ) {
+        passedProps.style['WebkitOverflowScrolling'] = 'auto'
+      }
 
-    return <div {...passedProps} className="scrollbar-view" />;
-  }, []);
+      return <div {...passedProps} className='scrollbar-view' />
+    },
+    [],
+  )
 
   const onScrollStop = useCallback(() => {
-    ref.current && setScrollTop && setScrollTop(ref.current.getValues());
-  }, [setScrollTop]);
+    ref.current && setScrollTop && setScrollTop(ref.current.getValues())
+  }, [setScrollTop])
 
   return (
     <Scrollbars
@@ -146,16 +165,23 @@ const CustomScrollbar = ({
       renderView={renderView}
       onScroll={onScroll}
     >
-      {showScrollIndicators ? <ScrollIndicators>{children}</ScrollIndicators> : children}
+      {showScrollIndicators ? (
+        <ScrollIndicators>{children}</ScrollIndicators>
+      ) : (
+        children
+      )}
     </Scrollbars>
-  );
-};
+  )
+}
 
-export default CustomScrollbar;
+export default CustomScrollbar
 
 const getStyles = (theme) => {
-  const {colorMode} = useColorMode()
-  const bg = colorMode == "light" ? customColors.scrollBg.light : customColors.scrollBg.dark
+  const { colorMode } = useColorMode()
+  const bg =
+    colorMode == 'light'
+      ? customColors.scrollBg.light
+      : customColors.scrollBg.dark
   return {
     customScrollbar: css`
       // Fix for Firefox. For some reason sometimes .view container gets a height of its content, but in order to
@@ -177,7 +203,7 @@ const getStyles = (theme) => {
       }
       .track-horizontal {
         border-radius: 4px;
-        height: 4px!important;
+        height: 4px !important;
         right: 2px;
         bottom: 2px;
         left: 2px;
@@ -209,5 +235,5 @@ const getStyles = (theme) => {
         position: static !important;
       }
     `,
-  };
-};
+  }
+}

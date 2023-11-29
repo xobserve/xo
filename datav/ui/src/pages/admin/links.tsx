@@ -1,3 +1,5 @@
+// Copyright 2023 xObserve.io Team
+
 import React from 'react'
 import { FaUser, FaUserCog } from 'react-icons/fa'
 import { MdOutlineAdminPanelSettings } from 'react-icons/md'

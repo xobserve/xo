@@ -1,20 +1,9 @@
 // Copyright 2023 xObserve.io Team
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-import { thresholdTransform } from "src/views/dashboard/plugins/components/Threshold/ThresholdEditor";
-import {  Units } from "types/panel/plugins";
-import { ThresholdsConfig, ThresholdsMode } from "types/threshold";
-import {  getDefaultPanelColor } from "utils/colors";
 
+import { thresholdTransform } from 'src/views/dashboard/plugins/components/Threshold/ThresholdEditor'
+import { Units } from 'types/panel/plugins'
+import { ThresholdsConfig, ThresholdsMode } from 'types/threshold'
+import { getDefaultPanelColor } from 'utils/colors'
 
 export const onClickCommonEvent = `
 // setVariable: (varName:string, varValue:string) => void 
@@ -28,42 +17,43 @@ function onRowClick(row, navigate, setVariable, setDateTime, $variables) {
 `
 
 export const getInitUnits = (): Units => {
-    return {
-        unitsType: 'none',
-        units: [],
-    }
+  return {
+    unitsType: 'none',
+    units: [],
+  }
 }
 
 export const initThresholds = (colorIndex?): ThresholdsConfig => {
-    const defaultColor = getDefaultPanelColor()
-    return {
-        mode: ThresholdsMode.Absolute,
-        thresholds: [{
-            value: null,
-            color: defaultColor
-        }],
-        transform: thresholdTransform,
-        enableTransform: false
-    }
+  const defaultColor = getDefaultPanelColor()
+  return {
+    mode: ThresholdsMode.Absolute,
+    thresholds: [
+      {
+        value: null,
+        color: defaultColor,
+      },
+    ],
+    transform: thresholdTransform,
+    enableTransform: false,
+  }
 }
 
-
 export const initAlertFilter = () => {
-    return {
-        enableFilter: true,
-        state: [],
-        datasources: [],
-        httpQuery: {
-            id: 65,
-            metrics: '',
-            legend: '',
-            data: {},
-            visible: true
-        },
-        ruleLabel: '',
-        alertLabel: '',
-        ruleName: '',
-    }
+  return {
+    enableFilter: true,
+    state: [],
+    datasources: [],
+    httpQuery: {
+      id: 65,
+      metrics: '',
+      legend: '',
+      data: {},
+      visible: true,
+    },
+    ruleLabel: '',
+    alertLabel: '',
+    ruleName: '',
+  }
 }
 export const setEchartsOptions = `
 // setOptions return echarts.Options, it is directly passed to a echarts chart.

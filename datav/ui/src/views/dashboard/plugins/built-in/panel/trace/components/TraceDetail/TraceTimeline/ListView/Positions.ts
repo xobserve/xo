@@ -1,18 +1,7 @@
 // Copyright (c) 2017 Uber Technologies, Inc.
 //
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
 
-type THeightGetter = (index: number) => number;
+type THeightGetter = (index: number) => number
 
 /**
  * Keeps track of the height and y-position for anything sequenctial where
@@ -28,23 +17,23 @@ export default class Positions {
    * Indicates how far past the explicitly required height or y-values should
    * checked.
    */
-  bufferLen: number;
-  dataLen: number;
-  heights: number[];
+  bufferLen: number
+  dataLen: number
+  heights: number[]
   /**
    * `lastI` keeps track of which values have already been visited. In many
    * scenarios, values do not need to be revisited. But, revisiting is required
    * when heights have changed, so `lastI` can be forced.
    */
-  lastI: number;
-  ys: number[];
+  lastI: number
+  ys: number[]
 
   constructor(bufferLen: number) {
-    this.ys = [];
-    this.heights = [];
-    this.bufferLen = bufferLen;
-    this.dataLen = -1;
-    this.lastI = -1;
+    this.ys = []
+    this.heights = []
+    this.bufferLen = bufferLen
+    this.dataLen = -1
+    this.lastI = -1
   }
 
   /**
@@ -53,11 +42,11 @@ export default class Positions {
    */
   profileData(dataLength: number) {
     if (dataLength !== this.dataLen) {
-      this.dataLen = dataLength;
-      this.ys.length = dataLength;
-      this.heights.length = dataLength;
+      this.dataLen = dataLength
+      this.ys.length = dataLength
+      this.heights.length = dataLength
       if (this.lastI >= dataLength) {
-        this.lastI = dataLength - 1;
+        this.lastI = dataLength - 1
       }
     }
   }
@@ -70,35 +59,38 @@ export default class Positions {
    */
   calcHeights(max: number, heightGetter: THeightGetter, forcedLastI?: number) {
     if (forcedLastI != null) {
-      this.lastI = forcedLastI;
+      this.lastI = forcedLastI
     }
-    let _max = max + this.bufferLen;
+    let _max = max + this.bufferLen
     if (_max <= this.lastI) {
-      return;
+      return
     }
     if (_max >= this.heights.length) {
-      _max = this.heights.length - 1;
+      _max = this.heights.length - 1
     }
-    let i = this.lastI;
+    let i = this.lastI
     if (this.lastI === -1) {
-      i = 0;
-      this.ys[0] = 0;
+      i = 0
+      this.ys[0] = 0
     }
     while (i <= _max) {
       // eslint-disable-next-line no-multi-assign
-      const h = (this.heights[i] = heightGetter(i));
-      this.ys[i + 1] = this.ys[i] + h;
-      i++;
+      const h = (this.heights[i] = heightGetter(i))
+      this.ys[i + 1] = this.ys[i] + h
+      i++
     }
-    this.lastI = _max;
+    this.lastI = _max
   }
 
   /**
    * Verify the height and y-values from `lastI` up to `yValue`.
    */
   calcYs(yValue: number, heightGetter: THeightGetter) {
-    while ((this.ys[this.lastI] == null || yValue > this.ys[this.lastI]) && this.lastI < this.dataLen - 1) {
-      this.calcHeights(this.lastI, heightGetter);
+    while (
+      (this.ys[this.lastI] == null || yValue > this.ys[this.lastI]) &&
+      this.lastI < this.dataLen - 1
+    ) {
+      this.calcHeights(this.lastI, heightGetter)
     }
   }
 
@@ -110,23 +102,23 @@ export default class Positions {
    * those items, just update based on the difference.
    */
   confirmHeight(_i: number, heightGetter: THeightGetter) {
-    let i = _i;
+    let i = _i
     if (i > this.lastI) {
-      this.calcHeights(i, heightGetter);
-      return;
+      this.calcHeights(i, heightGetter)
+      return
     }
-    const h = heightGetter(i);
+    const h = heightGetter(i)
     if (h === this.heights[i]) {
-      return;
+      return
     }
-    const chg = h - this.heights[i];
-    this.heights[i] = h;
+    const chg = h - this.heights[i]
+    this.heights[i] = h
     // shift the y positions by `chg` for all known y positions
     while (++i <= this.lastI) {
-      this.ys[i] += chg;
+      this.ys[i] += chg
     }
     if (this.ys[this.lastI + 1] != null) {
-      this.ys[this.lastI + 1] += chg;
+      this.ys[this.lastI + 1] += chg
     }
   }
 
@@ -136,36 +128,36 @@ export default class Positions {
    * `.ys`.
    */
   findFloorIndex(yValue: number, heightGetter: THeightGetter): number {
-    this.calcYs(yValue, heightGetter);
+    this.calcYs(yValue, heightGetter)
 
-    let imin = 0;
-    let imax = this.lastI;
+    let imin = 0
+    let imax = this.lastI
 
     if (this.ys.length < 2 || yValue < this.ys[1]) {
-      return 0;
+      return 0
     }
     if (yValue > this.ys[imax]) {
-      return imax;
+      return imax
     }
-    let i;
+    let i
     while (imin < imax) {
       // eslint-disable-next-line no-bitwise
-      i = (imin + 0.5 * (imax - imin)) | 0;
+      i = (imin + 0.5 * (imax - imin)) | 0
       if (yValue > this.ys[i]) {
         if (yValue <= this.ys[i + 1]) {
-          return i;
+          return i
         }
-        imin = i;
+        imin = i
       } else if (yValue < this.ys[i]) {
         if (yValue >= this.ys[i - 1]) {
-          return i - 1;
+          return i - 1
         }
-        imax = i;
+        imax = i
       } else {
-        return i;
+        return i
       }
     }
-    throw new Error(`unable to find floor index for y=${yValue}`);
+    throw new Error(`unable to find floor index for y=${yValue}`)
   }
 
   /**
@@ -174,11 +166,11 @@ export default class Positions {
    * @returns {{ height: number, y: number }}
    */
   getRowPosition(index: number, heightGetter: THeightGetter) {
-    this.confirmHeight(index, heightGetter);
+    this.confirmHeight(index, heightGetter)
     return {
       height: this.heights[index],
       y: this.ys[index],
-    };
+    }
   }
 
   /**
@@ -186,12 +178,12 @@ export default class Positions {
    * the average known height.
    */
   getEstimatedHeight(): number {
-    const known = this.ys[this.lastI] + this.heights[this.lastI];
+    const known = this.ys[this.lastI] + this.heights[this.lastI]
     if (this.lastI >= this.dataLen - 1) {
       // eslint-disable-next-line no-bitwise
-      return known | 0;
+      return known | 0
     }
     // eslint-disable-next-line no-bitwise
-    return ((known / (this.lastI + 1)) * this.heights.length) | 0;
+    return ((known / (this.lastI + 1)) * this.heights.length) | 0
   }
 }

@@ -1,3 +1,5 @@
+// Copyright 2023 xObserve.io Team
+
 export const overrideColors = {
   purple: {
     '50': '#FAE7FD',

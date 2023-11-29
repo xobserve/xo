@@ -1,109 +1,108 @@
 // Copyright 2023 xObserve.io Team
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-
 
 // limitations under the License.
 export interface TimeRange {
-    start: Date
-    end: Date
-    startRaw?: string
-    endRaw?: string
-    sub: number
+  start: Date
+  end: Date
+  startRaw?: string
+  endRaw?: string
+  sub: number
 }
 
 export interface SystemDateFormatSettings {
-    fullDate: string;
-    interval: {
-        millisecond: string;
-        second: string;
-        minute: string;
-        hour: string;
-        day: string;
-        month: string;
-        year: string;
-    };
-    useBrowserLocale: boolean;
+  fullDate: string
+  interval: {
+    millisecond: string
+    second: string
+    minute: string
+    hour: string
+    day: string
+    month: string
+    year: string
+  }
+  useBrowserLocale: boolean
 }
 
-const DEFAULT_SYSTEM_DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss';
-const DEFAULT_SYSTEM_DATE_MS_FORMAT = 'YYYY-MM-DD HH:mm:ss.SSS';
+const DEFAULT_SYSTEM_DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss'
+const DEFAULT_SYSTEM_DATE_MS_FORMAT = 'YYYY-MM-DD HH:mm:ss.SSS'
 
 export class SystemDateFormatsState {
-    fullDate = DEFAULT_SYSTEM_DATE_FORMAT;
-    fullDateMS = DEFAULT_SYSTEM_DATE_MS_FORMAT;
-    interval = {
-        millisecond: 'HH:mm:ss.SSS',
-        second: 'HH:mm:ss',
-        minute: 'HH:mm',
-        hour: 'MM/DD HH:mm',
-        day: 'MM/DD',
-        month: 'YYYY-MM',
-        year: 'YYYY',
-    };
+  fullDate = DEFAULT_SYSTEM_DATE_FORMAT
+  fullDateMS = DEFAULT_SYSTEM_DATE_MS_FORMAT
+  interval = {
+    millisecond: 'HH:mm:ss.SSS',
+    second: 'HH:mm:ss',
+    minute: 'HH:mm',
+    hour: 'MM/DD HH:mm',
+    day: 'MM/DD',
+    month: 'YYYY-MM',
+    year: 'YYYY',
+  }
 
-    update(settings: SystemDateFormatSettings) {
-        this.fullDate = settings.fullDate;
-        this.interval = settings.interval;
+  update(settings: SystemDateFormatSettings) {
+    this.fullDate = settings.fullDate
+    this.interval = settings.interval
 
-        if (settings.useBrowserLocale) {
-            this.useBrowserLocale();
-        }
+    if (settings.useBrowserLocale) {
+      this.useBrowserLocale()
     }
+  }
 
-    useBrowserLocale() {
-        this.fullDate = localTimeFormat({
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-        });
+  useBrowserLocale() {
+    this.fullDate = localTimeFormat({
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+    })
 
-        // ES5 doesn't support `DateTimeFormatOptions.fractionalSecondDigits` so we have to use
-        // a hack with string replacement.
-        this.fullDateMS = this.fullDate.replace('ss', 'ss.SSS');
+    // ES5 doesn't support `DateTimeFormatOptions.fractionalSecondDigits` so we have to use
+    // a hack with string replacement.
+    this.fullDateMS = this.fullDate.replace('ss', 'ss.SSS')
 
-        this.interval.millisecond = localTimeFormat(
-            { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false },
-            null,
-            this.interval.second
-        ).replace('ss', 'ss.SSS');
-        this.interval.second = localTimeFormat(
-            { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false },
-            null,
-            this.interval.second
-        );
-        this.interval.minute = localTimeFormat(
-            { hour: '2-digit', minute: '2-digit', hour12: false },
-            null,
-            this.interval.minute
-        );
-        this.interval.hour = localTimeFormat(
-            { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false },
-            null,
-            this.interval.hour
-        );
-        this.interval.day = localTimeFormat({ month: '2-digit', day: '2-digit', hour12: false }, null, this.interval.day);
-        this.interval.month = localTimeFormat(
-            { year: 'numeric', month: '2-digit', hour12: false },
-            null,
-            this.interval.month
-        );
-    }
+    this.interval.millisecond = localTimeFormat(
+      { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false },
+      null,
+      this.interval.second,
+    ).replace('ss', 'ss.SSS')
+    this.interval.second = localTimeFormat(
+      { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false },
+      null,
+      this.interval.second,
+    )
+    this.interval.minute = localTimeFormat(
+      { hour: '2-digit', minute: '2-digit', hour12: false },
+      null,
+      this.interval.minute,
+    )
+    this.interval.hour = localTimeFormat(
+      {
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+      },
+      null,
+      this.interval.hour,
+    )
+    this.interval.day = localTimeFormat(
+      { month: '2-digit', day: '2-digit', hour12: false },
+      null,
+      this.interval.day,
+    )
+    this.interval.month = localTimeFormat(
+      { year: 'numeric', month: '2-digit', hour12: false },
+      null,
+      this.interval.month,
+    )
+  }
 
-    getTimeFieldUnit(useMsResolution?: boolean) {
-        return `time:${useMsResolution ? this.fullDateMS : this.fullDate}`;
-    }
+  getTimeFieldUnit(useMsResolution?: boolean) {
+    return `time:${useMsResolution ? this.fullDateMS : this.fullDate}`
+  }
 }
 
 /**
@@ -114,47 +113,49 @@ export class SystemDateFormatsState {
  * @param fallback default format if Intl API is not present
  */
 export function localTimeFormat(
-    options: Intl.DateTimeFormatOptions,
-    locale?: string | string[] | null,
-    fallback?: string
+  options: Intl.DateTimeFormatOptions,
+  locale?: string | string[] | null,
+  fallback?: string,
 ): string {
-    if (missingIntlDateTimeFormatSupport()) {
-        return fallback ?? DEFAULT_SYSTEM_DATE_FORMAT;
-    }
+  if (missingIntlDateTimeFormatSupport()) {
+    return fallback ?? DEFAULT_SYSTEM_DATE_FORMAT
+  }
 
-    if (!locale && navigator) {
-        locale = [...navigator.languages];
-    }
+  if (!locale && navigator) {
+    locale = [...navigator.languages]
+  }
 
-    // https://momentjs.com/docs/#/displaying/format/
-    const dateTimeFormat = new Intl.DateTimeFormat(locale || undefined, options);
-    const parts = dateTimeFormat.formatToParts(new Date());
-    const hour12 = dateTimeFormat.resolvedOptions().hour12;
+  // https://momentjs.com/docs/#/displaying/format/
+  const dateTimeFormat = new Intl.DateTimeFormat(locale || undefined, options)
+  const parts = dateTimeFormat.formatToParts(new Date())
+  const hour12 = dateTimeFormat.resolvedOptions().hour12
 
-    const mapping: { [key: string]: string } = {
-        year: 'YYYY',
-        month: 'MM',
-        day: 'DD',
-        hour: hour12 ? 'hh' : 'HH',
-        minute: 'mm',
-        second: 'ss',
-        weekday: 'ddd',
-        era: 'N',
-        dayPeriod: 'A',
-        timeZoneName: 'Z',
-    };
+  const mapping: { [key: string]: string } = {
+    year: 'YYYY',
+    month: 'MM',
+    day: 'DD',
+    hour: hour12 ? 'hh' : 'HH',
+    minute: 'mm',
+    second: 'ss',
+    weekday: 'ddd',
+    era: 'N',
+    dayPeriod: 'A',
+    timeZoneName: 'Z',
+  }
 
-    return parts.map((part) => mapping[part.type] || part.value).join('');
+  return parts.map((part) => mapping[part.type] || part.value).join('')
 }
 
-export const systemDateFormats = new SystemDateFormatsState();
+export const systemDateFormats = new SystemDateFormatsState()
 
 const missingIntlDateTimeFormatSupport = (): boolean => {
-    return !('DateTimeFormat' in Intl) || !('formatToParts' in Intl.DateTimeFormat.prototype);
-};
-
+  return (
+    !('DateTimeFormat' in Intl) ||
+    !('formatToParts' in Intl.DateTimeFormat.prototype)
+  )
+}
 
 export interface IntervalValues {
-    interval: string; // 10s,5m
-    intervalMs: number;
-  }
+  interval: string // 10s,5m
+  intervalMs: number
+}

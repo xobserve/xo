@@ -1,15 +1,5 @@
 // Copyright 2023 xObserve.io Team
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
 
 import { getHost } from '../url'
@@ -27,7 +17,7 @@ import {
 // const JSONbigString = require('json-bigint')({ storeAsString: true })
 import type { OutgoingHttpHeaders } from 'http'
 
-import { createStandaloneToast } from "@chakra-ui/react"
+import { createStandaloneToast } from '@chakra-ui/react'
 import storage from 'utils/localStorage'
 import { isEmpty } from 'lodash'
 
@@ -68,11 +58,11 @@ requestApi.interceptors.request.use(autoWithClientToken)
 
 // 对返回信息进行处理
 requestApi.interceptors.response.use(
-  response => {
+  (response) => {
     return response.data
   },
-  error => {
-    // error.response { 
+  (error) => {
+    // error.response {
     //    config :{url: '/datasource/all', method: 'get', headers: {…}, baseURL: 'http://localhost:10086/api', transformRequest: Array(1), …}
     //    data: {status: 'success', data: Array(4), version: 'xobserve'}
     //    status: 400
@@ -82,7 +72,7 @@ requestApi.interceptors.response.use(
     if (!isSystemError) {
       const message = JSON.stringify(error.response.data)
       const status = error.response.status
-      
+
       // check if it's proxy request error
       if (error.response.data.version != 'xobserve') {
         // request route to other servers, not our xobserve api-server
@@ -94,18 +84,18 @@ requestApi.interceptors.response.use(
       // request to our api server
       if (status == 401) {
         // session expires
-        const id = "Session expires, redirect to login page.."
+        const id = 'Session expires, redirect to login page..'
         if (!toast.isActive(id)) {
           toast({
             id: id,
             title: id,
-            status: "error",
+            status: 'error',
             duration: 4000,
             isClosable: true,
           })
         }
         setTimeout(() => {
-          storage.set("current-page", location.pathname)
+          storage.set('current-page', location.pathname)
           location.href = '/login'
         }, 2000)
       } else {
@@ -116,28 +106,26 @@ requestApi.interceptors.response.use(
             id: id,
             // title: `请求错误`,
             description: JSON.parse(message).message,
-            status: "error",
+            status: 'error',
             duration: 3000,
             isClosable: true,
           })
         }
-        throw (message)
+        throw message
       }
     } else {
       // network error or proxy down error
       // when in these cases, the error.response is null
       // we need to check this error is network error or proxy down error
 
-      let title;
-      if (error.name == "Error") {
+      let title
+      if (error.name == 'Error') {
         // network error
-        title = "Request to backend failed"
-
+        title = 'Request to backend failed'
       } else {
-        title = "Request to datasource server failed"
+        title = 'Request to datasource server failed'
       }
 
-    
       const message = error.text ?? error.message
       const id = message
       if (!toast.isActive(id)) {
@@ -145,16 +133,16 @@ requestApi.interceptors.response.use(
           id: id,
           title: title,
           description: message,
-          status: "error",
+          status: 'error',
           duration: 8000,
           isClosable: true,
         })
       }
-      throw (message)
+      throw message
     }
 
     // return error.response
-  }
+  },
 )
 // 抛出被服务端吞掉的错误
 requestApi.interceptors.response.use(reThrowError)

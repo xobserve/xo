@@ -1,20 +1,9 @@
 // Copyright (c) 2017 Uber Technologies, Inc.
 //
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
 
-import TreeNode from "utils/treeNode";
+import TreeNode from 'utils/treeNode'
 
-export const TREE_ROOT_ID = '__root__';
+export const TREE_ROOT_ID = '__root__'
 
 /**
  * Build a tree of { value: spanID, children } items derived from the
@@ -31,37 +20,39 @@ export const TREE_ROOT_ID = '__root__';
  *                       between spans in the trace.
  */
 export function getTraceSpanIdsAsTree(trace) {
-  const nodesById = new Map(trace.spans.map(span => {
-    const n =  new TreeNode(span.spanID);
-    return [span.spanID, n]
-  }));
-  const spansById = new Map(trace.spans.map(span => [span.spanID, span]));
-  const root = new TreeNode(TREE_ROOT_ID);
-  trace.spans.forEach(span => {
-    const node = nodesById.get(span.spanID);
+  const nodesById = new Map(
+    trace.spans.map((span) => {
+      const n = new TreeNode(span.spanID)
+      return [span.spanID, n]
+    }),
+  )
+  const spansById = new Map(trace.spans.map((span) => [span.spanID, span]))
+  const root = new TreeNode(TREE_ROOT_ID)
+  trace.spans.forEach((span) => {
+    const node = nodesById.get(span.spanID)
     if (Array.isArray(span.references) && span.references.length) {
-      const { refType, spanID: parentID } = span.references[0];
+      const { refType, spanID: parentID } = span.references[0]
       if (refType === 'CHILD_OF' || refType === 'FOLLOWS_FROM') {
-        const parent = nodesById.get(parentID) || root;
-        parent.children.push(node);
+        const parent = nodesById.get(parentID) || root
+        parent.children.push(node)
       } else {
-        throw new Error(`Unrecognized ref type: ${refType}`);
+        throw new Error(`Unrecognized ref type: ${refType}`)
       }
     } else {
-      root.children.push(node);
+      root.children.push(node)
     }
-  });
+  })
   const comparator = (nodeA, nodeB) => {
-    const a = spansById.get(nodeA.value);
-    const b = spansById.get(nodeB.value);
-    return +(a.startTime > b.startTime) || +(a.startTime === b.startTime) - 1;
-  };
-  trace.spans.forEach(span => {
-    const node = nodesById.get(span.spanID);
+    const a = spansById.get(nodeA.value)
+    const b = spansById.get(nodeB.value)
+    return +(a.startTime > b.startTime) || +(a.startTime === b.startTime) - 1
+  }
+  trace.spans.forEach((span) => {
+    const node = nodesById.get(span.spanID)
     if (node.children.length > 1) {
-      node.children.sort(comparator);
+      node.children.sort(comparator)
     }
-  });
-  root.children.sort(comparator);
-  return root;
+  })
+  root.children.sort(comparator)
+  return root
 }

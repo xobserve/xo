@@ -1,12 +1,12 @@
+// Copyright 2023 xObserve.io Team
+
 import React, { ReactNode } from 'react'
 import { Select, SelectProps } from 'antd'
 import styled from '@emotion/styled'
 
-
 type AntdSelectProps = SelectProps & {
   prefixIcon?: ReactNode
 }
-
 
 const SelectWrapper = styled.div`
   position: relative;
@@ -20,23 +20,22 @@ const SelectWrapper = styled.div`
     justify-content: center;
   }
 
- && .ant-select .ant-select-selector .ant-select-selection-placeholder{
+  && .ant-select .ant-select-selector .ant-select-selection-placeholder {
     padding-left: calc(3rem - 27px);
   }
 
- && .ant-select .ant-select-selector .ant-select-selection-overflow{
-  padding-left: calc(3rem - 12px);
-}
+  && .ant-select .ant-select-selector .ant-select-selection-overflow {
+    padding-left: calc(3rem - 12px);
+  }
 `
-
 
 const CustomSelect = ({ prefixIcon, children, ...rest }: AntdSelectProps) => {
   return (
     <SelectWrapper>
-      {prefixIcon && <div className="prefix-icon-wrapper">{prefixIcon}</div>}
+      {prefixIcon && <div className='prefix-icon-wrapper'>{prefixIcon}</div>}
       <Select {...rest}>{children}</Select>
     </SelectWrapper>
-  );
-};
+  )
+}
 
-export default CustomSelect;
+export default CustomSelect

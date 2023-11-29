@@ -1,15 +1,4 @@
 // Copyright 2023 xObserve.io Team
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
 
 /*
 import { useState, useEffect, useRef } from 'react';
@@ -59,42 +48,42 @@ export default function App() {
 }
 */
 
-import { useEffect } from 'react';
+import { useEffect } from 'react'
 
 export function useFadeIn(ref, duration) {
   useEffect(() => {
-    const node = ref.current;
+    const node = ref.current
 
-    let startTime = performance.now();
-    let frameId = null;
+    let startTime = performance.now()
+    let frameId = null
 
     function onFrame(now) {
-      const timePassed = now - startTime;
-      const progress = Math.min(timePassed / duration, 1);
-      onProgress(progress);
+      const timePassed = now - startTime
+      const progress = Math.min(timePassed / duration, 1)
+      onProgress(progress)
       if (progress < 1) {
         // We still have more frames to paint
-        frameId = requestAnimationFrame(onFrame);
+        frameId = requestAnimationFrame(onFrame)
       }
     }
 
     function onProgress(progress) {
-      node.style.opacity = progress;
+      node.style.opacity = progress
     }
 
     function start() {
-      onProgress(0);
-      startTime = performance.now();
-      frameId = requestAnimationFrame(onFrame);
+      onProgress(0)
+      startTime = performance.now()
+      frameId = requestAnimationFrame(onFrame)
     }
 
     function stop() {
-      cancelAnimationFrame(frameId);
-      startTime = null;
-      frameId = null;
+      cancelAnimationFrame(frameId)
+      startTime = null
+      frameId = null
     }
 
-    start();
-    return () => stop();
-  }, [ref, duration]);
+    start()
+    return () => stop()
+  }, [ref, duration])
 }

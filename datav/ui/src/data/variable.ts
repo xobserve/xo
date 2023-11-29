@@ -1,13 +1,15 @@
-import { Variable, VariableQueryType, VariableRefresh } from "types/variable";
+// Copyright 2023 xObserve.io Team
 
-export const initVariable:Variable = {
-    name: '',
-    type: VariableQueryType.Custom,
-    value: "",
-    regex: "",
-    refresh: VariableRefresh.OnDashboardLoad,
-    enableMulti: false,
-    enableAll: false
+import { Variable, VariableQueryType, VariableRefresh } from 'types/variable'
+
+export const initVariable: Variable = {
+  name: '',
+  type: VariableQueryType.Custom,
+  value: '',
+  regex: '',
+  refresh: VariableRefresh.OnDashboardLoad,
+  enableMulti: false,
+  enableAll: false,
 }
 
 export const VariableSplitChar = '+'
@@ -19,4 +21,8 @@ export const VariableInterval = '__interval__' // refer to the caculated interva
 export const VariableTimerangeFrom = '__from__' // refer to the 'from' value in current time range
 export const VariableTimerangeTo = '__to__' // refer to the 'to' value in current time range
 
-export const builtinVariables = [VariableInterval, VariableTimerangeFrom, VariableTimerangeTo]
+export const builtinVariables = [
+  VariableInterval,
+  VariableTimerangeFrom,
+  VariableTimerangeTo,
+]

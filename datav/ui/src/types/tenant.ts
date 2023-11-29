@@ -1,3 +1,5 @@
+// Copyright 2023 xObserve.io Team
+
 import { AvailableStatus } from './misc'
 import { Team } from './teams'
 

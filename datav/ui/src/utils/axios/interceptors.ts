@@ -1,15 +1,5 @@
 // Copyright 2023 xObserve.io Team
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+
 import { KEYS } from './constants'
 import { createError, unWrapError } from './createError'
 import { toQueryStr } from '../toQueryStr'
@@ -27,7 +17,7 @@ import type {
 /**
  * 输出调试信息
  */
-export const printResUrlTime: ResOnFulfilledInterceptor = res => {
+export const printResUrlTime: ResOnFulfilledInterceptor = (res) => {
   if (ApiConfig.log) {
     const req = res.config
     if (req) {
@@ -47,7 +37,7 @@ export const printResUrlTime: ResOnFulfilledInterceptor = res => {
       }
 
       const duration = getMetadata(res, 'duration')
-      let optionalParams = ["请求耗时" ,reqUrl]
+      let optionalParams = ['请求耗时', reqUrl]
       if (duration) {
         optionalParams = optionalParams.concat(`[duration]: ${duration}ms`)
         setMetadata(res, 'duration', duration)
@@ -58,9 +48,9 @@ export const printResUrlTime: ResOnFulfilledInterceptor = res => {
   return res
 }
 
-export const printResData: ResOnFulfilledInterceptor = res => {
+export const printResData: ResOnFulfilledInterceptor = (res) => {
   if (ApiConfig.log) {
-    console.log("返回结果",res)
+    console.log('返回结果', res)
   }
   return res
 }
@@ -68,7 +58,7 @@ export const printResData: ResOnFulfilledInterceptor = res => {
 /**
  * 客户端重新抛出被服务端吞掉的错误
  */
-export const reThrowError: ResOnFulfilledInterceptor = res => {
+export const reThrowError: ResOnFulfilledInterceptor = (res) => {
   const error = unWrapError(res?.data)
   if (error) {
     return Promise.reject(error)
@@ -79,7 +69,7 @@ export const reThrowError: ResOnFulfilledInterceptor = res => {
 /**
  * 去掉代理用的 ^/api
  */
-export const rewriteApiUrl: ReqOnFulfilledInterceptor = req => {
+export const rewriteApiUrl: ReqOnFulfilledInterceptor = (req) => {
   req.url = rewriteUrl(req.url, ApiConfig.proxyApi)
   return req
 }
@@ -87,7 +77,7 @@ export const rewriteApiUrl: ReqOnFulfilledInterceptor = req => {
 /**
  * 计算接口请求时间
  */
-export const calcRequestTimeStart: ReqOnFulfilledInterceptor = req => {
+export const calcRequestTimeStart: ReqOnFulfilledInterceptor = (req) => {
   if (ApiConfig.log) {
     setMetadata(req, 'startTime', new Date())
   }
@@ -97,7 +87,7 @@ export const calcRequestTimeStart: ReqOnFulfilledInterceptor = req => {
 /**
  * 计算接口请求时间
  */
-export const calcRequestTimeEnd: ResOnFulfilledInterceptor = res => {
+export const calcRequestTimeEnd: ResOnFulfilledInterceptor = (res) => {
   if (ApiConfig.log) {
     const endTime = new Date()
     const startTime = getMetadata(res, 'startTime')
@@ -109,8 +99,8 @@ export const calcRequestTimeEnd: ResOnFulfilledInterceptor = res => {
 /**
  * 转发时如果需要，代理验证host
  */
-export const changeOrigin: ReqOnFulfilledInterceptor = req => {
-  const headers = req.headers ?? {} as any
+export const changeOrigin: ReqOnFulfilledInterceptor = (req) => {
+  const headers = req.headers ?? ({} as any)
   headers.host = getHost(req.baseURL)
   req.headers = headers
   return req
@@ -131,7 +121,7 @@ export const handleError = (error: any) => {
 /**
  * 客户端自动携带token
  */
-export const autoWithClientToken: ReqOnFulfilledInterceptor = req => {
+export const autoWithClientToken: ReqOnFulfilledInterceptor = (req) => {
   const headers = req.headers
   if (headers) {
     const token = getToken()
@@ -145,7 +135,7 @@ export const autoWithClientToken: ReqOnFulfilledInterceptor = req => {
 /**
  * 代理服务端如何发送token
  */
-export const resolveServerToken: ReqOnFulfilledInterceptor = req => {
+export const resolveServerToken: ReqOnFulfilledInterceptor = (req) => {
   const headers = req.headers
   if (headers) {
     const token = getHeaderAuth(headers)

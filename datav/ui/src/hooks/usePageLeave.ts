@@ -1,20 +1,22 @@
-import { useEffect, useState } from "react";
+// Copyright 2023 xObserve.io Team
+
+import { useEffect, useState } from 'react'
 
 const usePageLeave = (cb) => {
   const onMouseOut = (event) => {
-    event = event ? event : (window.event as any);
-    const from = event.relatedTarget || event.toElement;
-    if (!from || (from as any).nodeName === "HTML") {
-      cb();
+    event = event ? event : (window.event as any)
+    const from = event.relatedTarget || event.toElement
+    if (!from || (from as any).nodeName === 'HTML') {
+      cb()
     }
-  };
+  }
 
   useEffect(() => {
-    document.addEventListener("mouseout", onMouseOut);
+    document.addEventListener('mouseout', onMouseOut)
     return () => {
-      document.removeEventListener("mouseout", onMouseOut);
-    };
-  }, []);
-};
+      document.removeEventListener('mouseout', onMouseOut)
+    }
+  }, [])
+}
 
-export default usePageLeave;
+export default usePageLeave

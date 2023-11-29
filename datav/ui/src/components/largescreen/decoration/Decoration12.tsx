@@ -1,30 +1,20 @@
 // Copyright 2023 xObserve.io Team
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-import React, { useMemo, forwardRef, useRef } from 'react'
 
+import React, { useMemo, forwardRef, useRef } from 'react'
 
 import classnames from 'classnames'
 
 import { deepMerge } from '@jiaminghi/charts/lib/util/index'
-import { deepClone, getCircleRadianPoint } from '@jiaminghi/c-render/lib/plugin/util'
+import {
+  deepClone,
+  getCircleRadianPoint,
+} from '@jiaminghi/c-render/lib/plugin/util'
 import { fade } from '@jiaminghi/color'
 
 import useAutoResize from '../autoResize'
 import { uuid } from '../utils'
 import { DecorationProps } from '../types'
 import { Box } from '@chakra-ui/react'
-
-
 
 const defaultColor = ['#2783ce', '#2cf7fe']
 
@@ -38,211 +28,225 @@ const ringWidth = 1
 
 const showSplitLine = true
 
-const Decoration12 = forwardRef(({ children, className, style, color = [], scanDur = 3, haloDur = 2 }:DecorationProps, ref) => {
-  const { width, height, domRef } = useAutoResize(ref)
+const Decoration12 = forwardRef(
+  (
+    {
+      children,
+      className,
+      style,
+      color = [],
+      scanDur = 3,
+      haloDur = 2,
+    }: DecorationProps,
+    ref,
+  ) => {
+    const { width, height, domRef } = useAutoResize(ref)
 
-  const x = width / 2
+    const x = width / 2
 
-  const y = height / 2
+    const y = height / 2
 
-  const mergedColor = useMemo(() => deepMerge(deepClone(defaultColor, true), color || []), [color])
+    const mergedColor = useMemo(
+      () => deepMerge(deepClone(defaultColor, true), color || []),
+      [color],
+    )
 
-  const pathD = useMemo(() => {
-    const startAngle = -Math.PI / 2
-    const angleGap = sectorAngle / segment
-    const r = width / 4
-    let lastEndPoints = getCircleRadianPoint(x, y, r, startAngle)
+    const pathD = useMemo(() => {
+      const startAngle = -Math.PI / 2
+      const angleGap = sectorAngle / segment
+      const r = width / 4
+      let lastEndPoints = getCircleRadianPoint(x, y, r, startAngle)
 
-    return new Array(segment)
-      .fill('')
-      .map((_, i) => {
-        const endPoints = getCircleRadianPoint(x, y, r, startAngle - (i + 1) * angleGap).map(_ => _.toFixed(5))
-        const d = `M${lastEndPoints.join(',')} A${r}, ${r} 0 0 0 ${endPoints.join(',')}`
+      return new Array(segment).fill('').map((_, i) => {
+        const endPoints = getCircleRadianPoint(
+          x,
+          y,
+          r,
+          startAngle - (i + 1) * angleGap,
+        ).map((_) => _.toFixed(5))
+        const d = `M${lastEndPoints.join(
+          ',',
+        )} A${r}, ${r} 0 0 0 ${endPoints.join(',')}`
         lastEndPoints = endPoints
         return d
       })
-  }, [x, y, width])
+    }, [x, y, width])
 
-  const pathColor = useMemo(() => {
-    const color = mergedColor[0]
-    const colorGap = 100 / (segment - 1)
+    const pathColor = useMemo(() => {
+      const color = mergedColor[0]
+      const colorGap = 100 / (segment - 1)
 
-    return new Array(segment)
-      .fill(color)
-      .map((_, i) => fade(color, 100 - i * colorGap))
-  }, [mergedColor])
+      return new Array(segment)
+        .fill(color)
+        .map((_, i) => fade(color, 100 - i * colorGap))
+    }, [mergedColor])
 
-  const circleR = useMemo(() => {
-    const radiusGap = (width / 2 - ringWidth / 2) / ringNum
+    const circleR = useMemo(() => {
+      const radiusGap = (width / 2 - ringWidth / 2) / ringNum
 
-    return new Array(ringNum)
-      .fill(0)
-      .map((_, i) => radiusGap * (i + 1))
-  }, [width])
+      return new Array(ringNum).fill(0).map((_, i) => radiusGap * (i + 1))
+    }, [width])
 
-  const splitLinePoints = useMemo(() => {
-    const angleGap = Math.PI / 6
-    const r = width / 2
-    return new Array(6)
-      .fill('')
-      .map((_, i) => {
+    const splitLinePoints = useMemo(() => {
+      const angleGap = Math.PI / 6
+      const r = width / 2
+      return new Array(6).fill('').map((_, i) => {
         const startAngle = angleGap * (i + 1)
         const endAngle = startAngle + Math.PI
         const startPoint = getCircleRadianPoint(x, y, r, startAngle)
         const endPoint = getCircleRadianPoint(x, y, r, endAngle)
         return `${startPoint.join(',')} ${endPoint.join(',')}`
       })
-  }, [x, y, width])
+    }, [x, y, width])
 
-  const arcD = useMemo(() => {
-    const angleGap = Math.PI / 6
-    const r = width / 2 - 1
+    const arcD = useMemo(() => {
+      const angleGap = Math.PI / 6
+      const r = width / 2 - 1
 
-    return new Array(4)
-      .fill('')
-      .map((_, i) => {
+      return new Array(4).fill('').map((_, i) => {
         const startAngle = angleGap * (3 * i + 1)
         const endAngle = startAngle + angleGap
         const startPoint = getCircleRadianPoint(x, y, r, startAngle)
         const endPoint = getCircleRadianPoint(x, y, r, endAngle)
-        return `M${startPoint.join(',')} A${x}, ${y} 0 0 1 ${endPoint.join(',')}`
+        return `M${startPoint.join(',')} A${x}, ${y} 0 0 1 ${endPoint.join(
+          ',',
+        )}`
       })
-  }, [x, y, width])
+    }, [x, y, width])
 
-  const idRef = useRef({
-    gId: `decoration-12-g-${uuid()}`,
-    gradientId: `decoration-12-gradient-${uuid()}`
-  })
+    const idRef = useRef({
+      gId: `decoration-12-g-${uuid()}`,
+      gradientId: `decoration-12-gradient-${uuid()}`,
+    })
 
-  const classNames = useMemo(() => classnames('dv-decoration-12 panel-decoration', className), [
-    className
-  ])
+    const classNames = useMemo(
+      () => classnames('dv-decoration-12 panel-decoration', className),
+      [className],
+    )
 
-  return (
-    <Box className={classNames} style={style} ref={domRef} sx={cssStyles}>
-      <svg width={width} height={height}>
-        <defs>
-          <g id={idRef.current.gId}>
-            {
-              pathD.map((d, i) => <path
-                stroke={pathColor[i]}
-                strokeWidth={width / 2}
-                fill='transparent'
-                key={d}
-                d={d}
-              />)
-            }
-          </g>
+    return (
+      <Box className={classNames} style={style} ref={domRef} sx={cssStyles}>
+        <svg width={width} height={height}>
+          <defs>
+            <g id={idRef.current.gId}>
+              {pathD.map((d, i) => (
+                <path
+                  stroke={pathColor[i]}
+                  strokeWidth={width / 2}
+                  fill='transparent'
+                  key={d}
+                  d={d}
+                />
+              ))}
+            </g>
 
-          <radialGradient
-            id={idRef.current.gradientId}
-            cx='50%' cy='50%' r='50%'
-          >
-            <stop offset='0%' stopColor='transparent' stopOpacity='1' />
-            <stop offset='100%' stopColor={fade(mergedColor[1] || defaultColor[1], 30)} stopOpacity='1' />
-          </radialGradient>
-        </defs>
+            <radialGradient
+              id={idRef.current.gradientId}
+              cx='50%'
+              cy='50%'
+              r='50%'
+            >
+              <stop offset='0%' stopColor='transparent' stopOpacity='1' />
+              <stop
+                offset='100%'
+                stopColor={fade(mergedColor[1] || defaultColor[1], 30)}
+                stopOpacity='1'
+              />
+            </radialGradient>
+          </defs>
 
-        {
-          circleR.map(r => <circle
-            key={r}
-            r={r}
+          {circleR.map((r) => (
+            <circle
+              key={r}
+              r={r}
+              cx={x}
+              cy={y}
+              stroke={mergedColor[1]}
+              strokeWidth={0.5}
+              fill='transparent'
+            />
+          ))}
+
+          <circle
+            r='1'
             cx={x}
             cy={y}
-            stroke={mergedColor[1]}
-            strokeWidth={0.5}
-            fill='transparent'
-          />)
-        }
+            stroke='transparent'
+            fill={`url(#${idRef.current.gradientId})`}
+          >
+            <animate
+              attributeName='r'
+              values={`1;${width / 2}`}
+              dur={`${haloDur}s`}
+              repeatCount='indefinite'
+            />
+            <animate
+              attributeName='opacity'
+              values='1;0'
+              dur={`${haloDur}s`}
+              repeatCount='indefinite'
+            />
+          </circle>
 
-        <circle
-          r='1'
-          cx={x}
-          cy={y}
-          stroke='transparent'
-          fill={`url(#${idRef.current.gradientId})`}
-        >
-          <animate
-            attributeName='r'
-            values={`1;${width / 2}`}
-            dur={`${haloDur}s`}
-            repeatCount='indefinite'
-          />
-          <animate
-            attributeName='opacity'
-            values='1;0'
-            dur={`${haloDur}s`}
-            repeatCount='indefinite'
-          />
-        </circle>
+          <circle r='2' cx={x} cy={y} fill={mergedColor[1]} />
 
-        <circle
-          r='2'
-          cx={x}
-          cy={y}
-          fill={mergedColor[1]}
-        />
+          {showSplitLine && (
+            <g>
+              {splitLinePoints.map((p) => (
+                <polyline
+                  key={p}
+                  points={p}
+                  stroke={mergedColor[1]}
+                  strokeWidth={0.5}
+                  opacity='0.5'
+                />
+              ))}
+            </g>
+          )}
 
-        {
-          showSplitLine && <g>
-            {
-              splitLinePoints.map(p => <polyline
-                key={p}
-                points={p}
-                stroke={mergedColor[1]}
-                strokeWidth={0.5}
-                opacity='0.5'
-              />)
-            }
+          {arcD.map((d) => (
+            <path
+              key={d}
+              d={d}
+              stroke={mergedColor[1]}
+              strokeWidth='2'
+              fill='transparent'
+            />
+          ))}
 
-          </g>
-        }
+          <use href={`#${idRef.current.gId}`}>
+            <animateTransform
+              attributeName='transform'
+              type='rotate'
+              values={`0, ${x} ${y};360, ${x} ${y}`}
+              dur={`${scanDur}s`}
+              repeatCount='indefinite'
+            />
+          </use>
+        </svg>
 
-        {
-          arcD.map(d => <path
-            key={d}
-            d={d}
-            stroke={mergedColor[1]}
-            strokeWidth='2'
-            fill='transparent'
-          />)
-        }
-
-        <use href={`#${idRef.current.gId}`}>
-          <animateTransform
-            attributeName='transform'
-            type='rotate'
-            values={`0, ${x} ${y};360, ${x} ${y}`}
-            dur={`${scanDur}s`}
-            repeatCount='indefinite'
-          />
-        </use>
-      </svg>
-
-      <div className='decoration-content'>
-        {children}
-      </div>
-    </Box>
-  )
-})
-
+        <div className='decoration-content'>{children}</div>
+      </Box>
+    )
+  },
+)
 
 export default Decoration12
 
 const cssStyles = {
-    position: 'relative',
+  position: 'relative',
+  width: '100%',
+  height: '100%',
+  display: 'flex',
+
+  '.decoration-content': {
+    position: 'absolute',
+    top: '0px',
+    left: '0px',
     width: '100%',
     height: '100%',
     display: 'flex',
-  
-    '.decoration-content': {
-      position: 'absolute',
-      top: '0px',
-      left: '0px',
-      width: '100%',
-      height: '100%',
-      display: 'flex',
-      'align-items': 'center',
-      'justify-content': 'center'
-    }
-  }
+    'align-items': 'center',
+    'justify-content': 'center',
+  },
+}

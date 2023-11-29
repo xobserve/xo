@@ -1,3 +1,5 @@
+// Copyright 2023 xObserve.io Team
+
 import React, { useEffect, useMemo, useState } from 'react'
 import { $config, UIConfig } from '../../data/configs/config'
 import { requestApi } from 'utils/axios/request'

@@ -1,35 +1,38 @@
-import { css, cx } from '@emotion/css';
-import classNames from 'classnames';
-import React, { useEffect, useRef, useState } from 'react';
+// Copyright 2023 xObserve.io Team
 
-import { useExtraStyles } from 'hooks/useExtraTheme';
-import { FaAngleDown, FaAngleUp, FaArrowDown } from 'react-icons/fa';
+import { css, cx } from '@emotion/css'
+import classNames from 'classnames'
+import React, { useEffect, useRef, useState } from 'react'
+
+import { useExtraStyles } from 'hooks/useExtraTheme'
+import { FaAngleDown, FaAngleUp, FaArrowDown } from 'react-icons/fa'
 
 export const ScrollIndicators = ({ children }: React.PropsWithChildren<{}>) => {
-  const [showScrollTopIndicator, setShowTopScrollIndicator] = useState(false);
-  const [showScrollBottomIndicator, setShowBottomScrollIndicator] = useState(false);
-  const scrollTopMarker = useRef<HTMLDivElement>(null);
-  const scrollBottomMarker = useRef<HTMLDivElement>(null);
-  const styles = useExtraStyles(getStyles);
+  const [showScrollTopIndicator, setShowTopScrollIndicator] = useState(false)
+  const [showScrollBottomIndicator, setShowBottomScrollIndicator] =
+    useState(false)
+  const scrollTopMarker = useRef<HTMLDivElement>(null)
+  const scrollBottomMarker = useRef<HTMLDivElement>(null)
+  const styles = useExtraStyles(getStyles)
 
   // Here we observe the top and bottom markers to determine if we should show the scroll indicators
   useEffect(() => {
     const intersectionObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.target === scrollTopMarker.current) {
-          setShowTopScrollIndicator(!entry.isIntersecting);
+          setShowTopScrollIndicator(!entry.isIntersecting)
         } else if (entry.target === scrollBottomMarker.current) {
-          setShowBottomScrollIndicator(!entry.isIntersecting);
+          setShowBottomScrollIndicator(!entry.isIntersecting)
         }
-      });
-    });
-    [scrollTopMarker, scrollBottomMarker].forEach((ref) => {
+      })
+    })
+    ;[scrollTopMarker, scrollBottomMarker].forEach((ref) => {
       if (ref.current) {
-        intersectionObserver.observe(ref.current);
+        intersectionObserver.observe(ref.current)
       }
-    });
-    return () => intersectionObserver.disconnect();
-  }, []);
+    })
+    return () => intersectionObserver.disconnect()
+  }, [])
 
   return (
     <>
@@ -38,7 +41,9 @@ export const ScrollIndicators = ({ children }: React.PropsWithChildren<{}>) => {
           [styles.scrollIndicatorVisible]: showScrollTopIndicator,
         })}
       >
-        <FaAngleUp className={classNames(styles.scrollIcon, styles.scrollTopIcon)}  />
+        <FaAngleUp
+          className={classNames(styles.scrollIcon, styles.scrollTopIcon)}
+        />
       </div>
       <div className={styles.scrollContent}>
         <div ref={scrollTopMarker} />
@@ -50,14 +55,15 @@ export const ScrollIndicators = ({ children }: React.PropsWithChildren<{}>) => {
           [styles.scrollIndicatorVisible]: showScrollBottomIndicator,
         })}
       >
-        <FaAngleDown className={classNames(styles.scrollIcon, styles.scrollBottomIcon)} />
+        <FaAngleDown
+          className={classNames(styles.scrollIcon, styles.scrollBottomIcon)}
+        />
       </div>
     </>
-  );
-};
+  )
+}
 
 const getStyles = (theme) => {
-   
   return {
     scrollContent: css({
       flex: 1,
@@ -95,5 +101,5 @@ const getStyles = (theme) => {
     scrollBottomIcon: css({
       bottom: 0,
     }),
-  };
-};
+  }
+}
