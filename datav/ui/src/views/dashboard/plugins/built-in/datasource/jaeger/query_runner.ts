@@ -14,148 +14,168 @@
 // 1. Run the query to get the data from datasource
 // 2. Convert the data to the format which AiAPM expects
 
-import { Panel, PanelQuery } from "types/dashboard"
-import { Datasource } from "types/datasource"
-import { TimeRange } from "types/time"
-import { isJaegerDatasourceValid } from "./DatasourceEditor"
-import { requestApi } from "utils/axios/request"
-import { jaegerToPanels } from "./transformData"
-import { isJSON } from "utils/is"
-import { Variable } from "types/variable"
-import { JaegerDsQueryTypes } from "./VariableEditor"
-import { replaceWithVariablesHasMultiValues } from "utils/variable"
-import { getDatasource } from "utils/datasource"
-import { isEmpty } from "utils/validate"
-import { PanelTypeNodeGraph } from "../../panel/nodeGraph/types"
-import { PanelTypeTable } from "../../panel/table/types"
+import { Panel, PanelQuery } from 'types/dashboard'
+import { Datasource } from 'types/datasource'
+import { TimeRange } from 'types/time'
+import { isJaegerDatasourceValid } from './DatasourceEditor'
+import { requestApi } from 'utils/axios/request'
+import { jaegerToPanels } from './transformData'
+import { isJSON } from 'utils/is'
+import { Variable } from 'types/variable'
+import { JaegerDsQueryTypes } from './VariableEditor'
+import { replaceWithVariablesHasMultiValues } from 'utils/variable'
+import { getDatasource } from 'utils/datasource'
+import { isEmpty } from 'utils/validate'
+import { PanelTypeNodeGraph } from '../../panel/nodeGraph/types'
+import { PanelTypeTable } from '../../panel/table/types'
 
-export const run_jaeger_query = async (panel: Panel, q: PanelQuery, range: TimeRange, ds: Datasource) => {
-    let res = []
-    switch (panel.type) {
-        case PanelTypeNodeGraph:
-        case PanelTypeTable:
-            res = await queryDependencies(ds.id, range)
-            break
-        default:
-            break;
-    }
+export const run_jaeger_query = async (
+  panel: Panel,
+  q: PanelQuery,
+  range: TimeRange,
+  ds: Datasource,
+) => {
+  let res = []
+  switch (panel.type) {
+    case PanelTypeNodeGraph:
+    case PanelTypeTable:
+      res = await queryDependencies(ds.id, range)
+      break
+    default:
+      break
+  }
 
-    const data = jaegerToPanels(res, panel, q, range)
-    return {
-        error: null,
-        data: data
-    }
+  const data = jaegerToPanels(res, panel, q, range)
+  return {
+    error: null,
+    data: data,
+  }
 }
 
 export const queryDependencies = async (dsId, range: TimeRange) => {
-    const start = range.start.getTime()
-    const end = range.end.getTime()
+  const start = range.start.getTime()
+  const end = range.end.getTime()
 
-    const ds = getDatasource(dsId)
-    const res = await requestApi.get(`/proxy/${ds.id}/api/dependencies?endTs=${end}&lookback=${end - start}`)
-    return res.data
+  const ds = getDatasource(dsId)
+  const res = await requestApi.get(
+    `/proxy/${ds.id}/api/dependencies?endTs=${end}&lookback=${end - start}`,
+  )
+  return res.data
 }
 
 export const checkAndTestJaeger = async (ds: Datasource) => {
-    // check datasource setting is valid
-    const res = isJaegerDatasourceValid(ds)
-    if (res != null) {
-        return res
-    }
+  // check datasource setting is valid
+  const res = isJaegerDatasourceValid(ds)
+  if (res != null) {
+    return res
+  }
 
-    // test connection status
-    try {
-        await requestApi.get(`/common/proxy/${ds.id}?proxy_url=${ds.url}/api/services`)
-        return true
-    } catch (error) {
-        return error.message
-    }
+  // test connection status
+  try {
+    await requestApi.get(
+      `/common/proxy/${ds.id}?proxy_url=${ds.url}/api/services`,
+    )
+    return true
+  } catch (error) {
+    return error.message
+  }
 }
 
-
 export const replaceJaegerQueryWithVariables = (query: PanelQuery) => {
-    const showServices0 = query.metrics ? query.metrics.split(",") : []
+  const showServices0 = query.metrics ? query.metrics.split(',') : []
 
-    const ss = []
-    showServices0.forEach((item, i) => {
-        ss.push(...replaceWithVariablesHasMultiValues(item))
-    })
-    query.data.showServices = ss
-
+  const ss = []
+  showServices0.forEach((item, i) => {
+    ss.push(...replaceWithVariablesHasMultiValues(item))
+  })
+  query.data.showServices = ss
 }
 
 export const queryJaegerServices = async (dsId) => {
-    const ds = getDatasource(dsId)
-    const res = await requestApi.get(`/proxy/${ds.id}/api/services`)
-    return res.data
+  const ds = getDatasource(dsId)
+  const res = await requestApi.get(`/proxy/${ds.id}/api/services`)
+  return res.data
 }
 
 export const queryJaegerOperations = async (dsId, service) => {
-    const ds = getDatasource(dsId)
-    const res = await requestApi.get(`/proxy/${ds.id}/api/services/${service}/operations`)
-    return res.data
+  const ds = getDatasource(dsId)
+  const res = await requestApi.get(
+    `/proxy/${ds.id}/api/services/${service}/operations`,
+  )
+  return res.data
 }
 
 export const queryJaegerVariableValues = async (variable: Variable) => {
-    const result = {
-        error: null,
-        data: []
-    }
-    const data = isJSON(variable.value) ? JSON.parse(variable.value) : null
-    if (!data) {
-        return result
-    }
-
-    if (data.type == JaegerDsQueryTypes.Services) {
-        const res = await queryJaegerServices(variable.datasource)
-        result.data = res
-    } else if (data.type == JaegerDsQueryTypes.Operations) {
-        if (data.service) {
-            const services = replaceWithVariablesHasMultiValues(data.service)
-            for (let i = 0; i < services.length; i++) {
-                const res = await queryJaegerOperations(variable.datasource, services[i])
-                result.data = result.data.concat(res)
-            }
-        }
-    }
-
+  const result = {
+    error: null,
+    data: [],
+  }
+  const data = isJSON(variable.value) ? JSON.parse(variable.value) : null
+  if (!data) {
     return result
+  }
+
+  if (data.type == JaegerDsQueryTypes.Services) {
+    const res = await queryJaegerServices(variable.datasource)
+    result.data = res
+  } else if (data.type == JaegerDsQueryTypes.Operations) {
+    if (data.service) {
+      const services = replaceWithVariablesHasMultiValues(data.service)
+      for (let i = 0; i < services.length; i++) {
+        const res = await queryJaegerOperations(
+          variable.datasource,
+          services[i],
+        )
+        result.data = result.data.concat(res)
+      }
+    }
+  }
+
+  return result
 }
 
+export const queryJaegerTraces = async (
+  dsId,
+  timeRange: TimeRange,
+  service,
+  operation,
+  tags,
+  min,
+  max,
+  limit,
+) => {
+  const ds = getDatasource(dsId)
 
-export const queryJaegerTraces = async (dsId, timeRange: TimeRange, service, operation, tags, min, max, limit) => {
-    const ds = getDatasource(dsId)
+  const start = timeRange.start.getTime() * 1000
+  const end = timeRange.end.getTime() * 1000
 
-    const start = timeRange.start.getTime() * 1000
-    const end = timeRange.end.getTime() * 1000
+  let url = `/proxy/${ds.id}/api/traces?limit=${limit}&start=${start}&end=${end}&service=${service}`
+  if (operation != 'all' && !isEmpty(operation)) {
+    url += `&operation=${operation}`
+  }
 
-    let url = `/proxy/${ds.id}/api/traces?limit=${limit}&start=${start}&end=${end}&service=${service}`
-    if (operation != "all" && !isEmpty(operation)) {
-        url += `&operation=${operation}`
-    }
+  if (max == '') {
+    url += `&maxDuration`
+  } else {
+    url += `&maxDuration=${max}`
+  }
 
-    if (max == '') {
-        url += `&maxDuration`
-    } else {
-        url += `&maxDuration=${max}`
-    }
+  if (min == '') {
+    url += `&minDuration`
+  } else {
+    url += `&minDuration=${min}`
+  }
 
-    if (min == '') {
-        url += `&minDuration`
-    } else {
-        url += `&minDuration=${min}`
-    }
+  if (tags != '') {
+    url += `&tags=${tags}`
+  }
 
-    if (tags != '') {
-        url += `&tags=${tags}`
-    }
-
-    const res = await requestApi.get(url)
-    return res.data
+  const res = await requestApi.get(url)
+  return res
 }
 
 export const queryJaegerTrace = async (dsId, traceId) => {
-    const ds = getDatasource(dsId)
-    const res = await requestApi.get(`/proxy/${ds.id}/api/traces/${traceId}`)
-    return res.data
+  const ds = getDatasource(dsId)
+  const res = await requestApi.get(`/proxy/${ds.id}/api/traces/${traceId}`)
+  return res.data
 }
