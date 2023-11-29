@@ -11,25 +11,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 export interface Help {
-    title: string
-    headers: string[]
-    contents: string[][]
+  title: string
+  headers: string[]
+  contents: string[][]
 }
 
-export type TNil = null | undefined;
-
+export type TNil = null | undefined
 
 export enum ComparisonOperation {
-    EQ = 'eq',
-    GT = 'gt',
-    GTE = 'gte',
-    LT = 'lt',
-    LTE = 'lte',
-    NEQ = 'neq',
-  }
-  
+  EQ = 'eq',
+  GT = 'gt',
+  GTE = 'gte',
+  LT = 'lt',
+  LTE = 'lte',
+  NEQ = 'neq',
+}
 
-  export enum AvailableStatus {
-    OK = 0,
-    DELETE = 1,
-  }
+export enum AvailableStatus {
+  OK = 0,
+  DELETE = 1,
+}
+
+export enum Lang {
+  EN = 'en',
+  ZH = 'zh',
+}
