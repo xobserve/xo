@@ -23,6 +23,11 @@ interface Props {
 
 const bgOptions = [
   {
+    label: 'None',
+    value: '',
+    colorMode: 'dark',
+  },
+  {
     label: 'Universe',
     value: '/dashboard/universe.png',
     colorMode: 'dark',
