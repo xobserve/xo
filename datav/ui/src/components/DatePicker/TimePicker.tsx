@@ -4,25 +4,14 @@ import {
   Box,
   Button,
   Center,
-  ChakraProvider,
   Flex,
   HStack,
   Text,
   VStack,
+  useToast,
 } from '@chakra-ui/react'
 import { useStore } from '@nanostores/react'
-import {
-  Calendar,
-  CalendarDefaultTheme,
-  CalendarControls,
-  CalendarPrevButton,
-  CalendarNextButton,
-  CalendarMonths,
-  CalendarMonth,
-  CalendarMonthName,
-  CalendarWeek,
-  CalendarDays,
-} from '@uselessdev/datepicker'
+import { DatePicker, DatePickerProps } from 'antd'
 import { EditorInputItem } from 'src/components/editor/EditorItem'
 import { subHours, subMinutes } from 'date-fns'
 import { cloneDeep, includes, isDate, isEmpty } from 'lodash'
@@ -34,6 +23,8 @@ import { systemDateFormats, TimeRange } from 'types/time'
 import { dateTimeFormat } from 'utils/datetime/formatter'
 import storage from 'utils/localStorage'
 import { $time } from './store'
+import { RangePickerProps } from 'antd/es/date-picker'
+const { RangePicker } = DatePicker
 
 interface Props {
   initTimeRange: TimeRange
@@ -108,13 +99,26 @@ const TimePicker = ({
   const [tempRange, setTempRange] = useState<TimeRange>(initTimeRange)
   const [error, setError] = useState({ start: null, end: null })
   const [displayCalender, setDisplayCalender] = useState(false)
-
-  const handleSelectDate = (dates) => {
+  const toast = useToast()
+  const handleSelectDate = (
+    dates: DatePickerProps['value'] | RangePickerProps['value'],
+  ) => {
+    const start = dates[0]?.toDate()
+    const end = dates[1]?.toDate()
+    if (!start || !end) {
+      toast({
+        title: 'Please select start and end time',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+      return
+    }
     const r = {
-      start: dates.start,
-      end: dates.end,
-      startRaw: dates.start.getTime(),
-      endRaw: dates.end.getTime(),
+      start: start,
+      end: end,
+      startRaw: start.getTime(),
+      endRaw: end.getTime(),
       sub: 0,
     }
     setRange(r)
@@ -255,45 +259,29 @@ const TimePicker = ({
       {tempRange && (
         <Flex alignItems='top' justifyContent='space-between' gap='6'>
           {displayCalender && (
-            <Box>
-              <Flex
-                justifyContent='space-between'
-                alignItems='center'
-                fontSize='lg'
-                mb='2'
-              >
-                <Text>{t1.selectTime}</Text>
+            <Box mt='10'>
+              <Flex justifyContent='space-between' alignItems='center' mb='1'>
+                <Text fontSize='0.9em'>{t1.selectTime}</Text>
                 <FaTimes
                   cursor='pointer'
                   onClick={() => setDisplayCalender(false)}
                 />
               </Flex>
               {
-                <ChakraProvider theme={CalendarDefaultTheme}>
-                  <Calendar value={range} onSelectDate={handleSelectDate}>
-                    <Box position='relative'>
-                      <CalendarControls>
-                        <CalendarPrevButton />
-                        <CalendarNextButton />
-                      </CalendarControls>
-
-                      <CalendarMonths>
-                        <CalendarMonth>
-                          <CalendarMonthName />
-                          <CalendarWeek />
-                          <CalendarDays />
-                        </CalendarMonth>
-                      </CalendarMonths>
-                    </Box>
-                  </Calendar>
-                </ChakraProvider>
+                <RangePicker
+                  showTime={{ format: 'HH:mm:ss' }}
+                  format='YYYY-MM-DD HH:mm:ss'
+                  onOk={handleSelectDate}
+                />
               }
             </Box>
           )}
           <VStack alignItems='left' spacing={4}>
             <Text>{t1.customTime}</Text>
             <Box>
-              <Text fontSize='0.9em'>{t1.from}</Text>
+              <Text fontSize='0.9em' mb='1'>
+                {t1.from}
+              </Text>
               <HStack>
                 <EditorInputItem
                   key={tempRange.startRaw}
@@ -319,7 +307,9 @@ const TimePicker = ({
               )}
             </Box>
             <Box>
-              <Text fontSize='0.9em'>{t1.to}</Text>
+              <Text fontSize='0.9em' mb='1'>
+                {t1.to}
+              </Text>
               <HStack>
                 <EditorInputItem
                   key={tempRange.endRaw}
@@ -333,6 +323,7 @@ const TimePicker = ({
                 />
                 {showCanlendar && (
                   <FaCalendarAlt
+                    visibility='hidden'
                     cursor='pointer'
                     onClick={() => setDisplayCalender(!displayCalender)}
                   />

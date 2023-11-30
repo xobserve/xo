@@ -39,7 +39,6 @@
     "@tanstack/react-query": "4.16.1",
     "@tanstack/react-table": "8.10.7",
     "@types/ol": "^7.0.0",
-    "@uselessdev/datepicker": "^2.7.0",
     "allotment": "^1.19.3",
     "antd": "5.10.2",
     "axios": "^1.3.0",

@@ -86,7 +86,7 @@ const DashboardSettings = ({ dashboard, onChange }: Props) => {
           <ModalCloseButton mt='2' />
           <ModalBody p={isLargeScreen ? 2 : 1}>
             <Text textStyle='subTitle' mt='2'>
-              {dashboard.title} / Settings
+              {dashboard.title} / {t.settings}
             </Text>
             <Tabs
               orientation='vertical'
