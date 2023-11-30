@@ -354,7 +354,7 @@ export const dashboardSettingMsg = i18n('dashboardSetting', {
   visibleTo: 'Visible to',
   visibleToTips: 'Controls who can view this dashboard',
   tootipTips:
-    'Show tooltips at the same timeline position across all panels, need reload page to take effect',
+    'Show tooltips at the same timeline position across all graph panels, need reload page to take effect',
   hideVars: 'Hide global variables',
   hideVarsTips:
     "enter global variable names, separated with ',' , support regex",
@@ -381,7 +381,8 @@ export const dashboardSettingMsg = i18n('dashboardSetting', {
   sortWeightTips:
     'Higher value means higher sort priority, this is used in Search dashboards',
   background: 'Background',
-  backgroundTips: 'Set dashboard background color or image',
+  backgroundTips:
+    'Set dashboard background image through select a preset image or a external image url, you can also set it to none and set the background color for dashboard, e.g #000',
   backgroundColor: 'Background color',
   backgroundColorMode: 'Background color mode',
   backgroundColorModeTips:

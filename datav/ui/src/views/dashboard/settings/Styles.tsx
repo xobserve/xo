@@ -14,6 +14,7 @@ import { isEmpty } from 'utils/validate'
 import storage from 'utils/localStorage'
 import { PreviousColorModeKey } from 'src/data/storage-keys'
 import { MobileBreakpoint } from 'src/data/constants'
+import { locale } from 'src/i18n/i18n'
 
 interface Props {
   dashboard: Dashboard
@@ -40,6 +41,7 @@ const bgOptions = [
 
 const StyleSettings = ({ dashboard, onChange }: Props) => {
   const t1 = useStore(dashboardSettingMsg)
+  const lang = useStore(locale)
   const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
   return (
     <Form
@@ -75,28 +77,30 @@ const StyleSettings = ({ dashboard, onChange }: Props) => {
           options={bgOptions as any}
         />
       </FormItem>
-      <FormItem title={t1.backgroundColorMode}>
-        <Select
-          value={dashboard.data.styles.bg.colorMode}
-          onChange={(e) => {
-            const v = e.currentTarget.value
-            onChange((draft) => {
-              draft.data.styles.bg.colorMode = v
-            })
-            storage.remove(PreviousColorModeKey)
-          }}
-          isDisabled={
-            !isEmpty(
-              bgOptions.find(
-                (item) => item.value === dashboard.data.styles.bg.url,
-              ),
-            )
-          }
-        >
-          <option value='light'>Light</option>
-          <option value='dark'>Dark</option>
-        </Select>
-      </FormItem>
+      {!isEmpty(dashboard.data.styles.bg.url) && (
+        <FormItem title={t1.backgroundColorMode}>
+          <Select
+            value={dashboard.data.styles.bg.colorMode}
+            onChange={(e) => {
+              const v = e.currentTarget.value
+              onChange((draft) => {
+                draft.data.styles.bg.colorMode = v
+              })
+              storage.remove(PreviousColorModeKey)
+            }}
+            isDisabled={
+              !isEmpty(
+                bgOptions.find(
+                  (item) => item.value === dashboard.data.styles.bg.url,
+                ),
+              )
+            }
+          >
+            <option value='light'>Light</option>
+            <option value='dark'>Dark</option>
+          </Select>
+        </FormItem>
+      )}
       <FormItem size='md' title={t1.backgroundColor} labelWidth='100%'>
         <EditorInputItem
           type='input'
