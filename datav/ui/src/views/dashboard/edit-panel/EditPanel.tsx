@@ -440,7 +440,7 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
                         {/* panel datasource section */}
                         {!tempPanel.plugins[tempPanel.type]
                           .disableDatasource && (
-                          <CustomScrollbar>
+                          <CustomScrollbar hideHorizontalTrack>
                             <Box maxHeight='100%' mt='2'>
                               <Box position='relative' zIndex={0}>
                                 <Tabs variant='unstyled' isLazy>
@@ -491,7 +491,7 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
                       </Allotment>
                     </Box>
                     {/* panel settings section */}
-                    <CustomScrollbar>
+                    <CustomScrollbar hideHorizontalTrack>
                       <Box maxHeight='100%' zIndex={1} marginLeft={1.5}>
                         <Box className='top-gradient-border'>
                           <Tabs position='relative' variant='unstyled'>

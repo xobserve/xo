@@ -30,7 +30,7 @@ const LokiQueryEditor = ({
   return (
     <Form spacing={1}>
       <FormItem size='sm' title='Query'>
-        <Box width='100%'>
+        <Box width='90%'>
           <CodeEditor
             language={LogqlLang}
             value={tempQuery.metrics}
