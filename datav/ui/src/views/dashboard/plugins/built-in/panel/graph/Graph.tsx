@@ -34,6 +34,7 @@ import { AnnotationsPlugin } from '../../../../../Annotation/Annotations'
 import NoData from 'src/views/dashboard/components/PanelNoData'
 import LegendTable from '../../../components/Legend'
 import useEmbed from 'hooks/useEmbed'
+import { useSearchParam } from 'react-use'
 
 interface GraphPanelProps extends PanelProps {
   data: SeriesData[][]
@@ -64,7 +65,7 @@ export default GraphPanelWrapper
 const GraphPanel = memo((props: GraphPanelProps) => {
   const inactiveKey =
     PanelInactiveKey + props.dashboardId + '-' + props.panel.id
-  const embed = useEmbed()
+  const readonly = useSearchParam('readonly')
 
   const [inactiveSeries, setInactiveSeries] = useState(
     storage.get(inactiveKey) ?? [],
@@ -135,7 +136,7 @@ const GraphPanel = memo((props: GraphPanelProps) => {
   )
 
   const onZoom = (tr) => {
-    if (!embed) {
+    if (readonly != 'on') {
       setDateTime(tr.from, tr.to)
     }
   }
@@ -229,7 +230,7 @@ const GraphPanel = memo((props: GraphPanelProps) => {
                         />
                       )}
 
-                      {!embed && (
+                      {readonly != 'on' && (
                         <>
                           <ContextMenu
                             props={props}
