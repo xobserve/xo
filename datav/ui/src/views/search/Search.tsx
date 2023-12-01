@@ -35,20 +35,21 @@ import TagsFilter from 'src/components/TagsFilter'
 import { isEmpty } from 'utils/validate'
 import { Team } from 'types/teams'
 import TeamsFilter from './TeamsFilter'
-import { AiFillStar, AiOutlineStar, AiOutlineSearch } from 'react-icons/ai'
+import { AiFillStar, AiOutlineStar } from 'react-icons/ai'
 import ListView from './ListView'
 import TeamsView from './TeamsView'
 import TagsView from './TagsView'
 import PopoverTooltip from 'src/components/PopoverTooltip'
-import { useLocation } from 'react-router-dom'
 import useBus from 'use-bus'
 import { OnDashboardWeightChangeEvent } from 'src/data/bus-events'
 import { MobileBreakpoint } from 'src/data/constants'
 import Loading from 'src/components/loading/Loading'
-import { last } from 'lodash'
+import { add, last } from 'lodash'
 import { useStore } from '@nanostores/react'
 import { commonMsg, searchMsg } from 'src/i18n/locales/en'
 import { $config } from 'src/data/configs/config'
+import { addParamToUrl } from 'utils/url'
+import { useSearchParam } from 'react-use'
 
 interface Props {
   title: string
@@ -67,18 +68,42 @@ const Search = memo((props: Props) => {
   } = props
   const t = useStore(commonMsg)
   const t1 = useStore(searchMsg)
-  const location = useLocation()
+  const searchParam = useSearchParam('search')
+  const tagsParam = useSearchParam('tags')?.split(',') ?? []
+  const teamsParam = useSearchParam('teams')?.split(',') ?? []
+  for (const i in teamsParam) {
+    teamsParam[i] = Number(teamsParam[i]) as any
+  }
+  const starParam = useSearchParam('star')
+  const caseSensitiveParam = useSearchParam('caseSensitive')
+  const queryParam = useSearchParam('query')
+
   const config = useStore($config)
-  const [query, setQuery] = useState<string>(null)
-  const [caseSensitive, setCaseSensitive] = useState<boolean>(false)
+  const [query, setQuery] = useState<string>(queryParam)
+  const [caseSensitive, setCaseSensitive] = useState<boolean>(
+    caseSensitiveParam == 'true',
+  )
   const [rawDashboards, setRawDashboards] = useState<Dashboard[]>(null)
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const [selectedTags, setSelectedTags] = useState<string[]>([])
+  const [selectedTags, setSelectedTags] = useState<string[]>(tagsParam)
   const [teams, setTeams] = useState<Team[]>(null)
-  const [selectedTeams, setSelectedTeams] = useState<number[]>([])
-  const [filterStarred, setFilterStarred] = useState<boolean>(false)
+  const [selectedTeams, setSelectedTeams] = useState<number[]>(
+    teamsParam as any,
+  )
+  const [filterStarred, setFilterStarred] = useState<boolean>(
+    starParam == 'true',
+  )
   const [starredDashIds, setStarredDashIds] = useState<Set<string>>(new Set())
   const [layout, setLayout] = useState<'teams' | 'list' | 'tags'>('teams')
+
+  useEffect(() => {
+    if (searchParam == 'open' && config) {
+      onOpen()
+      onSearchOpen()
+    } else {
+      onClose()
+    }
+  }, [searchParam, config])
 
   useBus(
     OnDashboardWeightChangeEvent,
@@ -92,16 +117,7 @@ const Search = memo((props: Props) => {
     [rawDashboards],
   )
 
-  useEffect(() => {
-    onClose()
-  }, [location])
-
   const onSearchOpen = async () => {
-    if (isOpen) {
-      onClose()
-      return
-    }
-    onOpen()
     if (!rawDashboards) {
       const r1 = requestApi.get(`/dashboard/search/${config.currentTenant}`)
       const r2 = requestApi.get(`/dashboard/starred`)
@@ -129,6 +145,7 @@ const Search = memo((props: Props) => {
 
   const onQueryChange = (v) => {
     setQuery(v)
+    addParamToUrl({ query: v })
   }
 
   const tags = useMemo(() => {
@@ -264,6 +281,16 @@ const Search = memo((props: Props) => {
 
   const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
 
+  const onModalClose = () => {
+    addParamToUrl({ search: null })
+    onClose()
+  }
+
+  const onTagsChange = (v) => {
+    setSelectedTags(v)
+    addParamToUrl({ tags: v.join(',') })
+  }
+
   return (
     <Box>
       <PopoverTooltip
@@ -276,7 +303,9 @@ const Search = memo((props: Props) => {
             }
             className='hover-text'
             cursor='pointer'
-            onClick={onSearchOpen}
+            onClick={() => {
+              addParamToUrl({ search: 'open' })
+            }}
           >
             <Box>
               {miniMode ? (
@@ -307,7 +336,7 @@ const Search = memo((props: Props) => {
       />
       <Modal
         isOpen={isOpen}
-        onClose={onClose}
+        onClose={onModalClose}
         size='full'
         autoFocus={false}
         trapFocus={false}
@@ -325,7 +354,11 @@ const Search = memo((props: Props) => {
             <ModalHeader justifyContent='space-between' pb='1'>
               <Flex justifyContent='space-between' alignItems='center'>
                 <Text>{t1.searchDashboards}</Text>
-                <FaTimes opacity='0.6' cursor='pointer' onClick={onClose} />
+                <FaTimes
+                  opacity='0.6'
+                  cursor='pointer'
+                  onClick={onModalClose}
+                />
               </Flex>
               <Text color='gray.500' fontSize='sm'>
                 {t1.searchDashboardsTips}
@@ -353,7 +386,12 @@ const Search = memo((props: Props) => {
                 >
                   <Box
                     cursor='pointer'
-                    onClick={() => setCaseSensitive(!caseSensitive)}
+                    onClick={() => {
+                      setCaseSensitive(!caseSensitive)
+                      addParamToUrl({
+                        caseSensitive: !caseSensitive ? 'true' : null,
+                      })
+                    }}
                     color={caseSensitive ? 'brand.500' : 'inherit'}
                     fontWeight='600'
                     className={caseSensitive ? 'highlight-bordered' : null}
@@ -371,11 +409,11 @@ const Search = memo((props: Props) => {
                     tags={tags}
                     onChange={(v: string[]) => {
                       if (last(v) == 'untagged') {
-                        setSelectedTags(['untagged'])
+                        onTagsChange(['untagged'])
                       } else if (v.includes('untagged')) {
-                        setSelectedTags(v.filter((t) => t != 'untagged'))
+                        onTagsChange(v.filter((t) => t != 'untagged'))
                       } else {
-                        setSelectedTags(v)
+                        onTagsChange(v)
                       }
                     }}
                     tagCount={tagCount}
@@ -385,14 +423,20 @@ const Search = memo((props: Props) => {
                     <TeamsFilter
                       value={selectedTeams}
                       teams={teams}
-                      onChange={setSelectedTeams}
+                      onChange={(v) => {
+                        setSelectedTeams(v)
+                        addParamToUrl({ teams: v.join(',') })
+                      }}
                       teamCount={teamCount}
                       minWidth={isLargeScreen ? '260px' : '48%'}
                     />
                   )}
                   <Box
                     cursor='pointer'
-                    onClick={() => setFilterStarred(!filterStarred)}
+                    onClick={() => {
+                      setFilterStarred(!filterStarred)
+                      addParamToUrl({ star: !filterStarred ? 'true' : null })
+                    }}
                     fontSize='1.3rem'
                     color={useColorModeValue('orange.300', 'orange.200')}
                   >
@@ -442,7 +486,7 @@ const Search = memo((props: Props) => {
                     <ListView
                       teams={teams}
                       dashboards={dashboards as Dashboard[]}
-                      onItemClick={onClose}
+                      onItemClick={onModalClose}
                       query={query}
                       starredIds={starredDashIds}
                     />
@@ -451,7 +495,7 @@ const Search = memo((props: Props) => {
                     <TeamsView
                       teams={teams}
                       dashboards={dashboards as Map<string, Dashboard[]>}
-                      onItemClick={onClose}
+                      onItemClick={onModalClose}
                       query={query}
                       starredIds={starredDashIds}
                     />
@@ -461,7 +505,7 @@ const Search = memo((props: Props) => {
                       selectedTags={selectedTags}
                       teams={teams}
                       dashboards={dashboards as Map<string, Dashboard[]>}
-                      onItemClick={onClose}
+                      onItemClick={onModalClose}
                       query={query}
                       starredIds={starredDashIds}
                     />
@@ -471,7 +515,7 @@ const Search = memo((props: Props) => {
                 <Loading />
               )}
               {!isLargeScreen && (
-                <Button mt='2' onClick={onClose}>
+                <Button mt='2' onClick={onModalClose}>
                   Close
                 </Button>
               )}
