@@ -77,6 +77,7 @@ const DashboardShare = ({ dashboard, ...rest }: Props) => {
   const [refresh, setRefresh] = useState(REFRESH_OFF)
   const [embeddingPanel, setEmbeddingPanel] = useState<number>(0)
   const [colorMode, setColorMode] = useState('light')
+  const [readonly, setReadonly] = useState(false)
 
   useEffect(() => {
     let url = window.origin + location.pathname + '?'
@@ -137,6 +138,10 @@ const DashboardShare = ({ dashboard, ...rest }: Props) => {
 
       embedding = embedding + '&colorMode=' + colorMode
 
+      if (readonly) {
+        embedding = embedding + '&readonly=on'
+      }
+
       setShareUrl(url)
       setEmbededUrl(embedding)
       setValue(url)
@@ -151,6 +156,7 @@ const DashboardShare = ({ dashboard, ...rest }: Props) => {
     embeddingPanel,
     colorMode,
     dashboard,
+    readonly,
   ])
 
   const filterPanels = (
@@ -322,6 +328,18 @@ const DashboardShare = ({ dashboard, ...rest }: Props) => {
                             '5m',
                             '10m',
                           ].map((v) => ({ value: v, label: v }))}
+                        />
+                      </FormItem>
+                      <FormItem
+                        title={lang == Lang.EN ? 'Read only' : '设置为只读'}
+                        size='sm'
+                        alignItems={'center'}
+                      >
+                        <Switch
+                          isChecked={readonly}
+                          onChange={(e) => {
+                            setReadonly(e.currentTarget.checked)
+                          }}
                         />
                       </FormItem>
                       <FormItem

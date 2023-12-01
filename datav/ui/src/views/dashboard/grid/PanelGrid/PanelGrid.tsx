@@ -601,6 +601,7 @@ const PanelHeader = ({
 
   const { colorMode } = useColorMode()
   const embed = useEmbed()
+  const readonly = useSearchParam('readonly')
   const menuItems: MenuProps['items'] = [
     {
       key: 'edit',
@@ -718,42 +719,47 @@ const PanelHeader = ({
           ) : (
             <Box width='100px'>&nbsp;</Box>
           )}
-          <Dropdown
-            placement='bottom'
-            menu={{
-              mode: 'inline',
-              items: menuItems,
-            }}
-            trigger={['hover']}
-            overlayStyle={{}}
-          >
-            <Button
-              height={'100%'}
-              transition='all 0.2s'
-              _focus={{ border: null, background: null }}
-              _active={{ background: null, border: null }}
-              onClick={(e) => e.preventDefault()}
-              variant='ghost'
-              size='xs'
-              disabled={embed}
-              _hover={{ background: null, border: null }}
-              visibility={onHover ? 'visible' : 'hidden'}
-              color={paletteColorNameToHex(panel.styles.title.color, colorMode)}
+          {readonly != 'on' && (
+            <Dropdown
+              placement='bottom'
+              menu={{
+                mode: 'inline',
+                items: menuItems,
+              }}
+              trigger={['hover']}
+              overlayStyle={{}}
             >
-              {/* <Center width="100%"> */}
-
-              <Box
-                padding={1}
-                opacity='0.6'
-                fontSize='0.8rem'
-                zIndex={1000}
-                cursor='pointer'
+              <Button
+                height={'100%'}
+                transition='all 0.2s'
+                _focus={{ border: null, background: null }}
+                _active={{ background: null, border: null }}
+                onClick={(e) => e.preventDefault()}
+                variant='ghost'
+                size='xs'
+                disabled={embed}
+                _hover={{ background: null, border: null }}
+                visibility={onHover ? 'visible' : 'hidden'}
+                color={paletteColorNameToHex(
+                  panel.styles.title.color,
+                  colorMode,
+                )}
               >
-                <FaEllipsisV />
-              </Box>
-              {/* </Center> */}
-            </Button>
-          </Dropdown>
+                {/* <Center width="100%"> */}
+
+                <Box
+                  padding={1}
+                  opacity='0.6'
+                  fontSize='0.8rem'
+                  zIndex={1000}
+                  cursor='pointer'
+                >
+                  <FaEllipsisV />
+                </Box>
+                {/* </Center> */}
+              </Button>
+            </Dropdown>
+          )}
         </Flex>
         {!loading && panel.enableScopeTime && (
           <Popover trigger='hover'>

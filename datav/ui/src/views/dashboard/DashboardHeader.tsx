@@ -24,6 +24,7 @@ import CustomScrollbar from 'src/components/CustomScrollbar/CustomScrollbar'
 import DashboardRefresh from './DashboardRefresh'
 import { catelogVariables } from '../variables/utils'
 import { useSearchParam } from 'react-use'
+import useEmbed from 'hooks/useEmbed'
 
 interface HeaderProps {
   dashboard: Dashboard
@@ -38,6 +39,8 @@ const DashboardHeader = memo(
     const fullscreen = useFullscreen()
     const teamId = useParams().teamId
     const toolbar = useSearchParam('toolbar')
+    const readonly = useSearchParam('readonly')
+    const embed = useEmbed()
 
     const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
     const [dvars, gvars] = catelogVariables(vars, dashboard)
@@ -72,8 +75,12 @@ const DashboardHeader = memo(
                   <>
                     <Tooltip label={t1.headerTeamTips}>
                       <Box
-                        cursor='pointer'
-                        onClick={() => navigate(`/${teamId}/cfg/team/members`)}
+                        cursor={!embed && 'pointer'}
+                        onClick={
+                          !embed
+                            ? () => navigate(`/${teamId}/cfg/team/members`)
+                            : null
+                        }
                       >
                         {dashboard.ownerName}
                       </Box>
@@ -82,7 +89,7 @@ const DashboardHeader = memo(
                   </>
                 )}
                 <Box>{dashboard.title}</Box>
-                {isLargeScreen && (
+                {isLargeScreen && !embed && (
                   <>
                     <DashboardStar
                       dashboardId={dashboard.id}
@@ -101,19 +108,23 @@ const DashboardHeader = memo(
 
               <HStack>
                 <HStack spacing='0'>
-                  <AddPanel dashboard={dashboard} onChange={onChange} />
-                  <DashboardSave dashboard={dashboard} />
-                  {dashboard && (
-                    <DashboardSettings
-                      dashboard={dashboard}
-                      onChange={onChange}
-                    />
+                  {readonly != 'on' && (
+                    <>
+                      <AddPanel dashboard={dashboard} onChange={onChange} />
+                      <DashboardSave dashboard={dashboard} />
+                      {dashboard && (
+                        <DashboardSettings
+                          dashboard={dashboard}
+                          onChange={onChange}
+                        />
+                      )}
+                    </>
                   )}
                   <DatePicker showTime />
                   {isLargeScreen && (
                     <HStack spacing={0}>
                       <DashboardRefresh />
-                      <Fullscreen />
+                      {!embed && <Fullscreen />}
                     </HStack>
                   )}
                 </HStack>
