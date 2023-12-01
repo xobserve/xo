@@ -1,11 +1,21 @@
 // Copyright 2023 xObserve.io Team
 
-import { Box, Flex, HStack, Tooltip, useMediaQuery } from '@chakra-ui/react'
+import {
+  Box,
+  Flex,
+  HStack,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverContent,
+  PopoverTrigger,
+  Tooltip,
+  useMediaQuery,
+} from '@chakra-ui/react'
 import SelectVariables from 'src/views/variables/SelectVariable'
 import { isEmpty } from 'lodash'
 import React from 'react'
 import { memo } from 'react'
-import ReserveUrls from 'src/data/reserve-urls'
 import { Dashboard } from 'types/dashboard'
 import AddPanel from './AddPanel'
 import DashboardSave from './DashboardSave'
@@ -25,6 +35,8 @@ import DashboardRefresh from './DashboardRefresh'
 import { catelogVariables } from '../variables/utils'
 import { useSearchParam } from 'react-use'
 import useEmbed from 'hooks/useEmbed'
+import ColorTag from 'components/ColorTag'
+import { addParamToUrl } from 'utils/url'
 
 interface HeaderProps {
   dashboard: Dashboard
@@ -88,7 +100,32 @@ const DashboardHeader = memo(
                     <Box>/</Box>
                   </>
                 )}
-                <Box>{dashboard.title}</Box>
+                <Popover trigger='hover'>
+                  <PopoverTrigger>
+                    <Box cursor='pointer'>{dashboard.title}</Box>
+                  </PopoverTrigger>
+                  <PopoverContent>
+                    <PopoverBody>
+                      <HStack spacing={2}>
+                        {dashboard.tags.map((tag) => {
+                          return (
+                            <ColorTag
+                              name={tag}
+                              style={{ cursor: 'pointer' }}
+                              onClick={() => {
+                                addParamToUrl({
+                                  search: 'open',
+                                  searchTags: tag,
+                                })
+                              }}
+                            />
+                          )
+                        })}
+                      </HStack>
+                    </PopoverBody>
+                  </PopoverContent>
+                </Popover>
+
                 {isLargeScreen && !embed && (
                   <>
                     <DashboardStar

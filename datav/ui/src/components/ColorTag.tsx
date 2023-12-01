@@ -11,8 +11,9 @@ interface Props {
   label?: string
   onRemove?: any
   style?: Object
+  onClick?: any
 }
-const ColorTag = ({ name, onRemove, style, label }: Props) => {
+const ColorTag = ({ name, onRemove, style, label, onClick }: Props) => {
   const { colorMode } = useColorMode()
   const bg = colorGenerator.getColorByKey(name)
   return (
@@ -25,6 +26,7 @@ const ColorTag = ({ name, onRemove, style, label }: Props) => {
         e.stopPropagation()
       }}
       borderRadius={2}
+      onClick={onClick}
     >
       <TagLabel>{label ?? name}</TagLabel>
       {onRemove && <TagCloseButton onClick={onRemove} />}

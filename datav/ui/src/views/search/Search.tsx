@@ -44,11 +44,11 @@ import useBus from 'use-bus'
 import { OnDashboardWeightChangeEvent } from 'src/data/bus-events'
 import { MobileBreakpoint } from 'src/data/constants'
 import Loading from 'src/components/loading/Loading'
-import { add, last } from 'lodash'
+import { add, last, set } from 'lodash'
 import { useStore } from '@nanostores/react'
 import { commonMsg, searchMsg } from 'src/i18n/locales/en'
 import { $config } from 'src/data/configs/config'
-import { addParamToUrl } from 'utils/url'
+import { addParamToUrl, removeParamFromUrl } from 'utils/url'
 import { useSearchParam } from 'react-use'
 
 interface Props {
@@ -69,14 +69,14 @@ const Search = memo((props: Props) => {
   const t = useStore(commonMsg)
   const t1 = useStore(searchMsg)
   const searchParam = useSearchParam('search')
-  const tagsParam = useSearchParam('tags')?.split(',') ?? []
-  const teamsParam = useSearchParam('teams')?.split(',') ?? []
+  const tagsParam = useSearchParam('searchTags')?.split(',') ?? []
+  const teamsParam = useSearchParam('searchTeams')?.split(',') ?? []
   for (const i in teamsParam) {
     teamsParam[i] = Number(teamsParam[i]) as any
   }
-  const starParam = useSearchParam('star')
-  const caseSensitiveParam = useSearchParam('caseSensitive')
-  const queryParam = useSearchParam('query')
+  const starParam = useSearchParam('searchStar')
+  const caseSensitiveParam = useSearchParam('searchCaseSensitive')
+  const queryParam = useSearchParam('searchQuery')
 
   const config = useStore($config)
   const [query, setQuery] = useState<string>(queryParam)
@@ -97,11 +97,12 @@ const Search = memo((props: Props) => {
   const [layout, setLayout] = useState<'teams' | 'list' | 'tags'>('teams')
 
   useEffect(() => {
+    setSelectedTags(tagsParam)
+  }, [tagsParam])
+  useEffect(() => {
     if (searchParam == 'open' && config) {
       onOpen()
       onSearchOpen()
-    } else {
-      onClose()
     }
   }, [searchParam, config])
 
@@ -145,7 +146,7 @@ const Search = memo((props: Props) => {
 
   const onQueryChange = (v) => {
     setQuery(v)
-    addParamToUrl({ query: v })
+    addParamToUrl({ searchQuery: v })
   }
 
   const tags = useMemo(() => {
@@ -283,12 +284,19 @@ const Search = memo((props: Props) => {
 
   const onModalClose = () => {
     addParamToUrl({ search: null })
+    removeParamFromUrl([
+      'searchQuery',
+      'searchTags',
+      'searchTeams',
+      'searchStar',
+      'searchCaseSensitive',
+    ])
     onClose()
   }
 
   const onTagsChange = (v) => {
     setSelectedTags(v)
-    addParamToUrl({ tags: v.join(',') })
+    addParamToUrl({ searchTags: v.join(',') })
   }
 
   return (
@@ -389,7 +397,7 @@ const Search = memo((props: Props) => {
                     onClick={() => {
                       setCaseSensitive(!caseSensitive)
                       addParamToUrl({
-                        caseSensitive: !caseSensitive ? 'true' : null,
+                        searchCaseSensitive: !caseSensitive ? 'true' : null,
                       })
                     }}
                     color={caseSensitive ? 'brand.500' : 'inherit'}
@@ -425,7 +433,7 @@ const Search = memo((props: Props) => {
                       teams={teams}
                       onChange={(v) => {
                         setSelectedTeams(v)
-                        addParamToUrl({ teams: v.join(',') })
+                        addParamToUrl({ searchTeams: v.join(',') })
                       }}
                       teamCount={teamCount}
                       minWidth={isLargeScreen ? '260px' : '48%'}
@@ -435,7 +443,9 @@ const Search = memo((props: Props) => {
                     cursor='pointer'
                     onClick={() => {
                       setFilterStarred(!filterStarred)
-                      addParamToUrl({ star: !filterStarred ? 'true' : null })
+                      addParamToUrl({
+                        searchStar: !filterStarred ? 'true' : null,
+                      })
                     }}
                     fontSize='1.3rem'
                     color={useColorModeValue('orange.300', 'orange.200')}
