@@ -33,23 +33,27 @@ const DashboardPageWrapper = memo(({ sideWidth }: Props) => {
   }, [path])
 
   const loadConfig = async (path) => {
-    const res = await requestApi.get(
-      `/config/dashboard?teamId=${teamId}&path=${path}`,
-    )
-    if (res.data.reload) {
-      window.location.href = res.data.path
-      return
-    }
-    const cfg = res.data.cfg
-    cfg.sidemenu = (cfg.sidemenu as any).data.filter((item) => !item.hidden)
-    $config.set(cfg)
-    $teams.set(res.data.teams)
-    $datasources.set(res.data.datasources)
-    initVariableSelected(res.data.variables)
-    $variables.set(res.data.variables)
-    setDashboard(res.data.dashboard)
-    if (res.data.path != path) {
-      navigate('/' + res.data.cfg.currentTeam + res.data.path)
+    try {
+      const res = await requestApi.get(
+        `/config/dashboard?teamId=${teamId}&path=${path}`,
+      )
+      if (res.data.reload) {
+        window.location.href = res.data.path
+        return
+      }
+      const cfg = res.data.cfg
+      cfg.sidemenu = (cfg.sidemenu as any).data.filter((item) => !item.hidden)
+      $config.set(cfg)
+      $teams.set(res.data.teams)
+      $datasources.set(res.data.datasources)
+      initVariableSelected(res.data.variables)
+      $variables.set(res.data.variables)
+      setDashboard(res.data.dashboard)
+      if (res.data.path != path) {
+        navigate('/' + res.data.cfg.currentTeam + res.data.path)
+      }
+    } catch (error) {
+      setError(error)
     }
   }
   return (
