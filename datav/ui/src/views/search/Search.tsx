@@ -44,7 +44,7 @@ import useBus from 'use-bus'
 import { OnDashboardWeightChangeEvent } from 'src/data/bus-events'
 import { MobileBreakpoint } from 'src/data/constants'
 import Loading from 'src/components/loading/Loading'
-import { add, last, set } from 'lodash'
+import { add, isEqual, last, set } from 'lodash'
 import { useStore } from '@nanostores/react'
 import { commonMsg, searchMsg } from 'src/i18n/locales/en'
 import { $config } from 'src/data/configs/config'
@@ -97,8 +97,11 @@ const Search = memo((props: Props) => {
   const [layout, setLayout] = useState<'teams' | 'list' | 'tags'>('teams')
 
   useEffect(() => {
-    setSelectedTags(tagsParam)
+    if (!isEqual(selectedTags, tagsParam)) {
+      setSelectedTags(tagsParam)
+    }
   }, [tagsParam])
+
   useEffect(() => {
     if (searchParam == 'open' && config) {
       onOpen()
