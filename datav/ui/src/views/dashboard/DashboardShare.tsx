@@ -14,7 +14,6 @@ import {
   useDisclosure,
   Switch,
   HStack,
-  Input,
   VStack,
   Tabs,
   TabList,
@@ -22,7 +21,6 @@ import {
   TabPanels,
   TabPanel,
   ModalCloseButton,
-  ModalFooter,
   Textarea,
   Tooltip,
 } from '@chakra-ui/react'
@@ -47,6 +45,8 @@ import { REFRESH_OFF } from './DashboardRefresh'
 import { Select } from 'antd'
 import { concat } from 'lodash'
 import RadionButtons from 'components/RadioButtons'
+import { locale } from 'src/i18n/i18n'
+import { Lang } from 'types/misc'
 
 interface Props extends StyleProps {
   dashboard: Dashboard
@@ -56,8 +56,9 @@ interface Props extends StyleProps {
 export const shareUrlParams = {}
 const DashboardShare = ({ dashboard, ...rest }: Props) => {
   const variables = useStore($variables)
-  const t = useStore(commonMsg)
-  const t1 = useStore(dashboardMsg)
+  const t = commonMsg.get()
+  const t1 = dashboardMsg.get()
+  const lang = locale.get()
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -149,6 +150,7 @@ const DashboardShare = ({ dashboard, ...rest }: Props) => {
     refresh,
     embeddingPanel,
     colorMode,
+    dashboard,
   ])
 
   const filterPanels = (
@@ -171,7 +173,7 @@ const DashboardShare = ({ dashboard, ...rest }: Props) => {
             <ModalHeader maxHeight='20' paddingBottom={'1'}>
               <HStack spacing={8}>
                 <HStack>
-                  <FaShare />
+                  <FaShare fontSize='0.85rem' />
                   <Text fontSize='md'>{t.share}</Text>
                 </HStack>
                 <TabList>
@@ -201,7 +203,9 @@ const DashboardShare = ({ dashboard, ...rest }: Props) => {
                       </FormItem>
                       {enableCurrentTimeRange && (
                         <FormItem
-                          title='Use raw time'
+                          title={
+                            lang == Lang.EN ? 'Use raw time' : '使用原始时间'
+                          }
                           size='sm'
                           alignItems={'center'}
                         >

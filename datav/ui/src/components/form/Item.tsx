@@ -63,6 +63,7 @@ const FormItem = ({
         minWidth='fit-content'
         className={colorSchema == 'gray' ? 'label-bg' : 'tag-bg'}
         borderRadius='1px'
+        fontSize={size == 'sm' ? '0.9rem' : '1rem'}
       >
         {typeof title == 'string' ? (
           <Text
