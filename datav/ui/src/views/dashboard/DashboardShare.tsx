@@ -251,10 +251,10 @@ const DashboardShare = ({ dashboard, ...rest }: Props) => {
                     <Form
                       sx={{
                         '.form-item-label': {
-                          width: '150px',
+                          width: '170px',
                         },
                       }}
-                      spacing={2}
+                      spacing={1}
                     >
                       <FormItem
                         title={t.currentTimeRange}
@@ -270,7 +270,9 @@ const DashboardShare = ({ dashboard, ...rest }: Props) => {
                       </FormItem>
                       {enableCurrentTimeRange && (
                         <FormItem
-                          title='Use raw time'
+                          title={
+                            lang == Lang.EN ? 'Use raw time' : '使用原始时间'
+                          }
                           size='sm'
                           alignItems={'center'}
                         >
@@ -282,21 +284,26 @@ const DashboardShare = ({ dashboard, ...rest }: Props) => {
                           />
                         </FormItem>
                       )}
+                      {embeddingPanel === 0 && (
+                        <FormItem
+                          title={
+                            lang == Lang.EN
+                              ? 'Show dashboard header'
+                              : '显示仪表盘顶部'
+                          }
+                          size='sm'
+                          alignItems={'center'}
+                        >
+                          <Switch
+                            isChecked={useToolbar}
+                            onChange={(e) => {
+                              setUserToolbar(e.currentTarget.checked)
+                            }}
+                          />
+                        </FormItem>
+                      )}
                       <FormItem
-                        title={'Show toolbar'}
-                        size='sm'
-                        alignItems={'center'}
-                        desc='With toolbar, users can select variables and time'
-                      >
-                        <Switch
-                          isChecked={useToolbar}
-                          onChange={(e) => {
-                            setUserToolbar(e.currentTarget.checked)
-                          }}
-                        />
-                      </FormItem>
-                      <FormItem
-                        title={'Use refresh'}
+                        title={lang == Lang.EN ? 'Use refresh' : '启用自动刷新'}
                         size='sm'
                         alignItems={'center'}
                       >
@@ -304,6 +311,7 @@ const DashboardShare = ({ dashboard, ...rest }: Props) => {
                           popupMatchSelectWidth={false}
                           bordered={false}
                           value={refresh}
+                          size='small'
                           onChange={(v) => setRefresh(v)}
                           options={[
                             REFRESH_OFF,
@@ -317,7 +325,7 @@ const DashboardShare = ({ dashboard, ...rest }: Props) => {
                         />
                       </FormItem>
                       <FormItem
-                        title={'Color mode'}
+                        title={lang == Lang.EN ? 'Color mode' : '颜色主题'}
                         size='sm'
                         alignItems={'center'}
                       >
@@ -332,15 +340,26 @@ const DashboardShare = ({ dashboard, ...rest }: Props) => {
                         />
                       </FormItem>
                       <FormItem
-                        title={'Embedding panel'}
+                        title={lang == Lang.EN ? 'Embedding panel' : '嵌入图表'}
                         size='sm'
                         alignItems={'center'}
+                        desc={
+                          lang == Lang.EN
+                            ? 'When selected, you will embed a panel instead of the dashboard'
+                            : '选择后，将嵌入一个图表而不是整个仪表盘'
+                        }
                       >
                         <Select
                           popupMatchSelectWidth={false}
                           bordered={false}
                           value={embeddingPanel}
-                          onChange={(v) => setEmbeddingPanel(v)}
+                          onChange={(v) => {
+                            if (v !== 0) {
+                              // toolbar must not display when embedding a panel
+                              setUserToolbar(false)
+                            }
+                            setEmbeddingPanel(v)
+                          }}
                           options={concat(
                             [{ value: 0, label: 'OFF' }],
                             dashboard.data.panels.map((p) => ({
@@ -349,6 +368,7 @@ const DashboardShare = ({ dashboard, ...rest }: Props) => {
                             })),
                           )}
                           showSearch
+                          size='small'
                           filterOption={filterPanels}
                           style={{ width: '200px' }}
                         />

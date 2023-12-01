@@ -116,7 +116,7 @@ func GetDashboardConfig(c *gin.Context) {
 	}
 
 	if u == nil && (dashboard.VisibleTo == models.TeamVisible || dashboard.VisibleTo == models.TenantVisible) {
-		c.JSON(400, common.RespError("you have to sign in to view this dashboard"))
+		c.JSON(401, common.RespError("you have to sign in to view this dashboard"))
 		return
 	}
 

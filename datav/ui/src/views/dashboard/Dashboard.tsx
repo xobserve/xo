@@ -85,7 +85,6 @@ const DashboardWrapper = ({ rawDashboard, sideWidth }) => {
   const { setColorMode, colorMode, toggleColorMode } = useColorMode()
   // const [gVariables, setGVariables] = useState<Variable[]>([])
   const fullscreen = useFullscreen()
-  const toolbar = useSearchParam('toolbar')
 
   const initDash = (dash) => {
     dash.data.panels.forEach((panel: Panel) => {
@@ -334,24 +333,6 @@ const DashboardWrapper = ({ rawDashboard, sideWidth }) => {
               border={dashboard.data.styles.border}
             />
             <Box id='dashboard-scroll-top'></Box>
-            {fullscreen && toolbar == 'on' && (
-              <Flex
-                maxW={`calc(100% - ${10}px)`}
-                id='fullscreen-toolbar'
-                alignItems='center'
-                gap='3'
-              >
-                <Box minWidth='fit-content'>
-                  <DatePicker showTime showIcon={false} />
-                </Box>
-                <CustomScrollbar hideVerticalTrack>
-                  <Flex justifyContent='space-between'>
-                    <SelectVariables variables={dvars} />
-                    <SelectVariables variables={gvars} />
-                  </Flex>
-                </CustomScrollbar>
-              </Flex>
-            )}
             {dashboard.data.panels?.length > 0 && (
               <DashboardGrid
                 dashboard={dashboard}

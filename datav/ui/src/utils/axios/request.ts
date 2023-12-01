@@ -84,7 +84,7 @@ requestApi.interceptors.response.use(
       // request to our api server
       if (status == 401) {
         // session expires
-        const id = 'Session expires, redirect to login page..'
+        const id = 'You need to signin, redirect to login page..'
         if (!toast.isActive(id)) {
           toast({
             id: id,
@@ -95,7 +95,8 @@ requestApi.interceptors.response.use(
           })
         }
         setTimeout(() => {
-          storage.set('current-page', location.pathname)
+          const oldPath = location.href
+          storage.set('current-page', oldPath)
           location.href = '/login'
         }, 2000)
       } else {

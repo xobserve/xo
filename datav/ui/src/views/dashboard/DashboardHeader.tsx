@@ -23,6 +23,7 @@ import { MobileBreakpoint } from 'src/data/constants'
 import CustomScrollbar from 'src/components/CustomScrollbar/CustomScrollbar'
 import DashboardRefresh from './DashboardRefresh'
 import { catelogVariables } from '../variables/utils'
+import { useSearchParam } from 'react-use'
 
 interface HeaderProps {
   dashboard: Dashboard
@@ -36,6 +37,7 @@ const DashboardHeader = memo(
     const navigate = useNavigate()
     const fullscreen = useFullscreen()
     const teamId = useParams().teamId
+    const toolbar = useSearchParam('toolbar')
 
     const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
     const [dvars, gvars] = catelogVariables(vars, dashboard)
@@ -43,7 +45,7 @@ const DashboardHeader = memo(
     return (
       <Box
         id='dashboard-header'
-        display={fullscreen ? 'none' : 'block'}
+        display={fullscreen && toolbar != 'on' ? 'none' : 'block'}
         pt='1'
         // width={sideWidth ? `calc(100% - ${sideWidth})` : "100%"}
         position={sideWidth ? 'fixed' : 'static'}
