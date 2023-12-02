@@ -108,10 +108,13 @@ export const queryPromethuesVariableValues = async (variable: Variable) => {
       let url = `/proxy/${ds.id}/api/v1/label/${data.label}/values?${
         data.useCurrentTime ? `&start=${start}&end=${end}` : ''
       }`
-      const metrics = replaceWithVariablesHasMultiValues(data.metrics)
-      for (const m of metrics) {
-        url += `${m ? `&match[]=${m}` : ''}`
-      }
+      // const metrics = replaceWithVariablesHasMultiValues(data.metrics)
+      // for (const m of metrics) {
+      //   url += `${m ? `&match[]=${m}` : ''}`
+      // }
+      replacePrometheusQueryWithVariables(data, null)
+      url += `${data.metrics ? `&match[]=${data.metrics}` : ''}`
+
       const res: any = await requestApi.get(url)
       if (res.status == 'success') {
         result.data = result.data.concat(res.data)

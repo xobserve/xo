@@ -14,7 +14,7 @@ import { isEmpty } from './validate'
 import { externalDatasourcePlugins } from 'src/views/dashboard/plugins/external/plugins'
 import { builtinDatasourcePlugins } from 'src/views/dashboard/plugins/built-in/plugins'
 import { TimeRange } from 'types/time'
-import { isObject } from 'lodash'
+import { isObject, zip } from 'lodash'
 
 export const hasVariableFormat = (s: string) => {
   return isEmpty(s) ? false : s.includes('${')
@@ -112,8 +112,15 @@ export const replaceWithVariablesHasMultiValues = (
 ): string[] => {
   const vars = $variables.get()
   let res = []
+
   const formats = parseVariableFormat(s)
+  if (formats.length == 0) {
+    return [s]
+  }
+
+  const targets0 = []
   for (const f of formats) {
+    const t = []
     // const v = (vars.length > 0 ? vars : gvariables).find(v => v.name ==f)
     const v = vars.find((v) => v.name == f)
     if (v) {
@@ -130,15 +137,38 @@ export const replaceWithVariablesHasMultiValues = (
           : v.selected.split(VariableSplitChar)
       }
 
-      res = selected.map((v) => s.replaceAll(`\${${f}}`, v))
+      selected.forEach((v) => t.push(v))
     }
+    if (t.length == 0) {
+      t.push('')
+    }
+    targets0.push(t)
+  }
+
+  const results = []
+
+  function permute(arr, mmo) {
+    if (arr.length == 0) {
+      results.push(mmo)
+      return
+    }
+    for (let i = 0; i < arr[0].length; i++) {
+      permute(arr.slice(1), mmo.concat(arr[0][i]))
+    }
+  }
+  permute(targets0, [])
+
+  for (const r of results) {
+    let s1 = s
+    for (let i = 0; i < formats.length; i++) {
+      s1 = s1.replaceAll(`\${${formats[i]}}`, r[i])
+    }
+    res.push(s1)
   }
 
   if (res.length == 0) {
     res.push(s)
   }
-
-  // console.log("here333333:",s, res)
 
   return res
 }
