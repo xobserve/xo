@@ -7,4 +7,5 @@ start.sh
 ui
 *.log
 *.mmdb
+data
 

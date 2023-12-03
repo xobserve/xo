@@ -99,7 +99,8 @@
     "use-deep-compare-effect": "^1.8.1",
     "use-immer": "^0.9.0",
     "validator": "^13.5.2",
-    "viz.js": "1.8.1"
+    "viz.js": "1.8.1",
+    "systemjs": "6.14.2"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.123",
@@ -129,7 +130,8 @@
     "typescript": "^4.9.3",
     "vite": "^4.4.2",
     "vite-plugin-svgr": "^3.2.0",
-    "vite-tsconfig-paths": "^4.2.0"
+    "vite-tsconfig-paths": "^4.2.0",
+    "@types/systemjs": "6.13.1"
   },
   "resolutions": {
     "d3-interpolate": "2.0.1"

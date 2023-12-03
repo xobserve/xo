@@ -100,6 +100,7 @@ func connectDatabase(tc *sdktrace.TracerProvider) error {
 
 			path = dataPath + "/xobserve.db"
 		}
+		logger.Info("sqlite data path:", "path", path)
 		driver, _ := otelsql.Register("sqlite3",
 			otelsql.TraceQueryWithArgs(),
 			// otelsql.AllowRoot(),

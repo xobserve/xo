@@ -415,15 +415,9 @@ func UpdateTeam(c *gin.Context) {
 		return
 	}
 	u := c.MustGet("currentUser").(*models.User)
-	isTeamAdmin, err := models.IsTeamAdmin(c.Request.Context(), team.Id, u.Id)
+	err := acl.CanEditTeam(c.Request.Context(), team.Id, u.Id)
 	if err != nil {
-		logger.Warn("check team admin error", "error", err)
-		c.JSON(500, common.RespInternalError())
-		return
-	}
-
-	if !isTeamAdmin {
-		c.JSON(403, common.RespError(e.NoPermission))
+		c.JSON(403, common.RespError(err.Error()))
 		return
 	}
 
