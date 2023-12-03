@@ -26,7 +26,7 @@ const DashboardPageWrapper = memo(({ sideWidth }: Props) => {
   let path = location.pathname.replace(`/${teamId}`, '')
   const navigate = useNavigate()
   const [dashboard, setDashboard] = useState<Dashboard>(null)
-  const [error, setError] = useState<string>(null)
+  const [error, setError] = useState<any>(null)
 
   useEffect(() => {
     loadConfig(path)
@@ -65,7 +65,11 @@ const DashboardPageWrapper = memo(({ sideWidth }: Props) => {
           rawDashboard={dashboard}
         />
       )}
-      {error && <NotFoundPage message={error} />}
+      {error && (
+        <NotFoundPage
+          message={typeof error == 'string' ? error : error?.message}
+        />
+      )}
       {!dashboard && !error && (
         <Box position='fixed' top='50vh' left='50vw'>
           <Loading />
