@@ -1,7 +1,7 @@
 // Copyright 2023 xObserve.io Team
 
 // Render series table in tooltip
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Box,
   HStack,
@@ -30,6 +30,7 @@ import { findOverride, findRuleInOverride } from 'utils/dashboard/panel'
 import { BarRules } from '../built-in/panel/bar/OverridesEditor'
 import { PanelInactiveKey } from 'src/data/storage-keys'
 import storage from 'utils/localStorage'
+import CopyToClipboard from 'components/CopyToClipboard'
 
 interface Props {
   dashboardId: string
@@ -260,11 +261,11 @@ const LegendTable = memo(
                       py='1'
                       cursor='pointer'
                       onClick={() => onSelectSeries(v.name, i, pressShift[0])}
+                      userSelect='none'
                     >
                       <HStack
                         alignItems='start'
                         opacity={inactiveSeries.includes(v.name) ? '0.6' : 1}
-                        userSelect='none'
                       >
                         <Box
                           width='10px'
@@ -281,7 +282,7 @@ const LegendTable = memo(
                             wordBreak='break-all'
                             whiteSpace={'break-spaces'}
                           >
-                            {v.name}
+                            <CopableText text={v.name} />
                           </Text>
                         ) : (
                           <Text
@@ -298,7 +299,7 @@ const LegendTable = memo(
                                 : 'break-spaces'
                             }
                           >
-                            {v.name}
+                            <CopableText text={v.name} />
                           </Text>
                         )}
                       </HStack>
@@ -324,3 +325,30 @@ const LegendTable = memo(
 )
 
 export default LegendTable
+
+const CopableText = ({ text }) => {
+  const [onHover, setOnHover] = useState(false)
+  return (
+    <span
+      onMouseEnter={() => setOnHover(true)}
+      onMouseLeave={() => setOnHover(false)}
+    >
+      <span>{text}</span>
+      {onHover && (
+        <span
+          style={{
+            position: 'absolute',
+            paddingTop: '1px',
+            paddingLeft: '2px',
+          }}
+        >
+          <CopyToClipboard
+            copyText={text}
+            tooltipTitle='Copy name'
+            fontSize='0.8rem'
+          />
+        </span>
+      )}
+    </span>
+  )
+}
