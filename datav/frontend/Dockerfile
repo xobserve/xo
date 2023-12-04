@@ -3,7 +3,7 @@ WORKDIR /frontend
 COPY ./ ./
 ENV GENERATE_SOURCEMAP=false
 ENV NODE_OPTIONS=--max-old-space-size=16384
-RUN yarn install
+RUN yarn config set registry https://registry.npmmirror.com/ && yarn install
 RUN yarn build
 
 FROM nginx:1.25.2-alpine
