@@ -26,7 +26,7 @@ services:
         TARGETOS: "${GOOS}"
         TARGETPLATFORM: "${GOARCH}"
     environment:
-      - FRONTEND_API_ENDPOINT=http://localhost:10086
+      - QUERY_SERVICE_ADDR=http://host.docker.internal:10086
     restart: on-failure
     depends_on:
       - query

@@ -3,7 +3,7 @@ WORKDIR /frontend
 COPY ./ ./
 ENV GENERATE_SOURCEMAP=false
 ENV NODE_OPTIONS=--max-old-space-size=16384
-RUN yarn config set registry https://registry.npmmirror.com/ && yarn install
+RUN yarn install
 RUN yarn build
 
 FROM nginx:1.25.2-alpine
@@ -20,8 +20,10 @@ RUN rm -rf /usr/share/nginx/html/*
 COPY --from=uibuilder /frontend/build/ /usr/share/nginx/html/
 
 # Copy custom nginx config and static files
-COPY frontend-nginx.conf /etc/nginx/conf.d/default.conf
+COPY nginx.template /etc/nginx/conf.d
 
 EXPOSE 5173
 
-ENTRYPOINT ["nginx", "-g", "daemon off;"]
+WORKDIR /etc/nginx/conf.d
+
+ENTRYPOINT envsubst '$QUERY_SERVICE_ADDR'  < nginx.template > default.conf && cat default.conf && nginx -g 'daemon off;'

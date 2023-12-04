@@ -186,6 +186,10 @@ func GetBasicConfig() *UIConfig {
 
 // overrideApiServerAddrInLocalUI is used to override api server address in local ui automatically
 func OverrideApiServerAddrInLocalUI() {
+	if strings.TrimSpace(config.Data.Server.OverrideApiServerAddrForUI) == "" {
+		return
+	}
+
 	root := config.Data.Server.UiStaticPath
 	filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
 		paths := strings.Split(path, "/")
@@ -198,8 +202,8 @@ func OverrideApiServerAddrInLocalUI() {
 					log.Fatal(err.Error() + ":" + filename)
 				}
 
-				base := "VITE_API_SERVER_PROD:"
-				index := bytes.Index(content, []byte("VITE_API_SERVER_PROD:"))
+				base := "VITE_QUERY_SERVICE_PROD:"
+				index := bytes.Index(content, []byte("VITE_QUERY_SERVICE_PROD:"))
 				if index >= 0 {
 					start := index + 22
 					var end int

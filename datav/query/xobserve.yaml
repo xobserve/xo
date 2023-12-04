@@ -14,7 +14,7 @@ server:
     ## If leave empty, xobserve will use above `listening_addr` as api server address in UI 
     ## Let's assume you have created domain names pointed to UI and api sever, you need to set this field to the new api server address
     ## e.g https://api.xobserve.io
-    override_api_server_addr_for_ui: http://localhost:10086
+    override_api_server_addr_for_ui: 
     ## Find and override api server address in this directory
     ui_static_path: ./ui/static
 
