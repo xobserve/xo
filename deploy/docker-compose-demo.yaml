@@ -15,14 +15,7 @@ x-clickhouse-defaults: &clickhouse-defaults
       max-file: "3"
   healthcheck:
     # "clickhouse", "client", "-u ${CLICKHOUSE_USER}", "--password ${CLICKHOUSE_PASSWORD}", "-q 'SELECT 1'"
-    test:
-      [
-        "CMD",
-        "wget",
-        "--spider",
-        "-q",
-        "localhost:8123/ping"
-      ]
+    test: ["CMD", "wget", "--spider", "-q", "localhost:8123/ping"]
     interval: 30s
     timeout: 5s
     retries: 3
@@ -60,7 +53,7 @@ services:
       # - ZOO_SERVERS=0.0.0.0:2888:3888,zookeeper-2:2888:3888,zookeeper-3:2888:3888
       - ALLOW_ANONYMOUS_LOGIN=yes
       - ZOO_AUTOPURGE_INTERVAL=1
-  
+
   # zookeeper-2:
   #   image: bitnami/zookeeper:3.7.1
   #   container_name: xobserve-zookeeper-2
@@ -104,10 +97,10 @@ services:
       - "8123:8123"
       - "9181:9181"
     volumes:
-      - ./clickhouse-config.xml:/etc/clickhouse-server/config.xml
-      - ./clickhouse-users.xml:/etc/clickhouse-server/users.xml
-      - ./clickhouse-function.xml:/etc/clickhouse-server/custom-function.xml
-      - ./clickhouse-cluster.xml:/etc/clickhouse-server/config.d/cluster.xml
+      - ./clickhouse-conf/clickhouse-config.xml:/etc/clickhouse-server/config.xml
+      - ./clickhouse-conf/clickhouse-users.xml:/etc/clickhouse-server/users.xml
+      - ./clickhouse-conf/clickhouse-function.xml:/etc/clickhouse-server/custom-function.xml
+      - ./clickhouse-conf/clickhouse-cluster.xml:/etc/clickhouse-server/config.d/cluster.xml
       # - ./clickhouse-storage.xml:/etc/clickhouse-server/config.d/storage.xml
       - ./data/clickhouse/:/var/lib/clickhouse/
       - ./scripts/clickhouse-user-scripts:/var/lib/clickhouse/user_scripts/
@@ -128,7 +121,6 @@ services:
   #     # - ./clickhouse-storage.xml:/etc/clickhouse-server/config.d/storage.xml
   #     - ./data/clickhouse-2/:/var/lib/clickhouse/
   #     - ./data/user_scripts:/var/lib/clickhouse/user_scripts/
-
 
   # clickhouse-3:
   #   <<: *clickhouse-defaults
@@ -164,7 +156,7 @@ services:
       options:
         max-size: 50m
         max-file: "3"
-    command: [ "all" ]
+    command: ["all"]
     environment:
       - JAEGER_ENDPOINT=http://host.docker.internal:14268/api/traces
       # - JAEGER_ENDPOINT=http://otel-collector:14268/api/traces
@@ -183,3 +175,27 @@ services:
       LOCUST_OPTS: "--headless -u 10 -r 1"
     volumes:
       - ./scripts/locust-scripts:/locust
+
+  datav:
+    image: "xobserve/datav"
+    container_name: xobserve-datav
+    ports:
+      - "10086:10086"
+    volumes:
+      - ./data/xobserve/:/var/lib/datav/
+      - ../datav/query/datav.yaml:/etc/datav/datav.yaml
+
+  otel-collector:
+    image: "xobserve/otel-collector"
+    container_name: xobserve-collector
+    ports:
+      - "2255:2255"
+      - "4317:4317"
+      - "4318:4318"
+      - "14250:14250"
+      - "14268:14268"
+    volumes:
+      - ../otel-collector/config/docker-config.yaml:/etc/collector/config.yaml
+    restart: on-failure
+    depends_on:
+      - clickhouse
