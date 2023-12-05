@@ -24,7 +24,7 @@ ARG TARGETOS TARGETARCH
 # set working directory
 WORKDIR /app/query-service
 COPY --from=builder /app/query-service /app/query-service/query-service
-COPY ./xobserve.yaml /etc/xobserve/xobserve.yaml
+COPY ./datav.yaml /etc/datav/datav.yaml
 
 # Make query-service executable for non-root users
 RUN chmod 755 /root /app/query-service/query-service
@@ -32,6 +32,6 @@ RUN chmod 755 /root /app/query-service/query-service
 # run the binary
 ENTRYPOINT ["./query-service"]
 
-CMD ["--config", "/etc/xobserve/xobserve.yaml"]
+CMD ["--config", "/etc/datav/datav.yaml"]
 
 EXPOSE 10086

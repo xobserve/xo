@@ -1,7 +1,6 @@
 ./query
 ./xobserve
-xobserve.db
-commit.sh
+datav.db
 testConfig.yaml
 start.sh
 ui

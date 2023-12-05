@@ -10,8 +10,8 @@ services:
         LDFLAGS: ""
         TARGETPLATFORM: "${GOOS}/${GOARCH}"
     volumes:
-      - ../query/data/:/var/lib/xobserve/
-      - ../query/xobserve.yaml:/etc/xobserve/xobserve.yaml
+      - ../data/:/var/lib/datav/
+      - ../query/datav.yaml:/etc/datav/datav.yaml
     command: []
     ports:
       - "10086:10086"

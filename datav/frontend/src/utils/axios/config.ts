@@ -13,11 +13,11 @@ const env = import.meta.env
 const apis = (
   {
     development: {
-      target: env.VITE_QUERY_SERVICE_DEV,
+      target: env.VITE_API_SERVER_DEV,
       allowOrigin: '*',
     },
     production: {
-      target: env.VITE_QUERY_SERVICE_PROD,
+      target: env.VITE_API_SERVER_PROD,
       allowOrigin: '*',
     },
     testing: {

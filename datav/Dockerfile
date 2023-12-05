@@ -36,7 +36,7 @@ WORKDIR /app/query-service
 
 COPY --from=queryBuilder /app/query-service /app/query-service/query-service
 COPY --from=uiBuilder /app/build /app/query-service/ui
-COPY ./query/xobserve.yaml /etc/xobserve/xobserve.yaml
+COPY ./query/datav.yaml /etc/datav/datav.yaml
 
 # Make query-service executable for non-root users
 RUN chmod 755 /root /app/query-service/query-service
@@ -44,6 +44,6 @@ RUN chmod 755 /root /app/query-service/query-service
 # run the binary
 ENTRYPOINT ["./query-service"]
 
-CMD ["--config", "/etc/xobserve/xobserve.yaml"]
+CMD ["--config", "/etc/datav/datav.yaml"]
 
 EXPOSE 10086

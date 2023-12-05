@@ -3,8 +3,8 @@ common:
     version: 0.9.0
     log_level: info
     is_prod: false
-    app_name: xobserve
-    repo_url: https://github.com/xObserve/xObserve
+    app_name: datav
+    repo_url: https://github.com/xobserve/datav
 
 #################################### Server ##############################
 server:
@@ -26,7 +26,7 @@ database:
     account_secret: 
     host: localhost
     port: 3306
-    database: xobserve
+    database: datav
 
 #################################### User/Session ##############################
 user: 
@@ -85,7 +85,7 @@ smtp:
 # Path to where xobserve can store temp files, sessions, and the sqlite3 db (if that is used)
 paths:
     # sqlite3 db files
-    sqlite_data: "/var/lib/xobserve"
+    sqlite_data: "/var/lib/datav"
     logs: ""
 
 #################################### Sidemenu ##############################

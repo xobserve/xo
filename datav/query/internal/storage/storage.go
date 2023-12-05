@@ -87,7 +87,7 @@ func connectDatabase(tc *sdktrace.TracerProvider) error {
 		var path string
 		dataPath := strings.TrimSpace(config.Data.Paths.SqliteData)
 		if dataPath == "" {
-			path = "xobserve.db"
+			path = "datav.db"
 		} else {
 			exist, _ := utils.FileExists(dataPath)
 			if !exist {
@@ -98,7 +98,7 @@ func connectDatabase(tc *sdktrace.TracerProvider) error {
 				}
 			}
 
-			path = dataPath + "/xobserve.db"
+			path = dataPath + "/datav.db"
 		}
 		logger.Info("sqlite data path:", "path", path)
 		driver, _ := otelsql.Register("sqlite3",
