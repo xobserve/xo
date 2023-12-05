@@ -1,5 +1,5 @@
 <p align="center">
-![v_and_g_letter_logo_sm](https://github.com/xobserve/xobserve/assets/7036754/2ae62780-8973-4854-81dd-eed8e69e0a4a)
+  <img src="https://github.com/xobserve/xobserve/assets/7036754/b3e45ea5-8e03-46c1-870d-719889f44067" width="130px" />
 </p>
 
 <p align="center">
