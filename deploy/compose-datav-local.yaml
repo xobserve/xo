@@ -3,15 +3,16 @@ version: "2.4"
 services:
   query:
     container_name: datav-query
+    hostname: datav-query
     build:
-      context: "../query"
+      context: "../datav/query"
       dockerfile: "./Dockerfile"
       args:
         LDFLAGS: ""
         TARGETPLATFORM: "${GOOS}/${GOARCH}"
     volumes:
-      - ../data/:/var/lib/datav/
-      - ../query/datav.yaml:/etc/datav/datav.yaml
+      - ./data/xobserve/:/var/lib/datav/
+      - ../datav/query/datav.yaml:/etc/datav/datav.yaml
     command: []
     ports:
       - "10086:10086"
@@ -20,13 +21,13 @@ services:
   frontend:
     container_name: datav-frontend
     build:
-      context: "../frontend"
+      context: "../datav/frontend"
       dockerfile: "./Dockerfile"
       args:
         TARGETOS: "${GOOS}"
         TARGETPLATFORM: "${GOARCH}"
     environment:
-      - QUERY_SERVICE_ADDR=http://host.docker.internal:10086
+      - QUERY_SERVICE_ADDR=http://datav-query:10086
     restart: on-failure
     depends_on:
       - query

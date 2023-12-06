@@ -190,14 +190,19 @@ function Login() {
             flexDir='column'
           >
             <Image
-              src='/logo.png'
+              src='/logo.svg'
               className='rotate-image'
               alt=''
               height={isLargeScreen ? '160px' : '80px'}
               width={isLargeScreen ? '160px' : '80px'}
               marginLeft='-10px'
             />
-            <Box fontSize='26px' color='white' fontWeight='bold'>
+            <Box
+              fontSize='26px'
+              color='white'
+              fontWeight='bold'
+              marginTop='-25px'
+            >
               xObserve
             </Box>
           </Box>

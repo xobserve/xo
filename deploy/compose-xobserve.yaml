@@ -1,0 +1,27 @@
+version: "2.4"
+
+services:
+  datav:
+    image: "xobserve/datav"
+    container_name: xobserve-datav
+    ports:
+      - "10086:10086"
+    volumes:
+      - ./data/xobserve/:/var/lib/datav/
+      - ../datav/query/datav.yaml:/etc/datav/datav.yaml
+
+  otel-collector:
+    image: "xobserve/otel-collector"
+    container_name: xobserve-collector
+    hostname: otel-collector
+    ports:
+      - "2255:2255"
+      - "4317:4317"
+      - "4318:4318"
+      - "14250:14250"
+      - "14268:14268"
+    volumes:
+      - ../otel-collector/config/docker-config.yaml:/etc/collector/config.yaml
+    restart: on-failure
+    depends_on:
+      - clickhouse

@@ -10,13 +10,13 @@ import {
 } from '@chakra-ui/react'
 import React from 'react'
 
-const Logo = ({ showText = false, width = 8 }) => {
+const Logo = ({ showText = false, width = 12 }) => {
   return (
     <HStack cursor='pointer' spacing='1'>
       <Image
         width={width}
-        src='/logo.png'
-        animation='spin 30s linear infinite'
+        src='/logo.svg'
+        // animation='spin 30s linear infinite'
       />
       {showText && (
         <Text fontWeight='600' fontSize='xl'>

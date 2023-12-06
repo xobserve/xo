@@ -214,7 +214,7 @@ const Container = (props: Props) => {
                 alignItems={miniMode || isEmpty(sidemenu) ? 'center' : 'left'}
               >
                 {miniMode || isEmpty(sidemenu) ? (
-                  <Box cursor='pointer' onClick={onMinimodeChange} mt='2'>
+                  <Box cursor='pointer' onClick={onMinimodeChange} mt='1'>
                     <Logo />
                   </Box>
                 ) : (
@@ -237,7 +237,7 @@ const Container = (props: Props) => {
                 )}
                 <VStack
                   alignItems='left'
-                  mt={3}
+                  mt={miniMode ? 0 : 3}
                   spacing={miniMode ? '2px' : '10px'}
                 >
                   {sidemenu?.map((link, index) => {
