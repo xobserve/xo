@@ -5,14 +5,14 @@ services:
     container_name: datav-query
     hostname: datav-query
     build:
-      context: "../datav/query"
+      context: "../query"
       dockerfile: "./Dockerfile"
       args:
         LDFLAGS: ""
         TARGETPLATFORM: "${GOOS}/${GOARCH}"
     volumes:
-      - ./data/xobserve/:/var/lib/datav/
-      - ../datav/query/datav.yaml:/etc/datav/datav.yaml
+      - ../../deploy/data/xobserve/:/var/lib/datav/
+      - ../query/datav.yaml:/etc/datav/datav.yaml
     command: []
     ports:
       - "10086:10086"
@@ -21,7 +21,7 @@ services:
   frontend:
     container_name: datav-frontend
     build:
-      context: "../datav/frontend"
+      context: "../frontend"
       dockerfile: "./Dockerfile"
       args:
         TARGETOS: "${GOOS}"
