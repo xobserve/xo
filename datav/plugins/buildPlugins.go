@@ -21,10 +21,10 @@ func main() {
 		skipMap[skip] = true
 	}
 
-	cmd := exec.Command("bash", "-c", "mkdir -p ../ui/src/views/dashboard/plugins/external/panel")
+	cmd := exec.Command("bash", "-c", "mkdir -p ../frontend/src/views/dashboard/plugins/external/panel")
 	cmd.CombinedOutput()
 
-	cmd = exec.Command("bash", "-c", "mkdir -p ../ui/src/views/dashboard/plugins/external/datasource")
+	cmd = exec.Command("bash", "-c", "mkdir -p ../frontend/src/views/dashboard/plugins/external/datasource")
 	cmd.CombinedOutput()
 
 	importPluginsStr1 := `
@@ -47,7 +47,7 @@ import { DatasourcePluginComponents, PanelPluginComponents } from "types/plugin"
 export const externalPanelPlugins: Record<string,PanelPluginComponents> = {`
 
 	{
-		builtInPanels, err := os.ReadDir("../ui/src/views/dashboard/plugins/built-in/panel")
+		builtInPanels, err := os.ReadDir("../frontend/src/views/dashboard/plugins/built-in/panel")
 		if err != nil {
 			log.Fatal("read panel dir error", err)
 		}
@@ -81,7 +81,7 @@ export const externalPanelPlugins: Record<string,PanelPluginComponents> = {`
 			}
 
 			// cp panel codes into src/views/dashboard/plugins/panel
-			cmdStr := fmt.Sprintf("cp -r ./panel/%s ../ui/src/views/dashboard/plugins/external/panel", panelType)
+			cmdStr := fmt.Sprintf("cp -r ./panel/%s ../frontend/src/views/dashboard/plugins/external/panel", panelType)
 			cmd = exec.Command("bash", "-c", cmdStr)
 			if _, err := cmd.CombinedOutput(); err != nil {
 				log.Println("copy plugin code dir  error: ", err, ", panel: ", panelType)
@@ -105,7 +105,7 @@ export const externalPanelPlugins: Record<string,PanelPluginComponents> = {`
 export const externalDatasourcePlugins: Record<string,DatasourcePluginComponents> = {`
 
 	{
-		builtInDatasources, err := os.ReadDir("../ui/src/views/dashboard/plugins/built-in/datasource")
+		builtInDatasources, err := os.ReadDir("../frontend/src/views/dashboard/plugins/built-in/datasource")
 		if err != nil {
 			log.Fatal("read panel dir error", err)
 		}
@@ -140,7 +140,7 @@ export const externalDatasourcePlugins: Record<string,DatasourcePluginComponents
 			}
 
 			// cp panel codes into src/views/dashboard/plugins/panel
-			cmdStr := fmt.Sprintf("cp -r ./datasource/%s ../ui/src/views/dashboard/plugins/external/datasource", dsType)
+			cmdStr := fmt.Sprintf("cp -r ./datasource/%s ../frontend/src/views/dashboard/plugins/external/datasource", dsType)
 			cmd = exec.Command("bash", "-c", cmdStr)
 			if _, err := cmd.CombinedOutput(); err != nil {
 				log.Println("copy plugin code dir  error: ", err, ", datasource: ", dsType)
@@ -163,7 +163,7 @@ export const externalDatasourcePlugins: Record<string,DatasourcePluginComponents
 	externalPluginFile := importPluginsStr1 + panelExportStr + datasourceExportStr
 
 	// generate externalPlugins.ts file
-	err := os.WriteFile("../ui/src/views/dashboard/plugins/external/plugins.ts", []byte(externalPluginFile), 0666)
+	err := os.WriteFile("../frontend/src/views/dashboard/plugins/external/plugins.ts", []byte(externalPluginFile), 0666)
 	if err != nil {
 		log.Fatal("write plugin.json error", err)
 	}

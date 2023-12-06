@@ -11,11 +11,11 @@ import (
 /*
 This script sync plugins code from dev directory to this directory, it can help developers conveniently sync their code from development environment to release environment.
 
-dev directory: XOBSERVE_ROOT/ui/src/views/dashboard/plugins/external
+dev directory: XOBSERVE_ROOT/frontend/src/views/dashboard/plugins/external
 release directory: XOBSERVE_ROOT/plugins
 */
 
-const sourceDir = "../ui/src/views/dashboard/plugins/external"
+const sourceDir = "../frontend/src/views/dashboard/plugins/external"
 const releaseDir = "."
 const querySourceDir = "../query/internal/plugins/external"
 
@@ -31,6 +31,9 @@ func main() {
 	cmd.CombinedOutput()
 
 	cmd = exec.Command("bash", "-c", "mkdir -p ./datasource")
+	cmd.CombinedOutput()
+
+	cmd = exec.Command("bash", "-c", "mkdir -p ./query")
 	cmd.CombinedOutput()
 
 	if args[1] == "all" {
@@ -74,12 +77,13 @@ func main() {
 
 		for _, ds := range queryPlugins {
 			dsType := ds.Name()
-
-			// cp panel dir to public/plugins/external/panel
-			cmdStr := fmt.Sprintf("cp -r %s/%s %s/query", querySourceDir, dsType, releaseDir)
-			cmd := exec.Command("bash", "-c", cmdStr)
-			if _, err := cmd.CombinedOutput(); err != nil {
-				log.Println("copy query plugin codes error: ", err, ", query plugin: ", dsType)
+			if ds.IsDir() {
+				// cp panel dir to public/plugins/external/panel
+				cmdStr := fmt.Sprintf("cp -r %s/%s %s/query", querySourceDir, dsType, releaseDir)
+				cmd := exec.Command("bash", "-c", cmdStr)
+				if _, err := cmd.CombinedOutput(); err != nil {
+					log.Println("copy query plugin codes error: ", err, ", query plugin: ", dsType)
+				}
 			}
 		}
 	} else {

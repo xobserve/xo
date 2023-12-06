@@ -36,12 +36,12 @@ export const externalDatasourcePlugins: Record<string,DatasourcePluginComponents
 }
 `
 
-		err := os.WriteFile("../ui/src/views/dashboard/plugins/external/plugins.ts", []byte(externalPluginFile), 0666)
+		err := os.WriteFile("../frontend/src/views/dashboard/plugins/external/plugins.ts", []byte(externalPluginFile), 0666)
 		if err != nil {
 			log.Fatal("write plugins.ts error", err)
 		}
 
-		cmd := exec.Command("bash", "-c", "rm -rf ../ui/src/views/dashboard/plugins/external/*/*")
+		cmd := exec.Command("bash", "-c", "rm -rf ../frontend/src/views/dashboard/plugins/external/*/*")
 		cmd.CombinedOutput()
 
 		cmd = exec.Command("bash", "-c", "rm -rf ../query/internal/plugins/external/*")
@@ -70,7 +70,7 @@ export const externalDatasourcePlugins: Record<string,DatasourcePluginComponents
 				continue
 			} else {
 				// remove plugin code
-				cmd1 := exec.Command("bash", "-c", fmt.Sprintf("rm -rf ../ui/src/views/dashboard/plugins/external/%s/%s", tp, pluginType))
+				cmd1 := exec.Command("bash", "-c", fmt.Sprintf("rm -rf ../frontend/src/views/dashboard/plugins/external/%s/%s", tp, pluginType))
 				cmd1.CombinedOutput()
 			}
 		}
