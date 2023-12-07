@@ -28,6 +28,7 @@ import testdataDs from './datasource/testdata'
 import vmDs from './datasource/victoriaMetrics'
 import mysqlDs from './datasource/mysql'
 import postgresqlDs from './datasource/postgresql'
+import clickhouseDs from './datasource/clickhouse'
 
 export const builtinPanelPlugins: Record<string, PanelPluginComponents> = {
   [graphPanel.settings.type]: graphPanel,
@@ -63,4 +64,5 @@ export const builtinDatasourcePlugins: Record<
   [xobserveDs.settings.type]: xobserveDs,
   [mysqlDs.settings.type]: mysqlDs,
   [postgresqlDs.settings.type]: postgresqlDs,
+  [clickhouseDs.settings.type]: clickhouseDs,
 }
