@@ -5,37 +5,42 @@ The origin plugin files is in https://github.com/xObserve/xobserve/tree/main/ui/
 */
 
 // This demo datasource is just a copy of Promtheus datasource
-import { DatasourcePluginComponents } from "types/plugin";
-import DatasourceEditor from "./DatasourceEditor";
-import VariableEditor from "./VariableEditor";
-import QueryEditor from "./QueryEditor";
-import { DatasourceTypexobserve } from "./types"
-import { checkAndTestDatasource, queryxobserveVariableValues, query_http_alerts, replacexobserveQueryWithVariables, runQuery } from "./query_runner";
-import { $config } from "src/data/configs/config";
-
+import { DatasourcePluginComponents } from 'types/plugin'
+import DatasourceEditor from './DatasourceEditor'
+import VariableEditor from './VariableEditor'
+import QueryEditor from './QueryEditor'
+import { DatasourceTypexobserve } from './types'
+import {
+  checkAndTestDatasource,
+  queryxobserveVariableValues,
+  query_http_alerts,
+  replacexobserveQueryWithVariables,
+  runQuery,
+} from './query_runner'
+import { $config } from 'src/data/configs/config'
 
 const getDisabled = () => {
-    return  !$config.get().observability.enable
+  return !$config.get().observability.enable
 }
 
 const components: DatasourcePluginComponents = {
-    datasourceEditor: DatasourceEditor,
-    variableEditor:VariableEditor,
-    queryEditor: QueryEditor,
+  datasourceEditor: DatasourceEditor,
+  variableEditor: VariableEditor,
+  queryEditor: QueryEditor,
 
-    // defined in query_runner.ts
-    runQuery: runQuery,
-    testDatasource: checkAndTestDatasource,
-    replaceQueryWithVariables: replacexobserveQueryWithVariables,
-    queryVariableValues: queryxobserveVariableValues,
-    
-    queryAlerts: query_http_alerts,
+  // defined in query_runner.ts
+  runQuery: runQuery,
+  testDatasource: checkAndTestDatasource,
+  replaceQueryWithVariables: replacexobserveQueryWithVariables,
+  queryVariableValues: queryxobserveVariableValues,
 
-    settings:{
-        type: DatasourceTypexobserve,
-        icon: "/logo.png",
-        disabled: getDisabled
-    }
+  queryAlerts: query_http_alerts,
+
+  settings: {
+    type: DatasourceTypexobserve,
+    icon: '/logo.svg',
+    disabled: getDisabled,
+  },
 }
 
-export default  components
+export default components
