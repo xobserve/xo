@@ -15,6 +15,7 @@ import { parseVariableFormat } from './format'
 import { PanelQuery } from 'types/dashboard'
 import {
   VariableInterval,
+  VariableRange,
   VariableSplitChar,
   VariableTimerangeFrom,
   VariableTimerangeTo,
@@ -25,7 +26,9 @@ import { isEmpty } from './validate'
 import { externalDatasourcePlugins } from 'src/views/dashboard/plugins/external/plugins'
 import { builtinDatasourcePlugins } from 'src/views/dashboard/plugins/built-in/plugins'
 import { TimeRange } from 'types/time'
-import { isObject, zip } from 'lodash'
+import { isObject } from 'lodash'
+import { getCurrentTimeRange } from 'components/DatePicker/TimePicker'
+import { formatDuration } from './date'
 
 export const hasVariableFormat = (s: string) => {
   return isEmpty(s) ? false : s.includes('${')
@@ -42,6 +45,11 @@ export const replaceWithVariables = (
   const vars = $variables.get()
   const formats = parseVariableFormat(s)
   for (const f of formats) {
+    if (f == VariableRange) {
+      s = replaceWithRangeVariable(s)
+      continue
+    }
+
     const extrav = extraVars && extraVars[f]
     if (extrav) {
       s = s.replaceAll(`\${${f}}`, extrav.toString())
@@ -90,6 +98,10 @@ export const replaceQueryWithVariables = (
         (timeRange.end.getTime() / 1000).toString(),
       )
     }
+
+    if (f == VariableRange) {
+      q.metrics = replaceWithRangeVariable(q.metrics)
+    }
   }
 
   if (q.data.enableVariableKeys) {
@@ -115,6 +127,12 @@ export const replaceQueryWithVariables = (
   }
 }
 
+export const replaceWithRangeVariable = (s: string) => {
+  const range = getCurrentTimeRange()
+  const intv = range.end.getTime() - range.start.getTime()
+  const s1 = s.replaceAll(`\${${VariableRange}}`, formatDuration(intv * 1000))
+  return s1
+}
 // replace ${xxx} format in s with every possible value of the variable
 // if s doesn't contain any variable, return [s]
 export const replaceWithVariablesHasMultiValues = (

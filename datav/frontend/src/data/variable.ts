@@ -31,6 +31,7 @@ export const VariableCurrentValue = '__current__' // refer to the current value 
 export const VariableInterval = '__interval__' // refer to the caculated interval of current panel, e.g used for prometheus 'step' parameter
 export const VariableTimerangeFrom = '__from__' // refer to the 'from' value in current time range
 export const VariableTimerangeTo = '__to__' // refer to the 'to' value in current time range
+export const VariableRange = '__range__' // refer to the 'range' value in current time range, e.g the range of [now-5m, now] is 5m
 
 export const builtinVariables = [
   VariableInterval,
