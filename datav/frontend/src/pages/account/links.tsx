@@ -13,6 +13,7 @@
 
 import React from 'react'
 import { FaUserEdit } from 'react-icons/fa'
+import { getNavigateTo } from 'utils/url'
 import { isEmpty } from 'utils/validate'
 
 export const getAccountLinks = (teamId) => {
@@ -23,8 +24,8 @@ export const getAccountLinks = (teamId) => {
   return [
     {
       title: 'user',
-      url: `${teamPath}/account/setting`,
-      baseUrl: `${teamPath}/account/setting`,
+      url: getNavigateTo(`${teamPath}/account/setting`),
+      baseUrl: getNavigateTo(`${teamPath}/account/setting`),
       icon: <FaUserEdit />,
     },
   ]

@@ -16,7 +16,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import DashboardWrapper from 'src/views/dashboard/Dashboard'
 import NotFoundPage from '../NotFound'
-import { $config } from 'src/data/configs/config'
+import { $config, URL_ROOT_PATH } from 'src/data/configs/config'
 import { Box } from '@chakra-ui/react'
 import Loading from 'components/loading/Loading'
 import { Dashboard } from 'types/dashboard'
@@ -25,6 +25,7 @@ import { $teams } from 'src/views/team/store'
 import { $datasources } from 'src/views/datasource/store'
 import { initVariableSelected } from 'src/views/variables/SelectVariable'
 import { $variables } from 'src/views/variables/store'
+import { getNavigateTo, navigateTo } from 'utils/url'
 
 interface Props {
   dashboard?: Dashboard
@@ -35,7 +36,7 @@ const DashboardPageWrapper = memo(({ sideWidth }: Props) => {
   const teamId0 = Number(useParams().teamId)
   const teamId = isNaN(teamId0) ? 0 : teamId0
   let path = location.pathname.replace(`/${teamId}`, '')
-  const navigate = useNavigate()
+  path = path.replace(URL_ROOT_PATH, '')
   const [dashboard, setDashboard] = useState<Dashboard>(null)
   const [error, setError] = useState<any>(null)
 
@@ -49,7 +50,7 @@ const DashboardPageWrapper = memo(({ sideWidth }: Props) => {
         `/config/dashboard?teamId=${teamId}&path=${path}`,
       )
       if (res.data.reload) {
-        window.location.href = res.data.path
+        window.location.href = getNavigateTo(res.data.path)
         return
       }
       const cfg = res.data.cfg
@@ -61,7 +62,7 @@ const DashboardPageWrapper = memo(({ sideWidth }: Props) => {
       $variables.set(res.data.variables)
       setDashboard(res.data.dashboard)
       if (res.data.path != path) {
-        navigate('/' + res.data.cfg.currentTeam + res.data.path)
+        navigateTo(`/` + res.data.cfg.currentTeam + res.data.path)
       }
     } catch (error) {
       setError(error)

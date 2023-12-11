@@ -28,6 +28,7 @@ import TenantSetting from 'pages/tenant/TenantSetting'
 import CommonConfig from './components/configloader/CommonConfig'
 import BasicConfig from 'components/configloader/BasicConfig'
 import { URL_ROOT_PATH } from './data/configs/config'
+import { getNavigateTo } from 'utils/url'
 
 const DashboardPage = loadable(() => import('src/pages/dashboard/index'))
 const TracePage = loadable(() => import('src/pages/dashboard/Trace'))
@@ -47,7 +48,7 @@ const teamPageContainer = (ele) => {
 export const getRoutes = (enableTenant = false) => {
   let teamId = ''
   if (enableTenant) {
-    teamId = URL_ROOT_PATH + `/:teamId`
+    teamId = getNavigateTo(`/:teamId`)
   }
 
   const cfgRoutes = [

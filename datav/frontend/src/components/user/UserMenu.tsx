@@ -46,10 +46,11 @@ import SelectUserTeam from 'components/user/SelectUserTeam'
 import { ColorModeSwitcher } from 'src/components/ColorModeSwitcher'
 import SelectUserTenant from './SelectUserTenant'
 import { isEmpty } from 'utils/validate'
-import { $config } from 'src/data/configs/config'
+import { $config, URL_ROOT_PATH } from 'src/data/configs/config'
 import { Team } from 'types/teams'
 import { requestApi } from 'utils/axios/request'
 import { Tenant } from 'types/tenant'
+import { getNavigateTo, navigateTo } from 'utils/url'
 
 const UserMenu = ({ miniMode }) => {
   const t = useStore(commonMsg)
@@ -64,11 +65,10 @@ const UserMenu = ({ miniMode }) => {
 
   const toast = useToast()
   const config = useStore($config)
-  const navigate = useNavigate()
   const location = useLocation()
   const login = () => {
     storage.set('current-page', location.pathname)
-    navigate('/login')
+    navigateTo(`/login`)
   }
 
   const [tenants, setTenants] = useState<Tenant[]>([])
@@ -107,7 +107,9 @@ const UserMenu = ({ miniMode }) => {
     // window.location.reload()
   }
 
-  const isActive = window.location.pathname.startsWith('/account/')
+  const isActive = window.location.pathname.startsWith(
+    getNavigateTo(`${teamPath}/account/`),
+  )
 
   return (
     <>
@@ -136,7 +138,9 @@ const UserMenu = ({ miniMode }) => {
         )}
         <Portal>
           <MenuList zIndex={1000} fontSize='1em'>
-            <Link to={session ? `${teamPath}/account/setting` : null}>
+            <Link
+              to={session ? getNavigateTo(`${teamPath}/account/setting`) : null}
+            >
               <MenuItem
                 py='2px'
                 cursor='default'
@@ -156,7 +160,7 @@ const UserMenu = ({ miniMode }) => {
             <MenuDivider />
             {session && (
               <>
-                <Link to={`${teamPath}/tenant/users`}>
+                <Link to={getNavigateTo(`${teamPath}/tenant/users`)}>
                   <MenuItem width='100%' icon={<FaStar fontSize='1em' />}>
                     {t1.tenantAdmin}
                   </MenuItem>
@@ -193,7 +197,7 @@ const UserMenu = ({ miniMode }) => {
                   </MenuItem>
                 }
                 <MenuDivider />
-                <Link to={`${teamPath}/account/setting`}>
+                <Link to={getNavigateTo(`${teamPath}/account/setting`)}>
                   <MenuItem width='100%' icon={<FaRegSun fontSize='1em' />}>
                     {t1.accountSetting}
                   </MenuItem>

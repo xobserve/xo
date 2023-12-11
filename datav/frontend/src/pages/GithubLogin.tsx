@@ -1,23 +1,20 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { saveToken } from 'utils/axios/getToken'
 import { requestApi } from 'utils/axios/request'
 import storage from 'utils/localStorage'
 import useSession from 'hooks/use-session'
-import { useNavigate } from 'react-router-dom'
 import { useSearchParam } from 'react-use'
-import { URL_ROOT_PATH } from 'src/data/configs/config'
-import { isEmpty } from 'utils/validate'
+import { getNavigateTo, navigateTo } from 'utils/url'
 
 const GithubLogin = () => {
   const { useLogin } = useSession()
-  const navigate = useNavigate()
   const code = useSearchParam('code')
 
   useEffect(() => {
     if (code) {
       loginByGithub(code).catch((err) => {
         console.log('login github error：', err)
-        navigate(`${URL_ROOT_PATH}/login`)
+        navigateTo(`/login`)
       })
     }
   }, [code])
@@ -32,7 +29,7 @@ const GithubLogin = () => {
         storage.remove('current-page')
         location.href = oldPage
       } else {
-        window.location.href = isEmpty(URL_ROOT_PATH) ? '/' : `${URL_ROOT_PATH}`
+        window.location.href = getNavigateTo('/')
       }
     }, 200)
   }

@@ -12,7 +12,7 @@
 // limitations under the License.
 
 import React, { useEffect, useMemo, useState } from 'react'
-import { $config, UIConfig } from '../../data/configs/config'
+import { $config, UIConfig, URL_ROOT_PATH } from '../../data/configs/config'
 import { requestApi } from 'utils/axios/request'
 import { useToast } from '@chakra-ui/react'
 
@@ -20,11 +20,17 @@ const CommonConfig = ({ children }) => {
   const toast = useToast()
   const [cfg, setConfig] = useState<UIConfig>($config.get())
 
+  let rawPath = location.pathname
+  if (rawPath.startsWith(URL_ROOT_PATH)) {
+    rawPath = rawPath.replace(URL_ROOT_PATH, '')
+  }
+
   const teamPath = useMemo(() => {
     let firstIndex
     let secondIndex
     let i = 0
-    for (const c of location.pathname) {
+
+    for (const c of rawPath) {
       if (c == '/') {
         if (firstIndex === undefined) {
           firstIndex = i
@@ -40,7 +46,7 @@ const CommonConfig = ({ children }) => {
       i++
     }
 
-    const teamPath = location.pathname.slice(firstIndex + 1, secondIndex)
+    const teamPath = rawPath.slice(firstIndex + 1, secondIndex)
     return teamPath
   }, [location.pathname])
 
@@ -58,9 +64,9 @@ const CommonConfig = ({ children }) => {
     const cfg: UIConfig = res.data
     if (
       cfg.currentTeam != teamId &&
-      location.pathname != '' &&
-      location.pathname != '/' &&
-      !location.pathname.startsWith(`/admin/`)
+      rawPath != '' &&
+      rawPath != '/' &&
+      !rawPath.startsWith(`/admin/`)
     ) {
       toast({
         title: `You have no privilege to view team ${teamPath}, please visit root path to navigate to your current team`,

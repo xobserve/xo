@@ -14,6 +14,8 @@
 import { extend } from 'lodash'
 import queryString from 'query-string'
 import { isEmpty } from './validate'
+import { URL_ROOT_PATH } from 'src/data/configs/config'
+import { gnavigate } from 'layouts/PageContainer'
 
 export const getHost = (url: string) => {
   const urlMatched = url.match(/https?:\/\/([^/]+)\//i)
@@ -64,4 +66,16 @@ export const updateUrl = (params?: string) => {
 
   // router.replace(url,url)
   window.history.pushState({}, null, url)
+}
+
+export const navigateTo = (url, navigate?) => {
+  const nav = navigate ?? gnavigate
+  nav(URL_ROOT_PATH + url)
+}
+
+export const getNavigateTo = (url) => {
+  if (url.startsWith('/')) {
+    return URL_ROOT_PATH + url
+  }
+  return URL_ROOT_PATH + '/' + url
 }

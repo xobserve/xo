@@ -44,6 +44,7 @@ import { MobileBreakpoint } from 'src/data/constants'
 import { Session } from 'types/user'
 import { isAdmin } from 'types/role'
 import { isEmpty } from 'utils/validate'
+import { getNavigateTo } from 'utils/url'
 
 // login page
 function Login() {
@@ -81,14 +82,14 @@ function Login() {
         storage.remove('current-page')
         window.location.href = oldPage
       } else {
-        window.location.href = isEmpty(URL_ROOT_PATH) ? '/' : `${URL_ROOT_PATH}`
+        window.location.href = getNavigateTo('/')
       }
     }, 200)
   }
 
   const visitAdmin = () => {
     setTimeout(() => {
-      window.location.href = `${URL_ROOT_PATH}/admin/tenants`
+      window.location.href = getNavigateTo(`/admin/tenants`)
     }, 200)
   }
 

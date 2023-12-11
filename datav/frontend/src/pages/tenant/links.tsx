@@ -13,6 +13,7 @@
 
 import React from 'react'
 import { FaCog, FaUserCog, FaUsers } from 'react-icons/fa'
+import { getNavigateTo } from 'utils/url'
 import { isEmpty } from 'utils/validate'
 export const getTenantLinks = (teamId) => {
   let teamPath = ''
@@ -23,20 +24,20 @@ export const getTenantLinks = (teamId) => {
   return [
     {
       title: 'members',
-      url: `${teamPath}/tenant/users`,
-      baseUrl: `${teamPath}/tenant/users`,
+      url: getNavigateTo(`${teamPath}/tenant/users`),
+      baseUrl: getNavigateTo(`${teamPath}/tenant/users`),
       icon: <FaUserCog />,
     },
     {
       title: 'team',
-      url: `${teamPath}/tenant/teams`,
-      baseUrl: `${teamPath}/tenant/teams`,
+      url: getNavigateTo(`${teamPath}/tenant/teams`),
+      baseUrl: getNavigateTo(`${teamPath}/tenant/teams`),
       icon: <FaUsers />,
     },
     {
       title: 'settings',
-      url: `${teamPath}/tenant/setting`,
-      baseUrl: `${teamPath}/tenant/setting`,
+      url: getNavigateTo(`${teamPath}/tenant/setting`),
+      baseUrl: getNavigateTo(`${teamPath}/tenant/setting`),
       icon: <FaCog />,
     },
   ]
