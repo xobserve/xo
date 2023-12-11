@@ -22,14 +22,13 @@ import { initColors } from 'utils/colors'
 import useSession from 'hooks/use-session'
 import storage from 'utils/localStorage'
 import { UserDataStorageKey } from './data/storage-keys'
+import { URL_ROOT_PATH } from './data/configs/config'
 
 const { ToastContainer } = createStandaloneToast()
 
 export let canvasCtx
-;``
 
 export let appInitialized = false
-
 const AppView = () => {
   const { colorMode } = useColorMode()
   initColors(colorMode)

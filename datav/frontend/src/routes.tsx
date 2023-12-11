@@ -1,15 +1,4 @@
-// Copyright 2023 xobserve.io Team
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Copyright 2023 xObserve.io Team
 
 import React from 'react'
 import Login from 'src/pages/Login'
@@ -38,6 +27,7 @@ import AdminTenantUsers from 'pages/tenant/TenantUsers'
 import TenantSetting from 'pages/tenant/TenantSetting'
 import CommonConfig from './components/configloader/CommonConfig'
 import BasicConfig from 'components/configloader/BasicConfig'
+import { URL_ROOT_PATH } from './data/configs/config'
 
 const DashboardPage = loadable(() => import('src/pages/dashboard/index'))
 const TracePage = loadable(() => import('src/pages/dashboard/Trace'))
@@ -57,7 +47,7 @@ const teamPageContainer = (ele) => {
 export const getRoutes = (enableTenant = false) => {
   let teamId = ''
   if (enableTenant) {
-    teamId = `/:teamId`
+    teamId = URL_ROOT_PATH + `/:teamId`
   }
 
   const cfgRoutes = [
@@ -123,15 +113,15 @@ export const getRoutes = (enableTenant = false) => {
 
   const adminRoutes = [
     {
-      path: `/admin/audit`,
+      path: `${URL_ROOT_PATH}/admin/audit`,
       element: commonConfig(<AdminPage />),
     },
     {
-      path: `/admin/tenants`,
+      path: `${URL_ROOT_PATH}/admin/tenants`,
       element: commonConfig(<AdminTenants />),
     },
     {
-      path: `/admin/users`,
+      path: `${URL_ROOT_PATH}/admin/users`,
       element: commonConfig(<AdminUsers />),
     },
   ]
@@ -171,7 +161,7 @@ export const getRoutes = (enableTenant = false) => {
       element: pageContainer(<DashboardPage />),
     },
     {
-      path: `/`,
+      path: `/${URL_ROOT_PATH}`,
       element: pageContainer(<DashboardPage />),
     },
     {
@@ -191,7 +181,7 @@ export const getRoutes = (enableTenant = false) => {
       element: <IframeExamplesPage />,
     },
     {
-      path: '/login',
+      path: `/${URL_ROOT_PATH}/login`,
       element: (
         <BasicConfig>
           <Login />
@@ -199,7 +189,7 @@ export const getRoutes = (enableTenant = false) => {
       ),
     },
     {
-      path: '/login/github',
+      path: `${URL_ROOT_PATH}/login/github`,
       element: (
         <BasicConfig>
           <GithubLogin />

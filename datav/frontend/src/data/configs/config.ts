@@ -16,6 +16,9 @@ import { MenuItem } from 'types/teams'
 import { atom } from 'nanostores'
 import { Role } from 'types/role'
 
+//@ts-ignore
+export const URL_ROOT_PATH = import.meta.env.VITE_URL_ROOT_PATH
+
 // limitations under the License.
 const config: UIConfig = {
   appName: 'xobserve',

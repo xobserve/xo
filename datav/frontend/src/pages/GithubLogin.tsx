@@ -5,10 +5,11 @@ import storage from 'utils/localStorage'
 import useSession from 'hooks/use-session'
 import { useNavigate } from 'react-router-dom'
 import { useSearchParam } from 'react-use'
-import { $config } from 'src/data/configs/config'
+import { URL_ROOT_PATH } from 'src/data/configs/config'
+import { isEmpty } from 'utils/validate'
 
 const GithubLogin = () => {
-  const { session, useLogin } = useSession()
+  const { useLogin } = useSession()
   const navigate = useNavigate()
   const code = useSearchParam('code')
 
@@ -16,7 +17,7 @@ const GithubLogin = () => {
     if (code) {
       loginByGithub(code).catch((err) => {
         console.log('login github error：', err)
-        navigate('/login')
+        navigate(`${URL_ROOT_PATH}/login`)
       })
     }
   }, [code])
@@ -31,13 +32,7 @@ const GithubLogin = () => {
         storage.remove('current-page')
         location.href = oldPage
       } else {
-        const sidemenu = $config.get().sidemenu
-        if (sidemenu && sidemenu.length > 0) {
-          window.location.href =
-            `/${res.data.user.currentTeam}` + sidemenu[0].url
-        } else {
-          window.location.href = `/${res.data.user.currentTeam}/home`
-        }
+        window.location.href = isEmpty(URL_ROOT_PATH) ? '/' : `${URL_ROOT_PATH}`
       }
     }, 200)
   }

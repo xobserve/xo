@@ -39,10 +39,11 @@ import { saveToken } from 'utils/axios/getToken'
 import { useStore } from '@nanostores/react'
 import { commonMsg } from 'src/i18n/locales/en'
 import { FaGithub } from 'react-icons/fa'
-import { $config } from 'src/data/configs/config'
+import { $config, URL_ROOT_PATH } from 'src/data/configs/config'
 import { MobileBreakpoint } from 'src/data/constants'
 import { Session } from 'types/user'
 import { isAdmin } from 'types/role'
+import { isEmpty } from 'utils/validate'
 
 // login page
 function Login() {
@@ -80,14 +81,14 @@ function Login() {
         storage.remove('current-page')
         window.location.href = oldPage
       } else {
-        window.location.href = `/`
+        window.location.href = isEmpty(URL_ROOT_PATH) ? '/' : `${URL_ROOT_PATH}`
       }
     }, 200)
   }
 
   const visitAdmin = () => {
     setTimeout(() => {
-      window.location.href = '/admin/tenants'
+      window.location.href = `${URL_ROOT_PATH}/admin/tenants`
     }, 200)
   }
 
