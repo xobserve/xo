@@ -204,11 +204,17 @@ type SideMenu struct {
 }
 
 type MenuItem struct {
-	Url         string      `json:"url"`
-	Title       string      `json:"title"`
-	DashboardId string      `json:"dashboardId"`
-	Icon        string      `json:"icon,omitempty"`
-	Children    interface{} `json:"children"`
+	Url         string         `json:"url"`
+	Title       string         `json:"title"`
+	DashboardId string         `json:"dashboardId"`
+	Icon        string         `json:"icon,omitempty"`
+	Children    []*SubMenuItem `json:"children"`
+}
+
+type SubMenuItem struct {
+	Url         string `json:"url"`
+	Title       string `json:"title"`
+	DashboardId string `json:"dashboardId"`
 }
 
 func QuerySideMenu(ctx context.Context, id int64) (*SideMenu, error) {

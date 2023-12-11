@@ -24,12 +24,12 @@ import { paletteMap, palettes } from 'utils/colors'
 import lodash from 'lodash'
 import 'echarts/extension/bmap/bmap'
 import { genDynamicFunction } from 'utils/dashboard/dynamicCall'
-import { gnavigate } from 'layouts/PageContainer'
 import { setVariable } from 'src/views/variables/SelectVariable'
 import { setDateTime } from 'src/components/DatePicker/DatePicker'
 import { $variables } from 'src/views/variables/store'
 import NoData from 'src/views/dashboard/components/PanelNoData'
 import { formatUnit } from 'src/views/dashboard/plugins/components/UnitPicker'
+import { navigateTo } from 'utils/url'
 
 const EchartsPanel = memo((props: PanelProps) => {
   const { panel, width, height } = props
@@ -183,7 +183,7 @@ export const EchartsComponent = ({
       onChartEvents(
         options,
         chart,
-        gnavigate,
+        navigateTo,
         (k, v) => setVariable(k, v),
         setDateTime,
         $variables,

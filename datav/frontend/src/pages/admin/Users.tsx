@@ -63,19 +63,18 @@ import isEmail from 'validator/lib/isEmail'
 import { useStore } from '@nanostores/react'
 import { websiteAdmin, commonMsg } from 'src/i18n/locales/en'
 import { isEmpty } from 'utils/validate'
-import { useNavigate, useParams } from 'react-router-dom'
 import { getAdminLinks } from './links'
 import { Tenant } from 'types/tenant'
 import ColorTag from 'components/ColorTag'
 import { $config } from 'src/data/configs/config'
 import { AvailableStatus } from 'types/misc'
+import { getNavigateTo } from 'utils/url'
 
 const AdminUsers = () => {
   const t = useStore(commonMsg)
   const t1 = useStore(websiteAdmin)
   const { session } = useSession()
   const toast = useToast()
-  const navigate = useNavigate()
   const [users, setUsers] = useState<User[]>(null)
   useEffect(() => {
     load()
@@ -578,11 +577,13 @@ const AdminUsers = () => {
                           {tenant.teams?.map((team) => (
                             <Box
                               cursor='pointer'
-                              onClick={() =>
-                                navigate(
-                                  `/${config.currentTeam}/cfg/team/members`,
+                              onClick={() => {
+                                window.open(
+                                  getNavigateTo(
+                                    `/${config.currentTeam}/cfg/team/members`,
+                                  ),
                                 )
-                              }
+                              }}
                             >
                               <ColorTag name={team.name} />
                             </Box>

@@ -45,6 +45,7 @@ import { requestApi } from 'utils/axios/request'
 import { useNavigate, useParams } from 'react-router-dom'
 import { MobileBreakpoint } from 'src/data/constants'
 import RadionButtons from 'components/RadioButtons'
+import { navigateTo } from 'utils/url'
 
 interface Props {
   dashboard: Dashboard
@@ -52,7 +53,6 @@ interface Props {
 }
 
 const GeneralSettings = ({ dashboard, onChange }: Props) => {
-  const navigate = useNavigate()
   const t = useStore(commonMsg)
   const t1 = useStore(dashboardSettingMsg)
 
@@ -96,7 +96,7 @@ const GeneralSettings = ({ dashboard, onChange }: Props) => {
     })
 
     setTimeout(() => {
-      navigate(`/${teamId}/cfg/team/dashboards`)
+      navigateTo(`/${teamId}/cfg/team/dashboards`)
     }, 500)
   }
 

@@ -36,6 +36,7 @@ import { builtinDatasourcePlugins } from '../dashboard/plugins/built-in/plugins'
 import { isPluginDisabled } from 'utils/plugins'
 import { useParams } from 'react-router-dom'
 import { InputNumber } from 'antd'
+import { getNavigateTo } from 'utils/url'
 
 interface Props {
   ds: Datasource
@@ -77,7 +78,7 @@ const DatasourceEditor = ({
 
     if (initId == 0) {
       setTimeout(() => {
-        location.href = `${teamPath}/cfg/team/datasources`
+        location.href = getNavigateTo(`${teamPath}/cfg/team/datasources`)
       }, 1000)
     } else {
       onChange()

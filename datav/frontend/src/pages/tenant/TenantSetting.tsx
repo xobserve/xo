@@ -46,10 +46,10 @@ import FormItem from 'components/form/Item'
 import { cloneDeep } from 'lodash'
 import { $config } from 'src/data/configs/config'
 import { locale } from 'src/i18n/i18n'
-import { useNavigate } from 'react-router-dom'
 import { isSuperAdmin } from 'types/role'
 import { isEmpty } from 'utils/validate'
 import { getTenantLinks } from './links'
+import { getNavigateTo, navigateTo } from 'utils/url'
 
 export const TenantSetting = memo(() => {
   const config = useStore($config)
@@ -77,7 +77,6 @@ export const TenantSetting = memo(() => {
   const [transferTo, setTransferTo] = useState<string>(null)
   const cancelRef = useRef()
   const toast = useToast()
-  const navigate = useNavigate()
 
   const tenantLinks = getTenantLinks(config.currentTeam)
 
@@ -100,7 +99,7 @@ export const TenantSetting = memo(() => {
     })
 
     setTimeout(() => {
-      window.location.href = `/`
+      window.location.href = getNavigateTo(`/`)
     }, 1000)
   }
 
@@ -114,7 +113,7 @@ export const TenantSetting = memo(() => {
     })
 
     setTimeout(() => {
-      navigate(`/`)
+      navigateTo(`/`)
     }, 1000)
   }
 

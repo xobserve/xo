@@ -34,10 +34,10 @@ import { Dashboard } from 'types/dashboard'
 import { Team } from 'types/teams'
 import { requestApi } from 'utils/axios/request'
 import Loading from 'src/components/loading/Loading'
+import { navigateTo } from 'utils/url'
 
 const TeamDashboards = ({ team }: { team: Team }) => {
   const t = useStore(commonMsg)
-  const navigate = useNavigate()
 
   const teamId = useParams().teamId
   const [dashboards, setDashboards] = useState<Dashboard[]>(null)
@@ -59,7 +59,9 @@ const TeamDashboards = ({ team }: { team: Team }) => {
           <Button
             size='sm'
             onClick={() =>
-              navigate(`/${teamId}${ReserveUrls.New}/dashboard?team=${team.id}`)
+              navigateTo(
+                `/${teamId}${ReserveUrls.New}/dashboard?team=${team.id}`,
+              )
             }
           >
             {t.newItem({ name: t.dashboard })}
@@ -90,7 +92,7 @@ const TeamDashboards = ({ team }: { team: Team }) => {
                           variant='ghost'
                           size='sm'
                           px='0'
-                          onClick={() => navigate(`/${teamId}/${dash.id}`)}
+                          onClick={() => navigateTo(`/${teamId}/${dash.id}`)}
                         >
                           {t.manage}
                         </Button>

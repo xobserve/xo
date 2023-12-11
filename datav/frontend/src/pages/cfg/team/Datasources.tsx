@@ -43,19 +43,19 @@ import ReserveUrls from 'src/data/reserve-urls'
 import DatasourceEditor from 'src/views/datasource/Editor'
 import { Datasource } from 'types/datasource'
 import { requestApi } from 'utils/axios/request'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { useStore } from '@nanostores/react'
 import { cfgDatasourceMsg, commonMsg } from 'src/i18n/locales/en'
 import { Team } from 'types/teams'
 import { externalDatasourcePlugins } from 'src/views/dashboard/plugins/external/plugins'
 import Loading from 'components/loading/Loading'
 import { builtinDatasourcePlugins } from 'src/views/dashboard/plugins/built-in/plugins'
+import { navigateTo } from 'utils/url'
 
 const TeamDatasources = ({ team }: { team: Team }) => {
   const t = useStore(commonMsg)
   const t1 = useStore(cfgDatasourceMsg)
   const toast = useToast()
-  const navigate = useNavigate()
   const [datasources, setDatasources] = useState<Datasource[]>(null)
   const [datasource, setDatasource] = useState<Datasource>(null)
   const teamId = useParams().teamId
@@ -134,7 +134,7 @@ const TeamDatasources = ({ team }: { team: Team }) => {
           <Button
             size='sm'
             onClick={() =>
-              navigate(
+              navigateTo(
                 teamPath + ReserveUrls.New + `/datasource?teamId=${team.id}`,
               )
             }

@@ -54,6 +54,7 @@ import { PanelType } from '../../../xobserveTrace/types'
 import { initVariableSelected } from 'src/views/variables/SelectVariable'
 import { $variables } from 'src/views/variables/store'
 import CopyToClipboard from 'components/CopyToClipboard'
+import { useNavigate } from 'react-router-dom'
 
 interface Props {
   trace: Trace
@@ -99,6 +100,7 @@ const TraceDetailHeader = ({
   const [panel, setPanel] = useState<Panel>(null)
   const [onHover, setOnHover] = useState(false)
   const toast = useToast()
+  const navigate = useNavigate()
   useEffect(() => {
     if (dashboardId && panelId) {
       loadDashboard(dashboardId)
@@ -187,7 +189,7 @@ const TraceDetailHeader = ({
                           isClosable: true,
                         })
                       } else {
-                        commonInteractionEvent(onClick, trace)
+                        commonInteractionEvent(onClick, trace, navigate)
                       }
                     }}
                   >

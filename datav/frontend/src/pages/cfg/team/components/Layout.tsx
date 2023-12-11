@@ -29,6 +29,7 @@ import { isEmpty } from 'utils/validate'
 import { $config } from 'src/data/configs/config'
 import { requestApi } from 'utils/axios/request'
 import { Team } from 'types/teams'
+import { getNavigateTo } from 'utils/url'
 
 const getTeamSubLinks = (teamId) => {
   let teamPath = ''
@@ -38,30 +39,34 @@ const getTeamSubLinks = (teamId) => {
   return [
     {
       title: 'datasource',
-      url: `${teamPath}/cfg/team/datasources`,
+      url: getNavigateTo(`${teamPath}/cfg/team/datasources`),
       icon: <FaConnectdevelop />,
     },
     {
       title: 'variable',
-      url: `${teamPath}/cfg/team/variables`,
+      url: getNavigateTo(`${teamPath}/cfg/team/variables`),
       icon: <FaTerminal />,
     },
     {
       title: 'dashboard',
-      url: `${teamPath}/cfg/team/dashboards`,
+      url: getNavigateTo(`${teamPath}/cfg/team/dashboards`),
       icon: <MdOutlineDashboard />,
     },
     {
       title: 'sidemenu',
-      url: `${teamPath}/cfg/team/sidemenu`,
+      url: getNavigateTo(`${teamPath}/cfg/team/sidemenu`),
       icon: <FaAlignLeft />,
     },
     {
       title: 'members',
-      url: `${teamPath}/cfg/team/members`,
+      url: getNavigateTo(`${teamPath}/cfg/team/members`),
       icon: <FaUserFriends />,
     },
-    { title: 'settings', url: `${teamPath}/cfg/team/setting`, icon: <FaCog /> },
+    {
+      title: 'settings',
+      url: getNavigateTo(`${teamPath}/cfg/team/setting`),
+      icon: <FaCog />,
+    },
   ]
 }
 

@@ -28,7 +28,7 @@ import useSession from 'hooks/use-session'
 import Page from 'layouts/page/Page'
 import React, { useEffect, useState } from 'react'
 import { FaUserAlt } from 'react-icons/fa'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { MobileVerticalBreakpoint } from 'src/data/constants'
 import { accountSettingMsg, commonMsg } from 'src/i18n/locales/en'
 import { requestApi } from 'utils/axios/request'
@@ -40,6 +40,7 @@ import { EditorNumberItem } from 'components/editor/EditorItem'
 import storage from 'utils/localStorage'
 import { UserDataStorageKey } from 'src/data/storage-keys'
 import { getAccountLinks } from './links'
+import { navigateTo } from 'utils/url'
 
 const AccountSetting = () => {
   const t = useStore(commonMsg)
@@ -48,7 +49,6 @@ const AccountSetting = () => {
   const theme = useTheme()
   const themeColors = getColorThemeValues(theme, ['transparent'])
   const toast = useToast()
-  const navigate = useNavigate()
   const { session, logout } = useSession()
   const [oldpw, setOldpw] = useState('')
   const [newpw, setNewpw] = useState('')
@@ -143,7 +143,7 @@ const AccountSetting = () => {
     })
 
     logout()
-    navigate('/login')
+    navigateTo('/login')
   }
 
   const onThemeColorChange = async (v) => {

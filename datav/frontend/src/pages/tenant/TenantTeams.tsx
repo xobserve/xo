@@ -51,6 +51,7 @@ import { $config } from 'src/data/configs/config'
 import { Team } from 'types/teams'
 import { getTenantLinks } from './links'
 import { AvailableStatus } from 'types/misc'
+import { getNavigateTo } from 'utils/url'
 
 const TeamsPage = () => {
   const t = useStore(commonMsg)
@@ -104,7 +105,7 @@ const TeamsPage = () => {
     })
 
     setTimeout(() => {
-      window.location.href = `/${teamId}/cfg/team/datasources`
+      window.location.href = getNavigateTo(`/${teamId}/cfg/team/datasources`)
     }, 1000)
   }
 

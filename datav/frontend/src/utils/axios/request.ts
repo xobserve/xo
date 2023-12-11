@@ -13,7 +13,7 @@
 
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
 
-import { getHost } from '../url'
+import { getHost, getNavigateTo } from '../url'
 import { ApiConfig } from './config'
 import {
   autoWithClientToken,
@@ -108,7 +108,7 @@ requestApi.interceptors.response.use(
         setTimeout(() => {
           const oldPath = location.href
           storage.set('current-page', oldPath)
-          location.href = '/login'
+          location.href = getNavigateTo('/login')
         }, 2000)
       } else {
         // normal backend error

@@ -12,6 +12,7 @@
 // limitations under the License.
 
 import React from 'react'
+import { getNavigateTo } from 'utils/url'
 import { isEmpty } from 'utils/validate'
 export const getNewLinks = (teamId) => {
   let teamPath = ''
@@ -22,20 +23,20 @@ export const getNewLinks = (teamId) => {
   return [
     {
       title: `NewDashboard`,
-      url: `${teamPath}/new/dashboard`,
-      baseUrl: `/${teamId}/new/dashboard`,
+      url: getNavigateTo(`${teamPath}/new/dashboard`),
+      baseUrl: getNavigateTo(`/${teamId}/new/dashboard`),
       // icon: <FaUsersCog />
     },
     {
       title: `ImportDashboard`,
-      url: `${teamPath}/new/import`,
-      baseUrl: `${teamPath}/new/import`,
+      url: getNavigateTo(`${teamPath}/new/import`),
+      baseUrl: getNavigateTo(`${teamPath}/new/import`),
       // icon: <FaUsersCog />
     },
     {
       title: 'NewDatasource',
-      url: `${teamPath}/new/datasource`,
-      baseUrl: `${teamPath}/new/datasource`,
+      url: getNavigateTo(`${teamPath}/new/datasource`),
+      baseUrl: getNavigateTo(`${teamPath}/new/datasource`),
       // icon: <FaUsersCog />
     },
   ]

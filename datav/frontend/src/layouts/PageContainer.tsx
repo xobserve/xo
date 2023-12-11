@@ -54,6 +54,7 @@ import { HamburgerIcon } from '@chakra-ui/icons'
 import CustomScrollbar from 'src/components/CustomScrollbar/CustomScrollbar'
 import { locale } from 'src/i18n/i18n'
 import customColors from 'theme/colors'
+import { getNavigateTo } from 'utils/url'
 export let gnavigate
 
 const maxNavSize = 160
@@ -114,16 +115,16 @@ const Container = (props: Props) => {
     {
       title: t.new,
       icon: 'FaPlus',
-      baseUrl: teamPath + ReserveUrls.New,
-      url: `${teamPath}${ReserveUrls.New}/dashboard`,
-      isActive: asPath.startsWith(teamPath + ReserveUrls.New),
+      baseUrl: getNavigateTo(teamPath + ReserveUrls.New),
+      url: getNavigateTo(`${teamPath}${ReserveUrls.New}/dashboard`),
+      isActive: asPath.startsWith(getNavigateTo(teamPath + ReserveUrls.New)),
     },
     {
       title: t.configuration,
       icon: 'FaCog',
-      baseUrl: teamPath + ReserveUrls.Config,
-      url: `${teamPath}${ReserveUrls.Config}/team/datasources`,
-      isActive: asPath.startsWith(teamPath + ReserveUrls.Config),
+      baseUrl: getNavigateTo(teamPath + ReserveUrls.Config),
+      url: getNavigateTo(`${teamPath}${ReserveUrls.Config}/team/datasources`),
+      isActive: asPath.startsWith(getNavigateTo(teamPath + ReserveUrls.Config)),
     },
   ]
   // config.showAlertIcon && bottomNavs.push({ title: t.alert, icon: "FaBell", baseUrl: teamPath + ReserveUrls.Alerts, url: `${teamPath}${ReserveUrls.Alerts}`, isActive: asPath.startsWith(teamPath + ReserveUrls.Alerts) })
@@ -258,8 +259,10 @@ const Container = (props: Props) => {
                           <NavItem
                             isActive={
                               miniMode
-                                ? asPath.startsWith(teamPath + link.url)
-                                : asPath == teamPath + link.url
+                                ? asPath.startsWith(
+                                    getNavigateTo(teamPath + link.url),
+                                  )
+                                : asPath == getNavigateTo(teamPath + link.url)
                             }
                             key={index}
                             text={link.title}
@@ -268,8 +271,8 @@ const Container = (props: Props) => {
                             fontWeight={500}
                             url={
                               link.children?.length > 0
-                                ? teamPath + link.children[0].url
-                                : teamPath + link.url
+                                ? getNavigateTo(teamPath + link.children[0].url)
+                                : getNavigateTo(teamPath + link.url)
                             }
                             children={link.children}
                           />
@@ -280,11 +283,14 @@ const Container = (props: Props) => {
                             return (
                               <Box mt='7px' ml={childMarginLeft + 'px'}>
                                 <NavItem
-                                  isActive={asPath == teamPath + child.url}
+                                  isActive={
+                                    asPath ==
+                                    getNavigateTo(teamPath + child.url)
+                                  }
                                   key={index}
                                   text={child.title}
                                   miniMode={miniMode}
-                                  url={teamPath + child.url}
+                                  url={getNavigateTo(teamPath + child.url)}
                                 />
                               </Box>
                             )
@@ -302,7 +308,7 @@ const Container = (props: Props) => {
                       <Box mt={miniMode ? 2 : 3}>
                         <NavItem
                           text={t1.newItem}
-                          url={`${teamPath}/cfg/team/sidemenu`}
+                          url={getNavigateTo(`${teamPath}/cfg/team/sidemenu`)}
                           miniMode={miniMode}
                           icon='FaPlus'
                         />
@@ -387,14 +393,14 @@ const Container = (props: Props) => {
                       key={link.url}
                       to={
                         link.children?.length > 0
-                          ? link.children[0].url
-                          : link.url
+                          ? getNavigateTo(teamPath + link.children[0].url)
+                          : getNavigateTo(teamPath + link.url)
                       }
                     >
                       <MenuItem
                         icon={<Icon />}
                         color={
-                          asPath.startsWith(link.url)
+                          asPath.startsWith(getNavigateTo(teamPath + link.url))
                             ? useColorModeValue('brand.500', 'brand.200')
                             : 'inherit'
                         }
@@ -404,11 +410,14 @@ const Container = (props: Props) => {
                       {link.children &&
                         link.children.map((child) => {
                           return (
-                            <Link key={child.url} to={child.url}>
+                            <Link
+                              key={child.url}
+                              to={getNavigateTo(teamPath + child.url)}
+                            >
                               <MenuItem
                                 pl='36px'
                                 color={
-                                  asPath == child.url
+                                  asPath == getNavigateTo(teamPath + child.url)
                                     ? useColorModeValue(
                                         'brand.500',
                                         'brand.200',
@@ -553,7 +562,13 @@ const NavItem = ({
       }
       showHeaderBorder={children?.length > 0}
       headerComponent={
-        <Link to={children?.length > 0 ? teamPath + children[0].url : url}>
+        <Link
+          to={
+            children?.length > 0
+              ? getNavigateTo(teamPath + children[0].url)
+              : url
+          }
+        >
           <Text fontSize={fontSize}>{text}</Text>
         </Link>
       }
@@ -562,10 +577,13 @@ const NavItem = ({
           <VStack alignItems='left' spacing='3' py='2' fontSize={fontSize}>
             {children?.length > 0 &&
               children.map((subLink) => (
-                <Link to={teamPath + subLink.url} key={subLink.url}>
+                <Link
+                  to={getNavigateTo(teamPath + subLink.url)}
+                  key={subLink.url}
+                >
                   <Text
                     color={
-                      asPath == teamPath + subLink.url
+                      asPath == getNavigateTo(teamPath + subLink.url)
                         ? useColorModeValue('brand.500', 'brand.200')
                         : textColor
                     }

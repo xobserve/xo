@@ -47,7 +47,7 @@ import { catelogVariables } from '../variables/utils'
 import { useSearchParam } from 'react-use'
 import useEmbed from 'hooks/useEmbed'
 import ColorTag from 'components/ColorTag'
-import { addParamToUrl } from 'utils/url'
+import { addParamToUrl, navigateTo } from 'utils/url'
 
 interface HeaderProps {
   dashboard: Dashboard
@@ -58,7 +58,6 @@ const DashboardHeader = memo(
   ({ dashboard, onChange, sideWidth }: HeaderProps) => {
     const vars = useStore($variables)
     const t1 = useStore(dashboardMsg)
-    const navigate = useNavigate()
     const fullscreen = useFullscreen()
     const teamId = useParams().teamId
     const toolbar = useSearchParam('toolbar')
@@ -101,7 +100,7 @@ const DashboardHeader = memo(
                         cursor={!embed && 'pointer'}
                         onClick={
                           !embed
-                            ? () => navigate(`/${teamId}/cfg/team/members`)
+                            ? () => navigateTo(`/${teamId}/cfg/team/members`)
                             : null
                         }
                       >

@@ -12,15 +12,7 @@
 // limitations under the License.
 
 import React from 'react'
-import {
-  Box,
-  Button,
-  Select,
-  Text,
-  Textarea,
-  useToast,
-  VStack,
-} from '@chakra-ui/react'
+import { Box, Button, Textarea, useToast, VStack } from '@chakra-ui/react'
 import FormItem from 'src/components/form/Item'
 import Page from 'layouts/page/Page'
 import { isEmpty } from 'lodash'
@@ -29,16 +21,16 @@ import { FaPlus } from 'react-icons/fa'
 import { Dashboard } from 'types/dashboard'
 import { requestApi } from 'utils/axios/request'
 import { isJSON } from 'utils/is'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { commonMsg, newMsg } from 'src/i18n/locales/en'
 import { useStore } from '@nanostores/react'
 import { getNewLinks } from './links'
+import { navigateTo } from 'utils/url'
 
 const ImportDashboardPage = () => {
   const t = useStore(commonMsg)
   const t1 = useStore(newMsg)
   const toast = useToast()
-  const navigate = useNavigate()
   const [dashboard, setDashboard] = useState<Dashboard>(null)
 
   const teamId = useParams().teamId
@@ -59,7 +51,7 @@ const ImportDashboardPage = () => {
     })
 
     setTimeout(() => {
-      navigate(`/${teamId}/${res.data}`)
+      navigateTo(`/${teamId}/${res.data}`)
     }, 1000)
   }
 

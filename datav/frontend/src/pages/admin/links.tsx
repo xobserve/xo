@@ -14,30 +14,26 @@
 import React from 'react'
 import { FaUser, FaUserCog } from 'react-icons/fa'
 import { MdOutlineAdminPanelSettings } from 'react-icons/md'
-import { isEmpty } from 'utils/validate'
+import { getNavigateTo } from 'utils/url'
 
 export const getAdminLinks = (teamId) => {
-  let teamPath = ''
-  if (!isEmpty(teamId)) {
-    teamPath = `/${teamId}`
-  }
   return [
     {
       title: 'auditLog',
-      url: `/admin/audit`,
-      baseUrl: `/admin/audit`,
+      url: getNavigateTo(`/admin/audit`),
+      baseUrl: getNavigateTo(`/admin/audit`),
       icon: <MdOutlineAdminPanelSettings />,
     },
     {
       title: 'tenant',
-      url: `/admin/tenants`,
-      baseUrl: `/admin/tenants`,
+      url: getNavigateTo(`/admin/tenants`),
+      baseUrl: getNavigateTo(`/admin/tenants`),
       icon: <FaUser />,
     },
     {
       title: 'user',
-      url: `/admin/users`,
-      baseUrl: `/admin/users`,
+      url: getNavigateTo(`/admin/users`),
+      baseUrl: getNavigateTo(`/admin/users`),
       icon: <FaUserCog />,
     },
   ]

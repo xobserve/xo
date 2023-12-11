@@ -65,9 +65,9 @@ import { $config } from 'src/data/configs/config'
 import { Team } from 'types/teams'
 import ColorTag from 'components/ColorTag'
 import { getTenantLinks } from './links'
+import { navigateTo } from 'utils/url'
 
 const AdminTenantUsers = () => {
-  const navigate = useNavigate()
   const t = useStore(commonMsg)
   const t1 = useStore(websiteAdmin)
   const lang = useStore(locale)
@@ -348,7 +348,7 @@ const AdminTenantUsers = () => {
                   <Box
                     cursor='pointer'
                     onClick={() =>
-                      navigate(`/${config.currentTeam}/cfg/team/members`)
+                      navigateTo(`/${config.currentTeam}/cfg/team/members`)
                     }
                   >
                     <ColorTag name={team.name} />

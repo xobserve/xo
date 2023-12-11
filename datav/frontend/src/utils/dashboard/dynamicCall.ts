@@ -12,9 +12,9 @@
 // limitations under the License.
 
 import { setDateTime } from 'src/components/DatePicker/DatePicker'
-import { gnavigate } from 'layouts/PageContainer'
 import { setVariable } from 'src/views/variables/SelectVariable'
 import { $variables } from 'src/views/variables/store'
+import { navigateTo } from 'utils/url'
 
 // limitations under the License.
 export const genDynamicFunction = (ast) => {
@@ -26,10 +26,10 @@ export const genDynamicFunction = (ast) => {
   }
 }
 
-export const commonInteractionEvent = (callback, data) => {
+export const commonInteractionEvent = (callback, data, navigate?) => {
   return callback(
     data,
-    gnavigate,
+    (url) => navigateTo(url, navigate),
     (k, v) => setVariable(k, v),
     setDateTime,
     $variables,

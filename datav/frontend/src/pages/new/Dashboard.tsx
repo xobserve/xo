@@ -26,12 +26,12 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { commonMsg, newMsg } from 'src/i18n/locales/en'
 import { useStore } from '@nanostores/react'
 import { getNewLinks } from './links'
+import { navigateTo } from 'utils/url'
 
 const NewDashboardPage = () => {
   const t = useStore(commonMsg)
   const t1 = useStore(newMsg)
   const toast = useToast()
-  const navigate = useNavigate()
   const [dashboard, setDashboard] = useState<Dashboard>(initDashboard())
   const teamId = useParams().teamId
   const newLinks = getNewLinks(teamId)
@@ -49,7 +49,7 @@ const NewDashboardPage = () => {
     })
 
     setTimeout(() => {
-      navigate(`/${teamId}/${res.data}`)
+      navigateTo(`/${teamId}/${res.data}`)
     }, 1000)
   }
 

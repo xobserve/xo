@@ -42,19 +42,18 @@ import { cloneDeep } from 'lodash'
 import { useRef, useState } from 'react'
 import { Team } from 'types/teams'
 import { requestApi } from 'utils/axios/request'
-import { useNavigate, useParams } from 'react-router-dom'
 import { useStore } from '@nanostores/react'
 import { cfgTeam, commonMsg } from 'src/i18n/locales/en'
 import { $teams } from 'src/views/team/store'
 import { Role, isSuperAdmin } from 'types/role'
 import { $config } from 'src/data/configs/config'
 import { isEmpty } from 'utils/validate'
+import { navigateTo } from 'utils/url'
 
 const TeamSettings = (props: { team: Team }) => {
   const t = useStore(commonMsg)
   const t1 = useStore(cfgTeam)
   const [team, setTeam] = useState<Team>(props.team)
-  const navigate = useNavigate()
   const toast = useToast()
   const config = useStore($config)
 
@@ -100,7 +99,7 @@ const TeamSettings = (props: { team: Team }) => {
     const teams = $teams.get().filter((t) => t.id != team.id)
     $teams.set(teams)
     setTimeout(() => {
-      navigate(`/`)
+      navigateTo(`/`)
     }, 1000)
   }
 
@@ -114,7 +113,7 @@ const TeamSettings = (props: { team: Team }) => {
     })
 
     setTimeout(() => {
-      navigate(`/`)
+      navigateTo(`/`)
     }, 1000)
   }
 

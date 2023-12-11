@@ -99,6 +99,12 @@ func GetDashboardConfig(c *gin.Context) {
 					dashId = m.DashboardId
 					break
 				}
+				for _, sub := range m.Children {
+					if sub.Url == path {
+						dashId = m.DashboardId
+						break
+					}
+				}
 			}
 		}
 

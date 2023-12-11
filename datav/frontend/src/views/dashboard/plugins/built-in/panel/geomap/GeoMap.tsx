@@ -31,11 +31,11 @@ import 'ol-ext/dist/ol-ext.css'
 import { isSeriesData } from 'utils/seriesData'
 import { genDynamicFunction } from 'utils/dashboard/dynamicCall'
 import { isFunction } from 'lodash'
-import { gnavigate } from 'layouts/PageContainer'
 import { setVariable } from 'src/views/variables/SelectVariable'
 import { setDateTime } from 'src/components/DatePicker/DatePicker'
 import { $variables } from 'src/views/variables/store'
 import { DataLayerType } from './types'
+import { navigateTo } from 'utils/url'
 
 interface Props extends PanelProps {
   data: SeriesData[][]
@@ -167,7 +167,7 @@ const GeoMapPanel = (props: Props) => {
             onClick(
               item,
               map,
-              gnavigate,
+              navigateTo,
               (k, v) => setVariable(k, v),
               setDateTime,
               $variables,

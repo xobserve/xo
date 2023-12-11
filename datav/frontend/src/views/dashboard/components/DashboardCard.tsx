@@ -34,6 +34,7 @@ import { dispatch } from 'use-bus'
 import { OnDashboardWeightChangeEvent } from 'src/data/bus-events'
 import { Session } from 'types/user'
 import { isAdmin } from 'types/role'
+import { navigateTo } from 'utils/url'
 
 interface Props {
   dashboard: Dashboard
@@ -53,7 +54,6 @@ const DashboardCard = ({
   session,
 }: Props) => {
   const [active, setActive] = useState(false)
-  const navigate = useNavigate()
   const [weight, setWeight] = useState(null)
   const ref = useRef()
 
@@ -83,7 +83,7 @@ const DashboardCard = ({
           alignItems='center'
           cursor='pointer'
           onClick={() => {
-            navigate(`/${dashboard.ownedBy}` + getDashboardLink(dashboard.id))
+            navigateTo(`/${dashboard.ownedBy}` + getDashboardLink(dashboard.id))
             onClick && onClick()
           }}
         >
