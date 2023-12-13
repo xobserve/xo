@@ -27,6 +27,8 @@ import (
 	"context"
 	"database/sql"
 	"encoding/json"
+	"errors"
+	"fmt"
 	"net/http"
 	"strconv"
 	"sync"
@@ -88,6 +90,7 @@ func InitDatasources() {
 		time.Sleep(time.Second * 10)
 	}
 }
+
 func CreateDatasource(c *gin.Context) {
 	ds := &models.Datasource{}
 	err := c.Bind(&ds)
@@ -99,40 +102,46 @@ func CreateDatasource(c *gin.Context) {
 
 	u := c.MustGet("currentUser").(*models.User)
 
-	now := time.Now()
-	data, err := json.Marshal(ds.Data)
-	if err != nil {
-		logger.Warn("Error encode datasource data", "error", err)
-		c.JSON(500, common.RespError(e.Internal))
-		return
-	}
-
 	err = acl.CanEditTeam(c.Request.Context(), ds.TeamId, u.Id)
 	if err != nil {
 		c.JSON(403, common.RespError(err.Error()))
 		return
 	}
 
+	err = createDatasource(c.Request.Context(), ds, u)
+	if err != nil {
+		logger.Warn("create datasource error", "error", err)
+		c.JSON(http.StatusBadRequest, common.RespError(err.Error()))
+		return
+	}
+
+	c.JSON(http.StatusOK, common.RespSuccess(ds.Id))
+}
+
+func createDatasource(ctx context.Context, ds *models.Datasource, u *models.User) error {
 	var res sql.Result
+	var err error
+	data, err := json.Marshal(ds.Data)
+	if err != nil {
+		return fmt.Errorf("encode datasource data error: %w", err)
+	}
+	now := time.Now()
 	if ds.Id == 0 {
-		res, err = db.Conn.ExecContext(c.Request.Context(), "INSERT INTO datasource (name,type,url,team_id,data,created,updated) VALUES (?,?,?,?,?,?,?)", ds.Name, ds.Type, ds.URL, ds.TeamId, data, now, now)
+		res, err = db.Conn.ExecContext(ctx, "INSERT INTO datasource (name,type,url,team_id,data,created,updated) VALUES (?,?,?,?,?,?,?)", ds.Name, ds.Type, ds.URL, ds.TeamId, data, now, now)
 	} else {
-		res, err = db.Conn.ExecContext(c.Request.Context(), "INSERT INTO datasource (id, name,type,url,team_id,data,created,updated) VALUES (?,?,?,?,?,?,?,?)", ds.Id, ds.Name, ds.Type, ds.URL, ds.TeamId, data, now, now)
+		res, err = db.Conn.ExecContext(ctx, "INSERT INTO datasource (id, name,type,url,team_id,data,created,updated) VALUES (?,?,?,?,?,?,?,?)", ds.Id, ds.Name, ds.Type, ds.URL, ds.TeamId, data, now, now)
 	}
 	if err != nil {
 		if e.IsErrUniqueConstraint(err) {
-			c.JSON(http.StatusBadRequest, common.RespError("id or name alread exist"))
-			return
+			return errors.New("id or name alread exist")
 		}
-		logger.Warn("insert datasource error", "error", err)
-		c.JSON(http.StatusInternalServerError, common.RespInternalError())
-		return
+		return fmt.Errorf("insert datasource error: %w", err)
 	}
 
 	id, _ := res.LastInsertId()
 	ds.Id = id
 
-	c.JSON(http.StatusOK, common.RespSuccess(ds.Id))
+	return nil
 }
 
 func UpdateDatasource(c *gin.Context) {
