@@ -160,6 +160,22 @@ CREATE TABLE IF NOT EXISTS annotation (
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS template (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    type SMALLINT NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    description VARCHAR(255) DEFAULT '',
+    scope SMALLINT NOT NULL,
+    owned_by INTEGER NOT NULL,
+    content MEDIUMTEXT,
+    version VARCHAR(20) NOT NULL,
+    provider VARCHAR(255) NOT NULL,
+    created_by INTEGER NOT NULL,
+    created DATETIME NOT NULL,
+    updated DATETIME NOT NULL
+);
+
 `
 
 const SqliteIndex = `
@@ -210,4 +226,9 @@ CREATE INDEX IF NOT EXISTS audit_logs_tenant ON audit_logs (tenant);
 
 CREATE INDEX IF NOT EXISTS annotation_npid ON annotation (namespace_id);
 CREATE UNIQUE INDEX IF NOT EXISTS  annotation_time_ng ON annotation (namespace_id,group_id,time);
+
+CREATE INDEX IF NOT EXISTS template_type ON template (type);
+CREATE INDEX IF NOT EXISTS template_scope ON template (scope);
+CREATE INDEX IF NOT EXISTS template_owned_by ON template (owned_by);
+CREATE INDEX IF NOT EXISTS template_provider ON template (provider);
 `

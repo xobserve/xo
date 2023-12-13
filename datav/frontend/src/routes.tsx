@@ -166,6 +166,10 @@ export const getRoutes = (enableTenant = false) => {
       element: pageContainer(<DashboardPage />),
     },
     {
+      path: `/`,
+      element: pageContainer(<DashboardPage />),
+    },
+    {
       path: '*',
       element: <NotFoundPage />,
     },

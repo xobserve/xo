@@ -30,3 +30,9 @@ const (
 	StatusDeleted = 1
 	StatusOK      = 0
 )
+
+const (
+	ScopeWebsite = 1
+	ScopeTenant  = 2
+	ScopeTeam    = 3
+)

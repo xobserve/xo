@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS user (
 );
 
 CREATE INDEX user_username ON user (username);
+
 CREATE INDEX user_status ON user (status);
 
 CREATE TABLE IF NOT EXISTS tenant (
@@ -37,9 +38,10 @@ CREATE TABLE IF NOT EXISTS tenant (
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL
 );
-CREATE INDEX tenant_name ON tenant (name);
-CREATE INDEX tenant_status ON tenant (status);
 
+CREATE INDEX tenant_name ON tenant (name);
+
+CREATE INDEX tenant_status ON tenant (status);
 
 CREATE TABLE IF NOT EXISTS tenant_user (
     id INTEGER PRIMARY KEY AUTO_INCREMENT,
@@ -60,6 +62,7 @@ CREATE TABLE IF NOT EXISTS sessions (
     sid VARCHAR(255) PRIMARY KEY,
     user_id INTEGER
 );
+
 CREATE INDEX sessions_userid ON sessions (user_id);
 
 CREATE TABLE IF NOT EXISTS team (
@@ -79,10 +82,12 @@ CREATE TABLE IF NOT EXISTS team (
 );
 
 CREATE UNIQUE INDEX team_name ON team (tenant_id, name);
-CREATE INDEX team_tenant ON team (tenant_id);
-CREATE INDEX team_status ON team (status);
-CREATE INDEX team_created_by ON team (created_by);
 
+CREATE INDEX team_tenant ON team (tenant_id);
+
+CREATE INDEX team_status ON team (status);
+
+CREATE INDEX team_created_by ON team (created_by);
 
 CREATE TABLE IF NOT EXISTS team_member (
     id INTEGER PRIMARY KEY AUTO_INCREMENT,
@@ -95,8 +100,11 @@ CREATE TABLE IF NOT EXISTS team_member (
 );
 
 CREATE INDEX team_member_tenant_id ON team_member (tenant_id);
+
 CREATE INDEX team_member_team_id ON team_member (team_id);
+
 CREATE INDEX team_member_user_id ON team_member (user_id);
+
 CREATE UNIQUE INDEX team_member_team_user_id ON team_member (team_id, user_id);
 
 CREATE TABLE IF NOT EXISTS variable (
@@ -118,7 +126,8 @@ CREATE TABLE IF NOT EXISTS variable (
 );
 
 CREATE UNIQUE INDEX variable_name ON variable (team_id, name);
-CREATE INDEX  variable_team ON variable (team_id);
+
+CREATE INDEX variable_team ON variable (team_id);
 
 CREATE TABLE IF NOT EXISTS dashboard (
     id VARCHAR(40) PRIMARY KEY NOT NULL,
@@ -133,9 +142,9 @@ CREATE TABLE IF NOT EXISTS dashboard (
     updated DATETIME NOT NULL
 );
 
+CREATE INDEX dashboard_team_id ON dashboard (team_id);
 
-CREATE INDEX  dashboard_team_id ON dashboard (team_id);
-CREATE INDEX  dashboard_created_by ON dashboard (created_by);
+CREATE INDEX dashboard_created_by ON dashboard (created_by);
 
 CREATE TABLE IF NOT EXISTS dashboard_history (
     dashboard_id VARCHAR(40),
@@ -144,12 +153,10 @@ CREATE TABLE IF NOT EXISTS dashboard_history (
     history MEDIUMTEXT
 );
 
-
-CREATE UNIQUE INDEX  dashboard_id_version ON dashboard_history (dashboard_id,version);
-
+CREATE UNIQUE INDEX dashboard_id_version ON dashboard_history (dashboard_id, version);
 
 CREATE TABLE IF NOT EXISTS datasource (
-    id  INTEGER PRIMARY KEY AUTO_INCREMENT,
+    id INTEGER PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(64),
     type VARCHAR(32),
     url VARCHAR(255),
@@ -159,21 +166,21 @@ CREATE TABLE IF NOT EXISTS datasource (
     updated DATETIME NOT NULL
 );
 
+CREATE UNIQUE INDEX datasource_name ON datasource (team_id, name);
 
-CREATE UNIQUE INDEX  datasource_name ON datasource (team_id, name);
-CREATE INDEX  datasource_team ON datasource (team_id);
+CREATE INDEX datasource_team ON datasource (team_id);
 
 CREATE TABLE IF NOT EXISTS star_dashboard (
-    user_id  INTEGER NOT NULL,
+    user_id INTEGER NOT NULL,
     dashboard_id VARCHAR(40) NOT NULL,
     created DATETIME NOT NULL
 );
-CREATE UNIQUE INDEX  star_dashboard_id ON star_dashboard (user_id,dashboard_id);
 
+CREATE UNIQUE INDEX star_dashboard_id ON star_dashboard (user_id, dashboard_id);
 
 CREATE TABLE IF NOT EXISTS audit_logs (
-    id  INTEGER PRIMARY KEY AUTO_INCREMENT,
-    op_id  INTEGER NOT NULL,
+    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    op_id INTEGER NOT NULL,
     op_type VARCHAR(32) NOT NULL,
     target_id VARCHAR(64),
     data MEDIUMTEXT,
@@ -181,14 +188,16 @@ CREATE TABLE IF NOT EXISTS audit_logs (
     created DATETIME NOT NULL
 );
 
-CREATE INDEX  audit_logs_op_id ON audit_logs (op_id);
-CREATE INDEX  audit_logs_op_type ON audit_logs (op_type);
-CREATE INDEX  audit_logs_tenant ON audit_logs (tenant_id);
+CREATE INDEX audit_logs_op_id ON audit_logs (op_id);
+
+CREATE INDEX audit_logs_op_type ON audit_logs (op_type);
+
+CREATE INDEX audit_logs_tenant ON audit_logs (tenant_id);
 
 CREATE TABLE IF NOT EXISTS annotation (
-    id  INTEGER PRIMARY KEY AUTO_INCREMENT,
+    id INTEGER PRIMARY KEY AUTO_INCREMENT,
     text TEXT,
-    time  INTEGER NOT NULL,
+    time INTEGER NOT NULL,
     duration VARCHAR(32) NOT NULL,
     tags VARCHAR(255),
     namespace_id VARCHAR(40),
@@ -198,5 +207,29 @@ CREATE TABLE IF NOT EXISTS annotation (
     updated DATETIME NOT NULL
 );
 
-CREATE INDEX  annotation_npid ON annotation (namespace_id);
-CREATE UNIQUE INDEX  annotation_time_ng ON annotation (namespace_id,group_id,time);
+CREATE INDEX annotation_npid ON annotation (namespace_id);
+
+CREATE UNIQUE INDEX annotation_time_ng ON annotation (namespace_id, group_id, time);
+
+CREATE TABLE IF NOT EXISTS template (
+    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    type SMALLINT NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    description VARCHAR(255) DEFAULT '',
+    scope SMALLINT NOT NULL,
+    owned_by INTEGER NOT NULL,
+    content MEDIUMTEXT,
+    version VARCHAR(20) NOT NULL,
+    provider VARCHAR(255) NOT NULL,
+    created_by INTEGER NOT NULL,
+    created DATETIME NOT NULL,
+    updated DATETIME NOT NULL
+);
+
+CREATE INDEX template_type ON template (type);
+
+CREATE INDEX template_scope ON template (scope);
+
+CREATE INDEX template_owned_by ON template (owned_by);
+
+CREATE INDEX template_provider ON template (provider);
