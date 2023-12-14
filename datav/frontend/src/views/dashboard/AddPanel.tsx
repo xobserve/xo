@@ -28,6 +28,7 @@ import { useStore } from '@nanostores/react'
 import { dashboardMsg } from 'src/i18n/locales/en'
 import { $copiedPanel } from './store/dashboard'
 import { isEmpty } from 'utils/validate'
+import { round } from 'lodash'
 
 interface Props {
   dashboard: Dashboard
@@ -118,13 +119,20 @@ const AddPanel = ({ dashboard, onChange }: Props) => {
 export default AddPanel
 
 export const getNextPanelId = (dashboard: Dashboard) => {
-  let max = 0
-
-  for (const panel of dashboard.data.panels) {
-    if (panel.id > max) {
-      max = panel.id
-    }
+  const id = round(new Date().getTime() / 1000)
+  const exist = dashboard.data.panels.find((p) => p.id == id)
+  if (exist) {
+    return id + 1
   }
 
-  return max + 1
+  return id
+  // let max = 0
+
+  // for (const panel of dashboard.data.panels) {
+  //   if (panel.id > max) {
+  //     max = panel.id
+  //   }
+  // }
+
+  // return max + 1
 }

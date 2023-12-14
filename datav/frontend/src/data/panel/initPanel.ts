@@ -54,7 +54,7 @@ export const initPanel = (id?) => {
 
   if (id) {
     p.id = id
-    p.title = `New panel ${id}`
+    p.title = `New panel`
   }
 
   return p
