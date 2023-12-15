@@ -215,11 +215,12 @@ CREATE TABLE IF NOT EXISTS template (
     id INTEGER PRIMARY KEY AUTO_INCREMENT,
     type SMALLINT NOT NULL,
     title VARCHAR(255) NOT NULL,
-    description VARCHAR(255) DEFAULT '',
+    description TEXT,
     scope SMALLINT NOT NULL,
     owned_by INTEGER NOT NULL,
     provider VARCHAR(255) NOT NULL,
-    content_id INTEGER NOT NULL
+    content_id INTEGER DEFAULT 0,
+    created DATETIME NOT NULL
 );
 
 CREATE INDEX template_type ON template (type);

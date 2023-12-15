@@ -41,13 +41,7 @@ func CreateTemplate(c *gin.Context) {
 
 	t.Provider = models.CustomTemplateProvider
 
-	content, err := json.Marshal(t.Content)
-	if err != nil {
-		c.JSON(400, common.RespError("content is not valid json format"))
-		return
-	}
-
-	err = createTemplate(c.Request.Context(), u.Id, t, content)
+	err = createTemplate(c.Request.Context(), u.Id, t)
 	if err != nil {
 		logger.Warn("create template error", "error", err)
 		c.JSON(400, common.RespError(err.Error()))
@@ -55,9 +49,9 @@ func CreateTemplate(c *gin.Context) {
 	}
 }
 
-func createTemplate(ctx context.Context, userId int64, t *models.Template, content []byte) error {
+func createTemplate(ctx context.Context, userId int64, t *models.Template) error {
 	now := time.Now()
-	_, err := db.Conn.ExecContext(ctx, "INSERT INTO template (type,title,description,scope,owned_by,content,version,provider,created,updated) VALUES (?,?,?,?,?,?,?,?,?,?)", t.Type, t.Title, t.Description, t.Scope, t.OwnedBy, content, t.Version, t.Provider, now, now)
+	_, err := db.Conn.ExecContext(ctx, "INSERT INTO template (type,title,description,scope,owned_by,provider,created) VALUES (?,?,?,?,?,?,?)", t.Type, t.Title, t.Description, t.Scope, t.OwnedBy, t.Provider, now)
 	if err != nil {
 		return err
 	}
@@ -65,9 +59,15 @@ func createTemplate(ctx context.Context, userId int64, t *models.Template, conte
 	return nil
 }
 
-func updateTemplate(ctx context.Context, userId int64, t *models.Template, content []byte) error {
+// template_id INTEGER NOT NULL,
+// content MEDIUMTEXT,
+// description VARCHAR(255) NOT NULL,
+// created DATETIME NOT NULL,
+// created_by INTEGER NOT NULL
+
+func createTemplateContent(ctx context.Context, userId int64, tid int64, desc string, content []byte) error {
 	now := time.Now()
-	_, err := db.Conn.ExecContext(ctx, "UPDATE template SET title=?,description=?,content=?,version=?,updated=? WHERE id=?", t.Title, t.Description, content, t.Version, now, t.Id)
+	_, err := db.Conn.ExecContext(ctx, "INSERT INTO template_content (template_id,content,description,created,created_by) VALUES (?,?,?,?,?)", tid, content, desc, now, userId)
 	if err != nil {
 		return err
 	}
@@ -75,22 +75,21 @@ func updateTemplate(ctx context.Context, userId int64, t *models.Template, conte
 	return nil
 }
 
-func UpdateTemplate(c *gin.Context) {
-	t := &models.Template{}
+func CreateTemplateContent(c *gin.Context) {
+	t := &models.TemplateContent{}
 	err := c.BindJSON(t)
 	if err != nil {
 		c.JSON(400, common.RespError(err.Error()))
 		return
 	}
 
-	err = isTemplateValid(t)
-	if err != nil {
-		c.JSON(400, common.RespError(err.Error()))
+	if t.Content == "" || t.TemplateId == 0 || t.Description == "" {
+		c.JSON(400, common.RespError("invalid template content"))
 		return
 	}
 
 	u := c.MustGet("currentUser").(*models.User)
-	oldT, err := models.QueryTemplateById(c.Request.Context(), t.Id)
+	oldT, err := models.QueryTemplateById(c.Request.Context(), t.TemplateId)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			c.JSON(400, common.RespError("template not exist"))
@@ -112,9 +111,9 @@ func UpdateTemplate(c *gin.Context) {
 		return
 	}
 
-	err = updateTemplate(c.Request.Context(), u.Id, t, content)
+	err = createTemplateContent(c.Request.Context(), u.Id, t.TemplateId, t.Description, content)
 	if err != nil {
-		logger.Warn("update template error", "error", err)
+		logger.Warn("create template content error", "error", err)
 		c.JSON(400, common.RespError(err.Error()))
 		return
 	}
@@ -148,7 +147,7 @@ func isTemplateValid(t *models.Template) error {
 		return errors.New("invalid template scope")
 	}
 
-	if t.Title == "" || t.Version == "" {
+	if t.Title == "" {
 		return errors.New("invalid template")
 	}
 

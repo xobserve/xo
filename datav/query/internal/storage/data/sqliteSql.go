@@ -165,11 +165,12 @@ CREATE TABLE IF NOT EXISTS template (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     type SMALLINT NOT NULL,
     title VARCHAR(255) NOT NULL,
-    description VARCHAR(255) NOT NULL,
+    description TEXT NOT NULL,
     scope SMALLINT NOT NULL,
     owned_by INTEGER NOT NULL,
     provider VARCHAR(255) NOT NULL,
-    content_id INTEGER NOT NULL
+    content_id INTEGER DEFAULT 0,
+    created DATETIME NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS template_content (
