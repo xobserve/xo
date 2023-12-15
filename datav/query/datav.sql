@@ -218,12 +218,8 @@ CREATE TABLE IF NOT EXISTS template (
     description VARCHAR(255) DEFAULT '',
     scope SMALLINT NOT NULL,
     owned_by INTEGER NOT NULL,
-    content MEDIUMTEXT,
-    version VARCHAR(20) NOT NULL,
     provider VARCHAR(255) NOT NULL,
-    created_by INTEGER NOT NULL,
-    created DATETIME NOT NULL,
-    updated DATETIME NOT NULL
+    content_id INTEGER NOT NULL
 );
 
 CREATE INDEX template_type ON template (type);
@@ -233,3 +229,16 @@ CREATE INDEX template_scope ON template (scope);
 CREATE INDEX template_owned_by ON template (owned_by);
 
 CREATE INDEX template_provider ON template (provider);
+
+CREATE TABLE IF NOT EXISTS template_content (
+    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    template_id INTEGER NOT NULL,
+    content MEDIUMTEXT,
+    description VARCHAR(255) NOT NULL,
+    created DATETIME NOT NULL,
+    created_by INTEGER NOT NULL
+);
+
+CREATE INDEX template_content_tid ON template_content (template_id);
+
+CREATE UNIQUE INDEX template_content_tid_created ON template_content (template_id, created);
