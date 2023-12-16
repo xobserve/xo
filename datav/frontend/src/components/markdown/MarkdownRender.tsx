@@ -16,6 +16,7 @@ import Markdown from 'markdown-to-jsx'
 import hljs from 'highlight.js'
 import 'highlight.js/styles/atom-one-dark.css'
 import { chakra, Flex, PropsOf } from '@chakra-ui/react'
+import CustomScrollbar from 'components/CustomScrollbar/CustomScrollbar'
 
 type Props = PropsOf<typeof chakra.div> & {
   md: string
@@ -45,24 +46,26 @@ export function MarkdownRender({
   }, [md])
 
   return (
-    <Flex ref={rootRef}>
-      <ChakraMarkdown
-        children={renderMd}
-        {...rest}
-        style={{
-          height: '100%',
-          fontSize: fontSize ?? '1.05rem',
-          fontWeight: fontWeight,
-          lineHeight: '1.4',
-        }}
-        className='markdown-render'
-        options={{
-          overrides: {},
-          slugify: (str: string) =>
-            str.replaceAll('`', '').toLowerCase().replace(/[?\s]/g, '-'),
-        }}
-        maxWidth='100%'
-      ></ChakraMarkdown>
+    <Flex ref={rootRef} width='100%'>
+      <CustomScrollbar hideHorizontalTrack>
+        <ChakraMarkdown
+          children={renderMd}
+          {...rest}
+          style={{
+            height: '100%',
+            fontSize: fontSize ?? '1.05rem',
+            fontWeight: fontWeight,
+            lineHeight: '1.4',
+          }}
+          className='markdown-render'
+          options={{
+            overrides: {},
+            slugify: (str: string) =>
+              str.replaceAll('`', '').toLowerCase().replace(/[?\s]/g, '-'),
+          }}
+          maxWidth='100%'
+        ></ChakraMarkdown>
+      </CustomScrollbar>
     </Flex>
   )
 }

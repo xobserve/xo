@@ -16,6 +16,7 @@ import {
   Center,
   HStack,
   Image,
+  SimpleGrid,
   Tab,
   TabIndicator,
   TabList,
@@ -24,13 +25,50 @@ import {
   Tabs,
   Text,
   VStack,
+  Wrap,
 } from '@chakra-ui/react'
 import { useStore } from '@nanostores/react'
-import React from 'react'
+import Empty from 'components/Empty'
+import React, { useEffect, useState } from 'react'
+import { $config } from 'src/data/configs/config'
 import { locale } from 'src/i18n/i18n'
+import TemplateCard from 'src/views/template/TemplateCard'
+import { Template, TemplateType } from 'types/template'
+import { requestApi } from 'utils/axios/request'
 
 const TemplateStore = () => {
-  const lang = useStore(locale)
+  const lang = locale.get()
+  const config = useStore($config)
+  const [type, setType] = useState(TemplateType.App)
+  const [templates, setTemplates] = useState<Template[]>([])
+  useEffect(() => {
+    if (config) {
+      loadTemplates()
+    }
+  }, [config, type])
+
+  const loadTemplates = async () => {
+    const res = await requestApi.get(
+      `/template/list/${type}?teamId=${config.currentTeam}`,
+    )
+    setTemplates(res.data)
+  }
+
+  const tabs = [
+    {
+      value: TemplateType.App,
+      label: lang == 'zh' ? '应用模版' : 'Application',
+    },
+    {
+      value: TemplateType.Dashboard,
+      label: lang == 'zh' ? '仪表盘模版' : 'Dashboard',
+    },
+    {
+      value: TemplateType.Panel,
+      label: lang == 'zh' ? '图表模版' : 'Panel',
+    },
+  ]
+
   return (
     <Box>
       <VStack spacing='2' alignItems='center' p='4'>
@@ -38,40 +76,55 @@ const TemplateStore = () => {
           <Image src='/public/rocket.svg' alt='rocket' width={150} />
         </Center>
         <Center>
-          <Text className='color-text' fontWeight={550} fontSize={30}>
-            Template Store
+          <Text fontWeight={550} fontSize={30}>
+            {lang == 'zh' ? '模版商店' : 'Template Store'}
           </Text>
         </Center>
         <Center>
-          <Text fontWeight={500} fontSize={18} maxW={550}>
-            Choose one template to quickly create a panel, a dashboard or even a
-            whole application.
+          <Text fontWeight={500} fontSize={16} maxW={550}>
+            {lang == 'zh'
+              ? '选择一个模版快速创建图表、仪表盘甚至完整的应用'
+              : 'Choose a template to quickly create a panel, a dashboard or even a whole application.'}
           </Text>
         </Center>
       </VStack>
       <Center>
-        <Tabs position='relative' variant='unstyled' size='lg'>
-          <TabList>
-            <Tab>Application</Tab>
-            <Tab>Dashboard</Tab>
-            <Tab>Panel</Tab>
+        <Tabs position='relative' variant='unstyled' size='lg' width='100%'>
+          <TabList justifyContent='center'>
+            {tabs.map((tab) => (
+              <Tab
+                key={tab.value}
+                onClick={() => setType(tab.value)}
+                borderBottom='2px solid'
+                borderColor='transparent'
+                _selected={{
+                  color: 'brand.500',
+                  fontWeight: 500,
+                  borderColor: 'brand.500',
+                }}
+              >
+                {tab.label}
+              </Tab>
+            ))}
           </TabList>
-          <TabIndicator
-            mt='-1.5px'
-            height='3px'
-            bg='brand.500'
-            borderRadius='1px'
-          />
+
           <TabPanels>
-            <TabPanel>
-              <p>one!</p>
-            </TabPanel>
-            <TabPanel>
-              <p>two!</p>
-            </TabPanel>
-            <TabPanel>
-              <p>three!</p>
-            </TabPanel>
+            {tabs.map((tab) => (
+              <TabPanel key={tab.value}>
+                {templates.length > 0 ? (
+                  <Wrap>
+                    {templates.map((template) => (
+                      <TemplateCard
+                        template={template}
+                        width={['100%', '100%', '33%']}
+                      />
+                    ))}
+                  </Wrap>
+                ) : (
+                  <Empty />
+                )}
+              </TabPanel>
+            ))}
           </TabPanels>
         </Tabs>
       </Center>

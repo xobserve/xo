@@ -10,6 +10,7 @@ export const notFoundMsg = i18n('notfound', {
 })
 
 export const commonMsg = i18n('common', {
+  use: 'Use',
   all: 'All',
   website: 'Website',
   tenant: 'Tenant',
@@ -36,6 +37,7 @@ export const commonMsg = i18n('common', {
   configuration: 'Configuration',
   datasource: 'Datasource',
   template: 'Template',
+  templateStore: 'Template Store',
   type: 'Type',
   test: 'Test',
   save: 'Save',

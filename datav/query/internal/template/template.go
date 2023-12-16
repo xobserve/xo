@@ -193,6 +193,54 @@ func isTemplateValid(t *models.Template) error {
 	return nil
 }
 
+func GetTemplates(c *gin.Context) {
+	tp := c.Param("type")
+	teamId, _ := strconv.ParseInt(c.Query("teamId"), 10, 64)
+	u := c.MustGet("currentUser").(*models.User)
+
+	if acl.CanViewTeam(c.Request.Context(), teamId, u.Id) != nil {
+		c.JSON(403, common.RespError("you are not in this team"))
+		return
+	}
+
+	tenantId, err := models.QueryTenantIdByTeamId(c.Request.Context(), teamId)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			c.JSON(400, common.RespError("the tenant which you are visiting is not exist"))
+			return
+		}
+		logger.Warn("get tenant id error", "error", err)
+		c.JSON(500, common.RespError(err.Error()))
+		return
+	}
+
+	rows, err := db.Conn.Query("SELECT id,type,title,description,scope,owned_by,provider,created FROM template WHERE type=? and (scope=? or (scope=? and owned_by=?) or (scope=? and owned_by=?))", tp, common.ScopeWebsite, common.ScopeTenant, tenantId, common.ScopeTeam, teamId)
+	if err != nil {
+		logger.Warn("get templates error", "error", err)
+		c.JSON(500, common.RespError(err.Error()))
+		return
+	}
+
+	templates := make([]*models.Template, 0)
+	for rows.Next() {
+		t := &models.Template{}
+		var desc string
+		err := rows.Scan(&t.Id, &t.Type, &t.Title, &desc, &t.Scope, &t.OwnedBy, &t.Provider, &t.Created)
+		if err != nil {
+			logger.Warn("scan template error", "error", err)
+			c.JSON(500, common.RespError(err.Error()))
+			return
+		}
+
+		b, _ := b64.StdEncoding.DecodeString(desc)
+		t.Description = string(b)
+
+		templates = append(templates, t)
+	}
+
+	c.JSON(200, common.RespSuccess(templates))
+}
+
 func canEditTemplate(ctx context.Context, t *models.Template, u *models.User) error {
 	if t.Scope == common.ScopeWebsite {
 		return acl.CanEditWebsite(u)

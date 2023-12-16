@@ -1,5 +1,6 @@
 {
   "common": {
+    "use": "使用",
     "all": "全部",
     "website": "网站",
     "tenant": "租户",
@@ -26,6 +27,7 @@
     "configuration": "配置管理",
     "datasource": "数据源",
     "template": "模版",
+    "templateStore": "Template store",
     "type": "类型",
     "test": "测试",
     "save": "保存",

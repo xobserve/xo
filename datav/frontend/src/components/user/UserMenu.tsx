@@ -202,6 +202,11 @@ const UserMenu = ({ miniMode }) => {
                   </MenuItem>
                 }
                 <MenuDivider />
+                <Link to={getNavigateTo(`${teamPath}/template`)}>
+                  <MenuItem width='100%' icon={<FaRegSun fontSize='1em' />}>
+                    {t.templateStore}
+                  </MenuItem>
+                </Link>
                 <Link to={getNavigateTo(`${teamPath}/account/setting`)}>
                   <MenuItem width='100%' icon={<FaRegSun fontSize='1em' />}>
                     {t1.accountSetting}

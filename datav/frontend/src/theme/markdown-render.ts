@@ -32,34 +32,34 @@ export default function markdownRender(props) {
         },
       },
       h1: {
-        fontSize: '1.8em',
+        fontSize: '1.4em',
         fontWeight: 'bold',
-        marginBottom: '0.8rem',
+        marginBottom: '0.5rem',
       },
       h2: {
-        fontSize: '1.6em',
+        fontSize: '1.3em',
         fontWeight: 'bold',
-        marginBottom: '0.6rem',
+        marginBottom: '0.5rem',
       },
       h3: {
-        fontSize: '1.4em',
+        fontSize: '1.2em',
         fontWeight: '600',
-        marginBottom: '0.4rem',
+        marginBottom: '0.3rem',
       },
       h4: {
-        fontSize: '1.3em',
+        fontSize: '1.1em',
         fontWeight: '600',
       },
       h5: {
-        fontSize: '1.2em',
+        fontSize: '1em',
         fontWeight: 'normal',
       },
       h6: {
-        fontSize: '1.1em',
+        fontSize: '1em',
         fontWeight: 'normal',
       },
       p: {
-        padding: '0.5rem 0',
+        padding: '0rem 0',
       },
       blockquote: {
         lineHeight: '2rem',
@@ -75,7 +75,7 @@ export default function markdownRender(props) {
         },
       },
       pre: {
-        margin: '1.6rem 0',
+        margin: '1rem 0',
         fontSize: '.95rem',
       },
       a: {
