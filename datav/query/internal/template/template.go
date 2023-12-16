@@ -9,17 +9,20 @@ import (
 
 	"time"
 
+	b64 "encoding/base64"
+
 	"github.com/gin-gonic/gin"
 	"github.com/xObserve/xObserve/query/internal/acl"
 	"github.com/xObserve/xObserve/query/pkg/colorlog"
 	"github.com/xObserve/xObserve/query/pkg/common"
 	"github.com/xObserve/xObserve/query/pkg/db"
+	"github.com/xObserve/xObserve/query/pkg/e"
 	"github.com/xObserve/xObserve/query/pkg/models"
 )
 
 var logger = colorlog.RootLogger.New("logger", "template")
 
-func CreateTemplate(c *gin.Context) {
+func SaveTemplate(c *gin.Context) {
 	t := &models.Template{}
 	err := c.BindJSON(t)
 	if err != nil {
@@ -32,6 +35,21 @@ func CreateTemplate(c *gin.Context) {
 		c.JSON(400, common.RespError(err.Error()))
 		return
 	}
+
+	if t.Id != 0 {
+		oldT, err := models.QueryTemplateById(c.Request.Context(), t.Id)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				c.JSON(400, common.RespError("template not exist"))
+				return
+			}
+			c.JSON(400, common.RespError(err.Error()))
+			return
+		}
+		t.Scope = oldT.Scope
+		t.OwnedBy = oldT.OwnedBy
+	}
+
 	u := c.MustGet("currentUser").(*models.User)
 	err = canEditTemplate(c.Request.Context(), t, u)
 	if err != nil {
@@ -41,9 +59,20 @@ func CreateTemplate(c *gin.Context) {
 
 	t.Provider = models.CustomTemplateProvider
 
-	err = createTemplate(c.Request.Context(), u.Id, t)
+	t.Description = b64.StdEncoding.EncodeToString([]byte(t.Description))
+	if t.Id == 0 {
+		err = createTemplate(c.Request.Context(), u.Id, t)
+	} else {
+		err = updateTemplate(c.Request.Context(), u.Id, t)
+	}
+
 	if err != nil {
-		logger.Warn("create template error", "error", err)
+		if e.IsErrUniqueConstraint(err) {
+			c.JSON(400, common.RespError("template title already exist in this scope"))
+			return
+		}
+
+		logger.Warn("save template error", "error", err)
 		c.JSON(400, common.RespError(err.Error()))
 		return
 	}
@@ -52,6 +81,16 @@ func CreateTemplate(c *gin.Context) {
 func createTemplate(ctx context.Context, userId int64, t *models.Template) error {
 	now := time.Now()
 	_, err := db.Conn.ExecContext(ctx, "INSERT INTO template (type,title,description,scope,owned_by,provider,created) VALUES (?,?,?,?,?,?,?)", t.Type, t.Title, t.Description, t.Scope, t.OwnedBy, t.Provider, now)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func updateTemplate(ctx context.Context, userId int64, t *models.Template) error {
+	now := time.Now()
+	_, err := db.Conn.ExecContext(ctx, "UPDATE template SET title=?,description=?,updated=? WHERE id=?", t.Title, t.Description, now, t.Id)
 	if err != nil {
 		return err
 	}

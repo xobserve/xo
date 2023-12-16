@@ -1,5 +1,7 @@
 {
   "common": {
+    "all": "全部",
+    "website": "网站",
     "tenant": "租户",
     "title": "标题",
     "name": "名称",
@@ -18,10 +20,12 @@
     "cancel": "取消",
     "delete": "删除",
     "edit": "编辑",
+    "preview": "预览",
     "detail": "详情",
     "default": "默认",
     "configuration": "配置管理",
     "datasource": "数据源",
+    "template": "模版",
     "type": "类型",
     "test": "测试",
     "save": "保存",
@@ -50,6 +54,8 @@
     "dangeSection": "危险操作",
     "dashboard": "仪表盘",
     "panel": "图表",
+    "app": "应用",
+    "visibleTo": "可见范围",
     "members": "成员",
     "sidemenu": "左侧菜单",
     "created": "创建时间",
@@ -137,6 +143,8 @@
     "public": "公开",
     "caseSensitive": "大小写敏感",
     "caseInsensitive": "大小写不敏感",
+    "requiredFieldTips": "请填写必填项",
+    "supportMarkdown": "支持 Markdown 语法",
     "isAdded": "{name}添加成功!",
     "isUpdated": "{name}更新成功!",
     "isDeleted": "{name}删除成功!",
@@ -167,7 +175,7 @@
     "NewDashboard": "新建仪表盘",
     "NewDatasource": "新建数据源",
     "ImportDashboard": "导入仪表盘",
-    "NewTemplate": "基于模版创建"
+    "NewTemplate": "新建模版"
   },
   "notfound": {
     "title": "404: Not found",

@@ -4,6 +4,8 @@ import (
 	"context"
 	"time"
 
+	b64 "encoding/base64"
+
 	"github.com/xObserve/xObserve/query/pkg/db"
 )
 
@@ -39,16 +41,16 @@ type TemplateContent struct {
 func QueryTemplateById(ctx context.Context, id int64) (*Template, error) {
 	t := &Template{}
 	// var rawdata []byte
+	var desc string
 	err := db.Conn.QueryRowContext(ctx, "SELECT id,type,title,description,scope,owned_by,provider,created FROM template WHERE id=?", id).Scan(
-		&t.Id, &t.Type, &t.Title, &t.Description, &t.Scope, &t.OwnedBy, &t.Provider, &t.Created,
+		&t.Id, &t.Type, &t.Title, &desc, &t.Scope, &t.OwnedBy, &t.Provider, &t.Created,
 	)
 	if err != nil {
 		return nil, err
 	}
 
-	// if rawdata != nil {
-	// 	err = json.Unmarshal(rawdata, &t.Content)
-	// }
+	b, _ := b64.StdEncoding.DecodeString(desc)
+	t.Description = string(b)
 
 	return t, err
 }

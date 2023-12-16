@@ -215,10 +215,10 @@ const DatasourceEditor = ({
         {EditorPlugin && (
           <EditorPlugin datasource={datasource} onChange={setDatasource} />
         )}
-        <Button onClick={testDatasource} size='sm' mt='4'>
-          {t.test} & {t.save}
-        </Button>
       </FormSection>
+      <Button onClick={testDatasource} size='sm' mt='2'>
+        {t.test} & {t.save}
+      </Button>
     </Box>
   )
 }

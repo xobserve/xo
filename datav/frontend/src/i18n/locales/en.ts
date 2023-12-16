@@ -10,6 +10,8 @@ export const notFoundMsg = i18n('notfound', {
 })
 
 export const commonMsg = i18n('common', {
+  all: 'All',
+  website: 'Website',
   tenant: 'Tenant',
   title: 'Title',
   name: 'Name',
@@ -28,10 +30,12 @@ export const commonMsg = i18n('common', {
   cancel: 'Cancel',
   delete: 'Delete',
   edit: 'Edit',
+  preview: 'Preview',
   detail: 'Detail',
   default: 'Default',
   configuration: 'Configuration',
   datasource: 'Datasource',
+  template: 'Template',
   type: 'Type',
   test: 'Test',
   save: 'Save',
@@ -59,6 +63,8 @@ export const commonMsg = i18n('common', {
   dangeSection: 'Dangerous section',
   dashboard: 'Dashboard',
   panel: 'Panel',
+  app: 'App',
+  visibleTo: 'Visible to',
   members: 'Member',
   public: 'Public',
   sidemenu: 'Side Menu',
@@ -147,6 +153,8 @@ export const commonMsg = i18n('common', {
   external: 'External',
   caseSensitive: 'Case sensitive',
   caseInsensitive: 'Case insensitive',
+  requiredFieldTips: 'Please fill in required fields',
+  supportMarkdown: 'Support Markdown',
   inputTips: params('Enter {name}..'),
   isReqiiured: params('{name} is required'),
   isInvalid: params('{name} is invalid'),
@@ -181,7 +189,7 @@ export const navigateMsg = i18n('navigate', {
   NewDashboard: 'New Dashboard',
   NewDatasource: 'New Datasource',
   ImportDashboard: 'Import Dashboard',
-  NewTemplate: 'Create from template',
+  NewTemplate: 'New Template',
 })
 
 export const accountSettingMsg = i18n('accountSetting', {

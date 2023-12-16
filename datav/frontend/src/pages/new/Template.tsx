@@ -12,32 +12,20 @@
 // limitations under the License.
 
 import React from 'react'
-import { FormSection } from 'src/components/form/Form'
 import Page from 'layouts/page/Page'
 import { FaPlus } from 'react-icons/fa'
-import DatasourceEditor from 'src/views/datasource/Editor'
-import { Datasource } from 'types/datasource'
 import { commonMsg, newMsg } from 'src/i18n/locales/en'
 import { useStore } from '@nanostores/react'
-import { DatasourceTypePrometheus } from 'src/views/dashboard/plugins/built-in/datasource/prometheus/types'
 import { useParams } from 'react-router-dom'
 import { getNewLinks } from './links'
+import TemplateEditor from 'src/views/template/TemplateEditor'
 
-const NewDatasourcePage = () => {
+const NewTemplatePage = () => {
   const t = useStore(commonMsg)
   const t1 = useStore(newMsg)
 
   const teamId = useParams().teamId
   const newLinks = getNewLinks(teamId)
-
-  const initDatasource: Datasource = {
-    id: null,
-    name: '',
-    url: null,
-    type: DatasourceTypePrometheus,
-    data: {},
-    teamId: Number(teamId),
-  }
 
   return (
     <>
@@ -47,12 +35,10 @@ const NewDatasourcePage = () => {
         icon={<FaPlus />}
         tabs={newLinks}
       >
-        <FormSection maxW={600} title={t1.dsInfo}>
-          <DatasourceEditor ds={initDatasource} />
-        </FormSection>
+        <TemplateEditor />
       </Page>
     </>
   )
 }
 
-export default NewDatasourcePage
+export default NewTemplatePage

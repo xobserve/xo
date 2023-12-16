@@ -41,8 +41,8 @@ export const getNewLinks = (teamId) => {
     },
     {
       title: 'NewTemplate',
-      url: getNavigateTo(`${teamPath}/template`),
-      baseUrl: getNavigateTo(`${teamPath}/template`),
+      url: getNavigateTo(`${teamPath}/new/template`),
+      baseUrl: getNavigateTo(`${teamPath}/new/template`),
       // icon: <FaUsersCog />
     },
   ]

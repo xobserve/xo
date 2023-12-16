@@ -45,6 +45,7 @@ import (
 	"github.com/xObserve/xObserve/query/internal/storage"
 	"github.com/xObserve/xObserve/query/internal/task"
 	"github.com/xObserve/xObserve/query/internal/teams"
+	"github.com/xObserve/xObserve/query/internal/template"
 	"github.com/xObserve/xObserve/query/internal/tenant"
 	"github.com/xObserve/xObserve/query/internal/uiconfig"
 	"github.com/xObserve/xObserve/query/internal/user"
@@ -195,6 +196,8 @@ func (s *Server) Start() error {
 		r.POST("/team/transfer/:teamId/:username", MustLogin(), teams.TransferTeam)
 		r.POST("/team/leave/:id", MustLogin(), teams.LeaveTeam)
 
+		// template apis
+		r.POST("/template/save", MustLogin(), template.SaveTemplate)
 		// proxy apis
 		r.Any("/proxy/:id/*path", proxy.ProxyDatasource)
 		r.Any("/proxy/:id", proxy.ProxyDatasource)

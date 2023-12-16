@@ -170,7 +170,8 @@ CREATE TABLE IF NOT EXISTS template (
     owned_by INTEGER NOT NULL,
     provider VARCHAR(255) NOT NULL,
     content_id INTEGER DEFAULT 0,
-    created DATETIME NOT NULL
+    created DATETIME NOT NULL,
+    updated DATETIME
 );
 
 CREATE TABLE IF NOT EXISTS template_content (
@@ -234,6 +235,7 @@ CREATE UNIQUE INDEX IF NOT EXISTS  annotation_time_ng ON annotation (namespace_i
 
 CREATE INDEX IF NOT EXISTS template_type ON template (type);
 CREATE INDEX IF NOT EXISTS template_scope ON template (scope);
+CREATE UNIQUE INDEX IF NOT EXISTS template_scope_title ON template (scope, title);
 CREATE INDEX IF NOT EXISTS template_owned_by ON template (owned_by);
 CREATE INDEX IF NOT EXISTS template_provider ON template (provider);
 

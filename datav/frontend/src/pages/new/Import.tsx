@@ -90,7 +90,7 @@ const ImportDashboardPage = () => {
         icon={<FaPlus />}
         tabs={newLinks}
       >
-        <VStack alignItems='left' spacing={4}>
+        <VStack alignItems='left' spacing={4} maxW={600}>
           <FormItem title='Meta json'>
             <Textarea
               rows={8}

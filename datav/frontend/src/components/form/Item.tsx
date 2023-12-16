@@ -37,6 +37,7 @@ interface Props {
   spacing?: number
   alignItems?: string
   onLabelClick?: any
+  required?: boolean
 }
 
 const FormItem = ({
@@ -51,6 +52,7 @@ const FormItem = ({
   alignItems = 'top',
   onLabelClick,
   flexDirection = 'row',
+  required = false,
   ...rest
 }: Props & StyleProps) => {
   return (
@@ -77,14 +79,16 @@ const FormItem = ({
         fontSize={size == 'sm' ? '0.9rem' : '1rem'}
       >
         {typeof title == 'string' ? (
-          <Text
-            width={labelWidth}
-            className='form-item-label'
-            onClick={onLabelClick}
-            cursor={onLabelClick && 'pointer'}
-          >
-            {title}
-          </Text>
+          <HStack className='form-item-label' width={labelWidth}>
+            <Text onClick={onLabelClick} cursor={onLabelClick && 'pointer'}>
+              {title}
+            </Text>
+            {required && (
+              <Text className='error-text' paddingTop='1'>
+                *
+              </Text>
+            )}
+          </HStack>
         ) : (
           <Box width={labelWidth} className='form-item-label'>
             {title}

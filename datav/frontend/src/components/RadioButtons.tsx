@@ -23,6 +23,7 @@ interface Props {
   fontSize?: string
   theme?: 'brand' | 'default'
   width?: number
+  disabled?: boolean
 }
 
 interface Option {
@@ -39,6 +40,7 @@ const RadionButtons = ({
   fontSize = '0.9rem',
   theme = 'default',
   width = null,
+  disabled = false,
 }: Props) => {
   return (
     <Wrap spacing={spacing} width={width}>
@@ -58,6 +60,7 @@ const RadionButtons = ({
               : 'ghost'
           }
           colorScheme={theme == 'default' ? 'gray' : 'brand'}
+          isDisabled={disabled}
         >
           {o.label}
         </Button>

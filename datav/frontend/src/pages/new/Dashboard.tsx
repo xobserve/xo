@@ -69,6 +69,7 @@ const NewDashboardPage = () => {
               width: '150px',
             },
           }}
+          maxW={600}
         >
           <FormSection title={t1.dashInfo}>
             <FormItem title={t1.dashTitle}>
@@ -103,7 +104,7 @@ const NewDashboardPage = () => {
                             </Select>
                         </Box>
                     </FormItem> */}
-            <Button width='fit-content' onClick={addDashboard}>
+            <Button width='fit-content' onClick={addDashboard} mt='2' size='sm'>
               {t.submit}
             </Button>
           </FormSection>

@@ -220,12 +220,15 @@ CREATE TABLE IF NOT EXISTS template (
     owned_by INTEGER NOT NULL,
     provider VARCHAR(255) NOT NULL,
     content_id INTEGER DEFAULT 0,
-    created DATETIME NOT NULL
+    created DATETIME NOT NULL,
+    updated DATETIME
 );
 
 CREATE INDEX template_type ON template (type);
 
 CREATE INDEX template_scope ON template (scope);
+
+CREATE UNIQUE INDEX template_scope_title ON template (scope, title);
 
 CREATE INDEX template_owned_by ON template (owned_by);
 
