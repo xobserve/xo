@@ -13,12 +13,18 @@
 
 import React from 'react'
 import { Image, Text, VStack } from '@chakra-ui/react'
+import { locale } from 'src/i18n/i18n'
 
 const Empty = () => {
+  const lang = locale.get()
   return (
     <VStack spacing='16' py='16'>
-      <Text fontSize='1.2rem'>Moommm..It seems there are nothing here ..</Text>
       <Image src='/empty.svg' height='260px' />
+      <Text fontSize='1.1rem'>
+        {lang == 'zh'
+          ? 'Moommm.. 看起来这里什么都没有'
+          : 'Moommm..It seems there are nothing here ..'}
+      </Text>
     </VStack>
   )
 }

@@ -95,6 +95,7 @@ const TemplateStore = () => {
       duration: 3000,
       isClosable: true,
     })
+    setTempTemplate(null)
     onClose()
   }
   return (
@@ -110,7 +111,12 @@ const TemplateStore = () => {
             </Text>
           </Center>
           <Center>
-            <Text fontWeight={500} fontSize={16} maxW={550}>
+            <Text
+              fontWeight={500}
+              fontSize={16}
+              maxW={550}
+              layerStyle='textSecondary'
+            >
               {lang == 'zh'
                 ? '选择一个模版快速创建图表、仪表盘甚至完整的应用'
                 : 'Choose a template to quickly create a panel, a dashboard or even a whole application.'}
@@ -118,7 +124,12 @@ const TemplateStore = () => {
           </Center>
         </VStack>
         <Center>
-          <Tabs position='relative' variant='unstyled' size='lg' width='100%'>
+          <Tabs
+            position='relative'
+            variant='solid-rounded'
+            size='lg'
+            width='100%'
+          >
             <TabList justifyContent='center'>
               {tabs.map((tab) => (
                 <Tab
@@ -145,6 +156,7 @@ const TemplateStore = () => {
                       {templates.map((template) => (
                         <TemplateCard
                           template={template}
+                          selected={template.id == tempTemplate?.id}
                           width={['100%', '100%', '33%']}
                           onEdit={() => onTemplateEdit(template)}
                         />
@@ -159,7 +171,13 @@ const TemplateStore = () => {
           </Tabs>
         </Center>
       </Box>
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal
+        isOpen={isOpen}
+        onClose={() => {
+          setTempTemplate(null)
+          onClose()
+        }}
+      >
         <ModalOverlay />
         <ModalContent minWidth='700px'>
           <ModalHeader>

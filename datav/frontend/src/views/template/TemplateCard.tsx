@@ -13,6 +13,7 @@ interface Props {
   width: any
   height?: number
   onEdit?: () => void
+  selected: boolean
 }
 
 const TemplateCard = ({
@@ -20,6 +21,7 @@ const TemplateCard = ({
   width,
   height = 300,
   onEdit = null,
+  selected,
 }: Props) => {
   const lang = locale.get()
   const t = commonMsg.get()
@@ -46,7 +48,9 @@ const TemplateCard = ({
 
   return (
     <Flex
-      className={`${colorMode == 'dark' ? '' : 'bordered'} panel-bg`}
+      className={`${colorMode == 'dark' ? '' : 'bordered'} panel-bg ${
+        selected && 'highlight-bordered'
+      }`}
       width={width}
       flexDirection='column'
       height={height}
