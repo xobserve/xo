@@ -13,6 +13,7 @@
 
 import {
   Box,
+  Button,
   Center,
   HStack,
   Image,
@@ -36,22 +37,35 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { useStore } from '@nanostores/react'
+import { Input } from 'antd'
+import CodeEditor from 'components/CodeEditor/CodeEditor'
 import Empty from 'components/Empty'
+import { FormSection } from 'components/form/Form'
+import FormItem from 'components/form/Item'
 import React, { useEffect, useState } from 'react'
 import { $config } from 'src/data/configs/config'
 import { locale } from 'src/i18n/i18n'
+import { commonMsg } from 'src/i18n/locales/en'
 import TemplateCard from 'src/views/template/TemplateCard'
 import TemplateEditor from 'src/views/template/TemplateEditor'
-import { Template, TemplateType } from 'types/template'
+import { Template, TemplateContent, TemplateType } from 'types/template'
 import { requestApi } from 'utils/axios/request'
 
 const TemplateStore = () => {
+  const t = useStore(commonMsg)
   const lang = locale.get()
   const config = useStore($config)
   const [type, setType] = useState(TemplateType.App)
   const [templates, setTemplates] = useState<Template[]>([])
   const [tempTemplate, setTempTemplate] = useState<Template>()
+  const [tempTemplateConent, setTempTemplateConent] =
+    useState<Partial<TemplateContent>>(null)
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const {
+    isOpen: isCreateContentOpen,
+    onOpen: onCreateContentOpen,
+    onClose: onCreateContentClose,
+  } = useDisclosure()
   const toast = useToast()
 
   useEffect(() => {
@@ -87,7 +101,7 @@ const TemplateStore = () => {
     onOpen()
   }
 
-  const onTemplateChange = (t) => {
+  const onTemplateChange = (t: Template) => {
     setTemplates(templates.map((item) => (item.id == t.id ? t : item)))
     toast({
       title: lang == 'zh' ? '模版已更新' : 'Template updated!',
@@ -98,6 +112,33 @@ const TemplateStore = () => {
     setTempTemplate(null)
     onClose()
   }
+
+  const onCreateContent = (t: Template) => {
+    setTempTemplate(t)
+    if (t.id != tempTemplateConent?.templateId) {
+      setTempTemplateConent({
+        templateId: t.id,
+        description: '',
+        content: '',
+      })
+    }
+    onCreateContentOpen()
+  }
+
+  const onSubmitTemplateContent = async () => {
+    console.log('here3333:', tempTemplateConent)
+    await requestApi.post('/template/content', tempTemplateConent)
+    toast({
+      title: lang == 'zh' ? '模版内容已更新' : 'Template content updated!',
+      status: 'success',
+      duration: 3000,
+      isClosable: true,
+    })
+    setTempTemplate(null)
+    setTempTemplateConent(null)
+    onCreateContentClose()
+  }
+
   return (
     <>
       <Box>
@@ -124,13 +165,8 @@ const TemplateStore = () => {
           </Center>
         </VStack>
         <Center>
-          <Tabs
-            position='relative'
-            variant='solid-rounded'
-            size='lg'
-            width='100%'
-          >
-            <TabList justifyContent='center'>
+          <Tabs position='relative' variant='line' size='md' width='100%'>
+            <TabList justifyContent='center' borderBottomWidth='1px'>
               {tabs.map((tab) => (
                 <Tab
                   key={tab.value}
@@ -159,6 +195,7 @@ const TemplateStore = () => {
                           selected={template.id == tempTemplate?.id}
                           width={['100%', '100%', '33%']}
                           onEdit={() => onTemplateEdit(template)}
+                          onCreateContent={() => onCreateContent(template)}
                         />
                       ))}
                     </Wrap>
@@ -191,6 +228,91 @@ const TemplateStore = () => {
             />
           </ModalBody>
         </ModalContent>
+      </Modal>
+
+      <Modal
+        isOpen={isCreateContentOpen}
+        onClose={() => {
+          setTempTemplate(null)
+          onCreateContentClose()
+        }}
+        size='full'
+      >
+        <ModalOverlay />
+        {tempTemplateConent && (
+          <ModalContent>
+            <ModalHeader>
+              {lang == 'zh' ? '更新模版内容' : 'Update template content'}
+            </ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <Box
+                sx={{
+                  '.form-item-label': {
+                    width: '120px',
+                  },
+                }}
+              >
+                <FormSection spacing={2}>
+                  <FormItem
+                    title={'模版 Id'}
+                    alignItems='center'
+                    maxWidth={600}
+                  >
+                    <Text>{tempTemplate?.id}</Text>
+                  </FormItem>
+                  <FormItem
+                    title={t.itemName({ name: t.template })}
+                    alignItems='center'
+                    maxWidth={600}
+                  >
+                    <Text>{tempTemplate?.title}</Text>
+                  </FormItem>
+                  <FormItem
+                    title={'更新内容描述'}
+                    alignItems='center'
+                    maxWidth={600}
+                    required
+                  >
+                    <Input
+                      value={tempTemplateConent.description}
+                      onChange={(e) => {
+                        setTempTemplateConent({
+                          ...tempTemplateConent,
+                          description: e.target.value,
+                        })
+                      }}
+                      placeholder={
+                        '请认真描述更新内容，未来如果需要回滚，会非常重要'
+                      }
+                    />
+                  </FormItem>
+                  <FormItem
+                    title={'更新内容'}
+                    desc={
+                      '更新内容是 JSON 格式，可以通过图表、仪表盘等资源进行导出，复制导出的 JSON 数据，粘贴到此处'
+                    }
+                  >
+                    <CodeEditor
+                      value={tempTemplateConent.content}
+                      language='json'
+                      onChange={(v) => {
+                        setTempTemplateConent({
+                          ...tempTemplateConent,
+                          content: v,
+                        })
+                      }}
+                      height='600px'
+                    />
+                  </FormItem>
+                </FormSection>
+                <Button onClick={onSubmitTemplateContent} mt='4'>
+                  {t.submit}
+                </Button>
+              </Box>
+            </ModalBody>
+          </ModalContent>
+        )}
       </Modal>
     </>
   )

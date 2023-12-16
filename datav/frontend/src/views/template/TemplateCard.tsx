@@ -13,6 +13,7 @@ interface Props {
   width: any
   height?: number
   onEdit?: () => void
+  onCreateContent?: () => void
   selected: boolean
 }
 
@@ -21,6 +22,7 @@ const TemplateCard = ({
   width,
   height = 300,
   onEdit = null,
+  onCreateContent = null,
   selected,
 }: Props) => {
   const lang = locale.get()
@@ -92,11 +94,13 @@ const TemplateCard = ({
         >
           <Button size='xs'>{t.use.toUpperCase()}</Button>
         </Tooltip>
-        <Tooltip
-          title={lang == 'zh' ? '更新模版内容' : 'Update template content'}
-        >
-          <FaPlus cursor='pointer' />
-        </Tooltip>
+        {onCreateContent && (
+          <Tooltip
+            title={lang == 'zh' ? '更新模版内容' : 'Update template content'}
+          >
+            <FaPlus cursor='pointer' onClick={onCreateContent} />
+          </Tooltip>
+        )}
         {onEdit && (
           <Tooltip title={lang == 'zh' ? '编辑模版' : 'Edit template'}>
             <MdEdit cursor='pointer' onClick={onEdit} />
