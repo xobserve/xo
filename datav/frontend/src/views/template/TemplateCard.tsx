@@ -12,9 +12,15 @@ interface Props {
   template: Template
   width: any
   height?: number
+  onEdit?: () => void
 }
 
-const TemplateCard = ({ template, width, height = 300 }: Props) => {
+const TemplateCard = ({
+  template,
+  width,
+  height = 300,
+  onEdit = null,
+}: Props) => {
   const lang = locale.get()
   const t = commonMsg.get()
   const { colorMode } = useColorMode()
@@ -55,7 +61,7 @@ const TemplateCard = ({ template, width, height = 300 }: Props) => {
           {template.title}
         </Text>
         <Tooltip title={scopeTips}>
-          <Tag size='sm' variant='subtle'>
+          <Tag size='md' variant='subtle'>
             {scope}
           </Tag>
         </Tooltip>
@@ -80,16 +86,18 @@ const TemplateCard = ({ template, width, height = 300 }: Props) => {
             lang == 'zh' ? '使用该模版来创建' : 'Use this template to create'
           }
         >
-          <Button size='sm'>{t.use.toUpperCase()}</Button>
+          <Button size='xs'>{t.use.toUpperCase()}</Button>
         </Tooltip>
         <Tooltip
           title={lang == 'zh' ? '更新模版内容' : 'Update template content'}
         >
           <FaPlus cursor='pointer' />
         </Tooltip>
-        <Tooltip title={lang == 'zh' ? '编辑模版' : 'Edit template'}>
-          <MdEdit cursor='pointer' />
-        </Tooltip>
+        {onEdit && (
+          <Tooltip title={lang == 'zh' ? '编辑模版' : 'Edit template'}>
+            <MdEdit cursor='pointer' onClick={onEdit} />
+          </Tooltip>
+        )}
       </HStack>
     </Flex>
   )

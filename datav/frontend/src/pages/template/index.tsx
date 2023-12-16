@@ -16,6 +16,12 @@ import {
   Center,
   HStack,
   Image,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
   SimpleGrid,
   Tab,
   TabIndicator,
@@ -26,6 +32,8 @@ import {
   Text,
   VStack,
   Wrap,
+  useDisclosure,
+  useToast,
 } from '@chakra-ui/react'
 import { useStore } from '@nanostores/react'
 import Empty from 'components/Empty'
@@ -33,6 +41,7 @@ import React, { useEffect, useState } from 'react'
 import { $config } from 'src/data/configs/config'
 import { locale } from 'src/i18n/i18n'
 import TemplateCard from 'src/views/template/TemplateCard'
+import TemplateEditor from 'src/views/template/TemplateEditor'
 import { Template, TemplateType } from 'types/template'
 import { requestApi } from 'utils/axios/request'
 
@@ -41,6 +50,10 @@ const TemplateStore = () => {
   const config = useStore($config)
   const [type, setType] = useState(TemplateType.App)
   const [templates, setTemplates] = useState<Template[]>([])
+  const [tempTemplate, setTempTemplate] = useState<Template>()
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const toast = useToast()
+
   useEffect(() => {
     if (config) {
       loadTemplates()
@@ -69,66 +82,99 @@ const TemplateStore = () => {
     },
   ]
 
-  return (
-    <Box>
-      <VStack spacing='2' alignItems='center' p='4'>
-        <Center>
-          <Image src='/public/rocket.svg' alt='rocket' width={150} />
-        </Center>
-        <Center>
-          <Text fontWeight={550} fontSize={30}>
-            {lang == 'zh' ? '模版商店' : 'Template Store'}
-          </Text>
-        </Center>
-        <Center>
-          <Text fontWeight={500} fontSize={16} maxW={550}>
-            {lang == 'zh'
-              ? '选择一个模版快速创建图表、仪表盘甚至完整的应用'
-              : 'Choose a template to quickly create a panel, a dashboard or even a whole application.'}
-          </Text>
-        </Center>
-      </VStack>
-      <Center>
-        <Tabs position='relative' variant='unstyled' size='lg' width='100%'>
-          <TabList justifyContent='center'>
-            {tabs.map((tab) => (
-              <Tab
-                key={tab.value}
-                onClick={() => setType(tab.value)}
-                borderBottom='2px solid'
-                borderColor='transparent'
-                _selected={{
-                  color: 'brand.500',
-                  fontWeight: 500,
-                  borderColor: 'brand.500',
-                }}
-              >
-                {tab.label}
-              </Tab>
-            ))}
-          </TabList>
+  const onTemplateEdit = (t: Template) => {
+    setTempTemplate(t)
+    onOpen()
+  }
 
-          <TabPanels>
-            {tabs.map((tab) => (
-              <TabPanel key={tab.value}>
-                {templates.length > 0 ? (
-                  <Wrap>
-                    {templates.map((template) => (
-                      <TemplateCard
-                        template={template}
-                        width={['100%', '100%', '33%']}
-                      />
-                    ))}
-                  </Wrap>
-                ) : (
-                  <Empty />
-                )}
-              </TabPanel>
-            ))}
-          </TabPanels>
-        </Tabs>
-      </Center>
-    </Box>
+  const onTemplateChange = (t) => {
+    setTemplates(templates.map((item) => (item.id == t.id ? t : item)))
+    toast({
+      title: lang == 'zh' ? '模版已更新' : 'Template updated!',
+      status: 'success',
+      duration: 3000,
+      isClosable: true,
+    })
+    onClose()
+  }
+  return (
+    <>
+      <Box>
+        <VStack spacing='2' alignItems='center' p='4'>
+          <Center>
+            <Image src='/public/rocket.svg' alt='rocket' width={150} />
+          </Center>
+          <Center>
+            <Text fontWeight={550} fontSize={30}>
+              {lang == 'zh' ? '模版商店' : 'Template Store'}
+            </Text>
+          </Center>
+          <Center>
+            <Text fontWeight={500} fontSize={16} maxW={550}>
+              {lang == 'zh'
+                ? '选择一个模版快速创建图表、仪表盘甚至完整的应用'
+                : 'Choose a template to quickly create a panel, a dashboard or even a whole application.'}
+            </Text>
+          </Center>
+        </VStack>
+        <Center>
+          <Tabs position='relative' variant='unstyled' size='lg' width='100%'>
+            <TabList justifyContent='center'>
+              {tabs.map((tab) => (
+                <Tab
+                  key={tab.value}
+                  onClick={() => setType(tab.value)}
+                  borderBottom='2px solid'
+                  borderColor='transparent'
+                  _selected={{
+                    // color: 'brand.500',
+                    fontWeight: 500,
+                    borderColor: 'brand.500',
+                  }}
+                >
+                  {tab.label}
+                </Tab>
+              ))}
+            </TabList>
+
+            <TabPanels>
+              {tabs.map((tab) => (
+                <TabPanel key={tab.value}>
+                  {templates.length > 0 ? (
+                    <Wrap>
+                      {templates.map((template) => (
+                        <TemplateCard
+                          template={template}
+                          width={['100%', '100%', '33%']}
+                          onEdit={() => onTemplateEdit(template)}
+                        />
+                      ))}
+                    </Wrap>
+                  ) : (
+                    <Empty />
+                  )}
+                </TabPanel>
+              ))}
+            </TabPanels>
+          </Tabs>
+        </Center>
+      </Box>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent minWidth='700px'>
+          <ModalHeader>
+            {lang == 'zh' ? '编辑模版' : 'Edit template'}
+          </ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <TemplateEditor
+              template={tempTemplate}
+              onChange={onTemplateChange}
+            />
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+    </>
   )
 }
 

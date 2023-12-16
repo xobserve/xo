@@ -18,6 +18,7 @@ import RadionButtons from 'components/RadioButtons'
 import { FormSection } from 'components/form/Form'
 import FormItem from 'components/form/Item'
 import { MarkdownRender } from 'components/markdown/MarkdownRender'
+import { cloneDeep } from 'lodash'
 import React, { useState } from 'react'
 import { $config } from 'src/data/configs/config'
 import { locale } from 'src/i18n/i18n'
@@ -28,6 +29,7 @@ import { isEmpty } from 'utils/validate'
 
 interface Props {
   template?: Template
+  onChange?: any
 }
 
 const initTemplate: Partial<Template> = {
@@ -45,7 +47,7 @@ const TemplateEditor = (props: Props) => {
   const isCreate = isEmpty(props.template)
 
   const [template, setTemplate] = useState<Partial<Template>>(
-    props.template ?? initTemplate,
+    cloneDeep(props.template) ?? initTemplate,
   )
   const [isPreview, setIsPreview] = useState(false)
 
@@ -67,6 +69,8 @@ const TemplateEditor = (props: Props) => {
       duration: 3000,
       isClosable: true,
     })
+
+    props.onChange && props.onChange(template)
   }
 
   return (
