@@ -158,15 +158,16 @@
     "selectTenant": "当前租户",
     "themeChange": "当前主题 - ",
     "accountSetting": "个人设置",
-    "adminPanel": "网站管理",
-    "tenantAdmin": "租户管理",
+    "adminPanel": "管理网站",
+    "tenantAdmin": "管理当前租户",
     "currentLang": "当前语言",
     "newItem": "新建菜单项"
   },
   "navigate": {
     "NewDashboard": "新建仪表盘",
     "NewDatasource": "新建数据源",
-    "ImportDashboard": "导入仪表盘"
+    "ImportDashboard": "导入仪表盘",
+    "NewTemplate": "基于模版创建"
   },
   "notfound": {
     "title": "404: Not found",

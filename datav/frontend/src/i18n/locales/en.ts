@@ -167,13 +167,13 @@ export const miscMsg = i18n('misc', {})
 export const sidebarMsg = i18n('sidebar', {
   dashboard: 'Dashboards',
   search: 'Search',
-  selectTeam: 'Current Team',
-  selectTenant: 'Current Tenant',
-  themeChange: 'Current theme - ',
+  selectTeam: 'Team',
+  selectTenant: 'Tenant',
+  themeChange: 'Theme - ',
   accountSetting: 'User',
-  adminPanel: 'Website manage',
-  tenantAdmin: 'Tenant manage',
-  currentLang: 'Current Lang',
+  adminPanel: 'Manage website',
+  tenantAdmin: 'Manage current tenant',
+  currentLang: 'Lang',
   newItem: 'Add new item',
 })
 
@@ -181,6 +181,7 @@ export const navigateMsg = i18n('navigate', {
   NewDashboard: 'New Dashboard',
   NewDatasource: 'New Datasource',
   ImportDashboard: 'Import Dashboard',
+  NewTemplate: 'Create from template',
 })
 
 export const accountSettingMsg = i18n('accountSetting', {

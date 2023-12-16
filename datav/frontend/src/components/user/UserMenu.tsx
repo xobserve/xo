@@ -160,6 +160,11 @@ const UserMenu = ({ miniMode }) => {
             <MenuDivider />
             {session && (
               <>
+                <Link to={getNavigateTo(`/admin/users`)} target='_blank'>
+                  <MenuItem width='100%' icon={<FaStar fontSize='1em' />}>
+                    {t1.adminPanel}
+                  </MenuItem>
+                </Link>
                 <Link to={getNavigateTo(`${teamPath}/tenant/users`)}>
                   <MenuItem width='100%' icon={<FaStar fontSize='1em' />}>
                     {t1.tenantAdmin}

@@ -68,11 +68,7 @@ function Login() {
     const sess: Session = res.data
     saveToken(sess.token)
     useLogin()
-    if (isAdmin(sess.user.role)) {
-      onOpen()
-    } else {
-      visitWebsite()
-    }
+    visitWebsite()
   }
 
   const visitWebsite = () => {

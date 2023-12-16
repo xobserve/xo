@@ -29,6 +29,7 @@ import CommonConfig from './components/configloader/CommonConfig'
 import BasicConfig from 'components/configloader/BasicConfig'
 import { URL_ROOT_PATH } from './data/configs/config'
 import { getNavigateTo } from 'utils/url'
+import TemplateMarket from 'pages/template'
 
 const DashboardPage = loadable(() => import('src/pages/dashboard/index'))
 const TracePage = loadable(() => import('src/pages/dashboard/Trace'))
@@ -142,6 +143,13 @@ export const getRoutes = (enableTenant = false) => {
     },
   ]
 
+  const templateRoutes = [
+    {
+      path: `${teamId}/template`,
+      element: commonConfig(pageContainer(<TemplateMarket />)),
+    },
+  ]
+
   return [
     // {
     //   path: "/",
@@ -157,6 +165,7 @@ export const getRoutes = (enableTenant = false) => {
     ...cfgRoutes,
     ...adminRoutes,
     ...tenantRoutes,
+    ...templateRoutes,
     {
       path: `${teamId}/*`,
       element: pageContainer(<DashboardPage />),
