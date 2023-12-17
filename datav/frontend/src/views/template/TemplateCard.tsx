@@ -23,6 +23,7 @@ import {
   FaEdit,
   FaEllipsisV,
   FaPlus,
+  FaProjectDiagram,
   FaRegClone,
   FaTerminal,
 } from 'react-icons/fa'
@@ -129,7 +130,13 @@ const TemplateCard = (props: Props) => {
     {
       key: 'push',
       icon: <FaRegClone />,
-      label: lang == 'zh' ? '使用该模版来创建' : 'Use this template to create',
+      label: lang == 'zh' ? '基于克隆创建' : 'Create from clone',
+      onClick: onPush,
+    },
+    {
+      key: 'ref',
+      icon: <FaProjectDiagram />,
+      label: lang == 'zh' ? '基于引用创建' : 'Create from reference',
       onClick: onPush,
     },
   ]
