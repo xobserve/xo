@@ -239,6 +239,7 @@ CREATE TABLE IF NOT EXISTS template_content (
     template_id INTEGER NOT NULL,
     content MEDIUMTEXT,
     description VARCHAR(255) NOT NULL,
+    version VARCHAR(32) NOT NULL,
     created DATETIME NOT NULL,
     created_by INTEGER NOT NULL
 );

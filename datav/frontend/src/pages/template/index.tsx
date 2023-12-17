@@ -42,6 +42,7 @@ import CodeEditor from 'components/CodeEditor/CodeEditor'
 import Empty from 'components/Empty'
 import { FormSection } from 'components/form/Form'
 import FormItem from 'components/form/Item'
+import { clone, cloneDeep } from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { $config } from 'src/data/configs/config'
 import { locale } from 'src/i18n/i18n'
@@ -60,6 +61,8 @@ const TemplateStore = () => {
   const [tempTemplate, setTempTemplate] = useState<Template>()
   const [tempTemplateConent, setTempTemplateConent] =
     useState<Partial<TemplateContent>>(null)
+  const [applyTemplate, setApplyTemplate] = useState<Template>(null)
+
   const { isOpen, onOpen, onClose } = useDisclosure()
   const {
     isOpen: isCreateContentOpen,
@@ -155,7 +158,7 @@ const TemplateStore = () => {
             <Text
               fontWeight={500}
               fontSize={16}
-              maxW={550}
+              maxW={700}
               layerStyle='textSecondary'
             >
               {lang == 'zh'
@@ -196,6 +199,9 @@ const TemplateStore = () => {
                           width={['100%', '100%', '33%']}
                           onEdit={() => onTemplateEdit(template)}
                           onCreateContent={() => onCreateContent(template)}
+                          onPush={() => {
+                            setApplyTemplate(clone(template))
+                          }}
                         />
                       ))}
                     </Wrap>
@@ -268,11 +274,22 @@ const TemplateStore = () => {
                   >
                     <Text>{tempTemplate?.title}</Text>
                   </FormItem>
+                  <FormItem title={'版本号'} alignItems='center' maxWidth={600}>
+                    <Input
+                      value={tempTemplateConent.version}
+                      onChange={(e) => {
+                        setTempTemplateConent({
+                          ...tempTemplateConent,
+                          version: e.target.value,
+                        })
+                      }}
+                      placeholder={'x.y.z, e.g 1.0.3'}
+                    />
+                  </FormItem>
                   <FormItem
                     title={'更新内容描述'}
                     alignItems='center'
                     maxWidth={600}
-                    required
                   >
                     <Input
                       value={tempTemplateConent.description}
@@ -302,7 +319,7 @@ const TemplateStore = () => {
                           content: v,
                         })
                       }}
-                      height='600px'
+                      height='500px'
                     />
                   </FormItem>
                 </FormSection>

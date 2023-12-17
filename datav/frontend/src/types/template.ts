@@ -30,5 +30,6 @@ export interface TemplateContent {
   templateId: number
   content: string
   description: string
+  version: string
   created: string
 }

@@ -104,9 +104,9 @@ func updateTemplate(ctx context.Context, userId int64, t *models.Template) error
 // created DATETIME NOT NULL,
 // created_by INTEGER NOT NULL
 
-func createTemplateContent(ctx context.Context, userId int64, tid int64, desc string, content []byte) error {
+func createTemplateContent(ctx context.Context, userId int64, tid int64, desc string, content []byte, version string) error {
 	now := time.Now()
-	_, err := db.Conn.ExecContext(ctx, "INSERT INTO template_content (template_id,content,description,created,created_by) VALUES (?,?,?,?,?)", tid, content, desc, now, userId)
+	_, err := db.Conn.ExecContext(ctx, "INSERT INTO template_content (template_id,content,description,version,created,created_by) VALUES (?,?,?,?,?,?)", tid, content, desc, version, now, userId)
 	if err != nil {
 		return err
 	}
@@ -122,7 +122,7 @@ func CreateTemplateContent(c *gin.Context) {
 		return
 	}
 
-	if t.Content == "" || t.TemplateId == 0 || t.Description == "" {
+	if t.Content == "" || t.TemplateId == 0 || t.Description == "" || t.Version == "" {
 		c.JSON(400, common.RespError("invalid template content"))
 		return
 	}
@@ -150,7 +150,7 @@ func CreateTemplateContent(c *gin.Context) {
 		return
 	}
 
-	err = createTemplateContent(c.Request.Context(), u.Id, t.TemplateId, t.Description, content)
+	err = createTemplateContent(c.Request.Context(), u.Id, t.TemplateId, t.Description, content, t.Version)
 	if err != nil {
 		logger.Warn("create template content error", "error", err)
 		c.JSON(400, common.RespError(err.Error()))
@@ -214,7 +214,7 @@ func GetTemplates(c *gin.Context) {
 		return
 	}
 
-	rows, err := db.Conn.Query("SELECT id,type,title,description,scope,owned_by,provider,created FROM template WHERE type=? and (scope=? or (scope=? and owned_by=?) or (scope=? and owned_by=?))", tp, common.ScopeWebsite, common.ScopeTenant, tenantId, common.ScopeTeam, teamId)
+	rows, err := db.Conn.Query("SELECT id,type,title,description,scope,owned_by,provider,content_id, created FROM template WHERE type=? and (scope=? or (scope=? and owned_by=?) or (scope=? and owned_by=?))", tp, common.ScopeWebsite, common.ScopeTenant, tenantId, common.ScopeTeam, teamId)
 	if err != nil {
 		logger.Warn("get templates error", "error", err)
 		c.JSON(500, common.RespError(err.Error()))
@@ -225,7 +225,7 @@ func GetTemplates(c *gin.Context) {
 	for rows.Next() {
 		t := &models.Template{}
 		var desc string
-		err := rows.Scan(&t.Id, &t.Type, &t.Title, &desc, &t.Scope, &t.OwnedBy, &t.Provider, &t.Created)
+		err := rows.Scan(&t.Id, &t.Type, &t.Title, &desc, &t.Scope, &t.OwnedBy, &t.Provider, &t.ContentId, &t.Created)
 		if err != nil {
 			logger.Warn("scan template error", "error", err)
 			c.JSON(500, common.RespError(err.Error()))

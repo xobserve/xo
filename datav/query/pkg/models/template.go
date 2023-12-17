@@ -22,7 +22,7 @@ type Template struct {
 	Id          int64     `json:"id"`
 	Type        int       `json:"type"` // 1. App  2. Dashboard  3. Panel
 	Title       string    `json:"title"`
-	Description string    `json:"description"`
+	Description string    `json:"description,omitempty"`
 	Scope       int       `json:"scope"`     // 1. Website 2. Tenant 3. Team
 	OwnedBy     int64     `json:"ownedBy"`   // based on scope, e.g when scope == 2, ownedBy is tenantId
 	ContentId   int64     `json:"contentId"` // json encoded string
@@ -33,8 +33,9 @@ type Template struct {
 type TemplateContent struct {
 	Id          int64     `json:"id"`
 	TemplateId  int64     `json:"templateId"`
-	Content     string    `json:"content"`
-	Description string    `json:"description"`
+	Content     string    `json:"content,omitempty"`
+	Version     string    `json:"version"`
+	Description string    `json:"description,omitempty"`
 	Created     time.Time `json:"created"`
 }
 
