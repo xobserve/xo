@@ -27,7 +27,7 @@
     "configuration": "配置管理",
     "datasource": "数据源",
     "template": "模版",
-    "templateStore": "Template store",
+    "templateStore": "模版仓库",
     "type": "类型",
     "test": "测试",
     "save": "保存",
@@ -652,5 +652,8 @@
     "teamsView": "团队视图",
     "listView": "列表视图",
     "tagsView": "标签视图"
+  },
+  "template": {
+    "exportTemplate": "导出为模版"
   }
 }

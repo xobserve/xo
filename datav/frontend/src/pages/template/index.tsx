@@ -151,7 +151,7 @@ const TemplateStore = () => {
           </Center>
           <Center>
             <Text fontWeight={550} fontSize={30}>
-              {lang == 'zh' ? '模版商店' : 'Template Store'}
+              {t.templateStore}
             </Text>
           </Center>
           <Center>
@@ -194,6 +194,7 @@ const TemplateStore = () => {
                     <Wrap>
                       {templates.map((template) => (
                         <TemplateCard
+                          key={template.id}
                           template={template}
                           selected={template.id == tempTemplate?.id}
                           width={['100%', '100%', '33%']}

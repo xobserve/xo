@@ -741,3 +741,7 @@ export const searchMsg = i18n('search', {
   listView: 'List view',
   tagsView: 'Tags view',
 })
+
+export const templateMsg = i18n('template', {
+  exportTemplate: 'Export as template',
+})

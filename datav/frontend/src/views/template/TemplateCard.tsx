@@ -1,3 +1,16 @@
+// Copyright 2023 xobserve.io Team
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 import {
   Flex,
   HStack,
@@ -30,7 +43,12 @@ import {
 import { MdEdit } from 'react-icons/md'
 import { locale } from 'src/i18n/i18n'
 import { commonMsg } from 'src/i18n/locales/en'
-import { Template, TemplateContent, TemplateScope } from 'types/template'
+import {
+  Template,
+  TemplateContent,
+  TemplateScope,
+  TemplateType,
+} from 'types/template'
 import { requestApi } from 'utils/axios/request'
 
 interface Props {
@@ -111,33 +129,67 @@ const TemplateCard = (props: Props) => {
     {
       type: 'divider',
     },
-    {
+    onCreateContent && {
       key: 'createContent',
       icon: <FaPlus />,
       label: lang == 'zh' ? '创建新版本' : 'Create new version',
       onClick: onCreateContent,
     },
-    {
+    onEdit && {
       key: 'edit',
       icon: <MdEdit />,
       label: lang == 'zh' ? '编辑模版' : 'Edit template',
       onClick: onEdit,
     },
 
-    {
+    onPush && {
       type: 'divider',
     },
-    {
+    onPush && {
       key: 'push',
       icon: <FaRegClone />,
       label: lang == 'zh' ? '基于克隆创建' : 'Create from clone',
-      onClick: onPush,
+      onClick: () => {
+        if (
+          template.type == TemplateType.Panel ||
+          template.type == TemplateType.Dashboard
+        ) {
+          toast({
+            title:
+              lang == 'zh'
+                ? '请在创建图表处使用模版'
+                : 'Please use template in the place of creating panel',
+            status: 'info',
+            duration: 3000,
+            isClosable: true,
+          })
+
+          return
+        }
+      },
     },
-    {
+    onPush && {
       key: 'ref',
       icon: <FaProjectDiagram />,
       label: lang == 'zh' ? '基于引用创建' : 'Create from reference',
-      onClick: onPush,
+      onClick: () => {
+        if (
+          template.type == TemplateType.Panel ||
+          template.type == TemplateType.Dashboard
+        ) {
+          toast({
+            title:
+              lang == 'zh'
+                ? '请在创建图表处使用模版'
+                : 'Please use template in the place of creating panel',
+            status: 'info',
+            duration: 3000,
+            isClosable: true,
+          })
+
+          return
+        }
+      },
     },
   ]
 

@@ -1,3 +1,7 @@
+import { Dashboard, Panel } from './dashboard'
+import { Datasource } from './datasource'
+import { MenuItem, SideMenu } from './teams'
+
 export enum TemplateType {
   App = 1,
   Dashboard = 2,
@@ -32,4 +36,11 @@ export interface TemplateContent {
   description: string
   version: string
   created: string
+}
+
+export interface TemplateData {
+  panel?: Panel
+  dashboards?: Dashboard[]
+  datasources?: Datasource[]
+  sidemenu?: MenuItem[]
 }

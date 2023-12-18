@@ -49,7 +49,7 @@ import {
   DatasourceMinInterval,
   PANEL_HEADER_HEIGHT,
 } from 'src/data/constants'
-import { cloneDeep, isEqual, isFunction, toString } from 'lodash'
+import { clone, cloneDeep, isEqual, isFunction, toString } from 'lodash'
 import { TimeRange } from 'types/time'
 import { Variable } from 'types/variable'
 import {
@@ -76,7 +76,7 @@ import { calculateInterval } from 'utils/datetime/range'
 import { useSearchParam } from 'react-use'
 import React from 'react'
 import { useStore } from '@nanostores/react'
-import { commonMsg, panelMsg } from 'src/i18n/locales/en'
+import { commonMsg, panelMsg, templateMsg } from 'src/i18n/locales/en'
 import { genDynamicFunction } from 'utils/dashboard/dynamicCall'
 import lodash from 'lodash'
 import moment from 'moment'
@@ -112,6 +112,8 @@ import useEmbed from 'hooks/useEmbed'
 import { Dropdown, MenuProps } from 'antd'
 import { locale } from 'src/i18n/i18n'
 import { Lang } from 'types/misc'
+import TemplateExport from 'src/views/template/TemplateExport'
+import { TemplateType } from 'types/template'
 
 interface PanelGridProps {
   dashboard: Dashboard
@@ -605,10 +607,13 @@ const PanelHeader = ({
   onHover,
 }: PanelHeaderProps) => {
   const viewPanel = useSearchParam('viewPanel')
-  const t = useStore(commonMsg)
-  const t1 = useStore(panelMsg)
+  const t = commonMsg.get()
+  const t1 = panelMsg.get()
+  const t2 = templateMsg.get()
+
   const title = replaceWithVariables(panel.title)
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const [templatePanel, setTemplatePanel] = useState<Panel>(null)
 
   const { colorMode } = useColorMode()
   const embed = useEmbed()
@@ -647,16 +652,21 @@ const PanelHeader = ({
       label: viewPanel ? t1.exitlView : t1.viewPanel,
       onClick: () => addParamToUrl({ viewPanel: viewPanel ? null : panel.id }),
     },
-    {
+    !viewPanel && {
       key: 'more',
       label: t.more,
       icon: <FaLayerGroup style={{ display: 'inline-block' }} />,
       children: [
-        !viewPanel && {
+        {
           key: 'hidden',
           label: t1.hidePanel,
-          icon: <FaRegEyeSlash />,
+          // icon: <FaRegEyeSlash />,
           onClick: () => onHidePanel(panel),
+        },
+        {
+          key: 'exportTemplate',
+          label: t2.exportTemplate,
+          onClick: () => setTemplatePanel(clone(panel)),
         },
       ],
     },
@@ -818,6 +828,12 @@ const PanelHeader = ({
           data={data}
         />
       )}
+
+      <TemplateExport
+        type={TemplateType.Panel}
+        data={templatePanel}
+        onClose={() => setTemplatePanel(null)}
+      />
     </>
   )
 }
