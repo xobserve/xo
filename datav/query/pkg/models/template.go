@@ -31,12 +31,12 @@ type Template struct {
 }
 
 type TemplateContent struct {
-	Id          int64     `json:"id"`
-	TemplateId  int64     `json:"templateId"`
-	Content     string    `json:"content,omitempty"`
-	Version     string    `json:"version"`
-	Description string    `json:"description,omitempty"`
-	Created     time.Time `json:"created"`
+	Id          int64       `json:"id"`
+	TemplateId  int64       `json:"templateId"`
+	Content     interface{} `json:"content,omitempty"`
+	Version     string      `json:"version"`
+	Description string      `json:"description,omitempty"`
+	Created     time.Time   `json:"created"`
 }
 
 func QueryTemplateById(ctx context.Context, id int64) (*Template, error) {

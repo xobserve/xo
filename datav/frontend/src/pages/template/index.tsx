@@ -50,6 +50,7 @@ import { commonMsg } from 'src/i18n/locales/en'
 import TemplateCard from 'src/views/template/TemplateCard'
 import TemplateEditor from 'src/views/template/TemplateEditor'
 import { Template, TemplateContent, TemplateType } from 'types/template'
+import { getTemplatesApi } from 'utils/axios/api'
 import { requestApi } from 'utils/axios/request'
 
 const TemplateStore = () => {
@@ -78,9 +79,7 @@ const TemplateStore = () => {
   }, [config, type])
 
   const loadTemplates = async () => {
-    const res = await requestApi.get(
-      `/template/list/${type}?teamId=${config.currentTeam}`,
-    )
+    const res = await getTemplatesApi(type, config.currentTeam)
     setTemplates(res.data)
   }
 
@@ -129,7 +128,9 @@ const TemplateStore = () => {
   }
 
   const onSubmitTemplateContent = async () => {
-    console.log('here3333:', tempTemplateConent)
+    tempTemplateConent.content = JSON.stringify(
+      JSON.parse(tempTemplateConent.content),
+    )
     await requestApi.post('/template/content', tempTemplateConent)
     toast({
       title: lang == 'zh' ? '模版内容已更新' : 'Template content updated!',

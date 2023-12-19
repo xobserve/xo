@@ -66,6 +66,7 @@ export interface Panel {
   title?: string
   desc: string
   type: string
+  templateId?: number
 
   gridPos: GridPos
   collapsed: boolean

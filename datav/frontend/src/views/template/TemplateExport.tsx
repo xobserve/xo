@@ -54,18 +54,11 @@ const TemplateExport = (props: Props) => {
     }
     if (type == TemplateType.Panel) {
       const panel: Panel = data
-      const ds = datasources.find((ds) => ds.id == panel.datasource.id)
-      const templateDs = []
-      if (ds) {
-        templateDs.push(ds)
-      }
-
       const template: TemplateData = {
         panel,
-        datasources: templateDs,
       }
 
-      return prettyJson(template)
+      return template
     }
   }, [type, data])
 
@@ -82,7 +75,7 @@ const TemplateExport = (props: Props) => {
           <ModalContent minWidth={600}>
             <ModalBody>Export as template</ModalBody>
             <CodeEditor
-              value={templateData}
+              value={prettyJson(templateData)}
               language='json'
               height='500px'
               readonly
@@ -90,7 +83,7 @@ const TemplateExport = (props: Props) => {
             <Button
               variant='outline'
               onClick={() => {
-                navigator.clipboard.writeText(templateData)
+                navigator.clipboard.writeText(JSON.stringify(templateData))
                 toast({
                   title: t.copied,
                   status: 'success',

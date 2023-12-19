@@ -44,3 +44,8 @@ export interface TemplateData {
   datasources?: Datasource[]
   sidemenu?: MenuItem[]
 }
+
+export enum TemplateCreateType {
+  Clone = '1',
+  Refer = '2',
+}

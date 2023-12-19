@@ -17,6 +17,7 @@ import {
   MenuItem,
   MenuList,
   useColorModeValue,
+  useDisclosure,
   useToast,
 } from '@chakra-ui/react'
 import IconButton from 'src/components/button/IconButton'
@@ -28,7 +29,15 @@ import { useStore } from '@nanostores/react'
 import { dashboardMsg } from 'src/i18n/locales/en'
 import { $copiedPanel } from './store/dashboard'
 import { isEmpty } from 'utils/validate'
-import { round } from 'lodash'
+import { cloneDeep, round } from 'lodash'
+import { locale } from 'src/i18n/i18n'
+import CreateFromTemplate from '../template/CreateFromTemplate'
+import {
+  TemplateContent,
+  TemplateCreateType,
+  TemplateData,
+  TemplateType,
+} from 'types/template'
 
 interface Props {
   dashboard: Dashboard
@@ -37,8 +46,10 @@ interface Props {
 
 const AddPanel = ({ dashboard, onChange }: Props) => {
   const t1 = useStore(dashboardMsg)
+  const lang = locale.get()
   const copiedPanel = useStore($copiedPanel)
   const toast = useToast()
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   const onAddPanel = (isRow) => {
     if (!dashboard.data.panels) {
@@ -72,19 +83,43 @@ const AddPanel = ({ dashboard, onChange }: Props) => {
 
   const onPastePanel = () => {
     if (copiedPanel) {
-      const id = getNextPanelId(dashboard)
-      copiedPanel.id = id
-      copiedPanel.gridPos = initPanel().gridPos
-      onChange((dashboard) => {
-        dashboard.data.panels.unshift(copiedPanel)
-      })
-      // scroll to top after adding panel
-      const dashGrid = document.getElementById('dashboard-scroll-top')
-      dashGrid.scrollIntoView({ behavior: 'smooth', block: 'center' })
-      return
+      copyPanel(cloneDeep(copiedPanel))
     }
   }
 
+  const copyPanel = (panel: Panel) => {
+    const id = getNextPanelId(dashboard)
+    panel.id = id
+    panel.gridPos = initPanel().gridPos
+    onChange((dashboard) => {
+      dashboard.data.panels.unshift(panel)
+    })
+    // scroll to top after adding panel
+    const dashGrid = document.getElementById('dashboard-scroll-top')
+    dashGrid.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    return
+  }
+
+  const onCreateFromTemplate = (
+    templateContent: TemplateContent,
+    createType: TemplateCreateType,
+  ) => {
+    if (createType == TemplateCreateType.Clone) {
+      const data: TemplateData = JSON.parse(templateContent.content)
+      if (!data.panel) {
+        toast({
+          title: 'Invalid template, panel section not exist',
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+        })
+        return
+      }
+
+      copyPanel(data.panel)
+      console.log('here3333:', data.panel)
+    }
+  }
   return (
     <>
       <Menu>
@@ -101,7 +136,9 @@ const AddPanel = ({ dashboard, onChange }: Props) => {
         </MenuButton>
         <MenuList>
           <MenuItem onClick={() => onAddPanel(false)}>{t1.addPanel}</MenuItem>
-          <MenuItem onClick={() => onAddPanel(true)}>Add Row</MenuItem>
+          <MenuItem onClick={() => onAddPanel(true)}>
+            {lang == 'zh' ? '新建行' : 'Add Row'}
+          </MenuItem>
           <MenuItem
             onClick={() => {
               onPastePanel()
@@ -110,8 +147,17 @@ const AddPanel = ({ dashboard, onChange }: Props) => {
           >
             {t1.pastePanel}
           </MenuItem>
+          <MenuItem onClick={() => onOpen()}>
+            {lang == 'zh' ? '基于模版创建' : 'Create from template'}
+          </MenuItem>
         </MenuList>
       </Menu>
+      <CreateFromTemplate
+        type={TemplateType.Panel}
+        isOpen={isOpen}
+        onClose={onClose}
+        onCreated={onCreateFromTemplate}
+      />
     </>
   )
 }

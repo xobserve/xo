@@ -58,7 +58,7 @@ interface Props {
   onEdit?: () => void
   onCreateContent?: () => void
   onPush?: () => void
-  selected: boolean
+  selected?: boolean
 }
 
 const TemplateCard = (props: Props) => {
@@ -68,7 +68,7 @@ const TemplateCard = (props: Props) => {
     onEdit = null,
     onCreateContent = null,
     onPush = null,
-    selected,
+    selected = false,
   } = props
   const lang = locale.get()
   const t = commonMsg.get()
@@ -99,7 +99,7 @@ const TemplateCard = (props: Props) => {
   }
 
   const onDisplayVersions = async () => {
-    const res = await requestApi.get(`/template/content/${template.id}`)
+    const res = await requestApi.get(`/template/contents/${template.id}`)
     setContents(res.data)
     onOpen()
   }
@@ -217,6 +217,19 @@ const TemplateCard = (props: Props) => {
               {scope}
             </Tag>
           </Tooltip>
+          {!template.contentId && (
+            <Tooltip
+              title={
+                lang == 'zh'
+                  ? '该模版尚未设定关联的内容，使用它将无任何效果'
+                  : 'This template has not selected any contents version, so use it will has no effect'
+              }
+            >
+              <Tag size='sm' variant='subtle' colorScheme='orange'>
+                {lang == 'zh' ? '未设版本' : 'No version'}
+              </Tag>
+            </Tooltip>
+          )}
         </HStack>
         <MarkdownRender
           md={template.description}
@@ -225,38 +238,45 @@ const TemplateCard = (props: Props) => {
           width='100%'
           mt='4'
         />
-        <HStack
-          position='absolute'
-          right='2'
-          top='9px'
-          opacity={onHover ? 1 : 0}
-          spacing={3}
-          transition='opacity 0.4s'
-        >
-          <Dropdown
-            placement='bottom'
-            menu={{
-              mode: 'inline',
-              items: menuItems,
-            }}
-            trigger={['hover']}
-            overlayStyle={{}}
+        {onEdit && onCreateContent && onPush && (
+          <HStack
+            position='absolute'
+            right='2'
+            top='9px'
+            opacity={onHover ? 1 : 0}
+            spacing={3}
+            transition='opacity 0.4s'
           >
-            <Button
-              height={'100%'}
-              transition='all 0.2s'
-              onClick={(e) => e.preventDefault()}
-              variant='ghost'
-              size='xs'
-              visibility={onHover ? 'visible' : 'hidden'}
+            <Dropdown
+              placement='bottom'
+              menu={{
+                mode: 'inline',
+                items: menuItems,
+              }}
+              trigger={['hover']}
+              overlayStyle={{}}
             >
-              <Box padding={1} opacity='0.6' fontSize='0.8rem' cursor='pointer'>
-                <FaEllipsisV />
-              </Box>
-              {/* </Center> */}
-            </Button>
-          </Dropdown>
-        </HStack>
+              <Button
+                height={'100%'}
+                transition='all 0.2s'
+                onClick={(e) => e.preventDefault()}
+                variant='ghost'
+                size='xs'
+                visibility={onHover ? 'visible' : 'hidden'}
+              >
+                <Box
+                  padding={1}
+                  opacity='0.6'
+                  fontSize='0.8rem'
+                  cursor='pointer'
+                >
+                  <FaEllipsisV />
+                </Box>
+                {/* </Center> */}
+              </Button>
+            </Dropdown>
+          </HStack>
+        )}
       </Flex>
       {contents && (
         <Drawer placement='right' size='lg' onClose={onClose} isOpen={isOpen}>

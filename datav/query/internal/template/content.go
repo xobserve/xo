@@ -1,6 +1,9 @@
 package template
 
 import (
+	"database/sql"
+	"encoding/json"
+
 	"github.com/gin-gonic/gin"
 	"github.com/xObserve/xObserve/query/pkg/common"
 	"github.com/xObserve/xObserve/query/pkg/db"
@@ -49,4 +52,32 @@ func UseTemplateContent(c *gin.Context) {
 		c.JSON(500, common.RespError(err.Error()))
 		return
 	}
+}
+
+func GetTemplateContent(c *gin.Context) {
+	id := c.Param("id")
+
+	content := &models.TemplateContent{}
+
+	var rawdata []byte
+	err := db.Conn.QueryRow("select id,template_id,description,version,content,created from template_content where id = ?", id).Scan(
+		&content.Id, &content.TemplateId, &content.Description, &content.Version, &rawdata, &content.Created)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			c.JSON(400, common.RespError("the template content which you are visiting is not exist"))
+			return
+		}
+		c.JSON(500, common.RespError(err.Error()))
+		return
+	}
+
+	if rawdata != nil {
+		err = json.Unmarshal(rawdata, &content.Content)
+		if err != nil {
+			c.JSON(500, common.RespError(err.Error()))
+			return
+		}
+	}
+
+	c.JSON(200, common.RespSuccess(content))
 }

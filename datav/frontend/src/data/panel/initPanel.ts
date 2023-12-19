@@ -29,6 +29,7 @@ export const initPanel = (id?) => {
     desc: '',
     collapsed: false,
     type: initPanelType,
+    templateId: 0,
     gridPos: { x: 0, y: 0, w: 12, h: 20 },
     plugins: {
       [initPanelType]: plugin.settings.initOptions,
