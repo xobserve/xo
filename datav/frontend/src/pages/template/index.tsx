@@ -105,12 +105,6 @@ const TemplateStore = () => {
 
   const onTemplateChange = (t: Template) => {
     setTemplates(templates.map((item) => (item.id == t.id ? t : item)))
-    toast({
-      title: lang == 'zh' ? '模版已更新' : 'Template updated!',
-      status: 'success',
-      duration: 3000,
-      isClosable: true,
-    })
     setTempTemplate(null)
     onClose()
   }

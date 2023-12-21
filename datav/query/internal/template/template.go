@@ -22,7 +22,7 @@ import (
 
 var logger = colorlog.RootLogger.New("logger", "template")
 
-func SaveTemplate(c *gin.Context) {
+func CreateTemplate(c *gin.Context) {
 	t := &models.Template{}
 	err := c.BindJSON(t)
 	if err != nil {
@@ -38,16 +38,14 @@ func SaveTemplate(c *gin.Context) {
 
 	if t.Id != 0 {
 		oldT, err := models.QueryTemplateById(c.Request.Context(), t.Id)
-		if err != nil {
-			if err == sql.ErrNoRows {
-				c.JSON(400, common.RespError("template not exist"))
-				return
-			}
+		if err != nil && err != sql.ErrNoRows {
 			c.JSON(400, common.RespError(err.Error()))
 			return
 		}
-		t.Scope = oldT.Scope
-		t.OwnedBy = oldT.OwnedBy
+		if oldT != nil {
+			c.JSON(400, common.RespError("id alread exist"))
+			return
+		}
 	}
 
 	u := c.MustGet("currentUser").(*models.User)
@@ -60,11 +58,60 @@ func SaveTemplate(c *gin.Context) {
 	t.Provider = models.CustomTemplateProvider
 
 	t.Description = b64.StdEncoding.EncodeToString([]byte(t.Description))
-	if t.Id == 0 {
-		err = createTemplate(c.Request.Context(), u.Id, t)
-	} else {
-		err = updateTemplate(c.Request.Context(), u.Id, t)
+
+	err = createTemplate(c.Request.Context(), u.Id, t)
+
+	if err != nil {
+		if e.IsErrUniqueConstraint(err) {
+			c.JSON(400, common.RespError("template title already exist in this scope"))
+			return
+		}
+
+		logger.Warn("save template error", "error", err)
+		c.JSON(400, common.RespError(err.Error()))
+		return
 	}
+}
+
+func UpdateTemplate(c *gin.Context) {
+	t := &models.Template{}
+	err := c.BindJSON(t)
+	if err != nil {
+		c.JSON(400, common.RespError(err.Error()))
+		return
+	}
+
+	err = isTemplateValid(t)
+	if err != nil {
+		c.JSON(400, common.RespError(err.Error()))
+		return
+	}
+
+	oldT, err := models.QueryTemplateById(c.Request.Context(), t.Id)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			c.JSON(400, common.RespError("template not exist"))
+		}
+		c.JSON(400, common.RespError(err.Error()))
+		return
+
+	}
+
+	t.Scope = oldT.Scope
+	t.OwnedBy = oldT.OwnedBy
+
+	u := c.MustGet("currentUser").(*models.User)
+	err = canEditTemplate(c.Request.Context(), t, u)
+	if err != nil {
+		c.JSON(403, common.RespError(err.Error()))
+		return
+	}
+
+	t.Provider = models.CustomTemplateProvider
+
+	t.Description = b64.StdEncoding.EncodeToString([]byte(t.Description))
+
+	err = updateTemplate(c.Request.Context(), u.Id, t)
 
 	if err != nil {
 		if e.IsErrUniqueConstraint(err) {
@@ -80,7 +127,12 @@ func SaveTemplate(c *gin.Context) {
 
 func createTemplate(ctx context.Context, userId int64, t *models.Template) error {
 	now := time.Now()
-	_, err := db.Conn.ExecContext(ctx, "INSERT INTO template (type,title,description,scope,owned_by,provider,created) VALUES (?,?,?,?,?,?,?)", t.Type, t.Title, t.Description, t.Scope, t.OwnedBy, t.Provider, now)
+	var err error
+	if t.Id != 0 {
+		_, err = db.Conn.ExecContext(ctx, "INSERT INTO template (id,type,title,description,scope,owned_by,provider,created) VALUES (?,?,?,?,?,?,?,?)", t.Id, t.Type, t.Title, t.Description, t.Scope, t.OwnedBy, t.Provider, now)
+	} else {
+		_, err = db.Conn.ExecContext(ctx, "INSERT INTO template (type,title,description,scope,owned_by,provider,created) VALUES (?,?,?,?,?,?,?)", t.Type, t.Title, t.Description, t.Scope, t.OwnedBy, t.Provider, now)
+	}
 	if err != nil {
 		return err
 	}

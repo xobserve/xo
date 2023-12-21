@@ -13,7 +13,7 @@
 
 import { Box, Button, Textarea, useToast } from '@chakra-ui/react'
 import { useStore } from '@nanostores/react'
-import { Input } from 'antd'
+import { Input, InputNumber } from 'antd'
 import RadionButtons from 'components/RadioButtons'
 import { FormSection } from 'components/form/Form'
 import FormItem from 'components/form/Item'
@@ -62,7 +62,12 @@ const TemplateEditor = (props: Props) => {
       return
     }
 
-    await requestApi.post('/template/save', template)
+    if (isCreate) {
+      await requestApi.post('/template/create', template)
+    } else {
+      await requestApi.post('/template/update', template)
+    }
+
     toast({
       title: lang == 'zh' ? '模版已保存' : 'Template saved',
       status: 'success',
@@ -83,6 +88,19 @@ const TemplateEditor = (props: Props) => {
       maxW={600}
     >
       <FormSection>
+        <FormItem title={t.itemName({ name: t.template })} required>
+          <InputNumber
+            value={template.id}
+            placeholder='auto'
+            onChange={(v) => {
+              setTemplate({
+                ...template,
+                id: v,
+              })
+            }}
+            disabled={!isCreate}
+          />
+        </FormItem>
         <FormItem title={t.itemName({ name: t.template })} required>
           <Input
             value={template.title}

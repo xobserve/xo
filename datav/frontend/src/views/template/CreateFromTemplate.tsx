@@ -72,7 +72,6 @@ const CreateFromTemplate = ({ type, isOpen, onClose, onCreated }: Props) => {
     onCreated(res.data, createType)
   }
 
-  console.log('here33333:', templates)
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose}>
@@ -141,7 +140,7 @@ const CreateFromTemplate = ({ type, isOpen, onClose, onCreated }: Props) => {
               </Text>
             )}
             {createType == TemplateCreateType.Refer && (
-              <Text mt='2' opacity={0.7}>
+              <Text mt='2' opacity={0.7} fontSize='0.9rem'>
                 {lang == 'zh'
                   ? '引用模式将创建一个新的对象，该对象直接引用模版的内容。当模版内容发生变化时，该变化将同步到所有引用该模版的对象。基于引用模式创建的对象不可被修改。'
                   : ''}

@@ -118,6 +118,8 @@ const AddPanel = ({ dashboard, onChange }: Props) => {
 
       copyPanel(data.panel)
       console.log('here3333:', data.panel)
+    } else {
+      // create panel with reference points to the template
     }
   }
   return (
