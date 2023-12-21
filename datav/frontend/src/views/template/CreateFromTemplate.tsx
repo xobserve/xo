@@ -70,6 +70,7 @@ const CreateFromTemplate = ({ type, isOpen, onClose, onCreated }: Props) => {
     )
 
     onCreated(res.data, createType)
+    onClose()
   }
 
   return (

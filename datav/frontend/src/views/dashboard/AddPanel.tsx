@@ -104,22 +104,26 @@ const AddPanel = ({ dashboard, onChange }: Props) => {
     templateContent: TemplateContent,
     createType: TemplateCreateType,
   ) => {
-    if (createType == TemplateCreateType.Clone) {
-      const data: TemplateData = JSON.parse(templateContent.content)
-      if (!data.panel) {
-        toast({
-          title: 'Invalid template, panel section not exist',
-          status: 'error',
-          duration: 3000,
-          isClosable: true,
-        })
-        return
-      }
+    const data: TemplateData = JSON.parse(templateContent.content)
+    if (!data.panel) {
+      toast({
+        title: 'Invalid template, panel section not exist',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+      return
+    }
 
+    if (createType == TemplateCreateType.Clone) {
       copyPanel(data.panel)
-      console.log('here3333:', data.panel)
     } else {
       // create panel with reference points to the template
+      const panel: Panel = {
+        ...data.panel,
+        templateId: templateContent.templateId,
+      }
+      copyPanel(panel)
     }
   }
   return (

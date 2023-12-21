@@ -66,19 +66,11 @@ export interface Panel {
   title?: string
   desc: string
   type: string
-  templateId?: number
 
   gridPos: GridPos
   collapsed: boolean
 
-  // for plugin settings
-  plugins?: Record<string, any>
-
-  styles?: PanelStyles
-
   datasource?: PanelDatasource
-
-  overrides?: OverrideItem[]
 
   valueMapping?: ValueMappingItem[]
   transform?: string
@@ -91,6 +83,14 @@ export interface Panel {
   enableScopeTime?: boolean
   scopeTime?: TimeRange
   panels?: Panel[]
+
+  templateId?: number
+
+  /*---- when template content is updated, these secitons must also be updated ----*/
+  plugins?: Record<string, any>
+  styles?: PanelStyles
+  overrides?: OverrideItem[]
+  /*---------------------------*/
 }
 
 export interface ValueMappingItem {
