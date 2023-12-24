@@ -3,6 +3,8 @@ package template
 import (
 	"database/sql"
 	"encoding/json"
+	"fmt"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/xObserve/xObserve/query/pkg/common"
@@ -80,4 +82,47 @@ func GetTemplateContent(c *gin.Context) {
 	}
 
 	c.JSON(200, common.RespSuccess(content))
+}
+
+type CreateTemplateContentReq struct {
+	Ids []string `json:"ids"`
+}
+
+func GetTemplateContentsByIds(c *gin.Context) {
+	req := &CreateTemplateContentReq{}
+	err := c.BindJSON(req)
+	if err != nil {
+		c.JSON(400, common.RespError(err.Error()))
+		return
+	}
+
+	sql := fmt.Sprintf("select template.id, template_content.content from template_content JOIN template where template.id in ('%s') and template_content.id=template.content_id", strings.Join(req.Ids, "','"))
+	rows, err := db.Conn.Query(sql)
+	if err != nil {
+		logger.Warn("get template content error", "error", err, "sql", sql)
+		c.JSON(400, common.RespError(err.Error()))
+		return
+	}
+	defer rows.Close()
+
+	contents := make([]*models.TemplateContent, 0)
+	for rows.Next() {
+		content := &models.TemplateContent{}
+		var rawdata []byte
+		err := rows.Scan(&content.TemplateId, &rawdata)
+		if err != nil {
+			c.JSON(400, common.RespError(err.Error()))
+			return
+		}
+		if rawdata != nil {
+			err = json.Unmarshal(rawdata, &content.Content)
+			if err != nil {
+				c.JSON(400, common.RespError(err.Error()))
+				return
+			}
+		}
+		contents = append(contents, content)
+	}
+
+	c.JSON(200, common.RespSuccess(contents))
 }

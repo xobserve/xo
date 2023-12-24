@@ -29,7 +29,7 @@ import { useStore } from '@nanostores/react'
 import { dashboardMsg } from 'src/i18n/locales/en'
 import { $copiedPanel } from './store/dashboard'
 import { isEmpty } from 'utils/validate'
-import { cloneDeep, round } from 'lodash'
+import { cloneDeep, defaultsDeep, round } from 'lodash'
 import { locale } from 'src/i18n/i18n'
 import CreateFromTemplate from '../template/CreateFromTemplate'
 import {
@@ -114,15 +114,17 @@ const AddPanel = ({ dashboard, onChange }: Props) => {
       })
       return
     }
+    const panel: Panel = {
+      ...initPanel(),
+      ...data.panel,
+    }
 
+    console.log('here333333:', panel)
     if (createType == TemplateCreateType.Clone) {
-      copyPanel(data.panel)
+      copyPanel(panel)
     } else {
       // create panel with reference points to the template
-      const panel: Panel = {
-        ...data.panel,
-        templateId: templateContent.templateId,
-      }
+      panel.templateId = templateContent.templateId
       copyPanel(panel)
     }
   }
