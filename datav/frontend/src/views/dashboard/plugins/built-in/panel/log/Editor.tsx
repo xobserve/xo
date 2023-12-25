@@ -49,6 +49,16 @@ const LogPanelEditor = memo((props: LogEditorProps) => {
   const { panel, onChange } = props
 
   const t = useStore(commonMsg)
+  if (isEmpty(panel.interactions)) {
+    onChange((panel: Panel) => {
+      panel.interactions = {
+        enableClick: false,
+        clickActions: [],
+      }
+    })
+    return
+  }
+
   return (
     <>
       <PanelAccordion title={t.basicSetting}>
@@ -479,25 +489,24 @@ const LogPanelEditor = memo((props: LogEditorProps) => {
       <PanelAccordion title={t.interaction}>
         <PanelEditItem title={t.enable}>
           <Switch
-            isChecked={panel.plugins.log.interaction.enable}
+            isChecked={panel.interactions.enableClick}
             onChange={(e) =>
               onChange((panel: Panel) => {
-                panel.plugins.log.interaction.enable = e.target.checked
+                panel.interactions.enableClick = e.target.checked
               })
             }
           />
         </PanelEditItem>
-        {panel.plugins.log.interaction.enable && (
-          <ClickActionsEditor
-            panel={panel}
-            onChange={(v) => {
-              onChange((panel: Panel) => {
-                panel.plugins.log.interaction.actions = v
-              })
-            }}
-            actions={panel.plugins.log.interaction.actions}
-          />
-        )}
+
+        <ClickActionsEditor
+          panel={panel}
+          onChange={(v) => {
+            onChange((panel: Panel) => {
+              panel.interactions.clickActions = v
+            })
+          }}
+          actions={panel.interactions.clickActions}
+        />
       </PanelAccordion>
       <PanelAccordion title='Thresholds'>
         <ThresholdEditor

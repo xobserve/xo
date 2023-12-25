@@ -17,10 +17,6 @@ const panelComponents: PanelPluginComponents = {
       enableEditService: false,
       defaultOperation: '${operation}',
       enableEditOperation: false,
-      interaction: {
-        enable: false,
-        actions: [],
-      },
     },
   },
 }

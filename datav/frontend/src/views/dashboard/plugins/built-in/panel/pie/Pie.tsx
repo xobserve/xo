@@ -115,7 +115,7 @@ const PiePanel = (props: Props) => {
       color.push(paletteColorNameToHex(c))
     })
 
-    const onEvents = genDynamicFunction(panel.plugins.pie.onClickEvent)
+    const onEvents = genDynamicFunction(panel.interactions.onClickEvent)
 
     const lp = parseLegendPlacement(panel)
 
@@ -262,7 +262,7 @@ const PiePanel = (props: Props) => {
             height={height}
             onChartCreated={(c) => setChart(c)}
             onChartEvents={
-              panel.plugins.pie.enableClick
+              panel.interactions.enableClick
                 ? (row) => commonInteractionEvent(onEvents, row)
                 : null
             }

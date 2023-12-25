@@ -55,6 +55,7 @@ import { initVariableSelected } from 'src/views/variables/SelectVariable'
 import { $variables } from 'src/views/variables/store'
 import CopyToClipboard from 'components/CopyToClipboard'
 import { useNavigate } from 'react-router-dom'
+import { replaceDashboardTemplatePanels } from 'utils/template'
 
 interface Props {
   trace: Trace
@@ -109,6 +110,7 @@ const TraceDetailHeader = ({
   const loadDashboard = async (id) => {
     const res = await requestApi.get(`/dashboard/byId/${id}`)
     const dashboard: Dashboard = res.data
+    replaceDashboardTemplatePanels(dashboard)
     const dashVars = cloneDeep(dashboard.data.variables)
     initVariableSelected(dashVars)
     $variables.set([...$variables.get(), ...dashVars])
@@ -123,8 +125,7 @@ const TraceDetailHeader = ({
   const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
   const size = isLargeScreen ? 'sm' : 'sm'
 
-  const interactionOptions =
-    panel?.plugins.trace?.interaction ?? panel?.plugins[PanelType]?.interaction
+  const interactionOptions = panel?.interactions
   return (
     <>
       <Flex
@@ -164,9 +165,9 @@ const TraceDetailHeader = ({
           </Flex>
         </HStack>
         <HStack spacing={2}>
-          {panel && interactionOptions?.enable && (
+          {panel && interactionOptions.enableClick && (
             <HStack spacing={1}>
-              {interactionOptions.actions.map((action, index) => {
+              {interactionOptions.clickActions.map((action, index) => {
                 if (isEmpty(action.name)) {
                   return
                 }

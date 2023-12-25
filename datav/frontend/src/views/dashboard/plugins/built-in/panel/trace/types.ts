@@ -18,8 +18,4 @@ export interface TraceSettings {
   enableEditService: boolean
   defaultOperation: string
   enableEditOperation: boolean
-  interaction: {
-    enable: boolean
-    actions: ClickAction[]
-  }
 }

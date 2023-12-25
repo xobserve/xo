@@ -199,6 +199,7 @@ const StatGraph = memo((props: Props) => {
                         />
                       )}
                       <ValueText
+                        panel={panel}
                         data={data}
                         value={valueText}
                         options={statOptions}
@@ -251,6 +252,7 @@ const StatGraph = memo((props: Props) => {
                       />
                     )}
                     <ValueText
+                      panel={panel}
                       data={data}
                       value={valueText}
                       options={statOptions}
@@ -321,7 +323,16 @@ const LegentText = ({ legend, width, height, options, color }) => {
   )
 }
 
-const ValueText = ({ data, value, options, width, height, layout, color }) => {
+const ValueText = ({
+  panel,
+  data,
+  value,
+  options,
+  width,
+  height,
+  layout,
+  color,
+}) => {
   const toast = useToast()
   let fontSize = 16
   if (layout == 'horizontal') {
@@ -353,9 +364,11 @@ const ValueText = ({ data, value, options, width, height, layout, color }) => {
         fontWeight='bold'
         lineHeight={1.2}
         onClick={
-          options.enableClick
+          panel.interactions.enableClick
             ? () => {
-                const onClick = genDynamicFunction(options.clickAction)
+                const onClick = genDynamicFunction(
+                  panel.interactions.onClickEvent,
+                )
                 if (isFunction(onClick)) {
                   const tData = commonInteractionEvent(onClick, data)
                   return tData

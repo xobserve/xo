@@ -31,10 +31,23 @@ import { CodeEditorModal } from 'src/components/CodeEditor/CodeEditorModal'
 import { dispatch } from 'use-bus'
 import { PanelForceRebuildEvent } from 'src/data/bus-events'
 import { PieEditorProps, PiePanel as Panel, PieLegendPlacement } from './types'
+import { isEmpty } from 'utils/validate'
+import { onClickCommonEvent } from 'src/data/panel/initPlugins'
 
 const PiePanelEditor = memo(({ panel, onChange }: PieEditorProps) => {
   const t = useStore(commonMsg)
   const t1 = useStore(piePanelMsg)
+
+  if (isEmpty(panel.interactions)) {
+    onChange((panel: Panel) => {
+      panel.interactions = {
+        enableClick: false,
+        onClickEvent: onClickCommonEvent,
+      }
+    })
+    return
+  }
+
   return (
     <>
       <PanelAccordion title={t.basicSetting}>
@@ -358,10 +371,10 @@ const PiePanelEditor = memo(({ panel, onChange }: PieEditorProps) => {
       <PanelAccordion title={t.interaction}>
         <PanelEditItem title={t.enable}>
           <Switch
-            defaultChecked={panel.plugins.pie.enableClick}
+            defaultChecked={panel.interactions.enableClick}
             onChange={(e) =>
               onChange((panel: Panel) => {
-                panel.plugins.pie.enableClick = e.currentTarget.checked
+                panel.interactions.enableClick = e.currentTarget.checked
                 dispatch(PanelForceRebuildEvent + panel.id)
               })
             }
@@ -369,10 +382,10 @@ const PiePanelEditor = memo(({ panel, onChange }: PieEditorProps) => {
         </PanelEditItem>
         <PanelEditItem title={t.onClickEvent} desc={t.onClickEventTips}>
           <CodeEditorModal
-            value={panel.plugins.pie.onClickEvent}
+            value={panel.interactions.onClickEvent}
             onChange={(v) =>
               onChange((panel: Panel) => {
-                panel.plugins.pie.onClickEvent = v
+                panel.interactions.onClickEvent = v
               })
             }
           />

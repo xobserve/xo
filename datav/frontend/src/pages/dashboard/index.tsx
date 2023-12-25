@@ -27,6 +27,7 @@ import { initVariableSelected } from 'src/views/variables/SelectVariable'
 import { $variables } from 'src/views/variables/store'
 import { getNavigateTo, navigateTo } from 'utils/url'
 import { TemplateContent, TemplateData } from 'types/template'
+import { replaceDashboardTemplatePanels } from 'utils/template'
 
 interface Props {
   dashboard?: Dashboard
@@ -64,32 +65,7 @@ const DashboardPageWrapper = memo(({ sideWidth }: Props) => {
 
       // get panel templates content
       const dash: Dashboard = res.data.dashboard
-      const templateIds = []
-      for (const p of dash.data.panels) {
-        if (p.templateId) {
-          templateIds.push(p.templateId.toString())
-        }
-      }
-
-      if (templateIds.length > 0) {
-        const res1 = await requestApi.post(`/template/content/byIds`, {
-          ids: templateIds,
-        })
-        const contents: TemplateContent[] = res1.data
-        for (const p of dash.data.panels) {
-          if (p.templateId) {
-            const templateContent = contents.find(
-              (c) => c.templateId == p.templateId,
-            )?.content
-            if (templateContent) {
-              const content: TemplateData = JSON.parse(templateContent)
-              for (const k of Object.keys(content.panel)) {
-                p[k] = content.panel[k]
-              }
-            }
-          }
-        }
-      }
+      replaceDashboardTemplatePanels(dash)
       setDashboard(dash)
       if (res.data.path != path) {
         navigateTo(`/` + res.data.cfg.currentTeam + res.data.path)

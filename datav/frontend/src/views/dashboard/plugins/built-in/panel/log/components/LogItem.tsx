@@ -220,10 +220,10 @@ const LogItem = memo((props: LogItemProps) => {
       {!collapsed && (
         <Box p='4' fontSize={options.styles.fontSize}>
           <VStack alignItems='left' className='bordered' p='2' mt='1'>
-            {options.interaction.enable && (
+            {panel.interactions.enableClick && (
               <>
                 <HStack spacing={1}>
-                  {options.interaction.actions.map((action, index) => {
+                  {panel.interactions.clickActions.map((action, index) => {
                     if (isEmpty(action.name)) {
                       return
                     }

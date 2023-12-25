@@ -347,8 +347,8 @@ const ComplexTable = memo((props: Props) => {
   }
 
   if (
-    options.rowActions.length > 0 &&
-    options.rowActions.some((a) => !isEmpty(a.name))
+    panel.interactions.rowActions.length > 0 &&
+    panel.interactions.rowActions.some((a) => !isEmpty(a.name))
   ) {
     columns.push({
       title: isEmpty(options.actionColumnName)
@@ -356,11 +356,11 @@ const ComplexTable = memo((props: Props) => {
         : options.actionColumnName,
       key: 'action',
       width: isEmpty(options.actionClumnWidth)
-        ? 90 * options.rowActions.length
+        ? 90 * panel.interactions.rowActions.length
         : options.actionClumnWidth,
       render: (_, record) => (
         <HStack spacing={1}>
-          {props.panel.plugins.table.rowActions.map((action, index) => {
+          {props.panel.interactions.rowActions.map((action, index) => {
             if (isEmpty(action.name)) {
               return
             }
@@ -396,7 +396,7 @@ const ComplexTable = memo((props: Props) => {
     })
   }
 
-  const onRowClick = genDynamicFunction(props.panel.plugins.table.onRowClick)
+  const onRowClick = genDynamicFunction(props.panel.interactions.onRowClick)
 
   return (
     <>
@@ -422,9 +422,11 @@ const ComplexTable = memo((props: Props) => {
         showSorterTooltip={false}
         scroll={{ x: options.tableWidth + '%' }}
         bordered={options.bordered}
-        rowClassName={options.enableRowClick ? 'cursor-pointer' : null}
+        rowClassName={
+          panel.interactions.enableRowClick ? 'cursor-pointer' : null
+        }
         onRow={
-          options.enableRowClick
+          panel.interactions.enableRowClick
             ? (record) => {
                 return {
                   onClick: (_) => {

@@ -63,8 +63,7 @@ const TraceCard = ({
   const toast = useToast()
   const colorGenerator = new ColorGenerator(colors1)
 
-  const interactionOptions =
-    panel?.plugins.trace?.interaction ?? panel?.plugins[PanelType]?.interaction
+  const interactionOptions = panel.interactions
 
   return (
     <Box
@@ -201,7 +200,7 @@ const TraceCard = ({
             <HStack spacing={1}>
               {onHover && (
                 <>
-                  {interactionOptions.actions.map((action, index) => {
+                  {interactionOptions.clickActions.map((action, index) => {
                     if (isEmpty(action.name)) {
                       return
                     }

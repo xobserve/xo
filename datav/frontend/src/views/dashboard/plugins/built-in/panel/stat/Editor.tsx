@@ -34,11 +34,22 @@ import { LayoutOrientation } from 'types/layout'
 import { Units } from 'types/panel/plugins'
 import { CodeEditorModal } from 'src/components/CodeEditor/CodeEditorModal'
 import { StatEditorProps, StatPanel as Panel } from './types'
+import { onClickCommonEvent } from 'src/data/panel/initPlugins'
 
 const StatPanelEditor = memo(({ panel, onChange, data }: StatEditorProps) => {
   const t = useStore(commonMsg)
   const t1 = useStore(graphPanelMsg)
   const t2 = useStore(statsPanelMsg)
+
+  if (isEmpty(panel.interactions)) {
+    onChange((panel: Panel) => {
+      panel.interactions = {
+        enableClick: false,
+        onClickEvent: onClickCommonEvent,
+      }
+    })
+    return
+  }
 
   const seriesNames = [VarialbeAllOption].concat(
     ((data?.flat() as SeriesData[]) ?? []).map((s) => s.name),
@@ -306,10 +317,10 @@ const StatPanelEditor = memo(({ panel, onChange, data }: StatEditorProps) => {
       <PanelAccordion title={t.interaction}>
         <PanelEditItem title={t.enable}>
           <Switch
-            defaultChecked={panel.plugins.stat.enableClick}
+            defaultChecked={panel.interactions.enableClick}
             onChange={(e) =>
               onChange((panel: Panel) => {
-                panel.plugins.stat.enableClick = e.currentTarget.checked
+                panel.interactions.enableClick = e.currentTarget.checked
               })
             }
           />
@@ -318,10 +329,10 @@ const StatPanelEditor = memo(({ panel, onChange, data }: StatEditorProps) => {
           <CodeEditorModal
             onChange={(v) => {
               onChange((panel: Panel) => {
-                panel.plugins.stat.clickAction = v
+                panel.interactions.onClickEvent = v
               })
             }}
-            value={panel.plugins.stat.clickAction}
+            value={panel.interactions.onClickEvent}
           />
         </PanelEditItem>
       </PanelAccordion>

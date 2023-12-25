@@ -43,10 +43,23 @@ import { commonMsg, tablePanelMsg } from 'src/i18n/locales/en'
 import { ClickActionsEditor } from 'src/views/dashboard/edit-panel/components/ClickActionsEditor'
 import { ColorPicker } from 'src/components/ColorPicker'
 import { TableEditorProps, TablePanel as Panel } from './types'
+import { isEmpty } from 'utils/validate'
+import { onClickCommonEvent } from 'src/data/panel/initPlugins'
 
 const TablePanelEditor = memo(({ panel, onChange }: TableEditorProps) => {
   const t = useStore(commonMsg)
   const t1 = useStore(tablePanelMsg)
+  if (isEmpty(panel.interactions)) {
+    onChange((panel: Panel) => {
+      panel.interactions = {
+        enableRowClick: true,
+        onRowClick: onClickCommonEvent,
+        rowActions: [],
+      }
+    })
+    return
+  }
+
   return (
     <>
       <PanelAccordion title={t1.tableSetting}>
@@ -179,10 +192,10 @@ const TablePanelEditor = memo(({ panel, onChange }: TableEditorProps) => {
       <PanelAccordion title={t.interaction}>
         <PanelEditItem title='Enable row click'>
           <Switch
-            isChecked={panel.plugins.table.enableRowClick}
+            isChecked={panel.interactions.enableRowClick}
             onChange={(e) =>
               onChange((panel: Panel) => {
-                panel.plugins.table.enableRowClick = e.target.checked
+                panel.interactions.enableRowClick = e.target.checked
               })
             }
           />
@@ -191,7 +204,7 @@ const TablePanelEditor = memo(({ panel, onChange }: TableEditorProps) => {
           panel={panel}
           onChange={(v) => {
             onChange((panel: Panel) => {
-              panel.plugins.table.onRowClick = v
+              panel.interactions.onRowClick = v
             })
           }}
         />
@@ -200,12 +213,12 @@ const TablePanelEditor = memo(({ panel, onChange }: TableEditorProps) => {
           panel={panel}
           onChange={(v) => {
             onChange((panel: Panel) => {
-              panel.plugins.table.rowActions = v
+              panel.interactions.rowActions = v
             })
           }}
-          actions={panel.plugins.table.rowActions}
+          actions={panel.interactions.rowActions}
         />
-        {panel.plugins.table.rowActions.length > 0 && (
+        {panel.interactions.rowActions.length > 0 && (
           <>
             <PanelEditItem title={t1.actionColumnName}>
               <EditorInputItem
@@ -257,7 +270,7 @@ const OnRowClickEditor = ({ panel, onChange }: TableEditorProps) => {
   const t = useStore(commonMsg)
   const t1 = useStore(tablePanelMsg)
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const [temp, setTemp] = useState(panel.plugins.table.onRowClick)
+  const [temp, setTemp] = useState(panel.interactions.onRowClick)
 
   const onSubmit = () => {
     onChange(temp)

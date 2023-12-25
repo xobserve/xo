@@ -22,9 +22,20 @@ import { dispatch } from 'use-bus'
 import { PanelForceRebuildEvent } from 'src/data/bus-events'
 import { ClickActionsEditor } from 'src/views/dashboard/edit-panel/components/ClickActionsEditor'
 import { TraceEditorProps, TracePanel as Panel, PanelTypeTrace } from './types'
+import { isEmpty } from 'utils/validate'
 
 const TracePanelEditor = ({ panel, onChange }: TraceEditorProps) => {
   const t = useStore(commonMsg)
+  if (isEmpty(panel.interactions)) {
+    onChange((panel: Panel) => {
+      panel.interactions = {
+        enableClick: false,
+        clickActions: [],
+      }
+    })
+    return
+  }
+
   return (
     <>
       <PanelAccordion title={t.basic}>
@@ -79,23 +90,23 @@ const TracePanelEditor = ({ panel, onChange }: TraceEditorProps) => {
       <PanelAccordion title={t.interaction}>
         <PanelEditItem title={t.enable}>
           <Switch
-            isChecked={panel.plugins.trace.interaction.enable}
+            isChecked={panel.interactions.enableClick}
             onChange={(e) =>
               onChange((panel: Panel) => {
-                panel.plugins.trace.interaction.enable = e.target.checked
+                panel.interactions.enableClick = e.target.checked
               })
             }
           />
         </PanelEditItem>
-        {panel.plugins.trace.interaction.enable && (
+        {panel.interactions.enableClick && (
           <ClickActionsEditor
             panel={panel}
             onChange={(v) => {
               onChange((panel: Panel) => {
-                panel.plugins.trace.interaction.actions = v
+                panel.interactions.clickActions = v
               })
             }}
-            actions={panel.plugins.trace.interaction.actions}
+            actions={panel.interactions.clickActions}
           />
         )}
       </PanelAccordion>
