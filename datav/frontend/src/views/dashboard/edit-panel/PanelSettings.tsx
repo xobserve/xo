@@ -14,6 +14,7 @@
 import {
   Box,
   Center,
+  HStack,
   Image,
   SimpleGrid,
   Switch,
@@ -39,6 +40,7 @@ import { externalPanelPlugins } from '../plugins/external/plugins'
 import { initTimeRange } from 'components/DatePicker/TimePicker'
 import DatePicker from '../components/PanelDatePicker'
 import customColors from 'theme/colors'
+import TemplateBadge from 'src/views/template/TemplateBadge'
 
 // in edit mode, we need to cache all the plugins we have edited, until we save the dashboard
 let pluginsCachedInEdit = {}
@@ -84,7 +86,20 @@ const PanelSettings = memo(({ panel, onChange }: PanelEditorProps) => {
   const isxobserve = !isExternalPanel && panel.type.startsWith('xobserve')
   return (
     <>
-      <PanelAccordion title={t.basicSetting} spacing={2} defaultOpen={false}>
+      <PanelAccordion
+        title={
+          panel.templateId ? (
+            <HStack>
+              <Text>{t.basicSetting}</Text>
+              <TemplateBadge templateId={panel.templateId} />
+            </HStack>
+          ) : (
+            t.basicSetting
+          )
+        }
+        spacing={2}
+        defaultOpen={panel.templateId !== 0}
+      >
         <PanelEditItem title={t1.panelTitle}>
           <EditorInputItem
             value={panel.title}
@@ -166,8 +181,8 @@ const PanelSettings = memo(({ panel, onChange }: PanelEditorProps) => {
           </>
         )}
         <PanelEditItem
-          title='Enable scope timerange'
-          desc='panel scope timerange will override the global timerange which shows in dashboard header'
+          title={t1.enableScopeTimerange}
+          desc={t1.enableScopeTimerangeTips}
         >
           <Switch
             isChecked={panel.enableScopeTime}
@@ -200,49 +215,31 @@ const PanelSettings = memo(({ panel, onChange }: PanelEditorProps) => {
       </PanelAccordion>
 
       {/* panel visulization choosing */}
-      <PanelAccordion
-        title={
-          t1.panelType +
-          ` -> ${
-            isExternalPanel
-              ? t1.externalPanels
-              : isBuiltin
-              ? t1.visualization
-              : t1.xobservePanels
-          } -> ${panel.type}`
-        }
-        defaultOpen={false}
-        spacing={0}
-      >
-        <PanelAccordion title={t1.visualization} defaultOpen={isBuiltin}>
-          <Wrap>
-            {builtinPlugins.map((panelType) => {
-              if (panelType.startsWith('xobserve')) {
-                return <></>
-              }
-              const plugin = builtinPanelPlugins[panelType]
-              if (panelType == PanelTypeRow) {
-                return <></>
-              }
-              return (
-                <VisulizationItem
-                  selected={panel.type == panelType}
-                  title={upperFirst(panelType)}
-                  imageUrl={plugin?.settings.icon}
-                  onClick={() => onChangeVisualization(panelType)}
-                />
-              )
-            })}
-          </Wrap>
-        </PanelAccordion>
-        {externalPlugins.length > 0 && (
-          <PanelAccordion
-            title={t1.externalPanels}
-            defaultOpen={isExternalPanel}
-          >
+      {!panel.templateId && (
+        <PanelAccordion
+          title={
+            t1.panelType +
+            ` -> ${
+              isExternalPanel
+                ? t1.externalPanels
+                : isBuiltin
+                ? t1.visualization
+                : t1.xobservePanels
+            } -> ${panel.type}`
+          }
+          defaultOpen={false}
+          spacing={0}
+        >
+          <PanelAccordion title={t1.visualization} defaultOpen={isBuiltin}>
             <Wrap>
-              {externalPlugins.map((panelType) => {
-                const plugin = externalPanelPlugins[panelType]
+              {builtinPlugins.map((panelType) => {
+                if (panelType.startsWith('xobserve')) {
+                  return <></>
+                }
+                const plugin = builtinPanelPlugins[panelType]
+                if (panelType == PanelTypeRow) {
+                  return <></>
+                }
                 return (
                   <VisulizationItem
                     selected={panel.type == panelType}
@@ -254,25 +251,45 @@ const PanelSettings = memo(({ panel, onChange }: PanelEditorProps) => {
               })}
             </Wrap>
           </PanelAccordion>
-        )}
-        <PanelAccordion title={t1.xobservePanels} defaultOpen={isxobserve}>
-          <Wrap>
-            {builtinPlugins.map((panelType) => {
-              if (panelType.startsWith('xobserve')) {
-                const plugin = builtinPanelPlugins[panelType]
-                return (
-                  <VisulizationItem
-                    selected={panel.type == panelType}
-                    title={upperFirst(panelType)}
-                    imageUrl={plugin?.settings.icon}
-                    onClick={() => onChangeVisualization(panelType)}
-                  />
-                )
-              }
-            })}
-          </Wrap>
+          {externalPlugins.length > 0 && (
+            <PanelAccordion
+              title={t1.externalPanels}
+              defaultOpen={isExternalPanel}
+            >
+              <Wrap>
+                {externalPlugins.map((panelType) => {
+                  const plugin = externalPanelPlugins[panelType]
+                  return (
+                    <VisulizationItem
+                      selected={panel.type == panelType}
+                      title={upperFirst(panelType)}
+                      imageUrl={plugin?.settings.icon}
+                      onClick={() => onChangeVisualization(panelType)}
+                    />
+                  )
+                })}
+              </Wrap>
+            </PanelAccordion>
+          )}
+          <PanelAccordion title={t1.xobservePanels} defaultOpen={isxobserve}>
+            <Wrap>
+              {builtinPlugins.map((panelType) => {
+                if (panelType.startsWith('xobserve')) {
+                  const plugin = builtinPanelPlugins[panelType]
+                  return (
+                    <VisulizationItem
+                      selected={panel.type == panelType}
+                      title={upperFirst(panelType)}
+                      imageUrl={plugin?.settings.icon}
+                      onClick={() => onChangeVisualization(panelType)}
+                    />
+                  )
+                }
+              })}
+            </Wrap>
+          </PanelAccordion>
         </PanelAccordion>
-      </PanelAccordion>
+      )}
     </>
   )
 })

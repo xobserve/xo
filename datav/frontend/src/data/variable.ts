@@ -25,16 +25,18 @@ export const initVariable: Variable = {
 
 export const VariableSplitChar = '+'
 export const VarialbeAllOption = '__all__'
-
 export const VariableCurrentValue = '__current__' // refer to the current value of current object, e.g row data of Table panel
 
+/*---------- builtin variables  ----------*/
 export const VariableInterval = '__interval__' // refer to the caculated interval of current panel, e.g used for prometheus 'step' parameter
 export const VariableTimerangeFrom = '__from__' // refer to the 'from' value in current time range
 export const VariableTimerangeTo = '__to__' // refer to the 'to' value in current time range
 export const VariableRange = '__range__' // refer to the 'range' value in current time range, e.g the range of [now-5m, now] is 5m
-
+/*------------------------------*/
+// make sure to add above variables to below list
 export const builtinVariables = [
   VariableInterval,
   VariableTimerangeFrom,
   VariableTimerangeTo,
+  VariableRange,
 ]

@@ -430,7 +430,9 @@
     "conditionRender": "条件渲染",
     "conditionRenderTips": "开启后，只有当设置的条件被满足时，当前 panel 才会被渲染",
     "condition": "设置条件",
-    "conditionTips": "检查一个变量是否等于给定的值"
+    "conditionTips": "检查一个变量是否等于给定的值",
+    "enableScopeTimerange": "启用局部时间",
+    "enableScopeTimerangeTips": "图表的局部时间将覆盖全局的时间设置"
   },
   "prometheusDs": {
     "enterPromQL": "输入 PromQL 查询语句",

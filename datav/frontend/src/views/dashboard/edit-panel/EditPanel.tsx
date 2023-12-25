@@ -508,23 +508,24 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
                           <Tabs position='relative' variant='unstyled'>
                             <TabList pb='0'>
                               <Tab>{t.panel}</Tab>
-                              <Tab>{t.styles}</Tab>
-                              {panelOverridesRules.length > 0 && (
-                                <Tab>
-                                  {t1.overrides}{' '}
-                                  {tempPanel.overrides.length > 0 &&
-                                    isLargeScreen && (
-                                      <Text textStyle='annotation'>
-                                        &nbsp; ({tempPanel.overrides.length}/
-                                        {tempPanel.overrides.reduce(
-                                          (t, v) => t + v.overrides.length,
-                                          0,
-                                        )}
-                                        )
-                                      </Text>
-                                    )}
-                                </Tab>
-                              )}
+                              {!tempPanel.templateId && <Tab>{t.styles}</Tab>}
+                              {!tempPanel.templateId &&
+                                panelOverridesRules.length > 0 && (
+                                  <Tab>
+                                    {t1.overrides}{' '}
+                                    {tempPanel.overrides.length > 0 &&
+                                      isLargeScreen && (
+                                        <Text textStyle='annotation'>
+                                          &nbsp; ({tempPanel.overrides.length}/
+                                          {tempPanel.overrides.reduce(
+                                            (t, v) => t + v.overrides.length,
+                                            0,
+                                          )}
+                                          )
+                                        </Text>
+                                      )}
+                                  </Tab>
+                                )}
                             </TabList>
                             <TabIndicator
                               mt='3px'
@@ -541,11 +542,13 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
                                 />
 
                                 {/* panel rendering plugin setting */}
-                                <CustomPanelEditor
-                                  tempPanel={tempPanel}
-                                  setTempPanel={onTempPanelChange}
-                                  data={data}
-                                />
+                                {!tempPanel.templateId && (
+                                  <CustomPanelEditor
+                                    tempPanel={tempPanel}
+                                    setTempPanel={onTempPanelChange}
+                                    data={data}
+                                  />
+                                )}
 
                                 {enableValueMapping && (
                                   <PanelAccordion
@@ -559,19 +562,23 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
                                   </PanelAccordion>
                                 )}
                               </TabPanel>
-                              <TabPanel px='0' pt='1' pb='0'>
-                                <PanelStyles
-                                  panel={tempPanel}
-                                  onChange={setTempPanel}
-                                />
-                              </TabPanel>
-                              <TabPanel px='0' pt='1' pb='0'>
-                                <PanelOverrides
-                                  panel={tempPanel}
-                                  onChange={setTempPanel}
-                                  data={data}
-                                />
-                              </TabPanel>
+                              {!tempPanel.templateId && (
+                                <TabPanel px='0' pt='1' pb='0'>
+                                  <PanelStyles
+                                    panel={tempPanel}
+                                    onChange={setTempPanel}
+                                  />
+                                </TabPanel>
+                              )}
+                              {!tempPanel.templateId && (
+                                <TabPanel px='0' pt='1' pb='0'>
+                                  <PanelOverrides
+                                    panel={tempPanel}
+                                    onChange={setTempPanel}
+                                    data={data}
+                                  />
+                                </TabPanel>
+                              )}
                             </TabPanels>
                           </Tabs>
                         </Box>

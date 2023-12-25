@@ -724,9 +724,6 @@ const PanelHeader = ({
                   <Text noOfLines={1}>{title}</Text>
                 </TitleDecoration>
               </Box>
-              {panel.templateId && (
-                <TemplateBadge templateId={panel.templateId} />
-              )}
               {(queryError || panel.desc) && (
                 <Tooltip
                   label={

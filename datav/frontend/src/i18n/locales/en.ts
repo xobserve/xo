@@ -482,6 +482,9 @@ export const panelMsg = i18n('panel', {
     'If the condition you set is satisfied, the panel will be rendered, otherwise it will be hidden',
   condition: 'Condition',
   conditionTips: 'Check a variable is set to a given value',
+  enableScopeTimerange: 'Enable scope timerange',
+  enableScopeTimerangeTips:
+    'panel scope timerange will override the global timerange which shows in dashboard header',
 })
 
 export const prometheusDsMsg = i18n('prometheusDs', {
