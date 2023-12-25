@@ -272,7 +272,7 @@ const AlertRuleItem = memo((props: Props) => {
                       <Th>State</Th>
                       <Th>Active</Th>
                       <Th>Value</Th>
-                      {panel.plugins.alert?.clickActions && <Th>Actions</Th>}
+                      {panel.interactions?.clickActions && <Th>Actions</Th>}
                     </Tr>
                   </Thead>
                   <Tbody>
@@ -314,10 +314,10 @@ const AlertRuleItem = memo((props: Props) => {
                             </Text>
                           </Td>
                           <Td>{alert.value}</Td>
-                          {panel.plugins.alert?.clickActions && (
+                          {panel.interactions?.clickActions && (
                             <Td>
                               <HStack spacing={1}>
-                                {panel.plugins.alert.clickActions.map(
+                                {panel.interactions.clickActions.map(
                                   (action, i) =>
                                     !isEmpty(action.name) && (
                                       <Button
@@ -418,9 +418,9 @@ const AlertRuleItem = memo((props: Props) => {
                         <Text>{moment(alert.activeAt).fromNow()}</Text>
                       </HStack>
                       <Text mt='2'>{alert.value}</Text>
-                      {panel.plugins.alert?.clickActions && (
+                      {panel.interactions?.clickActions && (
                         <HStack spacing={1}>
-                          {panel.plugins.alert.clickActions.map(
+                          {panel.interactions.clickActions.map(
                             (action, i) =>
                               !isEmpty(action.name) && (
                                 <Button

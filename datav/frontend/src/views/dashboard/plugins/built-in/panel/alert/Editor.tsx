@@ -41,10 +41,19 @@ import { AlertEditorProps, PanelTypeAlert, AlertPanel as Panel } from './types'
 import { PanelTypeGraph } from '../graph/types'
 import { DatasourceTypeHttp } from '../../datasource/http/types'
 import { builtinDatasourcePlugins } from '../../plugins'
+import { isEmpty } from 'utils/validate'
 
 const AlertPanelEditor = memo((props: AlertEditorProps) => {
   const { panel, onChange } = props
   const t = useStore(commonMsg)
+  if (isEmpty(panel.interactions)) {
+    onChange((panel: Panel) => {
+      panel.interactions = {
+        clickActions: [],
+      }
+    })
+    return
+  }
   return (
     <>
       <PanelAccordion title={t.basic}>
@@ -298,10 +307,10 @@ const AlertPanelEditor = memo((props: AlertEditorProps) => {
           panel={panel}
           onChange={(v) => {
             onChange((panel: Panel) => {
-              panel.plugins.alert.clickActions = v
+              panel.interactions.clickActions = v
             })
           }}
-          actions={panel.plugins.alert.clickActions}
+          actions={panel.interactions.clickActions}
         />
       </PanelAccordion>
     </>
