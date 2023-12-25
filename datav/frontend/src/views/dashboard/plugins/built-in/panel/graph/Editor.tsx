@@ -33,11 +33,22 @@ import { ThresholdDisplay, Units } from 'types/panel/plugins'
 import { AlertFilterEditor } from '../alert/Editor'
 import { ClickActionsEditor } from 'src/views/dashboard/edit-panel/components/ClickActionsEditor'
 import { GraphEditorProps, GraphPanel } from './types'
+import { isEmpty } from 'utils/validate'
+import { Panel } from 'types/dashboard'
 
 const GraphPanelEditor = memo((props: GraphEditorProps) => {
   const { panel, onChange } = props
   const t = useStore(commonMsg)
   const t1 = useStore(graphPanelMsg)
+
+  if (isEmpty(panel.interactions)) {
+    onChange((panel: Panel) => {
+      panel.interactions = {
+        clickActions: [],
+      }
+    })
+    return
+  }
 
   return (
     <>
@@ -403,10 +414,10 @@ const GraphPanelEditor = memo((props: GraphEditorProps) => {
           panel={panel}
           onChange={(v) => {
             onChange((panel: GraphPanel) => {
-              panel.plugins.graph.clickActions = v
+              panel.interactions.clickActions = v
             })
           }}
-          actions={panel.plugins.graph.clickActions}
+          actions={panel.interactions.clickActions}
         />
       </PanelAccordion>
       <PanelAccordion title='Thresholds'>

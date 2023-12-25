@@ -212,7 +212,7 @@ const ContextMenu = memo(({ props, options, data, container }: Props) => {
                   {t.addItem({ name: t.annotation })}
                 </Button>
 
-                {props.panel.plugins.graph.clickActions.map(
+                {props.panel.interactions.clickActions?.map(
                   (action, i) =>
                     !isEmpty(action.name) && (
                       <Button
