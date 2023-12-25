@@ -114,6 +114,7 @@ import { locale } from 'src/i18n/i18n'
 import { Lang } from 'types/misc'
 import TemplateExport from 'src/views/template/TemplateExport'
 import { TemplateType } from 'types/template'
+import { extractPanelTemplateContent } from 'utils/template'
 
 interface PanelGridProps {
   dashboard: Dashboard
@@ -613,7 +614,7 @@ const PanelHeader = ({
 
   const title = replaceWithVariables(panel.title)
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const [templatePanel, setTemplatePanel] = useState<Panel>(null)
+  const [templatePanel, setTemplatePanel] = useState<Partial<Panel>>(null)
 
   const { colorMode } = useColorMode()
   const embed = useEmbed()
@@ -666,7 +667,8 @@ const PanelHeader = ({
         {
           key: 'exportTemplate',
           label: t2.exportTemplate,
-          onClick: () => setTemplatePanel(clone(panel)),
+          onClick: () =>
+            setTemplatePanel(extractPanelTemplateContent(clone(panel))),
         },
       ],
     },

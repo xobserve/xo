@@ -119,7 +119,6 @@ const AddPanel = ({ dashboard, onChange }: Props) => {
       ...data.panel,
     }
 
-    console.log('here333333:', panel)
     if (createType == TemplateCreateType.Clone) {
       copyPanel(panel)
     } else {
