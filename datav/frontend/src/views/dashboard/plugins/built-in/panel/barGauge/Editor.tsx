@@ -38,6 +38,7 @@ const BarGaugeEditor = memo(({ panel, onChange }: BarGaugeEditorProps) => {
         onClickEvent: onClickCommonEvent,
       }
     })
+    return
   }
 
   return (

@@ -56,11 +56,21 @@ import {
 import { Units } from 'types/panel/plugins'
 import { EditorNumberItem } from 'components/editor/EditorItem'
 import { EchartsEditorProps, EchartsPanel as Panel } from './types'
+import { echartsEventsFunc } from '.'
 
 const EchartsPanelEditor = memo(
   ({ panel, onChange, data }: EchartsEditorProps) => {
     const t = useStore(commonMsg)
     const t1 = useStore(echartsPanelMsg)
+    if (!panel.interactions) {
+      onChange((panel: Panel) => {
+        panel.interactions = {
+          enableClick: false,
+          registerEventsFunc: echartsEventsFunc,
+        }
+      })
+      return
+    }
     return (
       <>
         <PanelAccordion title={t1.about}>
@@ -132,10 +142,10 @@ const EchartsPanelEditor = memo(
         <PanelAccordion title={t.interaction}>
           <PanelEditItem title={t.enable}>
             <Switch
-              defaultChecked={panel.plugins.echarts.enableClick}
+              defaultChecked={panel.interactions.enableClick}
               onChange={(e) =>
                 onChange((panel: Panel) => {
-                  panel.plugins.echarts.enableClick = e.currentTarget.checked
+                  panel.interactions.enableClick = e.currentTarget.checked
                   dispatch(PanelForceRebuildEvent + panel.id)
                 })
               }
@@ -146,7 +156,7 @@ const EchartsPanelEditor = memo(
             panel={panel}
             onChange={(v) => {
               onChange((panel: Panel) => {
-                panel.plugins.echarts.registerEventsFunc = v
+                panel.interactions.registerEventsFunc = v
               })
             }}
           />
@@ -195,7 +205,7 @@ const SetOptions = ({ panel, onChange, data }: EchartsEditorProps) => {
   const setOptions = genDynamicFunction(temp)
   let options
 
-  if (isFunction(setOptions)) {
+  if (isFunction(setOptions) && data) {
     try {
       let o = setOptions(
         cloneDeep(data.flat()),
@@ -292,7 +302,7 @@ const RegisterEvents = ({ panel, onChange }: EchartsEditorProps) => {
   const t1 = useStore(echartsPanelMsg)
 
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const [temp, setTemp] = useState(panel.plugins.echarts.registerEventsFunc)
+  const [temp, setTemp] = useState(panel.interactions.registerEventsFunc)
 
   const onSubmit = () => {
     onChange(temp)

@@ -44,6 +44,7 @@ const BarPanelEditor = memo(({ panel, onChange }: BarEditorProps) => {
         onClickEvent: onClickCommonEvent,
       }
     })
+    return
   }
   return (
     <>

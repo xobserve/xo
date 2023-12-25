@@ -84,7 +84,7 @@ const EchartsPanel = memo((props: PanelProps) => {
 
     if (chart) {
       const registerEvents = genDynamicFunction(
-        panel.plugins.echarts.registerEventsFunc,
+        panel.interactions.registerEventsFunc,
       )
       if (isFunction(registerEvents)) {
         onEvents = registerEvents
@@ -118,7 +118,7 @@ const EchartsPanel = memo((props: PanelProps) => {
             width={width - 11}
             height={height}
             onChartCreated={(c) => setChart(c)}
-            onChartEvents={panel.plugins.echarts.enableClick ? onEvents : null}
+            onChartEvents={panel.interactions.enableClick ? onEvents : null}
             darkBg={darkBg}
           />
         </Box>
