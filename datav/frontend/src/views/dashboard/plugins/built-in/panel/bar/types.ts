@@ -1,75 +1,69 @@
-import {PanelEditorProps, Panel} from 'types/dashboard'
+import { PanelEditorProps, Panel } from 'types/dashboard'
 import { ThresholdDisplay, ValueSetting } from 'types/panel/plugins'
 import { ThresholdsConfig } from 'types/threshold'
 import { ValueCalculationType } from 'types/value'
 
-export const PanelTypeBar = "bar"
+export const PanelTypeBar = 'bar'
 
 export interface BarPanel extends Panel {
-    plugins: {
-        [PanelTypeBar]: BarSettings
-    }
+  plugins: {
+    [PanelTypeBar]: BarSettings
+  }
 }
 
 export interface BarEditorProps extends PanelEditorProps {
-    panel: BarPanel
+  panel: BarPanel
 }
-
-
 
 export interface BarSettings {
-    animation: boolean
-    showGrid: boolean
-    tooltip: "none" | "single" | "all"
-    stack: "auto" | "always" | "none"
-    showLabel: "auto" | "always" | "none"
-    styles: {
-        barWidth: number
-        axisFontSize: number
-        labelFontSize: number
-        barOpacity: number
+  animation: boolean
+  showGrid: boolean
+  tooltip: 'none' | 'single' | 'all'
+  stack: 'auto' | 'always' | 'none'
+  showLabel: 'auto' | 'always' | 'none'
+  styles: {
+    barWidth: number
+    axisFontSize: number
+    labelFontSize: number
+    barOpacity: number
+  }
+  axis: {
+    swap: boolean
+    scale: 'linear' | 'log'
+    scaleBase: 2 | 10
+  }
+  value: ValueSetting
+  legend: {
+    show: boolean
+    placement: 'bottom' | 'right'
+    valueCalcs: ValueCalculationType[]
+    width: number
+    nameWidth: string
+    order: {
+      by: ValueCalculationType
+      sort: 'asc' | 'desc'
     }
-    axis: {
-        swap: boolean
-        scale: "linear" | "log"
-        scaleBase: 2 | 10
-    }
-    value: ValueSetting
-    legend: {
-        show: boolean
-        placement: "bottom" | "right"
-        valueCalcs: ValueCalculationType[]
-        width: number
-        nameWidth: string
-        order: {
-            by: ValueCalculationType
-            sort: "asc" | "desc"
-        }
-    }
-    enableClick: boolean
-    onClickEvent: string
-    thresholds: ThresholdsConfig
-    thresholdsDisplay: ThresholdDisplay
-    thresholdArrow: BarThresholdArrow
+  }
+  thresholds: ThresholdsConfig
+  thresholdsDisplay: ThresholdDisplay
+  thresholdArrow: BarThresholdArrow
 }
 
-
-
 export interface BarSeries {
-    name: string
-    rawName: string
-    color?: string
-    timestamps?: number[]
-    values?: number[]
+  name: string
+  rawName: string
+  color?: string
+  timestamps?: number[]
+  values?: number[]
 }
 
 export enum BarThresholdArrow {
-    Circle = 'circle',
-    Rect = 'rect',
-    RoundRect =  'roundRect',
-    Triangle =  'triangle' ,
-    Diamond =  'diamond' ,
-    Pin =  'pin' ,
-    Arrow =  'arrow' ,
-    None =  'none'
+  Circle = 'circle',
+  Rect = 'rect',
+  RoundRect = 'roundRect',
+  Triangle = 'triangle',
+  Diamond = 'diamond',
+  Pin = 'pin',
+  Arrow = 'arrow',
+  None = 'none',
 }

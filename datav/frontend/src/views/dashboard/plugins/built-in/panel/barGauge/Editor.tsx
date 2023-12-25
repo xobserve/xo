@@ -25,10 +25,20 @@ import ThresholdEditor from 'src/views/dashboard/plugins/components/Threshold/Th
 import { Units } from 'types/panel/plugins'
 import { CodeEditorModal } from 'src/components/CodeEditor/CodeEditorModal'
 import { BarGaugeEditorProps, BarGaugePanel as Panel } from './types'
+import { onClickCommonEvent } from 'src/data/panel/initPlugins'
 
 const BarGaugeEditor = memo(({ panel, onChange }: BarGaugeEditorProps) => {
   const t = useStore(commonMsg)
   const t1 = useStore(barGaugePanelMsg)
+
+  if (!panel.interactions) {
+    onChange((panel: Panel) => {
+      panel.interactions = {
+        enableClick: false,
+        onClickEvent: onClickCommonEvent,
+      }
+    })
+  }
 
   return (
     <>
@@ -193,10 +203,10 @@ const BarGaugeEditor = memo(({ panel, onChange }: BarGaugeEditorProps) => {
       <PanelAccordion title={t.interaction}>
         <PanelEditItem title={t.enable}>
           <Switch
-            defaultChecked={panel.plugins.barGauge.enableClick}
+            defaultChecked={panel.interactions.enableClick}
             onChange={(e) =>
               onChange((panel: Panel) => {
-                panel.plugins.barGauge.enableClick = e.currentTarget.checked
+                panel.interactions.enableClick = e.currentTarget.checked
               })
             }
           />
@@ -205,10 +215,10 @@ const BarGaugeEditor = memo(({ panel, onChange }: BarGaugeEditorProps) => {
           <CodeEditorModal
             onChange={(v) => {
               onChange((panel: Panel) => {
-                panel.plugins.barGauge.clickAction = v
+                panel.interactions.onClickEvent = v
               })
             }}
-            value={panel.plugins.barGauge.clickAction}
+            value={panel.interactions.onClickEvent}
           />
         </PanelEditItem>
       </PanelAccordion>

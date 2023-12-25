@@ -67,7 +67,9 @@ const BarGaugePanel = memo((props: Props) => {
       textSize={options.style.valueSize}
       showMax={options.showMax}
       showMin={options.showMin}
-      onClick={options.enableClick ? options.clickAction : null}
+      onClick={
+        panel.interactions.enableClick ? panel.interactions.onClickEvent : null
+      }
     />
   )
 })
