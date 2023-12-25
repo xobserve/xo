@@ -45,12 +45,14 @@ import TemplateBadge from 'src/views/template/TemplateBadge'
 // in edit mode, we need to cache all the plugins we have edited, until we save the dashboard
 let pluginsCachedInEdit = {}
 let overridesCacheInEdit = {}
+let interactionCacheInEdit = {}
 const PanelSettings = memo(({ panel, onChange }: PanelEditorProps) => {
   const t = useStore(commonMsg)
   const t1 = useStore(panelMsg)
   const onChangeVisualization = (type) => {
     pluginsCachedInEdit[panel.type] = panel.plugins[panel.type]
     overridesCacheInEdit[panel.type] = panel.overrides
+    interactionCacheInEdit[panel.type] = panel.interactions
     onChange((tempPanel: Panel) => {
       const oldPlugin = tempPanel.plugins[tempPanel.type]
       tempPanel.type = type
@@ -62,6 +64,7 @@ const PanelSettings = memo(({ panel, onChange }: PanelEditorProps) => {
         tempPanel.plugins[type].value = oldPlugin.value
       }
       tempPanel.overrides = overridesCacheInEdit[type] ?? []
+      tempPanel.interactions = interactionCacheInEdit[type] ?? null
     })
   }
 
@@ -69,6 +72,7 @@ const PanelSettings = memo(({ panel, onChange }: PanelEditorProps) => {
     return () => {
       pluginsCachedInEdit = {}
       overridesCacheInEdit = {}
+      interactionCacheInEdit = {}
     }
   }, [])
 
@@ -98,7 +102,7 @@ const PanelSettings = memo(({ panel, onChange }: PanelEditorProps) => {
           )
         }
         spacing={2}
-        defaultOpen={panel.templateId !== 0}
+        defaultOpen={!isEmpty(panel.templateId)}
       >
         <PanelEditItem title={t1.panelTitle}>
           <EditorInputItem

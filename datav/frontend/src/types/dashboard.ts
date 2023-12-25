@@ -65,7 +65,6 @@ export interface Panel {
   id?: number
   title?: string
   desc: string
-  type: string
 
   gridPos: GridPos
   collapsed: boolean
@@ -83,10 +82,12 @@ export interface Panel {
   enableScopeTime?: boolean
   scopeTime?: TimeRange
   panels?: Panel[]
+  interactions?: any
 
   templateId?: number
 
   /*---- when template content is updated, these secitons must also be updated ----*/
+  type: string
   plugins?: Record<string, any>
   styles?: PanelStyles
   overrides?: OverrideItem[]

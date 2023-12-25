@@ -488,7 +488,7 @@ const BarChart = memo((props: Props) => {
     }
   }
 
-  const onEvents = genDynamicFunction(panel.plugins.bar.onClickEvent)
+  const onEvents = genDynamicFunction(panel.interactions.onClickEvent)
 
   return (
     <>
@@ -499,7 +499,7 @@ const BarChart = memo((props: Props) => {
         onChartCreated={(c) => setChart(c)}
         width={width}
         onChartEvents={
-          panel.plugins.bar.enableClick
+          panel.interactions.enableClick
             ? (row) => commonInteractionEvent(onEvents, row)
             : null
         }

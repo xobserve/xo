@@ -32,10 +32,19 @@ import { CodeEditorModal } from 'src/components/CodeEditor/CodeEditorModal'
 import { dispatch } from 'use-bus'
 import { PanelForceRebuildEvent } from 'src/data/bus-events'
 import { BarEditorProps, BarPanel as Panel, BarThresholdArrow } from './types'
+import { onClickCommonEvent } from 'src/data/panel/initPlugins'
 
 const BarPanelEditor = memo(({ panel, onChange }: BarEditorProps) => {
   const t = useStore(commonMsg)
   const t1 = useStore(graphPanelMsg)
+  if (!panel.interactions) {
+    onChange((panel: Panel) => {
+      panel.interactions = {
+        enableClick: false,
+        onClickEvent: onClickCommonEvent,
+      }
+    })
+  }
   return (
     <>
       <PanelAccordion title={t.basic}>
@@ -310,10 +319,10 @@ const BarPanelEditor = memo(({ panel, onChange }: BarEditorProps) => {
       <PanelAccordion title={t.interaction}>
         <PanelEditItem title={t.enable}>
           <Switch
-            defaultChecked={panel.plugins.bar.enableClick}
+            defaultChecked={panel.interactions.enableClick}
             onChange={(e) =>
               onChange((panel: Panel) => {
-                panel.plugins.bar.enableClick = e.currentTarget.checked
+                panel.interactions.enableClick = e.currentTarget.checked
                 dispatch(PanelForceRebuildEvent + panel.id)
               })
             }
@@ -321,10 +330,10 @@ const BarPanelEditor = memo(({ panel, onChange }: BarEditorProps) => {
         </PanelEditItem>
         <PanelEditItem title={t.onClickEvent} desc={t.onClickEventTips}>
           <CodeEditorModal
-            value={panel.plugins.bar.onClickEvent}
+            value={panel.interactions.onClickEvent}
             onChange={(v) =>
               onChange((panel: Panel) => {
-                panel.plugins.bar.onClickEvent = v
+                panel.interactions.onClickEvent = v
               })
             }
           />
