@@ -51,7 +51,7 @@ export const initPanel = (id?) => {
     },
     enableScopeTime: false,
     scopeTime: null,
-    interactions: null,
+    interactions: {},
   }
 
   if (id) {

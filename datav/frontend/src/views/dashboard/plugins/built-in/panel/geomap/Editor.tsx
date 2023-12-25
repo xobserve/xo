@@ -41,10 +41,33 @@ import {
   BaseLayerType,
   DataLayerType,
 } from './types'
+import { isEmpty } from 'utils/validate'
 
 const GeoMapPanelEditor = memo(({ panel, onChange }: GeomapEditorProps) => {
   const t = useStore(commonMsg)
   const options = panel.plugins.geomap
+  if (isEmpty(panel.interactions)) {
+    onChange((panel: Panel) => {
+      panel.interactions = {
+        enableClick: false,
+        onClickEvent: `
+        // map:  openlayer map <https://openlayers.org/en/latest/apidoc/module-ol_Map-Map.html>
+        // setVariable: (varName:string, varValue:string) => void 
+        // navigate: react-router-dom -> useNavigate() -> navigate 
+        // setDateTime: (from: Timestamp, to: TimeStamp) => void
+        
+        function onClick(data, map, navigate, setVariable, setDateTime, $variables) {
+            // You can get all current variables in this way
+            const coords = data[0].getGeometry().flatCoordinates
+            const view = map.getView()
+            view.setCenter(coords)
+            view.setZoom(10)
+        }
+        `,
+      }
+    })
+    return
+  }
   return (
     <>
       <PanelAccordion title={t.basic}>
@@ -414,10 +437,10 @@ const GeoMapPanelEditor = memo(({ panel, onChange }: GeomapEditorProps) => {
       <PanelAccordion title={t.interaction}>
         <PanelEditItem title={t.enable}>
           <Switch
-            defaultChecked={panel.plugins.geomap.enableClick}
+            defaultChecked={panel.interactions.enableClick}
             onChange={(e) =>
               onChange((panel: Panel) => {
-                panel.plugins.geomap.enableClick = e.currentTarget.checked
+                panel.interactions.enableClick = e.currentTarget.checked
                 // dispatch(PanelForceRebuildEvent + panel.id)
               })
             }
@@ -425,10 +448,10 @@ const GeoMapPanelEditor = memo(({ panel, onChange }: GeomapEditorProps) => {
         </PanelEditItem>
         <PanelEditItem title={t.onClickEvent} desc={t.onClickEventTips}>
           <CodeEditorModal
-            value={panel.plugins.geomap.onClickEvent}
+            value={panel.interactions.onClickEvent}
             onChange={(v) =>
               onChange((panel: Panel) => {
-                panel.plugins.geomap.onClickEvent = v
+                panel.interactions.onClickEvent = v
               })
             }
           />

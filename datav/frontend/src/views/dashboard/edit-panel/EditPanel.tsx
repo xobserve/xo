@@ -540,15 +540,13 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
                                   panel={tempPanel}
                                   onChange={onTempPanelChange}
                                 />
-
                                 {/* panel rendering plugin setting */}
-                                {!tempPanel.templateId && (
-                                  <CustomPanelEditor
-                                    tempPanel={tempPanel}
-                                    setTempPanel={onTempPanelChange}
-                                    data={data}
-                                  />
-                                )}
+
+                                <CustomPanelEditor
+                                  tempPanel={tempPanel}
+                                  setTempPanel={onTempPanelChange}
+                                  data={data}
+                                />
 
                                 {enableValueMapping && (
                                   <PanelAccordion

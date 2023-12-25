@@ -57,12 +57,13 @@ import { Units } from 'types/panel/plugins'
 import { EditorNumberItem } from 'components/editor/EditorItem'
 import { EchartsEditorProps, EchartsPanel as Panel } from './types'
 import { echartsEventsFunc } from '.'
+import { isEmpty } from 'utils/validate'
 
 const EchartsPanelEditor = memo(
   ({ panel, onChange, data }: EchartsEditorProps) => {
     const t = useStore(commonMsg)
     const t1 = useStore(echartsPanelMsg)
-    if (!panel.interactions) {
+    if (isEmpty(panel.interactions)) {
       onChange((panel: Panel) => {
         panel.interactions = {
           enableClick: false,

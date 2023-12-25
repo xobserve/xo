@@ -23,7 +23,7 @@ export const onClickCommonEvent = `
 function onRowClick(row, navigate, setVariable, setDateTime, $variables) {
     // You can get all current variables in this way
     // const currentVariables = $variables.get()
-    // console.log(row, currentVariables)
+    // console.log(row)
 }
 `
 

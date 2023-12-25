@@ -64,7 +64,7 @@ const PanelSettings = memo(({ panel, onChange }: PanelEditorProps) => {
         tempPanel.plugins[type].value = oldPlugin.value
       }
       tempPanel.overrides = overridesCacheInEdit[type] ?? []
-      tempPanel.interactions = interactionCacheInEdit[type] ?? null
+      tempPanel.interactions = interactionCacheInEdit[type] ?? {}
     })
   }
 

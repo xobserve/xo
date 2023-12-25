@@ -26,12 +26,13 @@ import { Units } from 'types/panel/plugins'
 import { CodeEditorModal } from 'src/components/CodeEditor/CodeEditorModal'
 import { BarGaugeEditorProps, BarGaugePanel as Panel } from './types'
 import { onClickCommonEvent } from 'src/data/panel/initPlugins'
+import { isEmpty } from 'utils/validate'
 
 const BarGaugeEditor = memo(({ panel, onChange }: BarGaugeEditorProps) => {
   const t = useStore(commonMsg)
   const t1 = useStore(barGaugePanelMsg)
 
-  if (!panel.interactions) {
+  if (isEmpty(panel.interactions)) {
     onChange((panel: Panel) => {
       panel.interactions = {
         enableClick: false,

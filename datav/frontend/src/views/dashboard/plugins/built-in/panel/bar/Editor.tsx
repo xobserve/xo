@@ -33,11 +33,12 @@ import { dispatch } from 'use-bus'
 import { PanelForceRebuildEvent } from 'src/data/bus-events'
 import { BarEditorProps, BarPanel as Panel, BarThresholdArrow } from './types'
 import { onClickCommonEvent } from 'src/data/panel/initPlugins'
+import { isEmpty } from 'utils/validate'
 
 const BarPanelEditor = memo(({ panel, onChange }: BarEditorProps) => {
   const t = useStore(commonMsg)
   const t1 = useStore(graphPanelMsg)
-  if (!panel.interactions) {
+  if (isEmpty(panel.interactions)) {
     onChange((panel: Panel) => {
       panel.interactions = {
         enableClick: false,

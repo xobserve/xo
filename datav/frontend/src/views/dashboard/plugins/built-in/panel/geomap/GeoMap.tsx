@@ -157,8 +157,8 @@ const GeoMapPanel = (props: Props) => {
     setMap(map)
     geomap = map
 
-    if ((options.value, options.enableClick)) {
-      const onClick = genDynamicFunction(panel.plugins.geomap.onClickEvent)
+    if ((options.value, panel.interactions.enableClick)) {
+      const onClick = genDynamicFunction(panel.interactions.onClickEvent)
       map.on('click', function (e) {
         var item = map.getFeaturesAtPixel(e.pixel)
         if (item !== null) {
@@ -198,8 +198,8 @@ const GeoMapPanel = (props: Props) => {
     options.baseMap,
     options.dataLayer,
     options.value,
-    options.enableClick,
-    options.onClickEvent,
+    panel.interactions?.enableClick,
+    panel.interactions?.onClickEvent,
   ])
 
   const initControls = (map) => {
