@@ -23,6 +23,7 @@ import {
   PopoverBody,
   PopoverContent,
   PopoverTrigger,
+  Tag,
   Text,
   Tooltip,
   useColorMode,
@@ -115,6 +116,7 @@ import { Lang } from 'types/misc'
 import TemplateExport from 'src/views/template/TemplateExport'
 import { TemplateType } from 'types/template'
 import { extractPanelTemplateContent } from 'utils/template'
+import TemplateBadge from 'src/views/template/TemplateBadge'
 
 interface PanelGridProps {
   dashboard: Dashboard
@@ -708,7 +710,9 @@ const PanelHeader = ({
               paddingRight={panel.styles.title.paddingRight}
               fontSize={panel.styles.title.fontSize}
               fontWeight={panel.styles.title.fontWeight}
-              spacing={0}
+              spacing={1}
+              zIndex={1}
+              alignItems='center'
             >
               <Box
                 color={paletteColorNameToHex(
@@ -720,23 +724,30 @@ const PanelHeader = ({
                   <Text noOfLines={1}>{title}</Text>
                 </TitleDecoration>
               </Box>
+              {panel.templateId && (
+                <TemplateBadge templateId={panel.templateId} />
+              )}
               {(queryError || panel.desc) && (
-                <Box
-                  color={useColorModeValue(
-                    queryError ? 'red' : 'brand.500',
-                    queryError ? 'red' : 'brand.200',
-                  )}
+                <Tooltip
+                  label={
+                    isEmpty(toString(queryError))
+                      ? replaceWithVariables(panel.desc)
+                      : toString(queryError)
+                  }
                 >
-                  <Tooltip
-                    label={
-                      toString(queryError) ?? replaceWithVariables(panel.desc)
-                    }
+                  <Tag
+                    variant='subtle'
+                    size='sm'
+                    colorScheme={queryError ? 'red' : null}
+                    paddingInlineStart='6px'
+                    paddingInlineEnd='6px'
+                    minW='auto'
+                    minH='14px'
+                    borderRadius={1}
                   >
-                    <Box>
-                      <IoMdInformation fontSize='20px' cursor='pointer' />
-                    </Box>
-                  </Tooltip>
-                </Box>
+                    i
+                  </Tag>
+                </Tooltip>
               )}
             </HStack>
           ) : (
