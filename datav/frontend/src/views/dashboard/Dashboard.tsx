@@ -80,8 +80,6 @@ import { $teams } from '../team/store'
 import { getNextPanelId } from './AddPanel'
 import { builtinPanelPlugins } from './plugins/built-in/plugins'
 import { externalPanelPlugins } from './plugins/external/plugins'
-import { useSearchParam } from 'react-use'
-import CustomScrollbar from 'components/CustomScrollbar/CustomScrollbar'
 import { catelogVariables } from '../variables/utils'
 
 setAutoFreeze(false)
@@ -312,7 +310,6 @@ const DashboardWrapper = ({ rawDashboard, sideWidth }) => {
   }, [dashboard, vars])
 
   const [isLargeScreen] = useMediaQuery('(min-width: 600px)')
-  const [dvars, gvars] = catelogVariables(vars, dashboard)
 
   return (
     <>

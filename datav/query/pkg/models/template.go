@@ -23,10 +23,11 @@ type Template struct {
 	Type        int       `json:"type"` // 1. App  2. Dashboard  3. Panel
 	Title       string    `json:"title"`
 	Description string    `json:"description,omitempty"`
-	Scope       int       `json:"scope"`     // 1. Website 2. Tenant 3. Team
-	OwnedBy     int64     `json:"ownedBy"`   // based on scope, e.g when scope == 2, ownedBy is tenantId
-	ContentId   int64     `json:"contentId"` // json encoded string
-	Provider    string    `json:"provider"`  // e.g xobserve , user-custom , third-party
+	Scope       int       `json:"scope"`             // 1. Website 2. Tenant 3. Team
+	OwnedBy     int64     `json:"ownedBy"`           // based on scope, e.g when scope == 2, ownedBy is tenantId
+	ContentId   int64     `json:"contentId"`         // json encoded string
+	Version     string    `json:"version,omitempty"` // content version
+	Provider    string    `json:"provider"`          // e.g xobserve , user-custom , third-party
 	Created     time.Time `json:"created"`
 }
 
@@ -53,5 +54,26 @@ func QueryTemplateById(ctx context.Context, id int64) (*Template, error) {
 	b, _ := b64.StdEncoding.DecodeString(desc)
 	t.Description = string(b)
 
+	if t.ContentId != 0 {
+		v, err := QueryTemplateVersion(ctx, t.ContentId)
+		if err != nil {
+			return nil, err
+		}
+		t.Version = v
+	}
+
 	return t, err
+}
+
+func QueryTemplateVersion(ctx context.Context, id int64) (string, error) {
+	var version string
+	err := db.Conn.QueryRowContext(ctx, "SELECT version FROM template_content WHERE id=?", id).Scan(
+		&version,
+	)
+
+	if err != nil {
+		return "", err
+	}
+
+	return version, err
 }

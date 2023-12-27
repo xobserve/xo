@@ -287,6 +287,15 @@ func GetTemplates(c *gin.Context) {
 		b, _ := b64.StdEncoding.DecodeString(desc)
 		t.Description = string(b)
 
+		if t.ContentId != 0 {
+			v, err := models.QueryTemplateVersion(c.Request.Context(), t.ContentId)
+			if err != nil {
+				logger.Warn("get template version error", "error", err)
+				c.JSON(400, common.RespError(err.Error()))
+				return
+			}
+			t.Version = v
+		}
 		templates = append(templates, t)
 	}
 

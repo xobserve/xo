@@ -3,12 +3,16 @@ import { TemplateContent, TemplateData } from 'types/template'
 import { requestApi } from './axios/request'
 
 export const extractPanelTemplateContent = (panel: Panel): Partial<Panel> => {
-  return {
-    type: panel.type,
-    plugins: panel.plugins,
-    styles: panel.styles,
-    overrides: panel.overrides,
-  }
+  delete panel.id
+  delete panel.title
+  delete panel.gridPos
+  delete panel.enableConditionRender
+  delete panel.conditionRender
+  delete panel.enableScopeTime
+  delete panel.scopeTime
+  delete panel.templateId
+
+  return panel
 }
 
 export const replaceDashboardTemplatePanels = async (dash: Dashboard) => {
@@ -31,6 +35,7 @@ export const replaceDashboardTemplatePanels = async (dash: Dashboard) => {
         )?.content
         if (templateContent) {
           const content: TemplateData = JSON.parse(templateContent)
+
           for (const k of Object.keys(content.panel)) {
             p[k] = content.panel[k]
           }

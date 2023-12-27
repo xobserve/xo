@@ -74,6 +74,7 @@ const DashboardPageWrapper = memo(({ sideWidth }: Props) => {
       setError(error)
     }
   }
+
   return (
     <>
       {dashboard && (

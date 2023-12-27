@@ -217,7 +217,7 @@ const TemplateCard = (props: Props) => {
               {scope}
             </Tag>
           </Tooltip>
-          {!template.contentId && (
+          {!template.contentId ? (
             <Tooltip
               title={
                 lang == 'zh'
@@ -229,6 +229,10 @@ const TemplateCard = (props: Props) => {
                 {lang == 'zh' ? '未设版本' : 'No version'}
               </Tag>
             </Tooltip>
+          ) : (
+            <Tag size='sm' variant='subtle'>
+              v{template.version}
+            </Tag>
           )}
         </HStack>
         <MarkdownRender

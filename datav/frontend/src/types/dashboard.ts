@@ -62,18 +62,10 @@ export interface DashboardData {
 }
 
 export interface Panel {
+  /*---- excluding from template content ----*/
   id?: number
   title?: string
-  desc: string
-
   gridPos: GridPos
-  collapsed: boolean
-
-  datasource?: PanelDatasource
-
-  valueMapping?: ValueMappingItem[]
-  transform?: string
-  enableTransform?: boolean
   enableConditionRender?: boolean
   conditionRender?: {
     type: 'variable' | 'custom'
@@ -81,17 +73,23 @@ export interface Panel {
   }
   enableScopeTime?: boolean
   scopeTime?: TimeRange
+  templateId?: number
+  /*---------------------------*/
+
+  desc: string
+  collapsed: boolean
+  datasource?: PanelDatasource
+  valueMapping?: ValueMappingItem[]
+  transform?: string
+  enableTransform?: boolean
+
   panels?: Panel[]
   interactions?: any
 
-  templateId?: number
-
-  /*---- when template content is updated, these secitons must also be updated ----*/
   type: string
   plugins?: Record<string, any>
   styles?: PanelStyles
   overrides?: OverrideItem[]
-  /*---------------------------*/
 }
 
 export interface ValueMappingItem {

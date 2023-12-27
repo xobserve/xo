@@ -25,6 +25,7 @@ export interface Template {
   scope: TemplateScope
   ownedBy: number
   contentId: number
+  version: string
   provider: string
   created: string
 }
