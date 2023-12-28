@@ -338,10 +338,10 @@ const StatPanelEditor = memo(({ panel, onChange, data }: StatEditorProps) => {
       </PanelAccordion>
       <PanelAccordion title='Thresholds'>
         <ThresholdEditor
-          value={panel.plugins.stat.thresholds}
+          value={panel.thresholds.thresholds}
           onChange={(v) =>
             onChange((panel: Panel) => {
-              panel.plugins.stat.thresholds = v
+              panel.thresholds.thresholds = v
             })
           }
           enableTransform

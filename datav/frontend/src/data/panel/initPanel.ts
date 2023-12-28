@@ -56,6 +56,7 @@ export const initPanel = (id?) => {
     scopeTime: null,
     interactions: {},
     thresholds: {
+      enable: false,
       thresholds: initThresholds(0),
       thresholdsDisplay: ThresholdDisplay.None,
       thresholdArrow: ThresholdArrow.None,

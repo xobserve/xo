@@ -27,10 +27,11 @@ import { replaceWithVariables } from 'utils/variable'
 import { VariableCurrentValue } from 'src/data/variable'
 import { formatUnit } from 'src/views/dashboard/plugins/components/UnitPicker'
 import NoData from 'src/views/dashboard/components/PanelNoData'
-import { GaugePluginData } from './types'
+import { GaugePanel as Panel, GaugePluginData } from './types'
 
 interface Props extends PanelProps {
   data: SeriesData[][]
+  panel: Panel
 }
 
 const GaugePanel = memo((props: Props) => {
@@ -82,7 +83,7 @@ const GaugePanel = memo((props: Props) => {
   ])
 
   const options = useMemo(() => {
-    const thresholds = panel.plugins.gauge.thresholds
+    const thresholds = panel.thresholds.thresholds
     let split = []
     if (isEmpty(thresholds)) {
       split = [[1, colors[0]]]
@@ -213,7 +214,7 @@ const GaugePanel = memo((props: Props) => {
         },
       ],
     }
-  }, [panel.plugins.gauge, colorMode])
+  }, [panel.plugins.gauge, colorMode, panel.thresholds])
 
   useEffect(() => {
     if (chart) {

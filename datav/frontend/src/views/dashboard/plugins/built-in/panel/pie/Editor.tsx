@@ -394,32 +394,31 @@ const PiePanelEditor = memo(({ panel, onChange }: PieEditorProps) => {
 
       <PanelAccordion title='Thresholds'>
         <ThresholdEditor
-          value={panel.plugins.pie.thresholds}
+          value={panel.thresholds.thresholds}
           onChange={(v) =>
             onChange((panel: Panel) => {
-              panel.plugins.pie.thresholds = v
+              panel.thresholds.thresholds = v
             })
           }
         />
 
         <PanelEditItem title={t.enable}>
           <Switch
-            defaultChecked={panel.plugins.pie.enableThresholds}
+            defaultChecked={panel.thresholds.enable}
             onChange={(e) =>
               onChange((panel: Panel) => {
-                panel.plugins.pie.enableThresholds = e.currentTarget.checked
+                panel.thresholds.enable = e.currentTarget.checked
               })
             }
           />
         </PanelEditItem>
-
-        {panel.plugins.pie.enableThresholds && (
+        {panel.thresholds.enable && (
           <PanelEditItem title='Show border'>
             <Switch
-              defaultChecked={panel.plugins.pie.showThreshodBorder}
+              defaultChecked={panel.plugins.pie.showSplitBorder}
               onChange={(e) =>
                 onChange((panel: Panel) => {
-                  panel.plugins.pie.showThreshodBorder = e.currentTarget.checked
+                  panel.plugins.pie.showSplitBorder = e.currentTarget.checked
                 })
               }
             />

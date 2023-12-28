@@ -48,6 +48,7 @@ import {
   commonInteractionEvent,
   genDynamicFunction,
 } from 'utils/dashboard/dynamicCall'
+import { StatSettings } from './types'
 
 interface Props {
   panel: Panel
@@ -61,7 +62,7 @@ const StatGraph = memo((props: Props) => {
   const { data, width, height, panel, panelData } = props
   const { colorMode } = useColorMode()
 
-  const statOptions = panel.plugins.stat
+  const statOptions: StatSettings = panel.plugins.stat
   const [valueText, options, legend, color, valueColor, legendColor, bgColor] =
     useMemo(() => {
       const override: OverrideItem = findOverride(panel, data.rawName)
@@ -81,13 +82,13 @@ const StatGraph = memo((props: Props) => {
           statOptions.value.decimal,
       )
       let max = 0
-      if (statOptions.thresholds.mode == ThresholdsMode.Percentage) {
+      if (panel.thresholds.thresholds.mode == ThresholdsMode.Percentage) {
         max = calcValueOnSeriesData(data, ValueCalculationType.Max)
       }
 
       const thresholds =
         findRuleInOverride(override, StatRules.SeriesThresholds) ??
-        statOptions.thresholds
+        panel.thresholds.thresholds
       let v1 = value
       if (thresholds.enableTransform) {
         const transformFunc = genDynamicFunction(thresholds.transform)

@@ -258,25 +258,21 @@ const GraphPanel = memo((props: GraphPanelProps) => {
                           />
                         </>
                       )}
-                      {props.panel.plugins.graph.thresholdsDisplay !=
+                      {props.panel.thresholds.thresholdsDisplay !=
                         ThresholdDisplay.None && (
                         <ThresholdsPlugin
                           options={options}
-                          thresholdsConfig={
-                            props.panel.plugins.graph.thresholds
-                          }
-                          display={props.panel.plugins.graph.thresholdsDisplay}
+                          thresholdsConfig={props.panel.thresholds.thresholds}
+                          display={props.panel.thresholds.thresholdsDisplay}
                         />
                       )}
                       {v &&
-                        props.panel.plugins.graph.thresholdsDisplay !=
+                        props.panel.thresholds.thresholdsDisplay !=
                           ThresholdDisplay.None && (
                           <ThresholdsPlugin
                             options={options}
                             thresholdsConfig={v}
-                            display={
-                              props.panel.plugins.graph.thresholdsDisplay
-                            }
+                            display={props.panel.thresholds.thresholdsDisplay}
                           />
                         )}
                     </UplotReact>

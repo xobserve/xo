@@ -21,9 +21,9 @@ import {
 import ChartComponent from 'src/components/charts/Chart'
 import { formatUnit } from 'src/views/dashboard/plugins/components/UnitPicker'
 import { memo, useMemo, useState } from 'react'
-import { OverrideItem, Panel, PanelProps } from 'types/dashboard'
+import { OverrideItem, PanelProps } from 'types/dashboard'
 
-import { PiePluginData } from './types'
+import { PiePanel as Panel, PiePluginData } from './types'
 import { SeriesData } from 'types/seriesData'
 import {
   commonInteractionEvent,
@@ -45,6 +45,7 @@ import { PieLegendPlacement } from './types'
 
 interface Props extends PanelProps {
   data: SeriesData[][]
+  panel: Panel
 }
 
 const PiePanelWrapper = memo((props: Props) => {
@@ -95,12 +96,12 @@ const PiePanel = (props: Props) => {
       })
 
       let c
-      if (panel.plugins.pie.enableThresholds) {
+      if (panel.thresholds.enable) {
         let max = 0
-        if (panel.plugins.pie.thresholds.mode == ThresholdsMode.Percentage) {
+        if (panel.thresholds.thresholds.mode == ThresholdsMode.Percentage) {
           max = calcValueOnSeriesData(series, ValueCalculationType.Max)
         }
-        const threshold = getThreshold(v, panel.plugins.pie.thresholds, max)
+        const threshold = getThreshold(v, panel.thresholds.thresholds, max)
         if (threshold) {
           c = threshold.color
         }
@@ -136,8 +137,8 @@ const PiePanel = (props: Props) => {
 
     const borderColor =
       color.length > 0 &&
-      panel.plugins.pie.enableThresholds &&
-      panel.plugins.pie.showThreshodBorder
+      panel.thresholds.enable &&
+      panel.plugins.pie.showSplitBorder
         ? true
         : null
     return [
@@ -249,6 +250,7 @@ const PiePanel = (props: Props) => {
     panel.styles.palette,
     isMobileScreen,
     panel.overrides,
+    panel.thresholds,
   ])
 
   return (

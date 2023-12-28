@@ -164,21 +164,20 @@ const EchartsPanelEditor = memo(
         </PanelAccordion>
         <PanelAccordion title='Thresholds'>
           <ThresholdEditor
-            value={panel.plugins.echarts.thresholds}
+            value={panel.thresholds.thresholds}
             onChange={(v) =>
               onChange((panel: Panel) => {
-                panel.plugins.echarts.thresholds = v
+                panel.thresholds.thresholds = v
               })
             }
           />
 
           <PanelEditItem title={t.enable}>
             <Switch
-              defaultChecked={panel.plugins.echarts.enableThresholds}
+              defaultChecked={panel.thresholds.enable}
               onChange={(e) =>
                 onChange((panel: Panel) => {
-                  panel.plugins.echarts.enableThresholds =
-                    e.currentTarget.checked
+                  panel.thresholds.enable = e.currentTarget.checked
                 })
               }
             />
@@ -210,7 +209,7 @@ const SetOptions = ({ panel, onChange, data }: EchartsEditorProps) => {
     try {
       let o = setOptions(
         cloneDeep(data.flat()),
-        panel.plugins.echarts.thresholds,
+        panel.thresholds.thresholds,
         colors,
         echarts,
         lodash,

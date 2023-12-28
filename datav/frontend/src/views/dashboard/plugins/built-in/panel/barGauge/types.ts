@@ -29,5 +29,4 @@ export interface BarGaugeSettings {
   maxminFrom: 'series' | 'all'
   showMax: boolean
   showMin: boolean
-  thresholds: ThresholdsConfig
 }

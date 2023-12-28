@@ -88,6 +88,7 @@ export interface Panel {
   interactions?: any
   overrides?: OverrideItem[]
   thresholds?: {
+    enable: boolean
     thresholds: ThresholdsConfig
     thresholdsDisplay: ThresholdDisplay
     thresholdArrow: ThresholdArrow

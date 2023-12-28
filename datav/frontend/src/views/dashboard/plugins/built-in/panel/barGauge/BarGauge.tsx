@@ -26,6 +26,7 @@ import { Center } from '@chakra-ui/react'
 import NoData from 'src/views/dashboard/components/PanelNoData'
 import { replaceWithVariables } from 'utils/variable'
 import { VariableCurrentValue } from 'src/data/variable'
+import { BarGaugeSettings } from './types'
 
 interface Props extends PanelProps {
   data: SeriesData[][]
@@ -52,10 +53,10 @@ const BarGaugePanel = memo((props: Props) => {
 
   const [data, textWidth] = transformData(rawData, panel)
 
-  const options = props.panel.plugins.barGauge
+  const options: BarGaugeSettings = props.panel.plugins.barGauge
   return (
     <BarGauge
-      threshods={options.thresholds}
+      threshods={panel.thresholds.thresholds}
       mode={options.mode}
       width={width}
       height={height}

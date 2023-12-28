@@ -422,10 +422,10 @@ const GraphPanelEditor = memo((props: GraphEditorProps) => {
       </PanelAccordion>
       <PanelAccordion title='Thresholds'>
         <ThresholdEditor
-          value={panel.plugins.graph.thresholds}
+          value={panel.thresholds.thresholds}
           onChange={(v) =>
             onChange((panel: GraphPanel) => {
-              panel.plugins.graph.thresholds = v
+              panel.thresholds.thresholds = v
               dispatch(PanelForceRebuildEvent + panel.id)
             })
           }
@@ -433,11 +433,11 @@ const GraphPanelEditor = memo((props: GraphEditorProps) => {
 
         <PanelEditItem title={t1.thresholdsDisplay}>
           <Select
-            value={panel.plugins.graph.thresholdsDisplay}
+            value={panel.thresholds.thresholdsDisplay}
             onChange={(e) => {
               const v = e.currentTarget.value
               onChange((panel: GraphPanel) => {
-                panel.plugins.graph.thresholdsDisplay = v as ThresholdDisplay
+                panel.thresholds.thresholdsDisplay = v as ThresholdDisplay
                 dispatch(PanelForceRebuildEvent + panel.id)
               })
             }}

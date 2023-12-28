@@ -55,7 +55,6 @@ const panelComponents: PanelPluginComponents = {
         scale: 'linear',
         scaleBase: 2,
       },
-      thresholds: initThresholds(),
     },
   },
 }

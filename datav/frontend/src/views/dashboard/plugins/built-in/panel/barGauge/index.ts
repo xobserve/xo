@@ -43,7 +43,6 @@ const panelComponents: PanelPluginComponents = {
       maxminFrom: 'all',
       showMax: true,
       showMin: true,
-      thresholds: initThresholds(6),
     },
   },
 }

@@ -44,7 +44,6 @@ export interface GeoMapSettings {
     showTooltip: boolean
   }
   value: ValueSetting
-  thresholds: ThresholdsConfig
 }
 
 export enum BaseLayerType {

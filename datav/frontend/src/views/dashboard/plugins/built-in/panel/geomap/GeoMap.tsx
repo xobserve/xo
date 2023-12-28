@@ -34,11 +34,12 @@ import { isFunction } from 'lodash'
 import { setVariable } from 'src/views/variables/SelectVariable'
 import { setDateTime } from 'src/components/DatePicker/DatePicker'
 import { $variables } from 'src/views/variables/store'
-import { DataLayerType } from './types'
+import { DataLayerType, GeoMapSettings, GeomapPanel as Panel } from './types'
 import { navigateTo } from 'utils/url'
 
 interface Props extends PanelProps {
   data: SeriesData[][]
+  Panel: Panel
 }
 
 export let geomap: Map = null
@@ -66,7 +67,7 @@ const GeoMapPanel = (props: Props) => {
   const { width, height, panel, data } = props
   const [map, setMap] = useState<Map>(null)
   const mouseWheelZoom = useRef<MouseWheelZoom>(null)
-  const options = panel.plugins.geomap
+  const options: GeoMapSettings = panel.plugins.geomap
   const mapContainer = useRef(null)
 
   if (!isSeriesData(props.data)) {
@@ -108,7 +109,7 @@ const GeoMapPanel = (props: Props) => {
     dataLayer,
     options.baseMap,
     options.dataLayer,
-    options.thresholds,
+    panel.thresholds.thresholds,
     options.value,
     panel.overrides,
   ])

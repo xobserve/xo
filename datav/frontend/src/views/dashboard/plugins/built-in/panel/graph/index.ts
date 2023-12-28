@@ -67,8 +67,6 @@ const panelComponents: PanelPluginComponents = {
         ...getInitUnits(),
         decimal: 3,
       },
-      thresholds: initThresholds(),
-      thresholdsDisplay: ThresholdDisplay.None,
       enableAlert: false,
       alertFilter: initAlertFilter(),
     },

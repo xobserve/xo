@@ -7,7 +7,7 @@ import GeomapOverridesEditor, {
 } from './OverridesEditor'
 import { mockGeomapDataForTestDataDs } from './mocks/mockData'
 import icon from './icon.svg'
-import { initThresholds, getInitUnits } from 'src/data/panel/initPlugins'
+import { getInitUnits } from 'src/data/panel/initPlugins'
 import { ValueCalculationType } from 'types/value'
 import {
   PanelTypeGeomap,
@@ -60,7 +60,6 @@ const panelComponents: PanelPluginComponents = {
         baseSize: 10,
         maxScale: 4,
       },
-      thresholds: initThresholds(12),
     },
   },
 }

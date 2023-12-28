@@ -44,9 +44,7 @@ export interface PieSettings {
   top: string
   left: string
   value: ValueSetting
-  thresholds: ThresholdsConfig
-  enableThresholds: boolean
-  showThreshodBorder: boolean
+  showSplitBorder: boolean
 }
 
 export enum PieLegendPlacement {

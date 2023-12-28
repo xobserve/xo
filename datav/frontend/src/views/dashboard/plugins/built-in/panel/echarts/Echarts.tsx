@@ -30,102 +30,114 @@ import { $variables } from 'src/views/variables/store'
 import NoData from 'src/views/dashboard/components/PanelNoData'
 import { formatUnit } from 'src/views/dashboard/plugins/components/UnitPicker'
 import { navigateTo } from 'utils/url'
+import { EchartsPanel as Panel } from './types'
 
-const EchartsPanel = memo((props: PanelProps) => {
-  const { panel, width, height } = props
-  if (!panel.plugins.echarts.allowEmptyData && isEmpty(props.data)) {
-    return (
-      <Center height='100%'>
-        <NoData />
-      </Center>
-    )
-  }
-
-  const { colorMode } = useColorMode()
-  const toast = useToast()
-  const [chart, setChart] = useState<ECharts>(null)
-  const edit = useSearchParam('edit')
-  const [options, onEvents] = useMemo(() => {
-    const data = props.data.flat()
-    let options = null
-    let onEvents = null
-    const colors = paletteMap[props.panel.styles.palette] ?? palettes
-    const setOptions = genDynamicFunction(panel.plugins.echarts.setOptionsFunc)
-    if (isFunction(setOptions)) {
-      try {
-        const o = setOptions(
-          cloneDeep(data),
-          panel.plugins.echarts.enableThresholds &&
-            panel.plugins.echarts.thresholds,
-          colors,
-          echarts,
-          lodash,
-          moment,
-          colorMode,
-          {
-            units: props.panel.plugins.echarts.value.units,
-            decimal: props.panel.plugins.echarts.value.decimal,
-            formatUnit: formatUnit,
-          },
-        )
-        options = o
-      } catch (error) {
-        console.log('parse echarts options error', error)
-      }
-    } else {
-      toast({
-        title: 'set options error',
-        description: 'The setOptions function you defined is not valid',
-        status: 'error',
-        duration: 3000,
-        isClosable: true,
-      })
+const EchartsPanel = memo(
+  (
+    props: PanelProps & {
+      panel: Panel
+    },
+  ) => {
+    const { panel, width, height } = props
+    if (!panel.plugins.echarts.allowEmptyData && isEmpty(props.data)) {
+      return (
+        <Center height='100%'>
+          <NoData />
+        </Center>
+      )
     }
 
-    if (chart && !isEmpty(panel.interactions.registerEventsFunc)) {
-      const registerEvents = genDynamicFunction(
-        panel.interactions.registerEventsFunc,
+    const { colorMode } = useColorMode()
+    const toast = useToast()
+    const [chart, setChart] = useState<ECharts>(null)
+    const edit = useSearchParam('edit')
+    const [options, onEvents] = useMemo(() => {
+      const data = props.data.flat()
+      let options = null
+      let onEvents = null
+      const colors = paletteMap[props.panel.styles.palette] ?? palettes
+      const setOptions = genDynamicFunction(
+        panel.plugins.echarts.setOptionsFunc,
       )
-      if (isFunction(registerEvents)) {
-        onEvents = registerEvents
+      if (isFunction(setOptions)) {
+        console.log(
+          'here33332222:',
+          panel.thresholds.enable && panel.thresholds.thresholds,
+        )
+        try {
+          const o = setOptions(
+            cloneDeep(data),
+            panel.thresholds.enable ? panel.thresholds.thresholds : null,
+            colors,
+            echarts,
+            lodash,
+            moment,
+            colorMode,
+            {
+              units: props.panel.plugins.echarts.value.units,
+              decimal: props.panel.plugins.echarts.value.decimal,
+              formatUnit: formatUnit,
+            },
+          )
+          options = o
+        } catch (error) {
+          console.log('parse echarts options error', error)
+        }
       } else {
         toast({
-          title: 'register events error',
-          description: 'The registerEvents function you defined is not valid',
+          title: 'set options error',
+          description: 'The setOptions function you defined is not valid',
           status: 'error',
           duration: 3000,
           isClosable: true,
         })
       }
-    }
 
-    if (options) {
-      options.animation = panel.plugins.echarts.animation
-    }
+      if (chart && !isEmpty(panel.interactions.registerEventsFunc)) {
+        const registerEvents = genDynamicFunction(
+          panel.interactions.registerEventsFunc,
+        )
+        if (isFunction(registerEvents)) {
+          onEvents = registerEvents
+        } else {
+          toast({
+            title: 'register events error',
+            description: 'The registerEvents function you defined is not valid',
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+          })
+        }
+      }
 
-    return [options, onEvents]
-  }, [panel.plugins.echarts, props.data, chart])
+      if (options) {
+        options.animation = panel.plugins.echarts.animation
+      }
 
-  // override  echarts background in panel edit mod
-  const darkBg = edit == panel.id.toString() ? 'transparent' : 'transparent' //  "#1A202C"
-  return (
-    <>
-      {options && (
-        <Box height={height} key={colorMode} className='echarts-panel'>
-          <EchartsComponent
-            options={options}
-            theme={colorMode}
-            width={width - 11}
-            height={height}
-            onChartCreated={(c) => setChart(c)}
-            onChartEvents={panel.interactions.enableClick ? onEvents : null}
-            darkBg={darkBg}
-          />
-        </Box>
-      )}
-    </>
-  )
-})
+      return [options, onEvents]
+    }, [panel.plugins.echarts, props.data, chart, panel.thresholds])
+
+    // override  echarts background in panel edit mod
+    const darkBg = edit == panel.id.toString() ? 'transparent' : 'transparent' //  "#1A202C"
+    return (
+      <>
+        {options && (
+          <Box height={height} key={colorMode} className='echarts-panel'>
+            <EchartsComponent
+              options={options}
+              theme={colorMode}
+              width={width - 11}
+              height={height}
+              onChartCreated={(c) => setChart(c)}
+              onChartEvents={panel.interactions.enableClick ? onEvents : null}
+              darkBg={darkBg}
+            />
+          </Box>
+        )}
+      </>
+    )
+  },
+)
 
 export default EchartsPanel
 

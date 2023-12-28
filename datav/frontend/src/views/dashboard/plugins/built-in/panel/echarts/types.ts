@@ -18,7 +18,5 @@ export interface EchartsSettings {
   animation: boolean
   allowEmptyData: boolean
   setOptionsFunc: string
-  thresholds: ThresholdsConfig
-  enableThresholds: boolean
   value: ValueSetting
 }

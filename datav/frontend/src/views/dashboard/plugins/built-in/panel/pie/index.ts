@@ -61,9 +61,7 @@ const panelComponents: PanelPluginComponents = {
         decimal: 3,
         calc: ValueCalculationType.Last,
       },
-      thresholds: initThresholds(12),
-      enableThresholds: false,
-      showThreshodBorder: true,
+      showSplitBorder: true,
     },
   },
 }

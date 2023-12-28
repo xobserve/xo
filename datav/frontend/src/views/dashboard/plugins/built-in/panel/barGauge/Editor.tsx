@@ -227,10 +227,10 @@ const BarGaugeEditor = memo(({ panel, onChange }: BarGaugeEditorProps) => {
 
       <PanelAccordion title='Thresholds'>
         <ThresholdEditor
-          value={panel.plugins.barGauge.thresholds}
+          value={panel.thresholds.thresholds}
           onChange={(v) =>
             onChange((panel: Panel) => {
-              panel.plugins.barGauge.thresholds = v
+              panel.thresholds.thresholds = v
             })
           }
         />

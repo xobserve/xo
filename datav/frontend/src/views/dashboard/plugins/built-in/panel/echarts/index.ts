@@ -21,8 +21,6 @@ const panelComponents: PanelPluginComponents = {
       animation: true,
       allowEmptyData: false,
       setOptionsFunc: setEchartsOptions,
-      thresholds: initThresholds(),
-      enableThresholds: true,
       value: {
         ...getInitUnits(),
         decimal: 3,

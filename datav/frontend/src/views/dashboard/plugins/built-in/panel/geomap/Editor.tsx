@@ -460,10 +460,10 @@ const GeoMapPanelEditor = memo(({ panel, onChange }: GeomapEditorProps) => {
 
       <PanelAccordion title='Thresholds'>
         <ThresholdEditor
-          value={panel.plugins.geomap.thresholds}
+          value={panel.thresholds.thresholds}
           onChange={(v) =>
             onChange((panel: Panel) => {
-              panel.plugins.geomap.thresholds = v
+              panel.thresholds.thresholds = v
             })
           }
         />

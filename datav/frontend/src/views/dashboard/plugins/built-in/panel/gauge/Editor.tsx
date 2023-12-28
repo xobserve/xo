@@ -325,10 +325,10 @@ const GaugePanelEditor = memo((props: GaugeEditorProps) => {
 
       <PanelAccordion title='Thresholds'>
         <ThresholdEditor
-          value={panel.plugins.gauge.thresholds}
+          value={panel.thresholds.thresholds}
           onChange={(v) =>
             onChange((panel: Panel) => {
-              panel.plugins.gauge.thresholds = v
+              panel.thresholds.thresholds = v
             })
           }
         />
