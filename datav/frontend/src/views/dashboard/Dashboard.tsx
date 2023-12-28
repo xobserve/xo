@@ -135,6 +135,7 @@ const DashboardWrapper = ({ rawDashboard, sideWidth }) => {
     const team = $teams.get().find((t) => t.id == dash.ownedBy)
     unstable_batchedUpdates(() => {
       setDashboardVariables(rawDashboard, team)
+
       setDashboard(cloneDeep(dash))
     })
     return () => {

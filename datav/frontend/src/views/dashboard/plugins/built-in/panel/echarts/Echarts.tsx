@@ -82,7 +82,7 @@ const EchartsPanel = memo((props: PanelProps) => {
       })
     }
 
-    if (chart) {
+    if (chart && !isEmpty(panel.interactions.registerEventsFunc)) {
       const registerEvents = genDynamicFunction(
         panel.interactions.registerEventsFunc,
       )

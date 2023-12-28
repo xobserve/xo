@@ -31,7 +31,7 @@ import ThresholdEditor from 'src/views/dashboard/plugins/components/Threshold/Th
 import { CodeEditorModal } from 'src/components/CodeEditor/CodeEditorModal'
 import { dispatch } from 'use-bus'
 import { PanelForceRebuildEvent } from 'src/data/bus-events'
-import { BarEditorProps, BarPanel as Panel, BarThresholdArrow } from './types'
+import { BarEditorProps, BarPanel as Panel, ThresholdArrow } from './types'
 import { onClickCommonEvent } from 'src/data/panel/initPlugins'
 import { isEmpty } from 'utils/validate'
 
@@ -343,10 +343,10 @@ const BarPanelEditor = memo(({ panel, onChange }: BarEditorProps) => {
       </PanelAccordion>
       <PanelAccordion title='Thresholds'>
         <ThresholdEditor
-          value={panel.plugins.bar.thresholds}
+          value={panel.thresholds.thresholds}
           onChange={(v) =>
             onChange((panel: Panel) => {
-              panel.plugins.bar.thresholds = v
+              panel.thresholds.thresholds = v
               // dispatch(PanelForceRebuildEvent + panel.id)
             })
           }
@@ -354,11 +354,11 @@ const BarPanelEditor = memo(({ panel, onChange }: BarEditorProps) => {
 
         <PanelEditItem title={t1.thresholdsDisplay}>
           <Select
-            value={panel.plugins.bar.thresholdsDisplay}
+            value={panel.thresholds.thresholdsDisplay}
             onChange={(e) => {
               const v = e.currentTarget.value
               onChange((panel: Panel) => {
-                panel.plugins.bar.thresholdsDisplay = v as ThresholdDisplay
+                panel.thresholds.thresholdsDisplay = v as ThresholdDisplay
                 // dispatch(PanelForceRebuildEvent + panel.id)
               })
             }}
@@ -376,19 +376,17 @@ const BarPanelEditor = memo(({ panel, onChange }: BarEditorProps) => {
         </PanelEditItem>
         <PanelEditItem title='Threshold line arrow'>
           <Select
-            value={panel.plugins.bar.thresholdArrow}
+            value={panel.thresholds.thresholdArrow}
             onChange={(e) => {
               const v = e.currentTarget.value
               onChange((panel: Panel) => {
-                panel.plugins.bar.thresholdArrow = v as BarThresholdArrow
+                panel.thresholds.thresholdArrow = v as ThresholdArrow
                 // dispatch(PanelForceRebuildEvent + panel.id)
               })
             }}
           >
-            {Object.keys(BarThresholdArrow).map((k) => (
-              <option value={BarThresholdArrow[k]}>
-                {BarThresholdArrow[k]}
-              </option>
+            {Object.keys(ThresholdArrow).map((k) => (
+              <option value={ThresholdArrow[k]}>{ThresholdArrow[k]}</option>
             ))}
           </Select>
         </PanelEditItem>

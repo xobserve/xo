@@ -28,6 +28,7 @@ import { $variables } from 'src/views/variables/store'
 import { getNavigateTo, navigateTo } from 'utils/url'
 import { TemplateContent, TemplateData } from 'types/template'
 import { replaceDashboardTemplatePanels } from 'utils/template'
+import { clone, cloneDeep } from 'lodash'
 
 interface Props {
   dashboard?: Dashboard
@@ -65,7 +66,7 @@ const DashboardPageWrapper = memo(({ sideWidth }: Props) => {
 
       // get panel templates content
       const dash: Dashboard = res.data.dashboard
-      replaceDashboardTemplatePanels(dash)
+      await replaceDashboardTemplatePanels(dash)
       setDashboard(dash)
       if (res.data.path != path) {
         navigateTo(`/` + res.data.cfg.currentTeam + res.data.path)

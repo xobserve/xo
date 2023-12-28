@@ -12,6 +12,7 @@
 // limitations under the License.
 
 import {
+  Button,
   Popover,
   PopoverArrow,
   PopoverBody,
@@ -31,9 +32,10 @@ import TemplateCard from './TemplateCard'
 
 interface Props {
   templateId: number
+  unlinkTemplate: any
 }
 
-const TemplateBadge = ({ templateId }: Props) => {
+const TemplateBadge = ({ templateId, unlinkTemplate }: Props) => {
   const lang = useStore(locale)
   const [template, setTemplate] = useState<Template>(null)
   const onOpen = async () => {
@@ -64,10 +66,18 @@ const TemplateBadge = ({ templateId }: Props) => {
         <Portal>
           <PopoverContent minW='500px'>
             <PopoverArrow />
-            <PopoverHeader>
+            <PopoverHeader
+              justifyContent='space-between'
+              display='flex'
+              alignItems='center'
+            >
               {lang == 'zh'
                 ? '图表引用了以下模版'
                 : 'This panel refers to below template'}
+
+              <Button size='md' variant='outline' onClick={unlinkTemplate}>
+                {lang == 'zh' ? '取消模版引用' : 'Unlink'}
+              </Button>
             </PopoverHeader>
             <PopoverBody>
               {template && <TemplateCard template={template} width='100%' />}

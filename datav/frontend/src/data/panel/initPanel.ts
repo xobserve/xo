@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Panel, PanelDatasource, PanelTypeRow } from 'types/dashboard'
+import { Panel, PanelTypeRow } from 'types/dashboard'
 import { initPanelStyles } from './initStyles'
 import { DatasourceMaxDataPoints, DatasourceMinInterval } from '../constants'
 import { builtinPanelPlugins } from 'src/views/dashboard/plugins/built-in/plugins'
@@ -20,6 +20,9 @@ import { PanelTypeGraph } from 'src/views/dashboard/plugins/built-in/panel/graph
 import { $datasources } from 'src/views/datasource/store'
 import { DatasourceTypeTestData } from 'src/views/dashboard/plugins/built-in/datasource/testdata/types'
 import { first } from 'lodash'
+import { initThresholds } from './initPlugins'
+import { ThresholdDisplay } from 'types/panel/plugins'
+import { ThresholdArrow } from 'src/views/dashboard/plugins/built-in/panel/bar/types'
 
 export const initPanelType = PanelTypeGraph
 export const initPanel = (id?) => {
@@ -52,6 +55,11 @@ export const initPanel = (id?) => {
     enableScopeTime: false,
     scopeTime: null,
     interactions: {},
+    thresholds: {
+      thresholds: initThresholds(0),
+      thresholdsDisplay: ThresholdDisplay.None,
+      thresholdArrow: ThresholdArrow.None,
+    },
   }
 
   if (id) {

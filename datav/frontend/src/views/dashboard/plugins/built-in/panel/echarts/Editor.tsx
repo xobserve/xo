@@ -63,7 +63,7 @@ const EchartsPanelEditor = memo(
   ({ panel, onChange, data }: EchartsEditorProps) => {
     const t = useStore(commonMsg)
     const t1 = useStore(echartsPanelMsg)
-    if (isEmpty(panel.interactions)) {
+    if (isEmpty(panel.interactions?.registerEventsFunc)) {
       onChange((panel: Panel) => {
         panel.interactions = {
           enableClick: false,

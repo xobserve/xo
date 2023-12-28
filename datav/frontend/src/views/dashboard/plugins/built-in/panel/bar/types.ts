@@ -44,9 +44,6 @@ export interface BarSettings {
       sort: 'asc' | 'desc'
     }
   }
-  thresholds: ThresholdsConfig
-  thresholdsDisplay: ThresholdDisplay
-  thresholdArrow: BarThresholdArrow
 }
 
 export interface BarSeries {
@@ -57,7 +54,7 @@ export interface BarSeries {
   values?: number[]
 }
 
-export enum BarThresholdArrow {
+export enum ThresholdArrow {
   Circle = 'circle',
   Rect = 'rect',
   RoundRect = 'roundRect',

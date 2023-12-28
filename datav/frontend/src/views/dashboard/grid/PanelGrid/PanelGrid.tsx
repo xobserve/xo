@@ -116,7 +116,6 @@ import { Lang } from 'types/misc'
 import TemplateExport from 'src/views/template/TemplateExport'
 import { TemplateType } from 'types/template'
 import { extractPanelTemplateContent } from 'utils/template'
-import TemplateBadge from 'src/views/template/TemplateBadge'
 
 interface PanelGridProps {
   dashboard: Dashboard

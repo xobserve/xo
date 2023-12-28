@@ -11,8 +11,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { ThresholdArrow } from 'src/views/dashboard/plugins/built-in/panel/bar/types'
+import { ThresholdDisplay } from './panel/plugins'
 import { PanelStyles } from './panel/styles'
 import { Role } from './role'
+import { ThresholdsConfig } from './threshold'
 import { TimeRange } from './time'
 import { Variable } from './variable'
 
@@ -62,7 +65,6 @@ export interface DashboardData {
 }
 
 export interface Panel {
-  /*---- excluding from template content ----*/
   id?: number
   title?: string
   gridPos: GridPos
@@ -74,7 +76,6 @@ export interface Panel {
   enableScopeTime?: boolean
   scopeTime?: TimeRange
   templateId?: number
-  /*---------------------------*/
 
   desc: string
   collapsed: boolean
@@ -85,11 +86,18 @@ export interface Panel {
 
   panels?: Panel[]
   interactions?: any
+  overrides?: OverrideItem[]
+  thresholds?: {
+    thresholds: ThresholdsConfig
+    thresholdsDisplay: ThresholdDisplay
+    thresholdArrow: ThresholdArrow
+  }
 
+  /*---- template content ----*/
   type: string
   plugins?: Record<string, any>
   styles?: PanelStyles
-  overrides?: OverrideItem[]
+  /*---------------------------*/
 }
 
 export interface ValueMappingItem {

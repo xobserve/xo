@@ -44,6 +44,7 @@ import {
   genDynamicFunction,
 } from 'utils/dashboard/dynamicCall'
 import { getTimeFormatForChart } from 'utils/format'
+import { BarSettings } from './types'
 
 interface Props {
   data: any[]
@@ -54,7 +55,7 @@ interface Props {
 
 const BarChart = memo((props: Props) => {
   const { panel, width, height } = props
-  const options = panel.plugins.bar
+  const options: BarSettings = panel.plugins.bar
   const [chart, setChart] = useState<echarts.ECharts>(null)
   const { colorMode } = useColorMode()
   useEffect(() => {
@@ -378,8 +379,8 @@ const BarChart = memo((props: Props) => {
     }),
   }
 
-  if (options.thresholdsDisplay != ThresholdDisplay.None) {
-    for (const threshold of options.thresholds.thresholds) {
+  if (panel.thresholds.thresholdsDisplay != ThresholdDisplay.None) {
+    for (const threshold of panel.thresholds.thresholds.thresholds) {
       if (threshold.value == null) {
         continue
       }
@@ -393,7 +394,7 @@ const BarChart = memo((props: Props) => {
         markLine: {
           [options.axis.swap ? 'xAxisIndex' : 'yAxisIndex']: 0,
           silent: true,
-          symbol: [options.thresholdArrow, null],
+          symbol: [panel.thresholds.thresholdArrow, null],
           label: {
             show: false,
           },
@@ -401,12 +402,12 @@ const BarChart = memo((props: Props) => {
           data: [
             {
               [options.axis.swap ? 'xAxis' : 'yAxis']:
-                options.thresholds.mode == ThresholdsMode.Absolute
+                panel.thresholds.thresholds.mode == ThresholdsMode.Absolute
                   ? threshold.value
                   : (threshold.value * max) / 100,
               lineStyle: {
                 type:
-                  options.thresholdsDisplay == ThresholdDisplay.Line
+                  panel.thresholds.thresholdsDisplay == ThresholdDisplay.Line
                     ? 'solid'
                     : 'dashed',
                 color: paletteColorNameToHex(threshold.color, colorMode),
@@ -458,8 +459,8 @@ const BarChart = memo((props: Props) => {
             silent: true,
             symbol:
               separateY === null
-                ? [null, options.thresholdArrow]
-                : [options.thresholdArrow, null],
+                ? [null, panel.thresholds.thresholdArrow]
+                : [panel.thresholds.thresholdArrow, null],
             label: {
               show: false,
             },
@@ -474,7 +475,7 @@ const BarChart = memo((props: Props) => {
                     : (threshold.value * max) / 100,
                 lineStyle: {
                   type:
-                    options.thresholdsDisplay == ThresholdDisplay.Line
+                    panel.thresholds.thresholdsDisplay == ThresholdDisplay.Line
                       ? 'solid'
                       : 'dashed',
                   color: paletteColorNameToHex(threshold.color, colorMode),

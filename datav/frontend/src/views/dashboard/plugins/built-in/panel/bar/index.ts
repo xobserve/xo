@@ -14,7 +14,7 @@ import {
   getInitUnits,
 } from 'src/data/panel/initPlugins'
 import { ThresholdDisplay } from 'types/panel/plugins'
-import { PanelTypeBar, BarThresholdArrow } from './types'
+import { PanelTypeBar, ThresholdArrow } from './types'
 
 const panelComponents: PanelPluginComponents = {
   panel: BarPanelWrapper,
@@ -58,9 +58,6 @@ const panelComponents: PanelPluginComponents = {
           sort: 'desc',
         },
       },
-      thresholds: initThresholds(0),
-      thresholdsDisplay: ThresholdDisplay.None,
-      thresholdArrow: BarThresholdArrow.None,
     },
   },
 }
