@@ -77,3 +77,16 @@ func QueryTemplateVersion(ctx context.Context, id int64) (string, error) {
 
 	return version, err
 }
+
+func QueryTemplateNewestVersion(ctx context.Context, id int64) (string, error) {
+	var version string
+	err := db.Conn.QueryRowContext(ctx, "SELECT version FROM template_content WHERE template_id=? ORDER BY created DESC limit 1", id).Scan(
+		&version,
+	)
+
+	if err != nil {
+		return "", err
+	}
+
+	return version, err
+}

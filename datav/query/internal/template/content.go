@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -125,4 +126,25 @@ func GetTemplateContentsByIds(c *gin.Context) {
 	}
 
 	c.JSON(200, common.RespSuccess(contents))
+}
+
+func GetTemplateNewestVersion(c *gin.Context) {
+	id, _ := strconv.ParseInt(c.Param("id"), 10, 64)
+	if id == 0 {
+		c.JSON(400, common.RespError("invalid template id"))
+		return
+	}
+
+	version, err := models.QueryTemplateNewestVersion(c.Request.Context(), id)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			c.JSON(200, common.RespSuccess(""))
+			return
+		}
+		logger.Warn("query template newest version error", "error", err)
+		c.JSON(500, common.RespError(err.Error()))
+		return
+	}
+
+	c.JSON(200, common.RespSuccess(version))
 }

@@ -63,7 +63,7 @@ const TemplateStore = () => {
   const [tempTemplateConent, setTempTemplateConent] =
     useState<Partial<TemplateContent>>(null)
   const [applyTemplate, setApplyTemplate] = useState<Template>(null)
-
+  const [newestVersion, setNewestVersion] = useState<string>(null)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const {
     isOpen: isCreateContentOpen,
@@ -109,7 +109,9 @@ const TemplateStore = () => {
     onClose()
   }
 
-  const onCreateContent = (t: Template) => {
+  const onCreateContent = async (t: Template) => {
+    const res = await requestApi.get(`/template/content/newest/${t.id}`)
+    setNewestVersion(res.data)
     setTempTemplate(t)
     if (t.id != tempTemplateConent?.templateId) {
       setTempTemplateConent({
@@ -122,6 +124,28 @@ const TemplateStore = () => {
   }
 
   const onSubmitTemplateContent = async () => {
+    if (!tempTemplateConent.version.match(/^\d+(?:\.\d+){2}$/)) {
+      toast({
+        title: lang == 'zh' ? '版本号格式错误' : 'Version format error',
+        status: 'error',
+        duration: 2000,
+        isClosable: true,
+      })
+      return
+    }
+
+    if (tempTemplateConent.version <= newestVersion) {
+      toast({
+        title:
+          lang == 'zh'
+            ? '新版本号必须大于上个版本号'
+            : 'New version must be greater than the previous version',
+        status: 'error',
+        duration: 2000,
+        isClosable: true,
+      })
+      return
+    }
     tempTemplateConent.content = JSON.stringify(
       JSON.parse(tempTemplateConent.content),
     )
@@ -137,6 +161,7 @@ const TemplateStore = () => {
     onCreateContentClose()
   }
 
+  console.log('here33333111:', newestVersion)
   return (
     <>
       <Box>
@@ -281,6 +306,14 @@ const TemplateStore = () => {
                       }}
                       placeholder={'x.y.z, e.g 1.0.3'}
                     />
+                    <Text
+                      minWidth='fit-content'
+                      fontSize='0.9rem'
+                      opacity='0.7'
+                    >
+                      {lang == 'zh' ? '上个版本' : 'previous version'}:{' '}
+                      {newestVersion}
+                    </Text>
                   </FormItem>
                   <FormItem
                     title={'更新内容描述'}
