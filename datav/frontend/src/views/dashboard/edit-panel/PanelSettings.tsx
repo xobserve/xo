@@ -89,11 +89,6 @@ const PanelSettings = memo(({ panel, onChange }: PanelEditorProps) => {
   const isBuiltin = !isExternalPanel && !panel.type.startsWith('xobserve')
   const isxobserve = !isExternalPanel && panel.type.startsWith('xobserve')
 
-  const unlinkTemplate = () => {
-    onChange((tempPanel: Panel) => {
-      tempPanel.templateId = 0
-    })
-  }
   return (
     <>
       <PanelAccordion
@@ -101,10 +96,6 @@ const PanelSettings = memo(({ panel, onChange }: PanelEditorProps) => {
           panel.templateId ? (
             <HStack>
               <Text>{t.basicSetting}</Text>
-              <TemplateBadge
-                templateId={panel.templateId}
-                unlinkTemplate={unlinkTemplate}
-              />
             </HStack>
           ) : (
             t.basicSetting

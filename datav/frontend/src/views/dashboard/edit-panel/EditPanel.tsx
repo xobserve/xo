@@ -79,6 +79,7 @@ import { PanelTypeTable } from '../plugins/built-in/panel/table/types'
 import { PanelTypeGraph } from '../plugins/built-in/panel/graph/types'
 import { Allotment } from 'allotment'
 import 'allotment/dist/style.css'
+import TemplateBadge from 'src/views/template/TemplateBadge'
 
 interface EditPanelProps {
   dashboard: Dashboard
@@ -294,6 +295,12 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
     ['sortWeight', 'name'],
     ['desc', 'asc'],
   )
+
+  const unlinkTemplate = () => {
+    setTempPanel((p: Panel) => {
+      p.templateId = 0
+    })
+  }
   return (
     <>
       <Modal
@@ -507,9 +514,19 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
                         <Box className='top-gradient-border'>
                           <Tabs position='relative' variant='unstyled'>
                             <TabList pb='0'>
-                              <Tab>{t.basicSetting}</Tab>
+                              <Tab gap={1}>
+                                {t.basicSetting}
+                                {tempPanel.templateId != 0 && (
+                                  <TemplateBadge
+                                    templateId={tempPanel.templateId}
+                                    unlinkTemplate={unlinkTemplate}
+                                  />
+                                )}
+                              </Tab>
                               <Tab>{t.panel}</Tab>
-                              <Tab>{t.styles}</Tab>
+                              {tempPanel.templateId == 0 && (
+                                <Tab>{t.styles}</Tab>
+                              )}
                               {panelOverridesRules.length > 0 && (
                                 <Tab>
                                   {t1.overrides}{' '}
@@ -562,12 +579,14 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
                                   </PanelAccordion>
                                 )}
                               </TabPanel>
-                              <TabPanel px='0' pt='1' pb='0'>
-                                <PanelStyles
-                                  panel={tempPanel}
-                                  onChange={setTempPanel}
-                                />
-                              </TabPanel>
+                              {tempPanel.templateId == 0 && (
+                                <TabPanel px='0' pt='1' pb='0'>
+                                  <PanelStyles
+                                    panel={tempPanel}
+                                    onChange={setTempPanel}
+                                  />
+                                </TabPanel>
+                              )}
                               <TabPanel px='0' pt='1' pb='0'>
                                 <PanelOverrides
                                   panel={tempPanel}
