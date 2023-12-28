@@ -62,133 +62,136 @@ const TablePanelEditor = memo(({ panel, onChange }: TableEditorProps) => {
 
   return (
     <>
-      <PanelAccordion title={t1.tableSetting}>
-        <PanelEditItem title={t1.showHeader} desc={t1.showHeaderTips}>
-          <Switch
-            isChecked={panel.plugins.table.showHeader}
-            onChange={(e) =>
-              onChange((panel: Panel) => {
-                panel.plugins.table.showHeader = e.target.checked
-              })
-            }
-          />
-        </PanelEditItem>
-        <PanelEditItem title={t1.showBorder}>
-          <Switch
-            isChecked={panel.plugins.table.bordered}
-            onChange={(e) =>
-              onChange((panel: Panel) => {
-                panel.plugins.table.bordered = e.target.checked
-              })
-            }
-          />
-        </PanelEditItem>
-        <PanelEditItem title={t1.stickyHeader} desc={t1.stickyHeaderTips}>
-          <Switch
-            isChecked={panel.plugins.table.stickyHeader}
-            onChange={(e) =>
-              onChange((panel: Panel) => {
-                panel.plugins.table.stickyHeader = e.target.checked
-                dispatch(PanelForceRebuildEvent + panel.id)
-              })
-            }
-          />
-        </PanelEditItem>
+      {panel.templateId == 0 && (
+        <>
+          <PanelAccordion title={t1.tableSetting}>
+            <PanelEditItem title={t1.showHeader} desc={t1.showHeaderTips}>
+              <Switch
+                isChecked={panel.plugins.table.showHeader}
+                onChange={(e) =>
+                  onChange((panel: Panel) => {
+                    panel.plugins.table.showHeader = e.target.checked
+                  })
+                }
+              />
+            </PanelEditItem>
+            <PanelEditItem title={t1.showBorder}>
+              <Switch
+                isChecked={panel.plugins.table.bordered}
+                onChange={(e) =>
+                  onChange((panel: Panel) => {
+                    panel.plugins.table.bordered = e.target.checked
+                  })
+                }
+              />
+            </PanelEditItem>
+            <PanelEditItem title={t1.stickyHeader} desc={t1.stickyHeaderTips}>
+              <Switch
+                isChecked={panel.plugins.table.stickyHeader}
+                onChange={(e) =>
+                  onChange((panel: Panel) => {
+                    panel.plugins.table.stickyHeader = e.target.checked
+                    dispatch(PanelForceRebuildEvent + panel.id)
+                  })
+                }
+              />
+            </PanelEditItem>
 
-        <PanelEditItem title={t1.cellSize}>
-          <RadionButtons
-            options={[
-              { label: t.small, value: 'small' },
-              { label: t.medium, value: 'middle' },
-              { label: t.large, value: 'large' },
-            ]}
-            value={panel.plugins.table.cellSize}
-            onChange={(v) =>
-              onChange((panel: Panel) => {
-                panel.plugins.table.cellSize = v
-              })
-            }
-          />
-        </PanelEditItem>
+            <PanelEditItem title={t1.cellSize}>
+              <RadionButtons
+                options={[
+                  { label: t.small, value: 'small' },
+                  { label: t.medium, value: 'middle' },
+                  { label: t.large, value: 'large' },
+                ]}
+                value={panel.plugins.table.cellSize}
+                onChange={(v) =>
+                  onChange((panel: Panel) => {
+                    panel.plugins.table.cellSize = v
+                  })
+                }
+              />
+            </PanelEditItem>
 
-        <PanelEditItem title={t1.tableWidth}>
-          <HStack>
-            <EditorNumberItem
-              value={panel.plugins.table.tableWidth}
-              min={100}
-              step={20}
-              onChange={(v) =>
-                onChange((panel: Panel) => {
-                  panel.plugins.table.tableWidth = v
-                })
-              }
-            />{' '}
-            <Text textStyle='annotation'>%</Text>
-          </HStack>
-        </PanelEditItem>
-        <PanelEditItem title={t.pagination}>
-          <Switch
-            isChecked={panel.plugins.table.enablePagination}
-            onChange={(e) =>
-              onChange((panel: Panel) => {
-                panel.plugins.table.enablePagination = e.target.checked
-              })
-            }
-          />
-        </PanelEditItem>
-      </PanelAccordion>
-      <PanelAccordion title={t1.column}>
-        <PanelEditItem title={t1.colorTitle}>
-          <ColorPicker
-            color={panel.plugins.table.column.colorTitle}
-            onChange={(v) =>
-              onChange((panel: Panel) => {
-                panel.plugins.table.column.colorTitle = v
-              })
-            }
-          />
-        </PanelEditItem>
+            <PanelEditItem title={t1.tableWidth}>
+              <HStack>
+                <EditorNumberItem
+                  value={panel.plugins.table.tableWidth}
+                  min={100}
+                  step={20}
+                  onChange={(v) =>
+                    onChange((panel: Panel) => {
+                      panel.plugins.table.tableWidth = v
+                    })
+                  }
+                />{' '}
+                <Text textStyle='annotation'>%</Text>
+              </HStack>
+            </PanelEditItem>
+            <PanelEditItem title={t.pagination}>
+              <Switch
+                isChecked={panel.plugins.table.enablePagination}
+                onChange={(e) =>
+                  onChange((panel: Panel) => {
+                    panel.plugins.table.enablePagination = e.target.checked
+                  })
+                }
+              />
+            </PanelEditItem>
+          </PanelAccordion>
+          <PanelAccordion title={t1.column}>
+            <PanelEditItem title={t1.colorTitle}>
+              <ColorPicker
+                color={panel.plugins.table.column.colorTitle}
+                onChange={(v) =>
+                  onChange((panel: Panel) => {
+                    panel.plugins.table.column.colorTitle = v
+                  })
+                }
+              />
+            </PanelEditItem>
 
-        <PanelEditItem title={t1.columnAlignment}>
-          <RadionButtons
-            options={[
-              { label: t.auto, value: 'auto' },
-              { label: t.left, value: 'left' },
-              { label: t.center, value: 'center' },
-              { label: t.right, value: 'right' },
-            ]}
-            value={panel.plugins.table.column.align}
-            onChange={(v) =>
-              onChange((panel: Panel) => {
-                panel.plugins.table.column.align = v
-              })
-            }
-          />
-        </PanelEditItem>
+            <PanelEditItem title={t1.columnAlignment}>
+              <RadionButtons
+                options={[
+                  { label: t.auto, value: 'auto' },
+                  { label: t.left, value: 'left' },
+                  { label: t.center, value: 'center' },
+                  { label: t.right, value: 'right' },
+                ]}
+                value={panel.plugins.table.column.align}
+                onChange={(v) =>
+                  onChange((panel: Panel) => {
+                    panel.plugins.table.column.align = v
+                  })
+                }
+              />
+            </PanelEditItem>
 
-        <PanelEditItem title={t1.columnSort} desc={t1.columnSortTips}>
-          <Switch
-            isChecked={panel.plugins.table.column.enableSort}
-            onChange={(e) =>
-              onChange((panel: Panel) => {
-                panel.plugins.table.column.enableSort = e.target.checked
-              })
-            }
-          />
-        </PanelEditItem>
+            <PanelEditItem title={t1.columnSort} desc={t1.columnSortTips}>
+              <Switch
+                isChecked={panel.plugins.table.column.enableSort}
+                onChange={(e) =>
+                  onChange((panel: Panel) => {
+                    panel.plugins.table.column.enableSort = e.target.checked
+                  })
+                }
+              />
+            </PanelEditItem>
 
-        <PanelEditItem title={t1.columnFilter} desc={t1.columnFilterTips}>
-          <Switch
-            isChecked={panel.plugins.table.column.enableFilter}
-            onChange={(e) =>
-              onChange((panel: Panel) => {
-                panel.plugins.table.column.enableFilter = e.target.checked
-              })
-            }
-          />
-        </PanelEditItem>
-      </PanelAccordion>
-
+            <PanelEditItem title={t1.columnFilter} desc={t1.columnFilterTips}>
+              <Switch
+                isChecked={panel.plugins.table.column.enableFilter}
+                onChange={(e) =>
+                  onChange((panel: Panel) => {
+                    panel.plugins.table.column.enableFilter = e.target.checked
+                  })
+                }
+              />
+            </PanelEditItem>
+          </PanelAccordion>
+        </>
+      )}
       <PanelAccordion title={t.interaction}>
         <PanelEditItem title='Enable row click'>
           <Switch

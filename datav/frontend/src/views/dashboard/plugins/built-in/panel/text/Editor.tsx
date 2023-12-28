@@ -23,6 +23,10 @@ import { locale } from 'src/i18n/i18n'
 
 const TextPanelEditor = memo(({ panel, onChange }: TextEditorProps) => {
   const lang = useStore(locale)
+
+  if (panel.templateId != 0) {
+    return <></>
+  }
   return (
     <PanelAccordion title={lang == 'en' ? 'Text settings' : 'Text 设置'}>
       <PanelEditItem title={lang == 'en' ? 'Content' : '内容'}>

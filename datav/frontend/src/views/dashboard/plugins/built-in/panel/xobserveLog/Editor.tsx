@@ -36,6 +36,10 @@ const PanelEditor = memo(({ panel, onChange }: xobserveLogEditorProps) => {
   const [columns, setColumns] = useState(
     JSON.stringify(panel.plugins[PanelType].columns.displayColumns, null, 4),
   )
+
+  if (panel.templateId != 0) {
+    return <></>
+  }
   return (
     <>
       <PanelAccordion

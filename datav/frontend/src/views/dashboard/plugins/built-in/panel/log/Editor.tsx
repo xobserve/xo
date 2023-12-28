@@ -61,431 +61,453 @@ const LogPanelEditor = memo((props: LogEditorProps) => {
 
   return (
     <>
-      <PanelAccordion title={t.basicSetting}>
-        <PanelEditItem title='Show time'>
-          <Switch
-            isChecked={panel.plugins.log.showTime}
-            onChange={(e) =>
-              onChange((panel: Panel) => {
-                panel.plugins.log.showTime = e.target.checked
-              })
-            }
-          />
-        </PanelEditItem>
-        <PanelEditItem title='Timestamp column width' desc='In css pixels'>
-          <EditorNumberItem
-            min={0}
-            max={500}
-            step={5}
-            value={panel.plugins.log.timeColumnWidth}
-            onChange={(v) =>
-              onChange((panel: Panel) => {
-                panel.plugins.log.timeColumnWidth = v
-              })
-            }
-            placeholder='auto'
-          />
-        </PanelEditItem>
-        <PanelEditItem title='Order by'>
-          <RadionButtons
-            options={[
-              { label: 'Newest First', value: 'newest' },
-              { label: 'Oldest First', value: 'oldest' },
-            ]}
-            value={panel.plugins.log.orderBy}
-            onChange={(v) =>
-              onChange((panel: Panel) => {
-                panel.plugins.log.orderBy = v
-              })
-            }
-          />
-        </PanelEditItem>
-        <PanelEditItem title='Timestamp precision'>
-          <Select
-            value={panel.plugins.log.timeStampPrecision}
-            onChange={(v) =>
-              onChange((panel: Panel) => {
-                panel.plugins.log.timeStampPrecision = v
-              })
-            }
-            options={[
-              { label: 'ns', value: 'ns' },
-              { label: 'us', value: 'us' },
-              { label: 'ms', value: 'ms' },
-              { label: 'second', value: 's' },
-            ]}
-            popupMatchSelectWidth={false}
-          />
-        </PanelEditItem>
-        <PanelEditItem title='Enable log details'>
-          <Switch
-            isChecked={panel.plugins.log.enableDetails}
-            onChange={(e) =>
-              onChange((panel: Panel) => {
-                panel.plugins.log.enableDetails = e.target.checked
-              })
-            }
-          />
-        </PanelEditItem>
-        <PanelEditItem title='Enable log transform'>
-          <Switch
-            isChecked={panel.plugins.log.enableTransform}
-            onChange={(e) =>
-              onChange((panel: Panel) => {
-                panel.plugins.log.enableTransform = e.target.checked
-              })
-            }
-          />
-        </PanelEditItem>
-        {panel.plugins.log.enableTransform && (
-          <PanelEditItem title='Log transform'>
-            <CodeEditorModal
-              value={panel.plugins.log.transform}
-              onChange={(v) =>
-                onChange((panel: Panel) => {
-                  panel.plugins.log.transform = v
-                })
-              }
-            />
-          </PanelEditItem>
-        )}
-      </PanelAccordion>
-      <PanelAccordion title='Labels'>
-        <PanelEditItem title='Display labels'>
-          <EditorInputItem
-            value={panel.plugins.log.labels.display}
-            onChange={(v) =>
-              onChange((panel: Panel) => {
-                panel.plugins.log.labels.display = v
-              })
-            }
-            placeholder='e.g job,filename'
-          />
-        </PanelEditItem>
-        <PanelEditItem title='Label column common width' desc='In css pixels'>
-          <EditorNumberItem
-            min={0}
-            max={1000}
-            step={5}
-            value={panel.plugins.log.labels.width}
-            onChange={(v) =>
-              onChange((panel: Panel) => {
-                panel.plugins.log.labels.width = v
-              })
-            }
-            placeholder='auto'
-          />
-        </PanelEditItem>
-        <PanelEditItem
-          title='Label column width'
-          desc={`Set width for specify label,JSON format, key is label key, value is width, e.g {"user":200}`}
-        >
-          <EditorInputItem
-            type='textarea'
-            value={panel.plugins.log.labels.widthMap}
-            onChange={(v) =>
-              onChange((panel: Panel) => {
-                panel.plugins.log.labels.widthMap = v
-              })
-            }
-            placeholder='auto'
-          />
-        </PanelEditItem>
-        <PanelEditItem title='Layout orientation'>
-          <RadionButtons
-            options={[
-              {
-                label: LayoutOrientation.Horizontal,
-                value: LayoutOrientation.Horizontal,
-              },
-              {
-                label: LayoutOrientation.Vertical,
-                value: LayoutOrientation.Vertical,
-              },
-            ]}
-            value={panel.plugins.log.labels.layout}
-            onChange={(v) =>
-              onChange((panel: Panel) => {
-                panel.plugins.log.labels.layout = v
-              })
-            }
-          />
-        </PanelEditItem>
-        <PanelEditItem
-          title='Max value lines'
-          desc='When label value is too long, set this option to hide some'
-        >
-          <EditorNumberItem
-            min={1}
-            max={5}
-            step={1}
-            value={panel.plugins.log.labels.maxValueLines}
-            onChange={(v) =>
-              onChange((panel: Panel) => {
-                panel.plugins.log.labels.maxValueLines = v
-              })
-            }
-            placeholder='auto'
-          />
-        </PanelEditItem>
-      </PanelAccordion>
-      <PanelAccordion title={t.styles}>
-        <PanelEditItem title='Auto color label'>
-          <Switch
-            isChecked={panel.plugins.log.styles.labelColorSyncChart}
-            onChange={(e) =>
-              onChange((panel: Panel) => {
-                panel.plugins.log.styles.labelColorSyncChart = e.target.checked
-              })
-            }
-          />
-        </PanelEditItem>
-        {!panel.plugins.log.styles.labelColorSyncChart && (
-          <PanelEditItem title='Label name color'>
-            <ColorPicker
-              color={panel.plugins.log.styles.labelColor}
-              onChange={(v) =>
-                onChange((panel: Panel) => {
-                  panel.plugins.log.styles.labelColor = v
-                })
-              }
-            />
-          </PanelEditItem>
-        )}
-        <PanelEditItem title='Label value color'>
-          <StringColorMappingEditor
-            value={panel.plugins.log.styles.labelValueColor}
-            onChange={(v) =>
-              onChange((panel: Panel) => {
-                panel.plugins.log.styles.labelValueColor = v
-              })
-            }
-          />
-        </PanelEditItem>
-        <PanelEditItem title='Content color'>
-          <ColorPicker
-            color={panel.plugins.log.styles.contentColor}
-            onChange={(v) =>
-              onChange((panel: Panel) => {
-                panel.plugins.log.styles.contentColor = v
-              })
-            }
-          />
-        </PanelEditItem>
-        <PanelEditItem title='Font size' desc='Css style font-size'>
-          <EditorInputItem
-            value={panel.plugins.log.styles.fontSize}
-            onChange={(v) =>
-              onChange((panel: Panel) => {
-                panel.plugins.log.styles.fontSize = v
-              })
-            }
-            placeholder='e.g 1rem, 16px'
-          />
-        </PanelEditItem>
-        <PanelEditItem title='Wrap line'>
-          <Switch
-            isChecked={panel.plugins.log.styles.wrapLine}
-            onChange={(e) =>
-              onChange((panel: Panel) => {
-                panel.plugins.log.styles.wrapLine = e.target.checked
-              })
-            }
-          />
-        </PanelEditItem>
-        <PanelEditItem title='Word break' desc='Css style word-break'>
-          <RadionButtons
-            options={[
-              { label: 'Break All', value: 'break-all' },
-              { label: 'Break Word', value: 'break-word' },
-            ]}
-            value={panel.plugins.log.styles.wordBreak}
-            onChange={(v) =>
-              onChange((panel: Panel) => {
-                panel.plugins.log.styles.wordBreak = v
-              })
-            }
-          />
-        </PanelEditItem>
-        <PanelEditItem title='Line border'>
-          <Switch
-            isChecked={panel.plugins.log.styles.showlineBorder}
-            onChange={(e) =>
-              onChange((panel: Panel) => {
-                panel.plugins.log.styles.showlineBorder = e.target.checked
-              })
-            }
-          />
-        </PanelEditItem>
+      {panel.templateId == 0 && (
+        <>
+          <PanelAccordion title={t.basicSetting}>
+            <PanelEditItem title='Show time'>
+              <Switch
+                isChecked={panel.plugins.log.showTime}
+                onChange={(e) =>
+                  onChange((panel: Panel) => {
+                    panel.plugins.log.showTime = e.target.checked
+                  })
+                }
+              />
+            </PanelEditItem>
+            <PanelEditItem title='Timestamp column width' desc='In css pixels'>
+              <EditorNumberItem
+                min={0}
+                max={500}
+                step={5}
+                value={panel.plugins.log.timeColumnWidth}
+                onChange={(v) =>
+                  onChange((panel: Panel) => {
+                    panel.plugins.log.timeColumnWidth = v
+                  })
+                }
+                placeholder='auto'
+              />
+            </PanelEditItem>
+            <PanelEditItem title='Order by'>
+              <RadionButtons
+                options={[
+                  { label: 'Newest First', value: 'newest' },
+                  { label: 'Oldest First', value: 'oldest' },
+                ]}
+                value={panel.plugins.log.orderBy}
+                onChange={(v) =>
+                  onChange((panel: Panel) => {
+                    panel.plugins.log.orderBy = v
+                  })
+                }
+              />
+            </PanelEditItem>
+            <PanelEditItem title='Timestamp precision'>
+              <Select
+                value={panel.plugins.log.timeStampPrecision}
+                onChange={(v) =>
+                  onChange((panel: Panel) => {
+                    panel.plugins.log.timeStampPrecision = v
+                  })
+                }
+                options={[
+                  { label: 'ns', value: 'ns' },
+                  { label: 'us', value: 'us' },
+                  { label: 'ms', value: 'ms' },
+                  { label: 'second', value: 's' },
+                ]}
+                popupMatchSelectWidth={false}
+              />
+            </PanelEditItem>
+            <PanelEditItem title='Enable log details'>
+              <Switch
+                isChecked={panel.plugins.log.enableDetails}
+                onChange={(e) =>
+                  onChange((panel: Panel) => {
+                    panel.plugins.log.enableDetails = e.target.checked
+                  })
+                }
+              />
+            </PanelEditItem>
+            <PanelEditItem title='Enable log transform'>
+              <Switch
+                isChecked={panel.plugins.log.enableTransform}
+                onChange={(e) =>
+                  onChange((panel: Panel) => {
+                    panel.plugins.log.enableTransform = e.target.checked
+                  })
+                }
+              />
+            </PanelEditItem>
+            {panel.plugins.log.enableTransform && (
+              <PanelEditItem title='Log transform'>
+                <CodeEditorModal
+                  value={panel.plugins.log.transform}
+                  onChange={(v) =>
+                    onChange((panel: Panel) => {
+                      panel.plugins.log.transform = v
+                    })
+                  }
+                />
+              </PanelEditItem>
+            )}
+          </PanelAccordion>
+          <PanelAccordion title='Labels'>
+            <PanelEditItem title='Display labels'>
+              <EditorInputItem
+                value={panel.plugins.log.labels.display}
+                onChange={(v) =>
+                  onChange((panel: Panel) => {
+                    panel.plugins.log.labels.display = v
+                  })
+                }
+                placeholder='e.g job,filename'
+              />
+            </PanelEditItem>
+            <PanelEditItem
+              title='Label column common width'
+              desc='In css pixels'
+            >
+              <EditorNumberItem
+                min={0}
+                max={1000}
+                step={5}
+                value={panel.plugins.log.labels.width}
+                onChange={(v) =>
+                  onChange((panel: Panel) => {
+                    panel.plugins.log.labels.width = v
+                  })
+                }
+                placeholder='auto'
+              />
+            </PanelEditItem>
+            <PanelEditItem
+              title='Label column width'
+              desc={`Set width for specify label,JSON format, key is label key, value is width, e.g {"user":200}`}
+            >
+              <EditorInputItem
+                type='textarea'
+                value={panel.plugins.log.labels.widthMap}
+                onChange={(v) =>
+                  onChange((panel: Panel) => {
+                    panel.plugins.log.labels.widthMap = v
+                  })
+                }
+                placeholder='auto'
+              />
+            </PanelEditItem>
+            <PanelEditItem title='Layout orientation'>
+              <RadionButtons
+                options={[
+                  {
+                    label: LayoutOrientation.Horizontal,
+                    value: LayoutOrientation.Horizontal,
+                  },
+                  {
+                    label: LayoutOrientation.Vertical,
+                    value: LayoutOrientation.Vertical,
+                  },
+                ]}
+                value={panel.plugins.log.labels.layout}
+                onChange={(v) =>
+                  onChange((panel: Panel) => {
+                    panel.plugins.log.labels.layout = v
+                  })
+                }
+              />
+            </PanelEditItem>
+            <PanelEditItem
+              title='Max value lines'
+              desc='When label value is too long, set this option to hide some'
+            >
+              <EditorNumberItem
+                min={1}
+                max={5}
+                step={1}
+                value={panel.plugins.log.labels.maxValueLines}
+                onChange={(v) =>
+                  onChange((panel: Panel) => {
+                    panel.plugins.log.labels.maxValueLines = v
+                  })
+                }
+                placeholder='auto'
+              />
+            </PanelEditItem>
+          </PanelAccordion>
+          <PanelAccordion title={t.styles}>
+            <PanelEditItem title='Auto color label'>
+              <Switch
+                isChecked={panel.plugins.log.styles.labelColorSyncChart}
+                onChange={(e) =>
+                  onChange((panel: Panel) => {
+                    panel.plugins.log.styles.labelColorSyncChart =
+                      e.target.checked
+                  })
+                }
+              />
+            </PanelEditItem>
+            {!panel.plugins.log.styles.labelColorSyncChart && (
+              <PanelEditItem title='Label name color'>
+                <ColorPicker
+                  color={panel.plugins.log.styles.labelColor}
+                  onChange={(v) =>
+                    onChange((panel: Panel) => {
+                      panel.plugins.log.styles.labelColor = v
+                    })
+                  }
+                />
+              </PanelEditItem>
+            )}
+            <PanelEditItem title='Label value color'>
+              <StringColorMappingEditor
+                value={panel.plugins.log.styles.labelValueColor}
+                onChange={(v) =>
+                  onChange((panel: Panel) => {
+                    panel.plugins.log.styles.labelValueColor = v
+                  })
+                }
+              />
+            </PanelEditItem>
+            <PanelEditItem title='Content color'>
+              <ColorPicker
+                color={panel.plugins.log.styles.contentColor}
+                onChange={(v) =>
+                  onChange((panel: Panel) => {
+                    panel.plugins.log.styles.contentColor = v
+                  })
+                }
+              />
+            </PanelEditItem>
+            <PanelEditItem title='Font size' desc='Css style font-size'>
+              <EditorInputItem
+                value={panel.plugins.log.styles.fontSize}
+                onChange={(v) =>
+                  onChange((panel: Panel) => {
+                    panel.plugins.log.styles.fontSize = v
+                  })
+                }
+                placeholder='e.g 1rem, 16px'
+              />
+            </PanelEditItem>
+            <PanelEditItem title='Wrap line'>
+              <Switch
+                isChecked={panel.plugins.log.styles.wrapLine}
+                onChange={(e) =>
+                  onChange((panel: Panel) => {
+                    panel.plugins.log.styles.wrapLine = e.target.checked
+                  })
+                }
+              />
+            </PanelEditItem>
+            <PanelEditItem title='Word break' desc='Css style word-break'>
+              <RadionButtons
+                options={[
+                  { label: 'Break All', value: 'break-all' },
+                  { label: 'Break Word', value: 'break-word' },
+                ]}
+                value={panel.plugins.log.styles.wordBreak}
+                onChange={(v) =>
+                  onChange((panel: Panel) => {
+                    panel.plugins.log.styles.wordBreak = v
+                  })
+                }
+              />
+            </PanelEditItem>
+            <PanelEditItem title='Line border'>
+              <Switch
+                isChecked={panel.plugins.log.styles.showlineBorder}
+                onChange={(e) =>
+                  onChange((panel: Panel) => {
+                    panel.plugins.log.styles.showlineBorder = e.target.checked
+                  })
+                }
+              />
+            </PanelEditItem>
 
-        <PanelEditItem
-          title='Highlight content'
-          desc='Highlight the matched content words with color'
-        >
-          <EditorInputItem
-            value={panel.plugins.log.styles.highlight}
-            onChange={(v) =>
-              onChange((panel: Panel) => {
-                panel.plugins.log.styles.highlight = v
-              })
-            }
-            placeholder='separate with comma'
-          />
-        </PanelEditItem>
-        <PanelEditItem title='Highlight color'>
-          <ColorPicker
-            color={panel.plugins.log.styles.highlightColor}
-            onChange={(v) =>
-              onChange((panel: Panel) => {
-                panel.plugins.log.styles.highlightColor = v
-              })
-            }
-          />
-        </PanelEditItem>
-      </PanelAccordion>
-      <PanelAccordion title='Toolbar'>
-        <PanelEditItem
-          title='Show icon'
-          desc='Show toolbar in upper right corner'
-        >
-          <Switch
-            isChecked={panel.plugins.log.toolbar.show}
-            onChange={(e) =>
-              onChange((panel: Panel) => {
-                panel.plugins.log.toolbar.show = e.target.checked
-              })
-            }
-          />
-        </PanelEditItem>
-        <PanelEditItem title='Default open'>
-          <Switch
-            isChecked={panel.plugins.log.toolbar.defaultOpen}
-            onChange={(e) =>
-              onChange((panel: Panel) => {
-                panel.plugins.log.toolbar.defaultOpen = e.target.checked
-              })
-            }
-          />
-        </PanelEditItem>
-        <PanelEditItem title='Toolbar width' desc='In css pixels'>
-          <EditorNumberItem
-            min={0}
-            max={500}
-            step={20}
-            value={panel.plugins.log.toolbar.width}
-            onChange={(v) =>
-              onChange((panel: Panel) => {
-                panel.plugins.log.toolbar.width = v
-              })
-            }
-          />
-        </PanelEditItem>
-      </PanelAccordion>
-      <PanelAccordion title='Chart'>
-        <PanelEditItem title='Show'>
-          <Switch
-            isChecked={panel.plugins.log.chart.show}
-            onChange={(e) =>
-              onChange((panel: Panel) => {
-                panel.plugins.log.chart.show = e.target.checked
-              })
-            }
-          />
-        </PanelEditItem>
-        <PanelEditItem title='Chart height' desc='Css style width'>
-          <EditorInputItem
-            value={panel.plugins.log.chart.height}
-            onChange={(v) =>
-              onChange((panel: Panel) => {
-                panel.plugins.log.chart.height = v
-                dispatch(PanelForceRebuildEvent + panel.id)
-              })
-            }
-            placeholder='e.g 200px 30%'
-          />
-        </PanelEditItem>
-        <PanelEditItem title='Show label' desc='Value label display on bars'>
-          <RadionButtons
-            options={[
-              { label: 'Auto', value: 'auto' },
-              { label: 'Always', value: 'always' },
-              { label: 'None', value: 'none' },
-            ]}
-            value={panel.plugins.log.chart.showLabel}
-            onChange={(v) =>
-              onChange((panel: Panel) => {
-                panel.plugins.log.chart.showLabel = v
-              })
-            }
-          />
-        </PanelEditItem>
-        <PanelEditItem title='Stack'>
-          <RadionButtons
-            options={[
-              { label: 'Auto', value: 'auto' },
-              { label: 'Always', value: 'always' },
-              { label: 'None', value: 'none' },
-            ]}
-            value={panel.plugins.log.chart.stack}
-            onChange={(v) =>
-              onChange((panel: Panel) => {
-                panel.plugins.log.chart.stack = v
-              })
-            }
-          />
-        </PanelEditItem>
-        <PanelEditItem title='Tooltip'>
-          <RadionButtons
-            options={[
-              { label: 'Single', value: 'single' },
-              { label: 'All', value: 'all' },
-              { label: 'None', value: 'none' },
-            ]}
-            value={panel.plugins.log.chart.tooltip}
-            onChange={(v) =>
-              onChange((panel: Panel) => {
-                panel.plugins.log.chart.tooltip = v
-              })
-            }
-          />
-        </PanelEditItem>
-        <PanelEditItem title='Categorize bar with label values'>
-          <EditorInputItem
-            value={panel.plugins.log.chart.categorize}
-            onChange={(v) =>
-              onChange((panel: Panel) => {
-                panel.plugins.log.chart.categorize = v
-                dispatch(PanelForceRebuildEvent + panel.id)
-              })
-            }
-            placeholder='input a label name'
-          />
-        </PanelEditItem>
-      </PanelAccordion>
-      <PanelAccordion title='Search logs'>
-        <PanelEditItem title='Search log content' desc='Support variables'>
-          <EditorInputItem
-            value={panel.plugins.log.search.log}
-            placeholder='textA || textB , A && B'
-            onChange={(v) =>
-              onChange((panel: Panel) => {
-                panel.plugins.log.search.log = v
-              })
-            }
-          />
-        </PanelEditItem>
-        <PanelEditItem title='Search log labels' desc='Support variables'>
-          <EditorInputItem
-            value={panel.plugins.log.search.labels}
-            placeholder='labelA=valueA,labelB=valueB'
-            onChange={(v) =>
-              onChange((panel: Panel) => {
-                panel.plugins.log.search.labels = v
-              })
-            }
-          />
-        </PanelEditItem>
-      </PanelAccordion>
+            <PanelEditItem
+              title='Highlight content'
+              desc='Highlight the matched content words with color'
+            >
+              <EditorInputItem
+                value={panel.plugins.log.styles.highlight}
+                onChange={(v) =>
+                  onChange((panel: Panel) => {
+                    panel.plugins.log.styles.highlight = v
+                  })
+                }
+                placeholder='separate with comma'
+              />
+            </PanelEditItem>
+            <PanelEditItem title='Highlight color'>
+              <ColorPicker
+                color={panel.plugins.log.styles.highlightColor}
+                onChange={(v) =>
+                  onChange((panel: Panel) => {
+                    panel.plugins.log.styles.highlightColor = v
+                  })
+                }
+              />
+            </PanelEditItem>
+          </PanelAccordion>
+          <PanelAccordion title='Toolbar'>
+            <PanelEditItem
+              title='Show icon'
+              desc='Show toolbar in upper right corner'
+            >
+              <Switch
+                isChecked={panel.plugins.log.toolbar.show}
+                onChange={(e) =>
+                  onChange((panel: Panel) => {
+                    panel.plugins.log.toolbar.show = e.target.checked
+                  })
+                }
+              />
+            </PanelEditItem>
+            <PanelEditItem title='Default open'>
+              <Switch
+                isChecked={panel.plugins.log.toolbar.defaultOpen}
+                onChange={(e) =>
+                  onChange((panel: Panel) => {
+                    panel.plugins.log.toolbar.defaultOpen = e.target.checked
+                  })
+                }
+              />
+            </PanelEditItem>
+            <PanelEditItem title='Toolbar width' desc='In css pixels'>
+              <EditorNumberItem
+                min={0}
+                max={500}
+                step={20}
+                value={panel.plugins.log.toolbar.width}
+                onChange={(v) =>
+                  onChange((panel: Panel) => {
+                    panel.plugins.log.toolbar.width = v
+                  })
+                }
+              />
+            </PanelEditItem>
+          </PanelAccordion>
+          <PanelAccordion title='Chart'>
+            <PanelEditItem title='Show'>
+              <Switch
+                isChecked={panel.plugins.log.chart.show}
+                onChange={(e) =>
+                  onChange((panel: Panel) => {
+                    panel.plugins.log.chart.show = e.target.checked
+                  })
+                }
+              />
+            </PanelEditItem>
+            <PanelEditItem title='Chart height' desc='Css style width'>
+              <EditorInputItem
+                value={panel.plugins.log.chart.height}
+                onChange={(v) =>
+                  onChange((panel: Panel) => {
+                    panel.plugins.log.chart.height = v
+                    dispatch(PanelForceRebuildEvent + panel.id)
+                  })
+                }
+                placeholder='e.g 200px 30%'
+              />
+            </PanelEditItem>
+            <PanelEditItem
+              title='Show label'
+              desc='Value label display on bars'
+            >
+              <RadionButtons
+                options={[
+                  { label: 'Auto', value: 'auto' },
+                  { label: 'Always', value: 'always' },
+                  { label: 'None', value: 'none' },
+                ]}
+                value={panel.plugins.log.chart.showLabel}
+                onChange={(v) =>
+                  onChange((panel: Panel) => {
+                    panel.plugins.log.chart.showLabel = v
+                  })
+                }
+              />
+            </PanelEditItem>
+            <PanelEditItem title='Stack'>
+              <RadionButtons
+                options={[
+                  { label: 'Auto', value: 'auto' },
+                  { label: 'Always', value: 'always' },
+                  { label: 'None', value: 'none' },
+                ]}
+                value={panel.plugins.log.chart.stack}
+                onChange={(v) =>
+                  onChange((panel: Panel) => {
+                    panel.plugins.log.chart.stack = v
+                  })
+                }
+              />
+            </PanelEditItem>
+            <PanelEditItem title='Tooltip'>
+              <RadionButtons
+                options={[
+                  { label: 'Single', value: 'single' },
+                  { label: 'All', value: 'all' },
+                  { label: 'None', value: 'none' },
+                ]}
+                value={panel.plugins.log.chart.tooltip}
+                onChange={(v) =>
+                  onChange((panel: Panel) => {
+                    panel.plugins.log.chart.tooltip = v
+                  })
+                }
+              />
+            </PanelEditItem>
+            <PanelEditItem title='Categorize bar with label values'>
+              <EditorInputItem
+                value={panel.plugins.log.chart.categorize}
+                onChange={(v) =>
+                  onChange((panel: Panel) => {
+                    panel.plugins.log.chart.categorize = v
+                    dispatch(PanelForceRebuildEvent + panel.id)
+                  })
+                }
+                placeholder='input a label name'
+              />
+            </PanelEditItem>
+          </PanelAccordion>
+          <PanelAccordion title='Search logs'>
+            <PanelEditItem title='Search log content' desc='Support variables'>
+              <EditorInputItem
+                value={panel.plugins.log.search.log}
+                placeholder='textA || textB , A && B'
+                onChange={(v) =>
+                  onChange((panel: Panel) => {
+                    panel.plugins.log.search.log = v
+                  })
+                }
+              />
+            </PanelEditItem>
+            <PanelEditItem title='Search log labels' desc='Support variables'>
+              <EditorInputItem
+                value={panel.plugins.log.search.labels}
+                placeholder='labelA=valueA,labelB=valueB'
+                onChange={(v) =>
+                  onChange((panel: Panel) => {
+                    panel.plugins.log.search.labels = v
+                  })
+                }
+              />
+            </PanelEditItem>
+          </PanelAccordion>
+          <PanelAccordion title='Thresholds'>
+            <ThresholdEditor
+              labels={[]}
+              value={panel.plugins.log.thresholds}
+              onChange={(v) =>
+                onChange((panel: Panel) => {
+                  panel.plugins.log.thresholds = v
+                })
+              }
+            />
+          </PanelAccordion>
+        </>
+      )}
       <PanelAccordion title={t.interaction}>
         <PanelEditItem title={t.enable}>
           <Switch
@@ -506,17 +528,6 @@ const LogPanelEditor = memo((props: LogEditorProps) => {
             })
           }}
           actions={panel.interactions.clickActions}
-        />
-      </PanelAccordion>
-      <PanelAccordion title='Thresholds'>
-        <ThresholdEditor
-          labels={[]}
-          value={panel.plugins.log.thresholds}
-          onChange={(v) =>
-            onChange((panel: Panel) => {
-              panel.plugins.log.thresholds = v
-            })
-          }
         />
       </PanelAccordion>
     </>

@@ -111,7 +111,7 @@ const PanelSettings = memo(({ panel, onChange }: PanelEditorProps) => {
           )
         }
         spacing={2}
-        defaultOpen={!isEmpty(panel.templateId)}
+        defaultOpen={true}
       >
         <PanelEditItem title={t1.panelTitle}>
           <EditorInputItem
@@ -240,7 +240,7 @@ const PanelSettings = memo(({ panel, onChange }: PanelEditorProps) => {
                 : t1.xobservePanels
             } -> ${panel.type}`
           }
-          defaultOpen={false}
+          defaultOpen={true}
           spacing={0}
         >
           <PanelAccordion title={t1.visualization} defaultOpen={isBuiltin}>

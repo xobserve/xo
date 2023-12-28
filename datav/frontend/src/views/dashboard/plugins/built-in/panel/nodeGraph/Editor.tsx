@@ -41,7 +41,7 @@ import {
 } from '@chakra-ui/react'
 import { ColorPicker } from 'src/components/ColorPicker'
 import RadionButtons from 'src/components/RadioButtons'
-import { cloneDeep, isEmpty } from 'lodash'
+import { cloneDeep, isEmpty, template } from 'lodash'
 import { memo, useMemo, useState } from 'react'
 import * as Icons from 'react-icons/fa'
 import { MdEdit } from 'react-icons/md'
@@ -74,6 +74,10 @@ const NodeGraphPanelEditor = memo((props: NodeGraphEditorProps) => {
   const t = useStore(commonMsg)
   const t1 = useStore(nodeGraphPanelMsg)
   const { panel, onChange } = props
+
+  if (panel.templateId != 0) {
+    return <></>
+  }
   return (
     <>
       <PanelAccordion title={t.basic}>

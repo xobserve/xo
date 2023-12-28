@@ -507,6 +507,7 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
                         <Box className='top-gradient-border'>
                           <Tabs position='relative' variant='unstyled'>
                             <TabList pb='0'>
+                              <Tab>{t.basicSetting}</Tab>
                               <Tab>{t.panel}</Tab>
                               <Tab>{t.styles}</Tab>
                               {panelOverridesRules.length > 0 && (
@@ -539,6 +540,8 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
                                   panel={tempPanel}
                                   onChange={onTempPanelChange}
                                 />
+                              </TabPanel>
+                              <TabPanel px='0' pt='1'>
                                 {/* panel rendering plugin setting */}
 
                                 <CustomPanelEditor

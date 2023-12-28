@@ -74,72 +74,79 @@ const EchartsPanelEditor = memo(
     }
     return (
       <>
-        <PanelAccordion title={t1.about}>
-          <Text fontSize='sm'>{t1.aboutContent1} </Text>
-          <Text mt='2' fontSize='sm'>
-            {t1.officialSite}: https://echarts.apache.org/en/index.html
-          </Text>
-        </PanelAccordion>
-        <PanelAccordion title={t1.settings}>
-          <PanelEditItem title={t.animation} desc={t.animationTips}>
-            <Switch
-              defaultChecked={panel.plugins.echarts.animation}
-              onChange={(e) =>
-                onChange((panel: Panel) => {
-                  panel.plugins.echarts.animation = e.currentTarget.checked
-                })
-              }
-            />
-          </PanelEditItem>
+        {panel.templateId == 0 && (
+          <>
+            <PanelAccordion title={t1.about}>
+              <Text fontSize='sm'>{t1.aboutContent1} </Text>
+              <Text mt='2' fontSize='sm'>
+                {t1.officialSite}: https://echarts.apache.org/en/index.html
+              </Text>
+            </PanelAccordion>
+            <PanelAccordion title={t1.settings}>
+              <PanelEditItem title={t.animation} desc={t.animationTips}>
+                <Switch
+                  defaultChecked={panel.plugins.echarts.animation}
+                  onChange={(e) =>
+                    onChange((panel: Panel) => {
+                      panel.plugins.echarts.animation = e.currentTarget.checked
+                    })
+                  }
+                />
+              </PanelEditItem>
 
-          <PanelEditItem title={t1.allowEmptyData} desc={t1.allowEmptyDataTips}>
-            <Switch
-              isChecked={panel.plugins.echarts.allowEmptyData}
-              onChange={(e) =>
-                onChange((panel: Panel) => {
-                  panel.plugins.echarts.allowEmptyData = e.target.checked
-                })
-              }
-            />
-          </PanelEditItem>
+              <PanelEditItem
+                title={t1.allowEmptyData}
+                desc={t1.allowEmptyDataTips}
+              >
+                <Switch
+                  isChecked={panel.plugins.echarts.allowEmptyData}
+                  onChange={(e) =>
+                    onChange((panel: Panel) => {
+                      panel.plugins.echarts.allowEmptyData = e.target.checked
+                    })
+                  }
+                />
+              </PanelEditItem>
 
-          <SetOptions
-            panel={panel}
-            onChange={(v) => {
-              onChange((panel: Panel) => {
-                panel.plugins.echarts.setOptionsFunc = v
-              })
-            }}
-            data={data}
-          />
-        </PanelAccordion>
-        <PanelAccordion title={t.valueSettings}>
-          <PanelEditItem title={t.unit}>
-            <UnitPicker
-              value={panel.plugins.echarts.value}
-              onChange={(v: Units) =>
-                onChange((panel: Panel) => {
-                  panel.plugins.echarts.value.units = v.units
-                  panel.plugins.echarts.value.unitsType = v.unitsType
-                })
-              }
-            />
-          </PanelEditItem>
+              <SetOptions
+                panel={panel}
+                onChange={(v) => {
+                  onChange((panel: Panel) => {
+                    panel.plugins.echarts.setOptionsFunc = v
+                  })
+                }}
+                data={data}
+              />
+            </PanelAccordion>
+            <PanelAccordion title={t.valueSettings}>
+              <PanelEditItem title={t.unit}>
+                <UnitPicker
+                  value={panel.plugins.echarts.value}
+                  onChange={(v: Units) =>
+                    onChange((panel: Panel) => {
+                      panel.plugins.echarts.value.units = v.units
+                      panel.plugins.echarts.value.unitsType = v.unitsType
+                    })
+                  }
+                />
+              </PanelEditItem>
 
-          <PanelEditItem title={t.decimal}>
-            <EditorNumberItem
-              value={panel.plugins.echarts.value.decimal}
-              min={0}
-              max={5}
-              step={1}
-              onChange={(v) =>
-                onChange((panel: Panel) => {
-                  panel.plugins.echarts.value.decimal = v
-                })
-              }
-            />
-          </PanelEditItem>
-        </PanelAccordion>
+              <PanelEditItem title={t.decimal}>
+                <EditorNumberItem
+                  value={panel.plugins.echarts.value.decimal}
+                  min={0}
+                  max={5}
+                  step={1}
+                  onChange={(v) =>
+                    onChange((panel: Panel) => {
+                      panel.plugins.echarts.value.decimal = v
+                    })
+                  }
+                />
+              </PanelEditItem>
+            </PanelAccordion>
+          </>
+        )}
         <PanelAccordion title={t.interaction}>
           <PanelEditItem title={t.enable}>
             <Switch

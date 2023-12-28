@@ -37,6 +37,10 @@ const PanelEditor = memo(({ panel, onChange }: CandleEditorProps) => {
   const t = useStore(commonMsg)
   const options: PluginSettings = panel.plugins[PanelTypeCandle]
 
+  if (panel.templateId != 0) {
+    return <></>
+  }
+
   return (
     <>
       <PanelAccordion title={t.basicSetting}>

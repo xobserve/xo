@@ -38,55 +38,59 @@ const TracePanelEditor = ({ panel, onChange }: TraceEditorProps) => {
 
   return (
     <>
-      <PanelAccordion title={t.basic}>
-        <PanelEditItem title='Default service'>
-          <EditorInputItem
-            value={panel.plugins.trace.defaultService}
-            onChange={(v) =>
-              onChange((panel: Panel) => {
-                panel.plugins.trace.defaultService = v
-                dispatch(PanelForceRebuildEvent + panel.id)
-              })
-            }
-          />
-        </PanelEditItem>
-        <PanelEditItem
-          title='Enable edit service'
-          desc='when diabled, service will be automatically set to default service'
-        >
-          <Switch
-            isChecked={panel.plugins.trace.enableEditService}
-            onChange={(e) =>
-              onChange((panel: Panel) => {
-                panel.plugins.trace.enableEditService = e.target.checked
-                dispatch(PanelForceRebuildEvent + panel.id)
-              })
-            }
-          />
-        </PanelEditItem>
-        <PanelEditItem title='Default operation'>
-          <EditorInputItem
-            value={panel.plugins[PanelTypeTrace].defaultOperation}
-            onChange={(v) =>
-              onChange((panel: Panel) => {
-                panel.plugins[PanelTypeTrace].defaultOperation = v
-                dispatch(PanelForceRebuildEvent + panel.id)
-              })
-            }
-          />
-        </PanelEditItem>
-        <PanelEditItem title='Enable edit operation'>
-          <Switch
-            isChecked={panel.plugins[PanelTypeTrace].enableEditOperation}
-            onChange={(e) =>
-              onChange((panel: Panel) => {
-                panel.plugins[PanelTypeTrace].enableEditOperation =
-                  e.target.checked
-              })
-            }
-          />
-        </PanelEditItem>
-      </PanelAccordion>
+      {panel.templateId == 0 && (
+        <>
+          <PanelAccordion title={t.basic}>
+            <PanelEditItem title='Default service'>
+              <EditorInputItem
+                value={panel.plugins.trace.defaultService}
+                onChange={(v) =>
+                  onChange((panel: Panel) => {
+                    panel.plugins.trace.defaultService = v
+                    dispatch(PanelForceRebuildEvent + panel.id)
+                  })
+                }
+              />
+            </PanelEditItem>
+            <PanelEditItem
+              title='Enable edit service'
+              desc='when diabled, service will be automatically set to default service'
+            >
+              <Switch
+                isChecked={panel.plugins.trace.enableEditService}
+                onChange={(e) =>
+                  onChange((panel: Panel) => {
+                    panel.plugins.trace.enableEditService = e.target.checked
+                    dispatch(PanelForceRebuildEvent + panel.id)
+                  })
+                }
+              />
+            </PanelEditItem>
+            <PanelEditItem title='Default operation'>
+              <EditorInputItem
+                value={panel.plugins[PanelTypeTrace].defaultOperation}
+                onChange={(v) =>
+                  onChange((panel: Panel) => {
+                    panel.plugins[PanelTypeTrace].defaultOperation = v
+                    dispatch(PanelForceRebuildEvent + panel.id)
+                  })
+                }
+              />
+            </PanelEditItem>
+            <PanelEditItem title='Enable edit operation'>
+              <Switch
+                isChecked={panel.plugins[PanelTypeTrace].enableEditOperation}
+                onChange={(e) =>
+                  onChange((panel: Panel) => {
+                    panel.plugins[PanelTypeTrace].enableEditOperation =
+                      e.target.checked
+                  })
+                }
+              />
+            </PanelEditItem>
+          </PanelAccordion>
+        </>
+      )}
       <PanelAccordion title={t.interaction}>
         <PanelEditItem title={t.enable}>
           <Switch
