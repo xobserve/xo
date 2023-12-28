@@ -26,8 +26,13 @@ import {
   DrawerOverlay,
   useDisclosure,
   useToast,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalBody,
 } from '@chakra-ui/react'
 import { Dropdown, MenuProps, Tooltip } from 'antd'
+import CodeEditor from 'components/CodeEditor/CodeEditor'
 import { MarkdownRender } from 'components/markdown/MarkdownRender'
 import { cloneDeep } from 'lodash'
 import moment from 'moment'
@@ -50,6 +55,7 @@ import {
   TemplateType,
 } from 'types/template'
 import { requestApi } from 'utils/axios/request'
+import { prettyJson } from 'utils/string'
 
 interface Props {
   template: Template
@@ -76,7 +82,14 @@ const TemplateCard = (props: Props) => {
   const [onHover, setOnHover] = useState(false)
   const [template, setTemplate] = useState<Template>(props.template)
   const [contents, setContents] = useState<TemplateContent[]>(null)
+  const [viewContent, setViewContent] = useState<TemplateContent>(null)
+
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const {
+    isOpen: isViewOpen,
+    onOpen: onViewOpen,
+    onClose: onViewClose,
+  } = useDisclosure()
   const toast = useToast()
 
   let scope = lang == 'zh' ? '全部' : 'All'
@@ -193,6 +206,11 @@ const TemplateCard = (props: Props) => {
     },
   ]
 
+  const onViewContent = async (id) => {
+    const res = await requestApi.get(`/template/content/${id}`)
+    setViewContent(res.data)
+    onViewOpen()
+  }
   return (
     <>
       <Flex
@@ -323,6 +341,15 @@ const TemplateCard = (props: Props) => {
                         {lang == 'zh' ? '当前使用' : 'Current'}
                       </Tag>
                     )}
+                    <Button
+                      size='sm'
+                      variant={viewContent?.id == c.id ? 'solid' : 'ghost'}
+                      onClick={() => {
+                        onViewContent(c.id)
+                      }}
+                    >
+                      {lang == 'zh' ? '查看' : 'View'}
+                    </Button>
                   </HStack>
                 </Flex>
               ))}
@@ -330,6 +357,27 @@ const TemplateCard = (props: Props) => {
           </DrawerContent>
         </Drawer>
       )}
+
+      <Modal
+        isOpen={isViewOpen}
+        onClose={() => {
+          setViewContent(null)
+          onViewClose()
+        }}
+      >
+        <ModalOverlay />
+        <ModalContent minWidth={600}>
+          {viewContent && (
+            <ModalBody>
+              <CodeEditor
+                readonly
+                value={prettyJson(JSON.parse(viewContent.content))}
+                height='600px'
+              />
+            </ModalBody>
+          )}
+        </ModalContent>
+      </Modal>
     </>
   )
 }
