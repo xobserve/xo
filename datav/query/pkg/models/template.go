@@ -5,6 +5,7 @@ import (
 	"time"
 
 	b64 "encoding/base64"
+	"encoding/json"
 
 	"github.com/xObserve/xObserve/query/pkg/db"
 )
@@ -28,6 +29,7 @@ type Template struct {
 	ContentId   int64     `json:"contentId"`         // json encoded string
 	Version     string    `json:"version,omitempty"` // content version
 	Provider    string    `json:"provider"`          // e.g xobserve , user-custom , third-party
+	Tags        []string  `json:"tags"`
 	Created     time.Time `json:"created"`
 }
 
@@ -44,8 +46,9 @@ func QueryTemplateById(ctx context.Context, id int64) (*Template, error) {
 	t := &Template{}
 	// var rawdata []byte
 	var desc string
-	err := db.Conn.QueryRowContext(ctx, "SELECT id,type,title,description,scope,owned_by,content_id,provider,created FROM template WHERE id=?", id).Scan(
-		&t.Id, &t.Type, &t.Title, &desc, &t.Scope, &t.OwnedBy, &t.ContentId, &t.Provider, &t.Created,
+	var tags []byte
+	err := db.Conn.QueryRowContext(ctx, "SELECT id,type,title,description,scope,owned_by,content_id,provider,tags,created FROM template WHERE id=?", id).Scan(
+		&t.Id, &t.Type, &t.Title, &desc, &t.Scope, &t.OwnedBy, &t.ContentId, &t.Provider, &tags, &t.Created,
 	)
 	if err != nil {
 		return nil, err
@@ -60,6 +63,13 @@ func QueryTemplateById(ctx context.Context, id int64) (*Template, error) {
 			return nil, err
 		}
 		t.Version = v
+	}
+
+	if tags != nil {
+		err = json.Unmarshal(tags, &t.Tags)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	return t, err

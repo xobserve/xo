@@ -11,14 +11,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Box, Button, Textarea, useToast } from '@chakra-ui/react'
+import { Box, Button, HStack, Textarea, useToast } from '@chakra-ui/react'
 import { useStore } from '@nanostores/react'
 import { Input, InputNumber } from 'antd'
+import ColorTag from 'components/ColorTag'
 import RadionButtons from 'components/RadioButtons'
 import { FormSection } from 'components/form/Form'
 import FormItem from 'components/form/Item'
 import { MarkdownRender } from 'components/markdown/MarkdownRender'
-import { cloneDeep } from 'lodash'
+import { cloneDeep, concat } from 'lodash'
 import React, { useState } from 'react'
 import { $config } from 'src/data/configs/config'
 import { locale } from 'src/i18n/i18n'
@@ -50,7 +51,7 @@ const TemplateEditor = (props: Props) => {
     cloneDeep(props.template) ?? initTemplate,
   )
   const [isPreview, setIsPreview] = useState(false)
-
+  const [tag, setTag] = useState(null)
   const onSubmitTemplate = async () => {
     if (isEmpty(template.title) || isEmpty(template.description)) {
       toast({
@@ -88,7 +89,7 @@ const TemplateEditor = (props: Props) => {
       maxW={600}
     >
       <FormSection>
-        <FormItem title={t.itemName({ name: t.template })} required>
+        <FormItem title='Id'>
           <InputNumber
             value={template.id}
             placeholder='auto'
@@ -207,6 +208,58 @@ const TemplateEditor = (props: Props) => {
             disabled={!isCreate}
           />
         </FormItem>
+        <FormItem title={t.tags}>
+          <Input
+            value={tag}
+            onChange={(e) => setTag(e.currentTarget.value)}
+            placeholder='input tag name'
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                if (isEmpty(tag)) {
+                  return
+                }
+                if (template.tags?.length >= 3) {
+                  toast({
+                    title: 'max 3 tags',
+                    status: 'error',
+                    duration: 3000,
+                    isClosable: true,
+                  })
+                  return
+                }
+                if (template.tags?.includes(tag.trim())) {
+                  toast({
+                    title: 'tag exists',
+                    status: 'error',
+                    duration: 3000,
+                    isClosable: true,
+                  })
+                  return
+                }
+                setTemplate({
+                  ...template,
+                  tags: concat(template.tags ?? [], [tag.trim()]),
+                })
+                setTag(null)
+              }
+            }}
+          />
+        </FormItem>
+        {template.tags?.length > 0 && (
+          <HStack width='100%'>
+            {template.tags.map((t) => (
+              <ColorTag
+                name={t}
+                onRemove={(_) => {
+                  setTemplate({
+                    ...template,
+                    tags: template.tags.filter((tag) => tag != t),
+                  })
+                }}
+              />
+            ))}
+          </HStack>
+        )}
       </FormSection>
       <Button onClick={onSubmitTemplate} size='sm' mt='2'>
         {t.submit}

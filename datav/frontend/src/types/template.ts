@@ -27,6 +27,7 @@ export interface Template {
   contentId: number
   version: string
   provider: string
+  tags: string[]
   created: string
 }
 

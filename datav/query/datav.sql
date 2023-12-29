@@ -219,6 +219,7 @@ CREATE TABLE IF NOT EXISTS template (
     scope SMALLINT NOT NULL,
     owned_by INTEGER NOT NULL,
     provider VARCHAR(255) NOT NULL,
+    tags TEXT,
     content_id INTEGER DEFAULT 0,
     created DATETIME NOT NULL,
     updated DATETIME
@@ -246,4 +247,4 @@ CREATE TABLE IF NOT EXISTS template_content (
 
 CREATE INDEX template_content_tid ON template_content (template_id);
 
-CREATE UNIQUE INDEX template_content_tid_created ON template_content (template_id, created);
+CREATE UNIQUE INDEX template_content_tid_version ON template_content (template_id, version);

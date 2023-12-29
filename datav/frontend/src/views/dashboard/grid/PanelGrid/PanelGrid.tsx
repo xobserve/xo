@@ -761,7 +761,8 @@ const PanelHeader = ({
             >
               <Button
                 height={'100%'}
-                transition='all 0.2s'
+                opacity={onHover ? 1 : 0}
+                transition='opacity 0.3s'
                 _focus={{ border: null, background: null }}
                 _active={{ background: null, border: null }}
                 onClick={(e) => e.preventDefault()}
@@ -769,7 +770,6 @@ const PanelHeader = ({
                 size='xs'
                 disabled={embed}
                 _hover={{ background: null, border: null }}
-                visibility={onHover ? 'visible' : 'hidden'}
                 color={paletteColorNameToHex(
                   panel.styles.title.color,
                   colorMode,
@@ -799,6 +799,7 @@ const PanelHeader = ({
                 fontSize='0.8rem'
                 zIndex={1000}
                 cursor='pointer'
+                paddingRight='2'
               >
                 <FaRegClock />
               </Box>

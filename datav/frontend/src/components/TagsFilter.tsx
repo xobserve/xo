@@ -28,6 +28,7 @@ interface Props {
   onChange: any
   tagCount?: Object
   minWidth?: string
+  displayCount?: boolean
 }
 
 const TagsFilter = ({
@@ -36,6 +37,7 @@ const TagsFilter = ({
   onChange,
   tagCount = {},
   minWidth = '260px',
+  displayCount = true,
 }: Props) => {
   const t1 = useStore(componentsMsg)
   const tagRender = (props: CustomTagProps) => {
@@ -64,8 +66,15 @@ const TagsFilter = ({
       >
         {tags.sort().map((tag) => {
           return (
-            <Option value={tag} label={tag + ` (${tagCount[tag] ?? 0})`}>
-              <ColorTag name={tag} label={tag + ` (${tagCount[tag] ?? 0})`} />
+            <Option
+              key={tag}
+              value={tag}
+              label={tag + (displayCount ? ` (${tagCount[tag] ?? 0})` : '')}
+            >
+              <ColorTag
+                name={tag}
+                label={tag + (displayCount ? ` (${tagCount[tag] ?? 0})` : '')}
+              />
             </Option>
           )
         })}

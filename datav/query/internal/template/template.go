@@ -126,12 +126,16 @@ func UpdateTemplate(c *gin.Context) {
 }
 
 func createTemplate(ctx context.Context, userId int64, t *models.Template) error {
+	tags, err := json.Marshal(t.Tags)
+	if err != nil {
+		return errors.New("invalid template tags:" + err.Error())
+	}
+
 	now := time.Now()
-	var err error
 	if t.Id != 0 {
-		_, err = db.Conn.ExecContext(ctx, "INSERT INTO template (id,type,title,description,scope,owned_by,provider,created) VALUES (?,?,?,?,?,?,?,?)", t.Id, t.Type, t.Title, t.Description, t.Scope, t.OwnedBy, t.Provider, now)
+		_, err = db.Conn.ExecContext(ctx, "INSERT INTO template (id,type,title,description,scope,owned_by,provider,tags,created) VALUES (?,?,?,?,?,?,?,?,?)", t.Id, t.Type, t.Title, t.Description, t.Scope, t.OwnedBy, t.Provider, tags, now)
 	} else {
-		_, err = db.Conn.ExecContext(ctx, "INSERT INTO template (type,title,description,scope,owned_by,provider,created) VALUES (?,?,?,?,?,?,?)", t.Type, t.Title, t.Description, t.Scope, t.OwnedBy, t.Provider, now)
+		_, err = db.Conn.ExecContext(ctx, "INSERT INTO template (type,title,description,scope,owned_by,provider,tags,created) VALUES (?,?,?,?,?,?,?,?)", t.Type, t.Title, t.Description, t.Scope, t.OwnedBy, t.Provider, tags, now)
 	}
 	if err != nil {
 		return err
@@ -141,8 +145,13 @@ func createTemplate(ctx context.Context, userId int64, t *models.Template) error
 }
 
 func updateTemplate(ctx context.Context, userId int64, t *models.Template) error {
+	tags, err := json.Marshal(t.Tags)
+	if err != nil {
+		return errors.New("invalid template tags:" + err.Error())
+	}
+
 	now := time.Now()
-	_, err := db.Conn.ExecContext(ctx, "UPDATE template SET title=?,description=?,updated=? WHERE id=?", t.Title, t.Description, now, t.Id)
+	_, err = db.Conn.ExecContext(ctx, "UPDATE template SET title=?,description=?,tags=?,updated=? WHERE id=?", t.Title, t.Description, tags, now, t.Id)
 	if err != nil {
 		return err
 	}
@@ -266,7 +275,7 @@ func GetTemplates(c *gin.Context) {
 		return
 	}
 
-	rows, err := db.Conn.Query("SELECT id,type,title,description,scope,owned_by,provider,content_id, created FROM template WHERE type=? and (scope=? or (scope=? and owned_by=?) or (scope=? and owned_by=?))", tp, common.ScopeWebsite, common.ScopeTenant, tenantId, common.ScopeTeam, teamId)
+	rows, err := db.Conn.Query("SELECT id,type,title,description,scope,owned_by,provider,content_id,tags, created FROM template WHERE type=? and (scope=? or (scope=? and owned_by=?) or (scope=? and owned_by=?))", tp, common.ScopeWebsite, common.ScopeTenant, tenantId, common.ScopeTeam, teamId)
 	if err != nil {
 		logger.Warn("get templates error", "error", err)
 		c.JSON(500, common.RespError(err.Error()))
@@ -277,7 +286,8 @@ func GetTemplates(c *gin.Context) {
 	for rows.Next() {
 		t := &models.Template{}
 		var desc string
-		err := rows.Scan(&t.Id, &t.Type, &t.Title, &desc, &t.Scope, &t.OwnedBy, &t.Provider, &t.ContentId, &t.Created)
+		var tags []byte
+		err := rows.Scan(&t.Id, &t.Type, &t.Title, &desc, &t.Scope, &t.OwnedBy, &t.Provider, &t.ContentId, &tags, &t.Created)
 		if err != nil {
 			logger.Warn("scan template error", "error", err)
 			c.JSON(500, common.RespError(err.Error()))
@@ -295,6 +305,13 @@ func GetTemplates(c *gin.Context) {
 				return
 			}
 			t.Version = v
+		}
+
+		if tags != nil {
+			err = json.Unmarshal(tags, &t.Tags)
+			if err != nil {
+				logger.Warn("unmarshal template tags error", "error", err)
+			}
 		}
 		templates = append(templates, t)
 	}

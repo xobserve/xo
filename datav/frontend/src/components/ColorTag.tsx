@@ -15,7 +15,6 @@ import { Tag, TagCloseButton, TagLabel, useColorMode } from '@chakra-ui/react'
 import React from 'react'
 import colorGenerator from 'utils/colorGenerator'
 import { getTextColorForAlphaBackground } from 'utils/colors'
-import paletteGenerator from 'utils/paletteGenerator'
 
 interface Props {
   name: string
@@ -29,7 +28,6 @@ const ColorTag = ({ name, onRemove, style, label, onClick }: Props) => {
   const bg = colorGenerator.getColorByKey(name)
   return (
     <Tag
-      style={style}
       bg={bg}
       color={getTextColorForAlphaBackground(bg, colorMode == 'dark')}
       onMouseDown={(e) => {
@@ -38,6 +36,7 @@ const ColorTag = ({ name, onRemove, style, label, onClick }: Props) => {
       }}
       borderRadius={2}
       onClick={onClick}
+      style={style}
     >
       <TagLabel>{label ?? name}</TagLabel>
       {onRemove && <TagCloseButton onClick={onRemove} />}

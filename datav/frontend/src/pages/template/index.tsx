@@ -34,17 +34,21 @@ import {
   VStack,
   Wrap,
   useDisclosure,
+  useMediaQuery,
   useToast,
 } from '@chakra-ui/react'
 import { useStore } from '@nanostores/react'
 import { Input } from 'antd'
 import CodeEditor from 'components/CodeEditor/CodeEditor'
 import Empty from 'components/Empty'
+import TagsFilter from 'components/TagsFilter'
 import { FormSection } from 'components/form/Form'
 import FormItem from 'components/form/Item'
 import { clone, cloneDeep } from 'lodash'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
+import { FaSearch } from 'react-icons/fa'
 import { $config } from 'src/data/configs/config'
+import { MobileBreakpoint } from 'src/data/constants'
 import { locale } from 'src/i18n/i18n'
 import { commonMsg } from 'src/i18n/locales/en'
 import TemplateCard from 'src/views/template/TemplateCard'
@@ -52,6 +56,7 @@ import TemplateEditor from 'src/views/template/TemplateEditor'
 import { Template, TemplateContent, TemplateType } from 'types/template'
 import { getTemplatesApi } from 'utils/axios/api'
 import { requestApi } from 'utils/axios/request'
+import { isEmpty } from 'utils/validate'
 
 const TemplateStore = () => {
   const t = useStore(commonMsg)
@@ -64,6 +69,9 @@ const TemplateStore = () => {
     useState<Partial<TemplateContent>>(null)
   const [applyTemplate, setApplyTemplate] = useState<Template>(null)
   const [newestVersion, setNewestVersion] = useState<string>(null)
+  const [searchOpen, setSearchOpen] = useState<boolean>(false)
+  const [searchTitle, setSearchTitle] = useState<string>(null)
+  const [searchTags, setSearchTags] = useState<string[]>([])
   const { isOpen, onOpen, onClose } = useDisclosure()
   const {
     isOpen: isCreateContentOpen,
@@ -161,7 +169,63 @@ const TemplateStore = () => {
     onCreateContentClose()
   }
 
-  console.log('here33333111:', newestVersion)
+  const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
+  const onSearchTagsChange = (v: string[]) => {
+    setSearchTags(v)
+  }
+
+  const tags = useMemo(() => {
+    const result = []
+    if (!templates) {
+      return result
+    }
+    const tags = new Set()
+    for (const t of templates) {
+      if (isEmpty(t.tags)) {
+        continue
+      }
+
+      for (const tag of t.tags ?? []) {
+        tags.add(tag)
+      }
+    }
+
+    for (const tag of tags) {
+      result.push(tag)
+    }
+    return result
+  }, [templates])
+
+  const filterTemplates = useMemo(() => {
+    if (isEmpty(searchTitle) && isEmpty(searchTags)) {
+      return templates
+    }
+
+    const result = []
+    for (const t of templates) {
+      if (
+        !isEmpty(searchTitle) &&
+        !t.title.toLowerCase().includes(searchTitle.toLowerCase())
+      ) {
+        continue
+      }
+      if (!isEmpty(searchTags)) {
+        let match = false
+        for (const tag of searchTags) {
+          if (t.tags?.includes(tag)) {
+            match = true
+            break
+          }
+        }
+        if (!match) {
+          continue
+        }
+      }
+      result.push(t)
+    }
+    return result
+  }, [templates, searchTitle, searchTags])
+
   return (
     <>
       <Box>
@@ -187,7 +251,40 @@ const TemplateStore = () => {
             </Text>
           </Center>
         </VStack>
-        <Center>
+        {searchOpen && (
+          <Center>
+            <HStack>
+              <Input
+                placeholder='search titles'
+                value={searchTitle}
+                onChange={(e) => {
+                  setSearchTitle(e.target.value)
+                }}
+              />
+
+              <TagsFilter
+                value={searchTags}
+                tags={tags}
+                onChange={(v: string[]) => {
+                  onSearchTagsChange(v)
+                }}
+                minWidth={isLargeScreen ? '260px' : '48%'}
+                displayCount={false}
+              />
+            </HStack>
+          </Center>
+        )}
+        <Center position='relative'>
+          <Box
+            position='absolute'
+            top='3'
+            right='6'
+            cursor='pointer'
+            zIndex={1}
+            onClick={() => setSearchOpen(!searchOpen)}
+          >
+            <FaSearch opacity='0.5' />
+          </Box>
           <Tabs position='relative' variant='line' size='md' width='100%'>
             <TabList justifyContent='center' borderBottomWidth='1px'>
               {tabs.map((tab) => (
@@ -210,9 +307,9 @@ const TemplateStore = () => {
             <TabPanels>
               {tabs.map((tab) => (
                 <TabPanel key={tab.value}>
-                  {templates.length > 0 ? (
+                  {filterTemplates.length > 0 ? (
                     <Wrap>
-                      {templates.map((template) => (
+                      {filterTemplates.map((template) => (
                         <TemplateCard
                           key={template.id}
                           template={template}
