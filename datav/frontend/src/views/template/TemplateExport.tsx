@@ -22,12 +22,17 @@ import {
 } from '@chakra-ui/react'
 import { useStore } from '@nanostores/react'
 import React, { useEffect, useMemo } from 'react'
-import { Panel } from 'types/dashboard'
+import { Dashboard, Panel } from 'types/dashboard'
 import { TemplateData, TemplateType } from 'types/template'
 import { $datasources } from '../datasource/store'
 import CodeEditor from 'components/CodeEditor/CodeEditor'
 import { prettyJson } from 'utils/string'
 import { commonMsg } from 'src/i18n/locales/en'
+import { cloneDeep, template } from 'lodash'
+import { Datasource } from 'types/datasource'
+import { $variables } from '../variables/store'
+import { Variable } from 'types/variable'
+import { parseVariableFormat } from 'utils/format'
 
 interface Props {
   type: TemplateType
@@ -40,6 +45,9 @@ const TemplateExport = (props: Props) => {
   const { type, data } = props
   const { isOpen, onOpen, onClose } = useDisclosure()
   const datasources = useStore($datasources)
+  const variables = useStore($variables)
+
+  console.log('here33333:', data)
   useEffect(() => {
     if (data) {
       onOpen()
@@ -58,6 +66,41 @@ const TemplateExport = (props: Props) => {
         panel,
       }
 
+      return template
+    } else if (type == TemplateType.Dashboard) {
+      const dash: Dashboard = data
+      const dsList: Datasource[] = []
+      const gVarList: Variable[] = []
+      for (const p of dash.data.panels) {
+        const ds = datasources.find((d) => d.id == p.datasource.id)
+        if (ds) {
+          const exist = dsList.find((d) => d.id == ds.id)
+          if (!exist) {
+            dsList.push(cloneDeep(ds))
+          }
+        }
+      }
+      const variableData = cloneDeep(dash.data)
+      delete variableData.variables
+
+      const formats = parseVariableFormat(JSON.stringify(variableData))
+      for (const f of formats) {
+        const existInLocal = dash.data.variables.find((v) => v.name == f)
+        if (!existInLocal) {
+          const existInGlobal = variables.find((v) => v.name == f)
+          if (existInGlobal) {
+            const exist = gVarList.find((v) => v.name == f)
+            if (!exist) {
+              gVarList.push(existInGlobal)
+            }
+          }
+        }
+      }
+      const template: TemplateData = {
+        dashboards: [data],
+        datasources: dsList,
+        variables: gVarList,
+      }
       return template
     }
   }, [type, data])

@@ -40,7 +40,6 @@ export interface DashboardData {
   panels: Panel[]
   variables: Variable[]
   sharedTooltip: boolean
-  editable: boolean
   hidingVars: string
   styles: {
     bg: Record<string, string>

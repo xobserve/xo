@@ -28,7 +28,6 @@ export const initDashboard = (): Dashboard => {
       panels: [],
       variables: [],
       sharedTooltip: false,
-      editable: true,
       hidingVars: '',
       description: '',
       styles: {

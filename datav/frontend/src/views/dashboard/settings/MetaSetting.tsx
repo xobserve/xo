@@ -24,6 +24,7 @@ import {
   AlertTitle,
   Box,
   Button,
+  HStack,
   Text,
   Textarea,
   useDisclosure,
@@ -34,9 +35,20 @@ import CodeEditor from 'src/components/CodeEditor/CodeEditor'
 import { DetailAlert, DetailAlertItem } from 'src/components/DetailAlert'
 import React from 'react'
 import { useRef, useState } from 'react'
-import { commonMsg, dashboardSettingMsg } from 'src/i18n/locales/en'
+import {
+  commonMsg,
+  dashboardSettingMsg,
+  templateMsg,
+} from 'src/i18n/locales/en'
 import { Dashboard } from 'types/dashboard'
 import { requestApi } from 'utils/axios/request'
+import TemplateExport from 'src/views/template/TemplateExport'
+import { TemplateType } from 'types/template'
+import { clone } from 'lodash'
+import {
+  extractDashboardTemplateContent,
+  extractPanelTemplateContent,
+} from 'utils/template'
 
 interface Props {
   dashboard: Dashboard
@@ -44,8 +56,9 @@ interface Props {
 }
 
 const MetaSettings = ({ dashboard }: Props) => {
-  const t = useStore(commonMsg)
-  const t1 = useStore(dashboardSettingMsg)
+  const t = commonMsg.get()
+  const t1 = dashboardSettingMsg.get()
+  const t2 = templateMsg.get()
 
   const toast = useToast()
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -54,6 +67,7 @@ const MetaSettings = ({ dashboard }: Props) => {
   const dash = JSON.stringify(dashboard, null, 4)
   const rawMeta = useRef(dash)
   const [meta, setMeta] = useState(dash)
+  const [templateDash, setTemplateDash] = useState<Partial<Dashboard>>(null)
 
   const onSubmit = async () => {
     await requestApi.post('/dashboard/save', {
@@ -82,10 +96,19 @@ const MetaSettings = ({ dashboard }: Props) => {
         <AlertDescription maxWidth='sm'></AlertDescription>
       </DetailAlert>
 
-      <Button mt='2' isDisabled={meta == rawMeta.current} onClick={onOpen}>
-        {t.submit}
-      </Button>
-
+      <HStack mt='2'>
+        <Button isDisabled={meta == rawMeta.current} onClick={onOpen}>
+          {t.save}
+        </Button>
+        <Button
+          onClick={() => {
+            setTemplateDash(extractDashboardTemplateContent(clone(dashboard)))
+          }}
+          variant='outline'
+        >
+          {t2.exportTemplate}
+        </Button>
+      </HStack>
       <AlertDialog
         isOpen={isOpen}
         leastDestructiveRef={cancelRef}
@@ -110,6 +133,11 @@ const MetaSettings = ({ dashboard }: Props) => {
           </AlertDialogContent>
         </AlertDialogOverlay>
       </AlertDialog>
+      <TemplateExport
+        type={TemplateType.Dashboard}
+        data={templateDash}
+        onClose={() => setTemplateDash(null)}
+      />
     </>
   )
 }

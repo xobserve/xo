@@ -1,13 +1,20 @@
 import { Dashboard, Panel } from 'types/dashboard'
 import { TemplateContent, TemplateData } from 'types/template'
 import { requestApi } from './axios/request'
-import { cloneDeep, extend, merge } from 'lodash'
 
 export const extractPanelTemplateContent = (panel: Panel): Partial<Panel> => {
   return {
     type: panel.type,
     plugins: panel.plugins,
     styles: panel.styles,
+  }
+}
+
+export const extractDashboardTemplateContent = (
+  dash: Dashboard,
+): Partial<Dashboard> => {
+  return {
+    data: dash.data,
   }
 }
 

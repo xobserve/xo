@@ -360,7 +360,7 @@ export const dashboardSaveMsg = i18n('dashboardSave', {
 
 export const dashboardSettingMsg = i18n('dashboardSetting', {
   dashSettings: 'Dashboard settings',
-  metaData: 'Meta data',
+  metaData: 'Meta data / Template',
   tootip: 'Shared tooltip',
   visibleTo: 'Visible to',
   visibleToTips: 'Controls who can view this dashboard',
