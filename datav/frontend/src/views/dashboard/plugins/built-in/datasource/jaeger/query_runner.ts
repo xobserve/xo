@@ -58,7 +58,9 @@ export const queryDependencies = async (dsId, range: TimeRange) => {
 
   const ds = getDatasource(dsId)
   const res = await requestApi.get(
-    `/proxy/${ds.id}/api/dependencies?endTs=${end}&lookback=${end - start}`,
+    `/proxy/${ds.teamId}/${ds.id}/api/dependencies?endTs=${end}&lookback=${
+      end - start
+    }`,
   )
   return res.data
 }
@@ -93,14 +95,14 @@ export const replaceJaegerQueryWithVariables = (query: PanelQuery) => {
 
 export const queryJaegerServices = async (dsId) => {
   const ds = getDatasource(dsId)
-  const res = await requestApi.get(`/proxy/${ds.id}/api/services`)
+  const res = await requestApi.get(`/proxy/${ds.teamId}/${ds.id}/api/services`)
   return res.data
 }
 
 export const queryJaegerOperations = async (dsId, service) => {
   const ds = getDatasource(dsId)
   const res = await requestApi.get(
-    `/proxy/${ds.id}/api/services/${service}/operations`,
+    `/proxy/${ds.teamId}/${ds.id}/api/services/${service}/operations`,
   )
   return res.data
 }
@@ -149,7 +151,7 @@ export const queryJaegerTraces = async (
   const start = timeRange.start.getTime() * 1000
   const end = timeRange.end.getTime() * 1000
 
-  let url = `/proxy/${ds.id}/api/traces?limit=${limit}&start=${start}&end=${end}&service=${service}`
+  let url = `/proxy/${ds.teamId}/${ds.id}/api/traces?limit=${limit}&start=${start}&end=${end}&service=${service}`
   if (operation != 'all' && !isEmpty(operation)) {
     url += `&operation=${operation}`
   }
@@ -176,6 +178,8 @@ export const queryJaegerTraces = async (
 
 export const queryJaegerTrace = async (dsId, traceId) => {
   const ds = getDatasource(dsId)
-  const res = await requestApi.get(`/proxy/${ds.id}/api/traces/${traceId}`)
+  const res = await requestApi.get(
+    `/proxy/${ds.teamId}/${ds.id}/api/traces/${traceId}`,
+  )
   return res.data
 }

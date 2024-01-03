@@ -290,8 +290,8 @@ func CreateTeam(ctx context.Context, tx *sql.Tx, tenantId int64, userId int64, n
 	}
 
 	// create testdata datasource
-	_, err = tx.ExecContext(ctx, `INSERT INTO datasource (name,type,url,team_id,created,updated) VALUES (?,?,?,?,?,?)`,
-		"TestData", DatasourceTestData, "", id, now, now)
+	_, err = tx.ExecContext(ctx, `INSERT INTO datasource (id,name,type,url,team_id,created,updated) VALUES (?,?,?,?,?,?,?)`,
+		1, "TestData", DatasourceTestData, "", id, now, now)
 	if err != nil {
 		return 0, err
 	}

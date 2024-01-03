@@ -50,7 +50,9 @@ const TraceDetailWrapper = ({ id, dsId }) => {
   }, [])
 
   const load = async () => {
-    const r1 = await requestApi.get(`/datasource/byId/${dsId}`)
+    const r1 = await requestApi.get(
+      `/datasource/byId/${config.currentTeam}/${dsId}`,
+    )
     const r2 = await requestApi.get(
       `/variable/team?teamId=${config.currentTeam}`,
     )

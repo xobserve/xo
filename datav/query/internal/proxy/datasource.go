@@ -48,9 +48,10 @@ var client = &http.Client{
 }
 
 func ProxyDatasource(c *gin.Context) {
+	teamId, _ := strconv.ParseInt(c.Param("teamId"), 10, 64)
 	dsID, _ := strconv.ParseInt(c.Param("id"), 10, 64)
 	// find datasource store url
-	ds, err := datasource.GetDatasource(c.Request.Context(), dsID)
+	ds, err := datasource.GetDatasource(c.Request.Context(), teamId, dsID)
 	if err != nil {
 		logger.Warn("query datasource error", "error", err)
 		c.JSON(500, common.RespError(err.Error()))

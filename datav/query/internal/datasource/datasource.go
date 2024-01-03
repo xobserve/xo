@@ -119,7 +119,6 @@ func CreateDatasource(c *gin.Context) {
 }
 
 func createDatasource(ctx context.Context, ds *models.Datasource, u *models.User) error {
-	var res sql.Result
 	var err error
 	data, err := json.Marshal(ds.Data)
 	if err != nil {
@@ -127,19 +126,16 @@ func createDatasource(ctx context.Context, ds *models.Datasource, u *models.User
 	}
 	now := time.Now()
 	if ds.Id == 0 {
-		res, err = db.Conn.ExecContext(ctx, "INSERT INTO datasource (name,type,url,team_id,data,created,updated) VALUES (?,?,?,?,?,?,?)", ds.Name, ds.Type, ds.URL, ds.TeamId, data, now, now)
-	} else {
-		res, err = db.Conn.ExecContext(ctx, "INSERT INTO datasource (id, name,type,url,team_id,data,created,updated) VALUES (?,?,?,?,?,?,?,?)", ds.Id, ds.Name, ds.Type, ds.URL, ds.TeamId, data, now, now)
+		ds.Id = time.Now().Unix()
 	}
+
+	_, err = db.Conn.ExecContext(ctx, "INSERT INTO datasource (id, name,type,url,team_id,data,created,updated) VALUES (?,?,?,?,?,?,?,?)", ds.Id, ds.Name, ds.Type, ds.URL, ds.TeamId, data, now, now)
 	if err != nil {
 		if e.IsErrUniqueConstraint(err) {
-			return errors.New("id or name alread exist")
+			return errors.New("id or name alread exist in target team")
 		}
 		return fmt.Errorf("insert datasource error: %w", err)
 	}
-
-	id, _ := res.LastInsertId()
-	ds.Id = id
 
 	return nil
 }
@@ -163,7 +159,7 @@ func UpdateDatasource(c *gin.Context) {
 		return
 	}
 
-	datasource, err := GetDatasource(c.Request.Context(), ds.Id)
+	_, err = GetDatasource(c.Request.Context(), ds.TeamId, ds.Id)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			c.JSON(400, common.RespError("datasource not found"))
@@ -174,13 +170,13 @@ func UpdateDatasource(c *gin.Context) {
 		return
 	}
 
-	err = acl.CanEditTeam(c.Request.Context(), datasource.TeamId, u.Id)
+	err = acl.CanEditTeam(c.Request.Context(), ds.TeamId, u.Id)
 	if err != nil {
 		c.JSON(403, common.RespError(err.Error()))
 		return
 	}
 
-	_, err = db.Conn.ExecContext(c.Request.Context(), "UPDATE datasource SET name=?,type=?,url=?,data=?,updated=? WHERE id=?", ds.Name, ds.Type, ds.URL, data, now, ds.Id)
+	_, err = db.Conn.ExecContext(c.Request.Context(), "UPDATE datasource SET name=?,type=?,url=?,data=?,updated=? WHERE team_id=? and id=?", ds.Name, ds.Type, ds.URL, data, now, ds.TeamId, ds.Id)
 	if err != nil {
 		if e.IsErrUniqueConstraint(err) {
 			c.JSON(http.StatusBadRequest, common.RespError("name alread exist"))
@@ -248,6 +244,7 @@ func GetDatasourcesByTeamId(ctx context.Context, teamId int64) ([]*models.Dataso
 	return dss, nil
 }
 func DeleteDatasource(c *gin.Context) {
+	teamId, _ := strconv.ParseInt(c.Param("teamId"), 10, 64)
 	id, _ := strconv.ParseInt(c.Param("id"), 10, 64)
 
 	if id == 0 {
@@ -260,7 +257,7 @@ func DeleteDatasource(c *gin.Context) {
 		return
 	}
 
-	ds, err := GetDatasource(c.Request.Context(), id)
+	ds, err := GetDatasource(c.Request.Context(), teamId, id)
 	if err != nil {
 		logger.Warn("Error query datasource", "error", err)
 		c.JSON(500, common.RespError(e.Internal))
@@ -284,12 +281,12 @@ func DeleteDatasource(c *gin.Context) {
 	c.JSON(http.StatusOK, common.RespSuccess(nil))
 }
 
-func GetDatasource(ctx context.Context, id int64) (*models.Datasource, error) {
+func GetDatasource(ctx context.Context, teamId, id int64) (*models.Datasource, error) {
 	ds, ok := datasources[id]
 	if !ok {
 		ds := &models.Datasource{}
 		var rawdata []byte
-		err := db.Conn.QueryRowContext(ctx, "SELECT name,type,url,data, created FROM datasource WHERE id=?", id).Scan(&ds.Name, &ds.Type, &ds.URL, &rawdata, &ds.Created)
+		err := db.Conn.QueryRowContext(ctx, "SELECT name,type,url,data, created FROM datasource WHERE team_id=? and id=?", teamId, id).Scan(&ds.Name, &ds.Type, &ds.URL, &rawdata, &ds.Created)
 		if err != nil {
 			return nil, err
 		}
@@ -297,6 +294,7 @@ func GetDatasource(ctx context.Context, id int64) (*models.Datasource, error) {
 		if rawdata != nil {
 			err = json.Unmarshal(rawdata, &ds.Data)
 		}
+		ds.TeamId = teamId
 		return ds, err
 	}
 
@@ -304,13 +302,14 @@ func GetDatasource(ctx context.Context, id int64) (*models.Datasource, error) {
 }
 
 func GetDatasourceById(c *gin.Context) {
+	teamId, _ := strconv.ParseInt(c.Param("teamId"), 10, 64)
 	id, _ := strconv.ParseInt(c.Param("id"), 10, 64)
 	if id == 0 {
 		c.JSON(http.StatusBadRequest, common.RespError("bad datasource id"))
 		return
 	}
 
-	ds, err := GetDatasource(c.Request.Context(), id)
+	ds, err := GetDatasource(c.Request.Context(), teamId, id)
 	if err != nil {
 		logger.Warn("Error query datasource", "error", err)
 		c.JSON(500, common.RespError(e.Internal))

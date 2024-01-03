@@ -156,15 +156,17 @@ CREATE TABLE IF NOT EXISTS dashboard_history (
 CREATE UNIQUE INDEX dashboard_id_version ON dashboard_history (dashboard_id, version);
 
 CREATE TABLE IF NOT EXISTS datasource (
-    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    team_id INTEGER NOT NULL,
+    id INTEGER NOT NULL,
     name VARCHAR(64),
     type VARCHAR(32),
     url VARCHAR(255),
     data MEDIUMTEXT,
-    team_id INTEGER NOT NULL,
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL
 );
+
+CREATE UNIQUE INDEX datasource_id ON datasource (team_id, id);
 
 CREATE UNIQUE INDEX datasource_name ON datasource (team_id, name);
 

@@ -159,8 +159,8 @@ func (s *Server) Start() error {
 		r.POST("/datasource/create", MustLogin(), datasource.CreateDatasource)
 		r.POST("/datasource/update", MustLogin(), datasource.UpdateDatasource)
 		r.GET("/datasource/all", CheckLogin(), otelPlugin, datasource.GetDatasources)
-		r.DELETE("/datasource/:id", MustLogin(), datasource.DeleteDatasource)
-		r.GET("/datasource/byId/:id", MustLogin(), datasource.GetDatasourceById)
+		r.DELETE("/datasource/:teamId/:id", MustLogin(), datasource.DeleteDatasource)
+		r.GET("/datasource/byId/:teamId/:id", MustLogin(), datasource.GetDatasourceById)
 		r.GET("/datasource/test", proxy.TestDatasource)
 
 		// tenant apis
@@ -209,8 +209,8 @@ func (s *Server) Start() error {
 		r.GET("/template/content/newest/:id", MustLogin(), template.GetTemplateNewestVersion)
 
 		// proxy apis
-		r.Any("/proxy/:id/*path", proxy.ProxyDatasource)
-		r.Any("/proxy/:id", proxy.ProxyDatasource)
+		r.Any("/proxy/:teamId/:id/*path", proxy.ProxyDatasource)
+		r.Any("/proxy/:teamId/:id", proxy.ProxyDatasource)
 
 		r.GET("/common/proxy/:panelId", proxy.Proxy)
 

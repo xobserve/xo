@@ -68,7 +68,7 @@ const QueryEditor = ({
       // /prometheus/expand-with-exprs
       requestApi
         .get(
-          `/proxy/${datasource.id}/prometheus/expand-with-exprs?query=${q}&format=json`,
+          `/proxy/${ds.teamId}/${datasource.id}/prometheus/expand-with-exprs?query=${q}&format=json`,
         )
         .then((res: any) => {
           if (res?.status == 'success') {

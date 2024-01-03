@@ -60,13 +60,13 @@ const TemplateExport = (props: Props) => {
     if (!data) {
       return null
     }
+
+    let template: TemplateData
     if (type == TemplateType.Panel) {
       const panel: Panel = data
-      const template: TemplateData = {
+      template = {
         panel,
       }
-
-      return template
     } else if (type == TemplateType.Dashboard) {
       const dash: Dashboard = data
       const dsList: Datasource[] = []
@@ -96,13 +96,14 @@ const TemplateExport = (props: Props) => {
           }
         }
       }
-      const template: TemplateData = {
+      template = {
         dashboards: [data],
         datasources: dsList,
         variables: gVarList,
       }
-      return template
     }
+
+    return template
   }, [type, data])
 
   return (

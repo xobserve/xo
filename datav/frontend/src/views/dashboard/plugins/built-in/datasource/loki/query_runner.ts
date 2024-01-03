@@ -43,7 +43,7 @@ export const run_loki_query = async (
   const end = roundDsTime(timeRange.end.getTime() / 1000)
 
   const res: any = await requestApi.get(
-    `/proxy/${ds.id}/loki/api/v1/query_range?query=${
+    `/proxy/${ds.teamId}/${ds.id}/loki/api/v1/query_range?query=${
       q.metrics
     }&start=${start}&end=${end}&step=${q.interval}&limit=${
       q.data['limit'] ?? 1000
@@ -101,9 +101,9 @@ export const queryLokiSeries = async (
   if (timeRange) {
     const start = roundDsTime(timeRange.start.getTime() / 1000)
     const end = roundDsTime(timeRange.end.getTime() / 1000)
-    url = `/proxy/${ds.id}/loki/api/v1/series?start=${start}&end=${end}`
+    url = `/proxy/${ds.teamId}/${ds.id}/loki/api/v1/series?start=${start}&end=${end}`
   } else {
-    url = `/proxy/${ds.id}/loki/api/v1/series?`
+    url = `/proxy/${ds.teamId}/${ds.id}/loki/api/v1/series?`
   }
 
   for (const k of match) {
@@ -144,9 +144,9 @@ export const queryLokiLabelNames = async (dsId, timeRange: TimeRange) => {
   if (timeRange) {
     const start = roundDsTime(timeRange.start.getTime() / 1000)
     const end = roundDsTime(timeRange.end.getTime() / 1000)
-    url = `/proxy/${ds.id}/loki/api/v1/labels?start=${start}&end=${end}`
+    url = `/proxy/${ds.teamId}/${ds.id}/loki/api/v1/labels?start=${start}&end=${end}`
   } else {
-    url = `/proxy/${ds.id}/loki/api/v1/labels?`
+    url = `/proxy/${ds.teamId}/${ds.id}/loki/api/v1/labels?`
   }
 
   const res: any = await requestApi.get(url)
@@ -175,9 +175,9 @@ export const queryLokiLabelValues = async (
   if (timeRange) {
     const start = roundDsTime(timeRange.start.getTime() / 1000)
     const end = roundDsTime(timeRange.end.getTime() / 1000)
-    url = `/proxy/${ds.id}/loki/api/v1/label/${labelName}/values?start=${start}&end=${end}`
+    url = `/proxy/${ds.teamId}/${ds.id}/loki/api/v1/label/${labelName}/values?start=${start}&end=${end}`
   } else {
-    url = `/proxy/${ds.id}/loki/api/v1/label/${labelName}/values?`
+    url = `/proxy/${ds.teamId}/${ds.id}/loki/api/v1/label/${labelName}/values?`
   }
 
   const res: any = await requestApi.get(url)
@@ -281,7 +281,7 @@ export const query_loki_alerts = async (
   query: PanelQuery,
 ) => {
   const res: any = await requestApi.get(
-    `/proxy/${ds.id}/api/v1/rules?type=alert`,
+    `/proxy/${ds.teamId}/${ds.id}/api/v1/rules?type=alert`,
   )
   if (res.status !== 'success') {
     console.log('Failed to fetch data from prometheus', res)

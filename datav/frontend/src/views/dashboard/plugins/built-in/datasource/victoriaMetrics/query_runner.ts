@@ -46,7 +46,7 @@ export const runQuery = async (
   const alignedEnd = end - (end % q.interval)
 
   const res: any = await requestApi.get(
-    `/proxy/${ds.id}/api/v1/query_range?query=${
+    `/proxy/${ds.teamId}/${ds.id}/api/v1/query_range?query=${
       q.metrics
     }&start=${alignedStart}&end=${end}&step=${q.interval}&trace=${
       q.data.traceQuery ? 1 : 0
@@ -118,9 +118,9 @@ export const queryVariableValues = async (variable: Variable) => {
   if (data.type == PromDsQueryTypes.LabelValues) {
     if (data.label) {
       // query label values : https://prometheus.io/docs/prometheus/latest/querying/api/#querying-label-values
-      let url = `/proxy/${ds.id}/api/v1/label/${data.label}/values?${
-        data.useCurrentTime ? `&start=${start}&end=${end}` : ''
-      }`
+      let url = `/proxy/${ds.teamId}/${ds.id}/api/v1/label/${
+        data.label
+      }/values?${data.useCurrentTime ? `&start=${start}&end=${end}` : ''}`
       const metrics = replaceWithVariablesHasMultiValues(data.metrics)
       for (const m of metrics) {
         url += `${m ? `&match[]=${m}` : ''}`
@@ -169,7 +169,7 @@ export const queryAlerts = async (
   ds: Datasource,
 ) => {
   const res: any = await requestApi.get(
-    `/proxy/${ds.id}/api/v1/rules?type=alert`,
+    `/proxy/${ds.teamId}/${ds.id}/api/v1/rules?type=alert`,
   )
   if (res.status !== 'success') {
     console.log('Failed to fetch data from demo datasource', res)
@@ -193,7 +193,7 @@ export const queryDemoAllMetrics = async (dsId, useCurrentTimerange = true) => {
   const start = roundDsTime(timeRange.start.getTime() / 1000)
   const end = roundDsTime(timeRange.end.getTime() / 1000)
 
-  const url = `/proxy/${ds.id}/api/v1/label/__name__/values?${
+  const url = `/proxy/${ds.teamId}/${ds.id}/api/v1/label/__name__/values?${
     useCurrentTimerange ? `&start=${start}&end=${end}` : ''
   }`
 
@@ -221,7 +221,7 @@ export const queryDemoLabels = async (
   const start = roundDsTime(timeRange.start.getTime() / 1000)
   const end = roundDsTime(timeRange.end.getTime() / 1000)
   const metrics = replaceWithVariablesHasMultiValues(metric)
-  let url = `/proxy/${ds.id}/api/v1/labels?${
+  let url = `/proxy/${ds.teamId}/${ds.id}/api/v1/labels?${
     useCurrentTimerange ? `&start=${start}&end=${end}` : ''
   }`
   for (const m of metrics) {

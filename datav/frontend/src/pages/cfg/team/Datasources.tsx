@@ -96,7 +96,7 @@ const TeamDatasources = ({ team }: { team: Team }) => {
   }
 
   const deleteDatasource = async () => {
-    await requestApi.delete(`/datasource/${datasource.id}`)
+    await requestApi.delete(`/datasource/${datasource.teamId}/${datasource.id}`)
     toast({
       description: t1.deleteToast({ name: datasource.name }),
       status: 'success',
