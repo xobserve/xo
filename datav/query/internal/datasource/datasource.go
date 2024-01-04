@@ -126,7 +126,7 @@ func createDatasource(ctx context.Context, ds *models.Datasource, u *models.User
 	}
 	now := time.Now()
 	if ds.Id == 0 {
-		ds.Id = time.Now().Unix()
+		ds.Id = now.UnixNano() / 1000
 	}
 
 	_, err = db.Conn.ExecContext(ctx, "INSERT INTO datasource (id, name,type,url,team_id,data,created,updated) VALUES (?,?,?,?,?,?,?,?)", ds.Id, ds.Name, ds.Type, ds.URL, ds.TeamId, data, now, now)

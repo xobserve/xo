@@ -80,7 +80,8 @@ CREATE TABLE IF NOT EXISTS team_member (
 );
 
 CREATE TABLE IF NOT EXISTS variable (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    team_id INTEGER NOT NULL,
+    id INTEGER  NOT NULL,
     name VARCHAR(60) NOT NULL,
     type VARCHAR(10) NOT NULL,
     value MEDIUMTEXT,
@@ -92,7 +93,6 @@ CREATE TABLE IF NOT EXISTS variable (
     enableAll BOOL NOT NULL DEFAULT false,
     sort TINYINT DEFAULT 0,
     regex TEXT,
-    team_id INTEGER NOT NULL,
     data MEDIUMTEXT,
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL
@@ -208,7 +208,7 @@ CREATE INDEX IF NOT EXISTS team_member_tenant_id ON team_member (tenant_id);
 CREATE INDEX IF NOT EXISTS team_member_user_id ON team_member (user_id);
 CREATE UNIQUE INDEX IF NOT EXISTS team_member_team_user_id ON team_member (team_id, user_id);
 
-
+CREATE UNIQUE INDEX IF NOT EXISTS variable_id ON variable (team_id, id);
 CREATE UNIQUE INDEX IF NOT EXISTS variable_name ON variable (team_id, name);
 CREATE INDEX IF NOT EXISTS variable_team ON variable (team_id);
 

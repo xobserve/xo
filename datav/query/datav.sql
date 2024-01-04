@@ -108,7 +108,8 @@ CREATE INDEX team_member_user_id ON team_member (user_id);
 CREATE UNIQUE INDEX team_member_team_user_id ON team_member (team_id, user_id);
 
 CREATE TABLE IF NOT EXISTS variable (
-    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    team_id INTEGER NOT NULL,
+    id INTEGER NOT NULL,
     name VARCHAR(60) NOT NULL,
     type VARCHAR(10) NOT NULL,
     value MEDIUMTEXT,
@@ -119,11 +120,12 @@ CREATE TABLE IF NOT EXISTS variable (
     enableAll BOOL NOT NULL DEFAULT false,
     sort SMALLINT DEFAULT 0,
     regex TEXT,
-    team_id INTEGER NOT NULL,
     data MEDIUMTEXT,
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL
 );
+
+CREATE UNIQUE INDEX variable_id ON variable (team_id, id);
 
 CREATE UNIQUE INDEX variable_name ON variable (team_id, name);
 

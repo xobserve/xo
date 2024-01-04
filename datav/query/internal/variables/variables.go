@@ -70,12 +70,16 @@ func AddNewVariable(c *gin.Context) {
 		return
 	}
 
+	if v.Id == 0 {
+		v.Id = time.Now().UnixNano() / 1000
+	}
+
 	now := time.Now()
-	_, err = db.Conn.ExecContext(c.Request.Context(), "INSERT INTO variable(name,type,value,default_selected,datasource,description,refresh,enableMulti,enableAll,regex,sort,team_id,created,updated) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-		v.Name, v.Type, v.Value, v.Default, v.Datasource, v.Desc, v.Refresh, v.EnableMulti, v.EnableAll, v.Regex, v.SortWeight, v.TeamId, now, now)
+	_, err = db.Conn.ExecContext(c.Request.Context(), "INSERT INTO variable(id,name,type,value,default_selected,datasource,description,refresh,enableMulti,enableAll,regex,sort,team_id,created,updated) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+		v.Id, v.Name, v.Type, v.Value, v.Default, v.Datasource, v.Desc, v.Refresh, v.EnableMulti, v.EnableAll, v.Regex, v.SortWeight, v.TeamId, now, now)
 	if err != nil {
 		if e.IsErrUniqueConstraint(err) {
-			c.JSON(400, common.RespError("variable name already exists"))
+			c.JSON(400, common.RespError("variable name or id already exists"))
 			return
 		}
 		logger.Warn("insert variable error", "error", err)
@@ -129,21 +133,32 @@ func UpdateVariable(c *gin.Context) {
 	}
 
 	u := c.MustGet("currentUser").(*models.User)
-	// only admin can do this
-	if !u.Role.IsAdmin() {
-		c.JSON(403, common.RespError(e.NoPermission))
+	err = isVariableExist(c.Request.Context(), v.TeamId, v.Id)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			c.JSON(400, common.RespError("variable not found"))
+			return
+		}
+		logger.Warn("Error query datasource", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+
+	err = acl.CanEditTeam(c.Request.Context(), v.TeamId, u.Id)
+	if err != nil {
+		c.JSON(403, common.RespError(err.Error()))
 		return
 	}
 
 	now := time.Now()
-	_, err = db.Conn.ExecContext(c.Request.Context(), "UPDATE variable SET name=?,type=?,value=?,default_selected=?,datasource=?,description=?,refresh=?,enableMulti=?,enableAll=?,regex=?,sort=?,updated=? WHERE id=?",
-		v.Name, v.Type, v.Value, v.Default, v.Datasource, v.Desc, v.Refresh, v.EnableMulti, v.EnableAll, v.Regex, v.SortWeight, now, v.Id)
+	_, err = db.Conn.ExecContext(c.Request.Context(), "UPDATE variable SET name=?,type=?,value=?,default_selected=?,datasource=?,description=?,refresh=?,enableMulti=?,enableAll=?,regex=?,sort=?,updated=? WHERE team_id=? and id=?",
+		v.Name, v.Type, v.Value, v.Default, v.Datasource, v.Desc, v.Refresh, v.EnableMulti, v.EnableAll, v.Regex, v.SortWeight, now, v.TeamId, v.Id)
 	if err != nil {
 		if e.IsErrUniqueConstraint(err) {
 			c.JSON(400, common.RespError("variable name already exists"))
 			return
 		}
-		logger.Warn("insert variable error", "error", err)
+		logger.Warn("update variable error", "error", err)
 		c.JSON(500, common.RespError(e.Internal))
 		return
 	}
@@ -151,27 +166,21 @@ func UpdateVariable(c *gin.Context) {
 }
 
 func DeleteVariable(c *gin.Context) {
+	teamId, _ := strconv.ParseInt(c.Param("teamId"), 10, 64)
 	id, _ := strconv.ParseInt(c.Param("id"), 10, 64)
-	if id == 0 {
+	if teamId == 0 || id == 0 {
 		c.JSON(http.StatusBadRequest, common.RespError("bad variable id"))
 		return
 	}
 
-	teamId, err := getVariableTeamId(c.Request.Context(), id)
-	if err != nil {
-		logger.Warn("Error query variable team id", "error", err)
-		c.JSON(500, common.RespError(e.Internal))
-		return
-	}
-
 	u := c.MustGet("currentUser").(*models.User)
-	err = acl.CanEditTeam(c.Request.Context(), teamId, u.Id)
+	err := acl.CanEditTeam(c.Request.Context(), teamId, u.Id)
 	if err != nil {
 		c.JSON(403, common.RespError(err.Error()))
 		return
 	}
 
-	_, err = db.Conn.ExecContext(c.Request.Context(), "DELETE FROM variable WHERE id=?", id)
+	_, err = db.Conn.ExecContext(c.Request.Context(), "DELETE FROM variable WHERE team_id=? and id=?", teamId, id)
 	if err != nil {
 		logger.Warn("delete variable error", "error", err)
 		c.JSON(500, common.RespError(e.Internal))
@@ -203,14 +212,10 @@ func isVariableNameValid(name string) bool {
 	return true
 }
 
-func getVariableTeamId(ctx context.Context, id int64) (int64, error) {
-	var teamId int64
-	err := db.Conn.QueryRowContext(ctx, "SELECT team_id FROM variable WHERE id=?", id).Scan(&teamId)
-	if err != nil {
-		return 0, err
-	}
-
-	return teamId, nil
+func isVariableExist(ctx context.Context, teamId int64, id int64) error {
+	var tempTid int64
+	err := db.Conn.QueryRowContext(ctx, "SELECT id FROM variable WHERE team_id=? and id=?", teamId, id).Scan(&tempTid)
+	return err
 }
 
 func QueryTeamVariables(c *gin.Context) {

@@ -175,7 +175,7 @@ const TeamVariablesPage = ({ team }: { team: Team }) => {
   }
 
   const onRemoveVariable = async (v: Variable) => {
-    await requestApi.delete(`/variable/${v.id}`)
+    await requestApi.delete(`/variable/${v.teamId}/${v.id}`)
     onClose()
     toast({
       title: t.isDeleted({ name: t.variable }),
