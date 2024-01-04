@@ -125,8 +125,8 @@ const DashboardWrapper = ({ rawDashboard, sideWidth }) => {
     const globalVars = $variables
       .get()
       .filter((v) => !v.id.toString().startsWith('d-'))
-
-    $variables.set([...globalVars, ...dashVars])
+    const vars = [...globalVars, ...dashVars]
+    $variables.set(vars)
   }
 
   useLayoutEffect(() => {

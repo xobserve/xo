@@ -47,7 +47,7 @@ const TemplateExport = (props: Props) => {
   const datasources = useStore($datasources)
   const variables = useStore($variables)
 
-  console.log('here33333:', data)
+  //   console.log('here33333:', data)
   useEffect(() => {
     if (data) {
       onOpen()

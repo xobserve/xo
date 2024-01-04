@@ -26,9 +26,7 @@ import { $datasources } from 'src/views/datasource/store'
 import { initVariableSelected } from 'src/views/variables/SelectVariable'
 import { $variables } from 'src/views/variables/store'
 import { getNavigateTo, navigateTo } from 'utils/url'
-import { TemplateContent, TemplateData } from 'types/template'
 import { replaceDashboardTemplatePanels } from 'utils/template'
-import { clone, cloneDeep } from 'lodash'
 
 interface Props {
   dashboard?: Dashboard
@@ -44,6 +42,7 @@ const DashboardPageWrapper = memo(({ sideWidth }: Props) => {
   const [error, setError] = useState<any>(null)
 
   useEffect(() => {
+    setDashboard(null)
     loadConfig(path)
   }, [path])
 
@@ -62,6 +61,7 @@ const DashboardPageWrapper = memo(({ sideWidth }: Props) => {
       $teams.set(res.data.teams)
       $datasources.set(res.data.datasources)
       initVariableSelected(res.data.variables)
+      console.log('here333333:', res.data.variables)
       $variables.set(res.data.variables)
 
       // get panel templates content
