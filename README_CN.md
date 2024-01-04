@@ -15,7 +15,7 @@
 
 
 <div>
-   <img src="https://github.com/xObserve/assets/blob/main/xobserve-readme/home-example1.jpg?raw=true" />
+   <img src="https://github.com/xObserve/assets/blob/main/datav-readme/home-example1.jpg?raw=true" />
    <p align="center">
         <a href="./README.md">English</a> | 简体中文
   </p>
@@ -57,17 +57,17 @@ xObserve 是专门为开发者设计的、可编程的可观测性平台，同�
 
 ## 示例图片
 
-<img src="https://github.com/xObserve/assets/blob/main/xobserve-readme/home-example1.jpg?raw=true" />
+<img src="https://github.com/xObserve/assets/blob/main/datav-readme/home-example1.jpg?raw=true" />
 
-<img src="https://github.com/xObserve/assets/blob/main/xobserve-readme/runtime-example.jpg?raw=true" />
+<img src="https://github.com/xObserve/assets/blob/main/datav-readme/runtime-example.jpg?raw=true" />
 
-<img src="https://github.com/xObserve/assets/blob/main/xobserve-readme/host-example.jpg?raw=true" />
+<img src="https://github.com/xObserve/assets/blob/main/datav-readme/host-example.jpg?raw=true" />
 
-<img src="https://github.com/xObserve/assets/blob/main/xobserve-readme/trace-search-example.jpg?raw=true" />
+<img src="https://github.com/xObserve/assets/blob/main/datav-readme/trace-search-example.jpg?raw=true" />
 
-<img src="https://github.com/xObserve/assets/blob/main/xobserve-readme/trace-example.jpg?raw=true" />
+<img src="https://github.com/xObserve/assets/blob/main/datav-readme/trace-example.jpg?raw=true" />
 
-<img src="https://github.com/xObserve/assets/blob/main/xobserve-readme/log-example.jpg?raw=true" />
+<img src="https://github.com/xObserve/assets/blob/main/datav-readme/log-example.jpg?raw=true" />
 
-<img src="https://github.com/xObserve/assets/blob/main/xobserve-readme/alert-example.jpg?raw=true" />
+<img src="https://github.com/xObserve/assets/blob/main/datav-readme/alert-example.jpg?raw=true" />
 
