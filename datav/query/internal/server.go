@@ -127,23 +127,23 @@ func (s *Server) Start() error {
 		r.DELETE("/variable/:teamId/:id", MustLogin(), variables.DeleteVariable)
 
 		// dashboard apis
-		r.GET("/dashboard/byId/:id", CheckLogin(), otelPlugin, dashboard.GetDashboard)
+		r.GET("/dashboard/byId/:teamId/:id", CheckLogin(), otelPlugin, dashboard.GetDashboard)
 		r.POST("/dashboard/save", MustLogin(), otelPlugin, dashboard.SaveDashboard)
 		r.GET("/dashboard/team/:id", CheckLogin(), dashboard.GetTeamDashboards)
-		r.GET("/dashboard/history/:id", CheckLogin(), otelPlugin, dashboard.GetHistory)
+		r.GET("/dashboard/history/:teamId/:id", CheckLogin(), otelPlugin, dashboard.GetHistory)
 		r.GET("/dashboard/search/:tenantId", CheckLogin(), otelPlugin, dashboard.Search)
-		r.POST("/dashboard/star/:id", MustLogin(), dashboard.Star)
-		r.POST("/dashboard/unstar/:id", MustLogin(), dashboard.UnStar)
+		r.POST("/dashboard/star/:teamId/:id", MustLogin(), dashboard.Star)
+		r.POST("/dashboard/unstar/:teamId/:id", MustLogin(), dashboard.UnStar)
 		r.GET("/dashboard/starred", CheckLogin(), dashboard.GetAllStarred)
-		r.GET("/dashboard/starred/:id", dashboard.GetStarred)
-		r.DELETE("/dashboard/:id", MustLogin(), dashboard.Delete)
+		r.GET("/dashboard/starred/:teamId/:id", dashboard.GetStarred)
+		r.DELETE("/dashboard/:teamId/:id", MustLogin(), dashboard.Delete)
 		r.POST("/dashboard/weight", MustLogin(), dashboard.UpdateWeight)
 
 		// annotation
 		r.POST("/annotation", MustLogin(), annotation.SetAnnotation)
-		r.GET("/annotation/:namespace", annotation.QueryNamespaceAnnotations)
-		r.DELETE("/annotation/:namespace/:id", MustLogin(), annotation.RemoveAnnotation)
-		r.DELETE("/annotation/group/:namespace/:group/:expires", MustLogin(), annotation.RemoveGroupAnnotations)
+		r.GET("/annotation/:teamId/:namespace", annotation.QueryNamespaceAnnotations)
+		r.DELETE("/annotation/:teamId/:namespace/:id", MustLogin(), annotation.RemoveAnnotation)
+		r.DELETE("/annotation/group/:teamId/:namespace/:group/:expires", MustLogin(), annotation.RemoveGroupAnnotations)
 
 		// admin apis
 		r.GET("/admin/users", CheckLogin(), otelPlugin, admin.GetUsers)

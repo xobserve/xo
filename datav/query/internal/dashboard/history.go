@@ -26,6 +26,7 @@ package dashboard
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -47,7 +48,7 @@ func InitHistory() {
 		dash := history.Dashboard
 		// query how many histories does it has
 		count := 0
-		err := db.Conn.QueryRow("SELECT count(1) FROM dashboard_history WHERE dashboard_id=?", dash.Id).Scan(&count)
+		err := db.Conn.QueryRow("SELECT count(1) FROM dashboard_history WHERE team_id=? and dashboard_id=?", dash.OwnedBy, dash.Id).Scan(&count)
 		if err != nil {
 			logger.Warn("query history count error", "erorr", err)
 			time.Sleep(1 * time.Second)
@@ -58,10 +59,10 @@ func InitHistory() {
 			// delete 5 least recently updated
 			var err error
 			if config.Data.Database.ConnectTo == "sqlite" {
-				_, err = db.Conn.Exec("DELETE FROM dashboard_history WHERE dashboard_id=? and version IN (SELECT version FROM dashboard_history WHERE dashboard_id=? ORDER BY version LIMIT ? )", dash.Id, dash.Id, DeleteCount)
+				_, err = db.Conn.Exec("DELETE FROM dashboard_history WHERE team_id=? and dashboard_id=? and version IN (SELECT version FROM dashboard_history WHERE team_id=? and dashboard_id=? ORDER BY version LIMIT ? )", dash.OwnedBy, dash.Id, dash.OwnedBy, dash.Id, DeleteCount)
 
 			} else {
-				_, err = db.Conn.Exec("DELETE FROM dashboard_history WHERE dashboard_id=? ORDER BY version LIMIT ?", dash.Id, DeleteCount)
+				_, err = db.Conn.Exec("DELETE FROM dashboard_history WHERE team_id=? and dashboard_id=? ORDER BY version LIMIT ?", dash.OwnedBy, dash.Id, DeleteCount)
 			}
 			if err != nil {
 				logger.Warn("delete history count error", "erorr", err)
@@ -77,7 +78,7 @@ func InitHistory() {
 			continue
 		}
 
-		_, err = db.Conn.Exec("INSERT INTO dashboard_history (dashboard_id,version,changes,history) VALUES (?,?,?,?)", dash.Id, time.Now(), history.Changes, data)
+		_, err = db.Conn.Exec("INSERT INTO dashboard_history (team_id,dashboard_id,version,changes,history) VALUES (?,?,?,?,?)", dash.OwnedBy, dash.Id, time.Now(), history.Changes, data)
 		if err != nil {
 			logger.Warn("marshal history error", "erorr", err)
 			time.Sleep(1 * time.Second)
@@ -86,8 +87,10 @@ func InitHistory() {
 }
 
 func GetHistory(c *gin.Context) {
+	teamId, _ := strconv.ParseInt(c.Param("teamId"), 10, 64)
 	id := c.Param("id")
-	rows, err := db.Conn.QueryContext(c.Request.Context(), "SELECT history,version,changes FROM dashboard_history WHERE dashboard_id=? ORDER BY version DESC", id)
+
+	rows, err := db.Conn.QueryContext(c.Request.Context(), "SELECT history,version,changes FROM dashboard_history WHERE team_id=? and dashboard_id=? ORDER BY version DESC", teamId, id)
 	if err != nil {
 		logger.Warn("query dashboard history error", "error,err")
 		c.JSON(http.StatusInternalServerError, common.RespError(e.Internal))

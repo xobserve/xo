@@ -151,6 +151,7 @@ const ContextMenu = memo(({ props, options, data, container }: Props) => {
       id: 0,
       group: props.panel.id,
       namespace: props.dashboardId,
+      teamId: props.teamId,
     })
   }
 

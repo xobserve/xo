@@ -13,6 +13,7 @@
 
 export interface Annotation {
   id: number
+  teamId: number
   namespace: string
   group: number
   userId?: number

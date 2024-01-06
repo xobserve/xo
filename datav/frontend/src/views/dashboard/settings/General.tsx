@@ -87,7 +87,7 @@ const GeneralSettings = ({ dashboard, onChange }: Props) => {
   }
 
   const onDelete = async () => {
-    await requestApi.delete(`/dashboard/${dashboard.id}`)
+    await requestApi.delete(`/dashboard/${dashboard.ownedBy}/${dashboard.id}`)
     toast({
       title: t.isDeleted({ name: t.dashboard }),
       status: 'success',

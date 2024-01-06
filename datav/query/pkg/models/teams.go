@@ -387,7 +387,7 @@ func DeleteTeam(ctx context.Context, teamId int64, tx *sql.Tx) error {
 		dashIds = append(dashIds, id)
 	}
 	for _, id := range dashIds {
-		err = DeleteDashboard(ctx, id, tx)
+		err = DeleteDashboard(ctx, teamId, id, tx)
 		if err != nil {
 			return errors.New("delete team dashboard error:" + err.Error())
 		}

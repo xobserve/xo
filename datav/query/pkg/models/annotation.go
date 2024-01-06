@@ -12,6 +12,7 @@ type Annotation struct {
 	GroupId     int      `json:"group"`
 
 	UserId  int64      `json:"userId"`
+	TeamId  int64      `json:"teamId"`
 	Created time.Time  `json:"created"`
 	Updated *time.Time `json:"updated,omitempty"`
 }

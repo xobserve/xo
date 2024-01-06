@@ -38,7 +38,7 @@ func SetAnnotation(c *gin.Context) {
 		return
 	}
 	u := c.MustGet("currentUser").(*models.User)
-	err = acl.CanEditAnnotation(c.Request.Context(), anno.NamespaceId, u)
+	err = acl.CanEditAnnotation(c.Request.Context(), anno.TeamId, anno.NamespaceId, u)
 	if err != nil {
 		c.JSON(400, common.RespError(err.Error()))
 		return
@@ -47,8 +47,8 @@ func SetAnnotation(c *gin.Context) {
 	now := time.Now()
 
 	if anno.Id == 0 {
-		res, err := db.Conn.ExecContext(c.Request.Context(), "INSERT INTO annotation (text,time,duration,tags,namespace_id,group_id,userId,created,updated) VALUES (?,?,?,?,?,?,?,?,?)",
-			anno.Text, anno.Time, anno.Duration, tags, anno.NamespaceId, anno.GroupId, u.Id, now, now)
+		res, err := db.Conn.ExecContext(c.Request.Context(), "INSERT INTO annotation (text,time,duration,tags,team_id,namespace_id,group_id,userId,created,updated) VALUES (?,?,?,?,?,?,?,?,?,?)",
+			anno.Text, anno.Time, anno.Duration, tags, anno.TeamId, anno.NamespaceId, anno.GroupId, u.Id, now, now)
 		if err != nil {
 			if e.IsErrUniqueConstraint(err) {
 				c.JSON(http.StatusBadRequest, common.RespError("annotation already exist in this time point"))
@@ -80,10 +80,11 @@ func SetAnnotation(c *gin.Context) {
 }
 
 func QueryNamespaceAnnotations(c *gin.Context) {
+	teamId, _ := strconv.ParseInt(c.Param("teamId"), 10, 64)
 	namespace := c.Param("namespace")
 	start := c.Query("start")
 	end := c.Query("end")
-	rows, err := db.Conn.QueryContext(c.Request.Context(), "SELECT id,text,time,duration,tags,group_id,userId,created FROM annotation WHERE namespace_id=? and time >= ? and time <= ?", namespace, start, end)
+	rows, err := db.Conn.QueryContext(c.Request.Context(), "SELECT id,text,time,duration,tags,group_id,userId,created FROM annotation WHERE team_id=? and namespace_id=? and time >= ? and time <= ?", teamId, namespace, start, end)
 	if err != nil {
 		logger.Warn("query annotation err", "error", err)
 		c.JSON(http.StatusInternalServerError, common.RespError("query annotation err"))
@@ -106,6 +107,7 @@ func QueryNamespaceAnnotations(c *gin.Context) {
 		}
 
 		anno.NamespaceId = namespace
+		anno.TeamId = teamId
 		annos = append(annos, anno)
 	}
 
@@ -113,11 +115,13 @@ func QueryNamespaceAnnotations(c *gin.Context) {
 }
 
 func RemoveAnnotation(c *gin.Context) {
+	teamId, _ := strconv.ParseInt(c.Param("teamId"), 10, 64)
 	namespace := c.Param("namespace")
+
 	id := c.Param("id")
 
 	u := c.MustGet("currentUser").(*models.User)
-	err := acl.CanEditAnnotation(c.Request.Context(), namespace, u)
+	err := acl.CanEditAnnotation(c.Request.Context(), teamId, namespace, u)
 	if err != nil {
 		c.JSON(400, common.RespError(err.Error()))
 		return
@@ -134,6 +138,7 @@ func RemoveAnnotation(c *gin.Context) {
 }
 
 func RemoveGroupAnnotations(c *gin.Context) {
+	teamId, _ := strconv.ParseInt(c.Param("teamId"), 10, 64)
 	namespace := c.Param("namespace")
 	group := c.Param("group")
 	expires, err := strconv.Atoi(c.Param("expires"))
@@ -143,21 +148,21 @@ func RemoveGroupAnnotations(c *gin.Context) {
 	}
 
 	u := c.MustGet("currentUser").(*models.User)
-	dash, err := models.QueryDashboard(c.Request.Context(), namespace)
+	err = models.IsDashboardExist(c.Request.Context(), teamId, namespace)
 	if err != nil {
 		logger.Warn("query dashboard err", "error", err)
 		c.JSON(http.StatusInternalServerError, common.RespError("query dashboard err"))
 		return
 	}
 
-	err = acl.CanEditDashboard(c.Request.Context(), dash, u)
+	err = acl.CanEditTeam(c.Request.Context(), teamId, u.Id)
 	if err != nil {
 		c.JSON(http.StatusForbidden, common.RespError(err.Error()))
 		return
 	}
 
 	deleteBefore := time.Now().Add(-time.Duration(expires) * time.Hour * 24)
-	_, err = db.Conn.ExecContext(c.Request.Context(), "DELETE FROM annotation WHERE namespace_id=? and group_id=? and created < ?", namespace, group, deleteBefore)
+	_, err = db.Conn.ExecContext(c.Request.Context(), "DELETE FROM annotation WHERE team_id=? and namespace_id=? and group_id=? and created < ?", teamId, namespace, group, deleteBefore)
 	if err != nil {
 		logger.Warn("delete annotation err", "error", err)
 		c.JSON(http.StatusInternalServerError, common.RespError("delete annotation err"))

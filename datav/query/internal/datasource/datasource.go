@@ -252,11 +252,6 @@ func DeleteDatasource(c *gin.Context) {
 		return
 	}
 
-	if id == 1 {
-		c.JSON(http.StatusBadRequest, common.RespError("can not delete default test data datasource"))
-		return
-	}
-
 	ds, err := GetDatasource(c.Request.Context(), teamId, id)
 	if err != nil {
 		logger.Warn("Error query datasource", "error", err)
@@ -271,7 +266,7 @@ func DeleteDatasource(c *gin.Context) {
 		return
 	}
 
-	_, err = db.Conn.ExecContext(c.Request.Context(), "DELETE FROM datasource WHERE id=?", id)
+	_, err = db.Conn.ExecContext(c.Request.Context(), "DELETE FROM datasource WHERE team_id=? and id=?", teamId, id)
 	if err != nil {
 		logger.Warn("delete datasource error", "error", err)
 		c.JSON(http.StatusInternalServerError, common.RespInternalError())

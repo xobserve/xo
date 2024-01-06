@@ -23,7 +23,9 @@
 // limitations under the License.
 package utils
 
-import "github.com/lithammer/shortuuid/v3"
+import (
+	"github.com/lithammer/shortuuid/v3"
+)
 
 func GenID(idType string) string {
 	u := shortuuid.New()

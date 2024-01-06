@@ -56,6 +56,7 @@ import { requestApi } from 'utils/axios/request'
 import { EditorNumberItem } from 'src/components/editor/EditorItem'
 import { dispatch } from 'use-bus'
 import { ReloadDashAnnotationsEvent } from 'src/data/bus-events'
+import { $config } from 'src/data/configs/config'
 
 interface Props {
   dashboardId: string
@@ -121,9 +122,10 @@ const PanelAnnotations = ({ dashboardId, panel }: PanelAnnotationsProps) => {
   const t = useStore(commonMsg)
   const toast = useToast()
   const [expires, setExpires] = useState(1)
+  const config = useStore($config)
   const deletelAnnotations = async () => {
     await requestApi.delete(
-      `/annotation/group/${dashboardId}/${panel.id}/${expires}`,
+      `/annotation/group/${config.currentTeam}/${dashboardId}/${panel.id}/${expires}`,
     )
     dispatch(ReloadDashAnnotationsEvent)
     toast({

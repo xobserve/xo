@@ -56,6 +56,8 @@ import { $variables } from 'src/views/variables/store'
 import CopyToClipboard from 'components/CopyToClipboard'
 import { useNavigate } from 'react-router-dom'
 import { replaceDashboardTemplatePanels } from 'utils/template'
+import { useStore } from '@nanostores/react'
+import { $config } from 'src/data/configs/config'
 
 interface Props {
   trace: Trace
@@ -102,13 +104,16 @@ const TraceDetailHeader = ({
   const [onHover, setOnHover] = useState(false)
   const toast = useToast()
   const navigate = useNavigate()
+  const config = useStore($config)
   useEffect(() => {
     if (dashboardId && panelId) {
       loadDashboard(dashboardId)
     }
   }, [])
   const loadDashboard = async (id) => {
-    const res = await requestApi.get(`/dashboard/byId/${id}`)
+    const res = await requestApi.get(
+      `/dashboard/byId/${config.currentTeam}/${id}`,
+    )
     const dashboard: Dashboard = res.data
     replaceDashboardTemplatePanels(dashboard)
     const dashVars = cloneDeep(dashboard.data.variables)

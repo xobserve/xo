@@ -301,7 +301,7 @@ func MarkUserAsDeleted(c *gin.Context) {
 		return
 	}
 
-	WriteAuditLog(c.Request.Context(), u.Id, AuditDeleteUser, strconv.FormatInt(userId, 10), targetUser)
+	WriteAuditLog(c.Request.Context(), 0, 0, u.Id, AuditDeleteUser, strconv.FormatInt(userId, 10), targetUser)
 	c.JSON(200, nil)
 }
 
@@ -341,5 +341,5 @@ func RestoreUser(c *gin.Context) {
 		return
 	}
 
-	WriteAuditLog(c.Request.Context(), u.Id, AuditRestoreUser, strconv.FormatInt(userId, 10), targetUser)
+	WriteAuditLog(c.Request.Context(), 0, 0, u.Id, AuditRestoreUser, strconv.FormatInt(userId, 10), targetUser)
 }

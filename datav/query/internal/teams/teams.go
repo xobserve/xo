@@ -597,7 +597,7 @@ func MarkDeleted(c *gin.Context) {
 		return
 	}
 
-	admin.WriteAuditLog(c.Request.Context(), u.Id, admin.AuditDeleteTeam, strconv.FormatInt(teamId, 10), t)
+	admin.WriteAuditLog(c.Request.Context(), t.TenantId, teamId, u.Id, admin.AuditDeleteTeam, strconv.FormatInt(teamId, 10), t)
 }
 
 func RestoreTeam(c *gin.Context) {
@@ -644,7 +644,7 @@ func RestoreTeam(c *gin.Context) {
 		return
 	}
 
-	admin.WriteAuditLog(c.Request.Context(), u.Id, admin.AuditRestoreTeam, strconv.FormatInt(teamId, 10), t)
+	admin.WriteAuditLog(c.Request.Context(), t.TenantId, teamId, u.Id, admin.AuditRestoreTeam, strconv.FormatInt(teamId, 10), t)
 }
 
 func LeaveTeam(c *gin.Context) {

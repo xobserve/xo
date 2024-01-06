@@ -67,14 +67,12 @@ func SaveDashboard(c *gin.Context) {
 		dash.CreatedBy = u.Id
 		dash.Created = &now
 	} else {
-		belongs, err := models.QueryDashboardBelongsTo(c.Request.Context(), dash.Id)
+		err := models.IsDashboardExist(c.Request.Context(), dash.OwnedBy, dash.Id)
 		if err != nil {
 			logger.Error("query dashboarde owner error", "error", err)
 			c.JSON(500, common.RespInternalError())
 			return
 		}
-
-		dash.OwnedBy = belongs
 	}
 
 	err = acl.CanEditDashboard(c.Request.Context(), dash, u)
@@ -111,8 +109,8 @@ func SaveDashboard(c *gin.Context) {
 			return
 		}
 	} else {
-		res, err := db.Conn.ExecContext(c.Request.Context(), `UPDATE dashboard SET title=?,tags=?,data=?,team_id=?,visible_to=?,updated=? WHERE id=?`,
-			dash.Title, tags, jsonData, dash.OwnedBy, dash.VisibleTo, dash.Updated, dash.Id)
+		res, err := db.Conn.ExecContext(c.Request.Context(), `UPDATE dashboard SET title=?,tags=?,data=?,visible_to=?,updated=? WHERE team_id=? and id=?`,
+			dash.Title, tags, jsonData, dash.VisibleTo, dash.Updated, dash.OwnedBy, dash.Id)
 		if err != nil {
 			logger.Error("update dashboard error", "error", err)
 			c.JSON(500, common.RespInternalError())
@@ -144,8 +142,12 @@ func GetDashboard(c *gin.Context) {
 
 func QueryDashboard(c *gin.Context, u *models.User) (*models.Dashboard, error) {
 	id := c.Param("id")
+	teamId, _ := strconv.ParseInt(c.Param("teamId"), 10, 64)
+	if teamId == 0 {
+		return nil, errors.New("team id is required")
+	}
 
-	dash, err := models.QueryDashboard(c.Request.Context(), id)
+	dash, err := models.QueryDashboard(c.Request.Context(), teamId, id)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, fmt.Errorf("dashboard id `%s` not found", id)
@@ -286,12 +288,14 @@ func Search(c *gin.Context) {
 }
 
 func Star(c *gin.Context) {
+	teamId, _ := strconv.ParseInt(c.Param("teamId"), 10, 64)
 	id := c.Param("id")
+
 	u := c.MustGet("currentUser").(*models.User)
-	teamId, err := models.QueryDashboardBelongsTo(c.Request.Context(), id)
+	err := models.IsDashboardExist(c.Request.Context(), teamId, id)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			c.JSON(404, common.RespError(e.TeamNotExist))
+			c.JSON(404, common.RespError("Dashboard not found"))
 			return
 		}
 		logger.Warn("query dashboard belongs to error", "error", err)
@@ -304,7 +308,7 @@ func Star(c *gin.Context) {
 		return
 	}
 
-	_, err = db.Conn.ExecContext(c.Request.Context(), "INSERT INTO star_dashboard (user_id, dashboard_id, created) VALUES (?,?,?)", u.Id, id, time.Now())
+	_, err = db.Conn.ExecContext(c.Request.Context(), "INSERT INTO star_dashboard (user_id, team_id, dashboard_id, created) VALUES (?,?,?,?)", u.Id, teamId, id, time.Now())
 	if err != nil {
 		logger.Warn("star dashboard", "error", err)
 		c.JSON(500, common.RespError(e.Internal))
@@ -315,9 +319,11 @@ func Star(c *gin.Context) {
 }
 
 func UnStar(c *gin.Context) {
+	teamId, _ := strconv.ParseInt(c.Param("teamId"), 10, 64)
 	id := c.Param("id")
+
 	u := c.MustGet("currentUser").(*models.User)
-	_, err := db.Conn.ExecContext(c.Request.Context(), "DELETE FROM star_dashboard WHERE user_id=? and dashboard_id=?", u.Id, id)
+	_, err := db.Conn.ExecContext(c.Request.Context(), "DELETE FROM star_dashboard WHERE user_id=? and team_id=? and dashboard_id=?", u.Id, teamId, id)
 	if err != nil {
 		logger.Warn("unstar dashboard", "error", err)
 		c.JSON(500, common.RespError(e.Internal))
@@ -328,14 +334,16 @@ func UnStar(c *gin.Context) {
 }
 
 func GetStarred(c *gin.Context) {
+	teamId, _ := strconv.ParseInt(c.Param("teamId"), 10, 64)
 	id := c.Param("id")
+
 	u := user.CurrentUser(c)
 	if u == nil {
 		c.JSON(http.StatusOK, common.RespSuccess(false))
 		return
 	}
 
-	starred, err := models.QuertyDashboardStared(c.Request.Context(), u.Id, id)
+	starred, err := models.QuertyDashboardStared(c.Request.Context(), u.Id, teamId, id)
 	if err != nil {
 		logger.Warn("unstar dashboard", "error", err)
 		c.JSON(500, common.RespError(e.Internal))
@@ -383,10 +391,12 @@ func Delete(c *gin.Context) {
 		return
 	}
 
+	teamId, _ := strconv.ParseInt(c.Param("teamId"), 10, 64)
 	id := c.Param("id")
+
 	u := c.MustGet("currentUser").(*models.User)
 
-	dash, err := models.QueryDashboard(c.Request.Context(), id)
+	dash, err := models.QueryDashboard(c.Request.Context(), teamId, id)
 	if err != nil {
 		logger.Warn("query dash belongs to error", "error", err)
 		c.JSON(500, common.RespError(e.Internal))
@@ -407,7 +417,7 @@ func Delete(c *gin.Context) {
 	}
 	defer tx.Rollback()
 
-	err = models.DeleteDashboard(c.Request.Context(), id, tx)
+	err = models.DeleteDashboard(c.Request.Context(), teamId, id, tx)
 	if err != nil {
 		logger.Warn("delete dashboard error", "error", err)
 		c.JSON(400, common.RespError(err.Error()))
@@ -421,12 +431,14 @@ func Delete(c *gin.Context) {
 		return
 	}
 
-	admin.WriteAuditLog(c.Request.Context(), u.Id, admin.AuditDeleteDashboard, id, dash)
+	tenantId, _ := models.QueryTenantIdByTeamId(c.Request.Context(), teamId)
+	admin.WriteAuditLog(c.Request.Context(), tenantId, teamId, u.Id, admin.AuditDeleteDashboard, id, dash)
 
 	c.JSON(200, common.RespSuccess(nil))
 }
 
 type DashboardReq struct {
+	TeamId int64  `json:"teamId"`
 	Id     string `json:"id"`
 	Weight int    `json:"weight"`
 }
@@ -440,14 +452,14 @@ func UpdateWeight(c *gin.Context) {
 		return
 	}
 
-	teamId, err := models.QueryDashboardBelongsTo(c.Request.Context(), req.Id)
+	err = models.IsDashboardExist(c.Request.Context(), req.TeamId, req.Id)
 	if err != nil {
 		logger.Warn("query dashboard belongs to error", "error", err)
 		c.JSON(500, common.RespError(e.Internal))
 		return
 	}
 
-	tenantId, err := models.QueryTenantIdByTeamId(c.Request.Context(), teamId)
+	tenantId, err := models.QueryTenantIdByTeamId(c.Request.Context(), req.TeamId)
 	if err != nil {
 		logger.Warn("query tenant id error", "error", err)
 		c.JSON(500, common.RespError(e.Internal))
@@ -461,7 +473,7 @@ func UpdateWeight(c *gin.Context) {
 		return
 	}
 
-	_, err = db.Conn.ExecContext(c.Request.Context(), "UPDATE dashboard SET weight=? WHERE id=?", req.Weight, req.Id)
+	_, err = db.Conn.ExecContext(c.Request.Context(), "UPDATE dashboard SET weight=? WHERE  team_id=? and id=?", req.Weight, req.TeamId, req.Id)
 	if err != nil {
 		logger.Warn("update dashboard weight error", "error", err)
 		c.JSON(500, common.RespError(e.Internal))

@@ -29,7 +29,7 @@ func GetDashboardConfig(c *gin.Context) {
 	var sidemenu *models.SideMenu
 	if strings.HasPrefix(path, "/"+models.DashboardIdPrefix) {
 		id := path[1:]
-		dash, err := models.QueryDashboard(c.Request.Context(), id)
+		dash, err := models.QueryDashboard(c.Request.Context(), teamId0, id)
 		if err != nil {
 			if err == sql.ErrNoRows {
 				c.JSON(400, common.RespError(fmt.Sprintf("dashboard %s not exist", path)))
@@ -108,7 +108,7 @@ func GetDashboardConfig(c *gin.Context) {
 			}
 		}
 
-		dash, err := models.QueryDashboard(c.Request.Context(), dashId)
+		dash, err := models.QueryDashboard(c.Request.Context(), teamId, dashId)
 		if err != nil {
 			if err == sql.ErrNoRows {
 				c.JSON(400, common.RespError(fmt.Sprintf("dashboard of team %d not exist", teamId)))

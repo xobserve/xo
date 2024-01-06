@@ -272,7 +272,7 @@ export const AnnotationsPlugin = ({
 
 export const onRemoveAnnotation = async (annotation: Annotation) => {
   await requestApi.delete(
-    `/annotation/${annotation.namespace}/${annotation.id}`,
+    `/annotation/${annotation.teamId}/${annotation.namespace}/${annotation.id}`,
   )
   const index = $rawDashAnnotations
     .get()

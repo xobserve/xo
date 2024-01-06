@@ -99,9 +99,9 @@ CREATE TABLE IF NOT EXISTS variable (
 );
 
 CREATE TABLE IF NOT EXISTS dashboard (
-    id VARCHAR(40) PRIMARY KEY NOT NULL,
-    title VARCHAR(255) NOT NULL,
     team_id INTEGER NOT NULL,
+    id VARCHAR(40) NOT NULL,
+    title VARCHAR(255) NOT NULL,
     visible_to VARCHAR(32) DEFAULT 'team',
     created_by INTEGER NOT NULL,
     tags TEXT,
@@ -112,6 +112,7 @@ CREATE TABLE IF NOT EXISTS dashboard (
 );
 
 CREATE TABLE IF NOT EXISTS dashboard_history (
+    team_id INTEGER NOT NULL,
     dashboard_id VARCHAR(40),
     version DATETIME,
     changes TEXT,
@@ -134,6 +135,7 @@ CREATE TABLE IF NOT EXISTS datasource (
 CREATE TABLE IF NOT EXISTS star_dashboard (
     id  INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id  INTEGER NOT NULL,
+    team_id INTEGER NOT NULL,
     dashboard_id VARCHAR(40) NOT NULL,
     created DATETIME NOT NULL
 );
@@ -144,7 +146,8 @@ CREATE TABLE IF NOT EXISTS audit_logs (
     op_type VARCHAR(32) NOT NULL,
     target_id VARCHAR(64),
     data MEDIUMTEXT,
-    tenant INTEGER NOT NULL,
+    tenant_id INTEGER NOT NULL,
+    team_id INTEGER NOT NULL,
     created DATETIME NOT NULL
 );
 
@@ -154,6 +157,7 @@ CREATE TABLE IF NOT EXISTS annotation (
     time  INTEGER NOT NULL,
     duration VARCHAR(32) NOT NULL,
     tags VARCHAR(255),
+    team_id INTEGER NOT NULL,
     namespace_id VARCHAR(40),
     group_id INTEGER,
     userId INTEGER,
@@ -212,12 +216,13 @@ CREATE UNIQUE INDEX IF NOT EXISTS variable_id ON variable (team_id, id);
 CREATE UNIQUE INDEX IF NOT EXISTS variable_name ON variable (team_id, name);
 CREATE INDEX IF NOT EXISTS variable_team ON variable (team_id);
 
+CREATE UNIQUE INDEX IF NOT EXISTS dashboard_team_dash_id ON dashboard (team_id, id);
 CREATE INDEX IF NOT EXISTS  dashboard_team_id ON dashboard (team_id);
 CREATE INDEX IF NOT EXISTS  dashboard_visible_to ON dashboard (visible_to);
 CREATE INDEX IF NOT EXISTS  dashboard_created_by ON dashboard (created_by);
 
 
-CREATE UNIQUE INDEX IF NOT EXISTS  dashboard_id_version ON dashboard_history (dashboard_id,version);
+CREATE UNIQUE INDEX IF NOT EXISTS  dashboard_id_version ON dashboard_history (team_id,dashboard_id,version);
 
 
 CREATE UNIQUE INDEX IF NOT EXISTS datasource_id ON datasource (team_id, id);
@@ -225,15 +230,17 @@ CREATE UNIQUE INDEX IF NOT EXISTS  datasource_name ON datasource (team_id,name);
 CREATE INDEX IF NOT EXISTS datasource_team ON datasource (team_id);
 
 
-CREATE UNIQUE INDEX IF NOT EXISTS  star_dashboard_id ON star_dashboard (user_id,dashboard_id);
+CREATE UNIQUE INDEX IF NOT EXISTS  star_dashboard_id ON star_dashboard (user_id,team_id,dashboard_id);
 
 
 CREATE INDEX IF NOT EXISTS   audit_logs_op_id ON audit_logs (op_id);
 CREATE INDEX IF NOT EXISTS   audit_logs_op_type ON audit_logs (op_type);
-CREATE INDEX IF NOT EXISTS audit_logs_tenant ON audit_logs (tenant);
+CREATE INDEX IF NOT EXISTS audit_logs_tenant ON audit_logs (tenant_id);
+CREATE INDEX IF NOT EXISTS audit_logs_team ON audit_logs (team_id);
 
-CREATE INDEX IF NOT EXISTS annotation_npid ON annotation (namespace_id);
-CREATE UNIQUE INDEX IF NOT EXISTS  annotation_time_ng ON annotation (namespace_id,group_id,time);
+
+CREATE INDEX IF NOT EXISTS annotation_npid ON annotation (team_id,namespace_id);
+CREATE UNIQUE INDEX IF NOT EXISTS  annotation_time_ng ON annotation (team_id,namespace_id,group_id,time);
 
 CREATE INDEX IF NOT EXISTS template_type ON template (type);
 CREATE INDEX IF NOT EXISTS template_scope ON template (scope);

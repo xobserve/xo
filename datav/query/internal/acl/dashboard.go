@@ -10,8 +10,8 @@ import (
 	"github.com/xObserve/xObserve/query/pkg/models"
 )
 
-func CanEditAnnotation(ctx context.Context, dashboardId string, u *models.User) error {
-	dash, err := models.QueryDashboard(ctx, dashboardId)
+func CanEditAnnotation(ctx context.Context, teamId int64, dashboardId string, u *models.User) error {
+	dash, err := models.QueryDashboard(ctx, teamId, dashboardId)
 	if err != nil {
 		return fmt.Errorf("query dashboard error: %w", err)
 	}

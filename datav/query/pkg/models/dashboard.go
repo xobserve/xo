@@ -62,12 +62,12 @@ type Dashboard struct {
 	Variables  []*Variable `json:"variables,omitempty"`
 }
 
-func QueryDashboard(ctx context.Context, id string) (*Dashboard, error) {
+func QueryDashboard(ctx context.Context, teamId int64, id string) (*Dashboard, error) {
 	dash := &Dashboard{}
 
 	var rawJSON []byte
 	var rawTags []byte
-	err := db.Conn.QueryRowContext(ctx, "SELECT title,tags,data,team_id,visible_to,weight,updated FROM dashboard WHERE id = ?", id).Scan(&dash.Title, &rawTags, &rawJSON, &dash.OwnedBy, &dash.VisibleTo, &dash.SortWeight, &dash.Updated)
+	err := db.Conn.QueryRowContext(ctx, "SELECT title,tags,data,team_id,visible_to,weight,updated FROM dashboard WHERE team_id=? and id = ?", teamId, id).Scan(&dash.Title, &rawTags, &rawJSON, &dash.OwnedBy, &dash.VisibleTo, &dash.SortWeight, &dash.Updated)
 	if err != nil {
 		return nil, err
 	}
@@ -98,9 +98,9 @@ func QueryDashboard(ctx context.Context, id string) (*Dashboard, error) {
 	return dash, nil
 }
 
-func QuertyDashboardStared(ctx context.Context, uid int64, dashId string) (bool, error) {
+func QuertyDashboardStared(ctx context.Context, userId int64, teamId int64, dashId string) (bool, error) {
 	var count int
-	err := db.Conn.QueryRowContext(ctx, "SELECT count(1) FROM star_dashboard WHERE user_id=? and dashboard_id=?", uid, dashId).Scan(&count)
+	err := db.Conn.QueryRowContext(ctx, "SELECT count(1) FROM star_dashboard WHERE user_id=? and team_id=? and dashboard_id=?", userId, teamId, dashId).Scan(&count)
 	if err != nil {
 		return false, err
 	}
@@ -128,14 +128,14 @@ func QueryDashboardsByTeamId(ctx context.Context, teamId int64) ([]*Dashboard, e
 	return dashboards, nil
 }
 
-func QueryDashboardBelongsTo(ctx context.Context, id string) (int64, error) {
-	var teamId int64
-	err := db.Conn.QueryRowContext(ctx, "SELECT team_id FROM dashboard WHERE id = ?", id).Scan(&teamId)
+func IsDashboardExist(ctx context.Context, teamId int64, id string) error {
+	var tid int64
+	err := db.Conn.QueryRowContext(ctx, "SELECT team_id FROM dashboard WHERE team_id=? and id = ?", teamId, id).Scan(&tid)
 	if err != nil {
-		return 0, err
+		return err
 	}
 
-	return teamId, nil
+	return nil
 }
 
 func ImportFromJSON(tx *sql.Tx, raw string, teamId int64, userId int64) (*Dashboard, error) {
@@ -172,23 +172,23 @@ func ImportFromJSON(tx *sql.Tx, raw string, teamId int64, userId int64) (*Dashbo
 	return dash, nil
 }
 
-func DeleteDashboard(ctx context.Context, id string, tx *sql.Tx) error {
-	_, err := tx.ExecContext(ctx, "DELETE FROM dashboard WHERE id=?", id)
+func DeleteDashboard(ctx context.Context, teamId int64, id string, tx *sql.Tx) error {
+	_, err := tx.ExecContext(ctx, "DELETE FROM dashboard WHERE team_id=? and id=?", teamId, id)
 	if err != nil {
 		return fmt.Errorf("delete dashboard error: %w", err)
 	}
 
-	_, err = tx.ExecContext(ctx, "DELETE FROM star_dashboard WHERE dashboard_id=?", id)
+	_, err = tx.ExecContext(ctx, "DELETE FROM star_dashboard WHERE team_id=? and dashboard_id=?", teamId, id)
 	if err != nil {
 		return fmt.Errorf("delete dashboard star error: %w", err)
 	}
 
-	_, err = tx.ExecContext(ctx, "DELETE FROM dashboard_history WHERE dashboard_id=?", id)
+	_, err = tx.ExecContext(ctx, "DELETE FROM dashboard_history WHERE team_id=? and dashboard_id=?", teamId, id)
 	if err != nil {
 		return fmt.Errorf("delete dashboard history error: %w", err)
 	}
 
-	_, err = tx.ExecContext(ctx, "DELETE FROM annotation WHERE namespace_id=?", id)
+	_, err = tx.ExecContext(ctx, "DELETE FROM annotation WHERE team_id=? and namespace_id=?", teamId, id)
 	if err != nil {
 		return fmt.Errorf("delete dashboard annotations error: %w", err)
 	}

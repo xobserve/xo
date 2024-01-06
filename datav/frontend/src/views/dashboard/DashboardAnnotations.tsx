@@ -58,7 +58,7 @@ const DashboardAnnotations = ({ dashboard }: Props) => {
   const loadAnnotations = async () => {
     const timerange = getCurrentTimeRange()
     const res = await requestApi.get(
-      `/annotation/${dashboard.id}?start=${roundDsTime(
+      `/annotation/${dashboard.ownedBy}/${dashboard.id}?start=${roundDsTime(
         timerange.start.getTime() / 1000,
       )}&end=${roundDsTime(timerange.end.getTime() / 1000)}`,
     )

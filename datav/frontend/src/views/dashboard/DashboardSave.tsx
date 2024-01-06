@@ -176,6 +176,9 @@ const DashboardSave = ({ dashboard }: Props) => {
       return
     }
 
+    const dash = cloneDeep(dashboard)
+    // remove template contents
+
     await requestApi.post('/dashboard/save', { dashboard, changes: changeMsg })
     toast({
       title: t1.savedMsg({ name: autoSave ? t.auto : '' }),
@@ -354,7 +357,9 @@ const DashboardHistory = ({ dashboard, onPreview }: HistoryProps) => {
   }, [])
 
   const load = async () => {
-    const res = await requestApi.get(`/dashboard/history/${dashboard.id}`)
+    const res = await requestApi.get(
+      `/dashboard/history/${dashboard.ownedBy}/${dashboard.id}`,
+    )
     setHistory(res.data)
   }
 

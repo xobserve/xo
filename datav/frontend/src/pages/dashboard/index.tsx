@@ -13,7 +13,7 @@
 
 import React, { memo } from 'react'
 import { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import DashboardWrapper from 'src/views/dashboard/Dashboard'
 import NotFoundPage from '../NotFound'
 import { $config, URL_ROOT_PATH } from 'src/data/configs/config'
@@ -44,7 +44,7 @@ const DashboardPageWrapper = memo(({ sideWidth }: Props) => {
   useEffect(() => {
     setDashboard(null)
     loadConfig(path)
-  }, [path])
+  }, [location.pathname])
 
   const loadConfig = async (path) => {
     try {
@@ -61,7 +61,6 @@ const DashboardPageWrapper = memo(({ sideWidth }: Props) => {
       $teams.set(res.data.teams)
       $datasources.set(res.data.datasources)
       initVariableSelected(res.data.variables)
-      console.log('here333333:', res.data.variables)
       $variables.set(res.data.variables)
 
       // get panel templates content
@@ -80,7 +79,7 @@ const DashboardPageWrapper = memo(({ sideWidth }: Props) => {
     <>
       {dashboard && (
         <DashboardWrapper
-          key={dashboard.id}
+          key={location.pathname}
           sideWidth={sideWidth}
           rawDashboard={dashboard}
         />

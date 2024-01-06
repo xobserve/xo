@@ -17,6 +17,7 @@ import { use } from 'echarts'
 import React, { useEffect, useState } from 'react'
 import { AiFillStar, AiOutlineStar } from 'react-icons/ai'
 import { FaStar } from 'react-icons/fa'
+import { $config } from 'src/data/configs/config'
 import { dashboardMsg } from 'src/i18n/locales/en'
 import { requestApi } from 'utils/axios/request'
 
@@ -37,20 +38,26 @@ const DashboardStar = (props: Props) => {
     enableClick = true,
   } = props
   const [starred, setStarred] = useState(props.starred)
-
+  const config = useStore($config)
   useEffect(() => {
     load()
-  }, [])
+  }, [config])
   const load = async () => {
-    const res = await requestApi.get(`/dashboard/starred/${dashboardId}`)
+    const res = await requestApi.get(
+      `/dashboard/starred/${config.currentTeam}/${dashboardId}`,
+    )
     setStarred(res.data)
   }
 
   const onStar = async () => {
     if (!starred) {
-      await requestApi.post(`/dashboard/star/${dashboardId}`)
+      await requestApi.post(
+        `/dashboard/star/${config.currentTeam}/${dashboardId}`,
+      )
     } else {
-      await requestApi.post(`/dashboard/unstar/${dashboardId}`)
+      await requestApi.post(
+        `/dashboard/unstar/${config.currentTeam}/${dashboardId}`,
+      )
     }
 
     setStarred(!starred)
