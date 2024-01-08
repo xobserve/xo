@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"strconv"
 
 	"time"
@@ -254,6 +255,8 @@ func isTemplateValid(t *models.Template) error {
 	return nil
 }
 
+const queryTemplatesBasic = "SELECT id,type,title,description,scope,owned_by,provider,content_id,tags, created FROM template "
+
 func GetTemplates(c *gin.Context) {
 	tp := c.Param("type")
 	teamId, _ := strconv.ParseInt(c.Query("teamId"), 10, 64)
@@ -275,13 +278,24 @@ func GetTemplates(c *gin.Context) {
 		return
 	}
 
-	rows, err := db.Conn.Query("SELECT id,type,title,description,scope,owned_by,provider,content_id,tags, created FROM template WHERE type=? and (scope=? or (scope=? and owned_by=?) or (scope=? and owned_by=?))", tp, common.ScopeWebsite, common.ScopeTenant, tenantId, common.ScopeTeam, teamId)
+	rows, err := db.Conn.Query(queryTemplatesBasic+"WHERE type=? and (scope=? or (scope=? and owned_by=?) or (scope=? and owned_by=?))", tp, common.ScopeWebsite, common.ScopeTenant, tenantId, common.ScopeTeam, teamId)
 	if err != nil {
 		logger.Warn("get templates error", "error", err)
 		c.JSON(500, common.RespError(err.Error()))
 		return
 	}
 
+	templates, err := getTemplates(c.Request.Context(), rows)
+	if err != nil {
+		logger.Warn("get templates error", "error", err)
+		c.JSON(400, common.RespError(err.Error()))
+		return
+	}
+
+	c.JSON(200, common.RespSuccess(templates))
+}
+
+func getTemplates(ctx context.Context, rows *sql.Rows) ([]*models.Template, error) {
 	templates := make([]*models.Template, 0)
 	for rows.Next() {
 		t := &models.Template{}
@@ -289,20 +303,16 @@ func GetTemplates(c *gin.Context) {
 		var tags []byte
 		err := rows.Scan(&t.Id, &t.Type, &t.Title, &desc, &t.Scope, &t.OwnedBy, &t.Provider, &t.ContentId, &tags, &t.Created)
 		if err != nil {
-			logger.Warn("scan template error", "error", err)
-			c.JSON(500, common.RespError(err.Error()))
-			return
+			return nil, fmt.Errorf("scan template error: %w", err)
 		}
 
 		b, _ := b64.StdEncoding.DecodeString(desc)
 		t.Description = string(b)
 
 		if t.ContentId != 0 {
-			v, err := models.QueryTemplateVersion(c.Request.Context(), t.ContentId)
+			v, err := models.QueryTemplateVersion(ctx, t.ContentId)
 			if err != nil {
-				logger.Warn("get template version error", "error", err)
-				c.JSON(400, common.RespError(err.Error()))
-				return
+				return nil, fmt.Errorf("get template version error: %w", err)
 			}
 			t.Version = v
 		}
@@ -316,9 +326,8 @@ func GetTemplates(c *gin.Context) {
 		templates = append(templates, t)
 	}
 
-	c.JSON(200, common.RespSuccess(templates))
+	return templates, nil
 }
-
 func canEditTemplate(ctx context.Context, t *models.Template, u *models.User) error {
 	if t.Scope == common.ScopeWebsite {
 		return acl.CanEditWebsite(u)
@@ -333,4 +342,58 @@ func canEditTemplate(ctx context.Context, t *models.Template, u *models.User) er
 	}
 
 	return nil
+}
+
+func GetScopeTemplates(c *gin.Context) {
+	scopeType, _ := strconv.Atoi(c.Param("type"))
+	scopeId, _ := strconv.ParseInt(c.Param("id"), 10, 64)
+
+	if scopeType != common.ScopeWebsite && scopeType != common.ScopeTenant && scopeType != common.ScopeTeam {
+		c.JSON(400, common.RespError("invalid scope type"))
+		return
+	}
+
+	if scopeId == 0 {
+		c.JSON(400, common.RespError("invalid scope id"))
+		return
+	}
+
+	u := c.MustGet("currentUser").(*models.User)
+	var err error
+	switch scopeType {
+	case common.ScopeWebsite:
+		err = acl.CanViewWebsite(u)
+	case common.ScopeTenant:
+		err = acl.CanViewTenant(c.Request.Context(), scopeId, u.Id)
+	case common.ScopeTeam:
+		err = acl.CanViewTeam(c.Request.Context(), scopeId, u.Id)
+	}
+
+	if err != nil {
+		c.JSON(403, common.RespError(err.Error()))
+		return
+	}
+
+	var cond string
+	if scopeType == common.ScopeWebsite {
+		cond = fmt.Sprintf("WHERE scope='%d'", scopeType)
+	} else {
+		cond = fmt.Sprintf("WHERE scope='%d' and owned_by='%d'", scopeType, scopeId)
+	}
+
+	rows, err := db.Conn.Query("%s %s", queryTemplatesBasic, cond)
+	if err != nil {
+		logger.Warn("get templates error", "error", err)
+		c.JSON(500, common.RespError(err.Error()))
+		return
+	}
+
+	templates, err := getTemplates(c.Request.Context(), rows)
+	if err != nil {
+		logger.Warn("get templates error", "error", err)
+		c.JSON(400, common.RespError(err.Error()))
+		return
+	}
+
+	c.JSON(200, common.RespSuccess(templates))
 }

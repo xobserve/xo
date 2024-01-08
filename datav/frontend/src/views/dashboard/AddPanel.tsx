@@ -160,7 +160,7 @@ const AddPanel = ({ dashboard, onChange }: Props) => {
         </MenuList>
       </Menu>
       <CreateFromTemplate
-        type={TemplateType.Panel}
+        types={[TemplateType.Panel]}
         isOpen={isOpen}
         onClose={onClose}
         onCreated={onCreateFromTemplate}

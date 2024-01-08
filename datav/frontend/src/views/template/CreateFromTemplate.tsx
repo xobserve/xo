@@ -7,6 +7,7 @@ import {
   ModalBody,
   ModalContent,
   ModalOverlay,
+  Select,
   Text,
   Wrap,
   useDisclosure,
@@ -24,19 +25,20 @@ import { commonMsg } from 'src/i18n/locales/en'
 import { requestApi } from 'utils/axios/request'
 
 interface Props {
-  type: TemplateType
+  types: TemplateType[]
   isOpen: boolean
   onClose: any
   onCreated: any
 }
 
-const CreateFromTemplate = ({ type, isOpen, onClose, onCreated }: Props) => {
+const CreateFromTemplate = ({ types, isOpen, onClose, onCreated }: Props) => {
   const config = useStore($config)
   const lang = locale.get()
   const t = commonMsg.get()
   const toast = useToast()
 
   const [templates, setTemplates] = useState<Template[]>([])
+  const [selectedType, setSelectedType] = useState<TemplateType>(types[0])
   const [selectedTemplate, setSelectedTemplate] = useState<number>(null)
   const [createType, setCreateType] = useState<TemplateCreateType>(
     TemplateCreateType.Clone,
@@ -44,13 +46,13 @@ const CreateFromTemplate = ({ type, isOpen, onClose, onCreated }: Props) => {
 
   useEffect(() => {
     const loadTemplates = async () => {
-      const res = await getTemplatesApi(type, config.currentTeam)
+      const res = await getTemplatesApi(selectedType, config.currentTeam)
       setTemplates(res.data)
     }
     if (config.currentTeam) {
       loadTemplates()
     }
-  }, [config.currentTeam])
+  }, [config.currentTeam, selectedType])
 
   const onCreate = async () => {
     if (!selectedTemplate) {
@@ -73,6 +75,19 @@ const CreateFromTemplate = ({ type, isOpen, onClose, onCreated }: Props) => {
     onClose()
   }
 
+  const getTemplateTypeText = (type: TemplateType) => {
+    switch (type) {
+      case TemplateType.Dashboard:
+        return lang == 'zh' ? '仪表盘' : 'Dashboard'
+      case TemplateType.Panel:
+        return lang == 'zh' ? '图表' : 'Panel'
+      case TemplateType.App:
+        return lang == 'zh' ? '应用' : 'App'
+      default:
+        return ''
+    }
+  }
+
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose}>
@@ -89,9 +104,20 @@ const CreateFromTemplate = ({ type, isOpen, onClose, onCreated }: Props) => {
             </Flex>
 
             <Divider mt='2' />
-            <Text mt='2'>
-              {lang == 'zh' ? '选择模版' : 'Select a template'}
-            </Text>
+            <Flex justifyContent='space-between' alignItems='center' mt='2'>
+              <Text>{lang == 'zh' ? '选择模版' : 'Select a template'}</Text>
+              <RadionButtons
+                value={selectedType as any}
+                onChange={setSelectedType}
+                size='sm'
+                options={
+                  types.map((type) => ({
+                    value: type,
+                    label: getTemplateTypeText(type),
+                  })) as any
+                }
+              />
+            </Flex>
             <Wrap mt='2'>
               {templates.map((template) => (
                 <Box

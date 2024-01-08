@@ -91,7 +91,9 @@ const TemplateExport = (props: Props) => {
           if (existInGlobal) {
             const exist = gVarList.find((v) => v.name == f)
             if (!exist) {
-              gVarList.push(existInGlobal)
+              const v = cloneDeep(existInGlobal)
+              delete v.values
+              gVarList.push(v)
             }
           }
         }

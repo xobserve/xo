@@ -36,6 +36,7 @@ import {
   FaStar,
   FaSignInAlt,
   FaFont,
+  FaProjectDiagram,
 } from 'react-icons/fa'
 
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
@@ -203,7 +204,10 @@ const UserMenu = ({ miniMode }) => {
                 }
                 <MenuDivider />
                 <Link to={getNavigateTo(`${teamPath}/template`)}>
-                  <MenuItem width='100%' icon={<FaRegSun fontSize='1em' />}>
+                  <MenuItem
+                    width='100%'
+                    icon={<FaProjectDiagram fontSize='1em' />}
+                  >
                     {t.templateStore}
                   </MenuItem>
                 </Link>

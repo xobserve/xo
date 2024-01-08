@@ -14,6 +14,7 @@ export const extractDashboardTemplateContent = (
   dash: Dashboard,
 ): Partial<Dashboard> => {
   return {
+    id: dash.id,
     data: dash.data,
   }
 }

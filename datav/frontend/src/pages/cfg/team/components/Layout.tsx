@@ -18,6 +18,7 @@ import {
   FaAlignLeft,
   FaCog,
   FaConnectdevelop,
+  FaProjectDiagram,
   FaTerminal,
   FaUserFriends,
 } from 'react-icons/fa'
@@ -61,6 +62,11 @@ const getTeamSubLinks = (teamId) => {
       title: 'members',
       url: getNavigateTo(`${teamPath}/cfg/team/members`),
       icon: <FaUserFriends />,
+    },
+    {
+      title: 'template',
+      url: getNavigateTo(`${teamPath}/cfg/team/templates`),
+      icon: <FaProjectDiagram />,
     },
     {
       title: 'settings',
