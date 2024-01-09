@@ -36,3 +36,9 @@ const (
 	ScopeTenant  = 2
 	ScopeTeam    = 3
 )
+
+var ScopeText = map[int]string{
+	1: "website",
+	2: "tenant",
+	3: "team",
+}

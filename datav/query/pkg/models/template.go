@@ -2,6 +2,8 @@ package models
 
 import (
 	"context"
+	"database/sql"
+	"fmt"
 	"time"
 
 	b64 "encoding/base64"
@@ -14,6 +16,17 @@ const (
 	TemplateTypeApp       = 1
 	TemplateTypeDashboard = 2
 	TemplateTypePanel     = 3
+)
+
+var TemplateTypeText = map[int]string{
+	1: "App",
+	2: "Dashboard",
+	3: "Panel",
+}
+
+const (
+	TemplateCreateClone = "1"
+	TemplateCreateRefer = "2"
 )
 
 const NativeTemplateProvider = "xobserve"
@@ -40,6 +53,12 @@ type TemplateContent struct {
 	Version     string      `json:"version"`
 	Description string      `json:"description,omitempty"`
 	Created     time.Time   `json:"created"`
+}
+
+type TemplateExport struct {
+	Dashboards  []*Dashboard  `json:"dashboards"`
+	Datasources []*Datasource `json:"datasources"`
+	Variables   []*Variable   `json:"variables"`
 }
 
 func QueryTemplateById(ctx context.Context, id int64) (*Template, error) {
@@ -99,4 +118,41 @@ func QueryTemplateNewestVersion(ctx context.Context, id int64) (string, error) {
 	}
 
 	return version, err
+}
+
+func QueryTemplateContent(ctx context.Context, id int64) (*TemplateContent, error) {
+	content := &TemplateContent{}
+
+	var rawdata []byte
+	err := db.Conn.QueryRow("select id,template_id,description,version,content,created from template_content where id = ?", id).Scan(
+		&content.Id, &content.TemplateId, &content.Description, &content.Version, &rawdata, &content.Created)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, fmt.Errorf("the template content which you are visiting is not exist")
+		}
+		return nil, err
+	}
+
+	if rawdata != nil {
+		err = json.Unmarshal(rawdata, &content.Content)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return content, nil
+}
+
+func QueryTemplateContentBytes(ctx context.Context, id int64) ([]byte, error) {
+	var content []byte
+	err := db.Conn.QueryRow("select content from template_content where id = ?", id).Scan(
+		&content)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, fmt.Errorf("the template content which you are visiting is not exist")
+		}
+		return nil, err
+	}
+
+	return content, nil
 }

@@ -203,11 +203,13 @@ const TemplateStore = () => {
 
     const result = []
     for (const t of templates) {
-      if (
-        !isEmpty(searchTitle) &&
-        !t.title.toLowerCase().includes(searchTitle.toLowerCase())
-      ) {
-        continue
+      if (!isEmpty(searchTitle)) {
+        if (
+          !t.title.toLowerCase().includes(searchTitle.toLowerCase()) &&
+          t.id != Number(searchTitle)
+        ) {
+          continue
+        }
       }
       if (!isEmpty(searchTags)) {
         let match = false
@@ -255,7 +257,7 @@ const TemplateStore = () => {
           <Center>
             <HStack>
               <Input
-                placeholder='search titles'
+                placeholder='search titles or template id'
                 value={searchTitle}
                 onChange={(e) => {
                   setSearchTitle(e.target.value)

@@ -58,28 +58,12 @@ func UseTemplateContent(c *gin.Context) {
 }
 
 func GetTemplateContent(c *gin.Context) {
-	id := c.Param("id")
+	id, _ := strconv.ParseInt(c.Param("id"), 10, 64)
 
-	content := &models.TemplateContent{}
-
-	var rawdata []byte
-	err := db.Conn.QueryRow("select id,template_id,description,version,content,created from template_content where id = ?", id).Scan(
-		&content.Id, &content.TemplateId, &content.Description, &content.Version, &rawdata, &content.Created)
+	content, err := models.QueryTemplateContent(c.Request.Context(), id)
 	if err != nil {
-		if err == sql.ErrNoRows {
-			c.JSON(400, common.RespError("the template content which you are visiting is not exist"))
-			return
-		}
-		c.JSON(500, common.RespError(err.Error()))
+		c.JSON(400, common.RespError(err.Error()))
 		return
-	}
-
-	if rawdata != nil {
-		err = json.Unmarshal(rawdata, &content.Content)
-		if err != nil {
-			c.JSON(500, common.RespError(err.Error()))
-			return
-		}
 	}
 
 	c.JSON(200, common.RespSuccess(content))

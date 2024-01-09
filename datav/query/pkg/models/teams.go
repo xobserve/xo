@@ -297,7 +297,7 @@ func CreateTeam(ctx context.Context, tx *sql.Tx, tenantId int64, userId int64, n
 	}
 
 	// insert home dashboard
-	d, err := ImportFromJSON(tx, storageData.HomeDashboard, id, userId)
+	d, err := ImportDashboardFromJSON(tx, storageData.HomeDashboard, id, userId)
 	if err != nil && !e.IsErrUniqueConstraint(err) {
 		return 0, fmt.Errorf("init home dashboard error: %w", err)
 	}

@@ -381,7 +381,7 @@ func GetScopeTemplates(c *gin.Context) {
 		cond = fmt.Sprintf("WHERE scope='%d' and owned_by='%d'", scopeType, scopeId)
 	}
 
-	rows, err := db.Conn.Query("%s %s", queryTemplatesBasic, cond)
+	rows, err := db.Conn.Query(fmt.Sprintf("%s %s", queryTemplatesBasic, cond))
 	if err != nil {
 		logger.Warn("get templates error", "error", err)
 		c.JSON(500, common.RespError(err.Error()))

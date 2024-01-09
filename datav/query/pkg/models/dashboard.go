@@ -31,7 +31,6 @@ import (
 	"time"
 
 	"github.com/xObserve/xObserve/query/pkg/db"
-	"github.com/xObserve/xObserve/query/pkg/utils"
 	"github.com/xObserve/xObserve/query/pkg/utils/simplejson"
 )
 
@@ -136,40 +135,6 @@ func IsDashboardExist(ctx context.Context, teamId int64, id string) error {
 	}
 
 	return nil
-}
-
-func ImportFromJSON(tx *sql.Tx, raw string, teamId int64, userId int64) (*Dashboard, error) {
-	var dash *Dashboard
-	err := json.Unmarshal([]byte(raw), &dash)
-	if err != nil {
-		return nil, err
-	}
-
-	now := time.Now()
-	if dash.Id == "" {
-		dash.Id = "d-" + utils.GenerateShortUID()
-	}
-
-	dash.Created = &now
-	dash.Updated = &now
-
-	jsonData, err := dash.Data.Encode()
-	if err != nil {
-		return nil, err
-	}
-
-	tags, err := json.Marshal(dash.Tags)
-	if err != nil {
-		return nil, err
-	}
-
-	_, err = tx.Exec(`INSERT INTO dashboard (id,title, team_id, created_by,tags, data,created,updated) VALUES (?,?,?,?,?,?,?,?)`,
-		dash.Id, dash.Title, teamId, userId, tags, jsonData, dash.Created, dash.Updated)
-	if err != nil {
-		return nil, err
-	}
-
-	return dash, nil
 }
 
 func DeleteDashboard(ctx context.Context, teamId int64, id string, tx *sql.Tx) error {

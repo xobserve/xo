@@ -38,6 +38,7 @@ import {
 } from 'types/template'
 import CreateFromTemplate from './CreateFromTemplate'
 import { requestApi } from 'utils/axios/request'
+import { locale } from 'src/i18n/i18n'
 
 interface Props {
   scopeId: number
@@ -46,6 +47,7 @@ interface Props {
 
 const TemplateList = ({ scopeId, scopeType }: Props) => {
   const t = useStore(commonMsg)
+  const lang = useStore(locale)
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const [templates, setTemplates] = useState<Template[]>(null)
@@ -58,36 +60,19 @@ const TemplateList = ({ scopeId, scopeType }: Props) => {
     const res = await requestApi.get(
       `/template/byScope/${scopeType}/${scopeId}`,
     )
-    console.log('here333333:', res)
+    setTemplates(res.data)
   }
 
-  const onCreateFromTemplate = (
+  const onCreateFromTemplate = async (
     templateContent: TemplateContent,
     createType: TemplateCreateType,
   ) => {
-    const data: TemplateData = JSON.parse(templateContent.content)
-    console.log('here33333:', data)
-    // if (!data.panel) {
-    //   toast({
-    //     title: 'Invalid template, panel section not exist',
-    //     status: 'error',
-    //     duration: 3000,
-    //     isClosable: true,
-    //   })
-    //   return
-    // }
-    // const panel: Panel = {
-    //   ...initPanel(),
-    //   ...data.panel,
-    // }
-
-    // if (createType == TemplateCreateType.Clone) {
-    //   copyPanel(panel)
-    // } else {
-    //   // create panel with reference points to the template
-    //   panel.templateId = templateContent.templateId
-    //   copyPanel(panel)
-    // }
+    const res = await requestApi.post(`/template/use`, {
+      scopeId,
+      scopeType,
+      templateId: templateContent.templateId,
+      type: createType,
+    })
   }
 
   return (
@@ -101,7 +86,7 @@ const TemplateList = ({ scopeId, scopeType }: Props) => {
               onOpen()
             }}
           >
-            {t.newItem({ name: t.template })}
+            {lang == 'zh' ? '使用模版' : 'Use template'}
           </Button>
         </Flex>
         {templates ? (
