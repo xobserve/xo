@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -230,4 +232,121 @@ func UseTemplate(c *gin.Context) {
 	}
 
 	c.JSON(200, common.RespSuccess(fmt.Sprintf("/%d/%s", req.ScopeId, templateExport.Dashboards[0].Id)))
+}
+
+func GetScopeUseTemplates(c *gin.Context) {
+	scopeType, _ := strconv.Atoi(c.Param("type"))
+	scopeId, _ := strconv.ParseInt(c.Param("id"), 10, 64)
+
+	if scopeType != common.ScopeWebsite && scopeType != common.ScopeTenant && scopeType != common.ScopeTeam {
+		c.JSON(400, common.RespError("invalid scope type"))
+		return
+	}
+
+	if scopeId == 0 {
+		c.JSON(400, common.RespError("invalid scope id"))
+		return
+	}
+
+	u := c.MustGet("currentUser").(*models.User)
+	var err error
+	switch scopeType {
+	case common.ScopeWebsite:
+		err = acl.CanViewWebsite(u)
+	case common.ScopeTenant:
+		err = acl.CanViewTenant(c.Request.Context(), scopeId, u.Id)
+	case common.ScopeTeam:
+		err = acl.CanViewTeam(c.Request.Context(), scopeId, u.Id)
+	}
+
+	if err != nil {
+		c.JSON(403, common.RespError(err.Error()))
+		return
+	}
+
+	var idsInt []int64
+	rows, err := db.Conn.Query("SELECT template_id FROM template_use WHERE scope = ? and scope_id = ?", scopeType, scopeId)
+	if err != nil {
+		logger.Warn("get templates error", "error", err)
+		c.JSON(500, common.RespError(err.Error()))
+		return
+	}
+
+	for rows.Next() {
+		var id int64
+		err := rows.Scan(&id)
+		if err != nil {
+			logger.Warn("scan template id error", "error", err)
+			c.JSON(500, common.RespError(err.Error()))
+			return
+		}
+		idsInt = append(idsInt, id)
+	}
+
+	var ids []string
+	for _, id := range idsInt {
+		ids = append(ids, strconv.FormatInt(id, 10))
+	}
+
+	rows, err = db.Conn.Query(fmt.Sprintf("%s WHERE id in ('%s')", queryTemplatesBasic, strings.Join(ids, "','")))
+	if err != nil {
+		logger.Warn("get templates error", "error", err)
+		c.JSON(500, common.RespError(err.Error()))
+		return
+	}
+
+	templates, err := getTemplates(c.Request.Context(), rows)
+	if err != nil {
+		logger.Warn("get templates error", "error", err)
+		c.JSON(400, common.RespError(err.Error()))
+		return
+	}
+
+	c.JSON(200, common.RespSuccess(templates))
+}
+
+func RemoveTemplateUse(c *gin.Context) {
+	scopeType, _ := strconv.Atoi(c.Param("scope"))
+	scopeId, _ := strconv.ParseInt(c.Param("scopeId"), 10, 64)
+	templateId, _ := strconv.ParseInt(c.Param("templateId"), 10, 64)
+
+	if scopeType != common.ScopeWebsite && scopeType != common.ScopeTenant && scopeType != common.ScopeTeam {
+		c.JSON(400, common.RespError("invalid scope type"))
+		return
+	}
+
+	if scopeId == 0 {
+		c.JSON(400, common.RespError("invalid scope id"))
+		return
+	}
+
+	if templateId == 0 {
+		c.JSON(400, common.RespError("invalid template id"))
+		return
+	}
+
+	u := c.MustGet("currentUser").(*models.User)
+	var err error
+	switch scopeType {
+	case common.ScopeWebsite:
+		err = acl.CanEditWebsite(u)
+	case common.ScopeTenant:
+		err = acl.CanEditTenant(c.Request.Context(), scopeId, u.Id)
+	case common.ScopeTeam:
+		err = acl.CanEditTeam(c.Request.Context(), scopeId, u.Id)
+	}
+
+	if err != nil {
+		c.JSON(403, common.RespError(err.Error()))
+		return
+	}
+
+	_, err = db.Conn.Exec("DELETE FROM template_use WHERE scope=? and scope_id=? and template_id=?", scopeType, scopeId, templateId)
+	if err != nil {
+		logger.Warn("delete template use error", "error", err)
+		c.JSON(500, common.RespError(err.Error()))
+		return
+	}
+
+	c.JSON(200, common.RespSuccess(nil))
 }
