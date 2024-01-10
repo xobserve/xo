@@ -29,9 +29,16 @@ interface Props {
   isOpen: boolean
   onClose: any
   onCreated: any
+  allowClone?: boolean
 }
 
-const CreateFromTemplate = ({ types, isOpen, onClose, onCreated }: Props) => {
+const CreateFromTemplate = ({
+  types,
+  isOpen,
+  onClose,
+  onCreated,
+  allowClone = true,
+}: Props) => {
   const config = useStore($config)
   const lang = locale.get()
   const t = commonMsg.get()
@@ -153,7 +160,9 @@ const CreateFromTemplate = ({ types, isOpen, onClose, onCreated }: Props) => {
             <Text my='2'>{lang == 'zh' ? '创建模式' : 'Create mode'}</Text>
             <RadionButtons
               options={[
-                { value: TemplateCreateType.Clone, label: '克隆' },
+                ...(allowClone
+                  ? [{ value: TemplateCreateType.Clone, label: '克隆' }]
+                  : []),
                 { value: TemplateCreateType.Refer, label: '引用' },
               ]}
               value={createType}
