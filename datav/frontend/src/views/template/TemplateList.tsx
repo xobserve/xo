@@ -23,6 +23,7 @@ import {
   Tr,
   Flex,
   useDisclosure,
+  useToast,
 } from '@chakra-ui/react'
 import { useStore } from '@nanostores/react'
 import React, { useEffect, useState } from 'react'
@@ -32,13 +33,13 @@ import {
   Template,
   TemplateContent,
   TemplateCreateType,
-  TemplateData,
   TemplateScope,
   TemplateType,
 } from 'types/template'
 import CreateFromTemplate from './CreateFromTemplate'
 import { requestApi } from 'utils/axios/request'
 import { locale } from 'src/i18n/i18n'
+import { navigateTo } from 'utils/url'
 
 interface Props {
   scopeId: number
@@ -49,7 +50,7 @@ const TemplateList = ({ scopeId, scopeType }: Props) => {
   const t = useStore(commonMsg)
   const lang = useStore(locale)
   const { isOpen, onOpen, onClose } = useDisclosure()
-
+  const toast = useToast()
   const [templates, setTemplates] = useState<Template[]>(null)
 
   useEffect(() => {
@@ -73,6 +74,20 @@ const TemplateList = ({ scopeId, scopeType }: Props) => {
       templateId: templateContent.templateId,
       type: createType,
     })
+
+    toast({
+      title:
+        lang == 'zh'
+          ? '导入成功，重载页面中...'
+          : 'Created successfully, reloading...',
+      status: 'success',
+      duration: 3000,
+      isClosable: true,
+    })
+
+    setTimeout(() => {
+      navigateTo(res.data)
+    }, 1000)
   }
 
   return (

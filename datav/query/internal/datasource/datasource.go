@@ -27,8 +27,6 @@ import (
 	"context"
 	"database/sql"
 	"encoding/json"
-	"errors"
-	"fmt"
 	"net/http"
 	"strconv"
 	"sync"
@@ -108,36 +106,29 @@ func CreateDatasource(c *gin.Context) {
 		return
 	}
 
-	err = createDatasource(c.Request.Context(), ds, u)
+	tx, err := db.Conn.Begin()
+	if err != nil {
+		logger.Warn("new tx error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+	defer tx.Rollback()
+
+	err = models.ImportDatasource(c.Request.Context(), ds, u, tx)
 	if err != nil {
 		logger.Warn("create datasource error", "error", err)
 		c.JSON(http.StatusBadRequest, common.RespError(err.Error()))
 		return
 	}
 
+	err = tx.Commit()
+	if err != nil {
+		logger.Warn("commit transaction error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+
 	c.JSON(http.StatusOK, common.RespSuccess(ds.Id))
-}
-
-func createDatasource(ctx context.Context, ds *models.Datasource, u *models.User) error {
-	var err error
-	data, err := json.Marshal(ds.Data)
-	if err != nil {
-		return fmt.Errorf("encode datasource data error: %w", err)
-	}
-	now := time.Now()
-	if ds.Id == 0 {
-		ds.Id = now.UnixNano() / 1000
-	}
-
-	_, err = db.Conn.ExecContext(ctx, "INSERT INTO datasource (id, name,type,url,team_id,data,created,updated) VALUES (?,?,?,?,?,?,?,?)", ds.Id, ds.Name, ds.Type, ds.URL, ds.TeamId, data, now, now)
-	if err != nil {
-		if e.IsErrUniqueConstraint(err) {
-			return errors.New("id or name alread exist in target team")
-		}
-		return fmt.Errorf("insert datasource error: %w", err)
-	}
-
-	return nil
 }
 
 func UpdateDatasource(c *gin.Context) {

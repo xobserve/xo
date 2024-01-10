@@ -70,13 +70,15 @@ func AddNewVariable(c *gin.Context) {
 		return
 	}
 
-	if v.Id == 0 {
-		v.Id = time.Now().UnixNano() / 1000
+	tx, err := db.Conn.Begin()
+	if err != nil {
+		logger.Warn("new user error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
 	}
+	defer tx.Rollback()
 
-	now := time.Now()
-	_, err = db.Conn.ExecContext(c.Request.Context(), "INSERT INTO variable(id,name,type,value,default_selected,datasource,description,refresh,enableMulti,enableAll,regex,sort,team_id,created,updated) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-		v.Id, v.Name, v.Type, v.Value, v.Default, v.Datasource, v.Desc, v.Refresh, v.EnableMulti, v.EnableAll, v.Regex, v.SortWeight, v.TeamId, now, now)
+	err = models.ImportVariable(c.Request.Context(), v, tx)
 	if err != nil {
 		if e.IsErrUniqueConstraint(err) {
 			c.JSON(400, common.RespError("variable name or id already exists"))
@@ -86,7 +88,13 @@ func AddNewVariable(c *gin.Context) {
 		c.JSON(500, common.RespError(e.Internal))
 		return
 	}
-	c.JSON(200, common.RespSuccess(nil))
+
+	err = tx.Commit()
+	if err != nil {
+		logger.Warn("commit transaction error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
 }
 
 func GetTeamVariables(ctx context.Context, teamId int64) ([]*models.Variable, error) {

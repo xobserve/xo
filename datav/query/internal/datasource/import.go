@@ -3,7 +3,9 @@ package datasource
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 
+	"github.com/xObserve/xObserve/query/pkg/db"
 	"github.com/xObserve/xObserve/query/pkg/models"
 )
 
@@ -15,5 +17,21 @@ func ImportFromJSON(ctx context.Context, raw string, teamId int64, u *models.Use
 	}
 	ds.TeamId = teamId
 
-	return createDatasource(ctx, ds, u)
+	tx, err := db.Conn.Begin()
+	if err != nil {
+		return fmt.Errorf("new user error: %w", err)
+	}
+	defer tx.Rollback()
+
+	err = models.ImportDatasource(ctx, ds, u, tx)
+	if err != nil {
+		return fmt.Errorf("import datasource error: %w", err)
+	}
+
+	err = tx.Commit()
+	if err != nil {
+		return fmt.Errorf("commit transaction error: %w", err)
+	}
+
+	return nil
 }

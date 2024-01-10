@@ -133,66 +133,59 @@ func UseTemplate(c *gin.Context) {
 		}
 	}
 
+	// get template content
+	content, err := models.QueryTemplateContentBytes(c.Request.Context(), t.ContentId)
+	if err != nil {
+		c.JSON(400, common.RespError(err.Error()))
+		return
+	}
+
+	var temp string
+	err = json.Unmarshal(content, &temp)
+	if err != nil {
+		c.JSON(400, common.RespError(err.Error()))
+		return
+	}
+	var templateExport *models.TemplateExport
+	err = json.Unmarshal([]byte(temp), &templateExport)
+	if err != nil {
+		c.JSON(400, common.RespError(err.Error()))
+		return
+	}
+
+	tx, err := db.Conn.Begin()
+	if err != nil {
+		logger.Warn("new user error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+	defer tx.Rollback()
+
 	if req.Type == models.TemplateCreateClone {
+		// clone a template
 		if req.ScopeType != common.ScopeTeam {
 			c.JSON(400, common.RespError("only team can clone template"))
 			return
 		}
-		// clone a template
-		// get template content
-		content, err := models.QueryTemplateContentBytes(c.Request.Context(), t.ContentId)
-		if err != nil {
-			c.JSON(400, common.RespError(err.Error()))
-			return
-		}
 
-		var temp string
-		err = json.Unmarshal(content, &temp)
-		if err != nil {
-			c.JSON(400, common.RespError(err.Error()))
-			return
-		}
-		var templateExport *models.TemplateExport
-		err = json.Unmarshal([]byte(temp), &templateExport)
-		if err != nil {
-			c.JSON(400, common.RespError(err.Error()))
-			return
-		}
-
-		tx, err := db.Conn.Begin()
-		if err != nil {
-			logger.Warn("new user error", "error", err)
-			c.JSON(500, common.RespInternalError())
-			return
-		}
-		defer tx.Rollback()
-
+		// import dashboards
 		for _, dash := range templateExport.Dashboards {
 			if dash.Title == "" {
 				dash.Title = fmt.Sprintf("Clone from %s template %d ", models.TemplateTypeText[t.Scope], t.Id)
 			}
 			err := models.ImportDashboard(tx, dash, req.ScopeId, u.Id)
 			if err != nil {
-				if e.IsErrUniqueConstraint(err) {
-					c.JSON(400, common.RespError("same dashboard id already exist"))
+				if !e.IsErrUniqueConstraint(err) {
+					logger.Warn("import dashboard error", "error", err)
+					c.JSON(500, common.RespInternalError())
 					return
 				}
-				logger.Warn("import dashboard error", "error", err)
-				c.JSON(500, common.RespInternalError())
-				return
-			}
-		}
-		// import template content
 
-		err = tx.Commit()
-		if err != nil {
-			logger.Warn("commit transaction error", "error", err)
-			c.JSON(500, common.RespInternalError())
-			return
+			}
 		}
 	} else {
 		// refer to a template
-		_, err = db.Conn.ExecContext(c.Request.Context(), "INSERT INTO template_use (scope,scope_id,template_id,created,created_by) VALUES (?,?,?,?,?)",
+		_, err = tx.ExecContext(c.Request.Context(), "INSERT INTO template_use (scope,scope_id,template_id,created,created_by) VALUES (?,?,?,?,?)",
 			req.ScopeType, req.ScopeId, req.TemplateId, time.Now(), u.Id)
 		if err != nil {
 			if e.IsErrUniqueConstraint(err) {
@@ -205,4 +198,36 @@ func UseTemplate(c *gin.Context) {
 		}
 	}
 
+	// import datasources
+	for _, ds := range templateExport.Datasources {
+		err := models.ImportDatasource(c.Request.Context(), ds, u, tx)
+		if err != nil {
+			if !e.IsErrUniqueConstraint(err) {
+				logger.Warn("import datasource error", "error", err)
+				c.JSON(400, common.RespInternalError())
+				return
+			}
+		}
+	}
+
+	// import variables
+	for _, ds := range templateExport.Variables {
+		err := models.ImportVariable(c.Request.Context(), ds, tx)
+		if err != nil {
+			if !e.IsErrUniqueConstraint(err) {
+				logger.Warn("import variable error", "error", err)
+				c.JSON(400, common.RespInternalError())
+				return
+			}
+		}
+	}
+
+	err = tx.Commit()
+	if err != nil {
+		logger.Warn("commit transaction error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+
+	c.JSON(200, common.RespSuccess(fmt.Sprintf("/%d/%s", req.ScopeId, templateExport.Dashboards[0].Id)))
 }
