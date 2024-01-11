@@ -48,7 +48,7 @@ const CreateFromTemplate = ({
   const [selectedType, setSelectedType] = useState<TemplateType>(types[0])
   const [selectedTemplate, setSelectedTemplate] = useState<number>(null)
   const [createType, setCreateType] = useState<TemplateCreateType>(
-    TemplateCreateType.Clone,
+    allowClone ? TemplateCreateType.Clone : TemplateCreateType.Refer,
   )
 
   useEffect(() => {

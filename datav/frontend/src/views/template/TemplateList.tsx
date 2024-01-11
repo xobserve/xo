@@ -123,6 +123,7 @@ const TemplateList = ({ scopeId, scopeType }: Props) => {
       isClosable: true,
     })
     load()
+    onRemoveClose()
   }
   return (
     <>
@@ -195,6 +196,7 @@ const TemplateList = ({ scopeId, scopeType }: Props) => {
         isOpen={isOpen}
         onClose={onClose}
         onCreated={onCreateFromTemplate}
+        allowClone={scopeType == TemplateScope.Team}
       />
 
       <Modal isOpen={isViewOpen} onClose={onViewClose}>

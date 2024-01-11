@@ -11,17 +11,31 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react'
-import { Team } from 'types/teams'
+import { useStore } from '@nanostores/react'
+import Page from 'layouts/page/Page'
+import React, { memo } from 'react'
+import { commonMsg, websiteAdmin } from 'src/i18n/locales/en'
+import { FaProjectDiagram } from 'react-icons/fa'
+import { getAdminLinks } from './links'
 import TemplateList from 'src/views/template/TemplateList'
 import { TemplateScope } from 'types/template'
 
-const TeamTemplates = ({ team }: { team: Team }) => {
-  return (
-    <>
-      <TemplateList scopeId={team.id} scopeType={TemplateScope.Team} />
-    </>
-  )
-}
+export const AdminTemplates = memo(() => {
+  const t = useStore(commonMsg)
+  const t1 = useStore(websiteAdmin)
 
-export default TeamTemplates
+  const adminLinks = getAdminLinks()
+
+  return (
+    <Page
+      title={t1.websiteAdmin}
+      subTitle={t.manageItem({ name: t.template })}
+      icon={<FaProjectDiagram />}
+      tabs={adminLinks}
+    >
+      <TemplateList scopeId={0} scopeType={TemplateScope.Website} />
+    </Page>
+  )
+})
+
+export default AdminTemplates

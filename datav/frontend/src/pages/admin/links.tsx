@@ -12,11 +12,11 @@
 // limitations under the License.
 
 import React from 'react'
-import { FaUser, FaUserCog } from 'react-icons/fa'
+import { FaProjectDiagram, FaUser, FaUserCog } from 'react-icons/fa'
 import { MdOutlineAdminPanelSettings } from 'react-icons/md'
 import { getNavigateTo } from 'utils/url'
 
-export const getAdminLinks = (teamId) => {
+export const getAdminLinks = () => {
   return [
     {
       title: 'auditLog',
@@ -35,6 +35,12 @@ export const getAdminLinks = (teamId) => {
       url: getNavigateTo(`/admin/users`),
       baseUrl: getNavigateTo(`/admin/users`),
       icon: <FaUserCog />,
+    },
+    {
+      title: 'template',
+      url: getNavigateTo(`/admin/templates`),
+      baseUrl: getNavigateTo(`/admin/templates`),
+      icon: <FaProjectDiagram />,
     },
   ]
 }

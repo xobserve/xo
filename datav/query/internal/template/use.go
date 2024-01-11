@@ -31,7 +31,7 @@ func UseTemplate(c *gin.Context) {
 		return
 	}
 
-	if req.TemplateId == 0 || req.ScopeId == 0 {
+	if req.TemplateId == 0 {
 		c.JSON(400, common.RespError("invalid request"))
 		return
 	}
@@ -97,7 +97,6 @@ func UseTemplate(c *gin.Context) {
 			c.JSON(403, common.RespError(err.Error()))
 			return
 		}
-		return
 	}
 
 	// team scope can use website, tenant and team template
@@ -185,6 +184,32 @@ func UseTemplate(c *gin.Context) {
 
 			}
 		}
+
+		// import datasources
+		for _, ds := range templateExport.Datasources {
+			ds.TeamId = req.ScopeId
+			err := models.ImportDatasource(c.Request.Context(), ds, u, tx)
+			if err != nil {
+				if !e.IsErrUniqueConstraint(err) {
+					logger.Warn("import datasource error", "error", err)
+					c.JSON(400, common.RespInternalError())
+					return
+				}
+			}
+		}
+
+		// import variables
+		for _, v := range templateExport.Variables {
+			v.TeamId = req.ScopeId
+			err := models.ImportVariable(c.Request.Context(), v, tx)
+			if err != nil {
+				if !e.IsErrUniqueConstraint(err) {
+					logger.Warn("import variable error", "error", err)
+					c.JSON(400, common.RespInternalError())
+					return
+				}
+			}
+		}
 	} else {
 		// refer to a template
 		_, err = tx.ExecContext(c.Request.Context(), "INSERT INTO template_use (scope,scope_id,template_id,created,created_by) VALUES (?,?,?,?,?)",
@@ -197,30 +222,6 @@ func UseTemplate(c *gin.Context) {
 			logger.Warn("insert template use error", "error", err)
 			c.JSON(500, common.RespError(err.Error()))
 			return
-		}
-	}
-
-	// import datasources
-	for _, ds := range templateExport.Datasources {
-		err := models.ImportDatasource(c.Request.Context(), ds, u, tx)
-		if err != nil {
-			if !e.IsErrUniqueConstraint(err) {
-				logger.Warn("import datasource error", "error", err)
-				c.JSON(400, common.RespInternalError())
-				return
-			}
-		}
-	}
-
-	// import variables
-	for _, ds := range templateExport.Variables {
-		err := models.ImportVariable(c.Request.Context(), ds, tx)
-		if err != nil {
-			if !e.IsErrUniqueConstraint(err) {
-				logger.Warn("import variable error", "error", err)
-				c.JSON(400, common.RespInternalError())
-				return
-			}
 		}
 	}
 
@@ -240,11 +241,6 @@ func GetScopeUseTemplates(c *gin.Context) {
 
 	if scopeType != common.ScopeWebsite && scopeType != common.ScopeTenant && scopeType != common.ScopeTeam {
 		c.JSON(400, common.RespError("invalid scope type"))
-		return
-	}
-
-	if scopeId == 0 {
-		c.JSON(400, common.RespError("invalid scope id"))
 		return
 	}
 

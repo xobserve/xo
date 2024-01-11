@@ -32,6 +32,8 @@ import { getNavigateTo } from 'utils/url'
 import TemplateMarket from 'pages/template'
 import NewTemplatePage from 'pages/new/Template'
 import TeamTemplates from 'pages/cfg/team/Templates'
+import TenantTemplates from 'pages/tenant/TenantTemplates'
+import AdminTemplates from 'pages/admin/Templates'
 
 const DashboardPage = loadable(() => import('src/pages/dashboard/index'))
 const TracePage = loadable(() => import('src/pages/dashboard/Trace'))
@@ -139,6 +141,10 @@ export const getRoutes = (enableTenant = false) => {
       path: `${URL_ROOT_PATH}/admin/users`,
       element: commonConfig(<AdminUsers />),
     },
+    {
+      path: `${URL_ROOT_PATH}/admin/templates`,
+      element: commonConfig(<AdminTemplates />),
+    },
   ]
 
   const tenantRoutes = [
@@ -149,6 +155,10 @@ export const getRoutes = (enableTenant = false) => {
     {
       path: `${teamId}/tenant/teams`,
       element: commonConfig(pageContainer(<TeamsPage />)),
+    },
+    {
+      path: `${teamId}/tenant/templates`,
+      element: commonConfig(pageContainer(<TenantTemplates />)),
     },
     {
       path: `${teamId}/tenant/setting`,

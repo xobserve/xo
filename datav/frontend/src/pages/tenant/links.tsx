@@ -12,7 +12,7 @@
 // limitations under the License.
 
 import React from 'react'
-import { FaCog, FaUserCog, FaUsers } from 'react-icons/fa'
+import { FaCog, FaProjectDiagram, FaUserCog, FaUsers } from 'react-icons/fa'
 import { getNavigateTo } from 'utils/url'
 import { isEmpty } from 'utils/validate'
 export const getTenantLinks = (teamId) => {
@@ -33,6 +33,12 @@ export const getTenantLinks = (teamId) => {
       url: getNavigateTo(`${teamPath}/tenant/teams`),
       baseUrl: getNavigateTo(`${teamPath}/tenant/teams`),
       icon: <FaUsers />,
+    },
+    {
+      title: 'template',
+      url: getNavigateTo(`${teamPath}/tenant/templates`),
+      baseUrl: getNavigateTo(`${teamPath}/tenant/templates`),
+      icon: <FaProjectDiagram />,
     },
     {
       title: 'settings',
