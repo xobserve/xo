@@ -192,6 +192,8 @@ const TemplateList = ({ scopeId, scopeType }: Props) => {
         )}
       </Box>
       <CreateFromTemplate
+        scopeType={scopeType}
+        scopeId={scopeId}
         types={[TemplateType.App, TemplateType.Dashboard]}
         isOpen={isOpen}
         onClose={onClose}

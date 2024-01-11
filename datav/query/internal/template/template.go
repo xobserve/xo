@@ -258,31 +258,67 @@ func isTemplateValid(t *models.Template) error {
 const queryTemplatesBasic = "SELECT id,type,title,description,scope,owned_by,provider,content_id,tags, created FROM template "
 
 func GetTemplates(c *gin.Context) {
-	tp := c.Param("type")
-	teamId, _ := strconv.ParseInt(c.Query("teamId"), 10, 64)
+	templateType, _ := strconv.Atoi(c.Param("templateType"))
+	scopeType, _ := strconv.Atoi(c.Param("scope"))
+	scopeId, _ := strconv.ParseInt(c.Param("scopeId"), 10, 64)
+
+	if templateType != models.TemplateTypeDashboard && templateType != models.TemplateTypeApp && templateType != models.TemplateTypePanel {
+		c.JSON(400, common.RespError("invalid template type"))
+		return
+	}
+
 	u := c.MustGet("currentUser").(*models.User)
 
-	if acl.CanViewTeam(c.Request.Context(), teamId, u.Id) != nil {
-		c.JSON(403, common.RespError("you are not in this team"))
+	var err error
+	switch scopeType {
+	case common.ScopeWebsite:
+		err = acl.CanViewWebsite(u)
+	case common.ScopeTenant:
+		err = acl.CanViewTenant(c.Request.Context(), scopeId, u.Id)
+	case common.ScopeTeam:
+		err = acl.CanViewTeam(c.Request.Context(), scopeId, u.Id)
+	default:
+		err = errors.New("invalid scope type")
+	}
+
+	if err != nil {
+		c.JSON(403, common.RespError(err.Error()))
 		return
 	}
 
-	tenantId, err := models.QueryTenantIdByTeamId(c.Request.Context(), teamId)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			c.JSON(400, common.RespError("the tenant which you are visiting is not exist"))
+	var rows *sql.Rows
+	if scopeType == common.ScopeTeam {
+		tenantId, err := models.QueryTenantIdByTeamId(c.Request.Context(), scopeId)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				c.JSON(400, common.RespError("the tenant which you are visiting is not exist"))
+				return
+			}
+			logger.Warn("get tenant id error", "error", err)
+			c.JSON(500, common.RespError(err.Error()))
 			return
 		}
-		logger.Warn("get tenant id error", "error", err)
-		c.JSON(500, common.RespError(err.Error()))
-		return
-	}
 
-	rows, err := db.Conn.Query(queryTemplatesBasic+"WHERE type=? and (scope=? or (scope=? and owned_by=?) or (scope=? and owned_by=?))", tp, common.ScopeWebsite, common.ScopeTenant, tenantId, common.ScopeTeam, teamId)
-	if err != nil {
-		logger.Warn("get templates error", "error", err)
-		c.JSON(500, common.RespError(err.Error()))
-		return
+		rows, err = db.Conn.Query(queryTemplatesBasic+"WHERE type=? and (scope=? or (scope=? and owned_by=?) or (scope=? and owned_by=?))", templateType, common.ScopeWebsite, common.ScopeTenant, tenantId, common.ScopeTeam, scopeId)
+		if err != nil {
+			logger.Warn("get templates error", "error", err)
+			c.JSON(500, common.RespError(err.Error()))
+			return
+		}
+	} else if scopeType == common.ScopeTenant {
+		rows, err = db.Conn.Query(queryTemplatesBasic+"WHERE type=? and (scope=? or (scope=? and owned_by=?))", templateType, common.ScopeWebsite, common.ScopeTenant, scopeId)
+		if err != nil {
+			logger.Warn("get templates error", "error", err)
+			c.JSON(500, common.RespError(err.Error()))
+			return
+		}
+	} else {
+		rows, err = db.Conn.Query(queryTemplatesBasic+"WHERE type=? and scope=?", templateType, common.ScopeWebsite)
+		if err != nil {
+			logger.Warn("get templates error", "error", err)
+			c.JSON(500, common.RespError(err.Error()))
+			return
+		}
 	}
 
 	templates, err := getTemplates(c.Request.Context(), rows)

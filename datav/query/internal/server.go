@@ -204,7 +204,7 @@ func (s *Server) Start() error {
 		r.POST("/template/create", MustLogin(), template.CreateTemplate)
 		r.POST("/template/update", MustLogin(), template.UpdateTemplate)
 		r.POST("/template/content", MustLogin(), template.CreateTemplateContent)
-		r.GET("/template/list/:type", MustLogin(), template.GetTemplates)
+		r.GET("/template/list/:templateType/:scope/:scopeId", MustLogin(), template.GetTemplates)
 		r.GET("/template/contents/:id", MustLogin(), template.GetTemplateContents)
 		r.GET("/template/content/:id", MustLogin(), template.GetTemplateContent)
 		r.POST("/template/content/use", MustLogin(), template.UseTemplateContent)

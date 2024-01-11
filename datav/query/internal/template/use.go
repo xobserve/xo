@@ -311,11 +311,6 @@ func RemoveTemplateUse(c *gin.Context) {
 		return
 	}
 
-	if scopeId == 0 {
-		c.JSON(400, common.RespError("invalid scope id"))
-		return
-	}
-
 	if templateId == 0 {
 		c.JSON(400, common.RespError("invalid template id"))
 		return

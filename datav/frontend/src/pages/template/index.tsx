@@ -53,7 +53,12 @@ import { locale } from 'src/i18n/i18n'
 import { commonMsg } from 'src/i18n/locales/en'
 import TemplateCard from 'src/views/template/TemplateCard'
 import TemplateEditor from 'src/views/template/TemplateEditor'
-import { Template, TemplateContent, TemplateType } from 'types/template'
+import {
+  Template,
+  TemplateContent,
+  TemplateScope,
+  TemplateType,
+} from 'types/template'
 import { getTemplatesApi } from 'utils/axios/api'
 import { requestApi } from 'utils/axios/request'
 import { isEmpty } from 'utils/validate'
@@ -87,7 +92,11 @@ const TemplateStore = () => {
   }, [config, type])
 
   const loadTemplates = async () => {
-    const res = await getTemplatesApi(type, config.currentTeam)
+    const res = await getTemplatesApi(
+      type,
+      TemplateScope.Team,
+      config.currentTeam,
+    )
     setTemplates(res.data)
   }
 

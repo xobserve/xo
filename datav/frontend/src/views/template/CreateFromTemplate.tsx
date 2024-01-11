@@ -17,7 +17,12 @@ import { useStore } from '@nanostores/react'
 import React, { useEffect, useState } from 'react'
 import { $config } from 'src/data/configs/config'
 import { locale } from 'src/i18n/i18n'
-import { Template, TemplateCreateType, TemplateType } from 'types/template'
+import {
+  Template,
+  TemplateCreateType,
+  TemplateScope,
+  TemplateType,
+} from 'types/template'
 import { getTemplatesApi } from 'utils/axios/api'
 import TemplateCard from './TemplateCard'
 import RadionButtons from 'components/RadioButtons'
@@ -25,6 +30,8 @@ import { commonMsg } from 'src/i18n/locales/en'
 import { requestApi } from 'utils/axios/request'
 
 interface Props {
+  scopeType: TemplateScope
+  scopeId: number
   types: TemplateType[]
   isOpen: boolean
   onClose: any
@@ -38,6 +45,8 @@ const CreateFromTemplate = ({
   onClose,
   onCreated,
   allowClone = true,
+  scopeType,
+  scopeId,
 }: Props) => {
   const config = useStore($config)
   const lang = locale.get()
@@ -53,7 +62,7 @@ const CreateFromTemplate = ({
 
   useEffect(() => {
     const loadTemplates = async () => {
-      const res = await getTemplatesApi(selectedType, config.currentTeam)
+      const res = await getTemplatesApi(selectedType, scopeType, scopeId)
       setTemplates(res.data)
     }
     if (config.currentTeam) {
