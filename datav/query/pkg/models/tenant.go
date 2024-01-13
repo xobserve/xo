@@ -251,3 +251,23 @@ func IsTenantExist(ctx context.Context, id int64) bool {
 
 	return false
 }
+
+func QueryAllTenantIds(ctx context.Context) ([]int64, error) {
+	tenantIds := make([]int64, 0)
+	rows, err := db.Conn.Query("SELECT id FROM tenant")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var tenantId int64
+		err := rows.Scan(&tenantId)
+		if err != nil {
+			return nil, err
+		}
+
+		tenantIds = append(tenantIds, tenantId)
+	}
+
+	return tenantIds, nil
+}

@@ -30,6 +30,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/xObserve/xObserve/query/pkg/common"
 	"github.com/xObserve/xObserve/query/pkg/db"
 	"github.com/xObserve/xObserve/query/pkg/utils/simplejson"
 )
@@ -56,6 +57,8 @@ type Dashboard struct {
 	VisibleTo string           `json:"visibleTo"`
 	Tags      []string         `json:"tags,omitempty"`
 	Data      *simplejson.Json `json:"data,omitempty"`
+
+	TemplateId int64 `json:"templateId"`
 
 	SortWeight int         `json:"weight"`
 	Variables  []*Variable `json:"variables,omitempty"`
@@ -156,6 +159,47 @@ func DeleteDashboard(ctx context.Context, teamId int64, id string, tx *sql.Tx) e
 	_, err = tx.ExecContext(ctx, "DELETE FROM annotation WHERE team_id=? and namespace_id=?", teamId, id)
 	if err != nil {
 		return fmt.Errorf("delete dashboard annotations error: %w", err)
+	}
+
+	return nil
+}
+
+func CreateDashboardInScope(ctx context.Context, scopeType int, scopeId int64, userId int64, dash *Dashboard, tx *sql.Tx) error {
+	if scopeType == common.ScopeTeam {
+		return ImportDashboard(tx, dash, scopeId, userId)
+	}
+
+	if scopeType == common.ScopeTenant {
+		return CreateDashboardInTenant(scopeId, userId, dash, tx)
+	}
+
+	// scope website
+	tenants, err := QueryAllTenantIds(ctx)
+	if err != nil {
+		return err
+	}
+
+	for _, tenantId := range tenants {
+		err = CreateDashboardInTenant(tenantId, userId, dash, tx)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func CreateDashboardInTenant(tenantId int64, userId int64, dash *Dashboard, tx *sql.Tx) error {
+	teamIds, err := QueryTenantAllTeamIds(tenantId)
+	if err != nil {
+		return err
+	}
+
+	for _, teamId := range teamIds {
+		err = ImportDashboard(tx, dash, teamId, userId)
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil

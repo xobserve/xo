@@ -34,6 +34,7 @@ import {
   AlertDialogHeader,
   AlertDialogBody,
   AlertDialogFooter,
+  HStack,
 } from '@chakra-ui/react'
 import { useStore } from '@nanostores/react'
 import React, { useEffect, useState } from 'react'
@@ -65,6 +66,7 @@ const TemplateList = ({ scopeId, scopeType }: Props) => {
   const toast = useToast()
   const [templates, setTemplates] = useState<Template[]>(null)
   const [tempTemplate, setTempTemplate] = useState<Template>(null)
+  const [removeType, setRemoveType] = useState<'all' | 'unlink'>(null)
   const cancelRef = React.useRef()
   const {
     isOpen: isViewOpen,
@@ -114,7 +116,7 @@ const TemplateList = ({ scopeId, scopeType }: Props) => {
 
   const onRemoveTemplateUse = async () => {
     await requestApi.delete(
-      `/template/use/${scopeType}/${scopeId}/${tempTemplate.id}`,
+      `/template/use/${scopeType}/${scopeId}/${tempTemplate.id}/${removeType}`,
     )
     toast({
       title: lang == 'zh' ? '移除成功.' : 'Removed successfully',
@@ -156,30 +158,48 @@ const TemplateList = ({ scopeId, scopeType }: Props) => {
                       <Td>{template.id}</Td>
                       <Td>{template.title}</Td>
                       <Td>
-                        <Button
-                          variant='ghost'
-                          size='sm'
-                          px='0'
-                          onClick={() => {
-                            setTempTemplate(template)
-                            onViewOpen()
-                          }}
-                        >
-                          {lang == 'zh' ? '查看' : 'View'}
-                        </Button>
-                        <Button
-                          variant='ghost'
-                          size='sm'
-                          px='0'
-                          ml='2'
-                          colorScheme='orange'
-                          onClick={() => {
-                            setTempTemplate(template)
-                            onRemoveOpen()
-                          }}
-                        >
-                          {lang == 'zh' ? '移除引用' : 'Unlink'}
-                        </Button>
+                        <HStack spacing={3}>
+                          <Button
+                            variant='ghost'
+                            size='sm'
+                            px='0'
+                            onClick={() => {
+                              setTempTemplate(template)
+                              onViewOpen()
+                            }}
+                          >
+                            {lang == 'zh' ? '查看' : 'View'}
+                          </Button>
+                          <Button
+                            variant='ghost'
+                            size='sm'
+                            px='0'
+                            colorScheme='orange'
+                            onClick={() => {
+                              setTempTemplate(template)
+                              setRemoveType('unlink')
+                              onRemoveOpen()
+                            }}
+                          >
+                            {lang == 'zh' ? '移除引用' : 'Unlink'}
+                          </Button>
+
+                          <Button
+                            variant='ghost'
+                            size='sm'
+                            px='0'
+                            colorScheme='red'
+                            onClick={() => {
+                              setTempTemplate(template)
+                              setRemoveType('all')
+                              onRemoveOpen()
+                            }}
+                          >
+                            {lang == 'zh'
+                              ? '移除引用及相关资源'
+                              : 'Unlink template and remove resources'}
+                          </Button>
+                        </HStack>
                       </Td>
                     </Tr>
                   )
@@ -217,12 +237,22 @@ const TemplateList = ({ scopeId, scopeType }: Props) => {
         <AlertDialogOverlay>
           <AlertDialogContent>
             <AlertDialogHeader fontSize='lg' fontWeight='bold'>
-              {lang == 'zh' ? '移除模版引用' : 'Unlink template'}
+              {removeType == 'all'
+                ? lang == 'zh'
+                  ? '移除模版及相关资源'
+                  : 'Unlink template and remove resources'
+                : lang == 'zh'
+                ? '移除模版引用'
+                : 'Unlink template'}
             </AlertDialogHeader>
 
             <AlertDialogBody>
-              {lang == 'zh'
-                ? '确定要移除模版引用吗？'
+              {removeType == 'all'
+                ? lang == 'zh'
+                  ? '确定要移除模版及相关资源吗？'
+                  : 'Are you sure you want to remove the template and related resources?'
+                : lang == 'zh'
+                ? '确定要移除模版吗？'
                 : 'Are you sure you want to remove the reference to  this template?'}
             </AlertDialogBody>
 
@@ -231,7 +261,13 @@ const TemplateList = ({ scopeId, scopeType }: Props) => {
                 {t.cancel}
               </Button>
               <Button colorScheme='red' onClick={onRemoveTemplateUse} ml={3}>
-                {lang == 'zh' ? '移除' : 'Unlink'}
+                {removeType == 'all'
+                  ? lang == 'zh'
+                    ? '移除所有'
+                    : 'Remove all'
+                  : lang == 'zh'
+                  ? '移除'
+                  : 'Unlink'}
               </Button>
             </AlertDialogFooter>
           </AlertDialogContent>

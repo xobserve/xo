@@ -200,7 +200,7 @@ func (s *Server) Start() error {
 		r.GET("/template/byId/:type/:id", MustLogin(), template.GetTemplate)
 		r.GET("/template/byScope/:type/:id", MustLogin(), template.GetScopeTemplates)
 		r.GET("/template/use/byScope/:type/:id", MustLogin(), template.GetScopeUseTemplates)
-		r.DELETE("/template/use/:scope/:scopeId/:templateId", MustLogin(), template.RemoveTemplateUse)
+		r.DELETE("/template/use/:scope/:scopeId/:templateId/:removeType", MustLogin(), template.RemoveTemplateUse)
 		r.POST("/template/create", MustLogin(), template.CreateTemplate)
 		r.POST("/template/update", MustLogin(), template.UpdateTemplate)
 		r.POST("/template/content", MustLogin(), template.CreateTemplateContent)

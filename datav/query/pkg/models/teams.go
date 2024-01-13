@@ -274,7 +274,6 @@ func IsTeamDeleted(ctx context.Context, teamId int64) (bool, error) {
 
 func CreateTeam(ctx context.Context, tx *sql.Tx, tenantId int64, userId int64, name string, brief string) (int64, error) {
 	now := time.Now()
-
 	res, err := tx.ExecContext(ctx, "INSERT INTO team (tenant_id,name,brief,created_by,created,updated) VALUES (?,?,?,?,?,?)",
 		tenantId, name, brief, userId, now, now)
 	if err != nil {
@@ -321,6 +320,32 @@ func CreateTeam(ctx context.Context, tx *sql.Tx, tenantId int64, userId int64, n
 		return 0, fmt.Errorf("update team sidemenu error: %w", err)
 	}
 
+	// create dashboards from template
+	tenantTemplates, err := QueryTenantUseTemplates(tenantId)
+	if err != nil {
+		return 0, fmt.Errorf("query tenant use templates error: %w", err)
+	}
+	websiteTemplaes, err := QueryWebsiteUseTemplates()
+	if err != nil {
+		return 0, fmt.Errorf("query website use templates error: %w", err)
+	}
+	useTemplateIds := append(tenantTemplates, websiteTemplaes...)
+	for _, templateId := range useTemplateIds {
+		// get template export
+		export, err := QueryTemplateExportByTemplateId(ctx, templateId)
+		if err != nil {
+			return 0, fmt.Errorf("query template export error: %w", err)
+		}
+
+		if export != nil {
+			err = CreateResourcesByTemplateExport(ctx, templateId, export, common.ScopeTeam, id, userId, tx)
+			if err != nil {
+				if !e.IsErrUniqueConstraint(err) {
+					return 0, fmt.Errorf("create dashboard by template export error: %w", err)
+				}
+			}
+		}
+	}
 	return id, nil
 }
 

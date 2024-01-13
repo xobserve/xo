@@ -23,17 +23,24 @@
 // limitations under the License.
 package models
 
-import "time"
+import (
+	"context"
+	"database/sql"
+	"time"
+
+	"github.com/xObserve/xObserve/query/pkg/common"
+)
 
 type Datasource struct {
-	Id      int64             `json:"id"`
-	Name    string            `json:"name"`
-	Type    string            `json:"type"`
-	URL     string            `json:"url"`
-	Data    map[string]string `json:"data,omitempty"`
-	TeamId  int64             `json:"teamId"`
-	Created *time.Time        `json:"created,omitempty"`
-	Updated *time.Time        `json:"updated,omitempty"`
+	Id         int64             `json:"id"`
+	Name       string            `json:"name"`
+	Type       string            `json:"type"`
+	URL        string            `json:"url"`
+	Data       map[string]string `json:"data,omitempty"`
+	TeamId     int64             `json:"teamId"`
+	TemplateId int64             `json:"templateId"`
+	Created    *time.Time        `json:"created,omitempty"`
+	Updated    *time.Time        `json:"updated,omitempty"`
 }
 
 const (
@@ -42,3 +49,46 @@ const (
 	DatasourceExternalHttp = "external-http"
 	DatasourceTestData     = "testdata"
 )
+
+func CreateDatasourceInScope(ctx context.Context, scopeType int, scopeId int64, ds *Datasource, tx *sql.Tx) error {
+	if scopeType == common.ScopeTeam {
+		ds.TeamId = scopeId
+		return ImportDatasource(ctx, ds, tx)
+	}
+
+	if scopeType == common.ScopeTenant {
+		return CreateDatasourceInTenant(ctx, scopeId, ds, tx)
+	}
+
+	// scope website
+	tenants, err := QueryAllTenantIds(ctx)
+	if err != nil {
+		return err
+	}
+
+	for _, tenantId := range tenants {
+		err = CreateDatasourceInTenant(ctx, tenantId, ds, tx)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func CreateDatasourceInTenant(ctx context.Context, tenantId int64, ds *Datasource, tx *sql.Tx) error {
+	teamIds, err := QueryTenantAllTeamIds(tenantId)
+	if err != nil {
+		return err
+	}
+
+	for _, teamId := range teamIds {
+		ds.TeamId = teamId
+		err = ImportDatasource(ctx, ds, tx)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}

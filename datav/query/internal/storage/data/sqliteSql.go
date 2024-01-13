@@ -94,6 +94,7 @@ CREATE TABLE IF NOT EXISTS variable (
     sort TINYINT DEFAULT 0,
     regex TEXT,
     data MEDIUMTEXT,
+    template_id INTEGER DEFAULT 0,
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL
 );
@@ -105,8 +106,9 @@ CREATE TABLE IF NOT EXISTS dashboard (
     visible_to VARCHAR(32) DEFAULT 'team',
     created_by INTEGER NOT NULL,
     tags TEXT,
-    data MEDIUMTEXT NOT NULL,
+    data MEDIUMTEXT,
     weight SMALLINT DEFAULT 0,
+    template_id INTEGER DEFAULT 0, 
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL
 );
@@ -127,6 +129,7 @@ CREATE TABLE IF NOT EXISTS datasource (
     type VARCHAR(32),
     url VARCHAR(255),
     data MEDIUMTEXT,
+    template_id INTEGER DEFAULT 0, 
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL
 );
@@ -223,11 +226,13 @@ CREATE UNIQUE INDEX IF NOT EXISTS team_member_team_user_id ON team_member (team_
 CREATE UNIQUE INDEX IF NOT EXISTS variable_id ON variable (team_id, id);
 CREATE UNIQUE INDEX IF NOT EXISTS variable_name ON variable (team_id, name);
 CREATE INDEX IF NOT EXISTS variable_team ON variable (team_id);
+CREATE INDEX IF NOT EXISTS variable_team_template ON variable (team_id, template_id);
 
 CREATE UNIQUE INDEX IF NOT EXISTS dashboard_team_dash_id ON dashboard (team_id, id);
 CREATE INDEX IF NOT EXISTS  dashboard_team_id ON dashboard (team_id);
 CREATE INDEX IF NOT EXISTS  dashboard_visible_to ON dashboard (visible_to);
 CREATE INDEX IF NOT EXISTS  dashboard_created_by ON dashboard (created_by);
+CREATE INDEX IF NOT EXISTS  dashboard_team_id_template ON dashboard (team_id, template_id);
 
 
 CREATE UNIQUE INDEX IF NOT EXISTS  dashboard_id_version ON dashboard_history (team_id,dashboard_id,version);
@@ -236,6 +241,7 @@ CREATE UNIQUE INDEX IF NOT EXISTS  dashboard_id_version ON dashboard_history (te
 CREATE UNIQUE INDEX IF NOT EXISTS datasource_id ON datasource (team_id, id);
 CREATE UNIQUE INDEX IF NOT EXISTS  datasource_name ON datasource (team_id,name);
 CREATE INDEX IF NOT EXISTS datasource_team ON datasource (team_id);
+CREATE INDEX IF NOT EXISTS datasource_team_template ON datasource (team_id, template_id);
 
 
 CREATE UNIQUE INDEX IF NOT EXISTS  star_dashboard_id ON star_dashboard (user_id,team_id,dashboard_id);

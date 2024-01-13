@@ -188,7 +188,7 @@ func UseTemplate(c *gin.Context) {
 		// import datasources
 		for _, ds := range templateExport.Datasources {
 			ds.TeamId = req.ScopeId
-			err := models.ImportDatasource(c.Request.Context(), ds, u, tx)
+			err := models.ImportDatasource(c.Request.Context(), ds, tx)
 			if err != nil {
 				if !e.IsErrUniqueConstraint(err) {
 					logger.Warn("import datasource error", "error", err)
@@ -222,6 +222,15 @@ func UseTemplate(c *gin.Context) {
 			logger.Warn("insert template use error", "error", err)
 			c.JSON(500, common.RespError(err.Error()))
 			return
+		}
+
+		err = models.CreateResourcesByTemplateExport(c.Request.Context(), t.Id, templateExport, req.ScopeType, req.ScopeId, u.Id, tx)
+		if err != nil {
+			if !e.IsErrUniqueConstraint(err) {
+				logger.Warn("create dashboard error", "error", err)
+				c.JSON(500, common.RespInternalError())
+				return
+			}
 		}
 	}
 
@@ -305,6 +314,7 @@ func RemoveTemplateUse(c *gin.Context) {
 	scopeType, _ := strconv.Atoi(c.Param("scope"))
 	scopeId, _ := strconv.ParseInt(c.Param("scopeId"), 10, 64)
 	templateId, _ := strconv.ParseInt(c.Param("templateId"), 10, 64)
+	removeType := c.Param("removeType")
 
 	if scopeType != common.ScopeWebsite && scopeType != common.ScopeTenant && scopeType != common.ScopeTeam {
 		c.JSON(400, common.RespError("invalid scope type"))
@@ -332,12 +342,35 @@ func RemoveTemplateUse(c *gin.Context) {
 		return
 	}
 
-	_, err = db.Conn.Exec("DELETE FROM template_use WHERE scope=? and scope_id=? and template_id=?", scopeType, scopeId, templateId)
+	tx, err := db.Conn.Begin()
+	if err != nil {
+		logger.Warn("new tx error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+	defer tx.Rollback()
+
+	_, err = tx.Exec("DELETE FROM template_use WHERE scope=? and scope_id=? and template_id=?", scopeType, scopeId, templateId)
 	if err != nil {
 		logger.Warn("delete template use error", "error", err)
 		c.JSON(500, common.RespError(err.Error()))
 		return
 	}
 
+	if removeType == "all" {
+		// remove dashboards, datasources and variables
+		err = models.RemoveTemplateResourcesInScope(c.Request.Context(), tx, scopeType, scopeId, templateId)
+		if err != nil {
+			logger.Warn("remove template resources error", "error", err)
+			c.JSON(500, common.RespError(err.Error()))
+			return
+		}
+	}
+	err = tx.Commit()
+	if err != nil {
+		logger.Warn("commit transaction error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
 	c.JSON(200, common.RespSuccess(nil))
 }

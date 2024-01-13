@@ -23,7 +23,13 @@
 // limitations under the License.
 package models
 
-import "time"
+import (
+	"context"
+	"database/sql"
+	"time"
+
+	"github.com/xObserve/xObserve/query/pkg/common"
+)
 
 type Variable struct {
 	Id          int64     `json:"id"`
@@ -40,6 +46,50 @@ type Variable struct {
 	Regex       *string   `json:"regex"`
 	SortWeight  int       `json:"sortWeight"`
 	TeamId      int64     `json:"teamId"`
+	TemplateId  int64     `json:"templateId"`
 }
 
 const VarialbeAllOption = "__all__"
+
+func CreateVariableInScope(ctx context.Context, scopeType int, scopeId int64, v *Variable, tx *sql.Tx) error {
+	if scopeType == common.ScopeTeam {
+		v.TeamId = scopeId
+		return ImportVariable(ctx, v, tx)
+	}
+
+	if scopeType == common.ScopeTenant {
+		return CreateVariableInTenant(ctx, scopeId, v, tx)
+	}
+
+	// scope website
+	tenants, err := QueryAllTenantIds(ctx)
+	if err != nil {
+		return err
+	}
+
+	for _, tenantId := range tenants {
+		err = CreateVariableInTenant(ctx, tenantId, v, tx)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func CreateVariableInTenant(ctx context.Context, tenantId int64, v *Variable, tx *sql.Tx) error {
+	teamIds, err := QueryTenantAllTeamIds(tenantId)
+	if err != nil {
+		return err
+	}
+
+	for _, teamId := range teamIds {
+		v.TeamId = teamId
+		err = ImportVariable(ctx, v, tx)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}

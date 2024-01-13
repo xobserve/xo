@@ -114,7 +114,7 @@ func CreateDatasource(c *gin.Context) {
 	}
 	defer tx.Rollback()
 
-	err = models.ImportDatasource(c.Request.Context(), ds, u, tx)
+	err = models.ImportDatasource(c.Request.Context(), ds, tx)
 	if err != nil {
 		logger.Warn("create datasource error", "error", err)
 		c.JSON(http.StatusBadRequest, common.RespError(err.Error()))

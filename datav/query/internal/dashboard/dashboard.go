@@ -59,6 +59,10 @@ func SaveDashboard(c *gin.Context) {
 	}
 
 	dash := req.Dashboard
+	if strings.TrimSpace(dash.Title) == "" {
+		c.JSON(400, common.RespError("title is required"))
+		return
+	}
 
 	now := time.Now()
 	isUpdate := dash.Id != ""

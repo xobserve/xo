@@ -121,6 +121,7 @@ CREATE TABLE IF NOT EXISTS variable (
     sort SMALLINT DEFAULT 0,
     regex TEXT,
     data MEDIUMTEXT,
+    template_id INTEGER DEFAULT 0,
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL
 );
@@ -131,6 +132,8 @@ CREATE UNIQUE INDEX variable_name ON variable (team_id, name);
 
 CREATE INDEX variable_team ON variable (team_id);
 
+CREATE INDEX variable_team_template ON variable (team_id, template_id);
+
 CREATE TABLE IF NOT EXISTS dashboard (
     team_id INTEGER NOT NULL,
     id VARCHAR(40) NOT NULL,
@@ -138,8 +141,9 @@ CREATE TABLE IF NOT EXISTS dashboard (
     visible_to VARCHAR(32) DEFAULT 'team',
     created_by INTEGER NOT NULL,
     tags TEXT,
-    data MEDIUMTEXT NOT NULL,
+    data MEDIUMTEXT,
     weight TINYINT DEFAULT 0,
+    template_id INTEGER DEFAULT 0,
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL
 );
@@ -147,6 +151,8 @@ CREATE TABLE IF NOT EXISTS dashboard (
 CREATE UNIQUE INDEX dashboard_team_dash_id ON dashboard (team_id, id);
 
 CREATE INDEX dashboard_team_id ON dashboard (team_id);
+
+CREATE INDEX dashboard_team_id_template ON dashboard (team_id, template_id);
 
 CREATE INDEX dashboard_created_by ON dashboard (created_by);
 
@@ -167,6 +173,7 @@ CREATE TABLE IF NOT EXISTS datasource (
     type VARCHAR(32),
     url VARCHAR(255),
     data MEDIUMTEXT,
+    template_id INTEGER DEFAULT 0,
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL
 );
@@ -176,6 +183,8 @@ CREATE UNIQUE INDEX datasource_id ON datasource (team_id, id);
 CREATE UNIQUE INDEX datasource_name ON datasource (team_id, name);
 
 CREATE INDEX datasource_team ON datasource (team_id);
+
+CREATE INDEX datasource_team_template ON datasource (team_id, template_id);
 
 CREATE TABLE IF NOT EXISTS star_dashboard (
     user_id INTEGER NOT NULL,
