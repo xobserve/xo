@@ -162,6 +162,37 @@ func UseTemplate(c *gin.Context) {
 	}
 	defer tx.Rollback()
 
+	if req.ScopeType == common.ScopeTenant || req.ScopeType == common.ScopeTeam {
+		// check template is already in website
+		var tid int64
+		db.Conn.QueryRow("SELECT template_id FROM template_use WHERE scope = ?  and template_id = ?", common.ScopeWebsite, t.Id).Scan(&tid)
+		if tid == t.Id {
+			c.JSON(400, common.RespError("template already linked in website scope"))
+			return
+		}
+	}
+
+	if req.ScopeType == common.ScopeTeam {
+		// check template is already in tenant
+		tenantId, err := models.QueryTenantIdByTeamId(c.Request.Context(), req.ScopeId)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				c.JSON(400, common.RespError("the tenant which you are visiting is not exist"))
+				return
+			}
+			logger.Warn("get tenant id error", "error", err)
+			c.JSON(500, common.RespError(err.Error()))
+			return
+		}
+
+		var tid int64
+		db.Conn.QueryRow("SELECT template_id FROM template_use WHERE scope=? and scope_id=? and template_id=?", common.ScopeTenant, tenantId, t.Id).Scan(&tid)
+		if tid == t.Id {
+			c.JSON(400, common.RespError("template already linked in tenant scope"))
+			return
+		}
+	}
+
 	if req.Type == models.TemplateCreateClone {
 		// clone a template
 		if req.ScopeType != common.ScopeTeam {
