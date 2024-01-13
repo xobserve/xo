@@ -2,7 +2,6 @@ package template
 
 import (
 	"database/sql"
-	"encoding/json"
 	"fmt"
 	"strconv"
 	"strings"
@@ -135,24 +134,7 @@ func UseTemplate(c *gin.Context) {
 	}
 
 	// get template content
-	content, err := models.QueryTemplateContentBytes(c.Request.Context(), t.ContentId)
-	if err != nil {
-		c.JSON(400, common.RespError(err.Error()))
-		return
-	}
-
-	var temp string
-	err = json.Unmarshal(content, &temp)
-	if err != nil {
-		c.JSON(400, common.RespError(err.Error()))
-		return
-	}
-	var templateExport *models.TemplateExport
-	err = json.Unmarshal([]byte(temp), &templateExport)
-	if err != nil {
-		c.JSON(400, common.RespError(err.Error()))
-		return
-	}
+	templateExport, err := models.QueryTemplateExportByTemplateId(c.Request.Context(), t.ContentId)
 
 	tx, err := db.Conn.Begin()
 	if err != nil {
@@ -390,7 +372,7 @@ func RemoveTemplateUse(c *gin.Context) {
 
 	if removeType == "all" {
 		// remove dashboards, datasources and variables
-		err = models.RemoveTemplateResourcesInScope(c.Request.Context(), tx, scopeType, scopeId, templateId)
+		err = models.RemoveTemplateResourcesInScope(c.Request.Context(), tx, scopeType, scopeId, templateId, false)
 		if err != nil {
 			logger.Warn("remove template resources error", "error", err)
 			c.JSON(500, common.RespError(err.Error()))

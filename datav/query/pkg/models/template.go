@@ -38,7 +38,7 @@ type Template struct {
 	Type        int       `json:"type"` // 1. App  2. Dashboard  3. Panel
 	Title       string    `json:"title"`
 	Description string    `json:"description,omitempty"`
-	Scope       int       `json:"scope"`             // 1. Website 2. Tenant 3. Team
+	Scope       int       `json:"scope"`             // Create in 1. Website 2. Tenant 3. Team scope
 	OwnedBy     int64     `json:"ownedBy"`           // based on scope, e.g when scope == 2, ownedBy is tenantId
 	ContentId   int64     `json:"contentId"`         // json encoded string
 	Version     string    `json:"version,omitempty"` // content version
@@ -95,17 +95,21 @@ func QueryTemplateById(ctx context.Context, id int64) (*Template, error) {
 	return t, err
 }
 
-func QueryTemplateExportByTemplateId(ctx context.Context, id int64) (*TemplateExport, error) {
+func QueryContentIdTemplateId(ctx context.Context, id int64) (int64, error) {
 	var contentId int64
 	err := db.Conn.QueryRow("SELECT content_id FROM template WHERE id=?", id).Scan(&contentId)
 	if err != nil {
-		return nil, err
+		return 0, err
 	}
 
 	if contentId == 0 {
-		return nil, nil
+		return 0, nil
 	}
 
+	return contentId, nil
+}
+
+func QueryTemplateExportByTemplateId(ctx context.Context, contentId int64) (*TemplateExport, error) {
 	// get template content
 	content, err := QueryTemplateContentBytes(ctx, contentId)
 	if err != nil {
@@ -179,9 +183,6 @@ func QueryTemplateContentBytes(ctx context.Context, id int64) ([]byte, error) {
 	err := db.Conn.QueryRow("select content from template_content where id = ?", id).Scan(
 		&content)
 	if err != nil {
-		if err == sql.ErrNoRows {
-			return nil, fmt.Errorf("the template content which you are visiting is not exist")
-		}
 		return nil, err
 	}
 
@@ -205,6 +206,30 @@ func QueryTenantUseTemplates(tenantId int64) ([]int64, error) {
 	}
 
 	return ids, nil
+}
+
+type TemplateUseByScope struct {
+	Scope   int
+	ScopeId int64
+}
+
+func QueryTemplateUsedByScopes(templateId int64) ([]*TemplateUseByScope, error) {
+	rows, err := db.Conn.Query("SELECT scope,scope_id FROM template_use WHERE template_id = ?", templateId)
+	if err != nil {
+		return nil, err
+	}
+
+	scopes := make([]*TemplateUseByScope, 0)
+	for rows.Next() {
+		s := &TemplateUseByScope{}
+		err := rows.Scan(&s.Scope, &s.ScopeId)
+		if err != nil {
+			return nil, err
+		}
+		scopes = append(scopes, s)
+	}
+
+	return scopes, nil
 }
 
 func QueryWebsiteUseTemplates() ([]int64, error) {
@@ -262,13 +287,13 @@ func CreateResourcesByTemplateExport(ctx context.Context, templateId int64, temp
 	return nil
 }
 
-func RemoveTemplateResourcesInScope(ctx context.Context, tx *sql.Tx, scopeType int, scopeId int64, templateId int64) error {
+func RemoveTemplateResourcesInScope(ctx context.Context, tx *sql.Tx, scopeType int, scopeId int64, templateId int64, onlyDelDash bool) error {
 	if scopeType == common.ScopeTeam {
-		return removeTemplateResourcesInTeam(tx, scopeId, templateId)
+		return removeTemplateResourcesInTeam(tx, scopeId, templateId, onlyDelDash)
 	}
 
 	if scopeType == common.ScopeTenant {
-		return removeTemplateResourcesInTenant(tx, scopeId, templateId)
+		return removeTemplateResourcesInTenant(tx, scopeId, templateId, onlyDelDash)
 	}
 
 	// scope website
@@ -278,7 +303,7 @@ func RemoveTemplateResourcesInScope(ctx context.Context, tx *sql.Tx, scopeType i
 	}
 
 	for _, tenantId := range tenants {
-		err = removeTemplateResourcesInTenant(tx, tenantId, templateId)
+		err = removeTemplateResourcesInTenant(tx, tenantId, templateId, onlyDelDash)
 		if err != nil {
 			return err
 		}
@@ -286,14 +311,14 @@ func RemoveTemplateResourcesInScope(ctx context.Context, tx *sql.Tx, scopeType i
 	return nil
 }
 
-func removeTemplateResourcesInTenant(tx *sql.Tx, tenantId int64, templateId int64) error {
+func removeTemplateResourcesInTenant(tx *sql.Tx, tenantId int64, templateId int64, onlyDelDash bool) error {
 	teamIds, err := QueryTenantAllTeamIds(tenantId)
 	if err != nil {
 		return err
 	}
 
 	for _, teamId := range teamIds {
-		err = removeTemplateResourcesInTeam(tx, teamId, templateId)
+		err = removeTemplateResourcesInTeam(tx, teamId, templateId, onlyDelDash)
 		if err != nil {
 			return err
 		}
@@ -302,23 +327,26 @@ func removeTemplateResourcesInTenant(tx *sql.Tx, tenantId int64, templateId int6
 	return nil
 }
 
-func removeTemplateResourcesInTeam(tx *sql.Tx, teamId int64, templateId int64) error {
+func removeTemplateResourcesInTeam(tx *sql.Tx, teamId int64, templateId int64, onlyDelDash bool) error {
 	// remove dashboards
 	_, err := tx.Exec("DELETE FROM dashboard WHERE team_id=? and template_id=?", teamId, templateId)
 	if err != nil {
 		return fmt.Errorf("delete dashboard error: %w", err)
 	}
 
-	// remove datasources
-	_, err = tx.Exec("DELETE FROM datasource WHERE team_id=? and template_id=?", teamId, templateId)
-	if err != nil {
-		return fmt.Errorf("delete datasource error: %w", err)
-	}
+	if !onlyDelDash {
+		// remove datasources
+		_, err = tx.Exec("DELETE FROM datasource WHERE team_id=? and template_id=?", teamId, templateId)
+		if err != nil {
+			return fmt.Errorf("delete datasource error: %w", err)
+		}
 
-	// remove variables
-	_, err = tx.Exec("DELETE FROM variable WHERE team_id=? and template_id=?", teamId, templateId)
-	if err != nil {
-		return fmt.Errorf("delete variable error: %w", err)
+		// remove variables
+		_, err = tx.Exec("DELETE FROM variable WHERE team_id=? and template_id=?", teamId, templateId)
+		if err != nil {
+			return fmt.Errorf("delete variable error: %w", err)
+		}
+
 	}
 
 	return nil

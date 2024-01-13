@@ -332,7 +332,15 @@ func CreateTeam(ctx context.Context, tx *sql.Tx, tenantId int64, userId int64, n
 	useTemplateIds := append(tenantTemplates, websiteTemplaes...)
 	for _, templateId := range useTemplateIds {
 		// get template export
-		export, err := QueryTemplateExportByTemplateId(ctx, templateId)
+		contentId, err := QueryContentIdTemplateId(ctx, templateId)
+		if err != nil {
+			return 0, fmt.Errorf("query template content id error: %w", err)
+		}
+		if contentId == 0 {
+			continue
+		}
+
+		export, err := QueryTemplateExportByTemplateId(ctx, contentId)
 		if err != nil {
 			return 0, fmt.Errorf("query template export error: %w", err)
 		}

@@ -204,3 +204,44 @@ func CreateDashboardInTenant(tenantId int64, userId int64, dash *Dashboard, tx *
 
 	return nil
 }
+
+func RemoveDashboardsInScope(ctx context.Context, dashId string, scopeType int, scopeId int64, tx *sql.Tx) error {
+	if scopeType == common.ScopeTeam {
+		return DeleteDashboard(ctx, scopeId, dashId, tx)
+	}
+
+	if scopeType == common.ScopeTenant {
+		return DeleteDashboardInTenant(ctx, scopeId, dashId, tx)
+	}
+
+	// scope website
+	tenants, err := QueryAllTenantIds(ctx)
+	if err != nil {
+		return err
+	}
+
+	for _, tenantId := range tenants {
+		err = DeleteDashboardInTenant(ctx, tenantId, dashId, tx)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func DeleteDashboardInTenant(ctx context.Context, tenantId int64, dashId string, tx *sql.Tx) error {
+	teamIds, err := QueryTenantAllTeamIds(tenantId)
+	if err != nil {
+		return err
+	}
+
+	for _, teamId := range teamIds {
+		err = DeleteDashboard(ctx, teamId, dashId, tx)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
