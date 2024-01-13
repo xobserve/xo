@@ -32,6 +32,7 @@ import (
 
 	"github.com/xObserve/xObserve/query/pkg/common"
 	"github.com/xObserve/xObserve/query/pkg/db"
+	"github.com/xObserve/xObserve/query/pkg/e"
 	"github.com/xObserve/xObserve/query/pkg/utils/simplejson"
 )
 
@@ -197,7 +198,7 @@ func CreateDashboardInTenant(tenantId int64, userId int64, dash *Dashboard, tx *
 
 	for _, teamId := range teamIds {
 		err = ImportDashboard(tx, dash, teamId, userId)
-		if err != nil {
+		if err != nil && !e.IsErrUniqueConstraint(err) {
 			return err
 		}
 	}

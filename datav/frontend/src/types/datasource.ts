@@ -23,6 +23,7 @@ export interface Datasource {
   url: string
   data?: { [key: string]: any }
   teamId?: number
+  templateId?: number
   created?: string
   updated?: string
 }

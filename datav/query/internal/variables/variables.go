@@ -97,15 +97,17 @@ func AddNewVariable(c *gin.Context) {
 	}
 }
 
+const baseGetVariablesQuery = "SELECT id,name,type,value,default_selected,datasource,description,refresh,enableMulti,enableAll,regex,sort,team_id,template_id FROM variable"
+
 func GetTeamVariables(ctx context.Context, teamId int64) ([]*models.Variable, error) {
 	var rows *sql.Rows
 	var err error
 	vars := []*models.Variable{}
 	if teamId == 0 {
-		rows, err = db.Conn.QueryContext(ctx, "SELECT id,name,type,value,default_selected,datasource,description,refresh,enableMulti,enableAll,regex,sort,team_id FROM variable")
+		rows, err = db.Conn.QueryContext(ctx, baseGetVariablesQuery)
 
 	} else {
-		rows, err = db.Conn.QueryContext(ctx, "SELECT id,name,type,value,default_selected,datasource,description,refresh,enableMulti,enableAll,regex,sort,team_id FROM variable WHERE team_id=?", teamId)
+		rows, err = db.Conn.QueryContext(ctx, baseGetVariablesQuery+" WHERE team_id=?", teamId)
 	}
 	if err != nil {
 		return nil, err
@@ -113,7 +115,7 @@ func GetTeamVariables(ctx context.Context, teamId int64) ([]*models.Variable, er
 	defer rows.Close()
 	for rows.Next() {
 		v := &models.Variable{}
-		err = rows.Scan(&v.Id, &v.Name, &v.Type, &v.Value, &v.Default, &v.Datasource, &v.Desc, &v.Refresh, &v.EnableMulti, &v.EnableAll, &v.Regex, &v.SortWeight, &v.TeamId)
+		err = rows.Scan(&v.Id, &v.Name, &v.Type, &v.Value, &v.Default, &v.Datasource, &v.Desc, &v.Refresh, &v.EnableMulti, &v.EnableAll, &v.Regex, &v.SortWeight, &v.TeamId, &v.TemplateId)
 		if err != nil {
 			logger.Warn("scan variable error", "error", err)
 			continue

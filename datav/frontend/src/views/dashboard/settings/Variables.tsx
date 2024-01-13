@@ -12,7 +12,7 @@
 // limitations under the License.
 
 import { Button, Flex, Text, useDisclosure, useToast } from '@chakra-ui/react'
-import { EditVariable, VariablesTable } from 'pages/cfg/team/Variables'
+import { EditVariable, VariablesTable } from 'pages/team/Variables'
 import { useState } from 'react'
 import { VariableManuallyChangedKey } from 'src/data/storage-keys'
 import { initVariable } from 'src/data/variable'

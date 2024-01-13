@@ -11,6 +11,7 @@ import (
 
 	"github.com/xObserve/xObserve/query/pkg/common"
 	"github.com/xObserve/xObserve/query/pkg/db"
+	"github.com/xObserve/xObserve/query/pkg/e"
 )
 
 const (
@@ -263,7 +264,7 @@ func CreateResourcesByTemplateExport(ctx context.Context, templateId int64, temp
 			newDash.Title = fmt.Sprintf("Refer from template %d ", templateId)
 		}
 		err := CreateDashboardInScope(ctx, scopeType, scopeId, userId, newDash, tx)
-		if err != nil {
+		if err != nil && !e.IsErrUniqueConstraint(err) {
 			return err
 		}
 	}
@@ -271,7 +272,7 @@ func CreateResourcesByTemplateExport(ctx context.Context, templateId int64, temp
 	for _, ds := range templateExport.Datasources {
 		ds.TemplateId = templateId
 		err := CreateDatasourceInScope(ctx, scopeType, scopeId, ds, tx)
-		if err != nil {
+		if err != nil && !e.IsErrUniqueConstraint(err) {
 			return err
 		}
 	}
@@ -279,7 +280,7 @@ func CreateResourcesByTemplateExport(ctx context.Context, templateId int64, temp
 	for _, v := range templateExport.Variables {
 		v.TemplateId = templateId
 		err := CreateVariableInScope(ctx, scopeType, scopeId, v, tx)
-		if err != nil {
+		if err != nil && !e.IsErrUniqueConstraint(err) {
 			return err
 		}
 	}

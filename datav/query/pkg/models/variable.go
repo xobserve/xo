@@ -29,6 +29,7 @@ import (
 	"time"
 
 	"github.com/xObserve/xObserve/query/pkg/common"
+	"github.com/xObserve/xObserve/query/pkg/e"
 )
 
 type Variable struct {
@@ -86,7 +87,7 @@ func CreateVariableInTenant(ctx context.Context, tenantId int64, v *Variable, tx
 	for _, teamId := range teamIds {
 		v.TeamId = teamId
 		err = ImportVariable(ctx, v, tx)
-		if err != nil {
+		if err != nil && !e.IsErrUniqueConstraint(err) {
 			return err
 		}
 	}

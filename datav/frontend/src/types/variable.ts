@@ -28,6 +28,7 @@ export interface Variable {
   enableAll?: boolean
   sortWeight?: number
   teamId?: number
+  templateId?: number
 }
 
 export enum VariableQueryType {

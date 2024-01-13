@@ -197,7 +197,7 @@ func (s *Server) Start() error {
 		r.POST("/team/leave/:id", MustLogin(), teams.LeaveTeam)
 
 		// template apis
-		r.GET("/template/byId/:type/:id", MustLogin(), template.GetTemplate)
+		r.GET("/template/byId/:id", MustLogin(), template.GetTemplate)
 		r.GET("/template/byScope/:type/:id", MustLogin(), template.GetScopeTemplates)
 		r.GET("/template/use/byScope/:type/:id", MustLogin(), template.GetScopeUseTemplates)
 		r.DELETE("/template/use/:scope/:scopeId/:templateId/:removeType", MustLogin(), template.RemoveTemplateUse)

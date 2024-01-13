@@ -81,7 +81,7 @@ const AdminUsers = () => {
   }, [])
 
   const config = useStore($config)
-  const adminLinks = getAdminLinks(config.currentTeam)
+  const adminLinks = getAdminLinks()
 
   const [userInEdit, setUserInEdit] = useState<User>()
   const [password, setPassword] = useState<string>('')

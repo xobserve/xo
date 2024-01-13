@@ -23,6 +23,7 @@ import {
   Thead,
   Tr,
   Flex,
+  HStack,
 } from '@chakra-ui/react'
 import { useStore } from '@nanostores/react'
 import moment from 'moment'
@@ -35,6 +36,7 @@ import { Team } from 'types/teams'
 import { requestApi } from 'utils/axios/request'
 import Loading from 'src/components/loading/Loading'
 import { navigateTo } from 'utils/url'
+import TemplateBadge from 'src/views/template/TemplateBadge'
 
 const TeamDashboards = ({ team }: { team: Team }) => {
   const t = useStore(commonMsg)
@@ -83,7 +85,14 @@ const TeamDashboards = ({ team }: { team: Team }) => {
                 {dashboards?.map((dash) => {
                   return (
                     <Tr key={dash.id}>
-                      <Td>{dash.title}</Td>
+                      <Td>
+                        <HStack>
+                          <Text> {dash.title}</Text>
+                          {dash.templateId != 0 && (
+                            <TemplateBadge templateId={dash.templateId} />
+                          )}
+                        </HStack>
+                      </Td>
                       <Td>{dash.id}</Td>
                       <Td>{moment(dash.created).fromNow()}</Td>
                       <Td>{moment(dash.updated).fromNow()}</Td>

@@ -43,6 +43,7 @@ import {
   AlertDialogBody,
   AlertDialogFooter,
   useMediaQuery,
+  HStack,
 } from '@chakra-ui/react'
 import { DetailAlert, DetailAlertItem } from 'src/components/DetailAlert'
 import RadionButtons from 'src/components/RadioButtons'
@@ -79,6 +80,7 @@ import { externalDatasourcePlugins } from 'src/views/dashboard/plugins/external/
 import Loading from 'components/loading/Loading'
 import { builtinDatasourcePlugins } from 'src/views/dashboard/plugins/built-in/plugins'
 import { $variables } from 'src/views/variables/store'
+import TemplateBadge from 'src/views/template/TemplateBadge'
 
 const TeamVariablesPage = ({ team }: { team: Team }) => {
   const t = useStore(commonMsg)
@@ -272,8 +274,9 @@ export const VariablesTable = ({ variables, onEdit, onRemove }: TableProps) => {
                 <Th>{t.itemName({ name: t.variable })}</Th>
                 {isLargeScreen && (
                   <>
-                    <Th>{t1.queryType}</Th>
-                    <Th>{t.datasource}</Th>
+                    {/* <Th>{t1.queryType}</Th>
+                    <Th>{t.datasource}</Th> */}
+                    <Th>Refresh</Th>
                     <Th>{t.description}</Th>
                     <Th>{t.sortWeight}</Th>
                   </>
@@ -294,18 +297,40 @@ export const VariablesTable = ({ variables, onEdit, onRemove }: TableProps) => {
                           : ''
                       }`}
                     >
-                      <Td>{variable.name}</Td>
+                      <Td>
+                        <HStack>
+                          <Text>{variable.name}</Text>
+                          {variable.templateId != 0 && (
+                            <TemplateBadge templateId={variable.templateId} />
+                          )}
+                        </HStack>
+                      </Td>
                       {isLargeScreen && (
                         <>
-                          <Td>{t[variable.type]}</Td>
+                          {/* <Td>{t[variable.type]}</Td>
                           <Td>
                             {
                               datasources?.find(
                                 (ds) => ds.id == variable.datasource,
                               )?.name
                             }
+                          </Td> */}
+                          <Td>
+                            {t1[variable.refresh]}{' '}
+                            {variable.refresh == VariableRefresh.Manually && (
+                              <Button
+                                size='sm'
+                                mt='-1'
+                                variant='ghost'
+                                ml='1'
+                                onClick={() =>
+                                  reloadValues(variable.id, variable.name)
+                                }
+                              >
+                                {t1.reload}
+                              </Button>
+                            )}
                           </Td>
-                          {/* <Td>{t1[variable.refresh]} {variable.refresh == VariableRefresh.Manually && <Button size="sm" mt="-1" variant="ghost" ml="1" onClick={() => reloadValues(variable.id, variable.name)}>{t1.reload}</Button>}</Td> */}
                           <Td>{variable.description}</Td>
                           <Td>{variable.sortWeight}</Td>
                         </>

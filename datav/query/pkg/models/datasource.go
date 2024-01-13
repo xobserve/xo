@@ -29,6 +29,7 @@ import (
 	"time"
 
 	"github.com/xObserve/xObserve/query/pkg/common"
+	"github.com/xObserve/xObserve/query/pkg/e"
 )
 
 type Datasource struct {
@@ -85,7 +86,7 @@ func CreateDatasourceInTenant(ctx context.Context, tenantId int64, ds *Datasourc
 	for _, teamId := range teamIds {
 		ds.TeamId = teamId
 		err = ImportDatasource(ctx, ds, tx)
-		if err != nil {
+		if err != nil && !e.IsErrUniqueConstraint(err) {
 			return err
 		}
 	}

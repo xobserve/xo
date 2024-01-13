@@ -51,6 +51,7 @@ import { externalDatasourcePlugins } from 'src/views/dashboard/plugins/external/
 import Loading from 'components/loading/Loading'
 import { builtinDatasourcePlugins } from 'src/views/dashboard/plugins/built-in/plugins'
 import { navigateTo } from 'utils/url'
+import TemplateBadge from 'src/views/template/TemplateBadge'
 
 const TeamDatasources = ({ team }: { team: Team }) => {
   const t = useStore(commonMsg)
@@ -245,7 +246,22 @@ const TeamDatasources = ({ team }: { team: Team }) => {
 
 export default TeamDatasources
 
-const DatasourceCard = ({ ds, selectedDs, plugin, onEdit, onDelete, t }) => {
+interface DatasourceCardProps {
+  ds: Datasource
+  selectedDs: Datasource
+  plugin: any
+  onEdit: () => void
+  onDelete: () => void
+  t: any
+}
+const DatasourceCard = ({
+  ds,
+  selectedDs,
+  plugin,
+  onEdit,
+  onDelete,
+  t,
+}: DatasourceCardProps) => {
   return (
     <Flex
       key={ds.id}
@@ -259,6 +275,9 @@ const DatasourceCard = ({ ds, selectedDs, plugin, onEdit, onDelete, t }) => {
         <Box>
           <HStack>
             <Text fontWeight='550'>{ds.name}</Text>
+            {ds.templateId != 0 && (
+              <TemplateBadge templateId={ds.templateId} unlinkTemplate={null} />
+            )}
             {!plugin && (
               <Tag colorScheme='red' size='sm'>
                 {ds.type} plugin not installed

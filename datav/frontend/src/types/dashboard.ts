@@ -32,6 +32,7 @@ export interface Dashboard {
   createdBy?: string
   created?: string
   updated?: string
+  templateId?: number
   updateChanges?: string
 }
 

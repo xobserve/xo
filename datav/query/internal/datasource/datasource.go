@@ -52,7 +52,7 @@ func InitDatasources() {
 
 		var rows *sql.Rows
 		var err error
-		rows, err = db.Conn.QueryContext(context.Background(), "SELECT id,name,type,url,team_id,data, created FROM datasource")
+		rows, err = db.Conn.QueryContext(context.Background(), "SELECT id,name,type,url,team_id,data,template_id, created FROM datasource")
 
 		if err != nil {
 			logger.Warn("get datasource error", "error", err)
@@ -64,7 +64,7 @@ func InitDatasources() {
 		for rows.Next() {
 			ds := &models.Datasource{}
 			var rawdata []byte
-			err := rows.Scan(&ds.Id, &ds.Name, &ds.Type, &ds.URL, &ds.TeamId, &rawdata, &ds.Created)
+			err := rows.Scan(&ds.Id, &ds.Name, &ds.Type, &ds.URL, &ds.TeamId, &rawdata, &ds.TemplateId, &ds.Created)
 			if err != nil {
 				logger.Warn("scan datasource error", "error", err)
 				continue
@@ -209,7 +209,7 @@ func GetDatasourcesByTeamId(ctx context.Context, teamId int64) ([]*models.Dataso
 
 	var rows *sql.Rows
 
-	rows, err := db.Conn.QueryContext(ctx, "SELECT id,name,type,url,team_id,data, created FROM datasource WHERE team_id=?", teamId)
+	rows, err := db.Conn.QueryContext(ctx, "SELECT id,name,type,url,team_id,data,template_id, created FROM datasource WHERE team_id=?", teamId)
 
 	if err != nil {
 		return nil, err
@@ -218,7 +218,7 @@ func GetDatasourcesByTeamId(ctx context.Context, teamId int64) ([]*models.Dataso
 	for rows.Next() {
 		ds := &models.Datasource{}
 		var rawdata []byte
-		err := rows.Scan(&ds.Id, &ds.Name, &ds.Type, &ds.URL, &ds.TeamId, &rawdata, &ds.Created)
+		err := rows.Scan(&ds.Id, &ds.Name, &ds.Type, &ds.URL, &ds.TeamId, &rawdata, &ds.TemplateId, &ds.Created)
 		if err != nil {
 			return nil, err
 		}
@@ -272,7 +272,7 @@ func GetDatasource(ctx context.Context, teamId, id int64) (*models.Datasource, e
 	if !ok {
 		ds := &models.Datasource{}
 		var rawdata []byte
-		err := db.Conn.QueryRowContext(ctx, "SELECT name,type,url,data, created FROM datasource WHERE team_id=? and id=?", teamId, id).Scan(&ds.Name, &ds.Type, &ds.URL, &rawdata, &ds.Created)
+		err := db.Conn.QueryRowContext(ctx, "SELECT name,type,url,data, template_id, created FROM datasource WHERE team_id=? and id=?", teamId, id).Scan(&ds.Name, &ds.Type, &ds.URL, &rawdata, &ds.TemplateId, &ds.Created)
 		if err != nil {
 			return nil, err
 		}

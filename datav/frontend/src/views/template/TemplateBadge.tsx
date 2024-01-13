@@ -32,10 +32,10 @@ import TemplateCard from './TemplateCard'
 
 interface Props {
   templateId: number
-  unlinkTemplate: any
+  unlinkTemplate?: any
 }
 
-const TemplateBadge = ({ templateId, unlinkTemplate }: Props) => {
+const TemplateBadge = ({ templateId, unlinkTemplate = null }: Props) => {
   const lang = useStore(locale)
   const [template, setTemplate] = useState<Template>(null)
   const onOpen = async () => {
@@ -72,12 +72,14 @@ const TemplateBadge = ({ templateId, unlinkTemplate }: Props) => {
               alignItems='center'
             >
               {lang == 'zh'
-                ? '图表引用了以下模版'
-                : 'This panel refers to below template'}
+                ? '对象引用了以下模版'
+                : 'This object refers to below template'}
 
-              <Button size='md' variant='outline' onClick={unlinkTemplate}>
-                {lang == 'zh' ? '取消模版引用' : 'Unlink'}
-              </Button>
+              {unlinkTemplate && (
+                <Button size='md' variant='outline' onClick={unlinkTemplate}>
+                  {lang == 'zh' ? '取消模版引用' : 'Unlink'}
+                </Button>
+              )}
             </PopoverHeader>
             <PopoverBody>
               {template && <TemplateCard template={template} width='100%' />}

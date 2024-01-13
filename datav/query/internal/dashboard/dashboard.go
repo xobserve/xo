@@ -213,7 +213,7 @@ func GetTeamDashboards(c *gin.Context) {
 
 	dashboards := make([]*models.Dashboard, 0)
 
-	rows, err := db.Conn.QueryContext(c.Request.Context(), "SELECT id,title, created, updated FROM dashboard WHERE team_id=?", teamId)
+	rows, err := db.Conn.QueryContext(c.Request.Context(), "SELECT id,title, created, updated,template_id FROM dashboard WHERE team_id=?", teamId)
 	if err != nil {
 		logger.Warn("query team dashboards error", "error", err)
 		c.JSON(500, common.RespError(e.Internal))
@@ -222,7 +222,7 @@ func GetTeamDashboards(c *gin.Context) {
 	defer rows.Close()
 	for rows.Next() {
 		dash := &models.Dashboard{}
-		err = rows.Scan(&dash.Id, &dash.Title, &dash.Created, &dash.Updated)
+		err = rows.Scan(&dash.Id, &dash.Title, &dash.Created, &dash.Updated, &dash.TemplateId)
 		if err != nil {
 			logger.Warn("scan dashboard error", "error", err)
 			c.JSON(500, common.RespError(e.Internal))
@@ -260,7 +260,7 @@ func Search(c *gin.Context) {
 		teamIds = append(teamIds, strconv.FormatInt(team, 10))
 	}
 
-	rows, err := db.Conn.QueryContext(c.Request.Context(), fmt.Sprintf("SELECT dashboard.id,dashboard.title, dashboard.team_id,team.name,dashboard.visible_to, dashboard.tags, dashboard.weight FROM dashboard INNER JOIN team ON dashboard.team_id = team.id WHERE dashboard.team_id in ('%s') ORDER BY dashboard.weight DESC,dashboard.created DESC", strings.Join(teamIds, "','")))
+	rows, err := db.Conn.QueryContext(c.Request.Context(), fmt.Sprintf("SELECT dashboard.id,dashboard.title, dashboard.team_id,team.name,dashboard.visible_to, dashboard.tags, dashboard.weight,dashboard.template_id FROM dashboard INNER JOIN team ON dashboard.team_id = team.id WHERE dashboard.team_id in ('%s') ORDER BY dashboard.weight DESC,dashboard.created DESC", strings.Join(teamIds, "','")))
 	if err != nil {
 		logger.Warn("query simple dashboards error", "error", err)
 		c.JSON(500, common.RespError(e.Internal))
@@ -270,7 +270,7 @@ func Search(c *gin.Context) {
 	for rows.Next() {
 		dash := &models.Dashboard{}
 		var rawTags []byte
-		err = rows.Scan(&dash.Id, &dash.Title, &dash.OwnedBy, &dash.OwnerName, &dash.VisibleTo, &rawTags, &dash.SortWeight)
+		err = rows.Scan(&dash.Id, &dash.Title, &dash.OwnedBy, &dash.OwnerName, &dash.VisibleTo, &rawTags, &dash.SortWeight, &dash.TemplateId)
 		if err != nil {
 			logger.Warn("get simple dashboards scan error", "error", err)
 			c.JSON(500, common.RespError(e.Internal))
