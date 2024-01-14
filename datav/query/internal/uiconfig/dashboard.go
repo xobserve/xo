@@ -112,22 +112,24 @@ func GetDashboardConfig(c *gin.Context) {
 		dash, err := models.QueryDashboard(c.Request.Context(), teamId, dashId)
 		if err != nil {
 			if err == sql.ErrNoRows {
-				// if rawpath == "/" || rawpath == "" {
-				// 	c.JSON(200, common.RespSuccess(map[string]interface{}{
-				// 		"cfg":    cfg,
-				// 		"path":   fmt.Sprintf("/%d/cfg/team/dashboards", teamId),
-				// 		"reload": true,
-				// 	}))
-				// 	return
-				// }
-				// c.JSON(400, common.RespError(fmt.Sprintf("dashboard of team %d not exist", teamId)))
-				// return
+				cfg.Sidemenu = sidemenu
+				cfg.CurrentTenant = tenantId
+				cfg.CurrentTeam = teamId
+				if rawpath == "/" || rawpath == "" {
+					c.JSON(200, common.RespSuccess(map[string]interface{}{
+						"cfg":    cfg,
+						"path":   fmt.Sprintf("/%d%s", teamId, path),
+						"reload": true,
+					}))
+					return
+				}
+
 				c.JSON(200, common.RespSuccess(map[string]interface{}{
-					"cfg":    cfg,
-					"path":   fmt.Sprintf("/%d/cfg/team/dashboards", teamId),
-					"reload": true,
+					"cfg": cfg,
 				}))
+				// c.JSON(400, common.RespError(fmt.Sprintf("dashboard of team %d not exist", teamId)))
 				return
+
 			}
 			logger.Warn("get dashboard error", "error", err)
 			c.JSON(500, common.RespError(err.Error()))

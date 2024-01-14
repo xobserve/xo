@@ -83,9 +83,7 @@ const UserMenu = ({ miniMode }) => {
   }, [config, session])
 
   const loadTeams = async () => {
-    const res = await requestApi.get(
-      `/team/user/is/in?tenantId=${config?.currentTenant}`,
-    )
+    const res = await requestApi.get(`/team/user/is/in?teamId=${teamId}`)
     setTeams(res.data)
   }
 

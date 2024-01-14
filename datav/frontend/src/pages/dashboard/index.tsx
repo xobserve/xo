@@ -56,8 +56,12 @@ const DashboardPageWrapper = memo(({ sideWidth }: Props) => {
         return
       }
       const cfg = res.data.cfg
-      cfg.sidemenu = (cfg.sidemenu as any).data.filter((item) => !item.hidden)
+      cfg.sidemenu = (cfg.sidemenu as any)?.data.filter((item) => !item.hidden)
       $config.set(cfg)
+      if (!res.data.dashboard) {
+        setError('Dashboard not found')
+        return
+      }
       $teams.set(res.data.teams)
       $datasources.set(res.data.datasources)
       initVariableSelected(res.data.variables)

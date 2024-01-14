@@ -704,13 +704,25 @@ func SetTeamForUser(ctx context.Context, teamId string, userId int64) error {
 }
 
 func GetTeamsForUser(c *gin.Context) {
-	tenantId, _ := strconv.ParseInt(c.Query("tenantId"), 10, 64)
+	teamId, _ := strconv.ParseInt(c.Query("teamId"), 10, 64)
+	if teamId == 0 {
+		c.JSON(400, common.RespError(e.ParamInvalid))
+		return
+	}
 
 	u := c.MustGet("currentUser").(*models.User)
-	if tenantId == 0 {
-		tenantId = u.CurrentTenant
-	}
 	teams := make([]*models.Team, 0)
+
+	tenantId, err := models.QueryTenantIdByTeamId(c.Request.Context(), teamId)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			c.JSON(400, common.RespError("team not exist"))
+			return
+		}
+		logger.Warn("query tenant id by team id error", "error", err)
+		c.JSON(400, common.RespInternalError())
+		return
+	}
 
 	teams0, err := models.QueryTeamsUserInTenant(c.Request.Context(), tenantId, u.Id)
 	if err != nil {
