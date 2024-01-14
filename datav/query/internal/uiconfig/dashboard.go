@@ -92,18 +92,28 @@ func GetDashboardConfig(c *gin.Context) {
 
 		var dashId string
 		if teamId0 == 0 || path == "" || path == "/" {
-			dashId = menuItems[0].DashboardId
-			path = menuItems[0].Url
-		} else {
 			for _, m := range menuItems {
-				if m.Url == path {
-					dashId = m.DashboardId
+				if len(m) > 0 {
+					dashId = m[0].DashboardId
+					path = m[0].Url
 					break
 				}
-				for _, sub := range m.Children {
-					if sub.Url == path {
-						dashId = m.DashboardId
-						break
+			}
+		} else {
+		LOOP:
+			for _, m1 := range menuItems {
+				if len(m1) > 0 {
+					for _, m := range m1 {
+						if m.Url == path {
+							dashId = m.DashboardId
+							break LOOP
+						}
+						for _, sub := range m.Children {
+							if sub.Url == path {
+								dashId = m.DashboardId
+								break LOOP
+							}
+						}
 					}
 				}
 			}

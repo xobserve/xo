@@ -61,6 +61,7 @@ type TemplateExport struct {
 	Dashboards  []*Dashboard  `json:"dashboards"`
 	Datasources []*Datasource `json:"datasources"`
 	Variables   []*Variable   `json:"variables"`
+	SideMenu    []*MenuItem   `json:"sideMenu"`
 }
 
 func QueryTemplateById(ctx context.Context, id int64) (*Template, error) {
@@ -280,6 +281,13 @@ func CreateResourcesByTemplateExport(ctx context.Context, templateId int64, temp
 	for _, v := range templateExport.Variables {
 		v.TemplateId = templateId
 		err := CreateVariableInScope(ctx, scopeType, scopeId, v, tx)
+		if err != nil && !e.IsErrUniqueConstraint(err) {
+			return err
+		}
+	}
+
+	if templateExport.SideMenu != nil {
+		err := CreateSidemenuInScope(ctx, templateId, scopeType, scopeId, templateExport.SideMenu, tx)
 		if err != nil && !e.IsErrUniqueConstraint(err) {
 			return err
 		}

@@ -87,3 +87,14 @@ func ImportVariable(ctx context.Context, v *Variable, tx *sql.Tx) error {
 
 	return nil
 }
+
+func ImportSidemenu(ctx context.Context, templateId int64, teamId int64, sidemenu []*MenuItem, tx *sql.Tx) error {
+	// oldSidemenu, err := QuerySideMenu(ctx, teamId)
+	// if err != nil {
+	// 	return err
+	// }
+
+	// newSidemenu := make([]*MenuItem, 0)
+
+	return nil
+}

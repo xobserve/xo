@@ -197,10 +197,10 @@ const (
 )
 
 type SideMenu struct {
-	TeamId   int64       `json:"teamId"`
-	TeamName string      `json:"teamName"`
-	Brief    string      `json:"brief"`
-	Data     []*MenuItem `json:"data"`
+	TeamId   int64         `json:"teamId"`
+	TeamName string        `json:"teamName"`
+	Brief    string        `json:"brief"`
+	Data     [][]*MenuItem `json:"data"`
 }
 
 type MenuItem struct {
@@ -209,12 +209,14 @@ type MenuItem struct {
 	DashboardId string         `json:"dashboardId"`
 	Icon        string         `json:"icon,omitempty"`
 	Children    []*SubMenuItem `json:"children"`
+	TemplateId  int64          `json:"templateId"`
 }
 
 type SubMenuItem struct {
 	Url         string `json:"url"`
 	Title       string `json:"title"`
 	DashboardId string `json:"dashboardId"`
+	TemplateId  int64  `json:"templateId"`
 }
 
 func QuerySideMenu(ctx context.Context, id int64) (*SideMenu, error) {
@@ -302,20 +304,18 @@ func CreateTeam(ctx context.Context, tx *sql.Tx, tenantId int64, userId int64, n
 	}
 
 	// init sidemenu
-	initSidemenu := []map[string]interface{}{
+	initSidemenu := []*MenuItem{
 		{
-			"title":       "Home",
-			"url":         "/home",
-			"icon":        "FaHome",
-			"dashboardId": d.Id,
+			Title:       "Home",
+			Url:         "/home",
+			Icon:        "FaHome",
+			DashboardId: d.Id,
 		},
 	}
-	menuStr, err := json.Marshal(initSidemenu)
-	if err != nil {
-		return 0, fmt.Errorf("json encode default menu error: %w", err)
-	}
 
-	_, err = tx.ExecContext(ctx, "UPDATE team SET sidemenu=? WHERE id=?", menuStr, id)
+	err = UpdateSideMenu(ctx, id, [][]*MenuItem{
+		initSidemenu,
+	}, tx)
 	if err != nil {
 		return 0, fmt.Errorf("update team sidemenu error: %w", err)
 	}
@@ -449,4 +449,59 @@ func DeleteTeam(ctx context.Context, teamId int64, tx *sql.Tx) error {
 	}
 
 	return nil
+}
+
+func CreateSidemenuInScope(ctx context.Context, templateId int64, scopeType int, scopeId int64, v []*MenuItem, tx *sql.Tx) error {
+	if scopeType == common.ScopeTeam {
+		return ImportSidemenu(ctx, templateId, scopeId, v, tx)
+	}
+
+	if scopeType == common.ScopeTenant {
+		return CreateSideMenuInTenant(ctx, templateId, scopeId, v, tx)
+	}
+
+	// scope website
+	tenants, err := QueryAllTenantIds(ctx)
+	if err != nil {
+		return err
+	}
+
+	for _, tenantId := range tenants {
+		err = CreateSideMenuInTenant(ctx, templateId, tenantId, v, tx)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func CreateSideMenuInTenant(ctx context.Context, templateId int64, tenantId int64, v []*MenuItem, tx *sql.Tx) error {
+	teamIds, err := QueryTenantAllTeamIds(tenantId)
+	if err != nil {
+		return err
+	}
+
+	for _, teamId := range teamIds {
+		err = ImportSidemenu(ctx, templateId, teamId, v, tx)
+		if err != nil && !e.IsErrUniqueConstraint(err) {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func UpdateSideMenu(ctx context.Context, teamId int64, menu [][]*MenuItem, tx *sql.Tx) error {
+	data, err := json.Marshal(menu)
+	if err != nil {
+		return err
+	}
+	_, err = tx.ExecContext(ctx, "UPDATE team SET sidemenu=?,updated=? WHERE id=?", data, time.Now(), teamId)
+	if err != nil {
+		return err
+	}
+
+	return nil
+
 }
