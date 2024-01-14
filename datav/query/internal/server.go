@@ -211,6 +211,7 @@ func (s *Server) Start() error {
 		r.POST("/template/content/byIds", MustLogin(), template.GetTemplateContentsByIds)
 		r.GET("/template/content/newest/:id", MustLogin(), template.GetTemplateNewestVersion)
 		r.POST("/template/use", MustLogin(), template.UseTemplate)
+		r.GET("/template/export/team/:id", MustLogin(), template.ExportTeamAsTemplate)
 
 		// proxy apis
 		r.Any("/proxy/:teamId/:id/*path", proxy.ProxyDatasource)

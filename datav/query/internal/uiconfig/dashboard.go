@@ -18,6 +18,7 @@ import (
 )
 
 func GetDashboardConfig(c *gin.Context) {
+	rawpath := strings.TrimSpace(c.Query("path"))
 	path := strings.TrimSpace(c.Query("path"))
 	teamId0, _ := strconv.ParseInt(c.Query("teamId"), 10, 64)
 	var tenantId int64
@@ -27,7 +28,7 @@ func GetDashboardConfig(c *gin.Context) {
 
 	var dashboard *models.Dashboard
 	var sidemenu *models.SideMenu
-	if strings.HasPrefix(path, "/"+models.DashboardIdPrefix) {
+	if strings.HasPrefix(path, "/"+models.DashboardIdPrefix) { // access dashboard by id
 		id := path[1:]
 		dash, err := models.QueryDashboard(c.Request.Context(), teamId0, id)
 		if err != nil {
@@ -59,7 +60,7 @@ func GetDashboardConfig(c *gin.Context) {
 				return
 			}
 		}
-	} else {
+	} else { // access dashboard in sidemenu
 		var err error
 		tenantId, teamId, err = getUserRealTeam(teamId0, u, c.Request.Context())
 		if err != nil {
@@ -111,7 +112,21 @@ func GetDashboardConfig(c *gin.Context) {
 		dash, err := models.QueryDashboard(c.Request.Context(), teamId, dashId)
 		if err != nil {
 			if err == sql.ErrNoRows {
-				c.JSON(400, common.RespError(fmt.Sprintf("dashboard of team %d not exist", teamId)))
+				// if rawpath == "/" || rawpath == "" {
+				// 	c.JSON(200, common.RespSuccess(map[string]interface{}{
+				// 		"cfg":    cfg,
+				// 		"path":   fmt.Sprintf("/%d/cfg/team/dashboards", teamId),
+				// 		"reload": true,
+				// 	}))
+				// 	return
+				// }
+				// c.JSON(400, common.RespError(fmt.Sprintf("dashboard of team %d not exist", teamId)))
+				// return
+				c.JSON(200, common.RespSuccess(map[string]interface{}{
+					"cfg":    cfg,
+					"path":   fmt.Sprintf("/%d/cfg/team/dashboards", teamId),
+					"reload": true,
+				}))
 				return
 			}
 			logger.Warn("get dashboard error", "error", err)

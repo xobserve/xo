@@ -26,7 +26,6 @@ import {
   AlertDialogHeader,
   AlertDialogOverlay,
   HStack,
-  FormLabel,
   Switch,
   Modal,
   ModalBody,
@@ -40,15 +39,18 @@ import { Form, FormSection } from 'src/components/form/Form'
 import FormItem from 'src/components/form/Item'
 import { cloneDeep } from 'lodash'
 import { useRef, useState } from 'react'
-import { Team } from 'types/teams'
+import { MenuItem, Team } from 'types/teams'
 import { requestApi } from 'utils/axios/request'
 import { useStore } from '@nanostores/react'
 import { cfgTeam, commonMsg } from 'src/i18n/locales/en'
 import { $teams } from 'src/views/team/store'
-import { Role, isSuperAdmin } from 'types/role'
+import { isSuperAdmin } from 'types/role'
 import { $config } from 'src/data/configs/config'
 import { isEmpty } from 'utils/validate'
 import { navigateTo } from 'utils/url'
+import { Dashboard } from 'types/dashboard'
+import TemplateExport from 'src/views/template/TemplateExport'
+import { TemplateType } from 'types/template'
 
 const TeamSettings = (props: { team: Team }) => {
   const t = useStore(commonMsg)
@@ -59,6 +61,10 @@ const TeamSettings = (props: { team: Team }) => {
 
   const [transferTo, setTransferTo] = useState<string>(null)
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const [appTemplate, setAppTemplate] = useState<{
+    dashboards: Dashboard[]
+    sidemenu: MenuItem[]
+  }>(null)
   const {
     isOpen: isLeaveOpen,
     onOpen: onLeaveOpen,
@@ -141,6 +147,11 @@ const TeamSettings = (props: { team: Team }) => {
     }, 1000)
   }
 
+  const onExport = async () => {
+    const res = await requestApi.get(`/template/export/team/${team.id}`)
+    setAppTemplate(res.data)
+  }
+
   return (
     <>
       <Box>
@@ -174,7 +185,20 @@ const TeamSettings = (props: { team: Team }) => {
           <Button width='fit-content' size='sm' onClick={updateTeam}>
             {t.submit}
           </Button>
-
+          <FormSection title={t.advanceSetting}>
+            <FormItem
+              title={'Export app template'}
+              desc={
+                'Export team dashboards and sidemenu as App template to reuse in other teams.'
+              }
+              labelWidth='150px'
+              alignItems='center'
+            >
+              <Button onClick={onExport} variant='ghost'>
+                {t.export}
+              </Button>
+            </FormItem>
+          </FormSection>
           <FormSection title={t.dangeSection}>
             {isSuperAdmin(config.teamRole) ? (
               <HStack>
@@ -320,6 +344,11 @@ const TeamSettings = (props: { team: Team }) => {
           )}
         </AlertDialogOverlay>
       </AlertDialog>
+      <TemplateExport
+        type={TemplateType.App}
+        data={appTemplate}
+        onClose={() => setAppTemplate(null)}
+      />
     </>
   )
 }

@@ -109,6 +109,7 @@ CREATE TABLE IF NOT EXISTS dashboard (
     data MEDIUMTEXT,
     weight SMALLINT DEFAULT 0,
     template_id INTEGER DEFAULT 0, 
+    editable BOOL DEFAULT true,
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL
 );

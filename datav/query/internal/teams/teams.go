@@ -705,12 +705,11 @@ func SetTeamForUser(ctx context.Context, teamId string, userId int64) error {
 
 func GetTeamsForUser(c *gin.Context) {
 	tenantId, _ := strconv.ParseInt(c.Query("tenantId"), 10, 64)
-	if tenantId == 0 {
-		c.JSON(400, common.RespError(e.ParamInvalid))
-		return
-	}
 
 	u := c.MustGet("currentUser").(*models.User)
+	if tenantId == 0 {
+		tenantId = u.CurrentTenant
+	}
 	teams := make([]*models.Team, 0)
 
 	teams0, err := models.QueryTeamsUserInTenant(c.Request.Context(), tenantId, u.Id)

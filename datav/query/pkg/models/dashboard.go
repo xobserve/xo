@@ -65,29 +65,22 @@ type Dashboard struct {
 	Variables  []*Variable `json:"variables,omitempty"`
 }
 
+const queryDashboardBase = "SELECT id,title,tags,data,team_id,visible_to,weight,updated,editable,template_id FROM dashboard"
+
 func QueryDashboard(ctx context.Context, teamId int64, id string) (*Dashboard, error) {
 	dash := &Dashboard{}
 
 	var rawJSON []byte
 	var rawTags []byte
-	err := db.Conn.QueryRowContext(ctx, "SELECT title,tags,data,team_id,visible_to,weight,updated FROM dashboard WHERE team_id=? and id = ?", teamId, id).Scan(&dash.Title, &rawTags, &rawJSON, &dash.OwnedBy, &dash.VisibleTo, &dash.SortWeight, &dash.Updated)
+	err := db.Conn.QueryRowContext(ctx, queryDashboardBase+" WHERE team_id=? and id = ?", teamId, id).Scan(&dash.Id, &dash.Title, &rawTags, &rawJSON, &dash.OwnedBy, &dash.VisibleTo, &dash.SortWeight, &dash.Updated, &dash.Editable, &dash.TemplateId)
 	if err != nil {
 		return nil, err
 	}
 
-	data := simplejson.New()
-	err = data.UnmarshalJSON(rawJSON)
+	err = initDashboard(ctx, dash, rawTags, rawJSON)
 	if err != nil {
 		return nil, err
 	}
-	dash.Data = data
-
-	tags := make([]string, 0)
-	err = json.Unmarshal(rawTags, &tags)
-	if err != nil {
-		return nil, err
-	}
-	dash.Tags = tags
 
 	teamName, _ := QueryTeamNameById(ctx, dash.OwnedBy)
 	if teamName == "" {
@@ -95,10 +88,25 @@ func QueryDashboard(ctx context.Context, teamId int64, id string) (*Dashboard, e
 	}
 	dash.OwnerName = teamName
 
-	dash.Editable = true
-
-	dash.Id = id
 	return dash, nil
+}
+
+func initDashboard(ctx context.Context, dash *Dashboard, rawTags []byte, rawJSON []byte) error {
+	data := simplejson.New()
+	err := data.UnmarshalJSON(rawJSON)
+	if err != nil {
+		return err
+	}
+	dash.Data = data
+
+	tags := make([]string, 0)
+	err = json.Unmarshal(rawTags, &tags)
+	if err != nil {
+		return err
+	}
+	dash.Tags = tags
+
+	return nil
 }
 
 func QuertyDashboardStared(ctx context.Context, userId int64, teamId int64, dashId string) (bool, error) {
@@ -113,14 +121,21 @@ func QuertyDashboardStared(ctx context.Context, userId int64, teamId int64, dash
 
 func QueryDashboardsByTeamId(ctx context.Context, teamId int64) ([]*Dashboard, error) {
 	dashboards := make([]*Dashboard, 0)
-	rows, err := db.Conn.QueryContext(ctx, `SELECT id FROM dashboard WHERE team_id=?`, teamId)
+	rows, err := db.Conn.QueryContext(ctx, queryDashboardBase+` WHERE team_id=?`, teamId)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 	for rows.Next() {
-		dash := &Dashboard{OwnedBy: teamId}
-		err := rows.Scan(&dash.Id)
+		dash := &Dashboard{}
+		var rawJSON []byte
+		var rawTags []byte
+		err := rows.Scan(&dash.Id, &dash.Title, &rawTags, &rawJSON, &dash.OwnedBy, &dash.VisibleTo, &dash.SortWeight, &dash.Updated, &dash.Editable, &dash.TemplateId)
+		if err != nil {
+			return nil, err
+		}
+
+		err = initDashboard(ctx, dash, rawTags, rawJSON)
 		if err != nil {
 			return nil, err
 		}

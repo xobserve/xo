@@ -379,7 +379,7 @@ func QueryTeamsUserIn(ctx context.Context, userId int64) ([]int64, error) {
 
 func QueryTeamsUserInTenant(ctx context.Context, tenantId, userId int64) ([]*Team, error) {
 	teams := make([]*Team, 0)
-	rows, err := db.Conn.QueryContext(ctx, "SELECT team_member.team_id, team.name FROM team_member INNER JOIN team ON team_member.team_id=team.id WHERE team_member.user_id=? and team_member.tenant_id=? ORDER BY team_member.team_id", userId, tenantId)
+	rows, err := db.Conn.QueryContext(ctx, "SELECT team_member.team_id, team.name FROM team_member INNER JOIN team ON team_member.team_id=team.id WHERE team_member.user_id=? and team_member.tenant_id=? and team.status!=? ORDER BY team_member.team_id", userId, tenantId, common.StatusDeleted)
 	if err != nil && err != sql.ErrNoRows {
 		return nil, err
 	}

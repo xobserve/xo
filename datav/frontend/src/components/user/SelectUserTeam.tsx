@@ -36,8 +36,15 @@ import { sidebarMsg } from 'src/i18n/locales/en'
 import { requestApi } from 'utils/axios/request'
 import { isEmpty } from 'utils/validate'
 import { $config } from 'src/data/configs/config'
+import { Team } from 'types/teams'
+import { Session } from 'types/user'
 
-const SelectUserTeam = ({ miniMode, teams }) => {
+interface Props {
+  miniMode: boolean
+  teams: Team[]
+}
+
+const SelectUserTeam = ({ miniMode, teams }: Props) => {
   const t1 = useStore(sidebarMsg)
   const toast = useToast()
   const config = useStore($config)

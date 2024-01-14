@@ -433,3 +433,39 @@ func GetScopeTemplates(c *gin.Context) {
 
 	c.JSON(200, common.RespSuccess(templates))
 }
+
+func ExportTeamAsTemplate(c *gin.Context) {
+	teamId, _ := strconv.ParseInt(c.Param("id"), 10, 64)
+	if teamId == 0 {
+		c.JSON(400, common.RespError("invalid team id"))
+		return
+	}
+
+	u := c.MustGet("currentUser").(*models.User)
+	err := acl.CanEditTeam(c.Request.Context(), teamId, u.Id)
+	if err != nil {
+		c.JSON(403, common.RespError(err.Error()))
+		return
+	}
+
+	// get team dashboards
+	dashboards, err := models.QueryDashboardsByTeamId(c.Request.Context(), teamId)
+	if err != nil {
+		logger.Warn("get dashboards error", "error", err)
+		c.JSON(400, common.RespError(err.Error()))
+		return
+	}
+
+	// get sidemenu
+	sidemenu, err := models.QuerySideMenu(c.Request.Context(), teamId)
+	if err != nil {
+		logger.Warn("get sidemenu error", "error", err)
+		c.JSON(400, common.RespError(err.Error()))
+		return
+	}
+
+	c.JSON(200, common.RespSuccess(map[string]interface{}{
+		"dashboards": dashboards,
+		"sidemenu":   sidemenu,
+	}))
+}
