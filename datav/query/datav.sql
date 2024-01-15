@@ -157,6 +157,19 @@ CREATE INDEX dashboard_team_id_template ON dashboard (team_id, template_id);
 
 CREATE INDEX dashboard_created_by ON dashboard (created_by);
 
+CREATE TABLE IF NOT EXISTS temp_dashboard (
+    team_id INTEGER NOT NULL,
+    id VARCHAR(40) NOT NULL,
+    template_id INTEGER DEFAULT 0,
+    title VARCHAR(255) NOT NULL,
+    visible_to VARCHAR(32) DEFAULT 'team',
+    tags TEXT,
+    weight TINYINT DEFAULT 0,
+    editable BOOL DEFAULT true
+);
+
+CREATE UNIQUE INDEX temp_dashboard_team_dash_id ON temp_dashboard (team_id, id);
+
 CREATE TABLE IF NOT EXISTS dashboard_history (
     team_id INTEGER NOT NULL,
     dashboard_id VARCHAR(40),

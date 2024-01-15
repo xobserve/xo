@@ -253,18 +253,29 @@ func QueryWebsiteUseTemplates() ([]int64, error) {
 	return ids, nil
 }
 
+func QueryTeamUseTemplates(teamId int64) ([]int64, error) {
+	rows, err := db.Conn.Query("SELECT template_id FROM template_use WHERE scope = ? and scope_id=?", common.ScopeTeam, teamId)
+	if err != nil {
+		return nil, err
+	}
+
+	ids := make([]int64, 0)
+	for rows.Next() {
+		var id int64
+		err := rows.Scan(&id)
+		if err != nil {
+			return nil, err
+		}
+		ids = append(ids, id)
+	}
+
+	return ids, nil
+}
+
 func CreateResourcesByTemplateExport(ctx context.Context, templateId int64, templateExport *TemplateExport, scopeType int, scopeId int64, userId int64, tx *sql.Tx) error {
 	for _, dash := range templateExport.Dashboards {
-		newDash := &Dashboard{
-			Id:         dash.Id,
-			TemplateId: templateId,
-			Title:      dash.Title,
-		}
-
-		if newDash.Title == "" {
-			newDash.Title = fmt.Sprintf("Refer from template %d ", templateId)
-		}
-		err := CreateDashboardInScope(ctx, scopeType, scopeId, userId, newDash, tx)
+		dash.TemplateId = templateId
+		err := CreateDashboardInScope(ctx, scopeType, scopeId, userId, dash, tx)
 		if err != nil && !e.IsErrUniqueConstraint(err) {
 			return err
 		}
@@ -287,6 +298,13 @@ func CreateResourcesByTemplateExport(ctx context.Context, templateId int64, temp
 	}
 
 	if templateExport.SideMenu != nil {
+		for _, item := range templateExport.SideMenu {
+			item.TemplateId = templateId
+			for _, subitem := range item.Children {
+				subitem.TemplateId = templateId
+			}
+		}
+
 		err := CreateSidemenuInScope(ctx, templateId, scopeType, scopeId, templateExport.SideMenu, tx)
 		if err != nil && !e.IsErrUniqueConstraint(err) {
 			return err
@@ -356,6 +374,37 @@ func removeTemplateResourcesInTeam(tx *sql.Tx, teamId int64, templateId int64, o
 			return fmt.Errorf("delete variable error: %w", err)
 		}
 
+		// remove sidemenu
+		sidemenu, err := QuerySideMenu(context.Background(), teamId)
+		if err != nil {
+			return err
+		}
+
+		delIndex := -1
+	LOOP:
+		for i, s := range sidemenu.Data {
+			for _, s1 := range s {
+				if s1.TemplateId == templateId {
+					delIndex = i
+					break LOOP
+				}
+			}
+		}
+
+		if delIndex != -1 {
+			newSidemenu := make([][]*MenuItem, 0)
+			for i, s := range sidemenu.Data {
+				if i != delIndex {
+					newSidemenu = append(newSidemenu, s)
+				}
+			}
+			err = UpdateSideMenu(context.Background(), teamId, newSidemenu, tx)
+			if err != nil {
+				return err
+			}
+		}
+
+		return nil
 	}
 
 	return nil

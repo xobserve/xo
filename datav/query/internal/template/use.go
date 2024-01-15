@@ -135,6 +135,15 @@ func UseTemplate(c *gin.Context) {
 
 	// get template content
 	templateExport, err := models.QueryTemplateExportByTemplateId(c.Request.Context(), t.ContentId)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			c.JSON(400, common.RespError("template content not exist"))
+			return
+		}
+		logger.Warn("query template export", "error", err)
+		c.JSON(400, common.RespError(err.Error()))
+		return
+	}
 
 	tx, err := db.Conn.Begin()
 	if err != nil {
@@ -221,6 +230,16 @@ func UseTemplate(c *gin.Context) {
 					c.JSON(400, common.RespInternalError())
 					return
 				}
+			}
+		}
+
+		// import sidemenu
+		if templateExport.SideMenu != nil {
+			err := models.ImportSidemenu(c.Request.Context(), t.Id, req.ScopeId, templateExport.SideMenu, tx)
+			if err != nil && !e.IsErrUniqueConstraint(err) {
+				logger.Warn("import sidemenu error", "error", err)
+				c.JSON(400, common.RespInternalError())
+				return
 			}
 		}
 	} else {

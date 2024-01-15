@@ -50,16 +50,15 @@ import {
 import CreateFromTemplate from './CreateFromTemplate'
 import { requestApi } from 'utils/axios/request'
 import { locale } from 'src/i18n/i18n'
-import { navigateTo } from 'utils/url'
 import TemplateCard from './TemplateCard'
-import { set } from 'lodash'
 
 interface Props {
   scopeId: number
   scopeType: TemplateScope
+  reload?: any
 }
 
-const TemplateList = ({ scopeId, scopeType }: Props) => {
+const TemplateList = ({ scopeId, scopeType, reload = null }: Props) => {
   const t = useStore(commonMsg)
   const lang = useStore(locale)
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -101,17 +100,21 @@ const TemplateList = ({ scopeId, scopeType }: Props) => {
     })
 
     toast({
-      title: lang == 'zh' ? '引用成功' : 'Created successfully',
+      title:
+        lang == 'zh'
+          ? '引用成功, 重载页面...'
+          : 'Created successfully, reloading...',
       status: 'success',
       duration: 3000,
       isClosable: true,
     })
 
-    load()
+    // load()
+    // reload && reload()
 
-    // setTimeout(() => {
-    //   navigateTo(res.data)
-    // }, 1000)
+    setTimeout(() => {
+      window.location.reload()
+    }, 1000)
   }
 
   const onRemoveTemplateUse = async () => {
@@ -124,8 +127,10 @@ const TemplateList = ({ scopeId, scopeType }: Props) => {
       duration: 3000,
       isClosable: true,
     })
-    load()
-    onRemoveClose()
+    // load()
+    // reload && reload()
+    // onRemoveClose()
+    window.location.reload()
   }
   return (
     <>

@@ -48,6 +48,7 @@ import { useSearchParam } from 'react-use'
 import useEmbed from 'hooks/useEmbed'
 import ColorTag from 'components/ColorTag'
 import { addParamToUrl, navigateTo } from 'utils/url'
+import TemplateBadge from '../template/TemplateBadge'
 
 interface HeaderProps {
   dashboard: Dashboard
@@ -112,28 +113,35 @@ const DashboardHeader = memo(
                 )}
                 <Popover trigger='hover'>
                   <PopoverTrigger>
-                    <Box cursor='pointer'>{dashboard.title}</Box>
+                    <HStack>
+                      <Box cursor='pointer'>{dashboard.title}</Box>
+                      {dashboard.templateId != 0 && (
+                        <TemplateBadge templateId={dashboard.templateId} />
+                      )}
+                    </HStack>
                   </PopoverTrigger>
-                  <PopoverContent>
-                    <PopoverBody>
-                      <HStack spacing={2}>
-                        {dashboard.tags.map((tag) => {
-                          return (
-                            <ColorTag
-                              name={tag}
-                              style={{ cursor: 'pointer' }}
-                              onClick={() => {
-                                addParamToUrl({
-                                  search: 'open',
-                                  searchTags: tag,
-                                })
-                              }}
-                            />
-                          )
-                        })}
-                      </HStack>
-                    </PopoverBody>
-                  </PopoverContent>
+                  {dashboard.tags.length > 0 && (
+                    <PopoverContent>
+                      <PopoverBody>
+                        <HStack spacing={2}>
+                          {dashboard.tags.map((tag) => {
+                            return (
+                              <ColorTag
+                                name={tag}
+                                style={{ cursor: 'pointer' }}
+                                onClick={() => {
+                                  addParamToUrl({
+                                    search: 'open',
+                                    searchTags: tag,
+                                  })
+                                }}
+                              />
+                            )
+                          })}
+                        </HStack>
+                      </PopoverBody>
+                    </PopoverContent>
+                  )}
                 </Popover>
 
                 {isLargeScreen && !embed && (

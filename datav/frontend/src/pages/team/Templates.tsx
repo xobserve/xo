@@ -16,10 +16,14 @@ import { Team } from 'types/teams'
 import TemplateList from 'src/views/template/TemplateList'
 import { TemplateScope } from 'types/template'
 
-const TeamTemplates = ({ team }: { team: Team }) => {
+const TeamTemplates = ({ team, load }: { team: Team; load: any }) => {
   return (
     <>
-      <TemplateList scopeId={team.id} scopeType={TemplateScope.Team} />
+      <TemplateList
+        scopeId={team.id}
+        scopeType={TemplateScope.Team}
+        reload={load}
+      />
     </>
   )
 }

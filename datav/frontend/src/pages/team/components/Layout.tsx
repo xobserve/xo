@@ -25,12 +25,15 @@ import {
 import { MdOutlineDashboard } from 'react-icons/md'
 import { useStore } from '@nanostores/react'
 import { cfgTeam } from 'src/i18n/locales/en'
-import { Box, HStack, Select, Text } from '@chakra-ui/react'
+import { Box, HStack, Text } from '@chakra-ui/react'
 import { isEmpty } from 'utils/validate'
 import { $config } from 'src/data/configs/config'
 import { requestApi } from 'utils/axios/request'
 import { Team } from 'types/teams'
 import { getNavigateTo } from 'utils/url'
+import { initVariableSelected } from 'src/views/variables/SelectVariable'
+import { $variables } from 'src/views/variables/store'
+import { $datasources } from 'src/views/datasource/store'
 
 const getTeamSubLinks = (teamId) => {
   let teamPath = ''
@@ -93,8 +96,17 @@ const TeamLayout = ({ children }: Props) => {
   const tabLinks: Route[] = getTeamSubLinks(config.currentTeam)
 
   const load = async () => {
-    const res = await requestApi.get(`/team/byId/${config.currentTeam}`)
-    setTeam(res.data)
+    const res0 = await requestApi.get(`/team/byId/${config.currentTeam}`)
+    const teamId = res0.data.id
+
+    const res = await requestApi.get(`/variable/team?teamId=${teamId}`)
+    initVariableSelected(res.data)
+    $variables.set(res.data)
+
+    const res1 = await requestApi.get(`/datasource/all?teamId=${teamId}`)
+    $datasources.set(res1.data)
+
+    setTeam(res0.data)
   }
 
   return (
@@ -112,7 +124,7 @@ const TeamLayout = ({ children }: Props) => {
         tabs={tabLinks}
       >
         <Box key={team?.id}>
-          {team && React.cloneElement(children, { team })}
+          {team && React.cloneElement(children, { team, load })}
         </Box>
       </Page>
     </>

@@ -448,6 +448,18 @@ func ExportTeamAsTemplate(c *gin.Context) {
 		return
 	}
 
+	// get team use template
+	templates, err := models.QueryTeamUseTemplates(teamId)
+	if err != nil {
+		logger.Warn("get team use templates error", "error", err)
+		c.JSON(400, common.RespError(err.Error()))
+		return
+	}
+	if len(templates) > 0 {
+		c.JSON(400, common.RespError("team which is using templates can not be exported"))
+		return
+	}
+
 	// get team dashboards
 	dashboards, err := models.QueryDashboardsByTeamId(c.Request.Context(), teamId)
 	if err != nil {
@@ -466,6 +478,6 @@ func ExportTeamAsTemplate(c *gin.Context) {
 
 	c.JSON(200, common.RespSuccess(map[string]interface{}{
 		"dashboards": dashboards,
-		"sidemenu":   sidemenu,
+		"sidemenu":   sidemenu.Data,
 	}))
 }

@@ -45,8 +45,6 @@ const TeamSidemenu = ({ team }: { team: Team }) => {
   const toast = useToast()
   const [sidemenu, setSideMenu] = useState<SideMenu>(null)
 
-  const getNodeKey = ({ treeIndex }) => treeIndex
-
   useEffect(() => {
     loadSidemenu()
   }, [])
@@ -56,11 +54,95 @@ const TeamSidemenu = ({ team }: { team: Team }) => {
     setSideMenu(res.data)
   }
 
+  let rawSidemenuI = sidemenu?.data.findIndex((item) =>
+    item.some((i) => !i.templateId),
+  )
+  if (rawSidemenuI && rawSidemenuI < 0) {
+    rawSidemenuI = 0
+  }
+  const updateSidemenu = async (sm) => {
+    sidemenu.data[rawSidemenuI] = sm
+    await requestApi.post(`/team/sidemenu`, sidemenu)
+    toast({
+      title: t1.sidemenuReload,
+      status: 'success',
+      duration: 3000,
+      isClosable: true,
+    })
+
+    setTimeout(() => {
+      window.location.reload()
+    }, 1000)
+  }
+
+  return (
+    <>
+      <Alert
+        status='info'
+        maxWidth='700px'
+        flexDirection='column'
+        alignItems='left'
+      >
+        <Text>{t1.sidemenuTip1}</Text>
+
+        <Text mt='4'>
+          {t1.sidemenuTip2}: &nbsp; <b>title | url | icon | dashboard id</b>{' '}
+          <br />
+        </Text>
+
+        <Text mt='4'>{t1.sidemenuTip3}:</Text>
+        <Text mt='2'>&nbsp;&nbsp;{t1.level} 1: /x, /y, /z</Text>
+        <Text mt='2'>
+          &nbsp;&nbsp;{t1.level} 2: {t1.sidemenuTip4}
+        </Text>
+
+        <Text mt='4'>
+          {t1.sidemenuTip5}:
+          https://react-icons.github.io/react-icons/icons?name=fa
+        </Text>
+      </Alert>
+      {sidemenu ? (
+        sidemenu.data.map((sm, i) => {
+          if (i == rawSidemenuI) {
+            return (
+              <TeamRawSidemenu
+                key={i}
+                rawSidemenu={sm}
+                onChange={(sm) => updateSidemenu(sm)}
+              />
+            )
+          }
+
+          return <TeamTemplateSidemenu key={i} sidemenu={sm} />
+        })
+      ) : (
+        <Loading style={{ marginTop: '50px' }} />
+      )}
+    </>
+  )
+}
+
+export default TeamSidemenu
+
+const TeamRawSidemenu = ({
+  rawSidemenu,
+  onChange,
+}: {
+  rawSidemenu: MenuItem[]
+  onChange: any
+}) => {
+  const t = useStore(commonMsg)
+  const t1 = useStore(cfgTeam)
+  const toast = useToast()
+  const [sidemenu, setSideMenu] = useState<MenuItem[]>(rawSidemenu)
+
+  const getNodeKey = ({ treeIndex }) => treeIndex
+
   const reserveUrls = Object.values(ReserveUrls)
 
   const updateSidemenu = async () => {
-    for (let i = 0; i < sidemenu.data.length; i++) {
-      const item = sidemenu.data[i]
+    for (let i = 0; i < sidemenu.length; i++) {
+      const item = sidemenu[i]
       if (!item.title) {
         toast({
           title: t1.sidemenuErrTitle,
@@ -190,24 +272,14 @@ const TeamSidemenu = ({ team }: { team: Team }) => {
       }
     }
 
-    await requestApi.post(`/team/sidemenu`, { ...sidemenu })
-    toast({
-      title: t1.sidemenuReload,
-      status: 'success',
-      duration: 3000,
-      isClosable: true,
-    })
-
-    setTimeout(() => {
-      window.location.reload()
-    }, 1000)
+    onChange(sidemenu)
   }
 
   const removeMenuItem = (item: MenuItem) => {
-    for (const i in sidemenu.data) {
-      const node = sidemenu.data[i]
+    for (const i in sidemenu) {
+      const node = sidemenu[i]
       if (node.url == item.url && node.title == item.title) {
-        sidemenu.data.splice(parseInt(i), 1)
+        sidemenu.splice(parseInt(i), 1)
         setSideMenu(cloneDeep(sidemenu))
         return
       } else {
@@ -226,7 +298,7 @@ const TeamSidemenu = ({ team }: { team: Team }) => {
   }
 
   const addMenuItem = () => {
-    sidemenu.data.unshift({
+    sidemenu.unshift({
       title: 'new menu item',
       icon: 'FaQuestion',
       url: '',
@@ -237,176 +309,224 @@ const TeamSidemenu = ({ team }: { team: Team }) => {
   }
   return (
     <>
-      {sidemenu ? (
-        <Box>
-          <Alert
-            status='info'
-            maxWidth='700px'
-            flexDirection='column'
-            alignItems='left'
-          >
-            <Text>{t1.sidemenuTip1}</Text>
+      <Box className='bordered'>
+        <Flex justifyContent='space-between' my='4' maxWidth='700px'>
+          <Box textStyle='subTitle'>{t1.modifySidemenu}</Box>
+          <HStack>
+            <Button
+              onClick={addMenuItem}
+              variant='outline'
+              leftIcon={<Icons.FaPlus />}
+              size='sm'
+            >
+              {t1.addMenuItem}
+            </Button>
+            <Button onClick={updateSidemenu} size='sm'>
+              {t.submit}
+            </Button>
+          </HStack>
+        </Flex>
 
-            <Text mt='4'>
-              {t1.sidemenuTip2}: &nbsp; <b>title | url | icon | dashboard id</b>{' '}
-              <br />
-            </Text>
-
-            <Text mt='4'>{t1.sidemenuTip3}:</Text>
-            <Text mt='2'>&nbsp;&nbsp;{t1.level} 1: /x, /y, /z</Text>
-            <Text mt='2'>
-              &nbsp;&nbsp;{t1.level} 2: {t1.sidemenuTip4}
-            </Text>
-
-            <Text mt='4'>
-              {t1.sidemenuTip5}:
-              https://react-icons.github.io/react-icons/icons?name=fa
-            </Text>
-          </Alert>
-          <Flex justifyContent='space-between' my='4' maxWidth='700px'>
-            <Box textStyle='subTitle'>{t1.modifySidemenu}</Box>
-            <HStack>
-              <Button
-                onClick={addMenuItem}
-                variant='outline'
-                leftIcon={<Icons.FaPlus />}
-                size='sm'
-              >
-                {t1.addMenuItem}
-              </Button>
-              <Button onClick={updateSidemenu} size='sm'>
-                {t.submit}
-              </Button>
-            </HStack>
-          </Flex>
-
-          <Box
-            height='600px'
-            sx={{
-              '.rst__row': {
-                alignItems: 'center',
+        <Box
+          height='300px'
+          sx={{
+            '.rst__row': {
+              alignItems: 'center',
+            },
+            '.rst__rowContents': {
+              backgroundColor: 'var(--chakra-colors-chakra-body-bg)',
+              border: 'unset',
+              boxShadow: 'unset',
+            },
+            '.rst__moveHandle': {
+              backgroundColor: useColorModeValue(
+                'gray.200',
+                'var(--chakra-colors-chakra-body-bg)',
+              ),
+              border: 'unset',
+              width: '30px',
+              height: '30px',
+            },
+            '.rst__lineHalfHorizontalRight::before, .rst__lineFullVertical::after, .rst__lineHalfVerticalTop::after, .rst__lineHalfVerticalBottom::after':
+              {
+                backgroundColor: useColorModeValue('brand.500', 'brand.200'),
               },
-              '.rst__rowContents': {
-                backgroundColor: 'var(--chakra-colors-chakra-body-bg)',
-                border: 'unset',
-                boxShadow: 'unset',
-              },
-              '.rst__moveHandle': {
-                backgroundColor: useColorModeValue(
-                  'gray.200',
-                  'var(--chakra-colors-chakra-body-bg)',
-                ),
-                border: 'unset',
-                width: '30px',
-                height: '30px',
-              },
-              '.rst__lineHalfHorizontalRight::before, .rst__lineFullVertical::after, .rst__lineHalfVerticalTop::after, .rst__lineHalfVerticalBottom::after':
-                {
-                  backgroundColor: useColorModeValue('brand.500', 'brand.200'),
-                },
-            }}
-          >
-            <SortableTree
-              treeData={sidemenu.data}
-              onChange={(treeData) =>
-                setSideMenu({ ...sidemenu, data: treeData })
-              }
-              maxDepth={2}
-              generateNodeProps={({ node, path }) => ({
-                title: () => {
-                  const Icon = Icons[node.icon]
-                  return (
-                    <HStack width='100%'>
-                      <Box fontSize='1rem' opacity='0.7'>
-                        {Icon && <Icon />}
-                      </Box>
+          }}
+        >
+          <SortableTree
+            treeData={sidemenu}
+            onChange={(treeData) => setSideMenu(treeData)}
+            maxDepth={2}
+            generateNodeProps={({ node, path }) => ({
+              title: () => {
+                const Icon = Icons[node.icon]
+                return (
+                  <HStack width='100%'>
+                    <Box fontSize='1rem' opacity='0.7'>
+                      {Icon && <Icon />}
+                    </Box>
+                    <Input
+                      width='200px'
+                      size='sm'
+                      value={node.title}
+                      onChange={(event) => {
+                        const title = event.target.value
+                        const newTreeData = changeNodeAtPath({
+                          treeData: sidemenu,
+                          path,
+                          getNodeKey,
+                          newNode: { ...node, title },
+                        })
+                        setSideMenu(newTreeData as any)
+                      }}
+                    />
+                    <Input
+                      width='150px'
+                      size='sm'
+                      value={node.url}
+                      onChange={(event) => {
+                        const newTreeData = changeNodeAtPath({
+                          treeData: sidemenu,
+                          path,
+                          getNodeKey,
+                          newNode: {
+                            ...node,
+                            url: event.target.value.trim(),
+                          },
+                        })
+                        setSideMenu(newTreeData as any)
+                      }}
+                      placeholder='e.g /home'
+                    />
+                    <Input
+                      width='120px'
+                      size='sm'
+                      value={node.icon}
+                      onChange={(event) => {
+                        const icon = event.target.value
+                        const newTreeData = changeNodeAtPath({
+                          treeData: sidemenu,
+                          path,
+                          getNodeKey,
+                          newNode: { ...node, icon },
+                        })
+                        setSideMenu(newTreeData as any)
+                      }}
+                      placeholder='icon name'
+                    />
+                    {!node.children?.length && (
                       <Input
                         width='200px'
                         size='sm'
-                        value={node.title}
+                        value={node.dashboardId}
                         onChange={(event) => {
-                          const title = event.target.value
+                          const dashboardId = event.target.value
                           const newTreeData = changeNodeAtPath({
-                            treeData: sidemenu.data,
+                            treeData: sidemenu,
                             path,
                             getNodeKey,
-                            newNode: { ...node, title },
+                            newNode: { ...node, dashboardId },
                           })
-                          setSideMenu({ ...sidemenu, data: newTreeData as any })
+                          setSideMenu(newTreeData as any)
                         }}
+                        placeholder='dash id, e.g d-home'
                       />
-                      <Input
-                        width='150px'
-                        size='sm'
-                        value={node.url}
-                        onChange={(event) => {
-                          const newTreeData = changeNodeAtPath({
-                            treeData: sidemenu.data,
-                            path,
-                            getNodeKey,
-                            newNode: {
-                              ...node,
-                              url: event.target.value.trim(),
-                            },
-                          })
-                          setSideMenu({ ...sidemenu, data: newTreeData as any })
-                        }}
-                        placeholder='e.g /home'
-                      />
-                      <Input
-                        width='120px'
-                        size='sm'
-                        value={node.icon}
-                        onChange={(event) => {
-                          const icon = event.target.value
-                          const newTreeData = changeNodeAtPath({
-                            treeData: sidemenu.data,
-                            path,
-                            getNodeKey,
-                            newNode: { ...node, icon },
-                          })
-                          setSideMenu({ ...sidemenu, data: newTreeData as any })
-                        }}
-                        placeholder='icon name'
-                      />
-                      {!node.children?.length && (
-                        <Input
-                          width='200px'
-                          size='sm'
-                          value={node.dashboardId}
-                          onChange={(event) => {
-                            const dashboardId = event.target.value
-                            const newTreeData = changeNodeAtPath({
-                              treeData: sidemenu.data,
-                              path,
-                              getNodeKey,
-                              newNode: { ...node, dashboardId },
-                            })
-                            setSideMenu({
-                              ...sidemenu,
-                              data: newTreeData as any,
-                            })
-                          }}
-                          placeholder='dash id, e.g d-home'
-                        />
-                      )}
-                      <Tooltip label={t1.removeMenuItem}>
-                        <Box onClick={() => removeMenuItem(node)} opacity='0.7'>
-                          <Icons.FaTimes />
-                        </Box>
-                      </Tooltip>
-                    </HStack>
-                  )
-                },
-              })}
-            />
-          </Box>
+                    )}
+                    <Tooltip label={t1.removeMenuItem}>
+                      <Box onClick={() => removeMenuItem(node)} opacity='0.7'>
+                        <Icons.FaTimes />
+                      </Box>
+                    </Tooltip>
+                  </HStack>
+                )
+              },
+            })}
+          />
         </Box>
-      ) : (
-        <Loading style={{ marginTop: '50px' }} />
-      )}
+      </Box>
     </>
   )
 }
 
-export default TeamSidemenu
+const TeamTemplateSidemenu = ({ sidemenu }: { sidemenu: MenuItem[] }) => {
+  return (
+    <>
+      <Box className='bordered'>
+        <Box
+          height='600px'
+          sx={{
+            '.rst__row': {
+              alignItems: 'center',
+            },
+            '.rst__rowContents': {
+              backgroundColor: 'var(--chakra-colors-chakra-body-bg)',
+              border: 'unset',
+              boxShadow: 'unset',
+            },
+            '.rst__moveHandle': {
+              backgroundColor: useColorModeValue(
+                'gray.200',
+                'var(--chakra-colors-chakra-body-bg)',
+              ),
+              border: 'unset',
+              width: '30px',
+              height: '30px',
+            },
+            '.rst__lineHalfHorizontalRight::before, .rst__lineFullVertical::after, .rst__lineHalfVerticalTop::after, .rst__lineHalfVerticalBottom::after':
+              {
+                backgroundColor: useColorModeValue('brand.500', 'brand.200'),
+              },
+          }}
+        >
+          <SortableTree
+            treeData={sidemenu}
+            onChange={null}
+            maxDepth={2}
+            canDrag={() => false}
+            generateNodeProps={({ node, path }) => ({
+              title: () => {
+                const Icon = Icons[node.icon]
+                return (
+                  <HStack width='100%'>
+                    <Box fontSize='1rem' opacity='0.7'>
+                      {Icon && <Icon />}
+                    </Box>
+                    <Input
+                      width='200px'
+                      size='sm'
+                      value={node.title}
+                      isDisabled
+                    />
+                    <Input
+                      width='150px'
+                      size='sm'
+                      value={node.url}
+                      isDisabled
+                      placeholder='e.g /home'
+                    />
+                    <Input
+                      width='120px'
+                      size='sm'
+                      value={node.icon}
+                      isDisabled
+                      placeholder='icon name'
+                    />
+                    {!node.children?.length && (
+                      <Input
+                        width='200px'
+                        size='sm'
+                        value={node.dashboardId}
+                        isDisabled
+                        placeholder='dash id, e.g d-home'
+                      />
+                    )}
+                  </HStack>
+                )
+              },
+            })}
+          />
+        </Box>
+      </Box>
+    </>
+  )
+}

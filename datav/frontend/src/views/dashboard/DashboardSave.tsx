@@ -70,6 +70,8 @@ import { useStore } from '@nanostores/react'
 import { commonMsg, dashboardSaveMsg } from 'src/i18n/locales/en'
 import { dateTimeFormat } from 'utils/datetime/formatter'
 import useEmbed from 'hooks/useEmbed'
+import { locale } from 'src/i18n/i18n'
+import TemplateBadge from '../template/TemplateBadge'
 
 interface Props {
   dashboard: Dashboard
@@ -77,7 +79,7 @@ interface Props {
 const DashboardSave = ({ dashboard }: Props) => {
   const t = useStore(commonMsg)
   const t1 = useStore(dashboardSaveMsg)
-
+  const lang = locale.get()
   const edit = useSearchParam('edit')
   const { colorMode } = useColorMode()
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -179,14 +181,17 @@ const DashboardSave = ({ dashboard }: Props) => {
     const dash = cloneDeep(dashboard)
     // remove template contents
 
-    await requestApi.post('/dashboard/save', { dashboard, changes: changeMsg })
+    await requestApi.post('/dashboard/save', {
+      dashboard: dash,
+      changes: changeMsg,
+    })
     toast({
       title: t1.savedMsg({ name: autoSave ? t.auto : '' }),
       status: 'success',
       duration: 2000,
       isClosable: true,
     })
-    setSaved(cloneDeep(dashboard))
+    setSaved(dash)
     setPageChanged(false)
     if (inPreview) {
       location.reload()
@@ -269,7 +274,15 @@ const DashboardSave = ({ dashboard }: Props) => {
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>
-            {t1.saveDash}: {dashboard.title}
+            <HStack>
+              <Text>
+                {' '}
+                {t1.saveDash}: {dashboard.title}{' '}
+              </Text>
+              {dashboard.templateId != 0 && (
+                <TemplateBadge templateId={dashboard.templateId} />
+              )}
+            </HStack>
           </ModalHeader>
           <ModalBody>
             {inPreview && (
@@ -281,7 +294,17 @@ const DashboardSave = ({ dashboard }: Props) => {
                 </AlertDescription>
               </Alert>
             )}
-            <FormItem title={t1.describeSaveChanges}>
+            {dashboard.templateId != 0 && (
+              <Alert status='warning'>
+                <AlertIcon />
+                <AlertDescription fontWeight='bold' mt='1'>
+                  {lang == 'en'
+                    ? 'Only title, tags and visibleTo can be saved for template dashboard'
+                    : '模版仪表盘只能保存标题、标签和可见性'}
+                </AlertDescription>
+              </Alert>
+            )}
+            <FormItem title={t1.describeSaveChanges} mt='2'>
               <Input
                 value={updateChanges}
                 onChange={(e) => setUpdateChanges(e.currentTarget.value)}

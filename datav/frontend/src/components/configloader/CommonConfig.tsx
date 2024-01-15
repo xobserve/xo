@@ -87,7 +87,9 @@ const CommonConfig = ({ children }) => {
       return
     }
 
-    cfg.sidemenu = (cfg.sidemenu as any).data.filter((item) => !item.hidden)
+    cfg.sidemenu = (cfg.sidemenu as any).data
+      .flat()
+      .filter((item) => !item.hidden)
     setConfig(cfg)
     $config.set(cfg)
   }

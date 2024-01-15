@@ -40,7 +40,7 @@ export interface SideMenu {
   isPublic?: boolean
   teamName?: string
   brief?: string
-  data: MenuItem[]
+  data: MenuItem[][]
 }
 
 export interface MenuItem {
@@ -49,4 +49,5 @@ export interface MenuItem {
   dashboardId: string
   icon?: string
   children?: MenuItem[]
+  templateId?: number
 }

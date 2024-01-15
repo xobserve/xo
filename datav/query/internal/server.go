@@ -190,7 +190,7 @@ func (s *Server) Start() error {
 		r.DELETE("/team/:id", MustLogin(), teams.MarkDeleted)
 		r.POST("/team/restore/:id", MustLogin(), teams.RestoreTeam)
 		r.GET("/team/sidemenu/:id", CheckLogin(), teams.GetSideMenu)
-		r.POST("/team/sidemenu/:id", MustLogin(), teams.UpdateSideMenu)
+		r.POST("/team/sidemenu", MustLogin(), teams.UpdateSideMenu)
 		r.POST("/team/switch/:teamId", MustLogin(), teams.SwitchTeam)
 		r.GET("/team/user/is/in", CheckLogin(), teams.GetTeamsForUser)
 		r.POST("/team/transfer/:teamId/:username", MustLogin(), teams.TransferTeam)

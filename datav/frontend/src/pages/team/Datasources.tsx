@@ -52,26 +52,16 @@ import Loading from 'components/loading/Loading'
 import { builtinDatasourcePlugins } from 'src/views/dashboard/plugins/built-in/plugins'
 import { navigateTo } from 'utils/url'
 import TemplateBadge from 'src/views/template/TemplateBadge'
+import { $datasources } from 'src/views/datasource/store'
 
-const TeamDatasources = ({ team }: { team: Team }) => {
+const TeamDatasources = ({ team, load }: { team: Team; load: any }) => {
   const t = useStore(commonMsg)
   const t1 = useStore(cfgDatasourceMsg)
   const toast = useToast()
-  const [datasources, setDatasources] = useState<Datasource[]>(null)
+  const datasources = useStore($datasources)
   const [datasource, setDatasource] = useState<Datasource>(null)
   const teamId = useParams().teamId
   const teamPath = isEmpty(teamId) ? '' : `/${teamId}`
-
-  useEffect(() => {
-    load()
-  }, [])
-
-  const load = async () => {
-    const res = await requestApi.get(
-      `/datasource/all${teamId ? `?teamId=${teamId}` : ''}`,
-    )
-    setDatasources(res.data)
-  }
 
   const { isOpen, onOpen, onClose } = useDisclosure()
   const {
@@ -106,7 +96,7 @@ const TeamDatasources = ({ team }: { team: Team }) => {
     })
 
     const dss = datasources.filter((ds) => ds.id != datasource.id)
-    setDatasources(dss)
+    $datasources.set(dss)
     closeAlert()
   }
 

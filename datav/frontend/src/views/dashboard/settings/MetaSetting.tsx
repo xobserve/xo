@@ -70,6 +70,16 @@ const MetaSettings = ({ dashboard }: Props) => {
   const [templateDash, setTemplateDash] = useState<Partial<Dashboard>>(null)
 
   const onSubmit = async () => {
+    if (dashboard.templateId != 0) {
+      toast({
+        title: 'Template Dashboard cannot be saved through meta json',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+      return
+    }
+
     await requestApi.post('/dashboard/save', {
       dashboard: JSON.parse(meta),
       changes: 'modify dashboard meta data',
@@ -97,9 +107,11 @@ const MetaSettings = ({ dashboard }: Props) => {
       </DetailAlert>
 
       <HStack mt='2'>
-        <Button isDisabled={meta == rawMeta.current} onClick={onOpen}>
-          {t.save}
-        </Button>
+        {dashboard.templateId == 0 && (
+          <Button isDisabled={meta == rawMeta.current} onClick={onOpen}>
+            {t.save}
+          </Button>
+        )}
         <Button
           onClick={() => {
             setTemplateDash(extractDashboardTemplateContent(clone(dashboard)))

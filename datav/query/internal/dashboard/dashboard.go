@@ -113,8 +113,15 @@ func SaveDashboard(c *gin.Context) {
 			return
 		}
 	} else {
-		res, err := db.Conn.ExecContext(c.Request.Context(), `UPDATE dashboard SET title=?,tags=?,data=?,visible_to=?,updated=? WHERE team_id=? and id=?`,
-			dash.Title, tags, jsonData, dash.VisibleTo, dash.Updated, dash.OwnedBy, dash.Id)
+		var res sql.Result
+		var err error
+		if dash.TemplateId != 0 { // template dashboard can only edit title, tags, visible_to,tags
+			res, err = db.Conn.ExecContext(c.Request.Context(), `UPDATE dashboard SET title=?,tags=?,visible_to=? WHERE team_id=? and id=?`,
+				dash.Title, tags, dash.VisibleTo, dash.OwnedBy, dash.Id)
+		} else {
+			res, err = db.Conn.ExecContext(c.Request.Context(), `UPDATE dashboard SET title=?,tags=?,data=?,visible_to=?,updated=? WHERE team_id=? and id=?`,
+				dash.Title, tags, jsonData, dash.VisibleTo, dash.Updated, dash.OwnedBy, dash.Id)
+		}
 		if err != nil {
 			logger.Error("update dashboard error", "error", err)
 			c.JSON(500, common.RespInternalError())
@@ -125,8 +132,27 @@ func SaveDashboard(c *gin.Context) {
 			c.JSON(http.StatusBadRequest, common.RespError("dashboard id not exist"))
 			return
 		}
+
+		if dash.TemplateId != 0 {
+			_, err := db.Conn.ExecContext(c.Request.Context(), "INSERT INTO temp_dashboard (id,title,team_id,visible_to,tags,template_id) VALUES (?,?,?,?,?,?)", dash.Id, dash.Title, dash.OwnedBy, dash.VisibleTo, tags, dash.TemplateId)
+			if err != nil && !e.IsErrUniqueConstraint(err) {
+				logger.Error("insert temp dashboard error", "error", err)
+				c.JSON(400, common.RespInternalError())
+				return
+			}
+
+			if err != nil && e.IsErrUniqueConstraint(err) {
+				_, err = db.Conn.ExecContext(c.Request.Context(), "UPDATE temp_dashboard SET title=?,tags=?,visible_to=? WHERE team_id=? and id=?", dash.Title, tags, dash.VisibleTo, dash.OwnedBy, dash.Id)
+				if err != nil {
+					logger.Error("update dashboard template id error", "error", err)
+					c.JSON(500, common.RespInternalError())
+					return
+				}
+			}
+		}
 	}
 
+	req.Dashboard.Data = nil
 	historyCh <- req
 
 	c.JSON(200, common.RespSuccess(dash.Id))

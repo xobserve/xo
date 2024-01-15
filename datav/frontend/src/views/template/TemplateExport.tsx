@@ -33,6 +33,7 @@ import { Datasource } from 'types/datasource'
 import { $variables } from '../variables/store'
 import { Variable } from 'types/variable'
 import { parseVariableFormat } from 'utils/format'
+import { MenuItem } from 'types/teams'
 
 interface Props {
   type: TemplateType
@@ -67,41 +68,57 @@ const TemplateExport = (props: Props) => {
       template = {
         panel,
       }
-    } else if (type == TemplateType.Dashboard) {
-      const dash: Dashboard = data
+    } else {
+      let dashList: Dashboard[]
+      let sidemenu: MenuItem[][]
+      if (type == TemplateType.Dashboard) {
+        dashList = [data]
+      } else {
+        // App template
+        dashList = data.dashboards
+        sidemenu = data.sidemenu
+      }
+
       const dsList: Datasource[] = []
       const gVarList: Variable[] = []
-      for (const p of dash.data.panels) {
-        const ds = datasources.find((d) => d.id == p.datasource.id)
-        if (ds) {
-          const exist = dsList.find((d) => d.id == ds.id)
-          if (!exist) {
-            dsList.push(cloneDeep(ds))
+      for (const dash of dashList) {
+        for (const p of dash.data.panels) {
+          const ds = datasources.find((d) => d.id == p.datasource.id)
+          if (ds) {
+            const exist = dsList.find((d) => d.id == ds.id)
+            if (!exist) {
+              dsList.push(cloneDeep(ds))
+            }
           }
         }
-      }
-      const variableData = cloneDeep(dash.data)
-      delete variableData.variables
+        const variableData = cloneDeep(dash.data)
+        delete variableData.variables
 
-      const formats = parseVariableFormat(JSON.stringify(variableData))
-      for (const f of formats) {
-        const existInLocal = dash.data.variables.find((v) => v.name == f)
-        if (!existInLocal) {
-          const existInGlobal = variables.find((v) => v.name == f)
-          if (existInGlobal) {
-            const exist = gVarList.find((v) => v.name == f)
-            if (!exist) {
-              const v = cloneDeep(existInGlobal)
-              delete v.values
-              gVarList.push(v)
+        const formats = parseVariableFormat(JSON.stringify(variableData))
+        for (const f of formats) {
+          const existInLocal = dash.data.variables.find((v) => v.name == f)
+          if (!existInLocal) {
+            const existInGlobal = variables.find((v) => v.name == f)
+            if (existInGlobal) {
+              const exist = gVarList.find((v) => v.name == f)
+              if (!exist) {
+                const v = cloneDeep(existInGlobal)
+                delete v.values
+                gVarList.push(v)
+              }
             }
           }
         }
       }
+
       template = {
-        dashboards: [data],
+        dashboards: dashList,
         datasources: dsList,
         variables: gVarList,
+      }
+
+      if (sidemenu) {
+        template.sidemenu = sidemenu.flat()
       }
     }
 

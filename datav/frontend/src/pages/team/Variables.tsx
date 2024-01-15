@@ -86,7 +86,7 @@ const TeamVariablesPage = ({ team }: { team: Team }) => {
   const t = useStore(commonMsg)
   const editVar = useSearchParam('editVar')
   const toast = useToast()
-  const [variables, setVariables] = useState<Variable[]>(null)
+  const variables = useStore($variables)
   const [variable, setVariable] = useState<Variable>()
   const [editMode, setEditMode] = useState<boolean>(false)
 
@@ -95,20 +95,6 @@ const TeamVariablesPage = ({ team }: { team: Team }) => {
       onEditVariable(variables.find((v) => v.id.toString() == editVar))
     }
   }, [variables, editVar])
-
-  useEffect(() => {
-    load()
-  }, [])
-
-  const load = async () => {
-    const res = await requestApi.get(`/variable/team?teamId=${team.id}`)
-    initVariableSelected(res.data)
-    setVariables(res.data)
-    $variables.set(res.data)
-
-    const res1 = await requestApi.get(`/datasource/all?teamId=${team.id}`)
-    $datasources.set(res1.data)
-  }
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 
