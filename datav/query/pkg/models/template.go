@@ -356,22 +356,23 @@ func removeTemplateResourcesInTenant(tx *sql.Tx, tenantId int64, templateId int6
 
 func removeTemplateResourcesInTeam(tx *sql.Tx, teamId int64, templateId int64, onlyDelDash bool) error {
 	// remove dashboards
+	// BUG: 这里 remove 不完整，需要调用 delete dashboard 接口来完成
 	_, err := tx.Exec("DELETE FROM dashboard WHERE team_id=? and template_id=?", teamId, templateId)
 	if err != nil {
 		return fmt.Errorf("delete dashboard error: %w", err)
 	}
 
 	if !onlyDelDash {
-		// remove datasources
-		_, err = tx.Exec("DELETE FROM datasource WHERE team_id=? and template_id=?", teamId, templateId)
+		// update datasources
+		_, err = tx.Exec("UPDATE datasource SET template_id=? WHERE team_id=? and template_id=?", 0, teamId, templateId)
 		if err != nil {
-			return fmt.Errorf("delete datasource error: %w", err)
+			return fmt.Errorf("update datasource error: %w", err)
 		}
 
-		// remove variables
-		_, err = tx.Exec("DELETE FROM variable WHERE team_id=? and template_id=?", teamId, templateId)
+		// update variables
+		_, err = tx.Exec("UPDATE variable SET template_id=? WHERE team_id=? and template_id=?", 0, teamId, templateId)
 		if err != nil {
-			return fmt.Errorf("delete variable error: %w", err)
+			return fmt.Errorf("update variable error: %w", err)
 		}
 
 		// remove sidemenu
@@ -380,24 +381,31 @@ func removeTemplateResourcesInTeam(tx *sql.Tx, teamId int64, templateId int64, o
 			return err
 		}
 
-		delIndex := -1
-	LOOP:
+		delIndexes := make([]int, 0)
+
 		for i, s := range sidemenu.Data {
 			for _, s1 := range s {
 				if s1.TemplateId == templateId {
-					delIndex = i
-					break LOOP
+					delIndexes = append(delIndexes, i)
+					break
 				}
 			}
 		}
 
-		if delIndex != -1 {
+		if len(delIndexes) > 0 {
 			newSidemenu := make([][]*MenuItem, 0)
 			for i, s := range sidemenu.Data {
-				if i != delIndex {
+				exist := false
+				for _, delIndex := range delIndexes {
+					if i == delIndex {
+						exist = true
+					}
+				}
+				if !exist {
 					newSidemenu = append(newSidemenu, s)
 				}
 			}
+
 			err = UpdateSideMenu(context.Background(), teamId, newSidemenu, tx)
 			if err != nil {
 				return err

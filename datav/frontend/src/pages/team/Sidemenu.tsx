@@ -23,8 +23,9 @@ import {
   Flex,
   Button,
   Tooltip,
+  VStack,
 } from '@chakra-ui/react'
-import { cloneDeep, isEmpty } from 'lodash'
+import { cloneDeep } from 'lodash'
 import { useEffect, useState } from 'react'
 import { MenuItem, SideMenu, Team } from 'types/teams'
 import { requestApi } from 'utils/axios/request'
@@ -38,13 +39,15 @@ import { useStore } from '@nanostores/react'
 import { cfgTeam, commonMsg } from 'src/i18n/locales/en'
 import ReserveUrls from 'src/data/reserve-urls'
 import Loading from 'src/components/loading/Loading'
+import { isEmpty } from 'utils/validate'
+import { locale } from 'src/i18n/i18n'
 
 const TeamSidemenu = ({ team }: { team: Team }) => {
   const t = useStore(commonMsg)
   const t1 = useStore(cfgTeam)
   const toast = useToast()
   const [sidemenu, setSideMenu] = useState<SideMenu>(null)
-
+  const lang = useStore(locale)
   useEffect(() => {
     loadSidemenu()
   }, [])
@@ -54,14 +57,17 @@ const TeamSidemenu = ({ team }: { team: Team }) => {
     setSideMenu(res.data)
   }
 
-  let rawSidemenuI = sidemenu?.data.findIndex((item) =>
-    item.some((i) => !i.templateId),
-  )
-  if (rawSidemenuI && rawSidemenuI < 0) {
-    rawSidemenuI = 0
+  const updateSidemenu = async (sm, i) => {
+    if (isEmpty(sm)) {
+      sidemenu.data.splice(i, 1)
+    } else {
+      sidemenu.data[i] = sm
+    }
+
+    update(sidemenu)
   }
-  const updateSidemenu = async (sm) => {
-    sidemenu.data[rawSidemenuI] = sm
+
+  const update = async (sidemenu) => {
     await requestApi.post(`/team/sidemenu`, sidemenu)
     toast({
       title: t1.sidemenuReload,
@@ -74,7 +80,23 @@ const TeamSidemenu = ({ team }: { team: Team }) => {
       window.location.reload()
     }, 1000)
   }
+  const onGoUp = (i) => {
+    const newSidemenu = cloneDeep(sidemenu)
+    const item = newSidemenu.data[i]
+    newSidemenu.data[i] = newSidemenu.data[i - 1]
+    newSidemenu.data[i - 1] = item
+    setSideMenu(newSidemenu)
+    update(newSidemenu)
+  }
 
+  const onGoDown = (i) => {
+    const newSidemenu = cloneDeep(sidemenu)
+    const item = newSidemenu.data[i]
+    newSidemenu.data[i] = newSidemenu.data[i + 1]
+    newSidemenu.data[i + 1] = item
+    setSideMenu(newSidemenu)
+    update(newSidemenu)
+  }
   return (
     <>
       <Alert
@@ -101,20 +123,63 @@ const TeamSidemenu = ({ team }: { team: Team }) => {
           https://react-icons.github.io/react-icons/icons?name=fa
         </Text>
       </Alert>
-      {sidemenu ? (
-        sidemenu.data.map((sm, i) => {
-          if (i == rawSidemenuI) {
-            return (
-              <TeamRawSidemenu
-                key={i}
-                rawSidemenu={sm}
-                onChange={(sm) => updateSidemenu(sm)}
-              />
-            )
-          }
 
-          return <TeamTemplateSidemenu key={i} sidemenu={sm} />
-        })
+      <Button
+        mt='2'
+        onClick={() => {
+          sidemenu.data.unshift([
+            {
+              title: 'new menu item',
+              icon: 'FaQuestion',
+              url: '',
+              dashboardId: '',
+              templateId: 0,
+            },
+          ])
+          setSideMenu(cloneDeep(sidemenu))
+        }}
+        size='sm'
+        variant='outline'
+      >
+        {lang == 'zh' ? '创建菜单' : 'Create Sidemenu'}
+      </Button>
+
+      {sidemenu ? (
+        <VStack alignItems='left' mt='2'>
+          {sidemenu.data.map((sm, i) => {
+            if (sm.length == 0) {
+              return <></>
+            }
+
+            return (
+              <Box position='relative'>
+                {sm[0].templateId == 0 ? (
+                  <TeamRawSidemenu
+                    key={i}
+                    rawSidemenu={sm}
+                    onChange={(sm) => updateSidemenu(sm, i)}
+                  />
+                ) : (
+                  <TeamTemplateSidemenu key={i} sidemenu={sm} />
+                )}
+                <HStack position='absolute' right='2' top='7'>
+                  {i != 0 && (
+                    <Icons.FaArrowUp
+                      cursor='pointer'
+                      onClick={() => onGoUp(i)}
+                    />
+                  )}
+                  {i < sidemenu.data.length - 1 && (
+                    <Icons.FaArrowDown
+                      cursor='pointer'
+                      onClick={() => onGoDown(i)}
+                    />
+                  )}
+                </HStack>
+              </Box>
+            )
+          })}
+        </VStack>
       ) : (
         <Loading style={{ marginTop: '50px' }} />
       )}
@@ -303,13 +368,14 @@ const TeamRawSidemenu = ({
       icon: 'FaQuestion',
       url: '',
       dashboardId: '',
+      templateId: 0,
     })
 
     setSideMenu(cloneDeep(sidemenu))
   }
   return (
     <>
-      <Box className='bordered'>
+      <Box className='bordered' p='2'>
         <Flex justifyContent='space-between' my='4' maxWidth='700px'>
           <Box textStyle='subTitle'>{t1.modifySidemenu}</Box>
           <HStack>
@@ -328,7 +394,7 @@ const TeamRawSidemenu = ({
         </Flex>
 
         <Box
-          height='300px'
+          height='200px'
           sx={{
             '.rst__row': {
               alignItems: 'center',
@@ -451,9 +517,9 @@ const TeamRawSidemenu = ({
 const TeamTemplateSidemenu = ({ sidemenu }: { sidemenu: MenuItem[] }) => {
   return (
     <>
-      <Box className='bordered'>
+      <Box className='bordered' p='2'>
         <Box
-          height='600px'
+          height='200px'
           sx={{
             '.rst__row': {
               alignItems: 'center',
