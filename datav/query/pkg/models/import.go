@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/xObserve/xObserve/query/pkg/db"
 	"github.com/xObserve/xObserve/query/pkg/utils"
 )
 
@@ -48,9 +49,27 @@ func ImportDashboard(tx *sql.Tx, dash *Dashboard, teamId int64, userId int64) er
 	_, err = tx.Exec(`INSERT INTO dashboard (id,title, team_id, created_by,tags, data, template_id, created,updated) VALUES (?,?,?,?,?,?,?,?,?)`,
 		dash.Id, dash.Title, teamId, userId, tags, jsonData, dash.TemplateId, dash.Created, dash.Updated)
 	if err != nil {
-		return err
+		return fmt.Errorf("insert dashboard error: %w", err)
 	}
 
+	tempDash := &Dashboard{}
+	if dash.TemplateId != 0 {
+		var tags []byte
+		err := db.Conn.QueryRow("SELECT id,title,tags,visible_to,weight,editable FROM temp_dashboard WHERE team_id=? and id=?", teamId, dash.Id).Scan(
+			&tempDash.Id, &tempDash.Title, &tags, &tempDash.VisibleTo, &tempDash.SortWeight, &tempDash.Editable,
+		)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				return nil
+			}
+			return fmt.Errorf("query temp dashboard error: %w", err)
+		}
+
+		_, err = tx.Exec("UPDATE dashboard SET title=?,tags=?,visible_to=?,weight=?,editable=? WHERE team_id=? and id=?", tempDash.Title, tags, tempDash.VisibleTo, tempDash.SortWeight, tempDash.Editable, teamId, dash.Id)
+		if err != nil {
+			return fmt.Errorf("update dashboard error: %w", err)
+		}
+	}
 	return nil
 }
 

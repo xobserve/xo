@@ -165,9 +165,9 @@ const TemplateList = ({ scopeId, scopeType, reload = null }: Props) => {
                       <Td>
                         <HStack spacing={3}>
                           <Button
-                            variant='ghost'
+                            variant='solid'
                             size='sm'
-                            px='0'
+                            // px='0'
                             onClick={() => {
                               setTempTemplate(template)
                               onViewOpen()
@@ -175,7 +175,7 @@ const TemplateList = ({ scopeId, scopeType, reload = null }: Props) => {
                           >
                             {lang == 'zh' ? '查看' : 'View'}
                           </Button>
-                          <Button
+                          {/* <Button
                             variant='ghost'
                             size='sm'
                             px='0'
@@ -187,12 +187,12 @@ const TemplateList = ({ scopeId, scopeType, reload = null }: Props) => {
                             }}
                           >
                             {lang == 'zh' ? '移除引用' : 'Unlink'}
-                          </Button>
+                          </Button> */}
 
                           <Button
-                            variant='ghost'
+                            variant='outline'
                             size='sm'
-                            px='0'
+                            // px='0'
                             colorScheme='red'
                             onClick={() => {
                               setTempTemplate(template)
@@ -201,7 +201,7 @@ const TemplateList = ({ scopeId, scopeType, reload = null }: Props) => {
                             }}
                           >
                             {lang == 'zh'
-                              ? '移除引用及相关资源'
+                              ? '移除模版及相关资源'
                               : 'Unlink template and remove resources'}
                           </Button>
                         </HStack>

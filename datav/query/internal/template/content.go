@@ -79,6 +79,14 @@ func UseTemplateContent(c *gin.Context) {
 	}
 
 	if len(usedByScopes) > 0 {
+		// remove old dashboards
+		_, err := tx.ExecContext(c.Request.Context(), "DELETE FROM dashboard WHERE template_id=?", template.Id)
+		if err != nil {
+			logger.Warn("delete dashboard error", "error", err)
+			c.JSON(400, common.RespInternalError())
+			return
+		}
+
 		// get template export
 		newExport, err := models.QueryTemplateExportByTemplateId(c.Request.Context(), req.ContentId)
 		if err != nil {
@@ -95,39 +103,6 @@ func UseTemplateContent(c *gin.Context) {
 					logger.Warn("create dashboard error", "error", err)
 					c.JSON(500, common.RespInternalError())
 					return
-				}
-			}
-		}
-
-		oldExport, err := models.QueryTemplateExportByTemplateId(c.Request.Context(), template.ContentId)
-		if err != nil && err != sql.ErrNoRows {
-			c.JSON(400, common.RespError(err.Error()))
-			return
-		}
-		// remove unused dashboards
-		if oldExport != nil {
-			dashToDel := make([]string, 0)
-			for _, dash := range oldExport.Dashboards {
-				exist := false
-				for _, newDash := range newExport.Dashboards {
-					if dash.Id == newDash.Id {
-						exist = true
-						break
-					}
-				}
-				if !exist {
-					dashToDel = append(dashToDel, dash.Id)
-				}
-			}
-
-			for _, dashId := range dashToDel {
-				for _, scope := range usedByScopes {
-					err := models.RemoveDashboardsInScope(c.Request.Context(), dashId, scope.Scope, scope.ScopeId, tx)
-					if err != nil {
-						logger.Warn("remove dashboard error", "error", err)
-						c.JSON(500, common.RespInternalError())
-						return
-					}
 				}
 			}
 		}

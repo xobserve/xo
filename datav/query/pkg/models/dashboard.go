@@ -162,6 +162,11 @@ func DeleteDashboard(ctx context.Context, teamId int64, id string, tx *sql.Tx) e
 		return fmt.Errorf("delete dashboard error: %w", err)
 	}
 
+	_, err = tx.ExecContext(ctx, "DELETE FROM temp_dashboard WHERE team_id=? and id=?", teamId, id)
+	if err != nil {
+		return fmt.Errorf("delete temp dashboard error: %w", err)
+	}
+
 	_, err = tx.ExecContext(ctx, "DELETE FROM star_dashboard WHERE team_id=? and dashboard_id=?", teamId, id)
 	if err != nil {
 		return fmt.Errorf("delete dashboard star error: %w", err)
