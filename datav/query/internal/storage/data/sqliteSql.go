@@ -211,6 +211,14 @@ CREATE TABLE IF NOT EXISTS template_use (
     created DATETIME NOT NULL,
     created_by INTEGER NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS template_disable (
+    scope SMALLINT NOT NULL,
+    scope_id INTEGER NOT NULL,
+    template_id INTEGER NOT NULL,
+    created DATETIME NOT NULL,
+    created_by INTEGER NOT NULL
+);
 `
 
 const SqliteIndex = `
@@ -281,4 +289,8 @@ CREATE UNIQUE INDEX IF NOT EXISTS template_content_tid_version ON template_conte
 
 CREATE UNIQUE INDEX IF NOT EXISTS template_use_scope_template ON template_use (scope, scope_id, template_id);
 CREATE INDEX IF NOT EXISTS template_use_scope ON template_use (scope, scope_id);
+
+CREATE UNIQUE INDEX IF NOT EXISTS template_disable_scope_template ON template_disable (scope, scope_id, template_id);
+
+CREATE INDEX IF NOT EXISTS template_disable_scope ON template_disable (scope, scope_id);
 `

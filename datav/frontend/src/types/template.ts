@@ -30,6 +30,7 @@ export interface Template {
   provider: string
   tags: string[]
   created: string
+  disabled: boolean
 }
 
 export interface TemplateContent {

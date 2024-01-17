@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/xObserve/xObserve/query/pkg/db"
+	"github.com/xObserve/xObserve/query/pkg/e"
 	"github.com/xObserve/xObserve/query/pkg/utils"
 )
 
@@ -86,6 +87,13 @@ func ImportDatasource(ctx context.Context, ds *Datasource, tx *sql.Tx) error {
 
 	_, err = tx.ExecContext(ctx, "INSERT INTO datasource (id, name,type,url,team_id,data,template_id,created,updated) VALUES (?,?,?,?,?,?,?,?,?)", ds.Id, ds.Name, ds.Type, ds.URL, ds.TeamId, data, ds.TemplateId, now, now)
 	if err != nil {
+		if e.IsErrUniqueConstraint(err) && ds.TemplateId != 0 {
+			_, err = tx.ExecContext(ctx, "UPDATE datasource SET template_id=? WHERE team_id=? and id=?", ds.TemplateId, ds.TeamId, ds.Id)
+			if err != nil {
+				return fmt.Errorf("update datasource error: %w", err)
+			}
+			return nil
+		}
 		return fmt.Errorf("insert datasource error: %w", err)
 	}
 
@@ -101,6 +109,13 @@ func ImportVariable(ctx context.Context, v *Variable, tx *sql.Tx) error {
 	_, err := tx.ExecContext(ctx, "INSERT INTO variable(id,name,type,value,default_selected,datasource,description,refresh,enableMulti,enableAll,regex,sort,team_id,template_id,created,updated) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
 		v.Id, v.Name, v.Type, v.Value, v.Default, v.Datasource, v.Desc, v.Refresh, v.EnableMulti, v.EnableAll, v.Regex, v.SortWeight, v.TeamId, v.TemplateId, now, now)
 	if err != nil {
+		if e.IsErrUniqueConstraint(err) && v.TemplateId != 0 {
+			_, err = tx.ExecContext(ctx, "UPDATE variable SET template_id=? WHERE team_id=? and id=?", v.TemplateId, v.TeamId, v.Id)
+			if err != nil {
+				return fmt.Errorf("update variable error: %w", err)
+			}
+			return nil
+		}
 		return fmt.Errorf("insert variable error: %w", err)
 	}
 

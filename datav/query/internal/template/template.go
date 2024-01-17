@@ -359,6 +359,7 @@ func getTemplates(ctx context.Context, rows *sql.Rows) ([]*models.Template, erro
 				logger.Warn("unmarshal template tags error", "error", err)
 			}
 		}
+
 		templates = append(templates, t)
 	}
 

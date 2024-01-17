@@ -45,6 +45,7 @@ type Template struct {
 	Version     string    `json:"version,omitempty"` // content version
 	Provider    string    `json:"provider"`          // e.g xobserve , user-custom , third-party
 	Tags        []string  `json:"tags"`
+	Disabled    bool      `json:"disabled"`
 	Created     time.Time `json:"created"`
 }
 
@@ -416,4 +417,20 @@ func removeTemplateResourcesInTeam(tx *sql.Tx, teamId int64, templateId int64, o
 	}
 
 	return nil
+}
+
+func GetTemplateDisabled(templateId int64, scope int, scopeId int64) (bool, error) {
+	var id int64
+	err := db.Conn.QueryRow("SELECT template_id FROM template_disable WHERE scope=? and scope_id=? and template_id=?", scope, scopeId, templateId).Scan(
+		&id,
+	)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return false, nil
+		}
+		return false, err
+	}
+
+	return true, err
 }

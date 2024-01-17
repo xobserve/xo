@@ -52,6 +52,7 @@ import { requestApi } from 'utils/axios/request'
 import { locale } from 'src/i18n/i18n'
 import TemplateCard from './TemplateCard'
 import { getTemplateScopeText } from 'utils/template'
+import { on } from 'events'
 
 interface Props {
   scopeId: number
@@ -118,6 +119,35 @@ const TemplateList = ({ scopeId, scopeType, reload = null }: Props) => {
     }, 1000)
   }
 
+  const onSyncTemplate = async (
+    templateId: number,
+    createType: TemplateCreateType,
+  ) => {
+    const res = await requestApi.post(`/template/sync`, {
+      scopeId,
+      scopeType,
+      templateId: templateId,
+      type: createType,
+    })
+
+    toast({
+      title:
+        lang == 'zh'
+          ? '引用成功, 重载页面...'
+          : 'Created successfully, reloading...',
+      status: 'success',
+      duration: 3000,
+      isClosable: true,
+    })
+
+    // load()
+    // reload && reload()
+
+    setTimeout(() => {
+      window.location.reload()
+    }, 1000)
+  }
+
   const onRemoveTemplateUse = async () => {
     await requestApi.delete(
       `/template/use/${scopeType}/${scopeId}/${tempTemplate.id}/${removeType}`,
@@ -131,7 +161,45 @@ const TemplateList = ({ scopeId, scopeType, reload = null }: Props) => {
     // load()
     // reload && reload()
     // onRemoveClose()
-    window.location.reload()
+    setTimeout(() => {
+      window.location.reload()
+    }, 1000)
+  }
+
+  const onDisableTemplate = async (templateId: number) => {
+    await requestApi.post(`/template/disable`, {
+      scopeId,
+      scopeType,
+      templateId: templateId,
+    })
+    toast({
+      title: lang == 'zh' ? '禁用成功.' : 'Disabled successfully',
+      status: 'success',
+      duration: 3000,
+      isClosable: true,
+    })
+
+    setTimeout(() => {
+      window.location.reload()
+    }, 1000)
+  }
+
+  const onEnableTemplate = async (templateId: number) => {
+    await requestApi.post(`/template/enable`, {
+      scopeId,
+      scopeType,
+      templateId: templateId,
+    })
+    toast({
+      title: lang == 'zh' ? '启用成功.' : 'Enable successfully',
+      status: 'success',
+      duration: 3000,
+      isClosable: true,
+    })
+
+    setTimeout(() => {
+      window.location.reload()
+    }, 1000)
   }
   return (
     <>
@@ -161,12 +229,13 @@ const TemplateList = ({ scopeId, scopeType, reload = null }: Props) => {
               <Tbody>
                 {templates?.map((template) => {
                   const scopeText = getTemplateScopeText(template.scope, lang)
+                  const isInherited = template.scope != scopeType
                   return (
                     <Tr key={template.id}>
                       <Td>{template.id}</Td>
                       <Td>{template.title}</Td>
                       <Td>
-                        {template.scope == scopeType
+                        {!isInherited
                           ? lang == 'zh'
                             ? '当前' + scopeText
                             : 'Current ' + scopeText
@@ -201,21 +270,61 @@ const TemplateList = ({ scopeId, scopeType, reload = null }: Props) => {
                             {lang == 'zh' ? '移除引用' : 'Unlink'}
                           </Button> */}
 
-                          <Button
-                            variant='outline'
-                            size='sm'
-                            // px='0'
-                            colorScheme='red'
-                            onClick={() => {
-                              setTempTemplate(template)
-                              setRemoveType('all')
-                              onRemoveOpen()
-                            }}
-                          >
-                            {lang == 'zh'
-                              ? '移除模版及相关资源'
-                              : 'Unlink template and remove resources'}
-                          </Button>
+                          {!isInherited && (
+                            <Button
+                              variant='outline'
+                              size='sm'
+                              // px='0'
+                              colorScheme='red'
+                              onClick={() => {
+                                setTempTemplate(template)
+                                setRemoveType('all')
+                                onRemoveOpen()
+                              }}
+                            >
+                              {lang == 'zh'
+                                ? '移除模版及相关资源'
+                                : 'Unlink template and remove resources'}
+                            </Button>
+                          )}
+                          {scopeType == TemplateScope.Team &&
+                            !template.disabled && (
+                              <Button
+                                variant='outline'
+                                size='sm'
+                                // px='0'
+                                onClick={() => {
+                                  onSyncTemplate(
+                                    template.id,
+                                    TemplateCreateType.Refer,
+                                  )
+                                }}
+                              >
+                                {lang == 'zh' ? '再次同步' : 'Sync again'}
+                              </Button>
+                            )}
+
+                          {isInherited && scopeType == TemplateScope.Team && (
+                            <Button
+                              variant='outline'
+                              size='sm'
+                              // px='0'
+                              colorScheme={template.disabled ? 'brand' : 'red'}
+                              onClick={() => {
+                                template.disabled
+                                  ? onEnableTemplate(template.id)
+                                  : onDisableTemplate(template.id)
+                              }}
+                            >
+                              {lang == 'zh'
+                                ? template.disabled
+                                  ? '启用模版'
+                                  : '禁用模版'
+                                : !template.disabled
+                                ? 'Enable template'
+                                : 'Disable template'}
+                            </Button>
+                          )}
                         </HStack>
                       </Td>
                     </Tr>

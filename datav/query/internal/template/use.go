@@ -294,6 +294,119 @@ func UseTemplate(c *gin.Context) {
 	c.JSON(200, common.RespSuccess(fmt.Sprintf("/%d/%s", req.ScopeId, templateExport.Dashboards[0].Id)))
 }
 
+func SyncTemplate(c *gin.Context) {
+	req := &UseTemplateRes{}
+	err := c.BindJSON(req)
+	if err != nil {
+		c.JSON(400, common.RespError(err.Error()))
+		return
+	}
+
+	if req.TemplateId == 0 {
+		c.JSON(400, common.RespError("invalid request"))
+		return
+	}
+
+	if req.ScopeType != common.ScopeTeam {
+		c.JSON(400, common.RespError("invalid scope type"))
+		return
+	}
+
+	// get template
+	t, err := models.QueryTemplateById(c.Request.Context(), req.TemplateId)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			c.JSON(400, common.RespError("template not exist"))
+			return
+		}
+		c.JSON(400, common.RespError(err.Error()))
+		return
+	}
+
+	// can only use dashboard and app template
+	if t.Type != models.TemplateTypeDashboard && t.Type != models.TemplateTypeApp {
+		c.JSON(400, common.RespError("invalid template type"))
+		return
+	}
+
+	// check permission
+	u := c.MustGet("currentUser").(*models.User)
+
+	// team scope can use website, tenant and team template
+	if req.ScopeType == common.ScopeTeam {
+		if t.Scope != common.ScopeWebsite {
+			if t.Scope == common.ScopeTenant {
+				// check if the team is in the tenant
+				tenantId, err := models.QueryTenantIdByTeamId(c.Request.Context(), req.ScopeId)
+				if err != nil {
+					if err == sql.ErrNoRows {
+						c.JSON(400, common.RespError("the tenant which you are visiting is not exist"))
+						return
+					}
+					logger.Warn("get tenant id error", "error", err)
+					c.JSON(500, common.RespError(err.Error()))
+					return
+				}
+
+				if tenantId != t.OwnedBy {
+					c.JSON(400, common.RespError("invalid template scope"))
+					return
+				}
+			}
+
+			// not the same team
+			if t.OwnedBy != req.ScopeId {
+				c.JSON(400, common.RespError("invalid template scope"))
+				return
+			}
+		}
+
+		if err := acl.CanEditTeam(c.Request.Context(), req.ScopeId, u.Id); err != nil {
+			c.JSON(403, common.RespError(err.Error()))
+			return
+		}
+	}
+
+	// get template content
+	templateExport, err := models.QueryTemplateExportByTemplateId(c.Request.Context(), t.ContentId)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			c.JSON(400, common.RespError("template content not exist"))
+			return
+		}
+		logger.Warn("query template export", "error", err)
+		c.JSON(400, common.RespError(err.Error()))
+		return
+	}
+
+	tx, err := db.Conn.Begin()
+	if err != nil {
+		logger.Warn("new user error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+	defer tx.Rollback()
+
+	if req.Type == models.TemplateCreateRefer {
+		err = models.CreateResourcesByTemplateExport(c.Request.Context(), t.Id, templateExport, req.ScopeType, req.ScopeId, u.Id, tx)
+		if err != nil {
+			if !e.IsErrUniqueConstraint(err) {
+				logger.Warn("create dashboard error", "error", err)
+				c.JSON(500, common.RespInternalError())
+				return
+			}
+		}
+	}
+
+	err = tx.Commit()
+	if err != nil {
+		logger.Warn("commit transaction error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+
+	c.JSON(200, common.RespSuccess(fmt.Sprintf("/%d/%s", req.ScopeId, templateExport.Dashboards[0].Id)))
+}
 func GetScopeUseTemplates(c *gin.Context) {
 	scopeType, _ := strconv.Atoi(c.Param("type"))
 	scopeId, _ := strconv.ParseInt(c.Param("id"), 10, 64)
@@ -413,6 +526,15 @@ func GetScopeUseTemplates(c *gin.Context) {
 			t.Scope = scope
 		} else {
 			t.Scope = scopeType
+		}
+		if scopeType == common.ScopeTeam {
+			disabled, err := models.GetTemplateDisabled(t.Id, scopeType, scopeId)
+			if err != nil {
+				logger.Warn("get template disabled error", "error", err)
+				c.JSON(400, common.RespError(err.Error()))
+				return
+			}
+			t.Disabled = disabled
 		}
 	}
 
