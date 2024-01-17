@@ -107,9 +107,10 @@ func ImportVariable(ctx context.Context, v *Variable, tx *sql.Tx) error {
 	return nil
 }
 
-func ImportSidemenu(ctx context.Context, templateId int64, teamId int64, items []*MenuItem, isMerge bool, tx *sql.Tx) error {
-	sidemenu, err := QuerySideMenu(ctx, teamId)
+func ImportSidemenu(ctx context.Context, templateId int64, teamId int64, items []*MenuItem, tx *sql.Tx) error {
+	sidemenu, err := QuerySideMenu(ctx, teamId, tx)
 	if err != nil {
+		fmt.Println("here333333")
 		return err
 	}
 

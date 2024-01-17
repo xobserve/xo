@@ -51,6 +51,7 @@ import CreateFromTemplate from './CreateFromTemplate'
 import { requestApi } from 'utils/axios/request'
 import { locale } from 'src/i18n/i18n'
 import TemplateCard from './TemplateCard'
+import { getTemplateScopeText } from 'utils/template'
 
 interface Props {
   scopeId: number
@@ -153,15 +154,26 @@ const TemplateList = ({ scopeId, scopeType, reload = null }: Props) => {
                 <Tr>
                   <Th>Id</Th>
                   <Th>{t.name}</Th>
+                  <Th>{lang == 'zh' ? '来源' : 'Source'}</Th>
                   <Th>{t.action}</Th>
                 </Tr>
               </Thead>
               <Tbody>
                 {templates?.map((template) => {
+                  const scopeText = getTemplateScopeText(template.scope, lang)
                   return (
                     <Tr key={template.id}>
                       <Td>{template.id}</Td>
                       <Td>{template.title}</Td>
+                      <Td>
+                        {template.scope == scopeType
+                          ? lang == 'zh'
+                            ? '当前' + scopeText
+                            : 'Current ' + scopeText
+                          : lang == 'zh'
+                          ? '继承自' + scopeText
+                          : 'Inherited from ' + scopeText}
+                      </Td>
                       <Td>
                         <HStack spacing={3}>
                           <Button

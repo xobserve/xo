@@ -219,12 +219,18 @@ type SubMenuItem struct {
 	TemplateId  int64  `json:"templateId"`
 }
 
-func QuerySideMenu(ctx context.Context, id int64) (*SideMenu, error) {
+func QuerySideMenu(ctx context.Context, id int64, tx *sql.Tx) (*SideMenu, error) {
 	menu := &SideMenu{
 		TeamId: id,
 	}
 	var rawJson []byte
-	err := db.Conn.QueryRowContext(ctx, "SELECT sidemenu from team WHERE id=?", id).Scan(&rawJson)
+	var err error
+	if tx != nil {
+		err = tx.QueryRowContext(ctx, "SELECT sidemenu from team WHERE id=?", id).Scan(&rawJson)
+
+	} else {
+		err = db.Conn.QueryRowContext(ctx, "SELECT sidemenu from team WHERE id=?", id).Scan(&rawJson)
+	}
 	if err != nil {
 		return nil, err
 	}

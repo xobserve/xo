@@ -52,7 +52,7 @@ func GetDashboardConfig(c *gin.Context) {
 			return
 		}
 		dashboard = dash
-		sidemenu, err = models.QuerySideMenu(c.Request.Context(), teamId)
+		sidemenu, err = models.QuerySideMenu(c.Request.Context(), teamId, nil)
 		if err != nil {
 			if err != sql.ErrNoRows {
 				logger.Warn("query sidemenu error", "error", err)
@@ -72,7 +72,7 @@ func GetDashboardConfig(c *gin.Context) {
 			return
 		}
 
-		sidemenu, err = models.QuerySideMenu(c.Request.Context(), teamId)
+		sidemenu, err = models.QuerySideMenu(c.Request.Context(), teamId, nil)
 		if err != nil {
 			if err != sql.ErrNoRows {
 				logger.Warn("query sidemenu error", "error", err)

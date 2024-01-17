@@ -51,7 +51,7 @@ func GetSideMenu(c *gin.Context) {
 		return
 	}
 
-	menu, err := models.QuerySideMenu(c.Request.Context(), teamId)
+	menu, err := models.QuerySideMenu(c.Request.Context(), teamId, nil)
 	if err != nil {
 		if err != sql.ErrNoRows {
 			logger.Error("query side menu error", "error", err)

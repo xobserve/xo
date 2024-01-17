@@ -163,6 +163,24 @@ func UseTemplate(c *gin.Context) {
 		}
 	}
 
+	if req.ScopeType == common.ScopeWebsite {
+		// remove tenant and team template link
+		_, err = tx.Exec("DELETE FROM template_use WHERE template_id=? and scope in (?,?)", t.Id, common.ScopeTenant, common.ScopeTeam)
+		if err != nil {
+			logger.Warn("delete template use error", "error", err)
+			c.JSON(400, common.RespError(err.Error()))
+			return
+		}
+	} else if req.ScopeType == common.ScopeTenant {
+		// remove team template link
+		_, err = tx.Exec("DELETE FROM template_use WHERE template_id=? and scope=?", t.Id, common.ScopeTeam)
+		if err != nil {
+			logger.Warn("delete template use error", "error", err)
+			c.JSON(400, common.RespError(err.Error()))
+			return
+		}
+	}
+
 	if req.ScopeType == common.ScopeTeam {
 		// check template is already in tenant
 		tenantId, err := models.QueryTenantIdByTeamId(c.Request.Context(), req.ScopeId)
@@ -314,10 +332,60 @@ func GetScopeUseTemplates(c *gin.Context) {
 		err := rows.Scan(&id)
 		if err != nil {
 			logger.Warn("scan template id error", "error", err)
-			c.JSON(500, common.RespError(err.Error()))
+			c.JSON(400, common.RespError(err.Error()))
 			return
 		}
 		idsInt = append(idsInt, id)
+	}
+
+	usedScope := make(map[int64]int)
+	// get inherited templates
+	if scopeType == common.ScopeTenant || scopeType == common.ScopeTeam {
+		// get website templates
+		rows, err = db.Conn.Query("SELECT template_id FROM template_use WHERE scope = ?", common.ScopeWebsite)
+		if err != nil {
+			logger.Warn("get websilte templates error", "error", err)
+			c.JSON(400, common.RespError(err.Error()))
+			return
+		}
+		for rows.Next() {
+			var id int64
+			err := rows.Scan(&id)
+			if err != nil {
+				logger.Warn("scan template id error", "error", err)
+				c.JSON(400, common.RespError(err.Error()))
+				return
+			}
+			usedScope[id] = common.ScopeWebsite
+			idsInt = append(idsInt, id)
+		}
+		if scopeType == common.ScopeTeam {
+			// get tenant templates
+			tenantId, err := models.QueryTenantIdByTeamId(c.Request.Context(), scopeId)
+			if err != nil {
+				logger.Warn("get tenant id error", "error", err)
+				c.JSON(400, common.RespError(err.Error()))
+				return
+			}
+			rows, err = db.Conn.Query("SELECT template_id FROM template_use WHERE scope = ? and scope_id = ?", common.ScopeTenant, tenantId)
+			if err != nil {
+				logger.Warn("get tenant templates error", "error", err)
+				c.JSON(400, common.RespError(err.Error()))
+				return
+			}
+			for rows.Next() {
+				var id int64
+				err := rows.Scan(&id)
+				if err != nil {
+					logger.Warn("scan template id error", "error", err)
+					c.JSON(400, common.RespError(err.Error()))
+					return
+				}
+				usedScope[id] = common.ScopeTenant
+
+				idsInt = append(idsInt, id)
+			}
+		}
 	}
 
 	var ids []string
@@ -337,6 +405,15 @@ func GetScopeUseTemplates(c *gin.Context) {
 		logger.Warn("get templates error", "error", err)
 		c.JSON(400, common.RespError(err.Error()))
 		return
+	}
+
+	for _, t := range templates {
+		scope, ok := usedScope[t.Id]
+		if ok {
+			t.Scope = scope
+		} else {
+			t.Scope = scopeType
+		}
 	}
 
 	c.JSON(200, common.RespSuccess(templates))

@@ -376,7 +376,7 @@ func removeTemplateResourcesInTeam(tx *sql.Tx, teamId int64, templateId int64, o
 		}
 
 		// remove sidemenu
-		sidemenu, err := QuerySideMenu(context.Background(), teamId)
+		sidemenu, err := QuerySideMenu(context.Background(), teamId, tx)
 		if err != nil {
 			return err
 		}

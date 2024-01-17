@@ -469,7 +469,7 @@ func ExportTeamAsTemplate(c *gin.Context) {
 	}
 
 	// get sidemenu
-	sidemenu, err := models.QuerySideMenu(c.Request.Context(), teamId)
+	sidemenu, err := models.QuerySideMenu(c.Request.Context(), teamId, nil)
 	if err != nil {
 		logger.Warn("get sidemenu error", "error", err)
 		c.JSON(400, common.RespError(err.Error()))

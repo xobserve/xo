@@ -106,7 +106,7 @@ func GetTenantConfig(c *gin.Context) {
 		return
 	}
 
-	menu, err := models.QuerySideMenu(c.Request.Context(), teamId)
+	menu, err := models.QuerySideMenu(c.Request.Context(), teamId, nil)
 	if err != nil {
 		if err != sql.ErrNoRows {
 			logger.Warn("query sidemenu error", "error", err)
