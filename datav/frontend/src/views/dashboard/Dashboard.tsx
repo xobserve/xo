@@ -96,6 +96,7 @@ const DashboardWrapper = ({ rawDashboard, sideWidth }) => {
   const fullscreen = useFullscreen()
 
   const initDash = (dash) => {
+    console.log('here33333:', dash)
     dash.data.panels.forEach((panel: Panel) => {
       // console.log("33333 before",cloneDeep(panel.plugins))
       if (panel.type != PanelTypeRow) {

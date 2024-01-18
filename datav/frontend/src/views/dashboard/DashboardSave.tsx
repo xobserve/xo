@@ -249,7 +249,9 @@ const DashboardSave = ({ dashboard }: Props) => {
           </Tooltip>
           <MenuList>
             <MenuItem onClick={onSaveOpen}>{t.save}</MenuItem>
-            <MenuItem onClick={onViewHistory}>{t1.viewHistory}</MenuItem>
+            {dashboard.templateId == 0 && (
+              <MenuItem onClick={onViewHistory}>{t1.viewHistory}</MenuItem>
+            )}
           </MenuList>
         </Menu>
       </Box>

@@ -152,8 +152,9 @@ func SaveDashboard(c *gin.Context) {
 		}
 	}
 
-	req.Dashboard.Data = nil
-	historyCh <- req
+	if dash.TemplateId == 0 {
+		historyCh <- req
+	}
 
 	c.JSON(200, common.RespSuccess(dash.Id))
 }

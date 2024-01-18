@@ -17,7 +17,6 @@ import { Role } from './role'
 export interface Team {
   id: number
   name: string
-  isPublic?: boolean
   brief?: string
   createdBy?: string
   createdById?: number

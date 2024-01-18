@@ -38,7 +38,6 @@ export const replaceDashboardTemplatePanels = async (dash: Dashboard) => {
         )?.content
         if (templateContent) {
           const content: TemplateData = JSON.parse(templateContent)
-          console.log('here33333:', content)
           for (const k of Object.keys(content.panel)) {
             p[k] = content.panel[k]
           }

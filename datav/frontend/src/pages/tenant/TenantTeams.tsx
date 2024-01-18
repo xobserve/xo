@@ -146,7 +146,6 @@ const TeamsPage = () => {
                 <Th>{t.itemName({ name: t.team })}</Th>
                 <Th>{t.yourRole}</Th>
                 <Th>{t.members}</Th>
-                <Th>{t.public}</Th>
                 <Th>{t.createdBy}</Th>
                 <Th>Status</Th>
                 <Th>{t.action}</Th>
@@ -160,7 +159,6 @@ const TeamsPage = () => {
                     <Td>{team.name}</Td>
                     <Td>{t[team.role]}</Td>
                     <Td>{team.memberCount}</Td>
-                    <Td>{team.isPublic ? 'true' : 'false'}</Td>
                     <Td>
                       {team.createdBy}{' '}
                       {session?.user?.id == team.createdById && (
@@ -173,7 +171,9 @@ const TeamsPage = () => {
                           team.status === AvailableStatus.DELETE && 'error-text'
                         }
                       >
-                        {team.status === AvailableStatus.OK ? 'OK' : 'Deleted'}
+                        {team.status !== AvailableStatus.DELETE
+                          ? 'OK'
+                          : 'Deleted'}
                       </Text>
                     </Th>
                     <Td>
