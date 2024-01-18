@@ -13,10 +13,7 @@ export const extractPanelTemplateContent = (panel: Panel): Partial<Panel> => {
 export const extractDashboardTemplateContent = (
   dash: Dashboard,
 ): Partial<Dashboard> => {
-  return {
-    id: dash.id,
-    data: dash.data,
-  }
+  return dash
 }
 
 export const replaceDashboardTemplatePanels = async (dash: Dashboard) => {

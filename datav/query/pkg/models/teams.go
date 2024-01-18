@@ -303,29 +303,6 @@ func CreateTeam(ctx context.Context, tx *sql.Tx, tenantId int64, userId int64, n
 		return 0, err
 	}
 
-	// insert home dashboard
-	d, err := ImportDashboardFromJSON(tx, storageData.HomeDashboard, id, userId)
-	if err != nil && !e.IsErrUniqueConstraint(err) {
-		return 0, fmt.Errorf("init home dashboard error: %w", err)
-	}
-
-	// init sidemenu
-	initSidemenu := []*MenuItem{
-		{
-			Title:       "Home",
-			Url:         "/home",
-			Icon:        "FaHome",
-			DashboardId: d.Id,
-		},
-	}
-
-	err = UpdateSideMenu(ctx, id, [][]*MenuItem{
-		initSidemenu,
-	}, tx)
-	if err != nil {
-		return 0, fmt.Errorf("update team sidemenu error: %w", err)
-	}
-
 	// create dashboards from template
 	tenantTemplates, err := QueryTenantUseTemplates(tenantId)
 	if err != nil {
@@ -358,6 +335,37 @@ func CreateTeam(ctx context.Context, tx *sql.Tx, tenantId int64, userId int64, n
 					return 0, fmt.Errorf("create dashboard by template export error: %w", err)
 				}
 			}
+		}
+	}
+
+	dashCount := 0
+	err = tx.QueryRow("SELECT count(*) FROM dashboard WHERE team_id=?", id).Scan(&dashCount)
+	if err != nil {
+		return 0, fmt.Errorf("query dashboard count error: %w", err)
+	}
+
+	if dashCount == 0 {
+		// insert home dashboard
+		d, err := ImportDashboardFromJSON(tx, storageData.HomeDashboard, id, userId)
+		if err != nil && !e.IsErrUniqueConstraint(err) {
+			return 0, fmt.Errorf("init home dashboard error: %w", err)
+		}
+
+		// init sidemenu
+		initSidemenu := []*MenuItem{
+			{
+				Title:       "Home",
+				Url:         "/home",
+				Icon:        "FaHome",
+				DashboardId: d.Id,
+			},
+		}
+
+		err = UpdateSideMenu(ctx, id, [][]*MenuItem{
+			initSidemenu,
+		}, tx)
+		if err != nil {
+			return 0, fmt.Errorf("update team sidemenu error: %w", err)
 		}
 	}
 	return id, nil
