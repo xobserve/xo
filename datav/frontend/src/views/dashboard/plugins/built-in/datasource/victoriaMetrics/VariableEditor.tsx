@@ -25,6 +25,7 @@ import { useStore } from '@nanostores/react'
 import { cfgVariablemsg } from 'src/i18n/locales/en'
 import { getCurrentTimeRange } from 'components/DatePicker/TimePicker'
 import { dateTimeFormat } from 'utils/datetime/formatter'
+import { replaceWithBuiltinVariables } from 'utils/variable'
 
 export enum PromDsQueryTypes {
   LabelValues = 'Label values',
@@ -53,6 +54,7 @@ const VariableEditor = ({
   }, [variable])
 
   const loadVariables = async (v: Variable) => {
+    v.value = replaceWithBuiltinVariables(v.value, {})
     const result = await queryVariableValues(v)
     onQueryResult(result)
   }

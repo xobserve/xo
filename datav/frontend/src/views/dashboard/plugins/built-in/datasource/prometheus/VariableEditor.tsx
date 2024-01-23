@@ -25,11 +25,19 @@ import { useStore } from '@nanostores/react'
 import { cfgVariablemsg } from 'src/i18n/locales/en'
 import { getCurrentTimeRange } from 'components/DatePicker/TimePicker'
 import { dateTimeFormat } from 'utils/datetime/formatter'
+import { replaceWithBuiltinVariables } from 'utils/variable'
+import { cloneDeep } from 'lodash'
 
 export enum PromDsQueryTypes {
   LabelValues = 'Label values',
   LabelNames = 'Label names',
   Metrics = 'Metrics',
+}
+
+const useVars = (variable, loadVariables) => {
+  useEffect(() => {
+    loadVariables(variable)
+  }, [variable])
 }
 
 const PrometheusVariableEditor = ({
@@ -48,14 +56,14 @@ const PrometheusVariableEditor = ({
     data.useCurrentTime = true
   }
 
-  useEffect(() => {
-    loadVariables(variable)
-  }, [variable])
-
   const loadVariables = async (v: Variable) => {
-    const result = await queryPromethuesVariableValues(v)
+    const v1 = cloneDeep(v)
+    v1.value = replaceWithBuiltinVariables(v1.value, {})
+    const result = await queryPromethuesVariableValues(v1)
     onQueryResult(result)
   }
+
+  useVars(variable, loadVariables)
 
   const timeRange = getCurrentTimeRange()
   return (

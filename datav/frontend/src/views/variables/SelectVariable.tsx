@@ -36,6 +36,7 @@ import { EditorInputItem } from 'components/editor/EditorItem'
 import { $teams } from '../team/store'
 import { externalDatasourcePlugins } from '../dashboard/plugins/external/plugins'
 import { builtinDatasourcePlugins } from '../dashboard/plugins/built-in/plugins'
+import { replaceWithBuiltinVariables } from 'utils/variable'
 
 interface Props {
   variables: Variable[]
@@ -385,7 +386,14 @@ export const queryVariableValues = async (
       const p =
         builtinDatasourcePlugins[ds.type] ?? externalDatasourcePlugins[ds.type]
       if (p && p.queryVariableValues) {
-        result = await p.queryVariableValues(v)
+        const v1 = cloneDeep(v)
+
+        v1.value = replaceWithBuiltinVariables(v1.value, {
+          teamId: v.teamId,
+        })
+        console.log('here333333', v1)
+
+        result = await p.queryVariableValues(v1)
       }
     }
   }

@@ -14,9 +14,11 @@
 import { parseVariableFormat } from './format'
 import { PanelQuery } from 'types/dashboard'
 import {
+  BuiltinVars,
   VariableInterval,
   VariableRange,
   VariableSplitChar,
+  VariableTeam,
   VariableTimerangeFrom,
   VariableTimerangeTo,
   VarialbeAllOption,
@@ -29,6 +31,7 @@ import { TimeRange } from 'types/time'
 import { isObject } from 'lodash'
 import { getCurrentTimeRange } from 'components/DatePicker/TimePicker'
 import { formatDuration } from './date'
+import { $config } from 'src/data/configs/config'
 
 export const hasVariableFormat = (s: string) => {
   return isEmpty(s) ? false : s.includes('${')
@@ -44,12 +47,8 @@ export const replaceWithVariables = (
 ) => {
   const vars = $variables.get()
   const formats = parseVariableFormat(s)
-  for (const f of formats) {
-    if (f == VariableRange) {
-      s = replaceWithRangeVariable(s)
-      continue
-    }
 
+  for (const f of formats) {
     const extrav = extraVars && extraVars[f]
     if (extrav) {
       s = s.replaceAll(`\${${f}}`, extrav.toString())
@@ -59,6 +58,47 @@ export const replaceWithVariables = (
     const v = vars.find((v) => v.name == f)
     if (v) {
       s = s.replaceAll(`\${${f}}`, v.selected)
+    }
+  }
+
+  s = replaceWithBuiltinVariables(s, {}, formats)
+
+  return s
+}
+
+export const replaceWithBuiltinVariables = (
+  s: string,
+  builtinVars: Partial<BuiltinVars>,
+  formats0?: string[],
+) => {
+  const formats = formats0 ?? parseVariableFormat(s)
+  for (const f of formats) {
+    if (f == VariableInterval && builtinVars.interval) {
+      s = s.replaceAll(`\${${f}}`, builtinVars.interval)
+      continue
+    }
+
+    const timeRange = builtinVars.timeRange ?? getCurrentTimeRange()
+    if (f == VariableTimerangeFrom) {
+      s = s.replaceAll(
+        `\${${f}}`,
+        (timeRange.start.getTime() / 1000).toString(),
+      )
+      continue
+    }
+
+    if (f == VariableTimerangeTo) {
+      s = s.replaceAll(`\${${f}}`, (timeRange.end.getTime() / 1000).toString())
+    }
+
+    if (f == VariableRange) {
+      const intv = timeRange.end.getTime() - timeRange.start.getTime()
+      s = s.replaceAll(`\${${VariableRange}}`, formatDuration(intv * 1000))
+    }
+
+    if (f == VariableTeam) {
+      const teamId = builtinVars.teamId ?? $config.get().currentTeam
+      s = s.replaceAll(`\${${VariableTeam}}`, teamId.toString())
     }
   }
 
@@ -77,32 +117,10 @@ export const replaceQueryWithVariables = (
     p.replaceQueryWithVariables(q, interval)
   }
 
-  const formats = parseVariableFormat(q.metrics)
-  for (const f of formats) {
-    if (f == VariableInterval) {
-      q.metrics = q.metrics.replaceAll(`\${${f}}`, interval)
-      continue
-    }
-
-    if (f == VariableTimerangeFrom) {
-      q.metrics = q.metrics.replaceAll(
-        `\${${f}}`,
-        (timeRange.start.getTime() / 1000).toString(),
-      )
-      continue
-    }
-
-    if (f == VariableTimerangeTo) {
-      q.metrics = q.metrics.replaceAll(
-        `\${${f}}`,
-        (timeRange.end.getTime() / 1000).toString(),
-      )
-    }
-
-    if (f == VariableRange) {
-      q.metrics = replaceWithRangeVariable(q.metrics)
-    }
-  }
+  q.metrics = replaceWithBuiltinVariables(q.metrics, {
+    interval,
+    timeRange,
+  })
 
   if (q.data.enableVariableKeys) {
     const keys = q.data.enableVariableKeys

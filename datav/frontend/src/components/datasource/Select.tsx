@@ -39,7 +39,6 @@ const DatasourceSelect = ({
   size = 'md',
 }: Props) => {
   const datasources = useStore($datasources)
-  console.log('here33333:', datasources)
   const teams = $teams.get()
   const options = []
   datasources.forEach((ds) => {
