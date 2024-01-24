@@ -25,6 +25,7 @@ import { apiList } from './QueryEditor'
 import { Box } from '@chakra-ui/react'
 import CodeEditor from 'components/CodeEditor/CodeEditor'
 import { DataFormat } from 'types/format'
+import useLoadVars from 'src/views/variables/useLoadVars'
 
 const VariableEditor = ({
   variable,
@@ -44,14 +45,12 @@ const VariableEditor = ({
       variable.value = JSON.stringify(data)
     })
 
-  useEffect(() => {
-    loadVariables(variable)
-  }, [variable])
-
   const loadVariables = async (v) => {
     const result = await queryxobserveVariableValues(variable)
     onQueryResult(result)
   }
+
+  useLoadVars(variable, loadVariables)
 
   return (
     <>

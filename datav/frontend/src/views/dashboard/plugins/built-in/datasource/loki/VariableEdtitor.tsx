@@ -25,6 +25,7 @@ import { queryLokiLabelNames, queryLokiVariableValues } from './query_runner'
 import { getNewestTimeRange } from 'src/components/DatePicker/TimePicker'
 import { Select } from 'antd'
 import InputSelect from 'src/components/select/InputSelect'
+import useLoadVars from 'src/views/variables/useLoadVars'
 
 export enum LokiDsQueryTypes {
   LabelValues = 'Label values',
@@ -56,10 +57,6 @@ const LokiVariableEditor = ({
   }
 
   useEffect(() => {
-    loadVariables(variable)
-  }, [variable])
-
-  useEffect(() => {
     loadLabelNames()
   }, [data.useCurrentTime])
 
@@ -76,6 +73,8 @@ const LokiVariableEditor = ({
     const result = await queryLokiVariableValues(v)
     onQueryResult(result)
   }
+
+  useLoadVars(variable, loadVariables)
 
   return (
     <>

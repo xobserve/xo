@@ -27,17 +27,12 @@ import { getCurrentTimeRange } from 'components/DatePicker/TimePicker'
 import { dateTimeFormat } from 'utils/datetime/formatter'
 import { replaceWithBuiltinVariables } from 'utils/variable'
 import { cloneDeep } from 'lodash'
+import useLoadVars from 'src/views/variables/useLoadVars'
 
 export enum PromDsQueryTypes {
   LabelValues = 'Label values',
   LabelNames = 'Label names',
   Metrics = 'Metrics',
-}
-
-const useVars = (variable, loadVariables) => {
-  useEffect(() => {
-    loadVariables(variable)
-  }, [variable])
 }
 
 const PrometheusVariableEditor = ({
@@ -57,13 +52,11 @@ const PrometheusVariableEditor = ({
   }
 
   const loadVariables = async (v: Variable) => {
-    const v1 = cloneDeep(v)
-    v1.value = replaceWithBuiltinVariables(v1.value, {})
-    const result = await queryPromethuesVariableValues(v1)
+    const result = await queryPromethuesVariableValues(v)
     onQueryResult(result)
   }
 
-  useVars(variable, loadVariables)
+  useLoadVars(variable, loadVariables)
 
   const timeRange = getCurrentTimeRange()
   return (

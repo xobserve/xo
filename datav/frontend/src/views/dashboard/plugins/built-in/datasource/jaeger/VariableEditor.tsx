@@ -23,6 +23,7 @@ import ChakraSelect from 'src/components/select/ChakraSelect'
 import React from 'react'
 import { useStore } from '@nanostores/react'
 import { jaegerDsMsg } from 'src/i18n/locales/en'
+import useLoadVars from 'src/views/variables/useLoadVars'
 
 export enum JaegerDsQueryTypes {
   Services = 'Services',
@@ -41,14 +42,12 @@ const JaegerVariableEditor = ({
     data.useCurrentTime = true
   }
 
-  useEffect(() => {
-    loadVariables(variable)
-  }, [variable])
-
   const loadVariables = async (v: Variable) => {
     const result = await queryJaegerVariableValues(v)
     onQueryResult(result)
   }
+
+  useLoadVars(variable, loadVariables)
 
   return (
     <>

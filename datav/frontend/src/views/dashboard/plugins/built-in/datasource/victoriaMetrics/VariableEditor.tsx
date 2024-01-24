@@ -26,6 +26,7 @@ import { cfgVariablemsg } from 'src/i18n/locales/en'
 import { getCurrentTimeRange } from 'components/DatePicker/TimePicker'
 import { dateTimeFormat } from 'utils/datetime/formatter'
 import { replaceWithBuiltinVariables } from 'utils/variable'
+import useLoadVars from 'src/views/variables/useLoadVars'
 
 export enum PromDsQueryTypes {
   LabelValues = 'Label values',
@@ -49,15 +50,13 @@ const VariableEditor = ({
     data.useCurrentTime = true
   }
 
-  useEffect(() => {
-    loadVariables(variable)
-  }, [variable])
-
   const loadVariables = async (v: Variable) => {
     v.value = replaceWithBuiltinVariables(v.value, {})
     const result = await queryVariableValues(v)
     onQueryResult(result)
   }
+
+  useLoadVars(variable, loadVariables)
 
   const timeRange = getCurrentTimeRange()
   return (

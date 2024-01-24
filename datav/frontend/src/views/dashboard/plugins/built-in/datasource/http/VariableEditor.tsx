@@ -23,6 +23,7 @@ import { EditorInputItem } from 'src/components/editor/EditorItem'
 import React from 'react'
 import { useStore } from '@nanostores/react'
 import { httpDsMsg } from 'src/i18n/locales/en'
+import useLoadVars from 'src/views/variables/useLoadVars'
 
 const HttpVariableEditor = ({
   variable,
@@ -46,14 +47,12 @@ const HttpVariableEditor = ({
       variable.value = JSON.stringify(data)
     })
 
-  useEffect(() => {
-    loadVariables(variable)
-  }, [variable])
-
   const loadVariables = async (v) => {
     const result = await queryHttpVariableValues(variable)
     onQueryResult(result)
   }
+
+  useLoadVars(variable, loadVariables)
 
   return (
     <>

@@ -11,10 +11,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { atom } from 'nanostores'
-import { Variable } from 'types/variable'
+import { cloneDeep } from 'lodash'
+import { useEffect } from 'react'
+import { replaceWithBuiltinVariables } from 'utils/variable'
 
-// store:
-// 1. global variables of current team
-// 2. current dashboard variables
-export const $variables = atom<Variable[]>([])
+const useLoadVars = (variable, loadVariables) => {
+  useEffect(() => {
+    const v = cloneDeep(variable)
+    v.value = replaceWithBuiltinVariables(v.value, {})
+    loadVariables(v)
+  }, [variable])
+}
+
+export default useLoadVars
