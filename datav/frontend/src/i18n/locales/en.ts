@@ -16,6 +16,7 @@ export const commonMsg = i18n('common', {
   tenant: 'Tenant',
   title: 'Title',
   name: 'Name',
+  status: 'Status',
   description: 'Description',
   basic: 'Basic',
   variable: 'Variable',

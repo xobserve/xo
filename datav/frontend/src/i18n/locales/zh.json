@@ -6,6 +6,7 @@
     "tenant": "租户",
     "title": "标题",
     "name": "名称",
+    "status": "状态",
     "description": "描述",
     "basic": "基本内容",
     "variable": "变量",

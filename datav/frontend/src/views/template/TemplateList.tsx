@@ -223,6 +223,7 @@ const TemplateList = ({ scopeId, scopeType, reload = null }: Props) => {
                   <Th>Id</Th>
                   <Th>{t.name}</Th>
                   <Th>{lang == 'zh' ? '来源' : 'Source'}</Th>
+                  <Th>{t.status}</Th>
                   <Th>{t.action}</Th>
                 </Tr>
               </Thead>
@@ -242,6 +243,15 @@ const TemplateList = ({ scopeId, scopeType, reload = null }: Props) => {
                           : lang == 'zh'
                           ? '继承自' + scopeText
                           : 'Inherited from ' + scopeText}
+                      </Td>
+                      <Td color={template.disabled ? 'red' : 'green'}>
+                        {template.disabled
+                          ? lang == 'zh'
+                            ? '已禁用'
+                            : 'Disabled'
+                          : lang == 'zh'
+                          ? '已启用'
+                          : 'Enabled'}
                       </Td>
                       <Td>
                         <HStack spacing={3}>
