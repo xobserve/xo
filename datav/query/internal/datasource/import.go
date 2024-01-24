@@ -23,7 +23,7 @@ func ImportFromJSON(ctx context.Context, raw string, teamId int64, u *models.Use
 	}
 	defer tx.Rollback()
 
-	err = models.ImportDatasource(ctx, ds, tx)
+	err = models.ImportDatasource(ctx, ds, tx, false)
 	if err != nil {
 		return fmt.Errorf("import datasource error: %w", err)
 	}

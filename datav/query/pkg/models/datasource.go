@@ -54,7 +54,7 @@ const (
 func CreateDatasourceInScope(ctx context.Context, scopeType int, scopeId int64, ds *Datasource, tx *sql.Tx) error {
 	if scopeType == common.ScopeTeam {
 		ds.TeamId = scopeId
-		return ImportDatasource(ctx, ds, tx)
+		return ImportDatasource(ctx, ds, tx, true)
 	}
 
 	if scopeType == common.ScopeTenant {
@@ -85,7 +85,7 @@ func CreateDatasourceInTenant(ctx context.Context, tenantId int64, ds *Datasourc
 
 	for _, teamId := range teamIds {
 		ds.TeamId = teamId
-		err = ImportDatasource(ctx, ds, tx)
+		err = ImportDatasource(ctx, ds, tx, true)
 		if err != nil && !e.IsErrUniqueConstraint(err) {
 			return err
 		}

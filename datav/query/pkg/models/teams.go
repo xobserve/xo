@@ -467,7 +467,7 @@ func DeleteTeam(ctx context.Context, teamId int64, tx *sql.Tx) error {
 
 func CreateSidemenuInScope(ctx context.Context, templateId int64, scopeType int, scopeId int64, v []*MenuItem, tx *sql.Tx) error {
 	if scopeType == common.ScopeTeam {
-		return ImportSidemenu(ctx, templateId, scopeId, v, tx)
+		return ImportSidemenu(ctx, templateId, scopeId, v, tx, true)
 	}
 
 	if scopeType == common.ScopeTenant {
@@ -497,7 +497,7 @@ func CreateSideMenuInTenant(ctx context.Context, templateId int64, tenantId int6
 	}
 
 	for _, teamId := range teamIds {
-		err = ImportSidemenu(ctx, templateId, teamId, v, tx)
+		err = ImportSidemenu(ctx, templateId, teamId, v, tx, true)
 		if err != nil && !e.IsErrUniqueConstraint(err) {
 			return err
 		}

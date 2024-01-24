@@ -419,11 +419,15 @@ func removeTemplateResourcesInTeam(tx *sql.Tx, teamId int64, templateId int64, o
 	return nil
 }
 
-func GetTemplateDisabled(templateId int64, scope int, scopeId int64) (bool, error) {
+func GetTemplateDisabled(templateId int64, scope int, scopeId int64, tx *sql.Tx) (bool, error) {
 	var id int64
-	err := db.Conn.QueryRow("SELECT template_id FROM template_disable WHERE scope=? and scope_id=? and template_id=?", scope, scopeId, templateId).Scan(
-		&id,
-	)
+	var err error
+	query := fmt.Sprintf("SELECT template_id FROM template_disable WHERE scope='%d' and scope_id='%d' and template_id='%d'", scope, scopeId, templateId)
+	if tx != nil {
+		err = tx.QueryRow(query).Scan(&id)
+	} else {
+		err = db.Conn.QueryRow(query).Scan(&id)
+	}
 
 	if err != nil {
 		if err == sql.ErrNoRows {

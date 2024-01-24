@@ -187,7 +187,7 @@ func DeleteDashboard(ctx context.Context, teamId int64, id string, tx *sql.Tx) e
 
 func CreateDashboardInScope(ctx context.Context, scopeType int, scopeId int64, userId int64, dash *Dashboard, tx *sql.Tx) error {
 	if scopeType == common.ScopeTeam {
-		return ImportDashboard(tx, dash, scopeId, userId)
+		return ImportDashboard(tx, dash, scopeId, userId, true)
 	}
 
 	if scopeType == common.ScopeTenant {
@@ -217,7 +217,7 @@ func CreateDashboardInTenant(tenantId int64, userId int64, dash *Dashboard, tx *
 	}
 
 	for _, teamId := range teamIds {
-		err = ImportDashboard(tx, dash, teamId, userId)
+		err = ImportDashboard(tx, dash, teamId, userId, true)
 		if err != nil && !e.IsErrUniqueConstraint(err) {
 			return err
 		}

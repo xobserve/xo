@@ -55,7 +55,7 @@ const VarialbeAllOption = "__all__"
 func CreateVariableInScope(ctx context.Context, scopeType int, scopeId int64, v *Variable, tx *sql.Tx) error {
 	if scopeType == common.ScopeTeam {
 		v.TeamId = scopeId
-		return ImportVariable(ctx, v, tx)
+		return ImportVariable(ctx, v, tx, true)
 	}
 
 	if scopeType == common.ScopeTenant {
@@ -86,7 +86,7 @@ func CreateVariableInTenant(ctx context.Context, tenantId int64, v *Variable, tx
 
 	for _, teamId := range teamIds {
 		v.TeamId = teamId
-		err = ImportVariable(ctx, v, tx)
+		err = ImportVariable(ctx, v, tx, true)
 		if err != nil && !e.IsErrUniqueConstraint(err) {
 			return err
 		}

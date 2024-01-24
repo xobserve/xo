@@ -78,7 +78,7 @@ func AddNewVariable(c *gin.Context) {
 	}
 	defer tx.Rollback()
 
-	err = models.ImportVariable(c.Request.Context(), v, tx)
+	err = models.ImportVariable(c.Request.Context(), v, tx, false)
 	if err != nil {
 		if e.IsErrUniqueConstraint(err) {
 			c.JSON(400, common.RespError("variable name or id already exists"))

@@ -165,7 +165,7 @@ func UseTemplate(c *gin.Context) {
 			if dash.Title == "" {
 				dash.Title = fmt.Sprintf("Clone from %s template %d ", models.TemplateTypeText[t.Scope], t.Id)
 			}
-			err := models.ImportDashboard(tx, dash, req.ScopeId, u.Id)
+			err := models.ImportDashboard(tx, dash, req.ScopeId, u.Id, false)
 			if err != nil {
 				if !e.IsErrUniqueConstraint(err) {
 					logger.Warn("import dashboard error", "error", err)
@@ -179,7 +179,7 @@ func UseTemplate(c *gin.Context) {
 		// import datasources
 		for _, ds := range templateExport.Datasources {
 			ds.TeamId = req.ScopeId
-			err := models.ImportDatasource(c.Request.Context(), ds, tx)
+			err := models.ImportDatasource(c.Request.Context(), ds, tx, false)
 			if err != nil {
 				if !e.IsErrUniqueConstraint(err) {
 					logger.Warn("import datasource error", "error", err)
@@ -192,7 +192,7 @@ func UseTemplate(c *gin.Context) {
 		// import variables
 		for _, v := range templateExport.Variables {
 			v.TeamId = req.ScopeId
-			err := models.ImportVariable(c.Request.Context(), v, tx)
+			err := models.ImportVariable(c.Request.Context(), v, tx, false)
 			if err != nil {
 				if !e.IsErrUniqueConstraint(err) {
 					logger.Warn("import variable error", "error", err)
@@ -204,7 +204,7 @@ func UseTemplate(c *gin.Context) {
 
 		// import sidemenu
 		if templateExport.SideMenu != nil {
-			err := models.ImportSidemenu(c.Request.Context(), t.Id, req.ScopeId, templateExport.SideMenu, tx)
+			err := models.ImportSidemenu(c.Request.Context(), t.Id, req.ScopeId, templateExport.SideMenu, tx, false)
 			if err != nil && !e.IsErrUniqueConstraint(err) {
 				logger.Warn("import sidemenu error", "error", err)
 				c.JSON(400, common.RespInternalError())
@@ -528,7 +528,7 @@ func GetScopeUseTemplates(c *gin.Context) {
 			t.Scope = scopeType
 		}
 		if scopeType == common.ScopeTeam {
-			disabled, err := models.GetTemplateDisabled(t.Id, scopeType, scopeId)
+			disabled, err := models.GetTemplateDisabled(t.Id, scopeType, scopeId, nil)
 			if err != nil {
 				logger.Warn("get template disabled error", "error", err)
 				c.JSON(400, common.RespError(err.Error()))

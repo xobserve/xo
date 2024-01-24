@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/xObserve/xObserve/query/pkg/common"
 	"github.com/xObserve/xObserve/query/pkg/db"
 	"github.com/xObserve/xObserve/query/pkg/e"
 	"github.com/xObserve/xObserve/query/pkg/utils"
@@ -19,11 +20,23 @@ func ImportDashboardFromJSON(tx *sql.Tx, raw string, teamId int64, userId int64)
 		return nil, err
 	}
 
-	err = ImportDashboard(tx, dash, teamId, userId)
+	err = ImportDashboard(tx, dash, teamId, userId, false)
 	return dash, err
 }
 
-func ImportDashboard(tx *sql.Tx, dash *Dashboard, teamId int64, userId int64) error {
+func ImportDashboard(tx *sql.Tx, dash *Dashboard, teamId int64, userId int64, checkTemplateDisabled bool) error {
+	if checkTemplateDisabled {
+		// check template is disabled by team
+		diabled, err := GetTemplateDisabled(dash.TemplateId, common.ScopeTeam, teamId, tx)
+		if err != nil {
+			return err
+		}
+
+		if diabled {
+			return nil
+		}
+	}
+
 	now := time.Now()
 	if dash.Id == "" {
 		dash.Id = "d-" + utils.GenerateShortUID()
@@ -71,10 +84,23 @@ func ImportDashboard(tx *sql.Tx, dash *Dashboard, teamId int64, userId int64) er
 			return fmt.Errorf("update dashboard error: %w", err)
 		}
 	}
+
 	return nil
 }
 
-func ImportDatasource(ctx context.Context, ds *Datasource, tx *sql.Tx) error {
+func ImportDatasource(ctx context.Context, ds *Datasource, tx *sql.Tx, checkTemplateDisabled bool) error {
+	if checkTemplateDisabled {
+		// check template is disabled by team
+		diabled, err := GetTemplateDisabled(ds.TemplateId, common.ScopeTeam, ds.TeamId, tx)
+		if err != nil {
+			return err
+		}
+
+		if diabled {
+			return nil
+		}
+	}
+
 	var err error
 	data, err := json.Marshal(ds.Data)
 	if err != nil {
@@ -100,7 +126,19 @@ func ImportDatasource(ctx context.Context, ds *Datasource, tx *sql.Tx) error {
 	return nil
 }
 
-func ImportVariable(ctx context.Context, v *Variable, tx *sql.Tx) error {
+func ImportVariable(ctx context.Context, v *Variable, tx *sql.Tx, checkTemplateDisabled bool) error {
+	if checkTemplateDisabled {
+		// check template is disabled by team
+		diabled, err := GetTemplateDisabled(v.TemplateId, common.ScopeTeam, v.TeamId, tx)
+		if err != nil {
+			return err
+		}
+
+		if diabled {
+			return nil
+		}
+	}
+
 	if v.Id == 0 {
 		v.Id = time.Now().UnixNano() / 1000
 	}
@@ -122,10 +160,21 @@ func ImportVariable(ctx context.Context, v *Variable, tx *sql.Tx) error {
 	return nil
 }
 
-func ImportSidemenu(ctx context.Context, templateId int64, teamId int64, items []*MenuItem, tx *sql.Tx) error {
+func ImportSidemenu(ctx context.Context, templateId int64, teamId int64, items []*MenuItem, tx *sql.Tx, checkTemplateDisabled bool) error {
+	if checkTemplateDisabled {
+		// check template is disabled by team
+		diabled, err := GetTemplateDisabled(templateId, common.ScopeTeam, teamId, tx)
+		if err != nil {
+			return err
+		}
+
+		if diabled {
+			return nil
+		}
+	}
+
 	sidemenu, err := QuerySideMenu(ctx, teamId, tx)
 	if err != nil {
-		fmt.Println("here333333")
 		return err
 	}
 

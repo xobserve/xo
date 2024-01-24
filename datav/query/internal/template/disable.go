@@ -145,6 +145,13 @@ func EnableTemplate(c *gin.Context) {
 	}
 	defer tx.Rollback()
 
+	_, err = tx.ExecContext(c.Request.Context(), "DELETE FROM template_disable WHERE scope=? AND scope_id=? AND template_id=?", req.ScopeType, req.ScopeId, req.TemplateId)
+	if err != nil {
+		logger.Warn("delete template disable error", "error", err)
+		c.JSON(400, common.RespError(err.Error()))
+		return
+	}
+
 	err = models.CreateResourcesByTemplateExport(c.Request.Context(), t.Id, templateExport, req.ScopeType, req.ScopeId, u.Id, tx)
 	if err != nil {
 		if !e.IsErrUniqueConstraint(err) {
@@ -154,12 +161,6 @@ func EnableTemplate(c *gin.Context) {
 		}
 	}
 
-	_, err = tx.ExecContext(c.Request.Context(), "DELETE FROM template_disable WHERE scope=? AND scope_id=? AND template_id=?", req.ScopeType, req.ScopeId, req.TemplateId)
-	if err != nil {
-		logger.Warn("delete template disable error", "error", err)
-		c.JSON(400, common.RespError(err.Error()))
-		return
-	}
 	err = tx.Commit()
 	if err != nil {
 		logger.Warn("commit transaction error", "error", err)
