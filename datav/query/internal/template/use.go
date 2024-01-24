@@ -153,55 +153,6 @@ func UseTemplate(c *gin.Context) {
 	}
 	defer tx.Rollback()
 
-	if req.ScopeType == common.ScopeTenant || req.ScopeType == common.ScopeTeam {
-		// check template is already in website
-		var tid int64
-		db.Conn.QueryRow("SELECT template_id FROM template_use WHERE scope = ?  and template_id = ?", common.ScopeWebsite, t.Id).Scan(&tid)
-		if tid == t.Id {
-			c.JSON(400, common.RespError("template already linked in website scope"))
-			return
-		}
-	}
-
-	if req.ScopeType == common.ScopeWebsite {
-		// remove tenant and team template link
-		_, err = tx.Exec("DELETE FROM template_use WHERE template_id=? and scope in (?,?)", t.Id, common.ScopeTenant, common.ScopeTeam)
-		if err != nil {
-			logger.Warn("delete template use error", "error", err)
-			c.JSON(400, common.RespError(err.Error()))
-			return
-		}
-	} else if req.ScopeType == common.ScopeTenant {
-		// remove team template link
-		_, err = tx.Exec("DELETE FROM template_use WHERE template_id=? and scope=?", t.Id, common.ScopeTeam)
-		if err != nil {
-			logger.Warn("delete template use error", "error", err)
-			c.JSON(400, common.RespError(err.Error()))
-			return
-		}
-	}
-
-	if req.ScopeType == common.ScopeTeam {
-		// check template is already in tenant
-		tenantId, err := models.QueryTenantIdByTeamId(c.Request.Context(), req.ScopeId)
-		if err != nil {
-			if err == sql.ErrNoRows {
-				c.JSON(400, common.RespError("the tenant which you are visiting is not exist"))
-				return
-			}
-			logger.Warn("get tenant id error", "error", err)
-			c.JSON(500, common.RespError(err.Error()))
-			return
-		}
-
-		var tid int64
-		db.Conn.QueryRow("SELECT template_id FROM template_use WHERE scope=? and scope_id=? and template_id=?", common.ScopeTenant, tenantId, t.Id).Scan(&tid)
-		if tid == t.Id {
-			c.JSON(400, common.RespError("template already linked in tenant scope"))
-			return
-		}
-	}
-
 	if req.Type == models.TemplateCreateClone {
 		// clone a template
 		if req.ScopeType != common.ScopeTeam {
@@ -261,6 +212,55 @@ func UseTemplate(c *gin.Context) {
 			}
 		}
 	} else {
+		if req.ScopeType == common.ScopeTenant || req.ScopeType == common.ScopeTeam {
+			// check template is already in website
+			var tid int64
+			db.Conn.QueryRow("SELECT template_id FROM template_use WHERE scope = ?  and template_id = ?", common.ScopeWebsite, t.Id).Scan(&tid)
+			if tid == t.Id {
+				c.JSON(400, common.RespError("template already linked in website scope"))
+				return
+			}
+		}
+
+		if req.ScopeType == common.ScopeWebsite {
+			// remove tenant and team template link
+			_, err = tx.Exec("DELETE FROM template_use WHERE template_id=? and scope in (?,?)", t.Id, common.ScopeTenant, common.ScopeTeam)
+			if err != nil {
+				logger.Warn("delete template use error", "error", err)
+				c.JSON(400, common.RespError(err.Error()))
+				return
+			}
+		} else if req.ScopeType == common.ScopeTenant {
+			// remove team template link
+			_, err = tx.Exec("DELETE FROM template_use WHERE template_id=? and scope=?", t.Id, common.ScopeTeam)
+			if err != nil {
+				logger.Warn("delete template use error", "error", err)
+				c.JSON(400, common.RespError(err.Error()))
+				return
+			}
+		}
+
+		if req.ScopeType == common.ScopeTeam {
+			// check template is already in tenant
+			tenantId, err := models.QueryTenantIdByTeamId(c.Request.Context(), req.ScopeId)
+			if err != nil {
+				if err == sql.ErrNoRows {
+					c.JSON(400, common.RespError("the tenant which you are visiting is not exist"))
+					return
+				}
+				logger.Warn("get tenant id error", "error", err)
+				c.JSON(500, common.RespError(err.Error()))
+				return
+			}
+
+			var tid int64
+			db.Conn.QueryRow("SELECT template_id FROM template_use WHERE scope=? and scope_id=? and template_id=?", common.ScopeTenant, tenantId, t.Id).Scan(&tid)
+			if tid == t.Id {
+				c.JSON(400, common.RespError("template already linked in tenant scope"))
+				return
+			}
+		}
+
 		// refer to a template
 		_, err = tx.ExecContext(c.Request.Context(), "INSERT INTO template_use (scope,scope_id,template_id,created,created_by) VALUES (?,?,?,?,?)",
 			req.ScopeType, req.ScopeId, req.TemplateId, time.Now(), u.Id)

@@ -12,11 +12,9 @@
 // limitations under the License.
 
 import { CodeEditorModal } from 'src/components/CodeEditor/CodeEditorModal'
-import Label from 'src/components/form/Item'
 import { isEmpty } from 'lodash'
 import { DatasourceVariableEditorProps } from 'types/datasource'
 import { isJSON } from 'utils/is'
-import { useEffect } from 'react'
 import { queryHttpVariableValues } from './query_runner'
 import FormItem from 'src/components/form/Item'
 import { EditorInputItem } from 'src/components/editor/EditorItem'

@@ -83,7 +83,7 @@ const TemplateExport = (props: Props) => {
       const gVarList: Variable[] = []
       for (const dash of dashList) {
         for (const p of dash.data.panels) {
-          const ds = datasources.find((d) => d.id == p.datasource.id)
+          const ds = datasources.find((d) => d.id == p.datasource?.id)
           if (ds) {
             const exist = dsList.find((d) => d.id == ds.id)
             if (!exist) {
