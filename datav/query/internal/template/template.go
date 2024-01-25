@@ -516,3 +516,51 @@ func UnlinkDashboardTemplate(c *gin.Context) {
 		return
 	}
 }
+
+func UnlinkDatasourceTemplate(c *gin.Context) {
+	teamId, _ := strconv.ParseInt(c.Param("teamId"), 10, 64)
+	dsId, _ := strconv.ParseInt(c.Param("id"), 10, 64)
+
+	if dsId == 0 || teamId == 0 {
+		c.JSON(400, common.RespError("invalid datasource id"))
+		return
+	}
+
+	u := c.MustGet("currentUser").(*models.User)
+	err := acl.CanEditTeam(c.Request.Context(), teamId, u.Id)
+	if err != nil {
+		c.JSON(403, common.RespError(err.Error()))
+		return
+	}
+
+	_, err = db.Conn.ExecContext(c.Request.Context(), "UPDATE datasource SET template_id=0 WHERE team_id=? and id=?", teamId, dsId)
+	if err != nil {
+		logger.Warn("unlink datasource template error", "error", err)
+		c.JSON(400, common.RespError(err.Error()))
+		return
+	}
+}
+
+func UnlinkVariableTemplate(c *gin.Context) {
+	teamId, _ := strconv.ParseInt(c.Param("teamId"), 10, 64)
+	dsId, _ := strconv.ParseInt(c.Param("id"), 10, 64)
+
+	if dsId == 0 || teamId == 0 {
+		c.JSON(400, common.RespError("invalid variable id"))
+		return
+	}
+
+	u := c.MustGet("currentUser").(*models.User)
+	err := acl.CanEditTeam(c.Request.Context(), teamId, u.Id)
+	if err != nil {
+		c.JSON(403, common.RespError(err.Error()))
+		return
+	}
+
+	_, err = db.Conn.ExecContext(c.Request.Context(), "UPDATE variable SET template_id=0 WHERE team_id=? and id=?", teamId, dsId)
+	if err != nil {
+		logger.Warn("unlink variable template error", "error", err)
+		c.JSON(400, common.RespError(err.Error()))
+		return
+	}
+}

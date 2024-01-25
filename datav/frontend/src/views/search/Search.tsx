@@ -62,6 +62,7 @@ import { commonMsg, searchMsg } from 'src/i18n/locales/en'
 import { $config } from 'src/data/configs/config'
 import { addParamToUrl, removeParamFromUrl } from 'utils/url'
 import { useSearchParam } from 'react-use'
+import { locale } from 'src/i18n/i18n'
 
 interface Props {
   title: string
@@ -80,6 +81,7 @@ const Search = memo((props: Props) => {
   } = props
   const t = useStore(commonMsg)
   const t1 = useStore(searchMsg)
+  const lang = useStore(locale)
   const searchParam = useSearchParam('search')
   const tagsParam = useSearchParam('searchTags')?.split(',') ?? []
   const teamsParam = useSearchParam('searchTeams')?.split(',') ?? []
@@ -119,6 +121,8 @@ const Search = memo((props: Props) => {
     if (searchParam == 'open' && config) {
       onOpen()
       onSearchOpen()
+    } else {
+      onClose()
     }
   }, [searchParam, config])
 
@@ -332,7 +336,9 @@ const Search = memo((props: Props) => {
             className='hover-text'
             cursor='pointer'
             onClick={() => {
-              addParamToUrl({ search: 'open' })
+              isOpen
+                ? addParamToUrl({ search: null })
+                : addParamToUrl({ search: 'open' })
             }}
           >
             <Box>
@@ -474,7 +480,11 @@ const Search = memo((props: Props) => {
                   </Box>
                 </HStack>
                 <HStack>
-                  <Text>Show template</Text>
+                  <Text>
+                    {lang == 'zh'
+                      ? '显示模版仪表盘'
+                      : 'Show template dashboards'}
+                  </Text>
                   <Checkbox
                     checked={displayTemplate}
                     onChange={(e) =>
