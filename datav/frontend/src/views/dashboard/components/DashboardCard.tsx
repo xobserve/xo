@@ -35,6 +35,7 @@ import { OnDashboardWeightChangeEvent } from 'src/data/bus-events'
 import { Session } from 'types/user'
 import { isAdmin } from 'types/role'
 import { navigateTo } from 'utils/url'
+import TemplateBadge from 'src/views/template/TemplateBadge'
 
 interface Props {
   dashboard: Dashboard
@@ -86,6 +87,7 @@ const DashboardCard = ({
             navigateTo(`/${dashboard.ownedBy}` + getDashboardLink(dashboard.id))
             onClick && onClick()
           }}
+          gap={1}
         >
           <Text>
             <Highlight
@@ -96,6 +98,9 @@ const DashboardCard = ({
             </Highlight>
           </Text>
           {location.pathname == '/' + dashboard.id && <Tag ml='1'>current</Tag>}
+          {dashboard.templateId != 0 && (
+            <TemplateBadge templateId={dashboard.templateId} />
+          )}
           {(query || active) && (
             <Flex alignItems='center' ml='2'>
               <Text textStyle='annotation' mb='-2px'>

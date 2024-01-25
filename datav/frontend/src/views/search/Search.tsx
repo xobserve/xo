@@ -14,6 +14,7 @@
 import {
   Box,
   Button,
+  Checkbox,
   Flex,
   HStack,
   IconButton,
@@ -106,6 +107,7 @@ const Search = memo((props: Props) => {
   )
   const [starredDashIds, setStarredDashIds] = useState<Set<string>>(new Set())
   const [layout, setLayout] = useState<'teams' | 'list' | 'tags'>('teams')
+  const [displayTemplate, setDisplayTemplate] = useState<boolean>(false)
 
   useEffect(() => {
     if (!isEqual(selectedTags, tagsParam)) {
@@ -197,6 +199,9 @@ const Search = memo((props: Props) => {
         continue
       }
 
+      if (!displayTemplate && dash.templateId != 0) {
+        continue
+      }
       const id = caseSensitive
         ? dash.id.toString()
         : dash.id.toString().toLowerCase()
@@ -251,6 +256,7 @@ const Search = memo((props: Props) => {
     selectedTeams,
     filterStarred,
     starredDashIds,
+    displayTemplate,
   ])
 
   const dashboards: Dashboard[] | Map<string, Dashboard[]> = useMemo(() => {
@@ -466,6 +472,15 @@ const Search = memo((props: Props) => {
                   >
                     {filterStarred ? <AiFillStar /> : <AiOutlineStar />}
                   </Box>
+                </HStack>
+                <HStack>
+                  <Text>Show template</Text>
+                  <Checkbox
+                    checked={displayTemplate}
+                    onChange={(e) =>
+                      setDisplayTemplate(e.currentTarget.checked)
+                    }
+                  />
                 </HStack>
                 {/* <Input value={query} onChange={e => onQueryChange(e.currentTarget.value)} w={isLargeScreen ? "320px" : "150px"} placeholder="enter dashboard name or id to search.." /> */}
                 <HStack spacing={4} fontSize='1.1rem'>
