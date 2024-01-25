@@ -482,3 +482,37 @@ func ExportTeamAsTemplate(c *gin.Context) {
 		"sidemenu":   sidemenu.Data,
 	}))
 }
+
+func UnlinkDashboardTemplate(c *gin.Context) {
+	teamId, _ := strconv.ParseInt(c.Param("teamId"), 10, 64)
+	dashId := c.Param("id")
+	if dashId == "" || teamId == 0 {
+		c.JSON(400, common.RespError("invalid dashboard id"))
+		return
+	}
+
+	u := c.MustGet("currentUser").(*models.User)
+	dash, err := models.QueryDashboard(c.Request.Context(), teamId, dashId)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			c.JSON(400, common.RespError("dashboard not exist"))
+			return
+		}
+		logger.Warn("get dashboard error", "error", err)
+		c.JSON(400, common.RespError(err.Error()))
+		return
+	}
+
+	err = acl.CanEditTeam(c.Request.Context(), dash.OwnedBy, u.Id)
+	if err != nil {
+		c.JSON(403, common.RespError(err.Error()))
+		return
+	}
+
+	_, err = db.Conn.ExecContext(c.Request.Context(), "UPDATE dashboard SET template_id=0 WHERE team_id=? and id=?", teamId, dashId)
+	if err != nil {
+		logger.Warn("unlink dashboard template error", "error", err)
+		c.JSON(400, common.RespError(err.Error()))
+		return
+	}
+}

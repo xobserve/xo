@@ -215,6 +215,7 @@ func (s *Server) Start() error {
 		r.POST("/template/sync", MustLogin(), template.SyncTemplate)
 		r.POST("/template/disable", MustLogin(), template.DisableTemplate)
 		r.POST("/template/enable", MustLogin(), template.EnableTemplate)
+		r.POST("/template/unlink/dashboard/:teamId/:id", MustLogin(), template.UnlinkDashboardTemplate)
 
 		// proxy apis
 		r.Any("/proxy/:teamId/:id/*path", proxy.ProxyDatasource)

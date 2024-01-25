@@ -22,6 +22,7 @@ import {
   PopoverTrigger,
   Tooltip,
   useMediaQuery,
+  useToast,
 } from '@chakra-ui/react'
 import SelectVariables from 'src/views/variables/SelectVariable'
 import { isEmpty } from 'lodash'
@@ -49,6 +50,7 @@ import useEmbed from 'hooks/useEmbed'
 import ColorTag from 'components/ColorTag'
 import { addParamToUrl, navigateTo } from 'utils/url'
 import TemplateBadge from '../template/TemplateBadge'
+import { requestApi } from 'utils/axios/request'
 
 interface HeaderProps {
   dashboard: Dashboard
@@ -57,6 +59,7 @@ interface HeaderProps {
 }
 const DashboardHeader = memo(
   ({ dashboard, onChange, sideWidth }: HeaderProps) => {
+    const toast = useToast()
     const vars = useStore($variables)
     const t1 = useStore(dashboardMsg)
     const fullscreen = useFullscreen()
@@ -68,6 +71,20 @@ const DashboardHeader = memo(
     const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
     const [dvars, gvars] = catelogVariables(vars, dashboard)
 
+    const unlinkTemplate = async () => {
+      await requestApi.post(
+        `/template/unlink/dashboard/${dashboard.ownedBy}/${dashboard.id}`,
+      )
+      toast({
+        title: 'Template unlinked,reloading..',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
+      setTimeout(() => {
+        window.location.reload()
+      }, 1000)
+    }
     return (
       <Box
         id='dashboard-header'
@@ -116,7 +133,10 @@ const DashboardHeader = memo(
                     <HStack>
                       <Box cursor='pointer'>{dashboard.title}</Box>
                       {dashboard.templateId != 0 && (
-                        <TemplateBadge templateId={dashboard.templateId} />
+                        <TemplateBadge
+                          templateId={dashboard.templateId}
+                          unlinkTemplate={unlinkTemplate}
+                        />
                       )}
                     </HStack>
                   </PopoverTrigger>
