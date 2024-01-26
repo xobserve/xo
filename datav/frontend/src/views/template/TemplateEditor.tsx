@@ -26,6 +26,7 @@ import { locale } from 'src/i18n/i18n'
 import { commonMsg } from 'src/i18n/locales/en'
 import { Template, TemplateScope, TemplateType } from 'types/template'
 import { requestApi } from 'utils/axios/request'
+import { navigateTo } from 'utils/url'
 import { isEmpty } from 'utils/validate'
 
 interface Props {
@@ -64,19 +65,33 @@ const TemplateEditor = (props: Props) => {
     }
 
     if (isCreate) {
-      await requestApi.post('/template/create', template)
+      const res = await requestApi.post('/template/create', template)
+      toast({
+        title:
+          lang == 'zh'
+            ? '模版已创建, 重定向中...'
+            : 'Template created, redirecting...',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
+
+      setTimeout(() => {
+        navigateTo(
+          `/${config.currentTeam}/template?id=${res.data}&templateType=${template.type}`,
+        )
+      }, 1000)
     } else {
       await requestApi.post('/template/update', template)
+      toast({
+        title: lang == 'zh' ? '模版已保存' : 'Template saved',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
+
+      props.onChange && props.onChange(template)
     }
-
-    toast({
-      title: lang == 'zh' ? '模版已保存' : 'Template saved',
-      status: 'success',
-      duration: 3000,
-      isClosable: true,
-    })
-
-    props.onChange && props.onChange(template)
   }
 
   return (

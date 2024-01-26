@@ -69,8 +69,9 @@ const TemplateStore = () => {
   const t = useStore(commonMsg)
   const lang = locale.get()
   const config = useStore($config)
-  const templateType = Number(useSearchParam('templateType'))
-  const [type, setType] = useState(templateType ?? TemplateType.App)
+  const urlType = useSearchParam('templateType')
+  const urlId = useSearchParam('id')
+  const [type, setType] = useState(Number(urlType ?? TemplateType.App))
   const [templates, setTemplates] = useState<Template[]>([])
   const [tempTemplate, setTempTemplate] = useState<Template>()
   const [tempTemplateConent, setTempTemplateConent] =
@@ -120,6 +121,7 @@ const TemplateStore = () => {
 
   const onTemplateEdit = (t: Template) => {
     setTempTemplate(t)
+    addParamToUrl({ id: t.id })
     onOpen()
   }
 
@@ -336,7 +338,7 @@ const TemplateStore = () => {
                         <TemplateCard
                           key={template.id}
                           template={template}
-                          selected={template.id == tempTemplate?.id}
+                          selected={template.id == urlId}
                           width={['100%', '100%', '33%']}
                           onEdit={() => onTemplateEdit(template)}
                           onCreateContent={() => onCreateContent(template)}
@@ -359,6 +361,7 @@ const TemplateStore = () => {
         isOpen={isOpen}
         onClose={() => {
           setTempTemplate(null)
+          addParamToUrl({ id: null })
           onClose()
         }}
       >

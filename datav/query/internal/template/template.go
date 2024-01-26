@@ -72,6 +72,8 @@ func CreateTemplate(c *gin.Context) {
 		c.JSON(400, common.RespError(err.Error()))
 		return
 	}
+
+	c.JSON(200, common.RespSuccess(t.Id))
 }
 
 func UpdateTemplate(c *gin.Context) {
@@ -135,11 +137,20 @@ func createTemplate(ctx context.Context, userId int64, t *models.Template) error
 	now := time.Now()
 	if t.Id != 0 {
 		_, err = db.Conn.ExecContext(ctx, "INSERT INTO template (id,type,title,description,scope,owned_by,provider,tags,created) VALUES (?,?,?,?,?,?,?,?,?)", t.Id, t.Type, t.Title, t.Description, t.Scope, t.OwnedBy, t.Provider, tags, now)
+		if err != nil {
+			return err
+		}
 	} else {
-		_, err = db.Conn.ExecContext(ctx, "INSERT INTO template (type,title,description,scope,owned_by,provider,tags,created) VALUES (?,?,?,?,?,?,?,?)", t.Type, t.Title, t.Description, t.Scope, t.OwnedBy, t.Provider, tags, now)
-	}
-	if err != nil {
-		return err
+		res, err := db.Conn.ExecContext(ctx, "INSERT INTO template (type,title,description,scope,owned_by,provider,tags,created) VALUES (?,?,?,?,?,?,?,?)", t.Type, t.Title, t.Description, t.Scope, t.OwnedBy, t.Provider, tags, now)
+		if err != nil {
+			return err
+		}
+
+		id, err := res.LastInsertId()
+		if err != nil {
+			return err
+		}
+		t.Id = id
 	}
 
 	return nil

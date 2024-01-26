@@ -56,6 +56,7 @@ import {
 } from 'types/template'
 import { requestApi } from 'utils/axios/request'
 import { prettyJson } from 'utils/string'
+import { addParamToUrl } from 'utils/url'
 
 interface Props {
   template: Template
@@ -115,6 +116,7 @@ const TemplateCard = (props: Props) => {
     const res = await requestApi.get(`/template/contents/${template.id}`)
     setContents(res.data)
     onOpen()
+    addParamToUrl({ id: template.id })
   }
 
   const onUseContent = async (contentId) => {
@@ -301,7 +303,15 @@ const TemplateCard = (props: Props) => {
         )}
       </Flex>
       {contents && (
-        <Drawer placement='right' size='lg' onClose={onClose} isOpen={isOpen}>
+        <Drawer
+          placement='right'
+          size='lg'
+          onClose={() => {
+            onClose()
+            addParamToUrl({ id: null })
+          }}
+          isOpen={isOpen}
+        >
           <DrawerOverlay />
           <DrawerContent>
             <DrawerHeader>
