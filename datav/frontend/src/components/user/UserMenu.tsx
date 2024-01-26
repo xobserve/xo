@@ -52,6 +52,7 @@ import { Team } from 'types/teams'
 import { requestApi } from 'utils/axios/request'
 import { Tenant } from 'types/tenant'
 import { getNavigateTo, navigateTo } from 'utils/url'
+import { isAdmin } from 'types/role'
 
 const UserMenu = ({ miniMode }) => {
   const t = useStore(commonMsg)
@@ -159,11 +160,13 @@ const UserMenu = ({ miniMode }) => {
             <MenuDivider />
             {session && (
               <>
-                <Link to={getNavigateTo(`/admin/users`)} target='_blank'>
-                  <MenuItem width='100%' icon={<FaStar fontSize='1em' />}>
-                    {t1.adminPanel}
-                  </MenuItem>
-                </Link>
+                {isAdmin(session.user.role) && (
+                  <Link to={getNavigateTo(`/admin/users`)} target='_blank'>
+                    <MenuItem width='100%' icon={<FaStar fontSize='1em' />}>
+                      {t1.adminPanel}
+                    </MenuItem>
+                  </Link>
+                )}
                 <Link to={getNavigateTo(`${teamPath}/tenant/users`)}>
                   <MenuItem width='100%' icon={<FaStar fontSize='1em' />}>
                     {t1.tenantAdmin}
