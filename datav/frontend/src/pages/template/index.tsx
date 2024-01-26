@@ -47,6 +47,7 @@ import FormItem from 'components/form/Item'
 import { clone, cloneDeep } from 'lodash'
 import React, { useEffect, useMemo, useState } from 'react'
 import { FaSearch } from 'react-icons/fa'
+import { useSearchParam } from 'react-use'
 import { $config } from 'src/data/configs/config'
 import { MobileBreakpoint } from 'src/data/constants'
 import { locale } from 'src/i18n/i18n'
@@ -61,13 +62,15 @@ import {
 } from 'types/template'
 import { getTemplatesApi } from 'utils/axios/api'
 import { requestApi } from 'utils/axios/request'
+import { addParamToUrl } from 'utils/url'
 import { isEmpty } from 'utils/validate'
 
 const TemplateStore = () => {
   const t = useStore(commonMsg)
   const lang = locale.get()
   const config = useStore($config)
-  const [type, setType] = useState(TemplateType.App)
+  const templateType = Number(useSearchParam('templateType'))
+  const [type, setType] = useState(templateType ?? TemplateType.App)
   const [templates, setTemplates] = useState<Template[]>([])
   const [tempTemplate, setTempTemplate] = useState<Template>()
   const [tempTemplateConent, setTempTemplateConent] =
@@ -296,12 +299,21 @@ const TemplateStore = () => {
           >
             <FaSearch opacity='0.5' />
           </Box>
-          <Tabs position='relative' variant='line' size='md' width='100%'>
+          <Tabs
+            position='relative'
+            variant='line'
+            size='md'
+            width='100%'
+            defaultIndex={type - 1}
+          >
             <TabList justifyContent='center' borderBottomWidth='1px'>
               {tabs.map((tab) => (
                 <Tab
                   key={tab.value}
-                  onClick={() => setType(tab.value)}
+                  onClick={() => {
+                    setType(tab.value)
+                    addParamToUrl({ templateType: tab.value })
+                  }}
                   borderBottom='2px solid'
                   borderColor='transparent'
                   _selected={{

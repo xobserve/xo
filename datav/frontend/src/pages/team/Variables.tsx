@@ -518,6 +518,9 @@ export const EditVariable = ({
                 }}
               >
                 <FormSection title={t.basicSetting}>
+                  <FormItem title='ID' alignItems='center'>
+                    <Text>{variable.id}</Text>
+                  </FormItem>
                   <FormItem title={t.name} desc={t1.nameDesc}>
                     <Input
                       placeholder={t1.nameTips}
