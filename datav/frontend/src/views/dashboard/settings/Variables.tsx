@@ -41,7 +41,7 @@ const VariablesSetting = ({ dashboard, onChange }: Props) => {
 
   const onAddVariable = () => {
     setEditMode(false)
-    const id = dashboard.id + new Date().getTime()
+    const id = dashboard.id + '-' + new Date().getTime()
     setVariable({
       id: id as any,
       ...initVariable,
@@ -51,7 +51,11 @@ const VariablesSetting = ({ dashboard, onChange }: Props) => {
   }
 
   const addVariable = async (v: Variable) => {
-    if (variables.find((v1) => v1.name.toLowerCase() == v.name.toLowerCase())) {
+    if (
+      dashboard.data.variables?.find(
+        (v1) => v1.name.toLowerCase() == v.name.toLowerCase(),
+      )
+    ) {
       toast({
         title: t.isExist({ name: v.name }),
         status: 'error',
