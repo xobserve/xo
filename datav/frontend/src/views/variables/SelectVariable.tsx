@@ -282,13 +282,14 @@ export const initVariableSelected = (variables: Variable[]) => {
     }
   }
 
-  let sv = storage.get(vkey)
-  if (!sv) {
-    sv = {}
+  let sv0 = storage.get(vkey)
+  if (!sv0) {
+    sv0 = {}
   }
 
   for (const v of variables) {
-    const selected = selectedInUrl[v.name] ?? sv[v.id]
+    const sv = sv0[v.teamId]
+    const selected = selectedInUrl[v.name] ?? sv?.[v.id]
     if (!selected) {
       if (v.type == VariableQueryType.TextInput) {
         v.selected = v.default ?? ''
@@ -345,10 +346,20 @@ const setValueToStorage = (variable: Variable, value) => {
   const sv = storage.get(vkey)
   if (!sv) {
     storage.set(vkey, {
-      [variable.id]: value,
+      [variable.teamId]: {
+        [variable.id]: value,
+      },
     })
   } else {
-    sv[variable.id] = value
+    const v = sv[variable.teamId]
+    if (!v) {
+      sv[variable.teamId] = {
+        [variable.id]: value,
+      }
+    } else {
+      v[variable.id] = value
+    }
+
     storage.set(vkey, sv)
   }
 }
