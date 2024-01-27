@@ -16,6 +16,8 @@
 // 2. teams whose sidemenu has been set to public
 
 import {
+  Box,
+  Center,
   HStack,
   IconButton,
   Popover,
@@ -23,7 +25,9 @@ import {
   PopoverContent,
   PopoverTrigger,
   Portal,
+  Tag,
   Text,
+  VStack,
   useMediaQuery,
   useToast,
 } from '@chakra-ui/react'
@@ -37,14 +41,19 @@ import { requestApi } from 'utils/axios/request'
 import { isEmpty } from 'utils/validate'
 import { $config } from 'src/data/configs/config'
 import { Team } from 'types/teams'
-import { Session } from 'types/user'
 
-interface Props {
-  miniMode: boolean
+interface TenantTeam {
+  tenantId: number
+  tenantName: string
   teams: Team[]
 }
 
-const SelectUserTeam = ({ miniMode, teams }: Props) => {
+interface Props {
+  miniMode: boolean
+  tenants: TenantTeam[]
+}
+
+const SelectUserTeam = ({ miniMode, tenants }: Props) => {
   const t1 = useStore(sidebarMsg)
   const toast = useToast()
   const config = useStore($config)
@@ -74,6 +83,8 @@ const SelectUserTeam = ({ miniMode, teams }: Props) => {
   }
 
   const [isMobileScreen] = useMediaQuery(MobileVerticalBreakpoint)
+  const currentTenant = tenants.find((t) => t.tenantId == config?.currentTenant)
+
   return (
     <>
       <Popover trigger={isMobileScreen ? 'click' : 'hover'} placement='right'>
@@ -95,7 +106,10 @@ const SelectUserTeam = ({ miniMode, teams }: Props) => {
             {!miniMode && (
               <Text fontSize='1em'>
                 {t1.selectTeam} -{' '}
-                {teams.find((t) => t.id == config?.currentTeam)?.name}
+                {
+                  currentTenant?.teams?.find((t) => t.id == config?.currentTeam)
+                    ?.name
+                }
               </Text>
             )}
           </HStack>
@@ -107,20 +121,26 @@ const SelectUserTeam = ({ miniMode, teams }: Props) => {
             border='null'
             pl='1'
           >
-            <PopoverBody>
-              <CardSelect title=''>
-                {teams.map((team) => (
-                  <CardSelectItem
-                    key={team.id}
-                    selected={config?.currentTeam == team.id}
-                    onClick={() => selectTeam(team.id)}
-                  >
-                    <Text fontSize='1em' fontWeight='550' px='2' py='1'>
-                      {team.name}
-                    </Text>
-                  </CardSelectItem>
+            <PopoverBody p='0'>
+              <HStack alignItems='start' spacing={1}>
+                {tenants?.map((tenant) => (
+                  <Box>
+                    <CardSelect title={tenant.tenantName}>
+                      {tenant.teams.map((team) => (
+                        <CardSelectItem
+                          key={team.id}
+                          selected={config?.currentTeam == team.id}
+                          onClick={() => selectTeam(team.id)}
+                        >
+                          <Text fontSize='1em' fontWeight='550' px='2' py='1'>
+                            {team.name}
+                          </Text>
+                        </CardSelectItem>
+                      ))}
+                    </CardSelect>
+                  </Box>
                 ))}
-              </CardSelect>
+              </HStack>
             </PopoverBody>
           </PopoverContent>
         </Portal>

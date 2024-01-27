@@ -73,20 +73,13 @@ const UserMenu = ({ miniMode }) => {
     navigateTo(`/login`)
   }
 
-  const [tenants, setTenants] = useState<Tenant[]>([])
-  const [teams, setTeams] = useState<Team[]>([])
+  const [tenants, setTenants] = useState<any[]>([])
 
   useEffect(() => {
     if (config && session) {
-      loadTeams()
       loadTenants()
     }
   }, [config, session])
-
-  const loadTeams = async () => {
-    const res = await requestApi.get(`/team/user/is/in?teamId=${teamId}`)
-    setTeams(res.data)
-  }
 
   const loadTenants = async () => {
     const res = await requestApi.get(`/tenant/user/is/in`)
@@ -192,15 +185,15 @@ const UserMenu = ({ miniMode }) => {
               <>
                 <MenuDivider />
                 {
-                  <MenuItem mt='2px' width='100%'>
-                    {' '}
-                    <SelectUserTenant miniMode={false} tenants={tenants} />
-                  </MenuItem>
+                  // <MenuItem mt='2px' width='100%'>
+                  //   {' '}
+                  //   <SelectUserTenant miniMode={false} tenants={tenants} />
+                  // </MenuItem>
                 }
                 {
                   <MenuItem mt='2px' width='100%'>
                     {' '}
-                    <SelectUserTeam miniMode={false} teams={teams} />
+                    <SelectUserTeam miniMode={false} tenants={tenants} />
                   </MenuItem>
                 }
                 <MenuDivider />

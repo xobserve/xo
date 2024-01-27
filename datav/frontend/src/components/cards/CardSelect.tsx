@@ -31,11 +31,17 @@ const CardSelect = ({ title, children }: Props) => {
   return (
     <Card>
       {!isEmpty(title) && (
-        <CardHeader pb='2' p='1' fontWeight='550' fontSize='0.9rem'>
+        <CardHeader
+          pb='2'
+          p='2'
+          fontWeight='500'
+          fontSize='1rem'
+          className='color-text'
+        >
           {title}
         </CardHeader>
       )}
-      <CardBody pt='0' p='1'>
+      <CardBody pt='0' p='2'>
         <Stack divider={<StackDivider />} spacing='0'>
           {children}
         </Stack>

@@ -378,6 +378,12 @@ func AddUserToTenant(userId int64, tenantId int64, role models.RoleType, tx *sql
 	return nil
 }
 
+type TenantTeam struct {
+	TenantId   int64          `json:"tenantId"`
+	TenantName string         `json:"tenantName"`
+	Teams      []*models.Team `json:"teams"`
+}
+
 func GetTenantsUserIn(c *gin.Context) {
 	u := c.MustGet("currentUser").(*models.User)
 	tenants, err := models.QueryTenantsByUserId(c.Request.Context(), u.Id)
@@ -387,7 +393,36 @@ func GetTenantsUserIn(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, common.RespSuccess(tenants))
+	tenantTeams := make([]*TenantTeam, 0)
+	for _, tenant := range tenants {
+		tenantTeam := &TenantTeam{
+			TenantId:   tenant.Id,
+			TenantName: tenant.Name,
+			Teams:      make([]*models.Team, 0),
+		}
+
+		teams0, err := models.QueryTeamsUserInTenant(c.Request.Context(), tenant.Id, u.Id)
+		if err != nil {
+			logger.Warn("query teams for user error", "error", err)
+			c.JSON(500, common.RespInternalError())
+			return
+		}
+
+		for _, t := range teams0 {
+			team, err := models.QueryTeam(c.Request.Context(), t.Id, "")
+			if err != nil {
+				logger.Warn("query team error", "error", err)
+				continue
+			}
+
+			if team.Status == common.StatusOK {
+				tenantTeam.Teams = append(tenantTeam.Teams, team)
+			}
+		}
+
+		tenantTeams = append(tenantTeams, tenantTeam)
+	}
+	c.JSON(200, common.RespSuccess(tenantTeams))
 }
 
 func SwitchTenant(c *gin.Context) {
