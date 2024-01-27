@@ -92,11 +92,24 @@ func GetDashboardConfig(c *gin.Context) {
 
 		var dashId string
 		if teamId0 == 0 || path == "" || path == "/" {
-			for _, m := range menuItems {
-				if len(m) > 0 {
-					dashId = m[0].DashboardId
-					path = m[0].Url
-					break
+		LOOP0:
+			for _, m1 := range menuItems {
+				if len(m1) > 0 {
+					for _, m := range m1 {
+						if m.DashboardId != "" && m.Url != "" {
+							dashId = m.DashboardId
+							path = m.Url
+							break LOOP0
+						}
+
+						for _, sub := range m.Children {
+							if sub.DashboardId != "" && sub.Url != "" {
+								dashId = m.DashboardId
+								path = m.Url
+								break LOOP0
+							}
+						}
+					}
 				}
 			}
 		} else {
@@ -120,6 +133,7 @@ func GetDashboardConfig(c *gin.Context) {
 		}
 
 		dash, err := models.QueryDashboard(c.Request.Context(), teamId, dashId)
+
 		if err != nil {
 			if err == sql.ErrNoRows {
 				cfg.Sidemenu = sidemenu

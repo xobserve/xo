@@ -51,7 +51,7 @@ const DashboardPageWrapper = memo(({ sideWidth }: Props) => {
       const res = await requestApi.get(
         `/config/dashboard?teamId=${teamId}&path=${path}`,
       )
-      if (res.data.reload) {
+      if (res.data.reload && res.data.path != path) {
         window.location.href = getNavigateTo(res.data.path)
         return
       }
