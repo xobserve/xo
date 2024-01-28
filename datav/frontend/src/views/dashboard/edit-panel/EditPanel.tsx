@@ -109,7 +109,9 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
   const [pageChanged, setPageChanged] = useState(false)
   const [data, setData] = useState(null)
   const [view, setView] = useState<'fill' | 'actual'>('fill')
-
+  const panelInEdit = dashboard.data.panels.find(
+    (p) => p.id.toString() === edit,
+  )
   useLandscapeMode(!isEmpty(edit))
 
   useBus(
@@ -140,11 +142,12 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
 
   useEffect(() => {
     if (edit) {
-      const p = dashboard.data.panels.find((p) => p.id.toString() === edit)
-      if (p) {
-        setTempPanel(p)
+      if (panelInEdit) {
+        setTempPanel(panelInEdit)
         onOpen()
-        const hide = storage.get(StorageHideDsKey + dashboard.id + p.id)
+        const hide = storage.get(
+          StorageHideDsKey + dashboard.id + panelInEdit.id,
+        )
         if (hide !== undefined) {
           setHideDatasource(hide)
         }
@@ -157,7 +160,7 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
         onClose()
       }
     }
-  }, [edit])
+  }, [panelInEdit])
 
   useEffect(() => {
     if (!tempPanel) {
@@ -213,26 +216,6 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
     removeParamFromUrl(['edit'])
     setPageChanged(false)
     onClose()
-  }
-
-  const maxPanelHeight = () => {
-    if (!tempPanel.plugins[tempPanel.type].disableDatasource) {
-      if (hideDatasource) {
-        return '100%'
-      }
-      return '50%'
-    }
-    return '100%'
-  }
-
-  const maxDatasourceHeight = () => {
-    if (!tempPanel.plugins[tempPanel.type].disableDatasource) {
-      if (hideDatasource) {
-        return '0%'
-      }
-      return '50%'
-    }
-    return '0%'
   }
 
   const panelOverridesRules = getPanelOverridesRules(

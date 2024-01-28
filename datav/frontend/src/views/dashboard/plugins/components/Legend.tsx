@@ -193,6 +193,7 @@ const LegendTable = memo(
       }
     }
 
+    const showValuesName = options.legend.showValuesName ?? true
     return (
       <Box width='100%'>
         <TableContainer
@@ -232,33 +233,35 @@ const LegendTable = memo(
                       })
                     }}
                   >
-                    <HStack
-                      spacing={0}
-                      justifyContent='end'
-                      cursor='pointer'
-                      position='relative'
-                    >
-                      <Text fontSize='0.9em !important' lineHeight='13px'>
-                        {v[0]}
-                      </Text>
-                      <Text>
-                        {' '}
-                        {options.legend.order.by == v[0] && (
-                          <Text
-                            fontSize='0.6em'
-                            opacity='0.7'
-                            position='absolute'
-                            top='3.5px'
-                          >
-                            {options.legend.order.sort == 'asc' ? (
-                              <FaChevronUp />
-                            ) : (
-                              <FaChevronDown />
-                            )}
-                          </Text>
-                        )}
-                      </Text>
-                    </HStack>
+                    {showValuesName && (
+                      <HStack
+                        spacing={0}
+                        justifyContent='end'
+                        cursor='pointer'
+                        position='relative'
+                      >
+                        <Text fontSize='0.9em !important' lineHeight='13px'>
+                          {v[0]}
+                        </Text>
+                        <Text>
+                          {' '}
+                          {options.legend.order.by == v[0] && (
+                            <Text
+                              fontSize='0.6em'
+                              opacity='0.7'
+                              position='absolute'
+                              top='3.5px'
+                            >
+                              {options.legend.order.sort == 'asc' ? (
+                                <FaChevronUp />
+                              ) : (
+                                <FaChevronDown />
+                              )}
+                            </Text>
+                          )}
+                        </Text>
+                      </HStack>
+                    )}
                   </Td>
                 ))}
               </Tr>

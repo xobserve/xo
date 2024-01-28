@@ -81,7 +81,6 @@ const ContextMenu = memo(({ props, options, data, container }: Props) => {
     })
 
     if (options) {
-      console.log('here333333:', options.hooks)
       options.hooks.syncRect.push((u, rect) => (bbox = rect))
       const setcusor = (uplot) => {
         if (!uplot || !bbox) {
