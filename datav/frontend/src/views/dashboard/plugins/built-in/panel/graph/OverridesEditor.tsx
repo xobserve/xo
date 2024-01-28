@@ -26,8 +26,6 @@ import { dispatch } from 'use-bus'
 import { PanelForceRebuildEvent } from 'src/data/bus-events'
 import ThresholdEditor from 'src/views/dashboard/plugins/components/Threshold/ThresholdEditor'
 import { palettes } from 'utils/colors'
-import { SeriesData } from 'types/seriesData'
-import { flatten, isArray } from 'lodash'
 import { getSeriesDataOverrideTargets } from 'src/views/dashboard/utils/overrides'
 
 interface Props {
@@ -98,7 +96,6 @@ const GraphOverridesEditor = ({ override, onChange, panel }: Props) => {
           step={1}
           onChange={(v) => {
             onChange(v)
-            dispatch(PanelForceRebuildEvent + panel.id)
           }}
         />
       )

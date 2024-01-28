@@ -178,6 +178,7 @@ const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
                           panel.overrides[i].overrides[j].value = v
                         })
                       }}
+                      panel={panel}
                     />
                   )}
                   <Box
