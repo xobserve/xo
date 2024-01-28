@@ -248,6 +248,7 @@ export const parseOptions = (
       ready: [],
       draw: [],
       drawClear: [],
+      syncRect: [],
     },
     padding: [
       padding[0] ?? 5,
