@@ -31,7 +31,7 @@ import { $config } from 'src/data/configs/config'
 import { requestApi } from 'utils/axios/request'
 import { Team } from 'types/teams'
 import { getNavigateTo } from 'utils/url'
-import { initVariableSelected } from 'src/views/variables/SelectVariable'
+import { initVariableSelected } from 'src/views/variables/Loader'
 import { $variables } from 'src/views/variables/store'
 import { $datasources } from 'src/views/datasource/store'
 

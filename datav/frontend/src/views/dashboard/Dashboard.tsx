@@ -11,13 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {
-  Box,
-  Divider,
-  Flex,
-  useColorMode,
-  useMediaQuery,
-} from '@chakra-ui/react'
+import { Box, useColorMode, useMediaQuery } from '@chakra-ui/react'
 import {
   useCallback,
   useEffect,
@@ -29,18 +23,8 @@ import {
 import { Dashboard, Panel, PanelTypeRow } from 'types/dashboard'
 import DashboardHeader from 'src/views/dashboard/DashboardHeader'
 import DashboardGrid from 'src/views/dashboard/grid/DashboardGrid'
-import {
-  clone,
-  cloneDeep,
-  concat,
-  defaultsDeep,
-  find,
-  findIndex,
-  orderBy,
-} from 'lodash'
-import SelectVariables, {
-  initVariableSelected,
-} from 'src/views/variables/SelectVariable'
+import { clone, cloneDeep, defaultsDeep, find, findIndex } from 'lodash'
+import { initVariableSelected } from 'src/views/variables/Loader'
 import {
   prevQueries,
   prevQueryData,
@@ -61,9 +45,7 @@ import useFullscreen from 'hooks/useFullscreen'
 import { initDashboard } from 'src/data/dashboard'
 import { initPanel, initPanelType } from 'src/data/panel/initPanel'
 import { DashboardHeaderHeight, GRID_COLUMN_COUNT } from 'src/data/constants'
-import DatePicker, {
-  updateTimeToNewest,
-} from 'src/components/DatePicker/DatePicker'
+import { updateTimeToNewest } from 'src/components/DatePicker/DatePicker'
 import { $variables } from '../variables/store'
 import { useStore } from '@nanostores/react'
 import { VarialbeAllOption } from 'src/data/variable'

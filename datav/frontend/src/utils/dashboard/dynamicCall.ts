@@ -12,7 +12,7 @@
 // limitations under the License.
 
 import { setDateTime } from 'src/components/DatePicker/DatePicker'
-import { setVariable } from 'src/views/variables/SelectVariable'
+import { setVariable } from 'src/views/variables/Loader'
 import { $variables } from 'src/views/variables/store'
 import { navigateTo } from 'utils/url'
 

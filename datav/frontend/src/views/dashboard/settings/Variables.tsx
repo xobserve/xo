@@ -44,6 +44,7 @@ const VariablesSetting = ({ dashboard, onChange }: Props) => {
     const id = dashboard.id + '-' + new Date().getTime()
     setVariable({
       id: id as any,
+      teamId: dashboard.ownedBy,
       ...initVariable,
     })
 

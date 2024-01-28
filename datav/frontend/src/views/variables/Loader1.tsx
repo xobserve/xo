@@ -42,7 +42,7 @@ interface Props {
 }
 
 const vkey = 'variables'
-const SelectVariables = ({ variables }: Props) => {
+const VariablesLoader = ({ variables }: Props) => {
   return (
     variables.length > 0 && (
       <HStack spacing={2}>
@@ -54,7 +54,7 @@ const SelectVariables = ({ variables }: Props) => {
   )
 }
 
-export default SelectVariables
+export default VariablesLoader
 
 const SelectVariable = memo(({ v }: { v: Variable }) => {
   const datasourcs = useStore($datasources)
@@ -252,7 +252,6 @@ const SelectVariable = memo(({ v }: { v: Variable }) => {
           onChange={(v1) => {
             if (v1 != v.selected) {
               setValue(v, v1)
-              setVariableValue(v, v1)
             }
           }}
           placeholder={t1.textInputTips}

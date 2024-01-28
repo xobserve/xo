@@ -69,7 +69,7 @@ import { isEmpty } from 'utils/validate'
 import { translateGridHeightToScreenHeight } from '../grid/DashboardGrid'
 import { $variables } from 'src/views/variables/store'
 import CustomScrollbar from 'components/CustomScrollbar/CustomScrollbar'
-import SelectVariables from 'src/views/variables/SelectVariable'
+import VariablesLoader from 'src/views/variables/Loader'
 import { externalPanelPlugins } from '../plugins/external/plugins'
 import ErrorBoundary from 'components/ErrorBoudary'
 import { builtinPanelPlugins } from '../plugins/built-in/plugins'
@@ -372,8 +372,8 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
                         <Flex mt='0' maxW={`calc(100% - ${10}px)`}>
                           <CustomScrollbar hideVerticalTrack>
                             <Flex justifyContent='space-between'>
-                              <SelectVariables variables={dvars} />
-                              <SelectVariables variables={gvars} />
+                              <VariablesLoader variables={dvars} />
+                              <VariablesLoader variables={gvars} />
                             </Flex>
                           </CustomScrollbar>
                         </Flex>

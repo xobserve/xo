@@ -51,7 +51,7 @@ import {
 import { cloneDeep, isFunction } from 'lodash'
 import { getShortTraceId } from '../../utils/trace'
 import { PanelType } from '../../../xobserveTrace/types'
-import { initVariableSelected } from 'src/views/variables/SelectVariable'
+import { initVariableSelected } from 'src/views/variables/Loader'
 import { $variables } from 'src/views/variables/store'
 import CopyToClipboard from 'components/CopyToClipboard'
 import { useNavigate } from 'react-router-dom'

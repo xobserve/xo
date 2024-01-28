@@ -32,7 +32,7 @@ import { DataFormat } from 'types/format'
 import { requestApi } from 'utils/axios/request'
 import { $config } from 'src/data/configs/config'
 import { $variables } from 'src/views/variables/store'
-import { initVariableSelected } from 'src/views/variables/SelectVariable'
+import { initVariableSelected } from 'src/views/variables/Loader'
 
 const TraceDetailWrapper = ({ id, dsId }) => {
   const [trace, setTrace] = useState<Trace>(null)

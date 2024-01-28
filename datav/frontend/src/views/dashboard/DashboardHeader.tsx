@@ -24,7 +24,7 @@ import {
   useMediaQuery,
   useToast,
 } from '@chakra-ui/react'
-import SelectVariables from 'src/views/variables/SelectVariable'
+import VariablesLoader from 'src/views/variables/Loader'
 import { isEmpty } from 'lodash'
 import React from 'react'
 import { memo } from 'react'
@@ -85,6 +85,7 @@ const DashboardHeader = memo(
         window.location.reload()
       }, 1000)
     }
+
     return (
       <Box
         id='dashboard-header'
@@ -209,8 +210,8 @@ const DashboardHeader = memo(
               <Flex mt='0' maxW={`calc(100% - ${10}px)`}>
                 <CustomScrollbar hideVerticalTrack>
                   <Flex justifyContent='space-between'>
-                    <SelectVariables variables={dvars} />
-                    <SelectVariables variables={gvars} />
+                    <VariablesLoader variables={dvars} />
+                    <VariablesLoader variables={gvars} />
                   </Flex>
                 </CustomScrollbar>
               </Flex>

@@ -60,10 +60,9 @@ import { initVariable } from 'src/data/variable'
 import { Variable, VariableQueryType, VariableRefresh } from 'types/variable'
 import { useImmer } from 'use-immer'
 import { requestApi } from 'utils/axios/request'
-import SelectVariables, {
-  initVariableSelected,
+import VariablesLoader, {
   queryVariableValues,
-} from 'src/views/variables/SelectVariable'
+} from 'src/views/variables/Loader'
 import storage from 'utils/localStorage'
 import { VariableManuallyChangedKey } from 'src/data/storage-keys'
 import { dispatch } from 'use-bus'
@@ -210,7 +209,7 @@ const TeamVariablesPage = ({ team }: { team: Team }) => {
       )}
       {variables && (
         <Box visibility='hidden'>
-          <SelectVariables variables={variables} />
+          <VariablesLoader variables={variables} />
         </Box>
       )}
     </>

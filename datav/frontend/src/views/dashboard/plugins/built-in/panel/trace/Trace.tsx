@@ -23,7 +23,7 @@ import { memo, useEffect, useMemo, useState } from 'react'
 import { TraceData } from 'src/views/dashboard/plugins/built-in/panel/trace/types/trace'
 import TraceSearchResult from './components/SearchResult'
 import transformTraceData from './utils/transform-trace-data'
-import { cloneDeep, toString, uniqBy } from 'lodash'
+import { cloneDeep, uniqBy } from 'lodash'
 import {
   replaceWithVariables,
   replaceWithVariablesHasMultiValues,
