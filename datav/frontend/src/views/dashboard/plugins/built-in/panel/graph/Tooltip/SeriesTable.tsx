@@ -58,10 +58,11 @@ const SeriesTable = memo(
   }: Props) => {
     const valueSettings: ValueSetting = props.panel.plugins[panelType].value
 
-    const tooltipMode = props.panel.plugins[panelType].tooltip.mode ?? 'single'
-    const tooltipSort = props.panel.plugins[panelType].tooltip.sortBy ?? 'value'
+    const tooltipMode = props.panel.plugins[panelType].tooltip?.mode ?? 'single'
+    const tooltipSort =
+      props.panel.plugins[panelType].tooltip?.sortBy ?? 'value'
     const tooltipSortDir =
-      props.panel.plugins[panelType].tooltip.sortDir ?? 'desc'
+      props.panel.plugins[panelType].tooltip?.sortDir ?? 'desc'
 
     const res = []
 

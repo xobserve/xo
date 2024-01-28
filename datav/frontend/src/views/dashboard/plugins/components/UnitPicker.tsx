@@ -281,8 +281,14 @@ export const UnitPicker = ({ value, onChange, size = 'md' }: Props) => {
 
 // v0: string or number
 export const formatUnit = (v0: any, units: Unit[], decimal: number) => {
-  if (isEmpty(v0) || isEmpty(units)) {
+  if (isEmpty(v0)) {
     return v0
+  }
+
+  if (isEmpty(units)) {
+    if (isNumber(v0)) {
+      return round(v0, decimal)
+    }
   }
 
   if (units.length == 1 && units[0].operator == 'x' && units[0].rhs == 0) {
