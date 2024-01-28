@@ -38,7 +38,6 @@ import { Dashboard, Panel } from 'types/dashboard'
 import EditPanelQuery from './DatasourceQuery'
 import { useImmer } from 'use-immer'
 import { removeParamFromUrl } from 'utils/url'
-import { FaArrowDown, FaArrowUp } from 'react-icons/fa'
 import PanelStyles from './PanelStyles'
 import PanelSettings from './PanelSettings'
 import { useLeavePageConfirm } from 'hooks/useLeavePage'
@@ -62,7 +61,6 @@ import EditPanelTransform from './Transform'
 import { getPanelOverridesRules } from 'utils/dashboard/panel'
 import ValueMapping from 'src/views/dashboard/plugins/components/ValueMapping/ValueMapping'
 import PanelAccordion from './Accordion'
-import storage from 'utils/localStorage'
 import EditPanelAlert from './Alert'
 import { useLocation, useSearchParam } from 'react-use'
 import { useLandscapeMode } from 'hooks/useLandscapeMode'
@@ -87,8 +85,6 @@ interface EditPanelProps {
   edit?: string
 }
 
-const StorageHideDsKey = 'hide-ds-'
-
 const EditPanelWrapper = memo((props: EditPanelProps) => {
   const edit = useSearchParam('edit')
   useLocation()
@@ -105,7 +101,6 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
   const [tempPanel, setTempPanel] = useImmer<Panel>(null)
   const [rawPanel, setRawPanel] = useState<Panel>(null)
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const [hideDatasource, setHideDatasource] = useState(false)
   const [pageChanged, setPageChanged] = useState(false)
   const [data, setData] = useState(null)
   const [view, setView] = useState<'fill' | 'actual'>('fill')
@@ -145,12 +140,6 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
       if (panelInEdit) {
         setTempPanel(panelInEdit)
         onOpen()
-        const hide = storage.get(
-          StorageHideDsKey + dashboard.id + panelInEdit.id,
-        )
-        if (hide !== undefined) {
-          setHideDatasource(hide)
-        }
       } else {
         onDiscard()
       }

@@ -16,12 +16,10 @@ import {
   Center,
   HStack,
   Image,
-  SimpleGrid,
   Switch,
   Text,
   useColorModeValue,
   Wrap,
-  WrapItem,
 } from '@chakra-ui/react'
 import { upperFirst } from 'lodash'
 import { Panel, PanelEditorProps, PanelTypeRow } from 'types/dashboard'
@@ -40,7 +38,6 @@ import { externalPanelPlugins } from '../plugins/external/plugins'
 import { initTimeRange } from 'components/DatePicker/TimePicker'
 import DatePicker from '../components/PanelDatePicker'
 import customColors from 'theme/colors'
-import TemplateBadge from 'src/views/template/TemplateBadge'
 
 // in edit mode, we need to cache all the plugins we have edited, until we save the dashboard
 let pluginsCachedInEdit = {}
