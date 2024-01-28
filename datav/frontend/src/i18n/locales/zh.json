@@ -165,7 +165,7 @@
   "sidebar": {
     "dashboard": "仪表盘",
     "search": "搜索",
-    "selectTeam": "当前团队",
+    "selectTeam": "当前租户 - 当前团队",
     "selectTenant": "当前租户",
     "themeChange": "当前主题 - ",
     "accountSetting": "个人设置",

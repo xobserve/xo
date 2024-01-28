@@ -76,7 +76,7 @@ const UserMenu = ({ miniMode }) => {
   const [tenants, setTenants] = useState<any[]>([])
 
   useEffect(() => {
-    if (config && session) {
+    if (session) {
       loadTenants()
     }
   }, [config, session])

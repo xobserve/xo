@@ -178,7 +178,7 @@ export const miscMsg = i18n('misc', {})
 export const sidebarMsg = i18n('sidebar', {
   dashboard: 'Dashboards',
   search: 'Search',
-  selectTeam: 'Team',
+  selectTeam: 'Current tenant - Current team',
   selectTenant: 'Tenant',
   themeChange: 'Theme - ',
   accountSetting: 'User',

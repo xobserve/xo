@@ -33,7 +33,6 @@ import { $datasources } from '../datasource/store'
 import { Datasource } from 'types/datasource'
 import Loading from 'components/loading/Loading'
 import { EditorInputItem } from 'components/editor/EditorItem'
-import { $teams } from '../team/store'
 import { externalDatasourcePlugins } from '../dashboard/plugins/external/plugins'
 import { builtinDatasourcePlugins } from '../dashboard/plugins/built-in/plugins'
 import { replaceWithBuiltinVariables } from 'utils/variable'
@@ -211,21 +210,12 @@ const SelectVariable = memo(({ v }: { v: Variable }) => {
   }
 
   const value = isEmpty(v.selected) ? [] : v.selected.split(VariableSplitChar)
-  const teams = $teams.get()
   const isDashVar = v.id.toString().startsWith('d-')
   return (
     <HStack key={v.id} spacing={1}>
       <Tooltip
         openDelay={300}
-        label={
-          (isDashVar
-            ? t1.dashScoped
-            : teams.find((t) => t.id == v.teamId)?.name +
-              ' team - ' +
-              t1.globalScoped) +
-          ': ' +
-          v.name
-        }
+        label={(isDashVar ? t1.dashScoped : t1.globalScoped) + ': ' + v.name}
         placement='auto'
       >
         <Text fontSize='0.95em' minWidth='max-content' noOfLines={1}>
@@ -402,7 +392,6 @@ export const queryVariableValues = async (
         v1.value = replaceWithBuiltinVariables(v1.value, {
           teamId: v.teamId,
         })
-        console.log('here333333', v1)
 
         result = await p.queryVariableValues(v1)
       }

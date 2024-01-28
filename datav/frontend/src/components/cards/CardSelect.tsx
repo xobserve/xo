@@ -34,6 +34,7 @@ const CardSelect = ({ title, children }: Props) => {
         <CardHeader
           pb='2'
           p='2'
+          pl='5'
           fontWeight='500'
           fontSize='1rem'
           className='color-text'

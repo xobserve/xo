@@ -27,6 +27,7 @@ import {
   Portal,
   Tag,
   Text,
+  Tooltip,
   VStack,
   useMediaQuery,
   useToast,
@@ -74,10 +75,19 @@ const SelectUserTeam = ({ miniMode, tenants }: Props) => {
         window.location.reload()
       } else {
         const path = window.location.pathname
-        window.location.href = path.replace(
-          `/${config?.currentTeam}/`,
-          `/${teamId}/`,
-        )
+        if (path.startsWith(`/${config?.currentTeam}/`)) {
+          window.location.href = path.replace(
+            `/${config?.currentTeam}/`,
+            `/${teamId}/`,
+          )
+        } else if (path.startsWith(`/${config?.currentTeam}`)) {
+          window.location.href = path.replace(
+            `/${config?.currentTeam}`,
+            `/${teamId}`,
+          )
+        } else {
+          window.location.href = `/${teamId}`
+        }
       }
     }, 1000)
   }
@@ -104,13 +114,16 @@ const SelectUserTeam = ({ miniMode, tenants }: Props) => {
               <FaAlignLeft fontSize='1em' />
             )}
             {!miniMode && (
-              <Text fontSize='1em'>
-                {t1.selectTeam} -{' '}
-                {
-                  currentTenant?.teams?.find((t) => t.id == config?.currentTeam)
-                    ?.name
-                }
-              </Text>
+              <Tooltip label={t1.selectTeam}>
+                <Text fontSize='1em'>
+                  {currentTenant?.tenantName} -{' '}
+                  {
+                    currentTenant?.teams?.find(
+                      (t) => t.id == config?.currentTeam,
+                    )?.name
+                  }
+                </Text>
+              </Tooltip>
             )}
           </HStack>
         </PopoverTrigger>
