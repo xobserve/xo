@@ -70,6 +70,34 @@ const GraphPanelEditor = memo((props: GraphEditorProps) => {
                 }
               />
             </PanelEditItem>
+            <PanelEditItem title={t.sort}>
+              <RadionButtons
+                options={[
+                  { label: 'Name', value: 'name' },
+                  { label: 'Value', value: 'value' },
+                ]}
+                value={panel.plugins.graph.tooltip.sortBy}
+                onChange={(v) =>
+                  onChange((panel: GraphPanel) => {
+                    panel.plugins.graph.tooltip.sortBy = v
+                  })
+                }
+              />
+            </PanelEditItem>
+            <PanelEditItem title={t.sortDir}>
+              <RadionButtons
+                options={[
+                  { label: 'Ascending', value: 'asc' },
+                  { label: 'Descending', value: 'desc' },
+                ]}
+                value={panel.plugins.graph.tooltip.sortDir}
+                onChange={(v) =>
+                  onChange((panel: GraphPanel) => {
+                    panel.plugins.graph.tooltip.sortDir = v
+                  })
+                }
+              />
+            </PanelEditItem>
           </PanelAccordion>
           <PanelAccordion title='Legend'>
             <PanelEditItem title={t.mode}>

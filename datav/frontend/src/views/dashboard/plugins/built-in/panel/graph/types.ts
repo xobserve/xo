@@ -22,7 +22,8 @@ export interface GraphEditorProps extends PanelEditorProps {
 export interface GraphSettings {
   tooltip?: {
     mode: 'single' | 'all' | 'hidden'
-    sort: 'asc' | 'desc'
+    sortBy: 'name' | 'value'
+    sortDir: 'asc' | 'desc'
   }
   legend?: {
     mode: 'table' | 'hidden'

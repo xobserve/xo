@@ -9,12 +9,8 @@ import { mockGraphDataForTestDataDs } from './mockData'
 import icon from './icon.svg'
 import { ValueCalculationType } from 'types/value'
 import { ThresholdDisplay } from 'types/panel/plugins'
-import {
-  initAlertFilter,
-  initThresholds,
-  getInitUnits,
-} from 'src/data/panel/initPlugins'
-import { PanelTypeGraph } from './types'
+import { initAlertFilter, getInitUnits } from 'src/data/panel/initPlugins'
+import { GraphSettings, PanelTypeGraph } from './types'
 
 const panelComponents: PanelPluginComponents = {
   panel: GraphPanelWrapper,
@@ -29,7 +25,8 @@ const panelComponents: PanelPluginComponents = {
     initOptions: {
       tooltip: {
         mode: 'all',
-        sort: 'desc',
+        sortBy: 'name',
+        sortDir: 'desc',
       },
       legend: {
         mode: 'table',
@@ -69,7 +66,7 @@ const panelComponents: PanelPluginComponents = {
       },
       enableAlert: false,
       alertFilter: initAlertFilter(),
-    },
+    } as GraphSettings,
   },
 }
 

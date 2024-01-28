@@ -116,6 +116,7 @@ export const commonMsg = i18n('common', {
   value: 'Value',
   pickColor: 'Pick color',
   sort: 'Sort',
+  sortDir: 'Sort direction',
   success: 'Success',
   error: 'Error',
   compore: 'Compare',

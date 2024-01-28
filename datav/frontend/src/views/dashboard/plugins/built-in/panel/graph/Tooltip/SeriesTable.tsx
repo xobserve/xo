@@ -56,15 +56,13 @@ const SeriesTable = memo(
     width,
     inactiveSeries,
   }: Props) => {
-    const tooltipMode =
-      panelType == PanelTypeGraph
-        ? props.panel.plugins.graph.tooltip.mode
-        : 'single'
     const valueSettings: ValueSetting = props.panel.plugins[panelType].value
-    const tooltipSort =
-      panelType == PanelTypeGraph
-        ? props.panel.plugins.graph.tooltip.sort
-        : 'desc'
+
+    const tooltipMode = props.panel.plugins[panelType].tooltip.mode ?? 'single'
+    const tooltipSort = props.panel.plugins[panelType].tooltip.sortBy ?? 'value'
+    const tooltipSortDir =
+      props.panel.plugins[panelType].tooltip.sortDir ?? 'desc'
+
     const res = []
 
     if (tooltipMode != 'single') {
@@ -102,10 +100,13 @@ const SeriesTable = memo(
     const values = orderBy(
       res,
       (i) => {
+        if (tooltipSort == 'name') {
+          return i.name
+        }
         const v = i.value[0][1]
         return v == null ? 0 : v
       },
-      tooltipSort,
+      tooltipSortDir,
     )
 
     for (const v of values) {

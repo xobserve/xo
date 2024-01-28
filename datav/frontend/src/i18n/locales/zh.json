@@ -104,6 +104,7 @@
     "value": "值",
     "pickColor": "选取颜色",
     "sort": "排序",
+    "sortDir": "升降序",
     "success": "成功",
     "error": "错误",
     "compore": "比较",
