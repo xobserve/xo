@@ -281,7 +281,7 @@ export const UnitPicker = ({ value, onChange, size = 'md' }: Props) => {
 
 // v0: string or number
 export const formatUnit = (v0: any, units: Unit[], decimal: number) => {
-  if (isEmpty(v0)) {
+  if (isEmpty(v0) || isEmpty(units)) {
     return v0
   }
 
