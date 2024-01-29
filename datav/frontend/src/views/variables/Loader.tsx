@@ -137,10 +137,13 @@ const SelectVariable = memo(({ v }: { v: Variable }) => {
         v.refresh == VariableRefresh.OnTimeRangeChange
       ) {
         // load from storage first
-        let vs = storage.get(VariableManuallyChangedKey + v.teamId + v.id)
+        let vs = storage.get(VariableManuallyChangedKey)
         if (vs) {
-          result = [...result, ...vs]
-          needQuery = false
+          const vs1 = vs[v.teamId + v.id]
+          if (vs1) {
+            result = [...result, ...vs1]
+            needQuery = false
+          }
         }
       }
     }
@@ -160,7 +163,15 @@ const SelectVariable = memo(({ v }: { v: Variable }) => {
             v.refresh == VariableRefresh.Manually ||
             v.refresh == VariableRefresh.OnTimeRangeChange
           ) {
-            storage.set(VariableManuallyChangedKey + v.teamId + v.id, res.data)
+            let vs = storage.get(VariableManuallyChangedKey)
+            if (!vs) {
+              vs = {
+                [v.teamId + v.id]: res.data,
+              }
+            } else {
+              vs[v.teamId + v.id] = res.data
+            }
+            storage.set(VariableManuallyChangedKey, vs)
           }
         }
       } catch (error) {
