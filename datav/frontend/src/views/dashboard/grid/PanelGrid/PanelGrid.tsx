@@ -27,7 +27,6 @@ import {
   Text,
   Tooltip,
   useColorMode,
-  useColorModeValue,
   useDisclosure,
   useToast,
 } from '@chakra-ui/react'
@@ -126,6 +125,7 @@ interface PanelGridProps {
   onVariablesChange?: any
   width: number
   height: number
+  initData?: any
 }
 
 export const PanelGrid = memo((props: PanelGridProps) => {
@@ -239,10 +239,11 @@ export const PanelComponent = ({
   sync,
   timeRange: timeRange0,
   forceQuery,
+  initData,
 }: PanelComponentProps) => {
   const lang = useStore(locale)
   const toast = useToast()
-  const [panelData, setPanelData] = useState<any[]>(null)
+  const [panelData, setPanelData] = useState<any[]>(initData)
   const [queryError, setQueryError] = useState<string>()
   const edit = useSearchParam('edit')
   const [loading, setLoading] = useState(false)
@@ -276,6 +277,9 @@ export const PanelComponent = ({
 
   const queryH = useRef(null)
   useEffect(() => {
+    if (initData) {
+      return
+    }
     if (queryH.current) {
       clearTimeout(queryH.current)
     }
