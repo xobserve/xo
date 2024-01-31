@@ -192,6 +192,7 @@ const DashboardWrapper = ({ rawDashboard, sideWidth }) => {
   )
 
   useEffect(() => {
+    console.log('here3333333 dashboard changed')
     if (dashboard) {
       $dashboard.set(dashboard)
       setTimeout(() => {
@@ -237,7 +238,11 @@ const DashboardWrapper = ({ rawDashboard, sideWidth }) => {
     }
   }, [colorMode])
 
-  const onDashbardChange = useCallback((tempPanel) => {
+  const onDashbardChange = useCallback((f) => {
+    setDashboard(f)
+  }, [])
+
+  const onEditPanelChange = useCallback((tempPanel) => {
     setDashboard((dashboard) => {
       for (var i = 0; i < dashboard.data.panels.length; i++) {
         if (dashboard.data.panels[i].id === tempPanel.id) {
@@ -345,8 +350,8 @@ const DashboardWrapper = ({ rawDashboard, sideWidth }) => {
             )}
           </Box>
           <EditPanel
-            dashboard={dashboard}
-            onChange={onDashbardChange}
+            dashboardId={dashboard.id}
+            onChange={onEditPanelChange}
             initPanel={panelInEdit}
           />
           <DashboardAnnotations dashboard={dashboard} />

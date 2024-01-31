@@ -99,7 +99,7 @@ import {
   externalDatasourcePlugins,
   externalPanelPlugins,
 } from '../../plugins/external/plugins'
-import { $copiedPanel } from '../../store/dashboard'
+import { $copiedPanel, $dashboard } from '../../store/dashboard'
 import {
   builtinDatasourcePlugins,
   builtinPanelPlugins,
@@ -117,7 +117,7 @@ import { TemplateType } from 'types/template'
 import { extractPanelTemplateContent } from 'utils/template'
 
 interface PanelGridProps {
-  dashboard: Dashboard
+  dashboardId: string
   panel: Panel
   onRemovePanel?: any
   onHidePanel?: any
@@ -191,7 +191,7 @@ export const PanelGrid = memo((props: PanelGridProps) => {
     for (const q of props.panel.datasource.queries) {
       const id = formatQueryId(
         props.panel.datasource.id,
-        props.dashboard.id,
+        props.dashboardId,
         props.panel.id,
         q.id,
         props.panel.type,
@@ -229,7 +229,7 @@ interface PanelComponentProps extends PanelGridProps {
 export const prevQueries = new Map()
 export const prevQueryData = new Map()
 export const PanelComponent = ({
-  dashboard,
+  dashboardId,
   panel,
   variables,
   onRemovePanel,
@@ -249,7 +249,7 @@ export const PanelComponent = ({
   const [loading, setLoading] = useState(false)
   const datasources = useStore($datasources)
   const [onHover, setOnHover] = useState(false)
-
+  const dashboard = useStore($dashboard)
   const timeRange = cloneDeep(
     panel.enableScopeTime && panel.scopeTime ? panel.scopeTime : timeRange0,
   )
@@ -264,7 +264,7 @@ export const PanelComponent = ({
         for (const q of panel.datasource.queries) {
           const id = formatQueryId(
             panel.datasource.id,
-            dashboard.id,
+            dashboardId,
             panel.id,
             q.id,
             panel.type,
@@ -284,7 +284,7 @@ export const PanelComponent = ({
       clearTimeout(queryH.current)
     }
     queryH.current = setTimeout(() => {
-      queryData(panel, dashboard.id)
+      queryData(panel, dashboardId)
     }, 200)
   }, [
     panel.datasource,
@@ -508,7 +508,7 @@ export const PanelComponent = ({
       {data && (
         <Box overflow='hidden'>
           <PanelHeader
-            dashboardId={dashboard.id}
+            dashboardId={dashboardId}
             panel={panel}
             data={panelData}
             queryError={queryError}
@@ -530,7 +530,7 @@ export const PanelComponent = ({
               marginTop={panel.styles.marginTop + 'px'}
             >
               <CustomPanelRender
-                dashboardId={dashboard.id}
+                dashboardId={dashboardId}
                 teamId={dashboard.ownedBy}
                 panel={panel}
                 data={data}

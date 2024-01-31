@@ -270,7 +270,7 @@ const DashboardGrid = memo((props: GridProps) => {
                                   {!inEdit && (
                                     <Wrapper width={width} height={height}>
                                       <PanelGrid
-                                        dashboard={dashboard}
+                                        dashboardId={dashboard.id}
                                         panel={panel}
                                         width={width}
                                         height={height}
@@ -291,7 +291,7 @@ const DashboardGrid = memo((props: GridProps) => {
                     <>
                       {!inEdit && (
                         <PanelGrid
-                          dashboard={dashboard}
+                          dashboardId={dashboard.id}
                           panel={panels.find(
                             (p) => p.id.toString() == viewPanel,
                           )}
