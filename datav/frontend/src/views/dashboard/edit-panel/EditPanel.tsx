@@ -82,18 +82,10 @@ import TemplateBadge from 'src/views/template/TemplateBadge'
 interface EditPanelProps {
   dashboard: Dashboard
   onChange: any
-  edit?: string
+  initPanel: Panel
 }
 
-const EditPanelWrapper = memo((props: EditPanelProps) => {
-  const edit = useSearchParam('edit')
-  useLocation()
-  return <EditPanel {...props} edit={edit} />
-})
-
-export default EditPanelWrapper
-
-const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
+const EditPanel = memo(({ dashboard, onChange, initPanel }: EditPanelProps) => {
   const t = useStore(commonMsg)
   const t1 = useStore(panelMsg)
 
@@ -104,10 +96,7 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
   const [pageChanged, setPageChanged] = useState(false)
   const [data, setData] = useState(null)
   const [view, setView] = useState<'fill' | 'actual'>('fill')
-  const panelInEdit = dashboard.data.panels.find(
-    (p) => p.id.toString() === edit,
-  )
-  useLandscapeMode(!isEmpty(edit))
+  useLandscapeMode(!isEmpty(initPanel))
 
   useBus(
     DashboardSavedEvent,
@@ -120,15 +109,8 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
   useBus(
     OnDashboardSaveEvent,
     () => {
-      if (edit) {
-        onChange((dashboard) => {
-          for (var i = 0; i < dashboard.data.panels.length; i++) {
-            if (dashboard.data.panels[i].id === tempPanel.id) {
-              dashboard.data.panels[i] = tempPanel
-              break
-            }
-          }
-        })
+      if (initPanel) {
+        onChange(tempPanel)
         setTimeout(() => dispatch(SaveDashboardEvent), 300)
       }
     },
@@ -136,20 +118,17 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
   )
 
   useEffect(() => {
-    if (edit) {
-      if (panelInEdit) {
-        setTempPanel(panelInEdit)
-        onOpen()
-      } else {
-        onDiscard()
-      }
+    if (initPanel) {
+      setTempPanel(initPanel)
+      onOpen()
     } else {
       if (!pageChanged) {
         setTempPanel(null)
         onClose()
       }
+      // onDiscard()
     }
-  }, [panelInEdit])
+  }, [initPanel])
 
   useEffect(() => {
     if (!tempPanel) {
@@ -169,23 +148,16 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
 
   useBus(
     (e) => {
-      return e.type == PanelDataEvent + edit
+      return e.type == PanelDataEvent + initPanel?.id
     },
     (e) => {
       setData(e.data)
     },
-    [edit],
+    [initPanel?.id],
   )
 
   const onApplyChanges = () => {
-    onChange((dashboard) => {
-      for (var i = 0; i < dashboard.data.panels.length; i++) {
-        if (dashboard.data.panels[i].id === tempPanel.id) {
-          dashboard.data.panels[i] = tempPanel
-          break
-        }
-      }
-    })
+    onChange(tempPanel)
 
     if (pageChanged) {
       dispatch(PanelForceRebuildEvent + tempPanel.id)
@@ -578,7 +550,7 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
           </ModalContent>
         )}
       </Modal>
-      {edit && dashboard.data.enableUnsavePrompt && (
+      {initPanel && dashboard.data.enableUnsavePrompt && (
         <PageLeave pageChanged={pageChanged} />
       )}
     </>
@@ -629,3 +601,5 @@ const PageLeave = ({ pageChanged }) => {
   useLeavePageConfirm(pageChanged)
   return <></>
 }
+
+export default EditPanel

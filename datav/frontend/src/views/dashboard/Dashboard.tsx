@@ -62,6 +62,7 @@ import { $teams } from '../team/store'
 import { getNextPanelId } from './AddPanel'
 import { builtinPanelPlugins } from './plugins/built-in/plugins'
 import { externalPanelPlugins } from './plugins/external/plugins'
+import { useSearchParam, useLocation } from 'react-use'
 
 setAutoFreeze(false)
 
@@ -75,6 +76,8 @@ const DashboardWrapper = ({ rawDashboard, sideWidth }) => {
   const { setColorMode, colorMode, toggleColorMode } = useColorMode()
   // const [gVariables, setGVariables] = useState<Variable[]>([])
   const fullscreen = useFullscreen()
+  const edit = useSearchParam('edit')
+  useLocation()
 
   const initDash = (dash) => {
     dash.data.panels.forEach((panel: Panel) => {
@@ -234,8 +237,15 @@ const DashboardWrapper = ({ rawDashboard, sideWidth }) => {
     }
   }, [colorMode])
 
-  const onDashbardChange = useCallback((f) => {
-    setDashboard(f)
+  const onDashbardChange = useCallback((tempPanel) => {
+    setDashboard((dashboard) => {
+      for (var i = 0; i < dashboard.data.panels.length; i++) {
+        if (dashboard.data.panels[i].id === tempPanel.id) {
+          dashboard.data.panels[i] = tempPanel
+          break
+        }
+      }
+    })
   }, [])
 
   const hidingVars = dashboard?.data?.hidingVars?.toLowerCase().split(',')
@@ -292,6 +302,9 @@ const DashboardWrapper = ({ rawDashboard, sideWidth }) => {
   }, [dashboard, vars])
 
   const [isLargeScreen] = useMediaQuery('(min-width: 600px)')
+  const panelInEdit = dashboard?.data?.panels.find(
+    (p) => p.id.toString() === edit,
+  )
 
   return (
     <>
@@ -331,7 +344,11 @@ const DashboardWrapper = ({ rawDashboard, sideWidth }) => {
               />
             )}
           </Box>
-          <EditPanel dashboard={dashboard} onChange={onDashbardChange} />
+          <EditPanel
+            dashboard={dashboard}
+            onChange={onDashbardChange}
+            initPanel={panelInEdit}
+          />
           <DashboardAnnotations dashboard={dashboard} />
         </Box>
       ) : (
