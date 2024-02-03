@@ -25,7 +25,7 @@ const panelComponents: PanelPluginComponents = {
   settings: {
     type: PanelTypePie,
     icon,
-    initOptions: {
+    initOptions: () => ({
       animation: true,
       shape: {
         type: 'normal',
@@ -42,8 +42,8 @@ const panelComponents: PanelPluginComponents = {
         fontSize: 12,
         lineHeight: 16,
         transformName: `function transformName(rawName, params) {
-    return rawName
-}`,
+      return rawName
+  }`,
       },
       legend: {
         show: false,
@@ -62,7 +62,7 @@ const panelComponents: PanelPluginComponents = {
         calc: ValueCalculationType.Last,
       },
       showSplitBorder: true,
-    },
+    }),
   },
 }
 

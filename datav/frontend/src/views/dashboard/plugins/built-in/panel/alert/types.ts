@@ -17,14 +17,14 @@ export interface AlertEditorProps extends PanelEditorProps {
 export interface AlerSettings extends DisableDatasource {
   viewMode: 'list' | 'stat'
   stat: {
-    showGraph: boolean
-    color: string
-    layout: LayoutOrientation
-    colorMode: 'none' | 'value' | 'bg-gradient' | 'bg-solid'
-    style: 'lines' | 'bars'
+    //   showGraph: boolean
+    //   color: string
+    //   layout: LayoutOrientation
+    //   colorMode: 'none' | 'value' | 'bg-gradient' | 'bg-solid'
+    //   style: 'lines' | 'bars'
     statName: string
-    valueSize: number
-    legendSize: number
+    //   valueSize: number
+    //   legendSize: number
   }
   orderBy: 'newest' | 'oldest'
   toolbar: {
@@ -39,6 +39,7 @@ export interface AlerSettings extends DisableDatasource {
     tooltip: 'none' | 'single' | 'all'
   }
   filter: AlertFilter
+  subPanel?: Panel
 }
 
 import { AlertState } from 'types/alert'

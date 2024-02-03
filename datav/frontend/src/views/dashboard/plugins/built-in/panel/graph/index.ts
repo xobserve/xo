@@ -22,51 +22,52 @@ const panelComponents: PanelPluginComponents = {
   settings: {
     type: PanelTypeGraph,
     icon,
-    initOptions: {
-      tooltip: {
-        mode: 'all',
-        sortBy: 'name',
-        sortDir: 'desc',
-      },
-      legend: {
-        mode: 'table',
-        placement: 'bottom',
-        valueCalcs: [ValueCalculationType.Last],
-        showValuesName: true,
-        width: 500,
-        nameWidth: '400',
-        order: {
-          by: ValueCalculationType.Last,
-          sort: 'desc',
+    initOptions: () =>
+      ({
+        tooltip: {
+          mode: 'all',
+          sortBy: 'name',
+          sortDir: 'desc',
         },
-      },
-      styles: {
-        style: 'lines',
-        lineWidth: 1,
-        fillOpacity: 80,
-        showPoints: 'auto',
-        pointSize: 6,
-        gradientMode: 'opacity',
-        connectNulls: false,
-        barRadius: 0,
-        barGap: 10,
-        enableStack: false,
-        padding: [null, null, null, null],
-      },
-      axis: {
-        showGrid: true,
-        showX: true,
-        showY: true,
-        scale: 'linear',
-        scaleBase: 2,
-      },
-      value: {
-        ...getInitUnits(),
-        decimal: 3,
-      },
-      enableAlert: false,
-      alertFilter: initAlertFilter(),
-    } as GraphSettings,
+        legend: {
+          mode: 'table',
+          placement: 'bottom',
+          valueCalcs: [ValueCalculationType.Last],
+          showValuesName: true,
+          width: 500,
+          nameWidth: '400',
+          order: {
+            by: ValueCalculationType.Last,
+            sort: 'desc',
+          },
+        },
+        styles: {
+          style: 'lines',
+          lineWidth: 1,
+          fillOpacity: 80,
+          showPoints: 'auto',
+          pointSize: 6,
+          gradientMode: 'opacity',
+          connectNulls: false,
+          barRadius: 0,
+          barGap: 10,
+          enableStack: false,
+          padding: [null, null, null, null],
+        },
+        axis: {
+          showGrid: true,
+          showX: true,
+          showY: true,
+          scale: 'linear',
+          scaleBase: 2,
+        },
+        value: {
+          ...getInitUnits(),
+          decimal: 3,
+        },
+        enableAlert: false,
+        alertFilter: initAlertFilter(),
+      } as GraphSettings),
   },
 }
 

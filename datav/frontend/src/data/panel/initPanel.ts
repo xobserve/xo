@@ -34,11 +34,9 @@ export const initPanel = (id?) => {
     type: initPanelType,
     templateId: 0,
     gridPos: { x: 0, y: 0, w: 12, h: 20 },
-    plugins: {
-      [initPanelType]: plugin.settings.initOptions,
-    },
+
     datasource: initDatasource(),
-    styles: initPanelStyles,
+    styles: initPanelStyles(),
     overrides: [],
     valueMapping: null,
     transform: `function transform(rawData,lodash, moment) {
@@ -61,11 +59,18 @@ export const initPanel = (id?) => {
       thresholdsDisplay: ThresholdDisplay.None,
       thresholdArrow: ThresholdArrow.None,
     },
+
+    disableMenu: false,
+    allowTypes: null, // null means allow all types
   }
 
   if (id) {
     p.id = id
     p.title = `New panel`
+  }
+
+  p.plugins = {
+    [initPanelType]: plugin.settings.initOptions(p),
   }
 
   return p

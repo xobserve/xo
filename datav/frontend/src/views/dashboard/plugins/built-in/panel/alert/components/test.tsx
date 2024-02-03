@@ -17,17 +17,22 @@ import { Panel, PanelProps } from 'types/dashboard'
 import StatPanel from '../../stat/Stat'
 import { SeriesData } from 'types/seriesData'
 import { AlertRule } from '../types'
+import { ValueCalculationType } from 'types/value'
+import { VarialbeAllOption } from 'src/data/variable'
 import { prometheusToSeriesData } from '../../../datasource/prometheus/transformData'
+import { builtinPanelPlugins } from '../../../plugins'
+import { PanelTypeStat } from '../../stat/types'
+import { initPanel } from 'src/data/panel/initPanel'
 import { PanelGrid } from 'src/views/dashboard/grid/PanelGrid/PanelGrid'
-import EditPanel from 'src/views/dashboard/edit-panel/EditPanel'
-import { useSearchParam } from 'react-use'
-import { UpdatePanelEvent } from 'src/data/bus-events'
-import { dispatch } from 'use-bus'
 
 const AlertStatView = (props: PanelProps) => {
-  const subPanel = props.panel.plugins[props.panel.type].subPanel
-  const edit = useSearchParam('editSub')
-  console.log('here33333:', edit)
+  const panel: Panel = initPanel(props.panel.id * 10 + 1)
+  panel.type = PanelTypeStat
+  const plugin = builtinPanelPlugins[panel.type]
+  panel.plugins = {
+    [panel.type]: plugin.settings.initOptions ?? {},
+  }
+  panel.title = ''
   const data: SeriesData[] = useMemo(() => {
     const promFormatData = {
       resultType: 'matrix',
@@ -56,7 +61,7 @@ const AlertStatView = (props: PanelProps) => {
     }
 
     const data: SeriesData[] = prometheusToSeriesData(
-      subPanel,
+      panel,
       promFormatData,
       {
         id: 65,
@@ -70,34 +75,54 @@ const AlertStatView = (props: PanelProps) => {
     return data
   }, [props.data])
 
-  const onSubPanelChange = (p) => {
-    const panel = cloneDeep(props.panel)
-    panel.plugins[panel.type].subPanel = p
-    dispatch({
-      type: UpdatePanelEvent,
-      data: panel,
-    })
-  }
+  // const newProps = cloneDeep(props)
+  // const statPlugin = builtinPanelPlugins.stat
+  // const statOptions = statPlugin.settings.initOptions
+  // statOptions.value.calc = ValueCalculationType.Sum
+  // statOptions.value.decimal = 0
+  // statOptions.displaySeries = VarialbeAllOption
+  // statOptions.showGraph = props.panel.plugins.alert.stat.showGraph
+  // statOptions.styles.connectNulls = true
+  // statOptions.styles.showPoints = true
+  // statOptions.styles.layout = props.panel.plugins.alert.stat.layout
+  // statOptions.styles.colorMode = props.panel.plugins.alert.stat.colorMode
+  // statOptions.styles.style = props.panel.plugins.alert.stat.style
+  // statOptions.textSize.value = props.panel.plugins.alert.stat.valueSize
+  // statOptions.textSize.legend = props.panel.plugins.alert.stat.legendSize
+  // statOptions.showLegend = true
+  // newProps.panel.plugins.stat = statOptions
 
+  // newProps.panel.type = PanelTypeStat
+  panel.overrides = [
+    {
+      target: props.panel.plugins.alert.stat.statName,
+      overrides: [
+        {
+          type: 'Series.thresholds',
+          value: {
+            mode: 'absolute',
+            thresholds: [
+              {
+                color: props.panel.plugins.alert.stat.color,
+                value: null,
+              },
+            ],
+          },
+        },
+      ],
+    },
+  ]
+
+  console.log('here333333:', data)
   return (
-    <>
-      <PanelGrid
-        dashboardId={props.dashboardId}
-        panel={subPanel}
-        sync={false}
-        width={props.width}
-        height={props.height}
-        initData={[data]}
-      />
-      {edit && (
-        <EditPanel
-          dashboardId={props.dashboardId}
-          initPanel={subPanel}
-          onChange={onSubPanelChange}
-          initPaneldata={[data]}
-        />
-      )}
-    </>
+    <PanelGrid
+      dashboardId={props.dashboardId}
+      panel={panel}
+      sync={false}
+      width={props.width}
+      height={props.height}
+      initData={[data]}
+    />
   )
 }
 

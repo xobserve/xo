@@ -14,7 +14,7 @@ const panelComponents: PanelPluginComponents = {
   settings: {
     type: PanelTypeGauge,
     icon,
-    initOptions: {
+    initOptions: () => ({
       animation: true,
       diisplaySeries: null,
       valueStyle: {
@@ -50,7 +50,7 @@ const panelComponents: PanelPluginComponents = {
         length: '80%',
         width: 8,
       },
-    },
+    }),
   },
 }
 

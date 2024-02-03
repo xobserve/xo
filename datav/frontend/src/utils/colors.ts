@@ -580,7 +580,7 @@ export function getGradientBackgroundColor(
 }
 
 export function getDefaultPanelColor() {
-  const defaultPalette = initPanelStyles.palette
+  const defaultPalette = initPanelStyles().palette
   const palette = paletteMap[defaultPalette]
   return paletteColorNameToHex(palette[0])
 }

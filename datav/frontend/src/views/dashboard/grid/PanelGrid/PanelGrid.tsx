@@ -629,7 +629,13 @@ const PanelHeader = ({
       key: 'edit',
       icon: <FaEdit />,
       label: t.edit,
-      onClick: () => addParamToUrl({ edit: panel.id }),
+      onClick: () => {
+        if (panel.isSubPanel) {
+          addParamToUrl({ editSub: panel.id })
+        } else {
+          addParamToUrl({ edit: panel.id })
+        }
+      },
     },
     {
       key: 'copy',
@@ -691,12 +697,12 @@ const PanelHeader = ({
     <>
       <HStack
         className='grid-drag-handle'
-        height={`${PANEL_HEADER_HEIGHT - (isEmpty(title) ? 15 : 0)}px`}
+        height={`${PANEL_HEADER_HEIGHT - (isEmpty(title) ? 0 : 0)}px`}
         cursor='move'
         spacing='0'
         position={isEmpty(title) ? 'absolute' : 'relative'}
         width='100%'
-        zIndex={1000}
+        zIndex={panel.isSubPanel ? 1000 : 1001}
       >
         <Flex
           width='100%'
@@ -753,46 +759,14 @@ const PanelHeader = ({
           ) : (
             <Box width='100px'>&nbsp;</Box>
           )}
-          {readonly != 'on' && (
-            <Dropdown
-              placement='bottom'
-              menu={{
-                mode: 'inline',
-                items: menuItems,
-              }}
-              trigger={['hover']}
-              overlayStyle={{}}
-            >
-              <Button
-                height={'100%'}
-                opacity={onHover ? 1 : 0}
-                transition='opacity 0.3s'
-                _focus={{ border: null, background: null }}
-                _active={{ background: null, border: null }}
-                onClick={(e) => e.preventDefault()}
-                variant='ghost'
-                size='xs'
-                disabled={embed}
-                _hover={{ background: null, border: null }}
-                color={paletteColorNameToHex(
-                  panel.styles.title.color,
-                  colorMode,
-                )}
-              >
-                {/* <Center width="100%"> */}
-
-                <Box
-                  padding={1}
-                  opacity='0.6'
-                  fontSize='0.8rem'
-                  zIndex={1000}
-                  cursor='pointer'
-                >
-                  <FaEllipsisV />
-                </Box>
-                {/* </Center> */}
-              </Button>
-            </Dropdown>
+          {readonly != 'on' && !panel.disableMenu && !panel.isSubPanel && (
+            <PanelMenu
+              panel={panel}
+              menuItems={menuItems}
+              onHover={onHover}
+              embed={embed}
+              colorMode={colorMode}
+            />
           )}
         </Flex>
         {!loading && panel.enableScopeTime && (
@@ -848,6 +822,17 @@ const PanelHeader = ({
         data={templatePanel}
         onClose={() => setTemplatePanel(null)}
       />
+      {readonly != 'on' && !panel.disableMenu && panel.isSubPanel && (
+        <Box position='absolute' zIndex={1002}>
+          <PanelMenu
+            panel={panel}
+            menuItems={menuItems}
+            onHover={onHover}
+            embed={embed}
+            colorMode={colorMode}
+          />
+        </Box>
+      )}
     </>
   )
 }
@@ -943,4 +928,45 @@ export const queryAlerts = async (
 
   result.data = data
   return result
+}
+
+const PanelMenu = ({ panel, menuItems, onHover, embed, colorMode }) => {
+  return (
+    <Dropdown
+      placement='bottom'
+      menu={{
+        mode: 'inline',
+        items: menuItems,
+      }}
+      trigger={['hover']}
+      overlayStyle={{}}
+    >
+      <Button
+        height={'100%'}
+        opacity={onHover ? 1 : 0}
+        transition='opacity 0.3s'
+        _focus={{ border: null, background: null }}
+        _active={{ background: null, border: null }}
+        onClick={(e) => e.preventDefault()}
+        variant='ghost'
+        size='xs'
+        disabled={embed}
+        _hover={{ background: null, border: null }}
+        color={paletteColorNameToHex(panel.styles.title.color, colorMode)}
+      >
+        {/* <Center width="100%"> */}
+
+        <Box
+          padding={1}
+          opacity='0.6'
+          fontSize='0.8rem'
+          zIndex={1000}
+          cursor='pointer'
+        >
+          <FaEllipsisV />
+        </Box>
+        {/* </Center> */}
+      </Button>
+    </Dropdown>
+  )
 }

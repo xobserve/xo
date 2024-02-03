@@ -94,6 +94,10 @@ export interface Panel {
     thresholdArrow: ThresholdArrow
   }
 
+  isSubPanel?: boolean
+  disableMenu?: boolean
+  allowTypes?: string[]
+
   /*---- template content ----*/
   type: string
   plugins?: Record<string, any>

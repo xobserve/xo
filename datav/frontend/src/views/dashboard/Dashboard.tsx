@@ -89,10 +89,10 @@ const DashboardWrapper = ({ rawDashboard, sideWidth }) => {
         if (plugin) {
           panel.plugins[panel.type] = defaultsDeep(
             panel.plugins[panel.type],
-            plugin.settings.initOptions,
+            plugin.settings.initOptions(panel),
           )
         }
-        panel.styles = defaultsDeep(panel.styles, initPanelStyles)
+        panel.styles = defaultsDeep(panel.styles, initPanelStyles())
       }
       // console.log("33333 after",cloneDeep(panel.plugins[panel.type]),cloneDeep(panel.overrides))
     })
@@ -349,11 +349,13 @@ const DashboardWrapper = ({ rawDashboard, sideWidth }) => {
               />
             )}
           </Box>
-          <EditPanel
-            dashboardId={dashboard.id}
-            onChange={onEditPanelChange}
-            initPanel={panelInEdit}
-          />
+          {panelInEdit && (
+            <EditPanel
+              dashboardId={dashboard.id}
+              onChange={onEditPanelChange}
+              initPanel={panelInEdit}
+            />
+          )}
           <DashboardAnnotations dashboard={dashboard} />
         </Box>
       ) : (

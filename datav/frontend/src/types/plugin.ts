@@ -29,7 +29,7 @@ export interface PanelPluginComponents {
   settings: {
     type: string
     icon: string
-    initOptions: Record<string, any>
+    initOptions: (p: Panel) => Record<string, any>
     disableAutoQuery?: boolean
   }
 }

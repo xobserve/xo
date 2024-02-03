@@ -26,38 +26,40 @@ const panelComponents: PanelPluginComponents = {
   settings: {
     type: PanelTypeBar,
     icon,
-    initOptions: {
-      animation: true,
-      showGrid: true,
-      tooltip: 'all',
-      showLabel: 'auto',
-      stack: 'auto',
-      axis: {
-        swap: false,
-        scale: 'linear',
-        scaleBase: 2,
-      },
-      styles: {
-        barWidth: 85,
-        axisFontSize: 11,
-        labelFontSize: 11,
-        barOpacity: 80,
-      },
-      value: {
-        ...getInitUnits(),
-        decimal: 2,
-      },
-      legend: {
-        show: true,
-        placement: 'bottom',
-        valueCalcs: [ValueCalculationType.Last],
-        width: 500,
-        nameWidth: '400',
-        order: {
-          by: ValueCalculationType.Last,
-          sort: 'desc',
+    initOptions: () => {
+      return {
+        animation: true,
+        showGrid: true,
+        tooltip: 'all',
+        showLabel: 'auto',
+        stack: 'auto',
+        axis: {
+          swap: false,
+          scale: 'linear',
+          scaleBase: 2,
         },
-      },
+        styles: {
+          barWidth: 85,
+          axisFontSize: 11,
+          labelFontSize: 11,
+          barOpacity: 80,
+        },
+        value: {
+          ...getInitUnits(),
+          decimal: 2,
+        },
+        legend: {
+          show: true,
+          placement: 'bottom',
+          valueCalcs: [ValueCalculationType.Last],
+          width: 500,
+          nameWidth: '400',
+          order: {
+            by: ValueCalculationType.Last,
+            sort: 'desc',
+          },
+        },
+      }
     },
   },
 }

@@ -15,6 +15,7 @@ import {
 import { LayoutOrientation } from 'types/layout'
 import { ValueCalculationType } from 'types/value'
 import { PanelTypeStat } from './types'
+import { VarialbeAllOption } from 'src/data/variable'
 
 const panelComponents: PanelPluginComponents = {
   panel: StatPanel,
@@ -26,10 +27,10 @@ const panelComponents: PanelPluginComponents = {
   settings: {
     type: PanelTypeStat,
     icon,
-    initOptions: {
+    initOptions: () => ({
       showTooltip: true,
       showGraph: true,
-      displaySeries: null,
+      displaySeries: VarialbeAllOption,
       showLegend: false,
       value: {
         ...getInitUnits(),
@@ -55,7 +56,7 @@ const panelComponents: PanelPluginComponents = {
         scale: 'linear',
         scaleBase: 2,
       },
-    },
+    }),
   },
 }
 

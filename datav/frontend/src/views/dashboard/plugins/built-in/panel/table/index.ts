@@ -21,7 +21,7 @@ const panelComponents: PanelPluginComponents = {
   settings: {
     type: PanelTypeTable,
     icon,
-    initOptions: {
+    initOptions: () => ({
       showHeader: true,
       bordered: false,
       cellSize: 'middle',
@@ -39,7 +39,7 @@ const panelComponents: PanelPluginComponents = {
       actionColumnName: null,
       actionClumnWidth: null,
       actionButtonSize: 'sm',
-    },
+    }),
   },
 }
 

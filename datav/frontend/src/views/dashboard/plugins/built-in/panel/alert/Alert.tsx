@@ -50,6 +50,7 @@ import { useStore } from '@nanostores/react'
 import { $variables } from 'src/views/variables/store'
 import CustomScrollbar from 'src/components/CustomScrollbar/CustomScrollbar'
 import { ColorGenerator } from 'utils/colorGenerator'
+import { PANEL_HEADER_HEIGHT } from 'src/data/constants'
 
 interface AlertPanelProps extends PanelProps {
   data: AlertRule[]
@@ -81,6 +82,8 @@ const AlertPanel = memo((props: AlertPanelProps) => {
   const [viewOptions, setViewOptions] = useState<AlertToolbarOptions>(
     storage.get(viewStorageKey) ?? initViewOptions(),
   )
+  const [onHover, setOnHover] = useState(false)
+
   const ruleId = useId()
   const generator = useMemo(() => {
     const palette = paletteMap[panel.styles.palette]
@@ -220,7 +223,13 @@ const AlertPanel = memo((props: AlertPanelProps) => {
   const alertsCount = filterData.reduce((acc, r) => acc + r.alerts.length, 0)
 
   return (
-    <Box height={height} width={width} position='relative'>
+    <Box
+      height={height}
+      width={width}
+      position='relative'
+      onMouseEnter={() => setOnHover(true)}
+      onMouseLeave={() => setOnHover(false)}
+    >
       {viewMode == 'list' && (
         <Flex position='relative'>
           {options.toolbar.show && (
@@ -327,26 +336,20 @@ const AlertPanel = memo((props: AlertPanelProps) => {
           className='alert-stat-view'
           height={props.height}
           width={props.width}
+          pt={0}
         >
-          <AlertStatView {...props} data={filterData} />
+          <AlertStatView {...props} data={filterData} height={props.height} />
         </Box>
       )}
       {viewMode == 'stat' && (
         <Box
           position='absolute'
-          right='2'
-          top='1'
-          opacity={width < 400 ? 0.5 : 1}
-          _hover={{ opacity: 1 }}
-          color={
-            viewMode == 'stat'
-              ? getTextColorForAlphaBackground(
-                  paletteColorNameToHex(options.stat.color),
-                  colorMode == 'dark',
-                )
-              : 'inherit'
-          }
+          right='3'
+          top='2'
+          opacity={onHover ? 1 : 0}
+          color={'inherit'}
           cursor='pointer'
+          transition='opacity 0.3s'
           onClick={() =>
             onViewOptionsChange({
               ...viewOptions,
@@ -354,6 +357,7 @@ const AlertPanel = memo((props: AlertPanelProps) => {
             })
           }
           pb='2'
+          zIndex={1002}
         >
           <AiOutlineSwitcher />
         </Box>

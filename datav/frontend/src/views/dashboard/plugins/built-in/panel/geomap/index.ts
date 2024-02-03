@@ -26,7 +26,7 @@ const panelComponents: PanelPluginComponents = {
   settings: {
     type: PanelTypeGeomap,
     icon,
-    initOptions: {
+    initOptions: () => ({
       initialView: {
         center: [0, 0],
         zoom: 2,
@@ -60,7 +60,7 @@ const panelComponents: PanelPluginComponents = {
         baseSize: 10,
         maxScale: 4,
       },
-    },
+    }),
   },
 }
 

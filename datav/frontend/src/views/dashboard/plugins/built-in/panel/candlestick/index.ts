@@ -4,25 +4,28 @@ This panel is for demonstration purpose, it is an external plugin, auto generate
 The origin plugin files is in https://github.com/xObserve/xobserve/tree/main/ui/external-plugins
 */
 
-import { PanelPluginComponents } from "types/plugin";
-import PanelComponent, { mockDataForTestDataDs } from "./Panel";
-import PanelEditor from "./Editor";
-import OverrideEditor, { OverrideRules, getOverrideTargets } from "./OverrideEditor";
+import { PanelPluginComponents } from 'types/plugin'
+import PanelComponent, { mockDataForTestDataDs } from './Panel'
+import PanelEditor from './Editor'
+import OverrideEditor, {
+  OverrideRules,
+  getOverrideTargets,
+} from './OverrideEditor'
 import icon from './icon.svg'
-import { PanelTypeCandle, initSettings } from "./types";
+import { PanelTypeCandle, initSettings } from './types'
 
 const panelComponents: PanelPluginComponents = {
-    panel: PanelComponent,
-    editor: PanelEditor,
-    overrideEditor: OverrideEditor,
-    overrideRules: OverrideRules,
-    getOverrideTargets: getOverrideTargets,
-    mockDataForTestDataDs: mockDataForTestDataDs,
-    settings:{
-        type: PanelTypeCandle,
-        icon,
-        initOptions: initSettings
-    }
+  panel: PanelComponent,
+  editor: PanelEditor,
+  overrideEditor: OverrideEditor,
+  overrideRules: OverrideRules,
+  getOverrideTargets: getOverrideTargets,
+  mockDataForTestDataDs: mockDataForTestDataDs,
+  settings: {
+    type: PanelTypeCandle,
+    icon,
+    initOptions: () => initSettings,
+  },
 }
 
-export default  panelComponents
+export default panelComponents

@@ -83,10 +83,11 @@ interface EditPanelProps {
   dashboardId: string
   onChange: any
   initPanel: Panel
+  initPaneldata?: any
 }
 
 const EditPanel = memo(
-  ({ dashboardId, onChange, initPanel }: EditPanelProps) => {
+  ({ dashboardId, onChange, initPanel, initPaneldata }: EditPanelProps) => {
     const t = useStore(commonMsg)
     const t1 = useStore(panelMsg)
 
@@ -176,7 +177,11 @@ const EditPanel = memo(
     }
 
     const onEditClose = () => {
-      removeParamFromUrl(['edit'])
+      if (tempPanel.isSubPanel) {
+        removeParamFromUrl(['editSub'])
+      } else {
+        removeParamFromUrl(['edit'])
+      }
       setPageChanged(false)
       onClose()
     }
@@ -379,6 +384,7 @@ const EditPanel = memo(
                                       dashboardId={dashboardId}
                                       panel={tempPanel}
                                       sync={null}
+                                      initData={initPaneldata}
                                     />
                                   )
                                 }}
@@ -396,6 +402,7 @@ const EditPanel = memo(
                                   dashboardId={dashboardId}
                                   panel={tempPanel}
                                   sync={null}
+                                  initData={initPaneldata}
                                 />
                               </Box>
                             )}
@@ -403,55 +410,59 @@ const EditPanel = memo(
                           </Box>
                           {/* panel datasource section */}
                           {!tempPanel.plugins[tempPanel.type]
-                            .disableDatasource && (
-                            <CustomScrollbar hideHorizontalTrack>
-                              <Box maxHeight='100%' mt='2'>
-                                <Box position='relative' zIndex={0}>
-                                  <Tabs variant='unstyled' isLazy>
-                                    <TabList pb='0'>
-                                      <Tab>{t.query}</Tab>
-                                      <Tab>{t.transform}</Tab>
-                                      {tempPanel.type == PanelTypeGraph &&
-                                        tempPanel.plugins.graph.enableAlert && (
-                                          <Tab>{t.alert}</Tab>
-                                        )}
-                                    </TabList>
-                                    <TabIndicator
-                                      mt='3px'
-                                      height='2px'
-                                      bg='brand.500'
-                                      borderRadius='1px'
-                                      position='absolute'
-                                    />
-                                    <TabPanels>
-                                      <TabPanel px='0' pt='1'>
-                                        <EditPanelQuery
-                                          key={tempPanel.id + tempPanel.type}
-                                          panel={tempPanel}
-                                          onChange={setTempPanel}
-                                        />
-                                      </TabPanel>
-                                      <TabPanel px='0' pt='1' pb='0'>
-                                        <EditPanelTransform
-                                          panel={tempPanel}
-                                          onChange={setTempPanel}
-                                        />
-                                      </TabPanel>
-                                      {tempPanel.type == PanelTypeGraph &&
-                                        tempPanel.plugins.graph.enableAlert && (
-                                          <TabPanel px='0' pt='1' pb='0'>
-                                            <EditPanelAlert
-                                              panel={tempPanel}
-                                              onChange={setTempPanel}
-                                            />
-                                          </TabPanel>
-                                        )}
-                                    </TabPanels>
-                                  </Tabs>
+                            .disableDatasource &&
+                            (initPaneldata === null ||
+                              initPaneldata === undefined) && (
+                              <CustomScrollbar hideHorizontalTrack>
+                                <Box maxHeight='100%' mt='2'>
+                                  <Box position='relative' zIndex={0}>
+                                    <Tabs variant='unstyled' isLazy>
+                                      <TabList pb='0'>
+                                        <Tab>{t.query}</Tab>
+                                        <Tab>{t.transform}</Tab>
+                                        {tempPanel.type == PanelTypeGraph &&
+                                          tempPanel.plugins.graph
+                                            .enableAlert && (
+                                            <Tab>{t.alert}</Tab>
+                                          )}
+                                      </TabList>
+                                      <TabIndicator
+                                        mt='3px'
+                                        height='2px'
+                                        bg='brand.500'
+                                        borderRadius='1px'
+                                        position='absolute'
+                                      />
+                                      <TabPanels>
+                                        <TabPanel px='0' pt='1'>
+                                          <EditPanelQuery
+                                            key={tempPanel.id + tempPanel.type}
+                                            panel={tempPanel}
+                                            onChange={setTempPanel}
+                                          />
+                                        </TabPanel>
+                                        <TabPanel px='0' pt='1' pb='0'>
+                                          <EditPanelTransform
+                                            panel={tempPanel}
+                                            onChange={setTempPanel}
+                                          />
+                                        </TabPanel>
+                                        {tempPanel.type == PanelTypeGraph &&
+                                          tempPanel.plugins.graph
+                                            .enableAlert && (
+                                            <TabPanel px='0' pt='1' pb='0'>
+                                              <EditPanelAlert
+                                                panel={tempPanel}
+                                                onChange={setTempPanel}
+                                              />
+                                            </TabPanel>
+                                          )}
+                                      </TabPanels>
+                                    </Tabs>
+                                  </Box>
                                 </Box>
-                              </Box>
-                            </CustomScrollbar>
-                          )}
+                              </CustomScrollbar>
+                            )}
                         </Allotment>
                       </Box>
                       {/* panel settings section */}

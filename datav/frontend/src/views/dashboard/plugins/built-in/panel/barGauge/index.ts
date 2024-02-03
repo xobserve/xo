@@ -25,7 +25,7 @@ const panelComponents: PanelPluginComponents = {
   settings: {
     type: PanelTypeBarGauge,
     icon,
-    initOptions: {
+    initOptions: () => ({
       value: {
         ...getInitUnits(),
         decimal: 2,
@@ -43,7 +43,7 @@ const panelComponents: PanelPluginComponents = {
       maxminFrom: 'all',
       showMax: true,
       showMin: true,
-    },
+    }),
   },
 }
 

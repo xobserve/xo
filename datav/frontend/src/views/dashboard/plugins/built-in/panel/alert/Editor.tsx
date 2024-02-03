@@ -76,7 +76,7 @@ const AlertPanelEditor = memo((props: AlertEditorProps) => {
             </PanelEditItem>
             {panel.plugins.alert.viewMode === 'stat' && (
               <>
-                <PanelEditItem title='Show stat graph'>
+                {/* <PanelEditItem title='Show stat graph'>
                   <Switch
                     isChecked={panel.plugins.alert.stat.showGraph}
                     onChange={(e) =>
@@ -139,7 +139,7 @@ const AlertPanelEditor = memo((props: AlertEditorProps) => {
                       })
                     }
                   />
-                </PanelEditItem>
+                </PanelEditItem> */}
                 <PanelEditItem title='Stat name'>
                   <EditorInputItem
                     value={panel.plugins.alert.stat.statName}
@@ -151,7 +151,7 @@ const AlertPanelEditor = memo((props: AlertEditorProps) => {
                     }
                   />
                 </PanelEditItem>
-                <PanelEditItem title='Stat value size'>
+                {/* <PanelEditItem title='Stat value size'>
                   <EditorNumberItem
                     min={8}
                     max={100}
@@ -176,7 +176,7 @@ const AlertPanelEditor = memo((props: AlertEditorProps) => {
                       })
                     }
                   />
-                </PanelEditItem>
+                </PanelEditItem> */}
               </>
             )}
             <PanelEditItem title='Order by'>

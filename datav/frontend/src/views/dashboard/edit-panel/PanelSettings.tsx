@@ -55,7 +55,10 @@ const PanelSettings = memo(({ panel, onChange }: PanelEditorProps) => {
       tempPanel.type = type
       const plugin = builtinPanelPlugins[type] ?? externalPanelPlugins[type]
       tempPanel.plugins = {
-        [type]: pluginsCachedInEdit[type] ?? plugin.settings.initOptions ?? {},
+        [type]:
+          pluginsCachedInEdit[type] ??
+          plugin.settings.initOptions(tempPanel) ??
+          {},
       }
       if (oldPlugin.value) {
         tempPanel.plugins[type].value = oldPlugin.value
@@ -241,6 +244,12 @@ const PanelSettings = memo(({ panel, onChange }: PanelEditorProps) => {
                 if (panelType == PanelTypeRow) {
                   return <></>
                 }
+
+                if (!isEmpty(panel.allowTypes)) {
+                  if (!panel.allowTypes.includes(panelType)) {
+                    return <></>
+                  }
+                }
                 return (
                   <VisulizationItem
                     selected={panel.type == panelType}
@@ -260,6 +269,11 @@ const PanelSettings = memo(({ panel, onChange }: PanelEditorProps) => {
               <Wrap>
                 {externalPlugins.map((panelType) => {
                   const plugin = externalPanelPlugins[panelType]
+                  if (!isEmpty(panel.allowTypes)) {
+                    if (!panel.allowTypes.includes(panelType)) {
+                      return <></>
+                    }
+                  }
                   return (
                     <VisulizationItem
                       selected={panel.type == panelType}
@@ -277,6 +291,11 @@ const PanelSettings = memo(({ panel, onChange }: PanelEditorProps) => {
               {builtinPlugins.map((panelType) => {
                 if (panelType.startsWith('xobserve')) {
                   const plugin = builtinPanelPlugins[panelType]
+                  if (!isEmpty(panel.allowTypes)) {
+                    if (!panel.allowTypes.includes(panelType)) {
+                      return <></>
+                    }
+                  }
                   return (
                     <VisulizationItem
                       selected={panel.type == panelType}

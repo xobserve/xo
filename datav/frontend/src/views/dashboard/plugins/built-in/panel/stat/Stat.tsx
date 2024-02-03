@@ -45,6 +45,7 @@ const StatPanel = memo((props: StatPanelProps) => {
   const data: SeriesData[] = useMemo(() => {
     let res: SeriesData[] = []
     const displaySeries = props.panel.plugins.stat.displaySeries
+
     if (props.data.length > 0) {
       for (const d of props.data) {
         for (const s of d) {

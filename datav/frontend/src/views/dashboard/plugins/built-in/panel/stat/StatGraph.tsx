@@ -154,6 +154,7 @@ const StatGraph = memo((props: Props) => {
   const graphHeight = statOptions.showGraph ? statOptions.styles.graphHeight : 0
   const TextContainer = graphHeight == 0 ? Center : Box
   const textAlign = statOptions.styles.textAlign
+
   return (
     <>
       <Box

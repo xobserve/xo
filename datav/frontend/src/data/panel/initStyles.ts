@@ -18,7 +18,7 @@ import {
   PanelTitleDecorationType,
 } from 'types/panel/styles'
 
-export const initPanelStyles: PanelStyles = {
+export const initPanelStyles = (): PanelStyles => ({
   palette: 'echarts-light',
   border: PanelBorderType.None,
   borderOnHover: true,
@@ -52,4 +52,4 @@ export const initPanelStyles: PanelStyles = {
   widthReduction: 0,
   marginTop: 0,
   marginLeft: 0,
-}
+})

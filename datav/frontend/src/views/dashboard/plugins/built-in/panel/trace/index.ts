@@ -12,12 +12,12 @@ const panelComponents: PanelPluginComponents = {
   settings: {
     type: PanelTypeTrace,
     icon,
-    initOptions: {
+    initOptions: () => ({
       defaultService: '${service}',
       enableEditService: false,
       defaultOperation: '${operation}',
       enableEditOperation: false,
-    },
+    }),
   },
 }
 

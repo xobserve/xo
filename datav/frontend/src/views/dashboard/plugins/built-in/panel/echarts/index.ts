@@ -17,7 +17,7 @@ const panelComponents: PanelPluginComponents = {
   settings: {
     type: PanelTypeEcharts,
     icon,
-    initOptions: {
+    initOptions: () => ({
       animation: true,
       allowEmptyData: false,
       setOptionsFunc: setEchartsOptions,
@@ -25,7 +25,7 @@ const panelComponents: PanelPluginComponents = {
         ...getInitUnits(),
         decimal: 3,
       },
-    },
+    }),
   },
 }
 

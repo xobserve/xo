@@ -28,7 +28,7 @@ const panelComponents: PanelPluginComponents = {
   settings: {
     type: PanelType,
     icon,
-    initOptions: initSettings(),
+    initOptions: initSettings,
     disableAutoQuery: true,
   },
 }
