@@ -36,6 +36,9 @@ export function customClasses(props) {
       color: mode('brand.500', 'brand.300')(props),
       opacity: 1,
     },
+    '.hover-border:hover': {
+      borderColor: mode('brand.500', 'brand.200')(props),
+    },
     '.label-bg': {
       bg: mode('#f7f9fb', 'rgba(255,255,255,0.05)')(props),
     },

@@ -34,6 +34,7 @@ import {
   FaBug,
   FaEdit,
   FaEllipsisV,
+  FaExternalLinkAlt,
   FaLayerGroup,
   FaRegClock,
   FaRegClone,
@@ -115,6 +116,7 @@ import { Lang } from 'types/misc'
 import TemplateExport from 'src/views/template/TemplateExport'
 import { TemplateType } from 'types/template'
 import { extractPanelTemplateContent } from 'utils/template'
+import { ExternalLinkComponent } from 'components/ExternalLinks'
 
 interface PanelGridProps {
   dashboardId: string
@@ -800,6 +802,31 @@ const PanelHeader = ({
                 <Text opacity={0.7} mt='2' ml='3' fontSize='0.9rem'>
                   Panel time range
                 </Text>
+              </PopoverBody>
+            </PopoverContent>
+          </Popover>
+        )}
+        {!isEmpty(panel.externalLinks) && (
+          <Popover trigger='hover'>
+            <PopoverTrigger>
+              <Box
+                opacity='0.5'
+                fontSize='0.8rem'
+                zIndex={1000}
+                cursor='pointer'
+                paddingRight='2'
+              >
+                <FaExternalLinkAlt />
+              </Box>
+            </PopoverTrigger>
+            <PopoverContent>
+              <PopoverArrow />
+              <PopoverBody>
+                <HStack>
+                  {panel.externalLinks.map((link, i) => (
+                    <ExternalLinkComponent key={i} link={link} />
+                  ))}
+                </HStack>
               </PopoverBody>
             </PopoverContent>
           </Popover>

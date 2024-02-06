@@ -210,7 +210,7 @@ export const ExternalLinkComponent = ({ link }: { link: ExternalLink }) => {
   return (
     <Tooltip label={link.url}>
       <HStack
-        className='bordered hover-bg'
+        className='bordered hover-border'
         py='1'
         px='2'
         cursor='pointer'
