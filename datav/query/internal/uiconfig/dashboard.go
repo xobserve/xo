@@ -132,7 +132,6 @@ func GetDashboardConfig(c *gin.Context) {
 				}
 			}
 		}
-		fmt.Println("here333333", teamId, dashId)
 		dash, err := models.QueryDashboard(c.Request.Context(), teamId, dashId)
 
 		if err != nil {

@@ -129,6 +129,32 @@ const CommonStyles = () => (
           }
         }
 
+        .bottom-gradient-border {
+          ::after {
+            display: block;
+            content: ' ';
+            position: relative;
+            height: 2px;
+            top: 8px;
+            background-image: linear-gradient(
+              to right,
+              #33a2e5 30%,
+              #52c41a 99%
+            );
+          }
+        }
+
+        .bottom-transparent-border {
+          ::after {
+            display: block;
+            content: ' ';
+            position: relative;
+            height: 2px;
+            top: 8px;
+            background-image: transparent;
+          }
+        }
+
         .chakra-slider__thumb {
           color: black;
         }

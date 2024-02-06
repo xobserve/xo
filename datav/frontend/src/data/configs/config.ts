@@ -52,6 +52,10 @@ export interface UIConfig {
       baiduMapAK: string
     }
   }
+  dashboard?: {
+    enableDelete: boolean
+    showSidemenuItems: boolean
+  }
   showAlertIcon?: boolean
   githubOAuthToken?: string
   enableGithubLogin?: boolean

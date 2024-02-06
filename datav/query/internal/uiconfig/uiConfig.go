@@ -59,6 +59,7 @@ type UIConfig struct {
 
 	Plugins *Plugins `json:"plugins"`
 
+	Dashboard     *config.Dashboard     `json:"dashboard"`
 	Observability *config.Observability `json:"observability"`
 	Tenant        *Tenant               `json:"tenant"`
 
@@ -190,6 +191,7 @@ func GetBasicConfig() *UIConfig {
 		Plugins:           (*Plugins)(&config.Data.Plugins),
 		Observability:     &config.Data.Observability,
 		Tenant:            &tenant,
+		Dashboard:         &config.Data.Dashboard,
 	}
 
 	return cfg

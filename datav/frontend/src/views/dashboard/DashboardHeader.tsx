@@ -22,12 +22,13 @@ import {
   PopoverTrigger,
   Text,
   Tooltip,
+  useColorModeValue,
   useMediaQuery,
   useToast,
 } from '@chakra-ui/react'
 import VariablesLoader from 'src/views/variables/Loader'
 import { concat, isEmpty } from 'lodash'
-import React from 'react'
+import React, { useMemo } from 'react'
 import { memo } from 'react'
 import { Dashboard } from 'types/dashboard'
 import AddPanel from './AddPanel'
@@ -53,14 +54,17 @@ import { addParamToUrl, navigateTo } from 'utils/url'
 import TemplateBadge from '../template/TemplateBadge'
 import { requestApi } from 'utils/axios/request'
 import { ExternalLinkComponent } from 'components/ExternalLinks'
+import { $config } from 'src/data/configs/config'
+import { MenuItem } from 'types/teams'
 
 interface HeaderProps {
   dashboard: Dashboard
   onChange: any
   sideWidth?: number
+  subMenus?: MenuItem
 }
 const DashboardHeader = memo(
-  ({ dashboard, onChange, sideWidth }: HeaderProps) => {
+  ({ dashboard, onChange, sideWidth, subMenus = null }: HeaderProps) => {
     const toast = useToast()
     const vars = useStore($variables)
     const t1 = useStore(dashboardMsg)
@@ -69,6 +73,7 @@ const DashboardHeader = memo(
     const toolbar = useSearchParam('toolbar')
     const readonly = useSearchParam('readonly')
     const embed = useEmbed()
+    const config = useStore($config)
 
     const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
     const [dvars, gvars] = catelogVariables(vars, dashboard)
@@ -107,6 +112,40 @@ const DashboardHeader = memo(
         zIndex={1001}
         transition='all 0.2s'
       >
+        {config.dashboard.showSidemenuItems && subMenus ? (
+          <HStack className='bordered-bottom' spacing={5}>
+            <Text
+              fontWeight={500}
+              mr={2}
+              className='bottom-transparent-border'
+              opacity={useColorModeValue(0.6, 0.8)}
+            >
+              {subMenus.title}
+            </Text>
+            {subMenus.children.map((item) => {
+              const path = `/${config.currentTeam}` + item.url
+              return (
+                <Box
+                  cursor='pointer'
+                  onClick={() => navigateTo(path)}
+                  className={
+                    'hover-text' +
+                    (window.location.pathname == path
+                      ? ' bottom-gradient-border'
+                      : ' bottom-transparent-border')
+                  }
+                  py='2'
+                  px='0'
+                  fontWeight={window.location.pathname == path ? 500 : null}
+                >
+                  <Text>{item.title}</Text>
+                </Box>
+              )
+            })}
+          </HStack>
+        ) : (
+          <></>
+        )}
         {
           <>
             <Flex justifyContent='space-between'>

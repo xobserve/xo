@@ -52,6 +52,7 @@ paths:
 #################################### Dashboard ##############################
 dashboard: 
     enable_delete: true
+    show_sidemenu_items: true
 
 #################################### Clean Tasks  ##############################
 task: 

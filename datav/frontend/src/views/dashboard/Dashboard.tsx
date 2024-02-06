@@ -63,6 +63,7 @@ import { getNextPanelId } from './AddPanel'
 import { builtinPanelPlugins } from './plugins/built-in/plugins'
 import { externalPanelPlugins } from './plugins/external/plugins'
 import { useSearchParam, useLocation } from 'react-use'
+import { $config } from 'src/data/configs/config'
 
 setAutoFreeze(false)
 
@@ -71,6 +72,7 @@ setAutoFreeze(false)
 // 1. team's side menu, asscessed by a specific url path
 // 2. dashboard page, accessed by a dashboard id
 const DashboardWrapper = ({ rawDashboard, sideWidth }) => {
+  const config = useStore($config)
   const vars = useStore($variables)
   const [dashboard, setDashboard] = useImmer<Dashboard>(null)
   const { setColorMode, colorMode, toggleColorMode } = useColorMode()
@@ -192,7 +194,6 @@ const DashboardWrapper = ({ rawDashboard, sideWidth }) => {
   )
 
   useEffect(() => {
-    console.log('here3333333 dashboard changed')
     if (dashboard) {
       $dashboard.set(dashboard)
       setTimeout(() => {
@@ -261,12 +262,6 @@ const DashboardWrapper = ({ rawDashboard, sideWidth }) => {
     )
   })
 
-  const headerHeight = fullscreen
-    ? 0
-    : (visibleVars.length > 0
-        ? DashboardHeaderHeight
-        : DashboardHeaderHeight - 25) + 7
-
   const panels = useMemo(() => {
     let panels
     if (dashboard) {
@@ -311,6 +306,32 @@ const DashboardWrapper = ({ rawDashboard, sideWidth }) => {
     (p) => p.id.toString() === edit,
   )
 
+  const subMenus = useMemo(() => {
+    const path = window.location.pathname
+    for (const item of config.sidemenu) {
+      if (`/${config.currentTeam}` + item.url == path) {
+        return null
+      }
+      if (!item.children) {
+        continue
+      }
+      for (const sub of item.children) {
+        if (`/${config.currentTeam}` + sub.url == path) {
+          return item
+        }
+      }
+    }
+
+    return null
+  }, [config.sidemenu])
+
+  const headerHeight =
+    (fullscreen
+      ? 0
+      : (visibleVars.length > 0
+          ? DashboardHeaderHeight
+          : DashboardHeaderHeight - 25) + 7) + (subMenus ? 36 : 0)
+
   return (
     <>
       {dashboard ? (
@@ -328,6 +349,7 @@ const DashboardWrapper = ({ rawDashboard, sideWidth }) => {
             dashboard={dashboard}
             onChange={onDashbardChange}
             sideWidth={sideWidth}
+            subMenus={subMenus}
           />
           <Box
             // key={dashboard.id + fullscreen}

@@ -63,9 +63,7 @@ type Config struct {
 		UiStaticPath               string `yaml:"ui_static_path"`
 	}
 
-	Dashboard struct {
-		EnableDelete bool `yaml:"enable_delete"`
-	}
+	Dashboard Dashboard
 
 	Datasource struct {
 		Prometheus   string `yaml:"prometheus_addr"`
@@ -123,6 +121,11 @@ type Config struct {
 
 type Observability struct {
 	Enable bool `yaml:"enable" json:"enable"`
+}
+
+type Dashboard struct {
+	EnableDelete      bool `yaml:"enable_delete" json:"enableDelete"`
+	ShowSidemenuItems bool `yaml:"show_sidemenu_items" json:"showSidemenuItems"`
 }
 
 // Data ...
