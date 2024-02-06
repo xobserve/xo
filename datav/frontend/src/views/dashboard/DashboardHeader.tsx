@@ -56,6 +56,7 @@ import { requestApi } from 'utils/axios/request'
 import { ExternalLinkComponent } from 'components/ExternalLinks'
 import { $config } from 'src/data/configs/config'
 import { MenuItem } from 'types/teams'
+import { locale } from 'src/i18n/i18n'
 
 interface HeaderProps {
   dashboard: Dashboard
@@ -68,6 +69,7 @@ const DashboardHeader = memo(
     const toast = useToast()
     const vars = useStore($variables)
     const t1 = useStore(dashboardMsg)
+    const lang = useStore(locale)
     const fullscreen = useFullscreen()
     const teamId = useParams().teamId
     const toolbar = useSearchParam('toolbar')
@@ -92,6 +94,16 @@ const DashboardHeader = memo(
         window.location.reload()
       }, 1000)
     }
+
+    const subTitle = useMemo(() => {
+      try {
+        const titleMap = JSON.parse(subMenus.title)
+        const title = titleMap[lang] ?? titleMap['en']
+        if (title) return title
+      } catch (_) {
+        return subMenus.title
+      }
+    }, [subMenus, lang])
 
     return (
       <Box
@@ -120,10 +132,16 @@ const DashboardHeader = memo(
               className='bottom-transparent-border'
               opacity={useColorModeValue(0.6, 0.8)}
             >
-              {subMenus.title}
+              {subTitle}
             </Text>
             {subMenus.children.map((item) => {
               const path = `/${config.currentTeam}` + item.url
+              let itemTitle = item.title
+              try {
+                const titleMap = JSON.parse(item.title)
+                const title = titleMap[lang] ?? titleMap['en']
+                if (title) itemTitle = title
+              } catch (_) {}
               return (
                 <Box
                   cursor='pointer'
@@ -138,7 +156,7 @@ const DashboardHeader = memo(
                   px='0'
                   fontWeight={window.location.pathname == path ? 500 : null}
                 >
-                  <Text>{item.title}</Text>
+                  <Text>{itemTitle}</Text>
                 </Box>
               )
             })}
