@@ -104,8 +104,8 @@ func GetDashboardConfig(c *gin.Context) {
 
 						for _, sub := range m.Children {
 							if sub.DashboardId != "" && sub.Url != "" {
-								dashId = m.DashboardId
-								path = m.Url
+								dashId = sub.DashboardId
+								path = sub.Url
 								break LOOP0
 							}
 						}
@@ -113,6 +113,7 @@ func GetDashboardConfig(c *gin.Context) {
 				}
 			}
 		} else {
+
 		LOOP:
 			for _, m1 := range menuItems {
 				if len(m1) > 0 {
@@ -123,7 +124,7 @@ func GetDashboardConfig(c *gin.Context) {
 						}
 						for _, sub := range m.Children {
 							if sub.Url == path {
-								dashId = m.DashboardId
+								dashId = sub.DashboardId
 								break LOOP
 							}
 						}
@@ -131,7 +132,7 @@ func GetDashboardConfig(c *gin.Context) {
 				}
 			}
 		}
-
+		fmt.Println("here333333", teamId, dashId)
 		dash, err := models.QueryDashboard(c.Request.Context(), teamId, dashId)
 
 		if err != nil {
