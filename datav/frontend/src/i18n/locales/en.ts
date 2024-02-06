@@ -15,6 +15,7 @@ export const commonMsg = i18n('common', {
   website: 'Website',
   tenant: 'Tenant',
   title: 'Title',
+  icon: 'Icon',
   name: 'Name',
   status: 'Status',
   description: 'Description',

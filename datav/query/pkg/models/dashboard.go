@@ -71,6 +71,7 @@ type ExternalLink struct {
 	Title       string `json:"title"`
 	Url         string `json:"url"`
 	TargetBlank bool   `json:"targetBlank"`
+	Icon        string `json:"icon"`
 }
 
 const queryDashboardBase = "SELECT id,title,tags,data,team_id,visible_to,weight,updated,editable,template_id,links FROM dashboard"

@@ -45,11 +45,11 @@ const vkey = 'variables'
 const LoadVariables = ({ variables }: Props) => {
   return (
     variables.length > 0 && (
-      <HStack spacing={2}>
+      <>
         {variables.map((v) => {
           return <SelectVariable key={v.id} v={v} />
         })}
-      </HStack>
+      </>
     )
   )
 }
@@ -238,7 +238,12 @@ const SelectVariable = memo(({ v }: { v: Variable }) => {
         label={(isDashVar ? t1.dashScoped : t1.globalScoped) + ': ' + v.name}
         placement='auto'
       >
-        <Text fontSize='0.95em' minWidth='max-content' noOfLines={1}>
+        <Text
+          fontSize='0.95em'
+          minWidth='max-content'
+          noOfLines={1}
+          fontWeight={400}
+        >
           {v.name}
         </Text>
       </Tooltip>

@@ -41,7 +41,7 @@ import { removeParamFromUrl } from 'utils/url'
 import PanelStyles from './PanelStyles'
 import PanelSettings from './PanelSettings'
 import { useLeavePageConfirm } from 'hooks/useLeavePage'
-import { cloneDeep, find, isEqual, orderBy } from 'lodash'
+import { cloneDeep, concat, find, isEqual, orderBy } from 'lodash'
 import useBus, { dispatch } from 'use-bus'
 import {
   DashboardSavedEvent,
@@ -348,13 +348,20 @@ const EditPanel = memo(
                     >
                       <Box height={`calc(100% - 20px)`} marginRight={2}>
                         {!isEmpty(vars) && (
-                          <Flex mt='0' maxW={`calc(100% - ${10}px)`}>
-                            <CustomScrollbar hideVerticalTrack>
-                              <Flex justifyContent='space-between'>
-                                <VariablesLoader variables={dvars} />
-                                <VariablesLoader variables={gvars} />
-                              </Flex>
-                            </CustomScrollbar>
+                          <Flex
+                            flexWrap='wrap'
+                            mt='0'
+                            alignItems='center'
+                            columnGap={3}
+                            rowGap={0}
+                          >
+                            <VariablesLoader variables={concat(gvars, dvars)} />
+                            <Box flexGrow={1}></Box>
+                            {/* <>
+                            {dashboard.links.map((link) => (
+                              <Text ml='2'>{link.title}</Text>
+                            ))}
+                          </> */}
                           </Flex>
                         )}
                         {/* panel rendering section */}

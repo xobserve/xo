@@ -15,6 +15,7 @@ import {
   StackDivider,
   Switch,
   Text,
+  Tooltip,
   VStack,
   useDisclosure,
   useToast,
@@ -25,15 +26,17 @@ import { FormSection } from './form/Form'
 import FormItem from './form/Item'
 import { isEmpty } from 'utils/validate'
 import { commonMsg } from 'src/i18n/locales/en'
-import { FaRegEdit, FaTimes } from 'react-icons/fa'
 import { locale } from 'src/i18n/i18n'
+import * as Icons from 'react-icons/fa'
 
 interface Props {
   links: ExternalLink[]
   onChange: any
+  enableIcon?: boolean
 }
 
 export const ExternalLinksEditor = (props: Props) => {
+  const { enableIcon = false, onChange } = props
   const t = commonMsg.get()
   const lang = locale.get()
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -67,15 +70,18 @@ export const ExternalLinksEditor = (props: Props) => {
 
     setLinks(newLinks)
     setTempLink(null)
-    props.onChange(newLinks)
+    onChange(newLinks)
     onClose()
   }
 
   const onRemoveLink = (index) => {
     const newLinks = links.filter((_, i) => i !== index)
     setLinks(newLinks)
-    props.onChange(newLinks)
+    onChange(newLinks)
   }
+
+  const Icon = Icons[tempLink?.icon]
+
   return (
     <>
       <VStack alignItems='left' divider={<StackDivider />}>
@@ -86,7 +92,7 @@ export const ExternalLinksEditor = (props: Props) => {
               <Text>{link.url}</Text>
             </Box>
             <HStack className='action-icon'>
-              <FaRegEdit
+              <Icons.FaRegEdit
                 cursor='pointer'
                 onClick={() => {
                   setEditIndex(index)
@@ -94,7 +100,10 @@ export const ExternalLinksEditor = (props: Props) => {
                   onOpen()
                 }}
               />
-              <FaTimes cursor='pointer' onClick={() => onRemoveLink(index)} />
+              <Icons.FaTimes
+                cursor='pointer'
+                onClick={() => onRemoveLink(index)}
+              />
             </HStack>
           </Flex>
         ))}
@@ -109,6 +118,7 @@ export const ExternalLinksEditor = (props: Props) => {
             title: '',
             url: '',
             targetBlank: false,
+            icon: '',
           })
           onOpen()
         }}
@@ -163,6 +173,22 @@ export const ExternalLinksEditor = (props: Props) => {
                     }
                   />
                 </FormItem>
+                <FormItem
+                  title={t.icon}
+                  alignItems='center'
+                  labelWidth={'100px'}
+                >
+                  <Input
+                    value={tempLink.icon}
+                    onChange={(e) =>
+                      setTempLink({
+                        ...tempLink,
+                        icon: e.currentTarget.value,
+                      })
+                    }
+                  />
+                  {Icon && <Icon fontSize='20px' className='color-text' />}
+                </FormItem>
               </FormSection>
             )}
           </ModalBody>
@@ -176,5 +202,25 @@ export const ExternalLinksEditor = (props: Props) => {
         </ModalContent>
       </Modal>
     </>
+  )
+}
+
+export const ExternalLinkComponent = ({ link }: { link: ExternalLink }) => {
+  const Icon = Icons[link.icon]
+  return (
+    <Tooltip label={link.url}>
+      <HStack
+        className='bordered hover-bg'
+        py='1'
+        px='2'
+        cursor='pointer'
+        onClick={() => {
+          window.open(link.url, link.targetBlank ? '_blank' : '_self')
+        }}
+      >
+        {Icon && <Icon fontSize='0.75rem' opacity='0.7' />}
+        <Text>{link.title}</Text>
+      </HStack>
+    </Tooltip>
   )
 }

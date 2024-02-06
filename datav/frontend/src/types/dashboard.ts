@@ -112,6 +112,7 @@ export interface ExternalLink {
   url: string
   title: string
   targetBlank: boolean
+  icon?: string
 }
 
 export interface ValueMappingItem {

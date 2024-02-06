@@ -20,12 +20,13 @@ import {
   PopoverBody,
   PopoverContent,
   PopoverTrigger,
+  Text,
   Tooltip,
   useMediaQuery,
   useToast,
 } from '@chakra-ui/react'
 import VariablesLoader from 'src/views/variables/Loader'
-import { isEmpty } from 'lodash'
+import { concat, isEmpty } from 'lodash'
 import React from 'react'
 import { memo } from 'react'
 import { Dashboard } from 'types/dashboard'
@@ -51,6 +52,7 @@ import ColorTag from 'components/ColorTag'
 import { addParamToUrl, navigateTo } from 'utils/url'
 import TemplateBadge from '../template/TemplateBadge'
 import { requestApi } from 'utils/axios/request'
+import { ExternalLinkComponent } from 'components/ExternalLinks'
 
 interface HeaderProps {
   dashboard: Dashboard
@@ -207,13 +209,20 @@ const DashboardHeader = memo(
               </HStack>
             </Flex>
             {!isEmpty(vars) && (
-              <Flex mt='0' maxW={`calc(100% - ${10}px)`}>
-                <CustomScrollbar hideVerticalTrack>
-                  <Flex justifyContent='space-between'>
-                    <VariablesLoader variables={dvars} />
-                    <VariablesLoader variables={gvars} />
-                  </Flex>
-                </CustomScrollbar>
+              <Flex
+                flexWrap='wrap'
+                mt='0'
+                alignItems='center'
+                columnGap={3}
+                rowGap={0}
+              >
+                <VariablesLoader variables={concat(gvars, dvars)} />
+                <Box flexGrow={1}></Box>
+                <>
+                  {dashboard.links.map((link) => (
+                    <ExternalLinkComponent link={link} />
+                  ))}
+                </>
               </Flex>
             )}
           </>
