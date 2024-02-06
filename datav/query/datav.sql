@@ -145,6 +145,7 @@ CREATE TABLE IF NOT EXISTS dashboard (
     weight TINYINT DEFAULT 0,
     template_id INTEGER DEFAULT 0,
     editable BOOL DEFAULT true,
+    links MEDIUMTEXT,
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL
 );
@@ -165,7 +166,8 @@ CREATE TABLE IF NOT EXISTS temp_dashboard (
     visible_to VARCHAR(32) DEFAULT 'team',
     tags TEXT,
     weight TINYINT DEFAULT 0,
-    editable BOOL DEFAULT true
+    editable BOOL DEFAULT true,
+    links MEDIUMTEXT
 );
 
 CREATE UNIQUE INDEX temp_dashboard_team_dash_id ON temp_dashboard (team_id, id);

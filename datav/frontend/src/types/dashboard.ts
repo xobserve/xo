@@ -34,6 +34,7 @@ export interface Dashboard {
   updated?: string
   templateId?: number
   updateChanges?: string
+  links?: ExternalLink[]
 }
 
 export interface DashboardData {

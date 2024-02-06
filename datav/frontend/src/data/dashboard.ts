@@ -63,5 +63,6 @@ export const initDashboard = (): Dashboard => {
       },
     },
     weight: 0,
+    links: [],
   }
 }

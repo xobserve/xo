@@ -100,9 +100,17 @@ func SaveDashboard(c *gin.Context) {
 		c.JSON(400, common.RespError(e.ParamInvalid))
 		return
 	}
+
+	links, err := json.Marshal(dash.Links)
+	if err != nil {
+		logger.Warn("encode tags error", "error", err)
+		c.JSON(400, common.RespError(e.ParamInvalid))
+		return
+	}
+
 	if !isUpdate {
-		_, err := db.Conn.ExecContext(c.Request.Context(), `INSERT INTO dashboard (id,title, team_id,visible_to, created_by,tags, data,created,updated) VALUES (?,?,?,?,?,?,?,?,?)`,
-			dash.Id, dash.Title, dash.OwnedBy, dash.VisibleTo, dash.CreatedBy, tags, jsonData, dash.Created, dash.Updated)
+		_, err := db.Conn.ExecContext(c.Request.Context(), `INSERT INTO dashboard (id,title, team_id,visible_to, created_by,tags, data,links, created,updated) VALUES (?,?,?,?,?,?,?,?,?,?)`,
+			dash.Id, dash.Title, dash.OwnedBy, dash.VisibleTo, dash.CreatedBy, tags, jsonData, links, dash.Created, dash.Updated)
 		if err != nil {
 			if e.IsErrUniqueConstraint(err) {
 				c.JSON(409, common.RespError("dashboard id already exists"))
@@ -116,11 +124,11 @@ func SaveDashboard(c *gin.Context) {
 		var res sql.Result
 		var err error
 		if dash.TemplateId != 0 { // template dashboard can only edit title, tags, visible_to,tags
-			res, err = db.Conn.ExecContext(c.Request.Context(), `UPDATE dashboard SET title=?,tags=?,visible_to=? WHERE team_id=? and id=?`,
-				dash.Title, tags, dash.VisibleTo, dash.OwnedBy, dash.Id)
+			res, err = db.Conn.ExecContext(c.Request.Context(), `UPDATE dashboard SET title=?,tags=?,visible_to=?,links=? WHERE team_id=? and id=?`,
+				dash.Title, tags, dash.VisibleTo, links, dash.OwnedBy, dash.Id)
 		} else {
-			res, err = db.Conn.ExecContext(c.Request.Context(), `UPDATE dashboard SET title=?,tags=?,data=?,visible_to=?,updated=? WHERE team_id=? and id=?`,
-				dash.Title, tags, jsonData, dash.VisibleTo, dash.Updated, dash.OwnedBy, dash.Id)
+			res, err = db.Conn.ExecContext(c.Request.Context(), `UPDATE dashboard SET title=?,tags=?,data=?,visible_to=?,links=?,updated=? WHERE team_id=? and id=?`,
+				dash.Title, tags, jsonData, dash.VisibleTo, links, dash.Updated, dash.OwnedBy, dash.Id)
 		}
 		if err != nil {
 			logger.Error("update dashboard error", "error", err)
@@ -134,7 +142,7 @@ func SaveDashboard(c *gin.Context) {
 		}
 
 		if dash.TemplateId != 0 {
-			_, err := db.Conn.ExecContext(c.Request.Context(), "INSERT INTO temp_dashboard (id,title,team_id,visible_to,tags,template_id) VALUES (?,?,?,?,?,?)", dash.Id, dash.Title, dash.OwnedBy, dash.VisibleTo, tags, dash.TemplateId)
+			_, err := db.Conn.ExecContext(c.Request.Context(), "INSERT INTO temp_dashboard (id,title,team_id,visible_to,tags,template_id,links) VALUES (?,?,?,?,?,?,?)", dash.Id, dash.Title, dash.OwnedBy, dash.VisibleTo, tags, dash.TemplateId, links)
 			if err != nil && !e.IsErrUniqueConstraint(err) {
 				logger.Error("insert temp dashboard error", "error", err)
 				c.JSON(400, common.RespInternalError())
@@ -142,7 +150,7 @@ func SaveDashboard(c *gin.Context) {
 			}
 
 			if err != nil && e.IsErrUniqueConstraint(err) {
-				_, err = db.Conn.ExecContext(c.Request.Context(), "UPDATE temp_dashboard SET title=?,tags=?,visible_to=? WHERE team_id=? and id=?", dash.Title, tags, dash.VisibleTo, dash.OwnedBy, dash.Id)
+				_, err = db.Conn.ExecContext(c.Request.Context(), "UPDATE temp_dashboard SET title=?,tags=?,visible_to=?,links=? WHERE team_id=? and id=?", dash.Title, tags, dash.VisibleTo, dash.Links, dash.OwnedBy, dash.Id)
 				if err != nil {
 					logger.Error("update dashboard template id error", "error", err)
 					c.JSON(500, common.RespInternalError())

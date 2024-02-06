@@ -60,8 +60,13 @@ func ImportDashboard(tx *sql.Tx, dash *Dashboard, teamId int64, userId int64, ch
 		return err
 	}
 
-	_, err = tx.Exec(`INSERT INTO dashboard (id,title, team_id, created_by,tags, data, template_id, created,updated) VALUES (?,?,?,?,?,?,?,?,?)`,
-		dash.Id, dash.Title, teamId, userId, tags, jsonData, dash.TemplateId, dash.Created, dash.Updated)
+	links, err := json.Marshal(dash.Links)
+	if err != nil {
+		return err
+	}
+
+	_, err = tx.Exec(`INSERT INTO dashboard (id,title, team_id, created_by,tags, data, template_id,links, created,updated) VALUES (?,?,?,?,?,?,?,?,?,?)`,
+		dash.Id, dash.Title, teamId, userId, tags, jsonData, dash.TemplateId, links, dash.Created, dash.Updated)
 	if err != nil {
 		return fmt.Errorf("insert dashboard error: %w", err)
 	}
@@ -69,8 +74,9 @@ func ImportDashboard(tx *sql.Tx, dash *Dashboard, teamId int64, userId int64, ch
 	tempDash := &Dashboard{}
 	if dash.TemplateId != 0 {
 		var tags []byte
-		err := db.Conn.QueryRow("SELECT id,title,tags,visible_to,weight,editable FROM temp_dashboard WHERE team_id=? and id=?", teamId, dash.Id).Scan(
-			&tempDash.Id, &tempDash.Title, &tags, &tempDash.VisibleTo, &tempDash.SortWeight, &tempDash.Editable,
+		var links []byte
+		err := db.Conn.QueryRow("SELECT id,title,tags,visible_to,weight,editable,links FROM temp_dashboard WHERE team_id=? and id=?", teamId, dash.Id).Scan(
+			&tempDash.Id, &tempDash.Title, &tags, &tempDash.VisibleTo, &tempDash.SortWeight, &tempDash.Editable, &links,
 		)
 		if err != nil {
 			if err == sql.ErrNoRows {
@@ -79,7 +85,7 @@ func ImportDashboard(tx *sql.Tx, dash *Dashboard, teamId int64, userId int64, ch
 			return fmt.Errorf("query temp dashboard error: %w", err)
 		}
 
-		_, err = tx.Exec("UPDATE dashboard SET title=?,tags=?,visible_to=?,weight=?,editable=? WHERE team_id=? and id=?", tempDash.Title, tags, tempDash.VisibleTo, tempDash.SortWeight, tempDash.Editable, teamId, dash.Id)
+		_, err = tx.Exec("UPDATE dashboard SET title=?,tags=?,visible_to=?,weight=?,editable=?,links=? WHERE team_id=? and id=?", tempDash.Title, tags, tempDash.VisibleTo, tempDash.SortWeight, tempDash.Editable, links, teamId, dash.Id)
 		if err != nil {
 			return fmt.Errorf("update dashboard error: %w", err)
 		}

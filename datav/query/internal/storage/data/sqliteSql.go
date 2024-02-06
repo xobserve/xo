@@ -110,6 +110,7 @@ CREATE TABLE IF NOT EXISTS dashboard (
     weight SMALLINT DEFAULT 0,
     template_id INTEGER DEFAULT 0, 
     editable BOOL DEFAULT true,
+    links MEDIUMTEXT,
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL
 );
@@ -122,7 +123,8 @@ CREATE TABLE IF NOT EXISTS temp_dashboard (
     visible_to VARCHAR(32) DEFAULT 'team',
     tags TEXT,
     weight TINYINT DEFAULT 0,
-    editable BOOL DEFAULT true
+    editable BOOL DEFAULT true,
+    links MEDIUMTEXT
 );
 
 CREATE TABLE IF NOT EXISTS dashboard_history (

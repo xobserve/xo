@@ -143,5 +143,6 @@ var HomeDashboard = `
         "variables": []
     },
     "weight": 0,
-    "tags": []
+    "tags": [],
+    "links": []
 }`

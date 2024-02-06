@@ -39,13 +39,14 @@ import { useState } from 'react'
 import { Dashboard, DashboardLayout } from 'types/dashboard'
 import React from 'react'
 import { useStore } from '@nanostores/react'
-import { commonMsg, dashboardSettingMsg } from 'src/i18n/locales/en'
+import { commonMsg, dashboardSettingMsg, panelMsg } from 'src/i18n/locales/en'
 import ColorTag from '../../../components/ColorTag'
 import { requestApi } from 'utils/axios/request'
 import { useNavigate, useParams } from 'react-router-dom'
 import { MobileBreakpoint } from 'src/data/constants'
 import RadionButtons from 'components/RadioButtons'
 import { navigateTo } from 'utils/url'
+import { ExternalLinksEditor } from 'components/ExternalLinks'
 
 interface Props {
   dashboard: Dashboard
@@ -53,9 +54,9 @@ interface Props {
 }
 
 const GeneralSettings = ({ dashboard, onChange }: Props) => {
-  const t = useStore(commonMsg)
-  const t1 = useStore(dashboardSettingMsg)
-
+  const t = commonMsg.get()
+  const t1 = dashboardSettingMsg.get()
+  const t2 = panelMsg.get()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const cancelRef = React.useRef()
 
@@ -337,6 +338,16 @@ const GeneralSettings = ({ dashboard, onChange }: Props) => {
               />
             </FormItem>
           )}
+        </FormSection>
+        <FormSection title={t2.externalLinks}>
+          <ExternalLinksEditor
+            links={dashboard.links}
+            onChange={(links) => {
+              onChange((dash: Dashboard) => {
+                dash.links = links
+              })
+            }}
+          />
         </FormSection>
         <FormSection title={t.dangeSection}>
           <Divider borderColor='red.500' mt='2' />

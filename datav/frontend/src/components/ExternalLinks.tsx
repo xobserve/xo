@@ -102,6 +102,7 @@ export const ExternalLinksEditor = (props: Props) => {
       <Button
         mt='4'
         size='sm'
+        width='fit-content'
         onClick={() => {
           setEditIndex(null)
           setTempLink({

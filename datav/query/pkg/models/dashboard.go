@@ -63,21 +63,30 @@ type Dashboard struct {
 
 	SortWeight int         `json:"weight"`
 	Variables  []*Variable `json:"variables,omitempty"`
+
+	Links []*ExternalLink `json:"links"`
 }
 
-const queryDashboardBase = "SELECT id,title,tags,data,team_id,visible_to,weight,updated,editable,template_id FROM dashboard"
+type ExternalLink struct {
+	Title       string `json:"title"`
+	Url         string `json:"url"`
+	TargetBlank bool   `json:"targetBlank"`
+}
+
+const queryDashboardBase = "SELECT id,title,tags,data,team_id,visible_to,weight,updated,editable,template_id,links FROM dashboard"
 
 func QueryDashboard(ctx context.Context, teamId int64, id string) (*Dashboard, error) {
 	dash := &Dashboard{}
 
 	var rawJSON []byte
 	var rawTags []byte
-	err := db.Conn.QueryRowContext(ctx, queryDashboardBase+" WHERE team_id=? and id = ?", teamId, id).Scan(&dash.Id, &dash.Title, &rawTags, &rawJSON, &dash.OwnedBy, &dash.VisibleTo, &dash.SortWeight, &dash.Updated, &dash.Editable, &dash.TemplateId)
+	var rawLinks []byte
+	err := db.Conn.QueryRowContext(ctx, queryDashboardBase+" WHERE team_id=? and id = ?", teamId, id).Scan(&dash.Id, &dash.Title, &rawTags, &rawJSON, &dash.OwnedBy, &dash.VisibleTo, &dash.SortWeight, &dash.Updated, &dash.Editable, &dash.TemplateId, &rawLinks)
 	if err != nil {
 		return nil, err
 	}
 
-	err = initDashboard(ctx, dash, rawTags, rawJSON)
+	err = initDashboard(ctx, dash, rawTags, rawJSON, rawLinks)
 	if err != nil {
 		return nil, err
 	}
@@ -91,7 +100,7 @@ func QueryDashboard(ctx context.Context, teamId int64, id string) (*Dashboard, e
 	return dash, nil
 }
 
-func initDashboard(ctx context.Context, dash *Dashboard, rawTags []byte, rawJSON []byte) error {
+func initDashboard(ctx context.Context, dash *Dashboard, rawTags []byte, rawJSON []byte, rawLinks []byte) error {
 	data := simplejson.New()
 	err := data.UnmarshalJSON(rawJSON)
 	if err != nil {
@@ -105,6 +114,13 @@ func initDashboard(ctx context.Context, dash *Dashboard, rawTags []byte, rawJSON
 		return err
 	}
 	dash.Tags = tags
+
+	links := make([]*ExternalLink, 0)
+	err = json.Unmarshal(rawLinks, &links)
+	if err != nil {
+		return err
+	}
+	dash.Links = links
 
 	return nil
 }
@@ -130,12 +146,13 @@ func QueryDashboardsByTeamId(ctx context.Context, teamId int64) ([]*Dashboard, e
 		dash := &Dashboard{}
 		var rawJSON []byte
 		var rawTags []byte
-		err := rows.Scan(&dash.Id, &dash.Title, &rawTags, &rawJSON, &dash.OwnedBy, &dash.VisibleTo, &dash.SortWeight, &dash.Updated, &dash.Editable, &dash.TemplateId)
+		var rawLinks []byte
+		err := rows.Scan(&dash.Id, &dash.Title, &rawTags, &rawJSON, &dash.OwnedBy, &dash.VisibleTo, &dash.SortWeight, &dash.Updated, &dash.Editable, &dash.TemplateId, &rawLinks)
 		if err != nil {
 			return nil, err
 		}
 
-		err = initDashboard(ctx, dash, rawTags, rawJSON)
+		err = initDashboard(ctx, dash, rawTags, rawJSON, rawLinks)
 		if err != nil {
 			return nil, err
 		}
