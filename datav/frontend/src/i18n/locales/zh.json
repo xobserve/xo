@@ -434,7 +434,8 @@
     "condition": "设置条件",
     "conditionTips": "检查一个变量是否等于给定的值",
     "enableScopeTimerange": "启用局部时间",
-    "enableScopeTimerangeTips": "图表的局部时间将覆盖全局的时间设置"
+    "enableScopeTimerangeTips": "图表的局部时间将覆盖全局的时间设置",
+    "externalLinks": "外部链接"
   },
   "prometheusDs": {
     "enterPromQL": "输入 PromQL 查询语句",

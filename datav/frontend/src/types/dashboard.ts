@@ -98,11 +98,19 @@ export interface Panel {
   disableMenu?: boolean
   allowTypes?: string[]
 
+  externalLinks?: ExternalLink[]
+
   /*---- template content ----*/
   type: string
   plugins?: Record<string, any>
   styles?: PanelStyles
   /*---------------------------*/
+}
+
+export interface ExternalLink {
+  url: string
+  title: string
+  targetBlank: boolean
 }
 
 export interface ValueMappingItem {

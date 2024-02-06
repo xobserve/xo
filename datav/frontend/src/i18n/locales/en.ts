@@ -487,6 +487,8 @@ export const panelMsg = i18n('panel', {
   enableScopeTimerange: 'Enable scope timerange',
   enableScopeTimerangeTips:
     'panel scope timerange will override the global timerange which shows in dashboard header',
+
+  externalLinks: 'External links',
 })
 
 export const prometheusDsMsg = i18n('prometheusDs', {
