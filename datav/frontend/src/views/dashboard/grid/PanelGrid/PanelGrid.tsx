@@ -116,7 +116,6 @@ import { Lang } from 'types/misc'
 import TemplateExport from 'src/views/template/TemplateExport'
 import { TemplateType } from 'types/template'
 import { extractPanelTemplateContent } from 'utils/template'
-import { ExternalLinkComponent } from 'components/ExternalLinks'
 
 interface PanelGridProps {
   dashboardId: string
@@ -779,7 +778,7 @@ const PanelHeader = ({
                 fontSize='0.8rem'
                 zIndex={1000}
                 cursor='pointer'
-                paddingRight='2'
+                padding={1}
               >
                 <FaRegClock />
               </Box>
@@ -807,29 +806,34 @@ const PanelHeader = ({
           </Popover>
         )}
         {!isEmpty(panel.externalLinks) && (
-          <Popover trigger='hover'>
-            <PopoverTrigger>
-              <Box
-                opacity='0.5'
-                fontSize='0.8rem'
-                zIndex={1000}
-                cursor='pointer'
-                paddingRight='2'
-              >
-                <FaExternalLinkAlt />
-              </Box>
-            </PopoverTrigger>
-            <PopoverContent>
-              <PopoverArrow />
-              <PopoverBody>
-                <HStack>
-                  {panel.externalLinks.map((link, i) => (
-                    <ExternalLinkComponent key={i} link={link} />
-                  ))}
-                </HStack>
-              </PopoverBody>
-            </PopoverContent>
-          </Popover>
+          <Dropdown
+            placement='bottom'
+            menu={{
+              mode: 'inline',
+              items: panel.externalLinks.map((link, i) => {
+                return {
+                  key: link.url,
+                  label: link.title,
+                  onClick: () => {
+                    window.open(link.url, link.targetBlank ? '_blank' : '_self')
+                  },
+                }
+              }),
+            }}
+            trigger={['hover']}
+            overlayStyle={{}}
+          >
+            <Box
+              padding={1}
+              opacity='0.6'
+              fontSize='0.8rem'
+              zIndex={1000}
+              cursor='pointer'
+            >
+              <FaExternalLinkAlt />
+            </Box>
+            {/* </Center> */}
+          </Dropdown>
         )}
         {/* <Box display="none"><FaBook className="grid-drag-handle" /></Box> */}
       </HStack>
@@ -968,32 +972,16 @@ const PanelMenu = ({ panel, menuItems, onHover, embed, colorMode }) => {
       trigger={['hover']}
       overlayStyle={{}}
     >
-      <Button
-        height={'100%'}
-        opacity={onHover ? 1 : 0}
+      <Box
+        padding={1}
+        opacity={onHover ? 0.6 : 0}
+        fontSize='0.8rem'
+        zIndex={1000}
+        cursor='pointer'
         transition='opacity 0.3s'
-        _focus={{ border: null, background: null }}
-        _active={{ background: null, border: null }}
-        onClick={(e) => e.preventDefault()}
-        variant='ghost'
-        size='xs'
-        disabled={embed}
-        _hover={{ background: null, border: null }}
-        color={paletteColorNameToHex(panel.styles.title.color, colorMode)}
       >
-        {/* <Center width="100%"> */}
-
-        <Box
-          padding={1}
-          opacity='0.6'
-          fontSize='0.8rem'
-          zIndex={1000}
-          cursor='pointer'
-        >
-          <FaEllipsisV />
-        </Box>
-        {/* </Center> */}
-      </Button>
+        <FaEllipsisV />
+      </Box>
     </Dropdown>
   )
 }
