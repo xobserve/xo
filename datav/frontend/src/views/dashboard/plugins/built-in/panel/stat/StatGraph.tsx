@@ -19,6 +19,7 @@ import React from 'react'
 import { parseOptions } from './options'
 import { isEmpty, isFunction } from 'lodash'
 import lodash from 'lodash'
+import { Typography } from 'antd'
 import Tooltip from '../graph/Tooltip'
 import {
   Box,
@@ -49,6 +50,8 @@ import {
   genDynamicFunction,
 } from 'utils/dashboard/dynamicCall'
 import { StatSettings } from './types'
+
+const { Text: AntdText } = Typography
 
 interface Props {
   panel: Panel
@@ -310,17 +313,18 @@ const LegentText = ({ legend, width, height, options, color }) => {
 
   return (
     <>
-      <ChakraTooltip label={legend}>
-        <Text
-          maxWidth={options.styles.layout == 'horizontal' ? '70%' : '100%'}
-          fontSize={options.textSize.legend ?? fontSize + 'px'}
-          wordBreak='break-all'
-          color={color}
-          fontWeight={options.styles.colorMode == 'value' ? 500 : 600}
-        >
-          {legend}
-        </Text>
-      </ChakraTooltip>
+      <AntdText
+        style={{
+          maxWidth: options.styles.layout == 'horizontal' ? '70%' : '100%',
+          fontSize: options.textSize.legend ?? fontSize + 'px',
+          wordBreak: 'break-all',
+          color: color,
+          fontWeight: options.styles.colorMode == 'value' ? 500 : 600,
+        }}
+        ellipsis={{ tooltip: legend }}
+      >
+        {legend}
+      </AntdText>
     </>
   )
 }
