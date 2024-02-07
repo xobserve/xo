@@ -13,6 +13,12 @@
 
 import {
   Alert,
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
   AlertIcon,
   Box,
   Button,
@@ -24,6 +30,7 @@ import {
   Text,
   Textarea,
   VStack,
+  useDisclosure,
   useToast,
 } from '@chakra-ui/react'
 import Empty from 'components/Empty'
@@ -31,7 +38,7 @@ import { EditorNumberItem } from 'components/editor/EditorItem'
 import { Form, FormSection } from 'components/form/Form'
 import FormItem from 'components/form/Item'
 import moment from 'moment'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { locale } from 'src/i18n/i18n'
 import { commonMsg } from 'src/i18n/locales/en'
 import { AccessToken } from 'types/accesstoken'
@@ -51,6 +58,9 @@ const AccessTokenManage = ({ scope, scopeId, hidenTitle = false }: Props) => {
   const lang = locale.get()
   const [tokens, setTokens] = useState<AccessToken[]>([])
   const [tempToken, setTempToken] = useState<Partial<AccessToken>>(null)
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const cancelRef = useRef()
+  const [deleteToken, setDeleteToken] = useState<AccessToken>(null)
 
   useEffect(() => {
     load()
@@ -74,6 +84,12 @@ const AccessTokenManage = ({ scope, scopeId, hidenTitle = false }: Props) => {
     setTempToken(null)
   }
 
+  const onDeleteToken = async () => {
+    await requestApi.delete(`/accessToken/${deleteToken.id}`)
+    await load()
+    setDeleteToken(null)
+    onClose()
+  }
   return (
     <>
       <Box>
@@ -160,11 +176,43 @@ const AccessTokenManage = ({ scope, scopeId, hidenTitle = false }: Props) => {
         ) : (
           <VStack divider={<StackDivider />} alignItems='left' maxW={800}>
             {tokens.map((token) => (
-              <AccessTokenItem key={token.id} token={token} />
+              <AccessTokenItem
+                key={token.id}
+                token={token}
+                onDeleteToken={() => {
+                  setDeleteToken(token)
+                  onOpen()
+                }}
+              />
             ))}
           </VStack>
         )}
       </Box>
+
+      <AlertDialog
+        isOpen={isOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={onClose}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize='lg' fontWeight='bold'>
+              {t.deleteItem({ name: t.accessToken })} : {deleteToken?.name}
+            </AlertDialogHeader>
+
+            <AlertDialogBody>{t.deleteAlert}</AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button ref={cancelRef} onClick={onClose}>
+                {t.cancel}
+              </Button>
+              <Button colorScheme='red' onClick={onDeleteToken} ml={3}>
+                {t.delete}
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
     </>
   )
 }
@@ -173,9 +221,10 @@ export default AccessTokenManage
 
 interface AccessTokenItemProps {
   token: AccessToken
+  onDeleteToken: any
 }
 
-const AccessTokenItem = ({ token }: AccessTokenItemProps) => {
+const AccessTokenItem = ({ token, onDeleteToken }: AccessTokenItemProps) => {
   const [tokenStr, setTokenStr] = useState(null)
   let expired = 'Never expires'
   if (token.expired) {
@@ -213,7 +262,12 @@ const AccessTokenItem = ({ token }: AccessTokenItemProps) => {
           >
             View token
           </Button>
-          <Button size='sm' variant='outline' colorScheme='red'>
+          <Button
+            size='sm'
+            variant='outline'
+            colorScheme='red'
+            onClick={() => onDeleteToken(token)}
+          >
             Delete
           </Button>
         </HStack>

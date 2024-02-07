@@ -42,7 +42,6 @@ func (p *xobservePlugin) Query(c *gin.Context, ds *models.Datasource) models.Plu
 	if ok {
 		paramStr := c.Query("params")
 		params := make(map[string]interface{})
-		fmt.Println(paramStr)
 		err := json.Unmarshal([]byte(paramStr), &params)
 		if err != nil {
 			return models.GenPluginResult(models.PluginStatusError, fmt.Sprintf("decode params error: %s", err.Error()), nil)

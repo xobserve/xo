@@ -1,7 +1,6 @@
 package accesstoken
 
 import (
-	"fmt"
 	"sort"
 	"strconv"
 	"time"
@@ -40,8 +39,6 @@ func CreateToken(c *gin.Context) {
 		c.JSON(500, common.RespInternalError())
 		return
 	}
-
-	fmt.Println("token", string(tokenStr), len(tokenStr))
 
 	_, err = db.Conn.Exec("INSERT INTO access_token (token, name, scope, scope_id, description, created, created_by, expired) VALUES (?, ?, ?, ?, ?, ?, ?,?)",
 		tokenStr, token.Name, token.Scope, token.ScopeId, token.Description, time.Now(), u.Id, token.Expired)
