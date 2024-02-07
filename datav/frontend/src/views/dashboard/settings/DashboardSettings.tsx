@@ -44,6 +44,7 @@ import { useStore } from '@nanostores/react'
 import { commonMsg, dashboardSettingMsg } from 'src/i18n/locales/en'
 import AnnotationSettings from './Annotation'
 import { MobileBreakpoint } from 'src/data/constants'
+import DashboardAccessToken from './AccessToken'
 
 interface Props {
   dashboard: Dashboard
@@ -113,6 +114,7 @@ const DashboardSettings = ({ dashboard, onChange }: Props) => {
                 <Tab>{t.styles}</Tab>
                 <Tab>{t.variable}</Tab>
                 <Tab>{t.annotation}</Tab>
+                <Tab>{t.accessToken}</Tab>
                 <Tab>{t1.metaData}</Tab>
               </TabList>
 
@@ -128,6 +130,12 @@ const DashboardSettings = ({ dashboard, onChange }: Props) => {
                 </TabPanel>
                 <TabPanel py='0' tabIndex={DashboardSettingType.Annotation}>
                   <AnnotationSettings
+                    dashboard={dashboard}
+                    onChange={onChange}
+                  />
+                </TabPanel>
+                <TabPanel py='0' tabIndex={DashboardSettingType.Variables}>
+                  <DashboardAccessToken
                     dashboard={dashboard}
                     onChange={onChange}
                   />
