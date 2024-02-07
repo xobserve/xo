@@ -48,12 +48,8 @@ import {
 import { MdEdit } from 'react-icons/md'
 import { locale } from 'src/i18n/i18n'
 import { commonMsg } from 'src/i18n/locales/en'
-import {
-  Template,
-  TemplateContent,
-  TemplateScope,
-  TemplateType,
-} from 'types/template'
+import { Scope } from 'types/scope'
+import { Template, TemplateContent, TemplateType } from 'types/template'
 import { requestApi } from 'utils/axios/request'
 import { prettyJson } from 'utils/string'
 import { addParamToUrl } from 'utils/url'
@@ -98,13 +94,13 @@ const TemplateCard = (props: Props) => {
     lang == 'zh'
       ? '该模版是公共模版，对全部租户都可见'
       : 'This template is public and visible to all tenants'
-  if (template.scope == TemplateScope.Tenant) {
+  if (template.scope == Scope.Tenant) {
     scope = lang == 'zh' ? '租户' : 'Tenant'
     scopeTips =
       lang == 'zh'
         ? '该模版由当前租户创建，仅对当前租户可见'
         : 'This template is created by current tenant and only visible to current tenant'
-  } else if (template.scope == TemplateScope.Team) {
+  } else if (template.scope == Scope.Team) {
     scope = lang == 'zh' ? '团队' : 'Team'
     scopeTips =
       lang == 'zh'

@@ -18,7 +18,7 @@ import { commonMsg, websiteAdmin } from 'src/i18n/locales/en'
 import { FaProjectDiagram } from 'react-icons/fa'
 import { getAdminLinks } from './links'
 import TemplateList from 'src/views/template/TemplateList'
-import { TemplateScope } from 'types/template'
+import { Scope } from 'types/scope'
 
 export const AdminTemplates = memo(() => {
   const t = useStore(commonMsg)
@@ -33,7 +33,7 @@ export const AdminTemplates = memo(() => {
       icon={<FaProjectDiagram />}
       tabs={adminLinks}
     >
-      <TemplateList scopeId={0} scopeType={TemplateScope.Website} />
+      <TemplateList scopeId={0} scopeType={Scope.Website} />
     </Page>
   )
 })

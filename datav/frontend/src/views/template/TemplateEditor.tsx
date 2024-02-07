@@ -24,7 +24,8 @@ import React, { useState } from 'react'
 import { $config } from 'src/data/configs/config'
 import { locale } from 'src/i18n/i18n'
 import { commonMsg } from 'src/i18n/locales/en'
-import { Template, TemplateScope, TemplateType } from 'types/template'
+import { Scope } from 'types/scope'
+import { Template, TemplateType } from 'types/template'
 import { requestApi } from 'utils/axios/request'
 import { navigateTo } from 'utils/url'
 import { isEmpty } from 'utils/validate'
@@ -36,7 +37,7 @@ interface Props {
 
 const initTemplate: Partial<Template> = {
   type: TemplateType.Dashboard,
-  scope: TemplateScope.Website,
+  scope: Scope.Website,
   description: '',
 }
 
@@ -208,17 +209,17 @@ const TemplateEditor = (props: Props) => {
                 ...template,
                 scope: Number(v),
                 ownedBy:
-                  v == TemplateScope.Team.toString()
+                  v == Scope.Team.toString()
                     ? config.currentTeam
-                    : v == TemplateScope.Tenant.toString()
+                    : v == Scope.Tenant.toString()
                     ? config.currentTenant
                     : 0,
               })
             }
             options={[
-              { label: t.all, value: TemplateScope.Website.toString() },
-              { label: t.tenant, value: TemplateScope.Tenant.toString() },
-              { label: t.team, value: TemplateScope.Team.toString() },
+              { label: t.all, value: Scope.Website.toString() },
+              { label: t.tenant, value: Scope.Tenant.toString() },
+              { label: t.team, value: Scope.Team.toString() },
             ]}
             disabled={!isCreate}
           />

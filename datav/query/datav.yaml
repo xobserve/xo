@@ -123,3 +123,6 @@ observability:
     enable: true
 
     
+#################################### Access token ##############################
+accesstoken:
+    length: 32

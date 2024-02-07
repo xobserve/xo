@@ -57,6 +57,9 @@ export const commonMsg = i18n('common', {
   query: 'Query',
   basicSetting: 'Basic Setting',
   advanceSetting: 'Advance Setting',
+  accessToken: 'Access Token',
+  accessTokenTips:
+    'Access token is used to access the target resources from external evironment.',
   showMore: 'Show More',
   custom: 'Custom',
   createdBy: 'Created By',

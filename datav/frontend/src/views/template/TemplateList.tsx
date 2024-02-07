@@ -44,19 +44,18 @@ import {
   Template,
   TemplateContent,
   TemplateCreateType,
-  TemplateScope,
   TemplateType,
 } from 'types/template'
 import CreateFromTemplate from './CreateFromTemplate'
 import { requestApi } from 'utils/axios/request'
 import { locale } from 'src/i18n/i18n'
 import TemplateCard from './TemplateCard'
-import { getTemplateScopeText } from 'utils/template'
-import { on } from 'events'
+import { Scope } from 'types/scope'
+import { getScopeText } from 'utils/scope'
 
 interface Props {
   scopeId: number
-  scopeType: TemplateScope
+  scopeType: Scope
   reload?: any
 }
 
@@ -229,7 +228,7 @@ const TemplateList = ({ scopeId, scopeType, reload = null }: Props) => {
               </Thead>
               <Tbody>
                 {templates?.map((template) => {
-                  const scopeText = getTemplateScopeText(template.scope, lang)
+                  const scopeText = getScopeText(template.scope, lang)
                   const isInherited = template.scope != scopeType
                   return (
                     <Tr key={template.id}>
@@ -297,24 +296,23 @@ const TemplateList = ({ scopeId, scopeType, reload = null }: Props) => {
                                 : 'Unlink template and remove resources'}
                             </Button>
                           )}
-                          {scopeType == TemplateScope.Team &&
-                            !template.disabled && (
-                              <Button
-                                variant='outline'
-                                size='sm'
-                                // px='0'
-                                onClick={() => {
-                                  onSyncTemplate(
-                                    template.id,
-                                    TemplateCreateType.Refer,
-                                  )
-                                }}
-                              >
-                                {lang == 'zh' ? '再次同步' : 'Sync again'}
-                              </Button>
-                            )}
+                          {scopeType == Scope.Team && !template.disabled && (
+                            <Button
+                              variant='outline'
+                              size='sm'
+                              // px='0'
+                              onClick={() => {
+                                onSyncTemplate(
+                                  template.id,
+                                  TemplateCreateType.Refer,
+                                )
+                              }}
+                            >
+                              {lang == 'zh' ? '再次同步' : 'Sync again'}
+                            </Button>
+                          )}
 
-                          {isInherited && scopeType == TemplateScope.Team && (
+                          {isInherited && scopeType == Scope.Team && (
                             <Button
                               variant='outline'
                               size='sm'
@@ -354,7 +352,7 @@ const TemplateList = ({ scopeId, scopeType, reload = null }: Props) => {
         isOpen={isOpen}
         onClose={onClose}
         onCreated={onCreateFromTemplate}
-        allowClone={scopeType == TemplateScope.Team}
+        allowClone={scopeType == Scope.Team}
       />
 
       <Modal isOpen={isViewOpen} onClose={onViewClose}>

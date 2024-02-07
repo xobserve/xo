@@ -12,9 +12,7 @@
 // limitations under the License.
 
 import React from 'react'
-import { Team } from 'types/teams'
 import TemplateList from 'src/views/template/TemplateList'
-import { TemplateScope } from 'types/template'
 import { useStore } from '@nanostores/react'
 import { $config } from 'src/data/configs/config'
 import Page from 'layouts/page/Page'
@@ -22,6 +20,7 @@ import { locale } from 'src/i18n/i18n'
 import { getTenantLinks } from './links'
 import { FaUser } from 'react-icons/fa'
 import { commonMsg } from 'src/i18n/locales/en'
+import { Scope } from 'types/scope'
 
 const TenantTemplates = () => {
   const t = useStore(commonMsg)
@@ -40,10 +39,7 @@ const TenantTemplates = () => {
         icon={<FaUser />}
         tabs={tenantLinks}
       >
-        <TemplateList
-          scopeId={config.currentTenant}
-          scopeType={TemplateScope.Tenant}
-        />
+        <TemplateList scopeId={config.currentTenant} scopeType={Scope.Tenant} />
       </Page>
     </>
   )

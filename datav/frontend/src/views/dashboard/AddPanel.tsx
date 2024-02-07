@@ -36,9 +36,9 @@ import {
   TemplateContent,
   TemplateCreateType,
   TemplateData,
-  TemplateScope,
   TemplateType,
 } from 'types/template'
+import { Scope } from 'types/scope'
 
 interface Props {
   dashboard: Dashboard
@@ -161,7 +161,7 @@ const AddPanel = ({ dashboard, onChange }: Props) => {
         </MenuList>
       </Menu>
       <CreateFromTemplate
-        scopeType={TemplateScope.Team}
+        scopeType={Scope.Team}
         scopeId={dashboard.ownedBy}
         types={[TemplateType.Panel]}
         isOpen={isOpen}

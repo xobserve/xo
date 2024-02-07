@@ -1,5 +1,6 @@
 import { Dashboard, Panel } from './dashboard'
 import { Datasource } from './datasource'
+import { Scope } from './scope'
 import { MenuItem, SideMenu } from './teams'
 import { Variable } from './variable'
 
@@ -7,12 +8,6 @@ export enum TemplateType {
   App = 1,
   Dashboard = 2,
   Panel = 3,
-}
-
-export enum TemplateScope {
-  Website = 1,
-  Tenant = 2,
-  Team = 3,
 }
 
 export const BuiltinTemplateProvider = 'xobserve'
@@ -23,7 +18,7 @@ export interface Template {
   type: TemplateType
   title: string
   description: string
-  scope: TemplateScope
+  scope: Scope
   ownedBy: number
   contentId: number
   version: string

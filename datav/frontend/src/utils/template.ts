@@ -1,6 +1,7 @@
 import { Dashboard, Panel } from 'types/dashboard'
-import { TemplateContent, TemplateData, TemplateScope } from 'types/template'
+import { TemplateContent, TemplateData } from 'types/template'
 import { requestApi } from './axios/request'
+import { Scope } from 'types/scope'
 
 export const extractPanelTemplateContent = (panel: Panel): Partial<Panel> => {
   return {
@@ -44,21 +45,5 @@ export const replaceDashboardTemplatePanels = async (dash: Dashboard) => {
         }
       }
     }
-  }
-}
-
-export const getTemplateScopeText = (
-  scope: TemplateScope,
-  lang: 'zh' | 'en' | string,
-) => {
-  switch (scope) {
-    case TemplateScope.Website:
-      return lang == 'zh' ? '网站' : 'Website'
-    case TemplateScope.Tenant:
-      return lang == 'zh' ? '租户' : 'Tenant'
-    case TemplateScope.Team:
-      return lang == 'zh' ? '团队' : 'Team'
-    default:
-      return ''
   }
 }

@@ -47,6 +47,8 @@
     "query": "查询",
     "basicSetting": "基本设置",
     "advanceSetting": "进阶设置",
+    "accessToken": "访问令牌",
+    "accessTokenTips": "访问令牌用于从外部环境访问对象资源",
     "showMore": "查看更多",
     "custom": "自定义",
     "createdBy": "创建者",

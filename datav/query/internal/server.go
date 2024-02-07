@@ -33,9 +33,9 @@ import (
 	"github.com/gin-contrib/gzip"
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
+	"github.com/xObserve/xObserve/query/internal/accesstoken"
 	"github.com/xObserve/xObserve/query/internal/admin"
 	"github.com/xObserve/xObserve/query/internal/annotation"
-	"github.com/xObserve/xObserve/query/internal/apitoken"
 	"github.com/xObserve/xObserve/query/internal/cache"
 	"github.com/xObserve/xObserve/query/internal/dashboard"
 	"github.com/xObserve/xObserve/query/internal/datasource"
@@ -221,8 +221,8 @@ func (s *Server) Start() error {
 		r.POST("/template/unlink/variable/:teamId/:id", MustLogin(), template.UnlinkVariableTemplate)
 
 		// api token
-		r.POST("/apiToken/create", MustLogin(), apitoken.CreateToken)
-		r.DELETE("/apiToken/:id", MustLogin(), apitoken.DeleteToken)
+		r.POST("/accessToken/create", MustLogin(), accesstoken.CreateToken)
+		r.DELETE("/accessToken/:id", MustLogin(), accesstoken.DeleteToken)
 
 		// proxy apis
 		r.Any("/proxy/:teamId/:id/*path", proxy.ProxyDatasource)

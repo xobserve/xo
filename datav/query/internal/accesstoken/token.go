@@ -1,6 +1,7 @@
-package apitoken
+package accesstoken
 
 import (
+	"fmt"
 	"strconv"
 	"time"
 
@@ -8,6 +9,7 @@ import (
 	"github.com/xObserve/xObserve/query/internal/acl"
 	"github.com/xObserve/xObserve/query/pkg/colorlog"
 	"github.com/xObserve/xObserve/query/pkg/common"
+	"github.com/xObserve/xObserve/query/pkg/config"
 	"github.com/xObserve/xObserve/query/pkg/db"
 	"github.com/xObserve/xObserve/query/pkg/e"
 	"github.com/xObserve/xObserve/query/pkg/models"
@@ -16,7 +18,7 @@ import (
 var logger = colorlog.RootLogger.New("logger", "token")
 
 func CreateToken(c *gin.Context) {
-	token := &models.ApiToken{}
+	token := &models.AccessToken{}
 	err := c.Bind(&token)
 	if err != nil {
 		logger.Warn("parse token error", "error", err)
@@ -31,14 +33,16 @@ func CreateToken(c *gin.Context) {
 		return
 	}
 
-	tokenStr, err := models.GenerateApiToken()
+	tokenStr, err := models.GenerateAccessToken(config.Data.AccessToken.Length)
 	if err != nil {
 		logger.Warn("generate token error", "error", err)
 		c.JSON(500, common.RespInternalError())
 		return
 	}
 
-	_, err = db.Conn.Exec("INSERT INTO api_token (token, name, scope, scope_id, description, created, created_by, expired) VALUES (?, ?, ?, ?, ?, ?, ?)",
+	fmt.Println("token", string(tokenStr), len(tokenStr))
+
+	_, err = db.Conn.Exec("INSERT INTO access_token (token, name, scope, scope_id, description, created, created_by, expired) VALUES (?, ?, ?, ?, ?, ?, ?,?)",
 		tokenStr, token.Name, token.Scope, token.ScopeId, token.Description, time.Now(), u.Id, token.Expired)
 	if err != nil {
 		logger.Warn("create token error", "error", err)
@@ -56,7 +60,7 @@ func DeleteToken(c *gin.Context) {
 		return
 	}
 
-	token, err := models.GetApiToken(id, "")
+	token, err := models.GetAccessToken(id, "")
 	if err != nil {
 		logger.Warn("get token error", "error", err)
 		c.JSON(400, common.RespError(err.Error()))
@@ -71,7 +75,7 @@ func DeleteToken(c *gin.Context) {
 		return
 	}
 
-	_, err = db.Conn.Exec("DELETE FROM api_token WHERE id = ?", id)
+	_, err = db.Conn.Exec("DELETE FROM access_token WHERE id = ?", id)
 	if err != nil {
 		logger.Warn("delete token error", "error", err)
 		c.JSON(500, common.RespInternalError())

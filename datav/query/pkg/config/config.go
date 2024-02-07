@@ -117,6 +117,10 @@ type Config struct {
 		Enable           bool `yaml:"enable"`
 		SyncWebsiteUsers bool `yaml:"sync_user_to_default"`
 	}
+
+	AccessToken struct {
+		Length int `yaml:"length"`
+	}
 }
 
 type Observability struct {

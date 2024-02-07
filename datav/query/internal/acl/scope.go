@@ -2,12 +2,13 @@ package acl
 
 import (
 	"context"
+	"strconv"
 
 	"github.com/xObserve/xObserve/query/pkg/common"
 	"github.com/xObserve/xObserve/query/pkg/models"
 )
 
-func CanEditScope(ctx context.Context, scope int, scopeId int64, u *models.User) error {
+func CanEditScope(ctx context.Context, scope int, scopeId string, u *models.User) error {
 	if scope == common.ScopeWebsite {
 		if err := CanEditWebsite(u); err != nil {
 			return err
@@ -16,14 +17,16 @@ func CanEditScope(ctx context.Context, scope int, scopeId int64, u *models.User)
 	}
 
 	if scope == common.ScopeTenant {
-		if err := CanEditTenant(ctx, scopeId, u.Id); err != nil {
+		id, _ := strconv.ParseInt(scopeId, 10, 64)
+		if err := CanEditTenant(ctx, id, u.Id); err != nil {
 			return err
 		}
 		return nil
 	}
 
 	if scope == common.ScopeTeam {
-		if err := CanEditTeam(ctx, scopeId, u.Id); err != nil {
+		id, _ := strconv.ParseInt(scopeId, 10, 64)
+		if err := CanEditTeam(ctx, id, u.Id); err != nil {
 			return err
 		}
 		return nil

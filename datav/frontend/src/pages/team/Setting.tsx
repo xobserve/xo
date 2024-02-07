@@ -51,6 +51,8 @@ import { navigateTo } from 'utils/url'
 import { Dashboard } from 'types/dashboard'
 import TemplateExport from 'src/views/template/TemplateExport'
 import { TemplateType } from 'types/template'
+import AccessTokenManage from 'src/views/accesstoken/AccessTokenManage'
+import { Scope } from 'types/scope'
 
 const TeamSettings = (props: { team: Team }) => {
   const t = useStore(commonMsg)
@@ -79,6 +81,11 @@ const TeamSettings = (props: { team: Team }) => {
     isOpen: isTransferAlertOpen,
     onOpen: onTransferAlertOpen,
     onClose: onTransferAlertClose,
+  } = useDisclosure()
+  const {
+    isOpen: isTokenOpen,
+    onOpen: onTokenOpen,
+    onClose: onTokenClose,
   } = useDisclosure()
 
   const cancelRef = useRef()
@@ -199,6 +206,18 @@ const TeamSettings = (props: { team: Team }) => {
               </Button>
             </FormItem>
           </FormSection>
+          <FormSection title={t.accessToken}>
+            <FormItem
+              title={t.accessToken}
+              desc={t.accessTokenTips}
+              labelWidth='150px'
+              alignItems='center'
+            >
+              <Button onClick={onTokenOpen} variant='ghost'>
+                {t.manage}
+              </Button>
+            </FormItem>
+          </FormSection>
           <FormSection title={t.dangeSection}>
             {isSuperAdmin(config.teamRole) ? (
               <HStack>
@@ -302,6 +321,24 @@ const TeamSettings = (props: { team: Team }) => {
             <Button mt='2' colorScheme='orange' onClick={onTransferAlertOpen}>
               {t.submit}
             </Button>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+      <Modal
+        isOpen={isTokenOpen}
+        onClose={() => {
+          onTokenClose()
+        }}
+        size='full'
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalCloseButton />
+          <ModalBody py='4'>
+            <AccessTokenManage
+              scope={Scope.Team}
+              scopeId={team.id.toString()}
+            />
           </ModalBody>
         </ModalContent>
       </Modal>
