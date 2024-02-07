@@ -31,10 +31,15 @@ func CreateToken(c *gin.Context) {
 		return
 	}
 
-	tokenStr := ""
+	tokenStr, err := models.GenerateApiToken()
+	if err != nil {
+		logger.Warn("generate token error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
 
-	_, err = db.Conn.Exec("INSERT INTO api_token (token, scope, scope_id, description, created, created_by, expired) VALUES (?, ?, ?, ?, ?, ?, ?)",
-		tokenStr, token.Scope, token.ScopeId, token.Description, time.Now(), u.Id, token.Expired)
+	_, err = db.Conn.Exec("INSERT INTO api_token (token, name, scope, scope_id, description, created, created_by, expired) VALUES (?, ?, ?, ?, ?, ?, ?)",
+		tokenStr, token.Name, token.Scope, token.ScopeId, token.Description, time.Now(), u.Id, token.Expired)
 	if err != nil {
 		logger.Warn("create token error", "error", err)
 		c.JSON(500, common.RespInternalError())

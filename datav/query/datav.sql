@@ -312,6 +312,7 @@ CREATE INDEX template_disable_scope ON template_disable (scope, scope_id);
 
 CREATE TABLE IF NOT EXISTS api_token (
     id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL,
     token VARCHAR(255) NOT NULL,
     scope SMALLINT NOT NULL,
     scope_id INTEGER NOT NULL,
