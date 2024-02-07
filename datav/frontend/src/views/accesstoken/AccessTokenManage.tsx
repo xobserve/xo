@@ -174,7 +174,12 @@ const AccessTokenManage = ({ scope, scopeId, hidenTitle = false }: Props) => {
         ) : isEmpty(tokens) ? (
           <Empty />
         ) : (
-          <VStack divider={<StackDivider />} alignItems='left' maxW={800}>
+          <VStack
+            divider={<StackDivider />}
+            alignItems='left'
+            maxW={800}
+            spacing={0}
+          >
             {tokens.map((token) => (
               <AccessTokenItem
                 key={token.id}
@@ -183,6 +188,7 @@ const AccessTokenManage = ({ scope, scopeId, hidenTitle = false }: Props) => {
                   setDeleteToken(token)
                   onOpen()
                 }}
+                selected={deleteToken?.id == token.id}
               />
             ))}
           </VStack>
@@ -192,7 +198,10 @@ const AccessTokenManage = ({ scope, scopeId, hidenTitle = false }: Props) => {
       <AlertDialog
         isOpen={isOpen}
         leastDestructiveRef={cancelRef}
-        onClose={onClose}
+        onClose={() => {
+          setDeleteToken(null)
+          onClose()
+        }}
       >
         <AlertDialogOverlay>
           <AlertDialogContent>
@@ -203,7 +212,13 @@ const AccessTokenManage = ({ scope, scopeId, hidenTitle = false }: Props) => {
             <AlertDialogBody>{t.deleteAlert}</AlertDialogBody>
 
             <AlertDialogFooter>
-              <Button ref={cancelRef} onClick={onClose}>
+              <Button
+                ref={cancelRef}
+                onClick={() => {
+                  setDeleteToken(null)
+                  onClose()
+                }}
+              >
                 {t.cancel}
               </Button>
               <Button colorScheme='red' onClick={onDeleteToken} ml={3}>
@@ -222,9 +237,14 @@ export default AccessTokenManage
 interface AccessTokenItemProps {
   token: AccessToken
   onDeleteToken: any
+  selected: boolean
 }
 
-const AccessTokenItem = ({ token, onDeleteToken }: AccessTokenItemProps) => {
+const AccessTokenItem = ({
+  token,
+  onDeleteToken,
+  selected,
+}: AccessTokenItemProps) => {
   const [tokenStr, setTokenStr] = useState(null)
   let expired = 'Never expires'
   if (token.expired) {
@@ -240,7 +260,13 @@ const AccessTokenItem = ({ token, onDeleteToken }: AccessTokenItemProps) => {
 
   return (
     <>
-      <Flex justifyContent='space-between' alignItems='center'>
+      <Flex
+        justifyContent='space-between'
+        alignItems='center'
+        className={'highlight-bordered'}
+        borderColor={selected ? null : 'transparent !important'}
+        p='4'
+      >
         <Box>
           <HStack>
             <Text>{token.name}</Text>
