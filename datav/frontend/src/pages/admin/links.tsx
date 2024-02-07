@@ -42,5 +42,11 @@ export const getAdminLinks = () => {
       baseUrl: getNavigateTo(`/admin/templates`),
       icon: <FaProjectDiagram />,
     },
+    {
+      title: 'accessToken',
+      url: getNavigateTo(`/admin/accesstoken`),
+      baseUrl: getNavigateTo(`/admin/accesstoken`),
+      icon: <FaProjectDiagram />,
+    },
   ]
 }

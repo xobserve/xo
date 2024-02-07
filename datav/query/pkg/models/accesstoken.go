@@ -21,6 +21,24 @@ type AccessToken struct {
 	Expired     int       `json:"expired"`
 }
 
+type AccessTokens []*AccessToken
+
+func (s AccessTokens) Len() int      { return len(s) }
+func (s AccessTokens) Swap(i, j int) { s[i], s[j] = s[j], s[i] }
+func (s AccessTokens) Less(i, j int) bool {
+	if s[i].Expired == 0 {
+		return false
+	}
+
+	if s[j].Expired == 0 {
+		return true
+	}
+
+	first := s[i].Created.Unix() + int64(s[i].Expired*24*3600)
+	second := s[j].Created.Unix() + int64(s[j].Expired*24*3600)
+	return first < second
+}
+
 func GetAccessToken(id int64, tk string) (*AccessToken, error) {
 	token := &AccessToken{}
 	err := db.Conn.QueryRow("SELECT id,name, token, scope, scope_id, description, created, created_by, expired FROM access_token WHERE id = ? OR token = ?", id, tk).Scan(

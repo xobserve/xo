@@ -40,15 +40,13 @@ import { FaEye } from 'react-icons/fa'
 import { dateTimeFormat } from 'utils/datetime/formatter'
 import { prettyJson } from 'utils/string'
 import CodeEditor from 'src/components/CodeEditor/CodeEditor'
-import { useParams } from 'react-router-dom'
 import { getAdminLinks } from './links'
 export const AdminAuditLogs = memo(() => {
   const t = useStore(commonMsg)
   const t1 = useStore(websiteAdmin)
 
   const [logs, setLogs] = useState<AuditLog[]>(null)
-  const teamId = useParams().teamId
-  const adminLinks = getAdminLinks(teamId)
+  const adminLinks = getAdminLinks()
 
   useEffect(() => {
     load()

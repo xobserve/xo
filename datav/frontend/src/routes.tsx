@@ -34,6 +34,7 @@ import NewTemplatePage from 'pages/new/Template'
 import TeamTemplates from 'pages/team/Templates'
 import TenantTemplates from 'pages/tenant/TenantTemplates'
 import AdminTemplates from 'pages/admin/Templates'
+import AdminAccessTokens from 'pages/admin/AccessTokens'
 
 const DashboardPage = loadable(() => import('src/pages/dashboard/index'))
 const TracePage = loadable(() => import('src/pages/dashboard/Trace'))
@@ -144,6 +145,10 @@ export const getRoutes = (enableTenant = false) => {
     {
       path: `${URL_ROOT_PATH}/admin/templates`,
       element: commonConfig(<AdminTemplates />),
+    },
+    {
+      path: `${URL_ROOT_PATH}/admin/accesstoken`,
+      element: commonConfig(<AdminAccessTokens />),
     },
   ]
 

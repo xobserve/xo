@@ -2,6 +2,7 @@ package accesstoken
 
 import (
 	"fmt"
+	"sort"
 	"strconv"
 	"time"
 
@@ -100,7 +101,7 @@ func GetTokens(c *gin.Context) {
 		return
 	}
 
-	tokens := make([]*models.AccessToken, 0)
+	tokens := make(models.AccessTokens, 0)
 	rows, err := db.Conn.Query("SELECT id, name, scope, scope_id, description, created, created_by, expired FROM access_token WHERE scope = ? and scope_id = ?", scope, scopeId)
 	if err != nil {
 		logger.Warn("query token error", "error", err)
@@ -119,6 +120,7 @@ func GetTokens(c *gin.Context) {
 		tokens = append(tokens, token)
 	}
 
+	sort.Sort(tokens)
 	c.JSON(200, common.RespSuccess(tokens))
 }
 

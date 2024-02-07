@@ -50,6 +50,8 @@ import { isSuperAdmin } from 'types/role'
 import { isEmpty } from 'utils/validate'
 import { getTenantLinks } from './links'
 import { getNavigateTo, navigateTo } from 'utils/url'
+import AccessTokenManage from 'src/views/accesstoken/AccessTokenManage'
+import { Scope } from 'types/scope'
 
 export const TenantSetting = memo(() => {
   const config = useStore($config)
@@ -72,6 +74,11 @@ export const TenantSetting = memo(() => {
     isOpen: isTransferAlertOpen,
     onOpen: onTransferAlertOpen,
     onClose: onTransferAlertClose,
+  } = useDisclosure()
+  const {
+    isOpen: isTokenOpen,
+    onOpen: onTokenOpen,
+    onClose: onTokenClose,
   } = useDisclosure()
 
   const [transferTo, setTransferTo] = useState<string>(null)
@@ -189,6 +196,19 @@ export const TenantSetting = memo(() => {
               <Button width='fit-content' size='sm' onClick={updateTenant}>
                 {t.submit}
               </Button>
+
+              <FormSection title={t.accessToken}>
+                <FormItem
+                  title={t.accessToken}
+                  desc={t.accessTokenTips}
+                  labelWidth='150px'
+                  alignItems='center'
+                >
+                  <Button onClick={onTokenOpen} variant='ghost'>
+                    {t.manage}
+                  </Button>
+                </FormItem>
+              </FormSection>
 
               <FormSection title={t.dangeSection}>
                 {isSuperAdmin(config.tenantRole) ? (
@@ -341,6 +361,24 @@ export const TenantSetting = memo(() => {
                 >
                   {t.submit}
                 </Button>
+              </ModalBody>
+            </ModalContent>
+          </Modal>
+          <Modal
+            isOpen={isTokenOpen}
+            onClose={() => {
+              onTokenClose()
+            }}
+            size='full'
+          >
+            <ModalOverlay />
+            <ModalContent>
+              <ModalCloseButton />
+              <ModalBody py='4'>
+                <AccessTokenManage
+                  scope={Scope.Tenant}
+                  scopeId={tenant.id.toString()}
+                />
               </ModalBody>
             </ModalContent>
           </Modal>

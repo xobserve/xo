@@ -42,9 +42,10 @@ import { isEmpty } from 'utils/validate'
 interface Props {
   scope: Scope
   scopeId: string
+  hidenTitle?: boolean
 }
 
-const AccessTokenManage = ({ scope, scopeId }: Props) => {
+const AccessTokenManage = ({ scope, scopeId, hidenTitle = false }: Props) => {
   const toast = useToast()
   const t = commonMsg.get()
   const lang = locale.get()
@@ -77,9 +78,11 @@ const AccessTokenManage = ({ scope, scopeId }: Props) => {
     <>
       <Box>
         <Flex alignItems='center' gap='4' mb='6'>
-          <Heading size='md'> {'Manage access tokens'}</Heading>
+          {!hidenTitle && (
+            <Heading size='md'> {'Manage access tokens'}</Heading>
+          )}
           <Button
-            size='md'
+            size='sm'
             onClick={() =>
               setTempToken({
                 scope,
@@ -89,7 +92,7 @@ const AccessTokenManage = ({ scope, scopeId }: Props) => {
                 expired: 7,
               })
             }
-            variant='ghost'
+            variant='outline'
           >
             Generate new token
           </Button>
@@ -192,9 +195,6 @@ const AccessTokenItem = ({ token }: AccessTokenItemProps) => {
         <Box>
           <HStack>
             <Text>{token.name}</Text>
-            <Text textStyle='annotation' fontWeight={500}>
-              {expired}
-            </Text>
           </HStack>
           <Text textStyle='annotation' mt='1'>
             {token.description}
@@ -202,6 +202,9 @@ const AccessTokenItem = ({ token }: AccessTokenItemProps) => {
         </Box>
 
         <HStack>
+          <Text textStyle='annotation' fontWeight={500}>
+            {expired}
+          </Text>
           <Button
             size='sm'
             variant='ghost'
