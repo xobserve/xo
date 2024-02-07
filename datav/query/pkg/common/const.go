@@ -32,13 +32,15 @@ const (
 )
 
 const (
-	ScopeWebsite = 1
-	ScopeTenant  = 2
-	ScopeTeam    = 3
+	ScopeWebsite   = 1
+	ScopeTenant    = 2
+	ScopeTeam      = 3
+	ScopeDashboard = 4
 )
 
 var ScopeText = map[int]string{
 	1: "website",
 	2: "tenant",
 	3: "team",
+	4: "Dashboard",
 }

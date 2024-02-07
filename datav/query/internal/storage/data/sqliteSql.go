@@ -221,6 +221,16 @@ CREATE TABLE IF NOT EXISTS template_disable (
     created DATETIME NOT NULL,
     created_by INTEGER NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS api_token (
+    token VARCHAR(255) PRIMARY KEY,
+    scope SMALLINT NOT NULL,
+    scope_id INTEGER NOT NULL,
+    description VARCHAR(255) NOT NULL,
+    created DATETIME NOT NULL,
+    created_by INTEGER NOT NULL,
+    expired DATETIME NOT NULL
+);
 `
 
 const SqliteIndex = `
@@ -295,4 +305,6 @@ CREATE INDEX IF NOT EXISTS template_use_scope ON template_use (scope, scope_id);
 CREATE UNIQUE INDEX IF NOT EXISTS template_disable_scope_template ON template_disable (scope, scope_id, template_id);
 
 CREATE INDEX IF NOT EXISTS template_disable_scope ON template_disable (scope, scope_id);
+
+CREATE INDEX IF NOT EXISTS api_token_scope ON api_token (scope, scope_id);
 `

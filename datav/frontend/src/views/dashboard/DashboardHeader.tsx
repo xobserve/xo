@@ -96,12 +96,14 @@ const DashboardHeader = memo(
     }
 
     const subTitle = useMemo(() => {
-      try {
-        const titleMap = JSON.parse(subMenus.title)
-        const title = titleMap[lang] ?? titleMap['en']
-        if (title) return title
-      } catch (_) {
-        return subMenus.title
+      if (subMenus) {
+        try {
+          const titleMap = JSON.parse(subMenus.title)
+          const title = titleMap[lang] ?? titleMap['en']
+          if (title) return title
+        } catch (_) {
+          return subMenus.title
+        }
       }
     }, [subMenus, lang])
 

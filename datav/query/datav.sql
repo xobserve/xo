@@ -309,3 +309,15 @@ CREATE TABLE IF NOT EXISTS template_disable (
 CREATE UNIQUE INDEX template_disable_scope_template ON template_disable (scope, scope_id, template_id);
 
 CREATE INDEX template_disable_scope ON template_disable (scope, scope_id);
+
+CREATE TABLE IF NOT EXISTS api_token (
+    token VARCHAR(255) PRIMARY KEY,
+    scope SMALLINT NOT NULL,
+    scope_id INTEGER NOT NULL,
+    description VARCHAR(255) NOT NULL,
+    created DATETIME NOT NULL,
+    created_by INTEGER NOT NULL,
+    expired DATETIME NOT NULL
+);
+
+CREATE INDEX api_token_scope ON api_token (scope, scope_id);
