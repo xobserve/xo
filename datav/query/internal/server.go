@@ -223,6 +223,8 @@ func (s *Server) Start() error {
 		// api token
 		r.POST("/accessToken/create", MustLogin(), accesstoken.CreateToken)
 		r.DELETE("/accessToken/:id", MustLogin(), accesstoken.DeleteToken)
+		r.GET("/accessToken/list/:scope/:scopeId", MustLogin(), accesstoken.GetTokens)
+		r.GET("/accessToken/view/:id", MustLogin(), accesstoken.ViewToken)
 
 		// proxy apis
 		r.Any("/proxy/:teamId/:id/*path", proxy.ProxyDatasource)

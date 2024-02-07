@@ -82,3 +82,67 @@ func DeleteToken(c *gin.Context) {
 		return
 	}
 }
+
+func GetTokens(c *gin.Context) {
+	scope, err := strconv.Atoi(c.Param("scope"))
+	if err != nil {
+		logger.Warn("parse scope error", "error", err)
+		c.JSON(400, common.RespError(e.ParamInvalid))
+		return
+	}
+
+	scopeId := c.Param("scopeId")
+
+	u := c.MustGet("currentUser").(*models.User)
+	err = acl.CanEditScope(c.Request.Context(), scope, scopeId, u)
+	if err != nil {
+		c.JSON(403, common.RespError(err.Error()))
+		return
+	}
+
+	tokens := make([]*models.AccessToken, 0)
+	rows, err := db.Conn.Query("SELECT id, name, scope, scope_id, description, created, created_by, expired FROM access_token WHERE scope = ? and scope_id = ?", scope, scopeId)
+	if err != nil {
+		logger.Warn("query token error", "error", err)
+		c.JSON(400, common.RespInternalError())
+		return
+	}
+
+	for rows.Next() {
+		token := &models.AccessToken{}
+		err = rows.Scan(&token.Id, &token.Name, &token.Scope, &token.ScopeId, &token.Description, &token.Created, &token.CreatedBy, &token.Expired)
+		if err != nil {
+			logger.Warn("scan token error", "error", err)
+			c.JSON(500, common.RespInternalError())
+			return
+		}
+		tokens = append(tokens, token)
+	}
+
+	c.JSON(200, common.RespSuccess(tokens))
+}
+
+func ViewToken(c *gin.Context) {
+	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	if err != nil {
+		logger.Warn("parse token id error", "error", err)
+		c.JSON(400, common.RespError(e.ParamInvalid))
+		return
+	}
+
+	token, err := models.GetAccessToken(id, "")
+	if err != nil {
+		logger.Warn("get token error", "error", err)
+		c.JSON(400, common.RespError(err.Error()))
+		return
+	}
+
+	u := c.MustGet("currentUser").(*models.User)
+	err = acl.CanEditScope(c.Request.Context(), token.Scope, token.ScopeId, u)
+	if err != nil {
+		c.JSON(403, common.RespError(err.Error()))
+		return
+	}
+
+	c.JSON(200, common.RespSuccess(token.Token))
+}
