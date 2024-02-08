@@ -27,6 +27,7 @@ import {
   MenuList,
   MenuItem,
   Portal,
+  Center,
 } from '@chakra-ui/react'
 import Logo from 'src/components/Logo'
 import React, { useEffect, useMemo, useState } from 'react'
@@ -129,22 +130,31 @@ const Container = (props: Props) => {
     storage.set(SidemenuMinimodeKey, !miniMode)
   }
 
-  const bottomNavs = [
-    {
-      title: t.new,
-      icon: 'FaPlus',
-      baseUrl: getNavigateTo(teamPath + ReserveUrls.New),
-      url: getNavigateTo(`${teamPath}${ReserveUrls.New}/dashboard`),
-      isActive: asPath.startsWith(getNavigateTo(teamPath + ReserveUrls.New)),
-    },
-    {
-      title: t.configuration,
-      icon: 'FaCog',
-      baseUrl: getNavigateTo(teamPath + ReserveUrls.Config),
-      url: getNavigateTo(`${teamPath}${ReserveUrls.Config}/team/datasources`),
-      isActive: asPath.startsWith(getNavigateTo(teamPath + ReserveUrls.Config)),
-    },
-  ]
+  const accessToken = useStore($accessToken)
+  const bottomNavs = isEmpty(accessToken)
+    ? [
+        {
+          title: t.new,
+          icon: 'FaPlus',
+          baseUrl: getNavigateTo(teamPath + ReserveUrls.New),
+          url: getNavigateTo(`${teamPath}${ReserveUrls.New}/dashboard`),
+          isActive: asPath.startsWith(
+            getNavigateTo(teamPath + ReserveUrls.New),
+          ),
+        },
+        {
+          title: t.configuration,
+          icon: 'FaCog',
+          baseUrl: getNavigateTo(teamPath + ReserveUrls.Config),
+          url: getNavigateTo(
+            `${teamPath}${ReserveUrls.Config}/team/datasources`,
+          ),
+          isActive: asPath.startsWith(
+            getNavigateTo(teamPath + ReserveUrls.Config),
+          ),
+        },
+      ]
+    : []
   // config.showAlertIcon && bottomNavs.push({ title: t.alert, icon: "FaBell", baseUrl: teamPath + ReserveUrls.Alerts, url: `${teamPath}${ReserveUrls.Alerts}`, isActive: asPath.startsWith(teamPath + ReserveUrls.Alerts) })
   bottomNavs.push({
     title: t1.search,
@@ -209,233 +219,278 @@ const Container = (props: Props) => {
   const textColor = useColorModeValue('gray.500', 'whiteAlpha.800')
 
   return (
-    <HStack id='page-container' width='100%' alignItems='top'>
-      {isLargeScreen ? (
-        <Flex
-          visibility={fullscreen ? 'hidden' : 'visible'}
-          flexDir='column'
-          justifyContent='space-between'
-          id='sidemenu'
-          position='fixed'
-          top='0'
-          left='0'
-          bottom='0'
-          right='0'
-          width={sideWidth + 'px'}
-          transition='all 0.2s'
-          height='100vh'
-          className='bordered-right'
-          borderWidth='0.5px'
-          // overflowY="auto" overflowX="hidden"
-        >
-          <CustomScrollbar hideHorizontalTrack>
-            <Flex
-              flexDir='column'
-              height='100%'
-              justifyContent='space-between'
-              pl={miniMode ? null : paddingLeft + 'px'}
-              pr={miniMode ? null : paddingRight + 'px'}
-              onMouseEnter={() => setOnHover(true)}
-              onMouseLeave={() => setOnHover(false)}
-            >
+    <>
+      <HStack id='page-container' width='100%' alignItems='top'>
+        {isLargeScreen ? (
+          <Flex
+            visibility={fullscreen ? 'hidden' : 'visible'}
+            flexDir='column'
+            justifyContent='space-between'
+            id='sidemenu'
+            position='fixed'
+            top='0'
+            left='0'
+            bottom='0'
+            right='0'
+            width={sideWidth + 'px'}
+            transition='all 0.2s'
+            height='100vh'
+            className='bordered-right'
+            borderWidth='0.5px'
+            // overflowY="auto" overflowX="hidden"
+          >
+            <CustomScrollbar hideHorizontalTrack>
               <Flex
-                id='sidemenu-top'
                 flexDir='column'
-                alignItems={miniMode || isEmpty(sidemenu) ? 'center' : 'left'}
+                height='100%'
+                justifyContent='space-between'
+                pl={miniMode ? null : paddingLeft + 'px'}
+                pr={miniMode ? null : paddingRight + 'px'}
+                onMouseEnter={() => setOnHover(true)}
+                onMouseLeave={() => setOnHover(false)}
               >
-                {miniMode || isEmpty(sidemenu) ? (
-                  <Box cursor='pointer' onClick={onMinimodeChange} mt='1'>
-                    <Logo />
-                  </Box>
-                ) : (
-                  onHover && (
-                    <Box
-                      cursor='pointer'
-                      onClick={onMinimodeChange}
-                      opacity='0.4'
-                      position='absolute'
-                      right='0px'
-                      top='12px'
-                      className='hover-text'
-                      p='1'
-                      fontSize='0.9rem'
-                      zIndex={1}
-                    >
-                      <Icons.FaArrowsAltH />
-                    </Box>
-                  )
-                )}
-                <VStack
-                  alignItems='left'
-                  mt={miniMode ? 0 : 3}
-                  spacing={miniMode ? '2px' : '10px'}
+                <Flex
+                  id='sidemenu-top'
+                  flexDir='column'
+                  alignItems={miniMode || isEmpty(sidemenu) ? 'center' : 'left'}
                 >
-                  {sidemenu?.map((link, index) => {
-                    return (
-                      <Box key={link.url}>
-                        <Box>
-                          <NavItem
-                            isActive={
-                              miniMode
-                                ? asPath.startsWith(
-                                    getNavigateTo(teamPath + link.url),
-                                  )
-                                : asPath == getNavigateTo(teamPath + link.url)
-                            }
-                            key={index}
-                            text={link.title}
-                            icon={link.icon}
-                            miniMode={miniMode}
-                            fontWeight={500}
-                            url={
-                              link.children?.length > 0
-                                ? getNavigateTo(teamPath + link.children[0].url)
-                                : getNavigateTo(teamPath + link.url)
-                            }
-                            children={link.children}
-                          />
-                        </Box>
-                        {!miniMode &&
-                          link.children &&
-                          link.children.map((child, index) => {
-                            return (
-                              <Box mt='7px' ml={childMarginLeft + 'px'}>
-                                <NavItem
-                                  isActive={
-                                    asPath ==
-                                    getNavigateTo(teamPath + child.url)
-                                  }
-                                  key={index}
-                                  text={child.title}
-                                  miniMode={miniMode}
-                                  url={getNavigateTo(teamPath + child.url)}
-                                />
-                              </Box>
-                            )
-                          })}
+                  {miniMode || isEmpty(sidemenu) ? (
+                    <Box cursor='pointer' onClick={onMinimodeChange} mt='1'>
+                      <Logo />
+                    </Box>
+                  ) : (
+                    onHover && (
+                      <Box
+                        cursor='pointer'
+                        onClick={onMinimodeChange}
+                        opacity='0.4'
+                        position='absolute'
+                        right='0px'
+                        top='12px'
+                        className='hover-text'
+                        p='1'
+                        fontSize='0.9rem'
+                        zIndex={1}
+                      >
+                        <Icons.FaArrowsAltH />
                       </Box>
                     )
-                  })}
-                </VStack>
-                {session &&
-                  !sidemenu?.some(
-                    (nav) => nav.dashboardId != HomeDashboardId,
-                  ) && (
-                    <>
-                      <Divider mt={miniMode ? 2 : 3} />
-                      <Box mt={miniMode ? 2 : 3}>
-                        <NavItem
-                          text={t1.newItem}
-                          url={getNavigateTo(`${teamPath}/cfg/team/sidemenu`)}
-                          miniMode={miniMode}
-                          icon='FaPlus'
-                        />
-                      </Box>
-                    </>
                   )}
-              </Flex>
-              <Flex
-                id='sidemenu-bottom'
-                flexDir='column'
-                pt='10px'
-                pb='2'
-                alignItems={miniMode ? 'center' : 'left'}
-                color={textColor}
-              >
-                <VStack alignItems='left' spacing={miniMode ? '2px' : 3}>
-                  {bottomNavs.map((nav, index) => {
-                    if (nav.url == ReserveUrls.Search) {
+                  <VStack
+                    alignItems='left'
+                    mt={miniMode ? 0 : 3}
+                    spacing={miniMode ? '2px' : '10px'}
+                  >
+                    {sidemenu?.map((link, index) => {
                       return (
-                        <Search
-                          key={nav.url}
-                          title={nav.title}
-                          miniMode={miniMode}
-                          sideWidth={sideWidth}
-                          fontSize={navSize}
-                        />
-                      )
-                    } else {
-                      return (
-                        <Box key={nav.url}>
-                          <NavItem
-                            isActive={nav.isActive}
-                            text={nav.title}
-                            icon={nav.icon}
-                            miniMode={miniMode}
-                            url={nav.url}
-                          />
+                        <Box key={link.url}>
+                          <Box>
+                            <NavItem
+                              isActive={
+                                miniMode
+                                  ? asPath.startsWith(
+                                      getNavigateTo(teamPath + link.url),
+                                    )
+                                  : asPath == getNavigateTo(teamPath + link.url)
+                              }
+                              key={index}
+                              text={link.title}
+                              icon={link.icon}
+                              miniMode={miniMode}
+                              fontWeight={500}
+                              url={
+                                link.children?.length > 0
+                                  ? getNavigateTo(
+                                      teamPath + link.children[0].url,
+                                    )
+                                  : getNavigateTo(teamPath + link.url)
+                              }
+                              children={link.children}
+                            />
+                          </Box>
+                          {!miniMode &&
+                            link.children &&
+                            link.children.map((child, index) => {
+                              return (
+                                <Box mt='7px' ml={childMarginLeft + 'px'}>
+                                  <NavItem
+                                    isActive={
+                                      asPath ==
+                                      getNavigateTo(teamPath + child.url)
+                                    }
+                                    key={index}
+                                    text={child.title}
+                                    miniMode={miniMode}
+                                    url={getNavigateTo(teamPath + child.url)}
+                                  />
+                                </Box>
+                              )
+                            })}
                         </Box>
                       )
-                    }
-                  })}
-
-                  <Divider />
-                  {/* <Box color={textColor}><ColorModeSwitcher miniMode={miniMode} /></Box> */}
-                  {!isEmpty(config?.repoUrl) && (
-                    <Box>
-                      <NavItem
-                        text='Github'
-                        icon='FaGithub'
-                        miniMode={miniMode}
-                        url={config.repoUrl}
-                      />
-                    </Box>
-                  )}
-                  {<UserMenu miniMode={miniMode} />}
-                </VStack>
-              </Flex>
-            </Flex>
-          </CustomScrollbar>
-        </Flex>
-      ) : (
-        <Box
-          position='absolute'
-          zIndex={1}
-          top='10px'
-          visibility={fullscreen ? 'hidden' : 'visible'}
-        >
-          <Menu>
-            <MenuButton
-              as={IconButton}
-              aria-label='Options'
-              icon={<HamburgerIcon />}
-              variant='outline'
-              size='xs'
-            />
-            <Portal>
-              <MenuList py='0' zIndex={1000}>
-                {sidemenu?.map((link) => {
-                  const Icon = Icons[link.icon]
-                  return (
-                    <Link
-                      key={link.url}
-                      to={
-                        link.children?.length > 0
-                          ? getNavigateTo(teamPath + link.children[0].url)
-                          : getNavigateTo(teamPath + link.url)
+                    })}
+                  </VStack>
+                  {session &&
+                    !sidemenu?.some(
+                      (nav) => nav.dashboardId != HomeDashboardId,
+                    ) && (
+                      <>
+                        <Divider mt={miniMode ? 2 : 3} />
+                        <Box mt={miniMode ? 2 : 3}>
+                          <NavItem
+                            text={t1.newItem}
+                            url={getNavigateTo(`${teamPath}/cfg/team/sidemenu`)}
+                            miniMode={miniMode}
+                            icon='FaPlus'
+                          />
+                        </Box>
+                      </>
+                    )}
+                </Flex>
+                <Flex
+                  id='sidemenu-bottom'
+                  flexDir='column'
+                  pt='10px'
+                  pb='2'
+                  alignItems={miniMode ? 'center' : 'left'}
+                  color={textColor}
+                >
+                  <VStack alignItems='left' spacing={miniMode ? '2px' : 3}>
+                    {bottomNavs.map((nav, index) => {
+                      if (nav.url == ReserveUrls.Search) {
+                        return (
+                          <Search
+                            key={nav.url}
+                            title={nav.title}
+                            miniMode={miniMode}
+                            sideWidth={sideWidth}
+                            fontSize={navSize}
+                          />
+                        )
+                      } else {
+                        return (
+                          <Box key={nav.url}>
+                            <NavItem
+                              isActive={nav.isActive}
+                              text={nav.title}
+                              icon={nav.icon}
+                              miniMode={miniMode}
+                              url={nav.url}
+                            />
+                          </Box>
+                        )
                       }
-                    >
-                      <MenuItem
-                        icon={<Icon />}
-                        color={
-                          asPath.startsWith(getNavigateTo(teamPath + link.url))
-                            ? useColorModeValue('brand.500', 'brand.200')
-                            : 'inherit'
+                    })}
+
+                    <Divider />
+                    {/* <Box color={textColor}><ColorModeSwitcher miniMode={miniMode} /></Box> */}
+                    {!isEmpty(config?.repoUrl) && (
+                      <Box>
+                        <NavItem
+                          text='Github'
+                          icon='FaGithub'
+                          miniMode={miniMode}
+                          url={config.repoUrl}
+                        />
+                      </Box>
+                    )}
+                    {<UserMenu miniMode={miniMode} />}
+                  </VStack>
+                </Flex>
+              </Flex>
+            </CustomScrollbar>
+          </Flex>
+        ) : (
+          <Box
+            position='absolute'
+            zIndex={1}
+            top='10px'
+            visibility={fullscreen ? 'hidden' : 'visible'}
+          >
+            <Menu>
+              <MenuButton
+                as={IconButton}
+                aria-label='Options'
+                icon={<HamburgerIcon />}
+                variant='outline'
+                size='xs'
+              />
+              <Portal>
+                <MenuList py='0' zIndex={1000}>
+                  {sidemenu?.map((link) => {
+                    const Icon = Icons[link.icon]
+                    return (
+                      <Link
+                        key={link.url}
+                        to={
+                          link.children?.length > 0
+                            ? getNavigateTo(teamPath + link.children[0].url)
+                            : getNavigateTo(teamPath + link.url)
                         }
                       >
-                        {link.title}
-                      </MenuItem>
-                      {link.children &&
-                        link.children.map((child) => {
+                        <MenuItem
+                          icon={<Icon />}
+                          color={
+                            asPath.startsWith(
+                              getNavigateTo(teamPath + link.url),
+                            )
+                              ? useColorModeValue('brand.500', 'brand.200')
+                              : 'inherit'
+                          }
+                        >
+                          {link.title}
+                        </MenuItem>
+                        {link.children &&
+                          link.children.map((child) => {
+                            return (
+                              <Link
+                                key={child.url}
+                                to={getNavigateTo(teamPath + child.url)}
+                              >
+                                <MenuItem
+                                  pl='36px'
+                                  color={
+                                    asPath ==
+                                    getNavigateTo(teamPath + child.url)
+                                      ? useColorModeValue(
+                                          'brand.500',
+                                          'brand.200',
+                                        )
+                                      : 'inherit'
+                                  }
+                                >
+                                  {child.title}
+                                </MenuItem>
+                              </Link>
+                            )
+                          })}
+                      </Link>
+                    )
+                  })}
+                  <Divider />
+                  <>
+                    {bottomNavs.map((nav, index) => {
+                      const Icon = Icons[nav.icon]
+                      if (Icon) {
+                        if (nav.url == ReserveUrls.Search) {
                           return (
-                            <Link
-                              key={child.url}
-                              to={getNavigateTo(teamPath + child.url)}
-                            >
+                            <MenuItem key={nav.url}>
+                              <Search
+                                key={nav.url}
+                                title={nav.title}
+                                miniMode={false}
+                                sideWidth={sideWidth}
+                                fontSize={navSize}
+                              />
+                            </MenuItem>
+                          )
+                        } else {
+                          return (
+                            <Link key={nav.url} to={nav.url}>
                               <MenuItem
-                                pl='36px'
+                                icon={<Icon />}
                                 color={
-                                  asPath == getNavigateTo(teamPath + child.url)
+                                  asPath.startsWith(nav.baseUrl)
                                     ? useColorModeValue(
                                         'brand.500',
                                         'brand.200',
@@ -443,74 +498,39 @@ const Container = (props: Props) => {
                                     : 'inherit'
                                 }
                               >
-                                {child.title}
+                                {nav.title}
                               </MenuItem>
                             </Link>
                           )
-                        })}
-                    </Link>
-                  )
-                })}
-                <Divider />
-                <>
-                  {bottomNavs.map((nav, index) => {
-                    const Icon = Icons[nav.icon]
-                    if (Icon) {
-                      if (nav.url == ReserveUrls.Search) {
-                        return (
-                          <MenuItem key={nav.url}>
-                            <Search
-                              key={nav.url}
-                              title={nav.title}
-                              miniMode={false}
-                              sideWidth={sideWidth}
-                              fontSize={navSize}
-                            />
-                          </MenuItem>
-                        )
-                      } else {
-                        return (
-                          <Link key={nav.url} to={nav.url}>
-                            <MenuItem
-                              icon={<Icon />}
-                              color={
-                                asPath.startsWith(nav.baseUrl)
-                                  ? useColorModeValue('brand.500', 'brand.200')
-                                  : 'inherit'
-                              }
-                            >
-                              {nav.title}
-                            </MenuItem>
-                          </Link>
-                        )
+                        }
                       }
-                    }
-                  })}
+                    })}
 
-                  <Divider />
-                </>
-                {!isEmpty(config?.repoUrl) && (
-                  <Link to={config.repoUrl}>
-                    <MenuItem icon={<Icons.FaGithub />}>Github</MenuItem>
-                  </Link>
-                )}
-                <MenuItem>
-                  <UserMenu miniMode={false} />
-                </MenuItem>
-              </MenuList>
-            </Portal>
-          </Menu>
+                    <Divider />
+                  </>
+                  {!isEmpty(config?.repoUrl) && (
+                    <Link to={config.repoUrl}>
+                      <MenuItem icon={<Icons.FaGithub />}>Github</MenuItem>
+                    </Link>
+                  )}
+                  <MenuItem>
+                    <UserMenu miniMode={false} />
+                  </MenuItem>
+                </MenuList>
+              </Portal>
+            </Menu>
+          </Box>
+        )}
+        <Box
+          id='main-container'
+          transition='all 0.2s'
+          width={`calc(100% - ${sideWidth}px)`}
+          ml={sideWidth + 'px'}
+        >
+          {React.cloneElement(children, { sideWidth })}
         </Box>
-      )}
-      <Box
-        id='main-container'
-        transition='all 0.2s'
-        width={`calc(100% - ${sideWidth}px)`}
-        ml={sideWidth + 'px'}
-      >
-        {React.cloneElement(children, { sideWidth })}
-      </Box>
-    </HStack>
+      </HStack>
+    </>
   )
 }
 

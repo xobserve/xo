@@ -50,6 +50,7 @@ import { $config } from 'src/data/configs/config'
 import { requestApi } from 'utils/axios/request'
 import { getNavigateTo, navigateTo } from 'utils/url'
 import { isAdmin } from 'types/role'
+import { $accessToken } from 'src/views/accesstoken/store'
 
 const UserMenu = ({ miniMode }) => {
   const t = useStore(commonMsg)
@@ -69,7 +70,7 @@ const UserMenu = ({ miniMode }) => {
     storage.set('current-page', location.pathname)
     navigateTo(`/login`)
   }
-
+  const accessToken = useStore($accessToken)
   const [tenants, setTenants] = useState<any[]>([])
 
   useEffect(() => {
@@ -79,7 +80,9 @@ const UserMenu = ({ miniMode }) => {
   }, [config, session])
 
   const loadTenants = async () => {
-    const res = await requestApi.get(`/tenant/user/is/in`)
+    const res = await requestApi.get(
+      `/tenant/user/is/in?currentTeam=${config.currentTeam}}`,
+    )
     setTenants(res.data)
   }
   const changeLang = () => {
@@ -157,12 +160,16 @@ const UserMenu = ({ miniMode }) => {
                     </MenuItem>
                   </Link>
                 )}
-                <Link to={getNavigateTo(`${teamPath}/tenant/users`)}>
-                  <MenuItem width='100%' icon={<FaStar fontSize='1em' />}>
-                    {t1.tenantAdmin}
-                  </MenuItem>
-                </Link>
-                <MenuDivider />
+                {isEmpty(accessToken) && (
+                  <>
+                    <Link to={getNavigateTo(`${teamPath}/tenant/users`)}>
+                      <MenuItem width='100%' icon={<FaStar fontSize='1em' />}>
+                        {t1.tenantAdmin}
+                      </MenuItem>
+                    </Link>
+                    <MenuDivider />
+                  </>
+                )}
               </>
             )}
 
@@ -181,27 +188,25 @@ const UserMenu = ({ miniMode }) => {
             {session && (
               <>
                 <MenuDivider />
-                {
-                  // <MenuItem mt='2px' width='100%'>
-                  //   {' '}
-                  //   <SelectUserTenant miniMode={false} tenants={tenants} />
-                  // </MenuItem>
-                }
-                {
-                  <MenuItem mt='2px' width='100%'>
-                    {' '}
-                    <SelectUserTeam miniMode={false} tenants={tenants} />
-                  </MenuItem>
-                }
-                <MenuDivider />
-                <Link to={getNavigateTo(`${teamPath}/template`)}>
-                  <MenuItem
-                    width='100%'
-                    icon={<FaProjectDiagram fontSize='1em' />}
-                  >
-                    {t.templateStore}
-                  </MenuItem>
-                </Link>
+                {isEmpty(accessToken) && (
+                  <>
+                    <MenuItem mt='2px' width='100%'>
+                      <SelectUserTeam miniMode={false} tenants={tenants} />
+                    </MenuItem>
+
+                    <MenuDivider />
+                  </>
+                )}
+                {isEmpty(accessToken) && (
+                  <Link to={getNavigateTo(`${teamPath}/template`)}>
+                    <MenuItem
+                      width='100%'
+                      icon={<FaProjectDiagram fontSize='1em' />}
+                    >
+                      {t.templateStore}
+                    </MenuItem>
+                  </Link>
+                )}
                 <Link to={getNavigateTo(`${teamPath}/account/setting`)}>
                   <MenuItem width='100%' icon={<FaRegSun fontSize='1em' />}>
                     {t1.accountSetting}

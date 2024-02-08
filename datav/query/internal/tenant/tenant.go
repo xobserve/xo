@@ -385,6 +385,8 @@ type TenantTeam struct {
 }
 
 func GetTenantsUserIn(c *gin.Context) {
+	tenantTeams := make([]*TenantTeam, 0)
+
 	u := c.MustGet("currentUser").(*models.User)
 	tenants, err := models.QueryTenantsByUserId(c.Request.Context(), u.Id)
 	if err != nil {
@@ -393,7 +395,6 @@ func GetTenantsUserIn(c *gin.Context) {
 		return
 	}
 
-	tenantTeams := make([]*TenantTeam, 0)
 	for _, tenant := range tenants {
 		tenantTeam := &TenantTeam{
 			TenantId:   tenant.Id,
@@ -422,6 +423,7 @@ func GetTenantsUserIn(c *gin.Context) {
 
 		tenantTeams = append(tenantTeams, tenantTeam)
 	}
+
 	c.JSON(200, common.RespSuccess(tenantTeams))
 }
 

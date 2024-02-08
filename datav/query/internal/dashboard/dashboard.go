@@ -34,6 +34,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/xObserve/xObserve/query/internal/accesstoken"
 	"github.com/xObserve/xObserve/query/internal/acl"
 	"github.com/xObserve/xObserve/query/internal/admin"
 	"github.com/xObserve/xObserve/query/internal/user"
@@ -283,16 +284,29 @@ func Search(c *gin.Context) {
 		return
 	}
 
-	teams, err := models.QueryVisibleTeamsByUserId(c.Request.Context(), tenantId, u.Id)
-	if err != nil {
-		logger.Warn("query visible teams error", "error", err)
-		c.JSON(500, common.RespError(e.Internal))
-		return
-	}
-	dashboards := make([]*models.Dashboard, 0)
+	accessToken := c.GetString("accessToken")
 	teamIds := make([]string, 0)
-	for _, team := range teams {
-		teamIds = append(teamIds, strconv.FormatInt(team, 10))
+	dashboards := make([]*models.Dashboard, 0)
+	if accessToken != "" {
+		ids, err := accesstoken.CanViewTeams(tenantId, accessToken)
+		if err != nil {
+			logger.Warn("check access token error", "error", err)
+			c.JSON(400, common.RespError(e.Internal))
+			return
+		}
+		for _, id := range ids {
+			teamIds = append(teamIds, strconv.FormatInt(id, 10))
+		}
+	} else {
+		teams, err := models.QueryVisibleTeamsByUserId(c.Request.Context(), tenantId, u.Id)
+		if err != nil {
+			logger.Warn("query visible teams error", "error", err)
+			c.JSON(500, common.RespError(e.Internal))
+			return
+		}
+		for _, team := range teams {
+			teamIds = append(teamIds, strconv.FormatInt(team, 10))
+		}
 	}
 
 	rows, err := db.Conn.QueryContext(c.Request.Context(), fmt.Sprintf("SELECT dashboard.id,dashboard.title, dashboard.team_id,team.name,dashboard.visible_to, dashboard.tags, dashboard.weight,dashboard.template_id FROM dashboard INNER JOIN team ON dashboard.team_id = team.id WHERE dashboard.team_id in ('%s') ORDER BY dashboard.weight DESC,dashboard.created DESC", strings.Join(teamIds, "','")))

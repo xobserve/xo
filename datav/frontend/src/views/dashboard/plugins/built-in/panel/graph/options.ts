@@ -432,7 +432,7 @@ function calculateAxisSize(self: uPlot, values: string[], axisIdx: number) {
   } else if (values?.length) {
     let maxTextWidth = values.reduce(
       (acc, value) =>
-        Math.max(acc, measureText(value, UPLOT_AXIS_FONT_SIZE).width),
+        Math.max(acc, measureText(value, UPLOT_AXIS_FONT_SIZE)?.width),
       0,
     )
     // limit y tick label width to 40% of visualization
@@ -470,7 +470,7 @@ function calculateSpace(
       defaultSpacing,
       increment,
     )
-    const width = measureText(sample[0], UPLOT_AXIS_FONT_SIZE).width + 18
+    const width = measureText(sample[0], UPLOT_AXIS_FONT_SIZE)?.width + 18
     return width
   }
 
