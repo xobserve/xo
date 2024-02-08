@@ -24,6 +24,7 @@ import type {
   ReqOnFulfilledInterceptor,
   ResOnFulfilledInterceptor,
 } from './types'
+import { $accessToken } from 'src/views/accesstoken/store'
 
 /**
  * 输出调试信息
@@ -138,6 +139,11 @@ export const autoWithClientToken: ReqOnFulfilledInterceptor = (req) => {
     const token = getToken()
     if (token) {
       setHeaderAuth(headers, token)
+    }
+
+    const ak = $accessToken.get()
+    if (ak) {
+      headers[KEYS.ak] = ak
     }
   }
   return req

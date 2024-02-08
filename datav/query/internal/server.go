@@ -109,7 +109,7 @@ func (s *Server) Start() error {
 		// r.Use(otelPlugin)
 		// global config
 		r.GET("/config/ui", uiconfig.GetTenantConfig)
-		r.GET("/config/dashboard", otelPlugin, uiconfig.GetDashboardConfig)
+		r.GET("/config/dashboard", otelPlugin, InjectAccessToken(), uiconfig.GetDashboardConfig)
 
 		// user apis
 		r.POST("/login", user.Login)
@@ -317,6 +317,15 @@ func Cors() gin.HandlerFunc {
 	}
 }
 
+func InjectAccessToken() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		ak := c.Request.Header.Get("X-AK")
+		c.Set("accessToken", ak)
+		c.Request.Header.Del("X-AK")
+		c.Next()
+	}
+}
+
 // APIs can be accessed by anonymous users when the configuration is set
 // When disabled, unauthorized users will be rediret to login page
 func CheckLogin() gin.HandlerFunc {
@@ -348,6 +357,9 @@ func MustLogin() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
+		ak := c.Request.Header.Get("X-AK")
+		c.Set("X-AK", ak)
+		c.Request.Header.Del("X-AK")
 		c.Next()
 	}
 }

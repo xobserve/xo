@@ -22,7 +22,7 @@ func GetDashboardConfig(c *gin.Context) {
 	rawpath := strings.TrimSpace(c.Query("path"))
 	path := strings.TrimSpace(c.Query("path"))
 	teamId0, _ := strconv.ParseInt(c.Query("teamId"), 10, 64)
-	accessToken := c.Query("accessToken")
+	accessToken := c.GetString("accessToken")
 
 	var tenantId int64
 	var teamId int64

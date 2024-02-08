@@ -29,7 +29,7 @@ import {
   Portal,
 } from '@chakra-ui/react'
 import Logo from 'src/components/Logo'
-import React, { useEffect, useLayoutEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { measureText } from 'utils/measureText'
 import * as Icons from 'react-icons/fa'
 import { cloneDeep, concat, isArray } from 'lodash'
@@ -79,9 +79,9 @@ const PageContainer = (props) => {
   }, [])
 
   useEffect(() => {
-    const id = $accessToken.get()
-    if (id) {
-      addParamToUrl({ accessToken: id }, true)
+    const at = $accessToken.get()
+    if (at) {
+      addParamToUrl({ accessToken: at }, true)
     }
   }, [location])
 

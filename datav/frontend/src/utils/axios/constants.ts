@@ -25,4 +25,5 @@ export const LS_KEY = {
 export const KEYS = {
   error: '$error',
   token: 'X-Token',
+  ak: 'X-AK',
 } as const

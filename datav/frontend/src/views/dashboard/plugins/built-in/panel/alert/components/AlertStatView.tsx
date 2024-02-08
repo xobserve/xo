@@ -27,7 +27,6 @@ import { dispatch } from 'use-bus'
 const AlertStatView = (props: PanelProps) => {
   const subPanel = props.panel.plugins[props.panel.type].subPanel
   const edit = useSearchParam('editSub')
-  console.log('here33333:', edit)
   const data: SeriesData[] = useMemo(() => {
     const promFormatData = {
       resultType: 'matrix',

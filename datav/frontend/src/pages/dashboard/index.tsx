@@ -86,11 +86,12 @@ const DashboardPageWrapper = memo(({ sideWidth }: Props) => {
     }
   }
 
+  console.log('here33333:', location.pathname)
   return (
     <>
       {dashboard && (
         <DashboardWrapper
-          key={location.pathname}
+          key={location.pathname + dashboard?.id}
           sideWidth={sideWidth}
           rawDashboard={dashboard}
         />

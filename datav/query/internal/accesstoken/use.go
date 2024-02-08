@@ -2,6 +2,7 @@ package accesstoken
 
 import (
 	"context"
+	"errors"
 	"strconv"
 
 	"github.com/xObserve/xObserve/query/pkg/common"
@@ -11,9 +12,11 @@ import (
 func CanViewDashboard(teamId int64, dashId string, tokenStr string) (bool, error) {
 	token, err := models.GetAccessToken(0, tokenStr)
 	if err != nil {
-		return false, err
+		return false, errors.New("invalid token")
 	}
-
+	if token.Mode == common.WriteOnlyMode {
+		return false, errors.New("invalid token")
+	}
 	if token.Scope == common.ScopeWebsite {
 		return true, nil
 	}

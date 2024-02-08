@@ -42,6 +42,10 @@ export function measureText(
 
   const context = getCanvasContext()
 
+  if (!context) {
+    return
+  }
+
   if (ctxFontStyle !== fontStyle) {
     context.font = fontStyle
   }
