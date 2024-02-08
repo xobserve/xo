@@ -16,7 +16,7 @@ type AccessToken struct {
 	Scope       int       `json:"scope"`
 	ScopeId     string    `json:"scopeId"`
 	Description string    `json:"description"`
-	Mode        int       `json:"mode"` // 0: read only 1. write only 2. read and write
+	Mode        int       `json:"mode"` // 0: read only 1. manage
 	CreatedBy   int64     `json:"createdBy"`
 	Created     time.Time `json:"created"`
 	Expired     int       `json:"expired"`

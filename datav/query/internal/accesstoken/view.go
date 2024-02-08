@@ -14,8 +14,8 @@ func CanViewDashboard(teamId int64, dashId string, tokenStr string) (bool, error
 	if err != nil {
 		return false, errors.New("invalid token")
 	}
-	if token.Mode == common.WriteOnlyMode {
-		return false, errors.New("invalid token")
+	if token.Mode != common.ReadOnlyMode {
+		return false, errors.New("invalid token ")
 	}
 	if token.Scope == common.ScopeWebsite {
 		return true, nil
@@ -47,7 +47,7 @@ func CanViewTeams(tenantId int64, tokenStr string) ([]int64, error) {
 	if err != nil {
 		return nil, errors.New("invalid token")
 	}
-	if token.Mode == common.WriteOnlyMode {
+	if token.Mode != common.ReadOnlyMode {
 		return nil, errors.New("invalid token")
 	}
 

@@ -46,7 +46,6 @@ var ScopeText = map[int]string{
 }
 
 const (
-	ReadOnlyMode  = 0
-	WriteOnlyMode = 1
-	ReadWriteMode = 2
+	ReadOnlyMode = 0
+	ManageMode   = 1
 )

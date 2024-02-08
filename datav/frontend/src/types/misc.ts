@@ -40,6 +40,5 @@ export enum Lang {
 
 export enum PermissionMode {
   ReadOnly = 0,
-  WriteOnly = 1,
-  ReadWrite = 2,
+  Manage = 1,
 }

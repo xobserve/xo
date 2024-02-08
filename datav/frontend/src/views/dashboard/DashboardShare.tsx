@@ -34,6 +34,7 @@ import {
   ModalCloseButton,
   Textarea,
   Tooltip,
+  Input,
 } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
 import { BsShare } from 'react-icons/bs'
@@ -89,7 +90,7 @@ const DashboardShare = ({ dashboard, ...rest }: Props) => {
   const [embeddingPanel, setEmbeddingPanel] = useState<number>(0)
   const [colorMode, setColorMode] = useState('light')
   const [readonly, setReadonly] = useState(false)
-
+  const [accessToken, setAccessToken] = useState(null)
   useEffect(() => {
     let url = window.origin + location.pathname + '?'
     const dashData = JSON.stringify(dashboard.data)
@@ -153,6 +154,11 @@ const DashboardShare = ({ dashboard, ...rest }: Props) => {
         embedding = embedding + '&readonly=on'
       }
 
+      if (accessToken) {
+        url = url + '&accessToken=' + accessToken
+        embedding = embedding + '&accessToken=' + accessToken
+      }
+
       setShareUrl(url)
       setEmbededUrl(embedding)
       setValue(url)
@@ -168,6 +174,7 @@ const DashboardShare = ({ dashboard, ...rest }: Props) => {
     colorMode,
     dashboard,
     readonly,
+    accessToken,
   ])
 
   const filterPanels = (
@@ -234,6 +241,20 @@ const DashboardShare = ({ dashboard, ...rest }: Props) => {
                           />
                         </FormItem>
                       )}
+                      <FormItem
+                        title={t.accessToken}
+                        size='sm'
+                        alignItems={'center'}
+                      >
+                        <Input
+                          value={accessToken}
+                          onChange={(e) => {
+                            setAccessToken(e.currentTarget.value)
+                          }}
+                          placeholder={lang === 'en' ? 'optional..' : '可选..'}
+                          width={300}
+                        />
+                      </FormItem>
                     </Form>
                     <HStack spacing={1} alignItems='end'>
                       <Textarea
@@ -400,6 +421,20 @@ const DashboardShare = ({ dashboard, ...rest }: Props) => {
                           size='small'
                           filterOption={filterPanels}
                           style={{ width: '200px' }}
+                        />
+                      </FormItem>
+                      <FormItem
+                        title={t.accessToken}
+                        size='sm'
+                        alignItems={'center'}
+                      >
+                        <Input
+                          value={accessToken}
+                          onChange={(e) => {
+                            setAccessToken(e.currentTarget.value)
+                          }}
+                          placeholder={lang === 'en' ? 'optional..' : '可选..'}
+                          width={300}
                         />
                       </FormItem>
                     </Form>

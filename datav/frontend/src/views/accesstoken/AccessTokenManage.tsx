@@ -168,7 +168,11 @@ const AccessTokenManage = ({ scope, scopeId, hidenTitle = false }: Props) => {
                 />
                 Days
               </FormItem>
-              <FormItem title='Permission mode' alignItems='center'>
+              <FormItem
+                title='Permission mode'
+                alignItems='center'
+                desc='Readonly mode allow user to view dashboards through web UI, manage mode allow managing resources through http apis.'
+              >
                 <RadionButtons
                   value={tempToken.mode.toString()}
                   onChange={(v) => {
@@ -176,16 +180,12 @@ const AccessTokenManage = ({ scope, scopeId, hidenTitle = false }: Props) => {
                   }}
                   options={[
                     {
-                      label: 'Read only',
+                      label: 'Readonly',
                       value: PermissionMode.ReadOnly.toString(),
                     },
                     {
-                      label: 'Write only',
-                      value: PermissionMode.WriteOnly.toString(),
-                    },
-                    {
-                      label: 'Read and write',
-                      value: PermissionMode.ReadWrite.toString(),
+                      label: 'Manage',
+                      value: PermissionMode.Manage.toString(),
                     },
                   ]}
                 />
