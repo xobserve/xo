@@ -278,26 +278,27 @@ func GetTemplates(c *gin.Context) {
 		return
 	}
 
-	u := c.MustGet("currentUser").(*models.User)
+	// u := c.MustGet("currentUser").(*models.User)
 
-	var err error
-	switch scopeType {
-	case common.ScopeWebsite:
-		err = acl.CanViewWebsite(u)
-	case common.ScopeTenant:
-		err = acl.CanViewTenant(c.Request.Context(), scopeId, u.Id)
-	case common.ScopeTeam:
-		err = acl.CanViewTeam(c.Request.Context(), scopeId, u.Id)
-	default:
-		err = errors.New("invalid scope type")
-	}
+	// var err error
+	// switch scopeType {
+	// case common.ScopeWebsite:
+	// 	err = acl.CanViewWebsite(u)
+	// case common.ScopeTenant:
+	// 	err = acl.CanViewTenant(c.Request.Context(), scopeId, u.Id)
+	// case common.ScopeTeam:
+	// 	err = acl.CanViewTeam(c.Request.Context(), scopeId, u.Id)
+	// default:
+	// 	err = errors.New("invalid scope type")
+	// }
 
-	if err != nil {
-		c.JSON(403, common.RespError(err.Error()))
-		return
-	}
+	// if err != nil {
+	// 	c.JSON(403, common.RespError(err.Error()))
+	// 	return
+	// }
 
 	var rows *sql.Rows
+	var err error
 	if scopeType == common.ScopeTeam {
 		tenantId, err := models.QueryTenantIdByTeamId(c.Request.Context(), scopeId)
 		if err != nil {

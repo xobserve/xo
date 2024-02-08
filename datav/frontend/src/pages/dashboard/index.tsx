@@ -27,6 +27,7 @@ import { initVariableSelected } from 'src/views/variables/Loader'
 import { $variables } from 'src/views/variables/store'
 import { getNavigateTo, navigateTo } from 'utils/url'
 import { replaceDashboardTemplatePanels } from 'utils/template'
+import { useSearchParam } from 'react-use'
 
 interface Props {
   dashboard?: Dashboard
@@ -40,6 +41,7 @@ const DashboardPageWrapper = memo(({ sideWidth }: Props) => {
   path = path.replace(URL_ROOT_PATH, '')
   const [dashboard, setDashboard] = useState<Dashboard>(null)
   const [error, setError] = useState<any>(null)
+  const accessToken = useSearchParam('accessToken')
 
   useEffect(() => {
     setDashboard(null)
@@ -49,7 +51,9 @@ const DashboardPageWrapper = memo(({ sideWidth }: Props) => {
   const loadConfig = async (path) => {
     try {
       const res = await requestApi.get(
-        `/config/dashboard?teamId=${teamId}&path=${path}`,
+        `/config/dashboard?teamId=${teamId}&path=${path}&accessToken=${
+          accessToken ?? ''
+        }`,
       )
       if (res.data.reload && res.data.path != path) {
         window.location.href = getNavigateTo(res.data.path)

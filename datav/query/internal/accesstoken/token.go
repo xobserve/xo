@@ -1,6 +1,7 @@
 package accesstoken
 
 import (
+	"database/sql"
 	"sort"
 	"strconv"
 	"time"
@@ -40,14 +41,66 @@ func CreateToken(c *gin.Context) {
 		return
 	}
 
-	_, err = db.Conn.Exec("INSERT INTO access_token (token, name, scope, scope_id, description, created, created_by, expired) VALUES (?, ?, ?, ?, ?, ?, ?,?)",
-		tokenStr, token.Name, token.Scope, token.ScopeId, token.Description, time.Now(), u.Id, token.Expired)
+	var tokenId int64
+	err = db.Conn.QueryRow("SELECT id FROM access_token WHERE token = ?", tokenStr).Scan(&token.Id)
+	if err != nil && err != sql.ErrNoRows {
+		logger.Warn("query token error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+
+	}
+	if tokenId != 0 {
+		c.JSON(400, common.RespError("a same token string already exists, please submit again"))
+		return
+	}
+
+	_, err = db.Conn.Exec("INSERT INTO access_token (token, name, scope, scope_id, description, mode, created, created_by, expired) VALUES (?, ?, ?, ?, ?, ?, ?,?,?)",
+		tokenStr, token.Name, token.Scope, token.ScopeId, token.Description, token.Mode, time.Now(), u.Id, token.Expired)
 	if err != nil {
+		if e.IsErrUniqueConstraint(err) {
+			c.JSON(400, common.RespError("token name  already exists in the same scope"))
+			return
+		}
 		logger.Warn("create token error", "error", err)
 		c.JSON(500, common.RespInternalError())
 		return
 	}
 
+}
+
+func UpdateToken(c *gin.Context) {
+	token := &models.AccessToken{}
+	err := c.Bind(&token)
+	if err != nil {
+		logger.Warn("parse token error", "error", err)
+		c.JSON(400, common.RespError(e.ParamInvalid))
+		return
+	}
+
+	validToken, err := models.GetAccessToken(token.Id, "")
+	if err != nil {
+		logger.Warn("get token error", "error", err)
+		c.JSON(400, common.RespError(err.Error()))
+		return
+	}
+
+	u := c.MustGet("currentUser").(*models.User)
+	err = acl.CanEditScope(c.Request.Context(), validToken.Scope, validToken.ScopeId, u)
+	if err != nil {
+		c.JSON(403, common.RespError(err.Error()))
+		return
+	}
+
+	_, err = db.Conn.Exec("UPDATE access_token SET name=?, description=?, mode=?, expired=? WHERE id=?", token.Name, token.Description, token.Mode, token.Expired, token.Id)
+	if err != nil {
+		if e.IsErrUniqueConstraint(err) {
+			c.JSON(400, common.RespError("token name  already exists in the same scope"))
+			return
+		}
+		logger.Warn("update token error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
 }
 
 func DeleteToken(c *gin.Context) {
@@ -99,7 +152,7 @@ func GetTokens(c *gin.Context) {
 	}
 
 	tokens := make(models.AccessTokens, 0)
-	rows, err := db.Conn.Query("SELECT id, name, scope, scope_id, description, created, created_by, expired FROM access_token WHERE scope = ? and scope_id = ?", scope, scopeId)
+	rows, err := db.Conn.Query("SELECT id, name, scope, scope_id, description, mode, created, created_by, expired FROM access_token WHERE scope = ? and scope_id = ?", scope, scopeId)
 	if err != nil {
 		logger.Warn("query token error", "error", err)
 		c.JSON(400, common.RespInternalError())
@@ -108,7 +161,7 @@ func GetTokens(c *gin.Context) {
 
 	for rows.Next() {
 		token := &models.AccessToken{}
-		err = rows.Scan(&token.Id, &token.Name, &token.Scope, &token.ScopeId, &token.Description, &token.Created, &token.CreatedBy, &token.Expired)
+		err = rows.Scan(&token.Id, &token.Name, &token.Scope, &token.ScopeId, &token.Description, &token.Mode, &token.Created, &token.CreatedBy, &token.Expired)
 		if err != nil {
 			logger.Warn("scan token error", "error", err)
 			c.JSON(500, common.RespInternalError())

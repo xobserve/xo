@@ -37,3 +37,9 @@ export enum Lang {
   EN = 'en',
   ZH = 'zh',
 }
+
+export enum PermissionMode {
+  ReadOnly = 0,
+  WriteOnly = 1,
+  ReadWrite = 2,
+}

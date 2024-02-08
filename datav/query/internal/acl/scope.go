@@ -8,6 +8,7 @@ import (
 	"github.com/xObserve/xObserve/query/pkg/models"
 )
 
+// Dont use access token here in the future, because we will use this function to check if the user has the right to edit the access token
 func CanEditScope(ctx context.Context, scope int, scopeId string, u *models.User) error {
 	if scope == common.ScopeWebsite {
 		if err := CanEditWebsite(u); err != nil {

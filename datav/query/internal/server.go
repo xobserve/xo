@@ -222,6 +222,7 @@ func (s *Server) Start() error {
 
 		// api token
 		r.POST("/accessToken/create", MustLogin(), accesstoken.CreateToken)
+		r.POST("/accessToken/update", MustLogin(), accesstoken.UpdateToken)
 		r.DELETE("/accessToken/:id", MustLogin(), accesstoken.DeleteToken)
 		r.GET("/accessToken/list/:scope/:scopeId", MustLogin(), accesstoken.GetTokens)
 		r.GET("/accessToken/view/:id", MustLogin(), accesstoken.ViewToken)

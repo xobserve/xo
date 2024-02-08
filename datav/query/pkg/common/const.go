@@ -44,3 +44,9 @@ var ScopeText = map[int]string{
 	3: "team",
 	4: "Dashboard",
 }
+
+const (
+	ReadOnlyMode  = 0
+	WriteOnlyMode = 1
+	ReadWriteMode = 2
+)

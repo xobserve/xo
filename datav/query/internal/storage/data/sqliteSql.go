@@ -229,6 +229,7 @@ CREATE TABLE IF NOT EXISTS access_token (
     scope SMALLINT NOT NULL,
     scope_id VARCHAR(255) NOT NULL,
     description VARCHAR(255) NOT NULL,
+    mode SMALLINT NOT NULL,
     created DATETIME NOT NULL,
     created_by INTEGER NOT NULL,
     expired INTEGER NOT NULL
@@ -310,4 +311,5 @@ CREATE INDEX IF NOT EXISTS template_disable_scope ON template_disable (scope, sc
 
 CREATE INDEX IF NOT EXISTS access_token_scope ON access_token (scope, scope_id);
 CREATE UNIQUE INDEX IF NOT EXISTS access_token_token ON access_token (token);
+CREATE UNIQUE INDEX IF NOT EXISTS access_token_name ON access_token (scope, scope_id, name);
 `

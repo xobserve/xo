@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
+	"github.com/xObserve/xObserve/query/internal/accesstoken"
 	"github.com/xObserve/xObserve/query/internal/datasource"
 	"github.com/xObserve/xObserve/query/internal/user"
 	"github.com/xObserve/xObserve/query/internal/variables"
@@ -21,6 +22,8 @@ func GetDashboardConfig(c *gin.Context) {
 	rawpath := strings.TrimSpace(c.Query("path"))
 	path := strings.TrimSpace(c.Query("path"))
 	teamId0, _ := strconv.ParseInt(c.Query("teamId"), 10, 64)
+	accessToken := c.Query("accessToken")
+
 	var tenantId int64
 	var teamId int64
 	u := user.CurrentUser(c)
@@ -162,35 +165,48 @@ func GetDashboardConfig(c *gin.Context) {
 		dashboard = dash
 	}
 
-	if u == nil && (dashboard.VisibleTo == models.TeamVisible || dashboard.VisibleTo == models.TenantVisible) {
-		c.JSON(401, common.RespError("you have to sign in to view this dashboard"))
-		return
-	}
-
-	if dashboard.VisibleTo == models.TeamVisible {
-		// check user is in team
-		_, err := models.QueryTeamMember(c.Request.Context(), teamId, u.Id)
+	if accessToken != "" {
+		canView, err := accesstoken.CanViewDashboard(dashboard.OwnedBy, dashboard.Id, accessToken)
 		if err != nil {
-			if err == sql.ErrNoRows {
-				c.JSON(403, common.RespError(e.NotTeamMember))
+			c.JSON(400, common.RespError(err.Error()))
+			return
+		}
+
+		if !canView {
+			c.JSON(400, common.RespError("invalid access token"))
+			return
+		}
+	} else {
+		if u == nil && (dashboard.VisibleTo == models.TeamVisible || dashboard.VisibleTo == models.TenantVisible) {
+			c.JSON(401, common.RespError("you have to sign in to view this dashboard"))
+			return
+		}
+
+		if dashboard.VisibleTo == models.TeamVisible {
+			// check user is in team
+			_, err := models.QueryTeamMember(c.Request.Context(), teamId, u.Id)
+			if err != nil {
+				if err == sql.ErrNoRows {
+					c.JSON(403, common.RespError(e.NotTeamMember))
+					return
+				}
+				logger.Warn("query team member error", "error", err)
+				c.JSON(500, common.RespError(err.Error()))
 				return
 			}
-			logger.Warn("query team member error", "error", err)
-			c.JSON(500, common.RespError(err.Error()))
-			return
-		}
-	} else if dashboard.VisibleTo == models.TenantVisible {
-		// check user is in tenant
-		in, err := models.IsUserInTenant(u.Id, tenantId)
-		if err != nil {
-			logger.Warn("check user in tenant error", "error", err)
-			c.JSON(500, common.RespError(err.Error()))
-			return
-		}
+		} else if dashboard.VisibleTo == models.TenantVisible {
+			// check user is in tenant
+			in, err := models.IsUserInTenant(u.Id, tenantId)
+			if err != nil {
+				logger.Warn("check user in tenant error", "error", err)
+				c.JSON(500, common.RespError(err.Error()))
+				return
+			}
 
-		if !in {
-			c.JSON(403, common.RespError(e.NotTenantUser))
-			return
+			if !in {
+				c.JSON(403, common.RespError(e.NotTenantUser))
+				return
+			}
 		}
 	}
 

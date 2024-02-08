@@ -16,6 +16,7 @@ type AccessToken struct {
 	Scope       int       `json:"scope"`
 	ScopeId     string    `json:"scopeId"`
 	Description string    `json:"description"`
+	Mode        int       `json:"mode"` // 0: read only 1. write only 2. read and write
 	CreatedBy   int64     `json:"createdBy"`
 	Created     time.Time `json:"created"`
 	Expired     int       `json:"expired"`
@@ -41,8 +42,8 @@ func (s AccessTokens) Less(i, j int) bool {
 
 func GetAccessToken(id int64, tk string) (*AccessToken, error) {
 	token := &AccessToken{}
-	err := db.Conn.QueryRow("SELECT id,name, token, scope, scope_id, description, created, created_by, expired FROM access_token WHERE id = ? OR token = ?", id, tk).Scan(
-		&token.Id, &token.Name, &token.Token, &token.Scope, &token.ScopeId, &token.Description, &token.Created, &token.CreatedBy, &token.Expired,
+	err := db.Conn.QueryRow("SELECT id,name, token, scope, scope_id, description, mode, created, created_by, expired FROM access_token WHERE id = ? OR token = ?", id, tk).Scan(
+		&token.Id, &token.Name, &token.Token, &token.Scope, &token.ScopeId, &token.Description, &token.Mode, &token.Created, &token.CreatedBy, &token.Expired,
 	)
 
 	return token, err

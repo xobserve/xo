@@ -27,6 +27,7 @@ import {
   Heading,
   Input,
   StackDivider,
+  Tag,
   Text,
   Textarea,
   VStack,
@@ -34,6 +35,7 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import Empty from 'components/Empty'
+import RadionButtons from 'components/RadioButtons'
 import { EditorNumberItem } from 'components/editor/EditorItem'
 import { Form, FormSection } from 'components/form/Form'
 import FormItem from 'components/form/Item'
@@ -42,6 +44,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { locale } from 'src/i18n/i18n'
 import { commonMsg } from 'src/i18n/locales/en'
 import { AccessToken } from 'types/accesstoken'
+import { PermissionMode } from 'types/misc'
 import { Scope } from 'types/scope'
 import { requestApi } from 'utils/axios/request'
 import { isEmpty } from 'utils/validate'
@@ -78,10 +81,18 @@ const AccessTokenManage = ({ scope, scopeId, hidenTitle = false }: Props) => {
       })
       return
     }
+    if (tempToken.id) {
+      await requestApi.post(`/accessToken/update`, tempToken)
+    } else {
+      await requestApi.post(`/accessToken/create`, tempToken)
+    }
 
-    await requestApi.post(`/accessToken/create`, tempToken)
     await load()
     setTempToken(null)
+    toast({
+      title: 'Token updated',
+      status: 'success',
+    })
   }
 
   const onDeleteToken = async () => {
@@ -89,6 +100,10 @@ const AccessTokenManage = ({ scope, scopeId, hidenTitle = false }: Props) => {
     await load()
     setDeleteToken(null)
     onClose()
+    toast({
+      title: 'Token deleted',
+      status: 'success',
+    })
   }
   return (
     <>
@@ -106,6 +121,7 @@ const AccessTokenManage = ({ scope, scopeId, hidenTitle = false }: Props) => {
                 name: '',
                 description: '',
                 expired: 7,
+                mode: PermissionMode.ReadOnly,
               })
             }
             variant='outline'
@@ -152,6 +168,28 @@ const AccessTokenManage = ({ scope, scopeId, hidenTitle = false }: Props) => {
                 />
                 Days
               </FormItem>
+              <FormItem title='Permission mode' alignItems='center'>
+                <RadionButtons
+                  value={tempToken.mode.toString()}
+                  onChange={(v) => {
+                    setTempToken({ ...tempToken, mode: Number(v) })
+                  }}
+                  options={[
+                    {
+                      label: 'Read only',
+                      value: PermissionMode.ReadOnly.toString(),
+                    },
+                    {
+                      label: 'Write only',
+                      value: PermissionMode.WriteOnly.toString(),
+                    },
+                    {
+                      label: 'Read and write',
+                      value: PermissionMode.ReadWrite.toString(),
+                    },
+                  ]}
+                />
+              </FormItem>
               <FormItem title={t.description} desc={'what is this token for'}>
                 <Textarea
                   value={tempToken.description}
@@ -187,6 +225,9 @@ const AccessTokenManage = ({ scope, scopeId, hidenTitle = false }: Props) => {
                 onDeleteToken={() => {
                   setDeleteToken(token)
                   onOpen()
+                }}
+                onEditToken={(token) => {
+                  setTempToken(token)
                 }}
                 selected={deleteToken?.id == token.id}
               />
@@ -237,12 +278,14 @@ export default AccessTokenManage
 interface AccessTokenItemProps {
   token: AccessToken
   onDeleteToken: any
+  onEditToken: any
   selected: boolean
 }
 
 const AccessTokenItem = ({
   token,
   onDeleteToken,
+  onEditToken,
   selected,
 }: AccessTokenItemProps) => {
   const [tokenStr, setTokenStr] = useState(null)
@@ -270,6 +313,7 @@ const AccessTokenItem = ({
         <Box>
           <HStack>
             <Text>{token.name}</Text>
+            <Tag size='sm'>{PermissionMode[token.mode]}</Tag>
           </HStack>
           <Text textStyle='annotation' mt='1'>
             {token.description}
@@ -287,6 +331,13 @@ const AccessTokenItem = ({
             onClick={() => onViewToken(token)}
           >
             View token
+          </Button>
+          <Button
+            size='sm'
+            variant='outline'
+            onClick={() => onEditToken(token)}
+          >
+            Edit
           </Button>
           <Button
             size='sm'

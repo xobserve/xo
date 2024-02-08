@@ -212,6 +212,7 @@ const PopoverSelect = ({
                   size={size}
                   variant='unstyled'
                   className='bordered-bottom'
+                  borderRadius={0}
                   placeholder='enter to search'
                 />
               </Box>
