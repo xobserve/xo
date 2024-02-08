@@ -16,6 +16,7 @@ import queryString from 'query-string'
 import { isEmpty } from './validate'
 import { URL_ROOT_PATH } from 'src/data/configs/config'
 import { gnavigate } from 'layouts/PageContainer'
+import { NavigateFunction } from 'react-router-dom'
 
 export const getHost = (url: string) => {
   const urlMatched = url.match(/https?:\/\/([^/]+)\//i)
@@ -27,7 +28,7 @@ export const getHost = (url: string) => {
 }
 export const clearApiVersion = (api: string) => api && api.replace(/\/v\d$/, '')
 
-export const addParamToUrl = (param: any) => {
+export const addParamToUrl = (param: any, isReplace = false) => {
   const currentQuery = getUrlParams()
   extend(currentQuery, param)
 
@@ -38,7 +39,7 @@ export const addParamToUrl = (param: any) => {
   }
 
   const params = queryString.stringify(currentQuery)
-  updateUrl(params)
+  updateUrl(params, isReplace)
 }
 
 export const setParamToUrl = (params) => {
@@ -58,18 +59,20 @@ export const getUrlParams = (): any => {
   return queryString.parseUrl(window?.location.href).query
 }
 
-export const updateUrl = (params?: string) => {
+export const updateUrl = (params: string, isReplace = false) => {
   let url = window.location.origin + window.location.pathname
   if (params != '') {
     url = url + '?' + params
   }
 
   // router.replace(url,url)
-  window.history.pushState({}, null, url)
+  isReplace
+    ? window.history.replaceState({}, null, url)
+    : window.history.pushState({}, null, url)
 }
 
-export const navigateTo = (url, navigate?) => {
-  const nav = navigate ?? gnavigate
+export const navigateTo = (url, navigate?: NavigateFunction) => {
+  const nav: NavigateFunction = navigate ?? gnavigate
   nav(URL_ROOT_PATH + url)
 }
 

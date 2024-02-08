@@ -29,7 +29,7 @@ import {
   Portal,
 } from '@chakra-ui/react'
 import Logo from 'src/components/Logo'
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useMemo, useState } from 'react'
 import { measureText } from 'utils/measureText'
 import * as Icons from 'react-icons/fa'
 import { cloneDeep, concat, isArray } from 'lodash'
@@ -54,7 +54,9 @@ import { HamburgerIcon } from '@chakra-ui/icons'
 import CustomScrollbar from 'src/components/CustomScrollbar/CustomScrollbar'
 import { locale } from 'src/i18n/i18n'
 import customColors from 'theme/colors'
-import { getNavigateTo } from 'utils/url'
+import { addParamToUrl, getNavigateTo } from 'utils/url'
+import { useSearchParam } from 'react-use'
+import { $accessToken } from 'src/views/accesstoken/store'
 export let gnavigate
 
 const maxNavSize = 160
@@ -67,6 +69,22 @@ interface Props {
 
 const PageContainer = (props) => {
   gnavigate = useNavigate()
+
+  const location = useLocation()
+  const accessToken = useSearchParam('accessToken')
+  useEffect(() => {
+    if (accessToken) {
+      $accessToken.set(accessToken)
+    }
+  }, [])
+
+  useEffect(() => {
+    const id = $accessToken.get()
+    if (id) {
+      addParamToUrl({ accessToken: id }, true)
+    }
+  }, [location])
+
   return <Container {...props} />
 }
 

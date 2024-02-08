@@ -42,6 +42,7 @@ import { requestApi } from 'utils/axios/request'
 import { isEmpty } from 'utils/validate'
 import { $config } from 'src/data/configs/config'
 import { Team } from 'types/teams'
+import { $accessToken } from 'src/views/accesstoken/store'
 
 interface TenantTeam {
   tenantId: number
@@ -75,18 +76,18 @@ const SelectUserTeam = ({ miniMode, tenants }: Props) => {
         window.location.reload()
       } else {
         const path = window.location.pathname
+        const accessToken = $accessToken.get()
         if (path.startsWith(`/${config?.currentTeam}/`)) {
-          window.location.href = path.replace(
-            `/${config?.currentTeam}/`,
-            `/${teamId}/`,
-          )
+          window.location.href =
+            path.replace(`/${config?.currentTeam}/`, `/${teamId}/`) +
+            (accessToken ? `?accessToken=${accessToken}` : '')
         } else if (path.startsWith(`/${config?.currentTeam}`)) {
-          window.location.href = path.replace(
-            `/${config?.currentTeam}`,
-            `/${teamId}`,
-          )
+          window.location.href =
+            path.replace(`/${config?.currentTeam}`, `/${teamId}`) +
+            (accessToken ? `?accessToken=${accessToken}` : '')
         } else {
-          window.location.href = `/${teamId}`
+          window.location.href =
+            `/${teamId}` + (accessToken ? `?accessToken=${accessToken}` : '')
         }
       }
     }, 1000)
