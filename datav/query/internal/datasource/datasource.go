@@ -33,6 +33,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/xObserve/xObserve/query/internal/accesstoken"
 	"github.com/xObserve/xObserve/query/internal/acl"
 	"github.com/xObserve/xObserve/query/pkg/colorlog"
 	"github.com/xObserve/xObserve/query/pkg/common"
@@ -98,12 +99,26 @@ func CreateDatasource(c *gin.Context) {
 		return
 	}
 
-	u := c.MustGet("currentUser").(*models.User)
+	ak := c.GetString("accessToken")
 
-	err = acl.CanEditTeam(c.Request.Context(), ds.TeamId, u.Id)
-	if err != nil {
-		c.JSON(403, common.RespError(err.Error()))
-		return
+	if ak != "" {
+		canManage, err := accesstoken.CanManageTeam(ds.TeamId, ak)
+		if err != nil {
+			c.JSON(400, common.RespError(err.Error()))
+			return
+		}
+		if !canManage {
+			c.JSON(403, common.RespError(e.InvalidToken))
+			return
+		}
+	} else {
+		u := c.MustGet("currentUser").(*models.User)
+
+		err = acl.CanEditTeam(c.Request.Context(), ds.TeamId, u.Id)
+		if err != nil {
+			c.JSON(403, common.RespError(err.Error()))
+			return
+		}
 	}
 
 	tx, err := db.Conn.Begin()
@@ -140,8 +155,6 @@ func UpdateDatasource(c *gin.Context) {
 		return
 	}
 
-	u := c.MustGet("currentUser").(*models.User)
-
 	now := time.Now()
 	data, err := json.Marshal(ds.Data)
 	if err != nil {
@@ -161,10 +174,26 @@ func UpdateDatasource(c *gin.Context) {
 		return
 	}
 
-	err = acl.CanEditTeam(c.Request.Context(), ds.TeamId, u.Id)
-	if err != nil {
-		c.JSON(403, common.RespError(err.Error()))
-		return
+	ak := c.GetString("accessToken")
+
+	if ak != "" {
+		canManage, err := accesstoken.CanManageTeam(ds.TeamId, ak)
+		if err != nil {
+			c.JSON(400, common.RespError(err.Error()))
+			return
+		}
+		if !canManage {
+			c.JSON(403, common.RespError(e.InvalidToken))
+			return
+		}
+	} else {
+		u := c.MustGet("currentUser").(*models.User)
+
+		err = acl.CanEditTeam(c.Request.Context(), ds.TeamId, u.Id)
+		if err != nil {
+			c.JSON(403, common.RespError(err.Error()))
+			return
+		}
 	}
 
 	_, err = db.Conn.ExecContext(c.Request.Context(), "UPDATE datasource SET name=?,type=?,url=?,data=?,updated=? WHERE team_id=? and id=?", ds.Name, ds.Type, ds.URL, data, now, ds.TeamId, ds.Id)
@@ -250,11 +279,24 @@ func DeleteDatasource(c *gin.Context) {
 		return
 	}
 
-	u := c.MustGet("currentUser").(*models.User)
-	err = acl.CanEditTeam(c.Request.Context(), ds.TeamId, u.Id)
-	if err != nil {
-		c.JSON(403, common.RespError(err.Error()))
-		return
+	ak := c.GetString("accessToken")
+	if ak != "" {
+		canManage, err := accesstoken.CanManageTeam(ds.TeamId, ak)
+		if err != nil {
+			c.JSON(400, common.RespError(err.Error()))
+			return
+		}
+		if !canManage {
+			c.JSON(403, common.RespError(e.InvalidToken))
+			return
+		}
+	} else {
+		u := c.MustGet("currentUser").(*models.User)
+		err = acl.CanEditTeam(c.Request.Context(), ds.TeamId, u.Id)
+		if err != nil {
+			c.JSON(403, common.RespError(err.Error()))
+			return
+		}
 	}
 
 	_, err = db.Conn.ExecContext(c.Request.Context(), "DELETE FROM datasource WHERE team_id=? and id=?", teamId, id)

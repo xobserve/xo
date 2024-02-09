@@ -157,10 +157,10 @@ func (s *Server) Start() error {
 		r.GET("/admin/auditlogs", CheckLogin(), admin.QueryAuditLogs)
 
 		// datasource apis
-		r.POST("/datasource/create", MustLogin(), datasource.CreateDatasource)
-		r.POST("/datasource/update", MustLogin(), datasource.UpdateDatasource)
+		r.POST("/datasource/create", CheckLoginOrAk(), datasource.CreateDatasource)
+		r.POST("/datasource/update", CheckLoginOrAk(), datasource.UpdateDatasource)
 		r.GET("/datasource/all", CheckLogin(), otelPlugin, datasource.GetDatasources)
-		r.DELETE("/datasource/:teamId/:id", MustLogin(), datasource.DeleteDatasource)
+		r.DELETE("/datasource/:teamId/:id", CheckLoginOrAk(), datasource.DeleteDatasource)
 		r.GET("/datasource/byId/:teamId/:id", MustLogin(), datasource.GetDatasourceById)
 		r.GET("/datasource/test", proxy.TestDatasource)
 
