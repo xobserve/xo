@@ -184,6 +184,7 @@ const DashboardSave = ({ dashboard }: Props) => {
     await requestApi.post('/dashboard/save', {
       dashboard: dash,
       changes: changeMsg,
+      isCreate: false,
     })
     toast({
       title: t1.savedMsg({ name: autoSave ? t.auto : '' }),

@@ -129,7 +129,7 @@ func (s *Server) Start() error {
 
 		// dashboard apis
 		r.GET("/dashboard/byId/:teamId/:id", CheckLogin(), otelPlugin, dashboard.GetDashboard)
-		r.POST("/dashboard/save", MustLogin(), otelPlugin, dashboard.SaveDashboard)
+		r.POST("/dashboard/save", CheckLoginOrAk(), otelPlugin, dashboard.SaveDashboard)
 		r.GET("/dashboard/team/:id", CheckLogin(), dashboard.GetTeamDashboards)
 		r.GET("/dashboard/history/:teamId/:id", CheckLogin(), otelPlugin, dashboard.GetHistory)
 		r.GET("/dashboard/search/:tenantId", CheckLogin(), InjectAccessToken(), otelPlugin, dashboard.Search)
@@ -137,7 +137,7 @@ func (s *Server) Start() error {
 		r.POST("/dashboard/unstar/:teamId/:id", MustLogin(), dashboard.UnStar)
 		r.GET("/dashboard/starred", CheckLogin(), dashboard.GetAllStarred)
 		r.GET("/dashboard/starred/:teamId/:id", dashboard.GetStarred)
-		r.DELETE("/dashboard/:teamId/:id", MustLogin(), dashboard.Delete)
+		r.DELETE("/dashboard/:teamId/:id", CheckLoginOrAk(), dashboard.Delete)
 		r.POST("/dashboard/weight", MustLogin(), dashboard.UpdateWeight)
 
 		// annotation

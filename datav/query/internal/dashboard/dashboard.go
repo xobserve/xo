@@ -50,7 +50,6 @@ import (
 var logger = colorlog.RootLogger.New("logger", "dashboard")
 
 func SaveDashboard(c *gin.Context) {
-	u := c.MustGet("currentUser").(*models.User)
 	req := &models.DashboardHistory{}
 	err := c.Bind(&req)
 	if err != nil {
@@ -66,24 +65,40 @@ func SaveDashboard(c *gin.Context) {
 	}
 
 	now := time.Now()
-	isUpdate := dash.Id != ""
-	if !isUpdate { // create dashboard
-		dash.Id = "d-" + utils.GenerateShortUID()
-		dash.CreatedBy = u.Id
+	if req.IsCreate { // create dashboard
+		if dash.Id == "" {
+			dash.Id = "d-" + utils.GenerateShortUID()
+		}
+
 		dash.Created = &now
 	} else {
 		err := models.IsDashboardExist(c.Request.Context(), dash.OwnedBy, dash.Id)
 		if err != nil {
 			logger.Error("query dashboarde owner error", "error", err)
-			c.JSON(500, common.RespInternalError())
+			c.JSON(400, common.RespError("dashboard id not exist"))
 			return
 		}
 	}
 
-	err = acl.CanEditDashboard(c.Request.Context(), dash, u)
-	if err != nil {
-		c.JSON(400, common.RespError(err.Error()))
-		return
+	ak := c.GetString("accessToken")
+	if ak != "" {
+		canManage, err := accesstoken.CanManageTeam(dash.OwnedBy, ak)
+		if err != nil {
+			c.JSON(400, common.RespError(err.Error()))
+			return
+		}
+		if !canManage {
+			c.JSON(403, common.RespError(e.InvalidToken))
+			return
+		}
+	} else {
+		u := c.MustGet("currentUser").(*models.User)
+		dash.CreatedBy = u.Id
+		err = acl.CanEditDashboard(c.Request.Context(), dash, u)
+		if err != nil {
+			c.JSON(400, common.RespError(err.Error()))
+			return
+		}
 	}
 
 	dash.Updated = &now
@@ -109,7 +124,7 @@ func SaveDashboard(c *gin.Context) {
 		return
 	}
 
-	if !isUpdate {
+	if req.IsCreate {
 		_, err := db.Conn.ExecContext(c.Request.Context(), `INSERT INTO dashboard (id,title, team_id,visible_to, created_by,tags, data,links, created,updated) VALUES (?,?,?,?,?,?,?,?,?,?)`,
 			dash.Id, dash.Title, dash.OwnedBy, dash.VisibleTo, dash.CreatedBy, tags, jsonData, links, dash.Created, dash.Updated)
 		if err != nil {
@@ -447,19 +462,33 @@ func Delete(c *gin.Context) {
 	teamId, _ := strconv.ParseInt(c.Param("teamId"), 10, 64)
 	id := c.Param("id")
 
-	u := c.MustGet("currentUser").(*models.User)
-
 	dash, err := models.QueryDashboard(c.Request.Context(), teamId, id)
 	if err != nil {
 		logger.Warn("query dash belongs to error", "error", err)
-		c.JSON(500, common.RespError(e.Internal))
+		c.JSON(400, common.RespError(e.Internal))
 		return
 	}
 
-	err = acl.CanEditDashboard(c.Request.Context(), dash, u)
-	if err != nil {
-		c.JSON(400, common.RespError(err.Error()))
-		return
+	var uid int64 = 0
+	ak := c.GetString("accessToken")
+	if ak != "" {
+		canManage, err := accesstoken.CanManageTeam(dash.OwnedBy, ak)
+		if err != nil {
+			c.JSON(400, common.RespError(err.Error()))
+			return
+		}
+		if !canManage {
+			c.JSON(403, common.RespError(e.InvalidToken))
+			return
+		}
+	} else {
+		u := c.MustGet("currentUser").(*models.User)
+		uid = u.Id
+		err = acl.CanEditDashboard(c.Request.Context(), dash, u)
+		if err != nil {
+			c.JSON(400, common.RespError(err.Error()))
+			return
+		}
 	}
 
 	tx, err := db.Conn.Begin()
@@ -485,7 +514,8 @@ func Delete(c *gin.Context) {
 	}
 
 	tenantId, _ := models.QueryTenantIdByTeamId(c.Request.Context(), teamId)
-	admin.WriteAuditLog(c.Request.Context(), tenantId, teamId, u.Id, admin.AuditDeleteDashboard, id, dash)
+
+	admin.WriteAuditLog(c.Request.Context(), tenantId, teamId, uid, admin.AuditDeleteDashboard, id, dash)
 
 	c.JSON(200, common.RespSuccess(nil))
 }

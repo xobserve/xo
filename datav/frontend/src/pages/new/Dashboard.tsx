@@ -40,6 +40,7 @@ const NewDashboardPage = () => {
     const res = await requestApi.post('/dashboard/save', {
       dashboard: { ...dashboard, ownedBy: Number(teamId) },
       changes: 'Newly created',
+      isCreate: true,
     })
     toast({
       title: t1.dashToast,
