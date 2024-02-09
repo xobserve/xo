@@ -124,8 +124,8 @@ func (s *Server) Start() error {
 		// variable apis
 		r.POST("/variable/new", CheckLoginOrAk(), variables.AddNewVariable)
 		r.GET("/variable/team", MustLogin(), otelPlugin, variables.QueryTeamVariables)
-		r.POST("/variable/update", MustLogin(), variables.UpdateVariable)
-		r.DELETE("/variable/:teamId/:id", MustLogin(), variables.DeleteVariable)
+		r.POST("/variable/update", CheckLoginOrAk(), variables.UpdateVariable)
+		r.DELETE("/variable/:teamId/:id", CheckLoginOrAk(), variables.DeleteVariable)
 
 		// dashboard apis
 		r.GET("/dashboard/byId/:teamId/:id", CheckLogin(), otelPlugin, dashboard.GetDashboard)

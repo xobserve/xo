@@ -77,7 +77,6 @@ func AddNewVariable(c *gin.Context) {
 			c.JSON(403, common.RespError(err.Error()))
 			return
 		}
-
 	}
 
 	tx, err := db.Conn.Begin()
@@ -152,7 +151,6 @@ func UpdateVariable(c *gin.Context) {
 		return
 	}
 
-	u := c.MustGet("currentUser").(*models.User)
 	err = isVariableExist(c.Request.Context(), v.TeamId, v.Id)
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -164,10 +162,25 @@ func UpdateVariable(c *gin.Context) {
 		return
 	}
 
-	err = acl.CanEditTeam(c.Request.Context(), v.TeamId, u.Id)
-	if err != nil {
-		c.JSON(403, common.RespError(err.Error()))
-		return
+	ak := c.GetString("accessToken")
+	if ak != "" {
+		canManage, err := accesstoken.CanManageTeam(v.TeamId, ak)
+		if err != nil {
+			c.JSON(400, common.RespError(err.Error()))
+			return
+		}
+		if !canManage {
+			c.JSON(403, common.RespError(e.InvalidToken))
+			return
+		}
+	} else {
+		u := c.MustGet("currentUser").(*models.User)
+
+		err = acl.CanEditTeam(c.Request.Context(), v.TeamId, u.Id)
+		if err != nil {
+			c.JSON(403, common.RespError(err.Error()))
+			return
+		}
 	}
 
 	now := time.Now()
@@ -193,14 +206,27 @@ func DeleteVariable(c *gin.Context) {
 		return
 	}
 
-	u := c.MustGet("currentUser").(*models.User)
-	err := acl.CanEditTeam(c.Request.Context(), teamId, u.Id)
-	if err != nil {
-		c.JSON(403, common.RespError(err.Error()))
-		return
+	ak := c.GetString("accessToken")
+	if ak != "" {
+		canManage, err := accesstoken.CanManageTeam(teamId, ak)
+		if err != nil {
+			c.JSON(400, common.RespError(err.Error()))
+			return
+		}
+		if !canManage {
+			c.JSON(403, common.RespError(e.InvalidToken))
+			return
+		}
+	} else {
+		u := c.MustGet("currentUser").(*models.User)
+		err := acl.CanEditTeam(c.Request.Context(), teamId, u.Id)
+		if err != nil {
+			c.JSON(403, common.RespError(err.Error()))
+			return
+		}
 	}
 
-	_, err = db.Conn.ExecContext(c.Request.Context(), "DELETE FROM variable WHERE team_id=? and id=?", teamId, id)
+	_, err := db.Conn.ExecContext(c.Request.Context(), "DELETE FROM variable WHERE team_id=? and id=?", teamId, id)
 	if err != nil {
 		logger.Warn("delete variable error", "error", err)
 		c.JSON(500, common.RespError(e.Internal))
