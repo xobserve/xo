@@ -31,6 +31,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/xObserve/xObserve/query/internal/accesstoken"
 	"github.com/xObserve/xObserve/query/internal/acl"
 	"github.com/xObserve/xObserve/query/pkg/colorlog"
 	"github.com/xObserve/xObserve/query/pkg/common"
@@ -41,12 +42,6 @@ import (
 
 var logger = colorlog.RootLogger.New("logger", "variables")
 
-// name VARCHAR(60) PRIMARY KEY NOT NULL,
-// type VARCHAR(10) NOT NULL,
-// value TEXT,
-// external_url VARCHAR(255) DEFAULT ”,
-// created DATETIME NOT NULL,
-// updated DATETIME NOT NULL
 func AddNewVariable(c *gin.Context) {
 	v := &models.Variable{}
 	err := c.Bind(&v)
@@ -62,12 +57,27 @@ func AddNewVariable(c *gin.Context) {
 		return
 	}
 
-	u := c.MustGet("currentUser").(*models.User)
-	// only admin or team admin can do this
-	err = acl.CanEditTeam(c.Request.Context(), v.TeamId, u.Id)
-	if err != nil {
-		c.JSON(403, common.RespError(err.Error()))
-		return
+	ak := c.GetString("accessToken")
+
+	if ak != "" {
+		canManage, err := accesstoken.CanManageTeam(v.TeamId, ak)
+		if err != nil {
+			c.JSON(400, common.RespError(err.Error()))
+			return
+		}
+		if !canManage {
+			c.JSON(403, common.RespError(e.InvalidToken))
+			return
+		}
+	} else {
+		u := c.MustGet("currentUser").(*models.User)
+		// only admin or team admin can do this
+		err = acl.CanEditTeam(c.Request.Context(), v.TeamId, u.Id)
+		if err != nil {
+			c.JSON(403, common.RespError(err.Error()))
+			return
+		}
+
 	}
 
 	tx, err := db.Conn.Begin()

@@ -50,6 +50,8 @@ const (
 	ParamInvalid          = "request param is not valid"
 	NotFound              = "target not exist目标不存在"
 	NoPermission          = "no permission"
+	InvalidToken          = "invalid token"
+	InvalidTokenMode      = "invalid token mode"
 	BadRequest            = "bad request"
 	AlreadyExist          = "target already exist"
 	UnsignUserError       = "unsignin user can't visit root path"

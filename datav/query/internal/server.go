@@ -74,7 +74,7 @@ func New() *Server {
 
 var logger = colorlog.RootLogger.New()
 
-// Start ...1=
+// Start ...
 func (s *Server) Start() error {
 	ot.InitOpentelemetry()
 
@@ -122,7 +122,7 @@ func (s *Server) Start() error {
 		r.GET("/user/detail", MustLogin(), user.GetUserDetail)
 
 		// variable apis
-		r.POST("/variable/new", MustLogin(), variables.AddNewVariable)
+		r.POST("/variable/new", CheckLoginOrAk(), variables.AddNewVariable)
 		r.GET("/variable/team", MustLogin(), otelPlugin, variables.QueryTeamVariables)
 		r.POST("/variable/update", MustLogin(), variables.UpdateVariable)
 		r.DELETE("/variable/:teamId/:id", MustLogin(), variables.DeleteVariable)
@@ -358,8 +358,30 @@ func MustLogin() gin.HandlerFunc {
 			return
 		}
 		ak := c.Request.Header.Get("X-AK")
-		c.Set("X-AK", ak)
+		c.Set("accessToken", ak)
 		c.Request.Header.Del("X-AK")
+		c.Next()
+	}
+}
+
+// APIS cannot be accessed by anonymous users, give user a not-login tips
+func CheckLoginOrAk() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		ak := c.Request.Header.Get("X-AK")
+		c.Set("accessToken", ak)
+		c.Request.Header.Del("X-AK")
+
+		if ak == "" {
+			// no ak passed, check login
+			u := user.CurrentUser(c)
+			c.Set("currentUser", u)
+			if u == nil {
+				c.JSON(http.StatusForbidden, common.RespError(e.NoPermission))
+				c.Abort()
+				return
+			}
+		}
+
 		c.Next()
 	}
 }
