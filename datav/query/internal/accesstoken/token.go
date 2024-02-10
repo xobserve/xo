@@ -34,7 +34,7 @@ func CreateToken(c *gin.Context) {
 		return
 	}
 
-	tokenStr, err := models.GenerateAccessToken(config.Data.AccessToken.Length)
+	tokenStr, err := models.GenerateAccessToken(config.Data.AccessToken.Length, token.Scope, token.Mode)
 	if err != nil {
 		logger.Warn("generate token error", "error", err)
 		c.JSON(500, common.RespInternalError())

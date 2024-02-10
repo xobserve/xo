@@ -35,6 +35,7 @@ import {
   Box,
   useToast,
   Text,
+  HStack,
 } from '@chakra-ui/react'
 import { Form } from 'src/components/form/Form'
 import FormItem from 'src/components/form/Item'
@@ -160,10 +161,12 @@ const TeamsPage = () => {
                     <Td>{t[team.role]}</Td>
                     <Td>{team.memberCount}</Td>
                     <Td>
-                      {team.createdBy}{' '}
-                      {session?.user?.id == team.createdById && (
-                        <Tag size='sm'>You</Tag>
-                      )}
+                      <HStack spacing={1}>
+                        <Text>{team.createdBy}</Text>
+                        {session?.user?.id == team.createdById && (
+                          <Tag size='sm'>You</Tag>
+                        )}
+                      </HStack>
                     </Td>
                     <Th>
                       <Text

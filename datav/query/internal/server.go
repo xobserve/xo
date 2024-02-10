@@ -166,19 +166,19 @@ func (s *Server) Start() error {
 
 		// tenant apis
 		r.GET("/tenant/list/all", MustLogin(), tenant.QueryTenants)
-		r.POST("/tenant/create", MustLogin(), tenant.CreateTenant)
+		r.POST("/tenant/create", CheckLoginOrAk(), tenant.CreateTenant)
 		r.GET(("/tenant/users/:tenantId"), MustLogin(), tenant.QueryTenantUsers)
-		r.POST("/tenant/user", MustLogin(), tenant.SubmitTenantUser)
-		r.DELETE("/tenant/user/:userId/:tenantId", MustLogin(), tenant.DeleteTenantUser)
+		r.POST("/tenant/user", CheckLoginOrAk(), tenant.SubmitTenantUser)
+		r.DELETE("/tenant/user/:userId/:tenantId", CheckLoginOrAk(), tenant.DeleteTenantUser)
 		r.GET("/tenant/user/is/in", InjectAccessToken(), MustLogin(), tenant.GetTenantsUserIn)
 		r.POST("/tenant/switch/:id", MustLogin(), tenant.SwitchTenant)
 		r.GET("/tenant/teams/:tenantId", MustLogin(), otelPlugin, teams.GetTenantTeams)
 		r.GET("/tenant/byId/:id", MustLogin(), tenant.GetTenant)
-		r.POST("/tenant/update", MustLogin(), tenant.UpdateTenant)
+		r.POST("/tenant/update", CheckLoginOrAk(), tenant.UpdateTenant)
 		r.POST("/tenant/transfer/:tenantId/:username", MustLogin(), tenant.TransferTenant)
 		r.POST("/tenant/leave/:id", MustLogin(), tenant.LeaveTenant)
-		r.DELETE("/tenant/:id", MustLogin(), tenant.MarkDeleted)
-		r.POST("/tenant/restore/:id", MustLogin(), tenant.RestoreTenant)
+		r.DELETE("/tenant/:id", CheckLoginOrAk(), tenant.MarkDeleted)
+		r.POST("/tenant/restore/:id", CheckLoginOrAk(), tenant.RestoreTenant)
 
 		// teams apis
 		r.GET("/team/byId/:id", CheckLogin(), teams.GetTeam)

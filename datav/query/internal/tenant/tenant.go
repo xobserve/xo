@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/xObserve/xObserve/query/internal/accesstoken"
 	"github.com/xObserve/xObserve/query/internal/acl"
 	"github.com/xObserve/xObserve/query/pkg/colorlog"
 	"github.com/xObserve/xObserve/query/pkg/common"
@@ -58,19 +59,37 @@ func QueryTenants(c *gin.Context) {
 }
 
 func CreateTenant(c *gin.Context) {
-	u := c.MustGet("currentUser").(*models.User)
-
-	if err := acl.CanEditWebsite(u); err != nil {
-		c.JSON(http.StatusForbidden, common.RespError(err.Error()))
-		return
-	}
-
 	req := &models.Tenant{}
 	c.Bind(&req)
 
 	if req.Name == "" {
 		c.JSON(400, common.RespError(e.ParamInvalid))
 		return
+	}
+
+	ak := c.GetString("accessToken")
+
+	if ak != "" {
+		canManage, err := accesstoken.CanManageWebsite(ak)
+		if err != nil {
+			c.JSON(400, common.RespError(err.Error()))
+			return
+		}
+		if !canManage {
+			c.JSON(403, common.RespError(e.InvalidToken))
+			return
+		}
+		if req.OwnerId == 0 {
+			req.OwnerId = models.SuperAdminId
+		}
+	} else {
+		u := c.MustGet("currentUser").(*models.User)
+
+		if err := acl.CanEditWebsite(u); err != nil {
+			c.JSON(http.StatusForbidden, common.RespError(err.Error()))
+			return
+		}
+		req.OwnerId = u.Id
 	}
 
 	now := time.Now()
@@ -97,7 +116,7 @@ func CreateTenant(c *gin.Context) {
 	id, _ := res.LastInsertId()
 
 	_, err = tx.ExecContext(c.Request.Context(), ("INSERT INTO tenant_user (tenant_id,user_id,role,created,updated) VALUES (?,?,?,?,?)"),
-		id, u.Id, models.ROLE_SUPER_ADMIN, now, now)
+		id, req.OwnerId, models.ROLE_SUPER_ADMIN, now, now)
 	if err != nil {
 		logger.Warn("Error create tenant user", "error", err)
 		c.JSON(500, common.RespInternalError())
@@ -105,7 +124,7 @@ func CreateTenant(c *gin.Context) {
 	}
 
 	// create default team
-	_, err = models.CreateTeam(c.Request.Context(), tx, id, u.Id, models.DefaultTeamName, "default team")
+	_, err = models.CreateTeam(c.Request.Context(), tx, id, req.OwnerId, models.DefaultTeamName, "default team")
 	if err != nil {
 		logger.Warn("Error create default team", "error", err)
 		c.JSON(500, common.RespInternalError())
@@ -162,8 +181,6 @@ func QueryTenantUsers(c *gin.Context) {
 }
 
 func SubmitTenantUser(c *gin.Context) {
-	u := c.MustGet("currentUser").(*models.User)
-
 	req := &models.User{}
 	c.Bind(&req)
 
@@ -183,37 +200,51 @@ func SubmitTenantUser(c *gin.Context) {
 		return
 	}
 
-	if targetUser.Id == u.Id {
-		c.JSON(400, common.RespError("you cant submit yourself"))
-		return
-	}
-
 	if req.Role == models.ROLE_SUPER_ADMIN {
 		c.JSON(400, common.RespError("can not submit super admin"))
 		return
 	}
 
-	tenantRole, err := models.QueryTenantRoleByUserId(c.Request.Context(), req.CurrentTenant, u.Id)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			c.JSON(400, common.RespError("user not in tenant"))
+	ak := c.GetString("accessToken")
+
+	if ak != "" {
+		canManage, err := accesstoken.CanManageTenant(req.CurrentTenant, ak)
+		if err != nil {
+			c.JSON(400, common.RespError(err.Error()))
 			return
 		}
-		logger.Warn("query target user error when add user to tenant", "error", err)
-		c.JSON(500, common.RespInternalError())
-		return
-	}
-
-	if req.Role.IsAdmin() {
-		// only super admin can delete admin in tenant
-		if !tenantRole.IsSuperAdmin() {
-			c.JSON(403, common.RespError("Only super admin can submit admin member"))
+		if !canManage {
+			c.JSON(403, common.RespError(e.InvalidToken))
 			return
 		}
 	} else {
-		if !tenantRole.IsAdmin() {
-			c.JSON(403, common.RespError(e.NoPermission))
+		u := c.MustGet("currentUser").(*models.User)
+		if targetUser.Id == u.Id {
+			c.JSON(400, common.RespError("you cant submit yourself"))
 			return
+		}
+
+		tenantRole, err := models.QueryTenantRoleByUserId(c.Request.Context(), req.CurrentTenant, u.Id)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				c.JSON(400, common.RespError("user not in tenant"))
+				return
+			}
+			logger.Warn("query target user error when add user to tenant", "error", err)
+			c.JSON(500, common.RespInternalError())
+			return
+		}
+
+		if req.Role.IsAdmin() {
+			if !tenantRole.IsSuperAdmin() {
+				c.JSON(403, common.RespError("Only super admin can submit admin member"))
+				return
+			}
+		} else {
+			if !tenantRole.IsAdmin() {
+				c.JSON(403, common.RespError(e.NoPermission))
+				return
+			}
 		}
 	}
 
@@ -270,8 +301,6 @@ func DeleteTenantUser(c *gin.Context) {
 		return
 	}
 
-	u := c.MustGet("currentUser").(*models.User)
-
 	tenantUser, err := models.QueryTenantUser(c.Request.Context(), tenantId, targetUserId)
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -288,27 +317,42 @@ func DeleteTenantUser(c *gin.Context) {
 		return
 	}
 
-	tenantRole, err := models.QueryTenantRoleByUserId(c.Request.Context(), tenantId, u.Id)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			c.JSON(400, common.RespError("you are not in this tenant"))
+	ak := c.GetString("accessToken")
+
+	if ak != "" {
+		canManage, err := accesstoken.CanManageTenant(tenantId, ak)
+		if err != nil {
+			c.JSON(400, common.RespError(err.Error()))
 			return
 		}
-		logger.Warn("query tenant role by user id error", "error", err)
-		c.JSON(500, common.RespInternalError())
-		return
-	}
-
-	if tenantUser.Role.IsAdmin() {
-		// only super admin can delete admin in tenant
-		if !tenantRole.IsSuperAdmin() {
-			c.JSON(403, common.RespError(e.NoPermission))
+		if !canManage {
+			c.JSON(403, common.RespError(e.InvalidToken))
 			return
 		}
 	} else {
-		if !tenantRole.IsAdmin() {
-			c.JSON(403, common.RespError(e.NoPermission))
+		u := c.MustGet("currentUser").(*models.User)
+		tenantRole, err := models.QueryTenantRoleByUserId(c.Request.Context(), tenantId, u.Id)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				c.JSON(400, common.RespError("you are not in this tenant"))
+				return
+			}
+			logger.Warn("query tenant role by user id error", "error", err)
+			c.JSON(500, common.RespInternalError())
 			return
+		}
+
+		if tenantUser.Role.IsAdmin() {
+			// only super admin can delete admin in tenant
+			if !tenantRole.IsSuperAdmin() {
+				c.JSON(403, common.RespError(e.NoPermission))
+				return
+			}
+		} else {
+			if !tenantRole.IsAdmin() {
+				c.JSON(403, common.RespError(e.NoPermission))
+				return
+			}
 		}
 	}
 
@@ -491,14 +535,28 @@ func UpdateTenant(c *gin.Context) {
 		return
 	}
 
-	u := c.MustGet("currentUser").(*models.User)
-	if err := acl.CanEditTenant(c.Request.Context(), req.Id, u.Id); err != nil {
-		c.JSON(http.StatusForbidden, common.RespError(err.Error()))
-		return
+	ak := c.GetString("accessToken")
+
+	if ak != "" {
+		canManage, err := accesstoken.CanManageTenant(req.Id, ak)
+		if err != nil {
+			c.JSON(400, common.RespError(err.Error()))
+			return
+		}
+		if !canManage {
+			c.JSON(403, common.RespError(e.InvalidToken))
+			return
+		}
+	} else {
+		u := c.MustGet("currentUser").(*models.User)
+		if err := acl.CanEditTenant(c.Request.Context(), req.Id, u.Id); err != nil {
+			c.JSON(http.StatusForbidden, common.RespError(err.Error()))
+			return
+		}
 	}
 
 	now := time.Now()
-	_, err := db.Conn.ExecContext(c.Request.Context(), "UPDATE tenant SET name=?,is_public=?, updated=? WHERE id=?", req.Name, req.IsPublic, now, req.Id)
+	_, err := db.Conn.ExecContext(c.Request.Context(), "UPDATE tenant SET name=?, updated=? WHERE id=?", req.Name, now, req.Id)
 	if err != nil {
 		if e.IsErrUniqueConstraint(err) {
 			c.JSON(400, common.RespError(fmt.Sprintf("tenant `%s` already exist", req.Name)))
@@ -676,22 +734,34 @@ func MarkDeleted(c *gin.Context) {
 		return
 	}
 
-	u := c.MustGet("currentUser").(*models.User)
+	ak := c.GetString("accessToken")
+	if ak != "" {
+		canManage, err := accesstoken.CanManageWebsite(ak)
+		if err != nil {
+			c.JSON(400, common.RespError(err.Error()))
+			return
+		}
+		if !canManage {
+			c.JSON(403, common.RespError(e.InvalidToken))
+			return
+		}
+	} else {
+		u := c.MustGet("currentUser").(*models.User)
+		operator, err := models.QueryTenantUser(c.Request.Context(), tenantId, u.Id)
+		if err != nil {
+			logger.Warn("update tenant error", "error", err)
+			c.JSON(500, common.RespInternalError())
+			return
+		}
 
-	operator, err := models.QueryTenantUser(c.Request.Context(), tenantId, u.Id)
-	if err != nil {
-		logger.Warn("update tenant error", "error", err)
-		c.JSON(500, common.RespInternalError())
-		return
+		// only superadmin can delete tenant
+		if !operator.Role.IsSuperAdmin() {
+			c.JSON(403, common.RespError("Only tenant super admin can do this"))
+			return
+		}
 	}
 
-	// only superadmin can delete tenant
-	if !operator.Role.IsSuperAdmin() {
-		c.JSON(403, common.RespError("Only tenant super admin can do this"))
-		return
-	}
-
-	_, err = db.Conn.ExecContext(c.Request.Context(), "UPDATE tenant SET status=?,statusUpdated=? WHERE id=?", common.StatusDeleted, time.Now(), tenantId)
+	_, err := db.Conn.ExecContext(c.Request.Context(), "UPDATE tenant SET status=?,statusUpdated=? WHERE id=?", common.StatusDeleted, time.Now(), tenantId)
 	if err != nil {
 		logger.Warn("update tenant error", "error", err)
 		c.JSON(500, common.RespInternalError())
@@ -706,11 +776,24 @@ func RestoreTenant(c *gin.Context) {
 		return
 	}
 
-	u := c.MustGet("currentUser").(*models.User)
+	ak := c.GetString("accessToken")
+	if ak != "" {
+		canManage, err := accesstoken.CanManageWebsite(ak)
+		if err != nil {
+			c.JSON(400, common.RespError(err.Error()))
+			return
+		}
+		if !canManage {
+			c.JSON(403, common.RespError(e.InvalidToken))
+			return
+		}
+	} else {
+		u := c.MustGet("currentUser").(*models.User)
 
-	if !u.Role.IsSuperAdmin() {
-		c.JSON(403, common.RespError("Only tenant super admin can do this"))
-		return
+		if !u.Role.IsSuperAdmin() {
+			c.JSON(403, common.RespError("Only tenant super admin can do this"))
+			return
+		}
 	}
 
 	_, err := db.Conn.ExecContext(c.Request.Context(), "UPDATE tenant SET status=?,statusUpdated=? WHERE id=?", common.StatusOK, time.Now(), tenantId)

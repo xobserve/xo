@@ -19,7 +19,6 @@ export interface Tenant {
   name: string
   ownerId: number
   owner: string
-  isPublic: boolean
   numTeams: number
   teams: Team[]
   status: AvailableStatus

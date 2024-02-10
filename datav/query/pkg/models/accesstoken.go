@@ -3,6 +3,7 @@ package models
 import (
 	"crypto/rand"
 	"encoding/hex"
+	"fmt"
 	"strconv"
 	"time"
 
@@ -49,11 +50,11 @@ func GetAccessToken(id int64, tk string) (*AccessToken, error) {
 	return token, err
 }
 
-func GenerateAccessToken(length int) (string, error) {
-	token := make([]byte, (length-10)/2)
+func GenerateAccessToken(length int, scope int, mode int) (string, error) {
+	token := make([]byte, ((length-10)/2 - 1))
 	_, err := rand.Read(token)
 	if err != nil {
 		return "", err
 	}
-	return strconv.FormatInt(time.Now().Unix(), 10) + hex.EncodeToString(token), nil
+	return fmt.Sprintf("%s%s%d%d", strconv.FormatInt(time.Now().Unix(), 10), hex.EncodeToString(token), scope, mode), nil
 }

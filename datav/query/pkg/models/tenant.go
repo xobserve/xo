@@ -18,7 +18,6 @@ type Tenant struct {
 	Name        string    `json:"name"`
 	OwnerId     int64     `json:"ownerId"`
 	Owner       string    `json:"owner"`
-	IsPublic    bool      `json:"isPublic"`
 	NumTeams    int       `json:"numTeams"`
 	Teams       []*Team   `json:"teams,omitempty"`
 	Created     time.Time `json:"created"`
@@ -74,7 +73,8 @@ func QueryTenant(ctx context.Context, tenantId int64) (*Tenant, error) {
 	tenant := &Tenant{
 		Id: tenantId,
 	}
-	err := db.Conn.QueryRowContext(ctx, `SELECT  name,is_public,created FROM tenant WHERE id=? and status!=?`, tenantId, common.StatusDeleted).Scan(&tenant.Name, &tenant.IsPublic, &tenant.Created)
+
+	err := db.Conn.QueryRowContext(ctx, `SELECT  name,created FROM tenant WHERE id=? and status!=?`, tenantId, common.StatusDeleted).Scan(&tenant.Name, &tenant.Created)
 	if err != nil {
 		return nil, err
 	}
