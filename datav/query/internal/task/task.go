@@ -18,7 +18,7 @@ func Init() {
 	for {
 		now := time.Now()
 		hour := now.Hour()
-		if hour == 13 {
+		if hour == 3 {
 			// delete annotations
 			expires := now.Add(-1 * time.Duration(config.Data.Task.CleanAnnotations) * time.Hour * 24)
 

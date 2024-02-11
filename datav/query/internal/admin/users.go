@@ -31,6 +31,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/xObserve/xObserve/query/internal/accesstoken"
 	"github.com/xObserve/xObserve/query/internal/tenant"
 	"github.com/xObserve/xObserve/query/internal/user"
 	"github.com/xObserve/xObserve/query/pkg/common"
@@ -133,18 +134,31 @@ func AddNewUser(c *gin.Context) {
 		return
 	}
 
-	u := c.MustGet("currentUser").(*models.User)
-
-	if !u.Role.IsAdmin() {
-		c.JSON(403, common.RespError(e.NoPermission))
-		return
-	}
-
-	// only superadmin can add Admin Role
-	if req.Role.IsAdmin() {
-		if !models.IsSuperAdmin(u.Id) {
-			c.JSON(403, common.RespError("Only super admin can add admin role"))
+	ak := c.GetString("accessToken")
+	if ak != "" {
+		canManage, err := accesstoken.CanManageWebsite(ak)
+		if err != nil {
+			c.JSON(400, common.RespError(err.Error()))
 			return
+		}
+		if !canManage {
+			c.JSON(403, common.RespError(e.InvalidToken))
+			return
+		}
+	} else {
+		u := c.MustGet("currentUser").(*models.User)
+
+		if !u.Role.IsAdmin() {
+			c.JSON(403, common.RespError(e.NoPermission))
+			return
+		}
+
+		// only superadmin can add Admin Role
+		if req.Role.IsAdmin() {
+			if !models.IsSuperAdmin(u.Id) {
+				c.JSON(403, common.RespError("Only super admin can add admin role"))
+				return
+			}
 		}
 	}
 
@@ -168,6 +182,11 @@ func AddNewUser(c *gin.Context) {
 	res, err := tx.ExecContext(c.Request.Context(), "INSERT INTO user (username,password,salt,email,role,current_tenant,created,updated) VALUES (?,?,?,?,?,?,?,?)",
 		req.Username, encodedPW, salt, req.Email, req.Role, tenantId, now, now)
 	if err != nil {
+		if e.IsErrUniqueConstraint(err) {
+			c.JSON(400, common.RespError("user already exists"))
+			return
+		}
+
 		logger.Warn("new user error", "error", err)
 		c.JSON(500, common.RespInternalError())
 		return
@@ -251,17 +270,6 @@ func MarkUserAsDeleted(c *gin.Context) {
 		return
 	}
 
-	u := c.MustGet("currentUser").(*models.User)
-	if userId == u.Id {
-		c.JSON(400, common.RespError("you cant delete yourself"))
-		return
-	}
-
-	if !models.IsSuperAdmin(u.Id) {
-		c.JSON(403, common.RespError("only superadmin can delete user"))
-		return
-	}
-
 	targetUser, err := models.QueryUserById(c.Request.Context(), userId)
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -273,7 +281,38 @@ func MarkUserAsDeleted(c *gin.Context) {
 		return
 	}
 
-	// user must not be in any tenant
+	if targetUser.Role.IsSuperAdmin() || targetUser.Id == models.SuperAdminId {
+		c.JSON(400, common.RespError("you cant delete super admin"))
+		return
+	}
+
+	ak := c.GetString("accessToken")
+	var uid int64
+	if ak != "" {
+		canManage, err := accesstoken.CanManageWebsite(ak)
+		if err != nil {
+			c.JSON(400, common.RespError(err.Error()))
+			return
+		}
+		if !canManage {
+			c.JSON(403, common.RespError(e.InvalidToken))
+			return
+		}
+	} else {
+		u := c.MustGet("currentUser").(*models.User)
+		if userId == u.Id {
+			c.JSON(400, common.RespError("you cant delete yourself"))
+			return
+		}
+
+		if !models.IsSuperAdmin(u.Id) {
+			c.JSON(403, common.RespError("only superadmin can delete user"))
+			return
+		}
+		uid = u.Id
+	}
+
+	// user must not be in any tenant as super admin role
 	tenants, err := models.QueryTenantsUserIn(c.Request.Context(), userId)
 	if err != nil {
 		logger.Warn("query user tenants error", "error", err)
@@ -301,7 +340,7 @@ func MarkUserAsDeleted(c *gin.Context) {
 		return
 	}
 
-	WriteAuditLog(c.Request.Context(), 0, 0, u.Id, AuditDeleteUser, strconv.FormatInt(userId, 10), targetUser)
+	WriteAuditLog(c.Request.Context(), 0, 0, uid, AuditDeleteUser, strconv.FormatInt(userId, 10), targetUser)
 	c.JSON(200, nil)
 }
 
@@ -309,17 +348,6 @@ func RestoreUser(c *gin.Context) {
 	userId, _ := strconv.ParseInt(c.Param("id"), 10, 64)
 	if userId == 0 {
 		c.JSON(400, common.RespError(e.ParamInvalid))
-		return
-	}
-
-	u := c.MustGet("currentUser").(*models.User)
-	if userId == u.Id {
-		c.JSON(400, common.RespError("you cant delete yourself"))
-		return
-	}
-
-	if !models.IsSuperAdmin(u.Id) {
-		c.JSON(403, common.RespError("only superadmin can delete user"))
 		return
 	}
 
@@ -334,6 +362,32 @@ func RestoreUser(c *gin.Context) {
 		return
 	}
 
+	var uid int64
+	ak := c.GetString("accessToken")
+	if ak != "" {
+		canManage, err := accesstoken.CanManageWebsite(ak)
+		if err != nil {
+			c.JSON(400, common.RespError(err.Error()))
+			return
+		}
+		if !canManage {
+			c.JSON(403, common.RespError(e.InvalidToken))
+			return
+		}
+	} else {
+		u := c.MustGet("currentUser").(*models.User)
+		if userId == u.Id {
+			c.JSON(400, common.RespError("you cant delete yourself"))
+			return
+		}
+
+		if !models.IsSuperAdmin(u.Id) {
+			c.JSON(403, common.RespError("only superadmin can delete user"))
+			return
+		}
+		uid = u.Id
+	}
+
 	_, err = db.Conn.Exec("UPDATE user SET status=?,statusUpdated=? WHERE id=?", common.StatusOK, time.Now(), userId)
 	if err != nil {
 		logger.Warn("delete user error", "error", err)
@@ -341,5 +395,5 @@ func RestoreUser(c *gin.Context) {
 		return
 	}
 
-	WriteAuditLog(c.Request.Context(), 0, 0, u.Id, AuditRestoreUser, strconv.FormatInt(userId, 10), targetUser)
+	WriteAuditLog(c.Request.Context(), 0, 0, uid, AuditRestoreUser, strconv.FormatInt(userId, 10), targetUser)
 }
