@@ -31,6 +31,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/xObserve/xObserve/query/internal/accesstoken"
 	"github.com/xObserve/xObserve/query/internal/acl"
 	"github.com/xObserve/xObserve/query/pkg/common"
 	"github.com/xObserve/xObserve/query/pkg/db"
@@ -67,16 +68,29 @@ func UpdateSideMenu(c *gin.Context) {
 	menu := &models.SideMenu{}
 	c.Bind(&menu)
 
-	u := c.MustGet("currentUser").(*models.User)
-	// only team admin can do this
-	err := acl.CanEditTeam(c.Request.Context(), menu.TeamId, u.Id)
-	if err != nil {
-		c.JSON(403, common.RespError(err.Error()))
-		return
+	ak := c.GetString("accessToken")
+	if ak != "" {
+		canManage, err := accesstoken.CanManageTeam(menu.TeamId, ak)
+		if err != nil {
+			c.JSON(400, common.RespError(err.Error()))
+			return
+		}
+		if !canManage {
+			c.JSON(403, common.RespError(e.InvalidToken))
+			return
+		}
+	} else {
+		u := c.MustGet("currentUser").(*models.User)
+		// only team admin can do this
+		err := acl.CanEditTeam(c.Request.Context(), menu.TeamId, u.Id)
+		if err != nil {
+			c.JSON(403, common.RespError(err.Error()))
+			return
+		}
 	}
 
 	data, _ := json.Marshal(menu.Data)
-	_, err = db.Conn.ExecContext(c.Request.Context(), "UPDATE team SET sidemenu=?,updated=? WHERE id=?", data, time.Now(), menu.TeamId)
+	_, err := db.Conn.ExecContext(c.Request.Context(), "UPDATE team SET sidemenu=?,updated=? WHERE id=?", data, time.Now(), menu.TeamId)
 	if err != nil {
 		logger.Error("update sidemenu error", "error", err)
 		c.JSON(500, common.RespInternalError())

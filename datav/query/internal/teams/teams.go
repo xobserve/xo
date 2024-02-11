@@ -34,6 +34,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/xObserve/xObserve/query/internal/accesstoken"
 	"github.com/xObserve/xObserve/query/internal/acl"
 	"github.com/xObserve/xObserve/query/internal/admin"
 	"github.com/xObserve/xObserve/query/pkg/colorlog"
@@ -294,19 +295,33 @@ func AddTeamMembers(c *gin.Context) {
 		return
 	}
 
-	u := c.MustGet("currentUser").(*models.User)
-
-	err := acl.CanEditTeam(c.Request.Context(), req.TeamId, u.Id)
-	if err != nil {
-		c.JSON(403, common.RespError(err.Error()))
-		return
-	}
-
 	team, err := models.QueryTeam(c.Request.Context(), req.TeamId, "")
 	if err != nil {
 		logger.Warn("get team error", "error", err)
 		c.JSON(500, common.RespInternalError())
 		return
+	}
+
+	ak := c.GetString("accessToken")
+	if ak != "" {
+		canManage, err := accesstoken.CanManageTeam(req.TeamId, ak)
+		if err != nil {
+			c.JSON(400, common.RespError(err.Error()))
+			return
+		}
+		if !canManage {
+			c.JSON(403, common.RespError(e.InvalidToken))
+			return
+		}
+	} else {
+		u := c.MustGet("currentUser").(*models.User)
+
+		err = acl.CanEditTeam(c.Request.Context(), req.TeamId, u.Id)
+		if err != nil {
+			c.JSON(403, common.RespError(err.Error()))
+			return
+		}
+
 	}
 
 	memberIds := make([]int64, 0)
@@ -334,7 +349,7 @@ func AddTeamMembers(c *gin.Context) {
 
 	for _, memberId := range memberIds {
 		err = AddTeamMember(c.Request.Context(), team.TenantId, req.TeamId, memberId, role)
-		if err != nil {
+		if err != nil && !e.IsErrUniqueConstraint(err) {
 			logger.Warn("add team member error", "error", err)
 			c.JSON(400, common.RespError(err.Error()))
 			return
@@ -362,27 +377,10 @@ func DeleteTeamMember(c *gin.Context) {
 		return
 	}
 
-	u := c.MustGet("currentUser").(*models.User)
-	if memberId == u.Id {
-		c.JSON(400, common.RespError("cannot delete yourself"))
-		return
-	}
-
 	member, err := models.QueryTeamMember(c.Request.Context(), teamId, memberId)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			c.JSON(400, common.RespError("member not exist"))
-			return
-		}
-		logger.Warn("query team member error", "error", err)
-		c.JSON(500, common.RespInternalError())
-		return
-	}
-
-	operator, err := models.QueryTeamMember(c.Request.Context(), teamId, u.Id)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			c.JSON(400, common.RespError("You are not in current team"))
 			return
 		}
 		logger.Warn("query team member error", "error", err)
@@ -395,16 +393,47 @@ func DeleteTeamMember(c *gin.Context) {
 		return
 	}
 
-	if member.Role == models.ROLE_ADMIN {
-		if operator.Role != models.ROLE_SUPER_ADMIN {
-			c.JSON(400, common.RespError("only super admin can delete admin"))
+	ak := c.GetString("accessToken")
+	if ak != "" {
+		canManage, err := accesstoken.CanManageTeam(teamId, ak)
+		if err != nil {
+			c.JSON(400, common.RespError(err.Error()))
 			return
 		}
-	}
+		if !canManage {
+			c.JSON(403, common.RespError(e.InvalidToken))
+			return
+		}
+	} else {
+		u := c.MustGet("currentUser").(*models.User)
+		if memberId == u.Id {
+			c.JSON(400, common.RespError("cannot delete yourself"))
+			return
+		}
 
-	if !operator.Role.IsAdmin() {
-		c.JSON(403, common.RespError(e.NoPermission))
-		return
+		operator, err := models.QueryTeamMember(c.Request.Context(), teamId, u.Id)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				c.JSON(400, common.RespError("You are not in current team"))
+				return
+			}
+			logger.Warn("query team member error", "error", err)
+			c.JSON(500, common.RespInternalError())
+			return
+		}
+
+		if member.Role == models.ROLE_ADMIN {
+			if operator.Role != models.ROLE_SUPER_ADMIN {
+				c.JSON(400, common.RespError("only super admin can delete admin"))
+				return
+			}
+		}
+
+		if !operator.Role.IsAdmin() {
+			c.JSON(403, common.RespError(e.NoPermission))
+			return
+		}
+
 	}
 
 	_, err = db.Conn.ExecContext(c.Request.Context(), "DELETE FROM team_member where team_id=? and user_id=?", teamId, memberId)
@@ -425,18 +454,32 @@ func UpdateTeam(c *gin.Context) {
 		c.JSON(400, common.RespError(e.ParamInvalid))
 		return
 	}
-	u := c.MustGet("currentUser").(*models.User)
-	err := acl.CanEditTeam(c.Request.Context(), team.Id, u.Id)
-	if err != nil {
-		c.JSON(403, common.RespError(err.Error()))
-		return
-	}
 
 	oldTeam, err := models.QueryTeam(c.Request.Context(), team.Id, "")
 	if err != nil {
 		logger.Warn("query team error", "error", err)
-		c.JSON(500, common.RespInternalError())
+		c.JSON(400, common.RespError(err.Error()))
 		return
+	}
+
+	ak := c.GetString("accessToken")
+	if ak != "" {
+		canManage, err := accesstoken.CanManageTeam(team.Id, ak)
+		if err != nil {
+			c.JSON(400, common.RespError(err.Error()))
+			return
+		}
+		if !canManage {
+			c.JSON(403, common.RespError(e.InvalidToken))
+			return
+		}
+	} else {
+		u := c.MustGet("currentUser").(*models.User)
+		err := acl.CanEditTeam(c.Request.Context(), team.Id, u.Id)
+		if err != nil {
+			c.JSON(403, common.RespError(err.Error()))
+			return
+		}
 	}
 
 	now := time.Now()
@@ -488,9 +531,8 @@ func UpdateTeamMember(c *gin.Context) {
 		return
 	}
 
-	u := c.MustGet("currentUser").(*models.User)
-	if req.Id == u.Id {
-		c.JSON(400, common.RespError("cannot change your own role"))
+	if req.Role == models.ROLE_SUPER_ADMIN {
+		c.JSON(400, common.RespError("cannot change role to super admin"))
 		return
 	}
 
@@ -505,32 +547,47 @@ func UpdateTeamMember(c *gin.Context) {
 		return
 	}
 
-	operator, err := models.QueryTeamMember(c.Request.Context(), req.TeamId, u.Id)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			c.JSON(400, common.RespError("You are not in current team"))
+	ak := c.GetString("accessToken")
+	if ak != "" {
+		canManage, err := accesstoken.CanManageTeam(req.TeamId, ak)
+		if err != nil {
+			c.JSON(400, common.RespError(err.Error()))
 			return
 		}
-		logger.Warn("query team member error", "error", err)
-		c.JSON(500, common.RespInternalError())
-		return
-	}
-
-	if req.Role == models.ROLE_SUPER_ADMIN {
-		c.JSON(400, common.RespError("cannot change role to super admin"))
-		return
-	}
-
-	if req.Role == models.ROLE_ADMIN || member.Role == models.ROLE_ADMIN {
-		if operator.Role != models.ROLE_SUPER_ADMIN {
-			c.JSON(400, common.RespError("only super admin can change role  admin"))
+		if !canManage {
+			c.JSON(403, common.RespError(e.InvalidToken))
 			return
 		}
-	}
+	} else {
+		u := c.MustGet("currentUser").(*models.User)
+		if req.Id == u.Id {
+			c.JSON(400, common.RespError("cannot change your own role"))
+			return
+		}
 
-	if !operator.Role.IsAdmin() {
-		c.JSON(403, common.RespError(e.NoPermission))
-		return
+		operator, err := models.QueryTeamMember(c.Request.Context(), req.TeamId, u.Id)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				c.JSON(400, common.RespError("You are not in current team"))
+				return
+			}
+			logger.Warn("query team member error", "error", err)
+			c.JSON(500, common.RespInternalError())
+			return
+		}
+
+		if req.Role == models.ROLE_ADMIN || member.Role == models.ROLE_ADMIN {
+			if operator.Role != models.ROLE_SUPER_ADMIN {
+				c.JSON(400, common.RespError("only super admin can change role  admin"))
+				return
+			}
+		}
+
+		if !operator.Role.IsAdmin() {
+			c.JSON(403, common.RespError(e.NoPermission))
+			return
+		}
+
 	}
 
 	_, err = db.Conn.ExecContext(c.Request.Context(), "UPDATE team_member SET role=?,updated=? WHERE team_id=? and user_id=?", req.Role, time.Now(), req.TeamId, req.Id)
@@ -545,27 +602,8 @@ func UpdateTeamMember(c *gin.Context) {
 
 func MarkDeleted(c *gin.Context) {
 	teamId, _ := strconv.ParseInt(c.Param("id"), 10, 64)
-
 	if teamId == 0 {
 		c.JSON(400, common.RespError(e.ParamInvalid))
-		return
-	}
-
-	u := c.MustGet("currentUser").(*models.User)
-
-	operator, err := models.QueryTeamMember(c.Request.Context(), teamId, u.Id)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			c.JSON(400, common.RespError("You are not in current team"))
-			return
-		}
-		logger.Warn("query team member error", "error", err)
-		c.JSON(500, common.RespInternalError())
-		return
-	}
-
-	if !operator.Role.IsSuperAdmin() {
-		c.JSON(403, common.RespError("Only super admin can do this"))
 		return
 	}
 
@@ -574,6 +612,39 @@ func MarkDeleted(c *gin.Context) {
 		logger.Warn("query team error", "error", err)
 		c.JSON(500, common.RespInternalError())
 		return
+	}
+
+	ak := c.GetString("accessToken")
+	var uid int64
+	if ak != "" {
+		canManage, err := accesstoken.CanManageTenant(t.TenantId, ak)
+		if err != nil {
+			c.JSON(400, common.RespError(err.Error()))
+			return
+		}
+		if !canManage {
+			c.JSON(403, common.RespError(e.InvalidToken))
+			return
+		}
+	} else {
+		u := c.MustGet("currentUser").(*models.User)
+
+		operator, err := models.QueryTeamMember(c.Request.Context(), teamId, u.Id)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				c.JSON(400, common.RespError("You are not in current team"))
+				return
+			}
+			logger.Warn("query team member error", "error", err)
+			c.JSON(500, common.RespInternalError())
+			return
+		}
+
+		if !operator.Role.IsSuperAdmin() {
+			c.JSON(403, common.RespError("Only super admin can do this"))
+			return
+		}
+		uid = u.Id
 	}
 
 	// check tenant has more than one team
@@ -597,7 +668,7 @@ func MarkDeleted(c *gin.Context) {
 		return
 	}
 
-	admin.WriteAuditLog(c.Request.Context(), t.TenantId, teamId, u.Id, admin.AuditDeleteTeam, strconv.FormatInt(teamId, 10), t)
+	admin.WriteAuditLog(c.Request.Context(), t.TenantId, teamId, uid, admin.AuditDeleteTeam, strconv.FormatInt(teamId, 10), t)
 }
 
 func RestoreTeam(c *gin.Context) {
@@ -607,8 +678,6 @@ func RestoreTeam(c *gin.Context) {
 		c.JSON(400, common.RespError(e.ParamInvalid))
 		return
 	}
-
-	u := c.MustGet("currentUser").(*models.User)
 
 	t, err := models.QueryTeam(c.Request.Context(), teamId, "")
 	if err != nil {
@@ -621,20 +690,37 @@ func RestoreTeam(c *gin.Context) {
 		return
 	}
 
-	operator, err := models.QueryTenantUser(c.Request.Context(), t.TenantId, u.Id)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			c.JSON(400, common.RespError("You are not in current team"))
+	ak := c.GetString("accessToken")
+	var uid int64
+	if ak != "" {
+		canManage, err := accesstoken.CanManageTenant(t.TenantId, ak)
+		if err != nil {
+			c.JSON(400, common.RespError(err.Error()))
 			return
 		}
-		logger.Warn("query team member error", "error", err)
-		c.JSON(500, common.RespInternalError())
-		return
-	}
+		if !canManage {
+			c.JSON(403, common.RespError(e.InvalidToken))
+			return
+		}
+	} else {
+		u := c.MustGet("currentUser").(*models.User)
 
-	if !operator.Role.IsSuperAdmin() {
-		c.JSON(403, common.RespError("Only super admin can do this"))
-		return
+		operator, err := models.QueryTenantUser(c.Request.Context(), t.TenantId, u.Id)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				c.JSON(400, common.RespError("You are not in current team"))
+				return
+			}
+			logger.Warn("query team member error", "error", err)
+			c.JSON(400, common.RespInternalError())
+			return
+		}
+
+		if !operator.Role.IsSuperAdmin() {
+			c.JSON(403, common.RespError("Only super admin can do this"))
+			return
+		}
+		uid = u.Id
 	}
 
 	_, err = db.Conn.ExecContext(c.Request.Context(), "UPDATE team SET status=?,statusUpdated=? WHERE id=?", common.StatusOK, time.Now(), teamId)
@@ -644,7 +730,7 @@ func RestoreTeam(c *gin.Context) {
 		return
 	}
 
-	admin.WriteAuditLog(c.Request.Context(), t.TenantId, teamId, u.Id, admin.AuditRestoreTeam, strconv.FormatInt(teamId, 10), t)
+	admin.WriteAuditLog(c.Request.Context(), t.TenantId, teamId, uid, admin.AuditRestoreTeam, strconv.FormatInt(teamId, 10), t)
 }
 
 func LeaveTeam(c *gin.Context) {
@@ -747,9 +833,10 @@ func GetTeamsForUser(c *gin.Context) {
 }
 
 type AddNewTeamModel struct {
-	Name     string `json:"name"`
-	Brief    string `json:"brief"`
-	TenantId int64  `json:"tenantId"`
+	Name      string `json:"name"`
+	Brief     string `json:"brief"`
+	TenantId  int64  `json:"tenantId"`
+	TeamOwner int64  `json:"teamOwner"`
 }
 
 func AddNewTeam(c *gin.Context) {
@@ -760,21 +847,50 @@ func AddNewTeam(c *gin.Context) {
 		return
 	}
 
-	u := c.MustGet("currentUser").(*models.User)
-	tenantRole, err := models.QueryTenantRoleByUserId(c.Request.Context(), req.TenantId, u.Id)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			c.JSON(400, common.RespError("user not in tenant"))
+	var uid int64
+	var uname string
+	ak := c.GetString("accessToken")
+	if ak != "" {
+		in, err := models.IsUserInTenant(req.TeamOwner, req.TenantId)
+		if err != nil {
+			logger.Warn("check user in tenant error", "error", err)
+			c.JSON(400, common.RespInternalError())
 			return
 		}
-		logger.Warn("query target user error when add user to tenant", "error", err)
-		c.JSON(500, common.RespInternalError())
-		return
-	}
+		if !in {
+			c.JSON(400, common.RespError("team owner not in tenant"))
+			return
+		}
 
-	if !tenantRole.IsAdmin() {
-		c.JSON(403, common.RespError(e.NoPermission))
-		return
+		canManage, err := accesstoken.CanManageTenant(req.TenantId, ak)
+		if err != nil {
+			c.JSON(400, common.RespError(err.Error()))
+			return
+		}
+		if !canManage {
+			c.JSON(403, common.RespError(e.InvalidToken))
+			return
+		}
+		uid = req.TeamOwner
+	} else {
+		u := c.MustGet("currentUser").(*models.User)
+		tenantRole, err := models.QueryTenantRoleByUserId(c.Request.Context(), req.TenantId, u.Id)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				c.JSON(400, common.RespError("user not in tenant"))
+				return
+			}
+			logger.Warn("query target user error when add user to tenant", "error", err)
+			c.JSON(500, common.RespInternalError())
+			return
+		}
+
+		if !tenantRole.IsAdmin() {
+			c.JSON(403, common.RespError(e.NoPermission))
+			return
+		}
+		uid = u.Id
+		uname = u.Username
 	}
 
 	now := time.Now()
@@ -786,7 +902,7 @@ func AddNewTeam(c *gin.Context) {
 	}
 	defer tx.Rollback()
 
-	id, err := models.CreateTeam(c.Request.Context(), tx, req.TenantId, u.Id, req.Name, req.Brief)
+	id, err := models.CreateTeam(c.Request.Context(), tx, req.TenantId, uid, req.Name, req.Brief)
 	if err != nil {
 		if e.IsErrUniqueConstraint(err) {
 			c.JSON(400, common.RespError("team name already exist"))
@@ -808,7 +924,7 @@ func AddNewTeam(c *gin.Context) {
 		Id:          id,
 		Name:        req.Name,
 		Brief:       req.Brief,
-		CreatedBy:   u.Username,
+		CreatedBy:   uname,
 		Created:     now,
 		Updated:     now,
 		MemberCount: 1,
@@ -823,22 +939,14 @@ func TransferTeam(c *gin.Context) {
 	}
 	transferTo := c.Param("username")
 
-	u := c.MustGet("currentUser").(*models.User)
-
-	operator, err := models.QueryTeamMember(c.Request.Context(), teamId, u.Id)
+	team, err := models.QueryTeam(c.Request.Context(), teamId, "")
 	if err != nil {
 		if err == sql.ErrNoRows {
-			c.JSON(400, common.RespError("You are not in current team"))
+			c.JSON(400, common.RespError("team not exist"))
 			return
 		}
-		logger.Warn("get team user error", "error", err)
+		logger.Warn("query team error", "error", err)
 		c.JSON(500, common.RespInternalError())
-		return
-	}
-
-	// only superadmin can transfer tenant
-	if !operator.Role.IsSuperAdmin() {
-		c.JSON(403, common.RespError("Only team super admin can do this"))
 		return
 	}
 
@@ -854,10 +962,43 @@ func TransferTeam(c *gin.Context) {
 		return
 	}
 
-	// can't transfer to self
-	if transferToUser.Id == u.Id {
-		c.JSON(400, common.RespError("can't transfer to yourself"))
-		return
+	ak := c.GetString("accessToken")
+	if ak != "" {
+		canManage, err := accesstoken.CanManageTenant(team.TenantId, ak)
+		if err != nil {
+			c.JSON(400, common.RespError(err.Error()))
+			return
+		}
+		if !canManage {
+			c.JSON(403, common.RespError(e.InvalidToken))
+			return
+		}
+	} else {
+		u := c.MustGet("currentUser").(*models.User)
+
+		operator, err := models.QueryTeamMember(c.Request.Context(), teamId, u.Id)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				c.JSON(400, common.RespError("You are not in current team"))
+				return
+			}
+			logger.Warn("get team user error", "error", err)
+			c.JSON(500, common.RespInternalError())
+			return
+		}
+
+		// only superadmin can transfer tenant
+		if !operator.Role.IsSuperAdmin() {
+			c.JSON(403, common.RespError("Only team super admin can do this"))
+			return
+		}
+
+		// can't transfer to self
+		if transferToUser.Id == u.Id {
+			c.JSON(400, common.RespError("can't transfer to yourself"))
+			return
+		}
+
 	}
 
 	// must transfer to a team user
@@ -882,16 +1023,17 @@ func TransferTeam(c *gin.Context) {
 	defer tx.Rollback()
 
 	now := time.Now()
-	// set target user to super admin
-	_, err = tx.ExecContext(c.Request.Context(), "UPDATE team_member SET role=?,updated=? WHERE team_id=? AND user_id=?", models.ROLE_SUPER_ADMIN, now, teamId, transferToUser.Id)
+
+	//set self to admin
+	_, err = tx.ExecContext(c.Request.Context(), "UPDATE team_member SET role=?,updated=? WHERE team_id=? AND role=?", models.ROLE_ADMIN, now, teamId, models.ROLE_SUPER_ADMIN)
 	if err != nil {
 		logger.Warn("transfer team error", "error", err)
 		c.JSON(500, common.RespInternalError())
 		return
 	}
 
-	//set self to admin
-	_, err = tx.ExecContext(c.Request.Context(), "UPDATE team_member SET role=?,updated=? WHERE team_id=? AND user_id=?", models.ROLE_ADMIN, now, teamId, u.Id)
+	// set target user to super admin
+	_, err = tx.ExecContext(c.Request.Context(), "UPDATE team_member SET role=?,updated=? WHERE team_id=? AND user_id=?", models.ROLE_SUPER_ADMIN, now, teamId, transferToUser.Id)
 	if err != nil {
 		logger.Warn("transfer team error", "error", err)
 		c.JSON(500, common.RespInternalError())

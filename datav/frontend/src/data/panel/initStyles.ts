@@ -20,7 +20,7 @@ import {
 
 export const initPanelStyles = (): PanelStyles => ({
   palette: 'echarts-light',
-  border: PanelBorderType.None,
+  border: PanelBorderType.Normal,
   borderOnHover: true,
   title: {
     position: 'left',

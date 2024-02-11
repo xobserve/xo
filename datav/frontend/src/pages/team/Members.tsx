@@ -136,7 +136,7 @@ const TeamMembers = ({ team }: { team: Team }) => {
   const addMember = async () => {
     await requestApi.post(`/team/add/member`, {
       teamId: team.id,
-      members: [memberInEdit.username],
+      members: memberInEdit.username.split(','),
       role: memberInEdit.role,
     })
     toast({

@@ -176,6 +176,9 @@ export const TenantSetting = memo(() => {
           <Box>
             <Form width='500px'>
               <FormSection title={t.basicSetting}>
+                <FormItem title='ID' labelWidth='150px' alignItems='center'>
+                  <Text>{tenant.id}</Text>
+                </FormItem>
                 <FormItem
                   title={t.itemName({ name: t.tenant })}
                   labelWidth='150px'
