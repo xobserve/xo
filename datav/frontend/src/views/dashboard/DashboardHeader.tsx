@@ -16,7 +16,6 @@ import {
   Flex,
   HStack,
   Popover,
-  PopoverArrow,
   PopoverBody,
   PopoverContent,
   PopoverTrigger,
@@ -37,14 +36,13 @@ import DashboardSettings from './settings/DashboardSettings'
 import Fullscreen from 'src/components/Fullscreen'
 import useFullscreen from 'hooks/useFullscreen'
 import DatePicker from 'src/components/DatePicker/DatePicker'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { useStore } from '@nanostores/react'
 import { dashboardMsg } from 'src/i18n/locales/en'
 import DashboardShare from './DashboardShare'
 import DashboardStar from './components/DashboardStar'
 import { $variables } from '../variables/store'
 import { MobileBreakpoint } from 'src/data/constants'
-import CustomScrollbar from 'src/components/CustomScrollbar/CustomScrollbar'
 import DashboardRefresh from './DashboardRefresh'
 import { catelogVariables } from '../variables/utils'
 import { useSearchParam } from 'react-use'
@@ -57,6 +55,7 @@ import { ExternalLinkComponent } from 'components/ExternalLinks'
 import { $config } from 'src/data/configs/config'
 import { MenuItem } from 'types/teams'
 import { locale } from 'src/i18n/i18n'
+import { dashboardLangTitle } from 'utils/dashboard/dashboard'
 
 interface HeaderProps {
   dashboard: Dashboard
@@ -193,7 +192,9 @@ const DashboardHeader = memo(
                 <Popover trigger='hover'>
                   <PopoverTrigger>
                     <HStack>
-                      <Box cursor='pointer'>{dashboard.title}</Box>
+                      <Box cursor='pointer'>
+                        {dashboardLangTitle(dashboard.title, lang)}
+                      </Box>
                       {dashboard.templateId != 0 && (
                         <TemplateBadge
                           templateId={dashboard.templateId}

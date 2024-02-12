@@ -28,7 +28,7 @@ import {
 import { useStore } from '@nanostores/react'
 import moment from 'moment'
 import React, { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import ReserveUrls from 'src/data/reserve-urls'
 import { commonMsg } from 'src/i18n/locales/en'
 import { Dashboard } from 'types/dashboard'
@@ -37,9 +37,12 @@ import { requestApi } from 'utils/axios/request'
 import Loading from 'src/components/loading/Loading'
 import { navigateTo } from 'utils/url'
 import TemplateBadge from 'src/views/template/TemplateBadge'
+import { dashboardLangTitle } from 'utils/dashboard/dashboard'
+import { locale } from 'src/i18n/i18n'
 
 const TeamDashboards = ({ team }: { team: Team }) => {
   const t = useStore(commonMsg)
+  const lang = useStore(locale)
 
   const teamId = useParams().teamId
   const [dashboards, setDashboards] = useState<Dashboard[]>(null)
@@ -87,7 +90,7 @@ const TeamDashboards = ({ team }: { team: Team }) => {
                     <Tr key={dash.id}>
                       <Td>
                         <HStack>
-                          <Text> {dash.title}</Text>
+                          <Text> {dashboardLangTitle(dash.title, lang)}</Text>
                           {dash.templateId != 0 && (
                             <TemplateBadge templateId={dash.templateId} />
                           )}

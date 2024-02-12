@@ -14,3 +14,13 @@
 export const getDashboardLink = (id) => {
   return `/${id}`
 }
+
+export const dashboardLangTitle = (title, lang) => {
+  try {
+    const tmap = JSON.parse(title)
+    const t = tmap[lang] ?? tmap['en']
+    if (t) return t
+  } catch (_) {
+    return title
+  }
+}

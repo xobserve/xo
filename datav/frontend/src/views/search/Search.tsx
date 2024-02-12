@@ -63,6 +63,7 @@ import { $config } from 'src/data/configs/config'
 import { addParamToUrl, removeParamFromUrl } from 'utils/url'
 import { useSearchParam } from 'react-use'
 import { locale } from 'src/i18n/i18n'
+import { dashboardLangTitle } from 'utils/dashboard/dashboard'
 
 interface Props {
   title: string
@@ -155,6 +156,7 @@ const Search = memo((props: Props) => {
 
       const dashTeamsMap = {}
       for (const dash of dashboards) {
+        dash.title = dashboardLangTitle(dash.title, lang)
         dashTeamsMap[dash.ownedBy] = {
           id: dash.ownedBy,
           name: dash.ownerName,

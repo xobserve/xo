@@ -23,7 +23,6 @@ import {
 import ColorTag from 'src/components/ColorTag'
 import CopyToClipboard from 'src/components/CopyToClipboard'
 import React, { useRef, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
 import { Dashboard } from 'types/dashboard'
 import { Team } from 'types/teams'
 import { getDashboardLink } from 'utils/dashboard/dashboard'
