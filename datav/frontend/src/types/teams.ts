@@ -36,7 +36,6 @@ export interface TeamMember {
 
 export interface SideMenu {
   teamId: number
-  isPublic?: boolean
   teamName?: string
   brief?: string
   data: MenuItem[][]

@@ -135,10 +135,20 @@ const AdminTenantUsers = () => {
   }
 
   const onSubmitUser = async () => {
-    await requestApi.post(`/tenant/user`, {
-      ...userInEdit,
-      currentTenant: config.currentTenant,
-    })
+    if (userInEdit.id) {
+      await requestApi.post(`/tenant/user/role`, {
+        userId: userInEdit.id,
+        tenantId: config.currentTenant,
+        role: userInEdit.role,
+      })
+    } else {
+      await requestApi.post(`/tenant/user`, {
+        usernames: [userInEdit.username],
+        tenantId: config.currentTenant,
+        role: userInEdit.role,
+      })
+    }
+
     toast({
       title: t.isUpdated({ name: t1.userRole }),
       status: 'success',

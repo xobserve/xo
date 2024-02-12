@@ -86,8 +86,8 @@ func (s TeamMembers) Less(i, j int) bool {
 
 func QueryTeam(ctx context.Context, id int64, name string) (*Team, error) {
 	team := &Team{}
-	err := db.Conn.QueryRowContext(ctx, `SELECT id,name,is_public,created_by,tenant_id,status,sync_users,created,updated FROM team WHERE id=? or name=?`,
-		id, name).Scan(&team.Id, &team.Name, &team.IsPublic, &team.CreatedById, &team.TenantId, &team.Status, &team.SyncUsers, &team.Created, &team.Updated)
+	err := db.Conn.QueryRowContext(ctx, `SELECT id,name,created_by,tenant_id,status,sync_users,created,updated FROM team WHERE id=? or name=?`,
+		id, name).Scan(&team.Id, &team.Name, &team.CreatedById, &team.TenantId, &team.Status, &team.SyncUsers, &team.Created, &team.Updated)
 	if err != nil {
 		return nil, err
 	}
@@ -138,21 +138,6 @@ func QueryTeamMember(ctx context.Context, teamId int64, userId int64) (*TeamMemb
 func QueryVisibleTeamsByUserId(ctx context.Context, tenantId int64, userId int64) ([]int64, error) {
 	membersMap := make(map[int64]bool)
 	rows, err := db.Conn.QueryContext(ctx, "SELECT team_id from team_member WHERE tenant_id = ? and user_id=?", tenantId, userId)
-	if err != nil && err != sql.ErrNoRows {
-		return nil, err
-	}
-	defer rows.Close()
-	for rows.Next() {
-		var m int64
-		err := rows.Scan(&m)
-		if err != nil {
-			return nil, err
-		}
-
-		membersMap[m] = true
-	}
-
-	rows, err = db.Conn.QueryContext(ctx, "SELECT id from team WHERE tenant_id = ? and is_public=?", tenantId, true)
 	if err != nil && err != sql.ErrNoRows {
 		return nil, err
 	}
@@ -237,16 +222,6 @@ func QuerySideMenu(ctx context.Context, id int64, tx *sql.Tx) (*SideMenu, error)
 
 	json.Unmarshal(rawJson, &menu.Data)
 	return menu, nil
-}
-
-func IsTeamPublic(ctx context.Context, id int64) (bool, error) {
-	var isPublic bool
-	err := db.Conn.QueryRowContext(ctx, "SELECT is_public from team WHERE id=?", id).Scan(&isPublic)
-	if err != nil {
-		return false, err
-	}
-
-	return isPublic, nil
 }
 
 func IsTeamVisibleToUser(ctx context.Context, teamId int64, userId int64) (bool, error) {

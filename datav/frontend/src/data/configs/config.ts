@@ -36,9 +36,9 @@ const config: UIConfig = {
   observability: {
     enable: false,
   },
-  tenant: {
-    enable: false,
-  },
+  // tenant: {
+  //   enable: false,
+  // },
 }
 
 export const $config = atom<UIConfig>(null)
@@ -67,9 +67,9 @@ export interface UIConfig {
   observability?: {
     enable: boolean
   }
-  tenant?: {
-    enable: boolean
-  }
+  // tenant?: {
+  //   enable: boolean
+  // }
   currentTenant?: number
   tenantName?: string
   tenantRole?: Role

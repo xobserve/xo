@@ -123,21 +123,21 @@ func (s *Server) Start() error {
 
 		// variable apis
 		r.POST("/variable/new", CheckLoginOrAk(), variables.AddNewVariable)
-		r.GET("/variable/team", MustLogin(), otelPlugin, variables.QueryTeamVariables)
 		r.POST("/variable/update", CheckLoginOrAk(), variables.UpdateVariable)
 		r.DELETE("/variable/:teamId/:id", CheckLoginOrAk(), variables.DeleteVariable)
+		r.GET("/variable/team", MustLogin(), otelPlugin, variables.QueryTeamVariables)
 
 		// dashboard apis
 		r.GET("/dashboard/byId/:teamId/:id", CheckLogin(), otelPlugin, dashboard.GetDashboard)
 		r.POST("/dashboard/save", CheckLoginOrAk(), otelPlugin, dashboard.SaveDashboard)
+		r.GET("/dashboard/search/:tenantId", CheckLogin(), InjectAccessToken(), otelPlugin, dashboard.Search)
+		r.DELETE("/dashboard/:teamId/:id", CheckLoginOrAk(), dashboard.Delete)
 		r.GET("/dashboard/team/:id", CheckLogin(), dashboard.GetTeamDashboards)
 		r.GET("/dashboard/history/:teamId/:id", CheckLogin(), otelPlugin, dashboard.GetHistory)
-		r.GET("/dashboard/search/:tenantId", CheckLogin(), InjectAccessToken(), otelPlugin, dashboard.Search)
 		r.POST("/dashboard/star/:teamId/:id", MustLogin(), dashboard.Star)
 		r.POST("/dashboard/unstar/:teamId/:id", MustLogin(), dashboard.UnStar)
 		r.GET("/dashboard/starred", CheckLogin(), dashboard.GetAllStarred)
 		r.GET("/dashboard/starred/:teamId/:id", dashboard.GetStarred)
-		r.DELETE("/dashboard/:teamId/:id", CheckLoginOrAk(), dashboard.Delete)
 		r.POST("/dashboard/weight", MustLogin(), dashboard.UpdateWeight)
 
 		// annotation
@@ -147,13 +147,13 @@ func (s *Server) Start() error {
 		r.DELETE("/annotation/group/:teamId/:namespace/:group/:expires", MustLogin(), annotation.RemoveGroupAnnotations)
 
 		// admin apis
+		r.DELETE("/admin/user/:id", CheckLoginOrAk(), admin.MarkUserAsDeleted)
+		r.POST("/admin/user/restore/:id", CheckLoginOrAk(), admin.RestoreUser)
+		r.POST("/admin/user/new", CheckLoginOrAk(), admin.AddNewUser)
 		r.GET("/admin/users", CheckLogin(), otelPlugin, admin.GetUsers)
 		r.POST("/admin/user", MustLogin(), admin.UpdateUser)
 		r.POST("/admin/user/password", MustLogin(), admin.UpdateUserPassword)
-		r.POST("/admin/user/new", CheckLoginOrAk(), admin.AddNewUser)
 		r.POST("/admin/user/role", MustLogin(), admin.UpdateUserRole)
-		r.DELETE("/admin/user/:id", CheckLoginOrAk(), admin.MarkUserAsDeleted)
-		r.POST("/admin/user/restore/:id", CheckLoginOrAk(), admin.RestoreUser)
 		r.GET("/admin/auditlogs", CheckLogin(), admin.QueryAuditLogs)
 
 		// datasource apis
@@ -165,24 +165,23 @@ func (s *Server) Start() error {
 		r.GET("/datasource/test", proxy.TestDatasource)
 
 		// tenant apis
-		r.GET("/tenant/list/all", MustLogin(), tenant.QueryTenants)
 		r.POST("/tenant/create", CheckLoginOrAk(), tenant.CreateTenant)
-		r.GET(("/tenant/users/:tenantId"), MustLogin(), tenant.QueryTenantUsers)
 		r.POST("/tenant/user", CheckLoginOrAk(), tenant.SubmitTenantUser)
+		r.POST("/tenant/user/role", CheckLoginOrAk(), tenant.ChangeTenantUserRole)
 		r.DELETE("/tenant/user/:userId/:tenantId", CheckLoginOrAk(), tenant.DeleteTenantUser)
 		r.GET("/tenant/user/is/in", InjectAccessToken(), MustLogin(), tenant.GetTenantsUserIn)
+		r.POST("/tenant/update", CheckLoginOrAk(), tenant.UpdateTenant)
+		r.DELETE("/tenant/:id", CheckLoginOrAk(), tenant.MarkDeleted)
+		r.POST("/tenant/restore/:id", CheckLoginOrAk(), tenant.RestoreTenant)
+		r.GET("/tenant/list/all", MustLogin(), tenant.QueryTenants)
+		r.GET(("/tenant/users/:tenantId"), MustLogin(), tenant.QueryTenantUsers)
 		r.POST("/tenant/switch/:id", MustLogin(), tenant.SwitchTenant)
 		r.GET("/tenant/teams/:tenantId", MustLogin(), otelPlugin, teams.GetTenantTeams)
 		r.GET("/tenant/byId/:id", MustLogin(), tenant.GetTenant)
-		r.POST("/tenant/update", CheckLoginOrAk(), tenant.UpdateTenant)
 		r.POST("/tenant/transfer/:tenantId/:username", MustLogin(), tenant.TransferTenant)
 		r.POST("/tenant/leave/:id", MustLogin(), tenant.LeaveTenant)
-		r.DELETE("/tenant/:id", CheckLoginOrAk(), tenant.MarkDeleted)
-		r.POST("/tenant/restore/:id", CheckLoginOrAk(), tenant.RestoreTenant)
 
 		// teams apis
-		r.GET("/team/byId/:id", CheckLogin(), teams.GetTeam)
-		r.GET("/team/:id/members", CheckLogin(), teams.GetTeamMembers)
 		r.POST("/team/member", CheckLoginOrAk(), teams.UpdateTeamMember)
 		r.POST("/team/add/member", CheckLoginOrAk(), teams.AddTeamMembers)
 		r.DELETE("/team/member/:teamId/:memberId", CheckLoginOrAk(), teams.DeleteTeamMember)
@@ -190,11 +189,13 @@ func (s *Server) Start() error {
 		r.POST("/team/new", CheckLoginOrAk(), teams.AddNewTeam)
 		r.DELETE("/team/:id", CheckLoginOrAk(), teams.MarkDeleted)
 		r.POST("/team/restore/:id", CheckLoginOrAk(), teams.RestoreTeam)
-		r.GET("/team/sidemenu/:id", CheckLogin(), teams.GetSideMenu)
 		r.POST("/team/sidemenu", CheckLoginOrAk(), teams.UpdateSideMenu)
+		r.POST("/team/transfer/:teamId/:username", CheckLoginOrAk(), teams.TransferTeam)
+		r.GET("/team/byId/:id", CheckLogin(), teams.GetTeam)
+		r.GET("/team/:id/members", CheckLogin(), teams.GetTeamMembers)
+		r.GET("/team/sidemenu/:id", CheckLogin(), teams.GetSideMenu)
 		r.POST("/team/switch/:teamId", MustLogin(), teams.SwitchTeam)
 		r.GET("/team/user/is/in", CheckLogin(), teams.GetTeamsForUser)
-		r.POST("/team/transfer/:teamId/:username", CheckLoginOrAk(), teams.TransferTeam)
 		r.POST("/team/leave/:id", MustLogin(), teams.LeaveTeam)
 
 		// template apis

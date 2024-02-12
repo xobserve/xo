@@ -177,9 +177,7 @@ func GetBasicConfig() *UIConfig {
 		Echarts: echarts,
 	}
 
-	tenant := Tenant{
-		Enable: config.Data.Tenant.Enable,
-	}
+	tenant := Tenant{}
 
 	cfg := &UIConfig{
 		AppName:           config.Data.Common.AppName,

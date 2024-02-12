@@ -131,29 +131,6 @@ func QueryTenantsUserIn(ctx context.Context, userId int64) ([]*Tenant, error) {
 	return tenants, nil
 }
 
-func QueryPublicTenants() ([]int64, error) {
-	tenants := make([]int64, 0)
-	rows, err := db.Conn.Query("SELECT id FROM tenant WHERE is_public=? ORDER BY id", true)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			return tenants, nil
-		}
-		return nil, err
-	}
-	defer rows.Close()
-	for rows.Next() {
-		var tenantId int64
-		err := rows.Scan(&tenantId)
-		if err != nil {
-			return nil, err
-		}
-
-		tenants = append(tenants, tenantId)
-	}
-
-	return tenants, nil
-}
-
 func QueryTenantTeamIds(tenantId int64) ([]int64, error) {
 	teamIds := make([]int64, 0)
 	rows, err := db.Conn.Query("SELECT id FROM team WHERE tenant_id=? and status!=?", tenantId, common.StatusDeleted)

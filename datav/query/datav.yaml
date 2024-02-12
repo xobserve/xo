@@ -111,7 +111,6 @@ plugins:
 
 #################################### Tenant ##############################
 tenant:
-    enable: false
     ## Automatically sync users to default tenant
     sync_user_to_default: true
 

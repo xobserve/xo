@@ -180,23 +180,18 @@ func QueryTenantUsers(c *gin.Context) {
 	c.JSON(200, common.RespSuccess(tenantUsers))
 }
 
+type SubmitTenantUserReq struct {
+	Usernames []string        `json:"usernames"`
+	Role      models.RoleType `json:"role"`
+	TenantId  int64           `json:"tenantId"`
+}
+
 func SubmitTenantUser(c *gin.Context) {
-	req := &models.User{}
+	req := &SubmitTenantUserReq{}
 	c.Bind(&req)
 
-	if req.Username == "" || !req.Role.IsValid() {
+	if req.Usernames == nil || !req.Role.IsValid() {
 		c.JSON(400, common.RespError(e.ParamInvalid))
-		return
-	}
-
-	targetUser, err := models.QueryUserByName(c.Request.Context(), req.Username)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			c.JSON(400, common.RespError(e.UserNotExist))
-			return
-		}
-		logger.Warn("query target user error when submit user", "error", err)
-		c.JSON(500, common.RespInternalError())
 		return
 	}
 
@@ -208,7 +203,7 @@ func SubmitTenantUser(c *gin.Context) {
 	ak := c.GetString("accessToken")
 
 	if ak != "" {
-		canManage, err := accesstoken.CanManageTenant(req.CurrentTenant, ak)
+		canManage, err := accesstoken.CanManageTenant(req.TenantId, ak)
 		if err != nil {
 			c.JSON(400, common.RespError(err.Error()))
 			return
@@ -219,12 +214,8 @@ func SubmitTenantUser(c *gin.Context) {
 		}
 	} else {
 		u := c.MustGet("currentUser").(*models.User)
-		if targetUser.Id == u.Id {
-			c.JSON(400, common.RespError("you cant submit yourself"))
-			return
-		}
 
-		tenantRole, err := models.QueryTenantRoleByUserId(c.Request.Context(), req.CurrentTenant, u.Id)
+		tenantRole, err := models.QueryTenantRoleByUserId(c.Request.Context(), req.TenantId, u.Id)
 		if err != nil {
 			if err == sql.ErrNoRows {
 				c.JSON(400, common.RespError("user not in tenant"))
@@ -248,18 +239,27 @@ func SubmitTenantUser(c *gin.Context) {
 		}
 	}
 
-	now := time.Now()
-	if req.Id == 0 {
-		// insert
-		tx, err := db.Conn.Begin()
+	// insert
+	tx, err := db.Conn.Begin()
+	if err != nil {
+		logger.Warn("new user error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+	defer tx.Rollback()
+	for _, username := range req.Usernames {
+		targetUser, err := models.QueryUserByName(c.Request.Context(), username)
 		if err != nil {
-			logger.Warn("new user error", "error", err)
+			if err == sql.ErrNoRows {
+				c.JSON(400, common.RespError(e.UserNotExist))
+				return
+			}
+			logger.Warn("query target user error when submit user", "error", err)
 			c.JSON(500, common.RespInternalError())
 			return
 		}
-		defer tx.Rollback()
 
-		err = AddUserToTenant(targetUser.Id, req.CurrentTenant, req.Role, tx, c.Request.Context())
+		err = AddUserToTenant(targetUser.Id, req.TenantId, req.Role, tx, c.Request.Context())
 		if err != nil {
 			if e.IsErrUniqueConstraint(err) {
 				c.JSON(400, common.RespError("user already in tenant"))
@@ -269,22 +269,97 @@ func SubmitTenantUser(c *gin.Context) {
 			c.JSON(500, common.RespInternalError())
 			return
 		}
+	}
 
-		err = tx.Commit()
+	err = tx.Commit()
+	if err != nil {
+		logger.Warn("commit sql transaction error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+
+}
+
+type ChangeTenantUserReq struct {
+	UserId   int64           `json:"userId"`
+	TenantId int64           `json:"tenantId"`
+	Role     models.RoleType `json:"role"`
+}
+
+func ChangeTenantUserRole(c *gin.Context) {
+	req := &ChangeTenantUserReq{}
+	c.Bind(&req)
+
+	if !req.Role.IsValid() {
+		c.JSON(400, common.RespError(e.ParamInvalid))
+		return
+	}
+
+	if req.Role == models.ROLE_SUPER_ADMIN {
+		c.JSON(400, common.RespError("can not set user to  super admin"))
+		return
+	}
+
+	targetUser, err := models.QueryUserById(c.Request.Context(), req.UserId)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			c.JSON(400, common.RespError(e.UserNotExist))
+			return
+		}
+		logger.Warn("query target user error when submit user", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+	if targetUser.Role == models.ROLE_SUPER_ADMIN {
+		c.JSON(400, common.RespError("can not change the role of  super admin"))
+		return
+	}
+
+	ak := c.GetString("accessToken")
+	if ak != "" {
+		canManage, err := accesstoken.CanManageTenant(req.TenantId, ak)
 		if err != nil {
-			logger.Warn("commit sql transaction error", "error", err)
-			c.JSON(500, common.RespInternalError())
+			c.JSON(400, common.RespError(err.Error()))
+			return
+		}
+		if !canManage {
+			c.JSON(403, common.RespError(e.InvalidToken))
 			return
 		}
 	} else {
-		// update
-		_, err = db.Conn.ExecContext(c.Request.Context(), "UPDATE tenant_user SET role=?,updated=? WHERE tenant_id=? AND user_id=?",
-			req.Role, now, req.CurrentTenant, targetUser.Id)
+		u := c.MustGet("currentUser").(*models.User)
+
+		tenantRole, err := models.QueryTenantRoleByUserId(c.Request.Context(), req.TenantId, u.Id)
 		if err != nil {
-			logger.Warn("update tenant user error", "error", err)
+			if err == sql.ErrNoRows {
+				c.JSON(400, common.RespError("user not in tenant"))
+				return
+			}
+			logger.Warn("query target user error when add user to tenant", "error", err)
 			c.JSON(500, common.RespInternalError())
 			return
 		}
+
+		if req.Role.IsAdmin() {
+			if !tenantRole.IsSuperAdmin() {
+				c.JSON(403, common.RespError("Only super admin can submit admin member"))
+				return
+			}
+		} else {
+			if !tenantRole.IsAdmin() {
+				c.JSON(403, common.RespError(e.NoPermission))
+				return
+			}
+		}
+	}
+
+	// 	// update
+	_, err = db.Conn.ExecContext(c.Request.Context(), "UPDATE tenant_user SET role=?,updated=? WHERE tenant_id=? AND user_id=?",
+		req.Role, time.Now(), req.TenantId, req.UserId)
+	if err != nil {
+		logger.Warn("update tenant user error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
 	}
 }
 
