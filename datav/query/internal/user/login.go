@@ -195,6 +195,7 @@ func LoginGithub(c *gin.Context) {
 	}
 
 	if err == sql.ErrNoRows {
+		user = &models.User{}
 		// create user
 		salt, _ := utils.GetRandomString(10)
 		encodedPW, _ := utils.EncodePassword("", salt)
@@ -218,6 +219,13 @@ func LoginGithub(c *gin.Context) {
 		id, err := res.LastInsertId()
 		if err != nil {
 			logger.Warn("new user error", "error", err)
+			c.JSON(500, common.RespInternalError())
+			return
+		}
+
+		err = models.SyncUserToTenants(c.Request.Context(), id, models.ROLE_VIEWER, tx)
+		if err != nil {
+			logger.Warn("sync users to tenant error", "error", err)
 			c.JSON(500, common.RespInternalError())
 			return
 		}

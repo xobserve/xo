@@ -269,3 +269,39 @@ func GetEnableSyncUsersTenants() ([]int64, error) {
 
 	return tenants, nil
 }
+
+func AddUserToTenant(userId int64, tenantId int64, role RoleType, tx *sql.Tx, ctx context.Context) error {
+	now := time.Now()
+	_, err := tx.ExecContext(ctx, ("INSERT INTO tenant_user (tenant_id,user_id,role,created,updated) VALUES (?,?,?,?,?)"),
+		tenantId, userId, role, now, now)
+	if err != nil {
+		return err
+	}
+
+	// find teams in tenant that enables user sync
+	rows, err := tx.QueryContext(ctx, `SELECT id FROM team WHERE tenant_id=? AND sync_users=true`, tenantId)
+	if err != nil {
+		return err
+	}
+
+	defer rows.Close()
+	teamIds := make([]int64, 0)
+	for rows.Next() {
+		var teamId int64
+		err := rows.Scan(&teamId)
+		if err != nil {
+			return err
+		}
+		teamIds = append(teamIds, teamId)
+	}
+
+	for _, teamId := range teamIds {
+		_, err = tx.ExecContext(ctx, ("INSERT INTO team_member (tenant_id,team_id,user_id,role,created,updated) VALUES (?,?,?,?,?,?)"),
+			tenantId, teamId, userId, ROLE_VIEWER, now, now)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}

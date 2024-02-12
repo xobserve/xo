@@ -188,3 +188,20 @@ func GetAllUserIds() ([]int64, error) {
 	}
 	return users, nil
 }
+
+func SyncUserToTenants(ctx context.Context, userId int64, role RoleType, tx *sql.Tx) error {
+	tenantIds, err := GetEnableSyncUsersTenants()
+	if err != nil {
+		return err
+	}
+
+	if len(tenantIds) > 0 {
+		for _, tenantId := range tenantIds {
+			err = AddUserToTenant(userId, tenantId, role, tx, ctx)
+			if err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}

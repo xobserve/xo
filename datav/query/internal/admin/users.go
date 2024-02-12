@@ -32,7 +32,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/xObserve/xObserve/query/internal/accesstoken"
-	"github.com/xObserve/xObserve/query/internal/tenant"
 	"github.com/xObserve/xObserve/query/internal/user"
 	"github.com/xObserve/xObserve/query/pkg/common"
 	"github.com/xObserve/xObserve/query/pkg/db"
@@ -165,13 +164,6 @@ func AddNewUser(c *gin.Context) {
 	encodedPW, _ := utils.EncodePassword(req.Password, salt)
 	now := time.Now()
 
-	tenantIds, err := models.GetEnableSyncUsersTenants()
-	if err != nil {
-		logger.Warn("get enable sync users tenants error", "error", err)
-		c.JSON(500, common.RespInternalError())
-		return
-	}
-
 	tx, err := db.Conn.Begin()
 	if err != nil {
 		logger.Warn("new user error", "error", err)
@@ -195,15 +187,11 @@ func AddNewUser(c *gin.Context) {
 
 	id, _ := res.LastInsertId()
 
-	if len(tenantIds) > 0 {
-		for _, tenantId := range tenantIds {
-			err = tenant.AddUserToTenant(id, tenantId, req.Role, tx, c.Request.Context())
-			if err != nil {
-				logger.Warn("new user error", "error", err)
-				c.JSON(500, common.RespInternalError())
-				return
-			}
-		}
+	err = models.SyncUserToTenants(c.Request.Context(), id, req.Role, tx)
+	if err != nil {
+		logger.Warn("sync users to tenant error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
 	}
 
 	err = tx.Commit()

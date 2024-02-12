@@ -259,7 +259,7 @@ func SubmitTenantUser(c *gin.Context) {
 			return
 		}
 
-		err = AddUserToTenant(targetUser.Id, req.TenantId, req.Role, tx, c.Request.Context())
+		err = models.AddUserToTenant(targetUser.Id, req.TenantId, req.Role, tx, c.Request.Context())
 		if err != nil {
 			if e.IsErrUniqueConstraint(err) {
 				c.JSON(400, common.RespError("user already in tenant"))
@@ -461,42 +461,6 @@ func DeleteTenantUser(c *gin.Context) {
 	}
 }
 
-func AddUserToTenant(userId int64, tenantId int64, role models.RoleType, tx *sql.Tx, ctx context.Context) error {
-	now := time.Now()
-	_, err := tx.ExecContext(ctx, ("INSERT INTO tenant_user (tenant_id,user_id,role,created,updated) VALUES (?,?,?,?,?)"),
-		tenantId, userId, role, now, now)
-	if err != nil {
-		return err
-	}
-
-	// find teams in tenant that enables user sync
-	rows, err := tx.QueryContext(ctx, `SELECT id FROM team WHERE tenant_id=? AND sync_users=true`, tenantId)
-	if err != nil {
-		return err
-	}
-
-	defer rows.Close()
-	teamIds := make([]int64, 0)
-	for rows.Next() {
-		var teamId int64
-		err := rows.Scan(&teamId)
-		if err != nil {
-			return err
-		}
-		teamIds = append(teamIds, teamId)
-	}
-
-	for _, teamId := range teamIds {
-		_, err = tx.ExecContext(ctx, ("INSERT INTO team_member (tenant_id,team_id,user_id,role,created,updated) VALUES (?,?,?,?,?,?)"),
-			tenantId, teamId, userId, models.ROLE_VIEWER, now, now)
-		if err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
-
 type TenantTeam struct {
 	TenantId   int64          `json:"tenantId"`
 	TenantName string         `json:"tenantName"`
@@ -664,7 +628,7 @@ func UpdateTenant(c *gin.Context) {
 		}
 
 		for _, userId := range userIds {
-			err = AddUserToTenant(userId, oldTenant.Id, models.ROLE_VIEWER, tx, c.Request.Context())
+			err = models.AddUserToTenant(userId, oldTenant.Id, models.ROLE_VIEWER, tx, c.Request.Context())
 			if err != nil && !e.IsErrUniqueConstraint(err) {
 				logger.Warn("add team member error", "error", err)
 				c.JSON(400, common.RespError(err.Error()))
