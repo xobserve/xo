@@ -84,7 +84,37 @@ type Echarts struct {
 	BaiduMapAK     string `json:"baiduMapAK"`
 }
 type Tenant struct {
-	Enable bool `json:"enable"`
+	EnableSyncUsers bool `json:"enableSyncUsers"`
+}
+
+func GetBasicConfig() *UIConfig {
+	echarts := Echarts{
+		EnableBaiduMap: config.Data.Panel.Echarts.EnableBaiduMap,
+		BaiduMapAK:     config.Data.Panel.Echarts.BaiduMapAK,
+	}
+
+	panel := Panel{
+		Echarts: echarts,
+	}
+
+	tenant := Tenant{
+		EnableSyncUsers: config.Data.Tenant.EnableSyncUsers,
+	}
+
+	cfg := &UIConfig{
+		AppName:           config.Data.Common.AppName,
+		RepoUrl:           config.Data.Common.RepoUrl,
+		Panel:             panel,
+		ShowAlertIcon:     config.Data.Sidemenu.ShowAlertIcon,
+		EnableGithubLogin: config.Data.User.EnableGithubLogin,
+		GithubOAuthToken:  config.Data.User.GithubOAuthToken,
+		Plugins:           (*Plugins)(&config.Data.Plugins),
+		Observability:     &config.Data.Observability,
+		Tenant:            &tenant,
+		Dashboard:         &config.Data.Dashboard,
+	}
+
+	return cfg
 }
 
 func GetTenantConfig(c *gin.Context) {
@@ -165,34 +195,6 @@ func GetTenantConfig(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, common.RespSuccess(cfg))
-}
-
-func GetBasicConfig() *UIConfig {
-	echarts := Echarts{
-		EnableBaiduMap: config.Data.Panel.Echarts.EnableBaiduMap,
-		BaiduMapAK:     config.Data.Panel.Echarts.BaiduMapAK,
-	}
-
-	panel := Panel{
-		Echarts: echarts,
-	}
-
-	tenant := Tenant{}
-
-	cfg := &UIConfig{
-		AppName:           config.Data.Common.AppName,
-		RepoUrl:           config.Data.Common.RepoUrl,
-		Panel:             panel,
-		ShowAlertIcon:     config.Data.Sidemenu.ShowAlertIcon,
-		EnableGithubLogin: config.Data.User.EnableGithubLogin,
-		GithubOAuthToken:  config.Data.User.GithubOAuthToken,
-		Plugins:           (*Plugins)(&config.Data.Plugins),
-		Observability:     &config.Data.Observability,
-		Tenant:            &tenant,
-		Dashboard:         &config.Data.Dashboard,
-	}
-
-	return cfg
 }
 
 // overrideApiServerAddrInLocalUI is used to override api server address in local ui automatically

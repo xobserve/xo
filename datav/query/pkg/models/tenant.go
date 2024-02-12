@@ -20,6 +20,7 @@ type Tenant struct {
 	Owner       string    `json:"owner"`
 	NumTeams    int       `json:"numTeams"`
 	Teams       []*Team   `json:"teams,omitempty"`
+	SyncUsers   bool      `json:"syncUsers"`
 	Created     time.Time `json:"created"`
 	Status      int       `json:"status"`
 	CurrentRole RoleType  `json:"-"`
@@ -74,7 +75,7 @@ func QueryTenant(ctx context.Context, tenantId int64) (*Tenant, error) {
 		Id: tenantId,
 	}
 
-	err := db.Conn.QueryRowContext(ctx, `SELECT  name,created FROM tenant WHERE id=? and status!=?`, tenantId, common.StatusDeleted).Scan(&tenant.Name, &tenant.Created)
+	err := db.Conn.QueryRowContext(ctx, `SELECT  name,sync_users,created FROM tenant WHERE id=? and status!=?`, tenantId, common.StatusDeleted).Scan(&tenant.Name, &tenant.SyncUsers, &tenant.Created)
 	if err != nil {
 		return nil, err
 	}
@@ -247,4 +248,24 @@ func QueryAllTenantIds(ctx context.Context) ([]int64, error) {
 	}
 
 	return tenantIds, nil
+}
+
+func GetEnableSyncUsersTenants() ([]int64, error) {
+	tenants := make([]int64, 0)
+	rows, err := db.Conn.Query("SELECT id FROM tenant WHERE sync_users=?", true)
+	if err != nil {
+		return nil, err
+	}
+
+	for rows.Next() {
+		var id int64
+		err = rows.Scan(&id)
+		if err != nil {
+			return nil, err
+		}
+
+		tenants = append(tenants, id)
+	}
+
+	return tenants, nil
 }

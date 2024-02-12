@@ -111,8 +111,8 @@ plugins:
 
 #################################### Tenant ##############################
 tenant:
-    ## Automatically sync users to default tenant
-    sync_user_to_default: true
+    ## when enabled, there will be a setting option in tenant which can sync users from website
+    enable_sync_users: true
 
 #################################### Observability ##############################
 observability:

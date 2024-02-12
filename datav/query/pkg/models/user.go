@@ -167,3 +167,24 @@ func DeleteUser(userId int64, tx *sql.Tx) error {
 
 	return nil
 }
+
+func GetAllUserIds() ([]int64, error) {
+	rows, err := db.Conn.Query(`SELECT id FROM user`)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	users := make([]int64, 0)
+
+	for rows.Next() {
+		var id int64
+		err := rows.Scan(&id)
+		if err != nil {
+			return nil, err
+		}
+
+		users = append(users, id)
+	}
+	return users, nil
+}

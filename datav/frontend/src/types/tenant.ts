@@ -21,6 +21,7 @@ export interface Tenant {
   owner: string
   numTeams: number
   teams: Team[]
+  syncUsers: boolean
   status: AvailableStatus
   created: string
 }

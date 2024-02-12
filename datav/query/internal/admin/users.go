@@ -35,7 +35,6 @@ import (
 	"github.com/xObserve/xObserve/query/internal/tenant"
 	"github.com/xObserve/xObserve/query/internal/user"
 	"github.com/xObserve/xObserve/query/pkg/common"
-	"github.com/xObserve/xObserve/query/pkg/config"
 	"github.com/xObserve/xObserve/query/pkg/db"
 	"github.com/xObserve/xObserve/query/pkg/e"
 	"github.com/xObserve/xObserve/query/pkg/models"
@@ -166,6 +165,13 @@ func AddNewUser(c *gin.Context) {
 	encodedPW, _ := utils.EncodePassword(req.Password, salt)
 	now := time.Now()
 
+	tenantIds, err := models.GetEnableSyncUsersTenants()
+	if err != nil {
+		logger.Warn("get enable sync users tenants error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+
 	tx, err := db.Conn.Begin()
 	if err != nil {
 		logger.Warn("new user error", "error", err)
@@ -174,13 +180,8 @@ func AddNewUser(c *gin.Context) {
 	}
 	defer tx.Rollback()
 
-	var tenantId int64
-	if config.Data.Tenant.SyncWebsiteUsers {
-		tenantId = models.DefaultTenantId
-	}
-
 	res, err := tx.ExecContext(c.Request.Context(), "INSERT INTO user (username,password,salt,email,role,current_tenant,created,updated) VALUES (?,?,?,?,?,?,?,?)",
-		req.Username, encodedPW, salt, req.Email, req.Role, tenantId, now, now)
+		req.Username, encodedPW, salt, req.Email, req.Role, 0, now, now)
 	if err != nil {
 		if e.IsErrUniqueConstraint(err) {
 			c.JSON(400, common.RespError("user already exists"))
@@ -194,12 +195,14 @@ func AddNewUser(c *gin.Context) {
 
 	id, _ := res.LastInsertId()
 
-	if tenantId != 0 {
-		err = tenant.AddUserToTenant(id, tenantId, req.Role, tx, c.Request.Context())
-		if err != nil {
-			logger.Warn("new user error", "error", err)
-			c.JSON(500, common.RespInternalError())
-			return
+	if len(tenantIds) > 0 {
+		for _, tenantId := range tenantIds {
+			err = tenant.AddUserToTenant(id, tenantId, req.Role, tx, c.Request.Context())
+			if err != nil {
+				logger.Warn("new user error", "error", err)
+				c.JSON(500, common.RespInternalError())
+				return
+			}
 		}
 	}
 

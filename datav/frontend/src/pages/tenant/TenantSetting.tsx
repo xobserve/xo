@@ -192,6 +192,20 @@ export const TenantSetting = memo(() => {
                     }}
                   />
                 </FormItem>
+                <FormItem
+                  title={t1.syncUsers}
+                  desc={t1.syncUsersTips}
+                  labelWidth='150px'
+                  alignItems='center'
+                >
+                  <Switch
+                    isChecked={tenant.syncUsers}
+                    onChange={(e) => {
+                      tenant.syncUsers = e.currentTarget.checked
+                      setTenant(cloneDeep(tenant))
+                    }}
+                  />
+                </FormItem>
               </FormSection>
               <Button width='fit-content' size='sm' onClick={updateTenant}>
                 {t.submit}

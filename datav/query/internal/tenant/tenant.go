@@ -610,6 +610,12 @@ func UpdateTenant(c *gin.Context) {
 		return
 	}
 
+	oldTenant, err := models.QueryTenant(c.Request.Context(), req.Id)
+	if err != nil {
+		c.JSON(400, common.RespError("get tenant error:"+err.Error()))
+		return
+	}
+
 	ak := c.GetString("accessToken")
 
 	if ak != "" {
@@ -630,14 +636,47 @@ func UpdateTenant(c *gin.Context) {
 		}
 	}
 
+	tx, err := db.Conn.Begin()
+	if err != nil {
+		logger.Warn("leave tenant error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+	defer tx.Rollback()
+
 	now := time.Now()
-	_, err := db.Conn.ExecContext(c.Request.Context(), "UPDATE tenant SET name=?, updated=? WHERE id=?", req.Name, now, req.Id)
+	_, err = tx.ExecContext(c.Request.Context(), "UPDATE tenant SET name=?, updated=?, sync_users=? WHERE id=?", req.Name, now, req.SyncUsers, req.Id)
 	if err != nil {
 		if e.IsErrUniqueConstraint(err) {
 			c.JSON(400, common.RespError(fmt.Sprintf("tenant `%s` already exist", req.Name)))
 			return
 		}
 		logger.Warn("update tenant error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+
+	if !oldTenant.SyncUsers && req.SyncUsers {
+		userIds, err := models.GetAllUserIds()
+		if err != nil {
+			c.JSON(400, common.RespError("get user ids error:"+err.Error()))
+			return
+		}
+
+		for _, userId := range userIds {
+			err = AddUserToTenant(userId, oldTenant.Id, models.ROLE_VIEWER, tx, c.Request.Context())
+			if err != nil && !e.IsErrUniqueConstraint(err) {
+				logger.Warn("add team member error", "error", err)
+				c.JSON(400, common.RespError(err.Error()))
+				return
+			}
+		}
+
+	}
+
+	err = tx.Commit()
+	if err != nil {
+		logger.Warn("commit sql transaction error", "error", err)
 		c.JSON(500, common.RespInternalError())
 		return
 	}
