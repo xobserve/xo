@@ -54,7 +54,9 @@ export const DetailAlert = ({
       </HStack>
 
       <Divider mt='1' />
-      <VStack mt='1'>{children}</VStack>
+      <VStack mt='1' alignItems='left'>
+        {children}
+      </VStack>
     </Alert>
   )
 }
