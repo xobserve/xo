@@ -5,7 +5,6 @@ import (
 	"database/sql"
 	"time"
 
-	"github.com/gin-gonic/gin"
 	"github.com/xObserve/xObserve/query/pkg/common"
 	"github.com/xObserve/xObserve/query/pkg/db"
 )
@@ -32,10 +31,6 @@ func (s Tenants) Len() int      { return len(s) }
 func (s Tenants) Swap(i, j int) { s[i], s[j] = s[j], s[i] }
 func (s Tenants) Less(i, j int) bool {
 	return s[i].Created.Unix() > s[j].Created.Unix()
-}
-
-func GetTenant(c *gin.Context) string {
-	return DefaultTenant
 }
 
 type TenantUser struct {

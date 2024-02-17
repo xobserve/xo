@@ -1,6 +1,6 @@
 CREATE TABLE xobserve_metrics.time_series
 (
-    tenantId LowCardinality(String)  DEFAULT 'default',
+    teamId LowCardinality(String)  DEFAULT '1',
     environment LowCardinality(String) DEFAULT 'default',
     serviceName LowCardinality(String) CODEC(ZSTD(1)),
     temporality LowCardinality(String) DEFAULT 'Unspecified',

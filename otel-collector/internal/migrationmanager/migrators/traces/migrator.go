@@ -9,7 +9,7 @@ import (
 const (
 	name            = "traces"
 	database        = "xobserve_traces"
-	migrationFolder = "internal/migrationmanager/migrators/traces/migrations"
+	migrationFolder = "migrations/traces"
 )
 
 type TracesMigrator struct {

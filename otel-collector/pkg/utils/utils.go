@@ -20,26 +20,26 @@ func SpanIDToHexOrEmptyString(spanID pcommon.SpanID) string {
 	return ""
 }
 
-func GetTenantFromResource(resource pcommon.Resource) string {
-	tenant, found := resource.Attributes().Get("xobserve.tenant")
+func GetTeamIdFromResource(resource pcommon.Resource) string {
+	teamId, found := resource.Attributes().Get("xo.teamId")
 	if !found {
-		return "default"
+		return "1"
 	}
-	return tenant.AsString()
+	return teamId.AsString()
 }
 
 func GetNamespaceFromResource(resource pcommon.Resource) string {
-	env, found := resource.Attributes().Get("xobserve.namespace")
+	namespace, found := resource.Attributes().Get("xo.namespace")
 	if !found {
 		return "default"
 	}
-	return env.AsString()
+	return namespace.AsString()
 }
 
-func GetGroupFromResource(resource pcommon.Resource) string {
-	group, found := resource.Attributes().Get("xobserve.group")
+func GetClusterFromResource(resource pcommon.Resource) string {
+	cluster, found := resource.Attributes().Get("xo.cluster")
 	if !found {
 		return "default"
 	}
-	return group.AsString()
+	return cluster.AsString()
 }

@@ -21,8 +21,8 @@ type ServiceNameRes struct {
 }
 
 func GetServiceNames(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[string]interface{}) models.PluginResult {
-	tenant := models.DefaultTenant
-	domainQuery := xobserveutils.BuildBasicDomainQuery(tenant, params)
+	var teamId int64 = 1
+	domainQuery := xobserveutils.BuildBasicDomainQuery(teamId, params)
 
 	query := fmt.Sprintf("SELECT DISTINCT serviceName FROM %s.%s WHERE %s", xobservemodels.DefaultTraceDB, xobservemodels.DefaultServiceOperationsTable, domainQuery)
 
@@ -43,8 +43,8 @@ func GetServiceNames(c *gin.Context, ds *models.Datasource, conn ch.Conn, params
 }
 
 func GetServiceOperations(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[string]interface{}) models.PluginResult {
-	tenant := models.DefaultTenant
-	domainQuery := xobserveutils.BuildBasicDomainQuery(tenant, params)
+	var teamId int64 = 1
+	domainQuery := xobserveutils.BuildBasicDomainQuery(teamId, params)
 
 	service := xobserveutils.GetValueListFromParams(params, "service")
 	if service != nil {
@@ -70,8 +70,8 @@ func GetServiceOperations(c *gin.Context, ds *models.Datasource, conn ch.Conn, p
 }
 
 func GetServiceRootOperations(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[string]interface{}) models.PluginResult {
-	tenant := models.DefaultTenant
-	domainQuery := xobserveutils.BuildBasicDomainQuery(tenant, params)
+	var teamId int64 = 1
+	domainQuery := xobserveutils.BuildBasicDomainQuery(teamId, params)
 
 	service := xobserveutils.GetValueListFromParams(params, "service")
 	if service != nil {
@@ -112,8 +112,8 @@ func GetServiceInfoList(c *gin.Context, ds *models.Datasource, conn ch.Conn, par
 		return models.GenPluginResult(models.PluginStatusError, "start and end is required", nil)
 	}
 
-	tenant := models.DefaultTenant
-	domainQuery := xobserveutils.BuildBasicDomainQuery(tenant, params)
+	var teamId int64 = 1
+	domainQuery := xobserveutils.BuildBasicDomainQuery(teamId, params)
 
 	service := xobserveutils.GetValueListFromParams(params, "service")
 	if service != nil {

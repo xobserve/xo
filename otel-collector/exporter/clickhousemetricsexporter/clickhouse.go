@@ -344,14 +344,14 @@ func (ch *clickHouse) Write(ctx context.Context, data *prompb.WriteRequest, metr
 			for _, s := range ts.Samples {
 
 				// usage collection checks
-				tenant := "default"
+				tenant := "1"
 				collectUsage := true
 				for _, val := range timeSeries[fingerprint] {
 					if val.Name == nameLabel && strings.HasPrefix(val.Value, "xobserve_") {
 						collectUsage = false
 						break
 					}
-					if val.Name == "tenant" {
+					if val.Name == "teamId" {
 						tenant = val.Value
 					}
 				}

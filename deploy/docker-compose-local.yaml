@@ -4,7 +4,6 @@ include:
   - ./compose-clickhouse.yaml
   - ./compose-mockdata.yaml
   - ../datav/deploy/docker-compose-local.yaml
-
 services:
   otel-collector:
     container_name: xobserve-collector

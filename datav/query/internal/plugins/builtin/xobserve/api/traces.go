@@ -29,8 +29,8 @@ func GetTraces(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[s
 	// @performace: 对 traceId 做 skip index
 	traceIds := strings.TrimSpace(c.Query("traceIds"))
 
-	tenant := models.GetTenant(c)
-	domainQuery := xobserveutils.BuildBasicDomainQuery(tenant, params)
+	var teamId int64 = 1
+	domainQuery := xobserveutils.BuildBasicDomainQuery(teamId, params)
 
 	service0 := c.Query("service")
 	var service string
@@ -354,8 +354,8 @@ type TagKey struct {
 }
 
 func GetTraceTagKeys(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[string]interface{}) models.PluginResult {
-	tenant := models.GetTenant(c)
-	domainQuery := xobserveutils.BuildBasicDomainQuery(tenant, params)
+	var teamId int64 = 1
+	domainQuery := xobserveutils.BuildBasicDomainQuery(teamId, params)
 
 	service := c.Query("service")
 	if service == "" {

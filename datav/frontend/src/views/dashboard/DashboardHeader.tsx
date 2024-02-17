@@ -56,6 +56,7 @@ import { $config } from 'src/data/configs/config'
 import { MenuItem } from 'types/teams'
 import { locale } from 'src/i18n/i18n'
 import { dashboardLangTitle } from 'utils/dashboard/dashboard'
+import { use } from 'echarts'
 
 interface HeaderProps {
   dashboard: Dashboard
@@ -77,7 +78,19 @@ const DashboardHeader = memo(
     const config = useStore($config)
 
     const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
-    const [dvars, gvars] = catelogVariables(vars, dashboard)
+
+    const displayVars = useMemo(() => {
+      const [dvars, gvars] = catelogVariables(vars, dashboard)
+      const res = dvars
+      for (const v of gvars) {
+        if (res.find((v1) => v1.name == v.name)) {
+          continue
+        }
+        res.push(v)
+      }
+
+      return res
+    }, [vars])
 
     const unlinkTemplate = async () => {
       await requestApi.post(
@@ -276,7 +289,7 @@ const DashboardHeader = memo(
                 columnGap={3}
                 rowGap={0}
               >
-                <VariablesLoader variables={concat(gvars, dvars)} />
+                <VariablesLoader variables={displayVars} />
                 <Box flexGrow={1}></Box>
                 <>
                   {dashboard.links.map((link) => (

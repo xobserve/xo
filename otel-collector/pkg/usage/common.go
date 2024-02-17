@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	TenantKey                 = "tenant"
+	TenantKey                 = "teamId"
 	DefaultCollectionInterval = 1 * time.Hour
 	UsageTableName            = "usage"
 )
@@ -30,7 +30,7 @@ type UsageDB struct {
 	CollectorID string    `ch:"collector_id" json:"collectorId"`
 	ExporterID  string    `ch:"exporter_id" json:"exporterId"`
 	TimeStamp   time.Time `ch:"timestamp" json:"timestamp"`
-	Tenant      string    `ch:"tenant" json:"tenant"`
+	Tenant      string    `ch:"teamId" json:"teamId"`
 	Data        string    `ch:"data" json:"data"`
 }
 

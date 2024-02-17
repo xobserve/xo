@@ -276,9 +276,9 @@ func newStructuredSpan(otelSpan ptrace.Span, serviceName string, resource pcommo
 
 	resourceAttrs := map[string]string{}
 
-	tenant := utils.GetTenantFromResource(resource)
+	teamId := utils.GetTeamIdFromResource(resource)
 	namespace := utils.GetNamespaceFromResource(resource)
-	group := utils.GetGroupFromResource(resource)
+	cluster := utils.GetClusterFromResource(resource)
 	attributes.Range(func(k string, v pcommon.Value) bool {
 		tagMap[k] = v.AsString()
 		spanAttribute := SpanAttribute{
@@ -352,9 +352,9 @@ func newStructuredSpan(otelSpan ptrace.Span, serviceName string, resource pcommo
 		Name:                otelSpan.Name(),
 		StartTime:           uint64(otelSpan.StartTimestamp()),
 		Duration:            durationNano,
-		Tenant:              tenant,
+		TeamId:              teamId,
 		Namespace:           namespace,
-		Group:               group,
+		Cluster:             cluster,
 		ServiceName:         serviceName,
 		Kind:                int8(otelSpan.Kind()),
 		StatusCode:          statusCode,
@@ -388,9 +388,9 @@ func newStructuredSpan(otelSpan ptrace.Span, serviceName string, resource pcommo
 	populateTraceModel(span)
 	spanAttributes = append(spanAttributes, extractSpanAttributesFromSpanIndex(span)...)
 	for _, v := range spanAttributes {
-		v.Tenant = tenant
+		v.TeamId = teamId
+		v.Cluster = cluster
 		v.Namespace = namespace
-		v.Group = group
 		v.ServiceName = serviceName
 	}
 

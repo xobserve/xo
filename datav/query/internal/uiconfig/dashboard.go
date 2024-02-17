@@ -36,6 +36,18 @@ func GetDashboardConfig(c *gin.Context) {
 		dash, err := models.QueryDashboard(c.Request.Context(), teamId0, id)
 		if err != nil {
 			if err == sql.ErrNoRows {
+				tenantId, err = models.QueryTenantIdByTeamId(c.Request.Context(), teamId0)
+				sidemenu, err = models.QuerySideMenu(c.Request.Context(), teamId0, nil)
+				if sidemenu != nil {
+					cfg.Sidemenu = sidemenu
+					cfg.CurrentTenant = tenantId
+					cfg.CurrentTeam = teamId
+
+					c.JSON(200, common.RespSuccess(map[string]interface{}{
+						"cfg": cfg,
+					}))
+					return
+				}
 				c.JSON(400, common.RespError(fmt.Sprintf("dashboard %s not exist", path)))
 				return
 			}

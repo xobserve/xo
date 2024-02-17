@@ -5,12 +5,14 @@ CREATE TABLE IF NOT EXISTS xobserve_traces.dependency_graph_minutes ON CLUSTER c
     error_count SimpleAggregateFunction(sum, UInt64) CODEC(T64, ZSTD(1)),
     total_count SimpleAggregateFunction(sum, UInt64) CODEC(T64, ZSTD(1)),
     timestamp DateTime CODEC(DoubleDelta, LZ4),
-    tenant LowCardinality(String) CODEC(ZSTD(1)),
+    teamId UInt64 CODEC(ZSTD(1)), 
+    cluster LowCardinality(String) CODEC(ZSTD(1)),
     namespace LowCardinality(String) CODEC(ZSTD(1)),
-    group LowCardinality(String) CODEC(ZSTD(1)),
+    INDEX idx_cluster cluster TYPE bloom_filter GRANULARITY 4,
+    INDEX idx_namespace namespace TYPE bloom_filter GRANULARITY 4,
 ) ENGINE AggregatingMergeTree
 PARTITION BY toDate(timestamp)
-ORDER BY (timestamp,tenant, namespace, group, src, dest)
+ORDER BY (timestamp,teamId, src, dest)
 TTL toDateTime(timestamp) + INTERVAL 1296000 SECOND DELETE;
 
 
@@ -23,12 +25,12 @@ SELECT
     countIf(B.statusCode=2) as error_count,
     count(*) as total_count,
     toStartOfMinute(fromUnixTimestamp64Nano(B.startTime)) as timestamp,
-    B.tenant as tenant,
-    B.namespace as namespace,
-    B.group as group
+    B.teamId as teamId,
+    B.cluster as cluster,
+    B.namespace as namespace
 FROM xobserve_traces.trace_index AS A, xobserve_traces.trace_index AS B
 WHERE (A.serviceName != B.serviceName) AND (A.spanId = B.parentId)
-GROUP BY timestamp,tenant, namespace, group, src, dest;
+GROUP BY timestamp,teamId, cluster, namespace, src, dest;
 
 CREATE MATERIALIZED VIEW IF NOT EXISTS xobserve_traces.dependency_graph_minutes_db_calls_mv ON CLUSTER cluster
 TO xobserve_traces.dependency_graph_minutes AS
@@ -39,12 +41,12 @@ SELECT
     countIf(statusCode=2) as error_count,
     count(*) as total_count,
     toStartOfMinute(fromUnixTimestamp64Nano(startTime)) as timestamp,
-    tenant,
-    namespace,
-    group
+    teamId,
+    cluster,
+    namespace
 FROM xobserve_traces.trace_index
 WHERE dest != '' and kind != 2
-GROUP BY timestamp,tenant, namespace, group, src, dest;
+GROUP BY timestamp,teamId, cluster, namespace, src, dest;
 
 CREATE MATERIALIZED VIEW IF NOT EXISTS xobserve_traces.dependency_graph_minutes_messaging_calls_mv ON CLUSTER cluster
 TO xobserve_traces.dependency_graph_minutes AS
@@ -55,12 +57,12 @@ SELECT
     countIf(statusCode=2) as error_count,
     count(*) as total_count,
     toStartOfMinute(fromUnixTimestamp64Nano(startTime)) as timestamp,
-    tenant,
-    namespace,
-    group
+    teamId,
+    cluster,
+    namespace
 FROM xobserve_traces.trace_index
 WHERE dest != '' and kind != 2
-GROUP BY timestamp,tenant, namespace, group, src, dest
+GROUP BY timestamp,teamId, cluster, namespace, src, dest
 
 CREATE TABLE IF NOT EXISTS xobserve_traces.distributed_dependency_graph_minutes ON CLUSTER cluster AS xobserve_traces.dependency_graph_minutes
 ENGINE = Distributed("cluster", "xobserve_traces", dependency_graph_minutes, cityHash64(rand()));

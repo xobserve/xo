@@ -163,10 +163,10 @@ processors:
       ]
     dimensions_cache_size: 100000
     dimensions:
-      - name: service.namespace
-        default: default
-      - name: deployment.environment
-        default: default
+      # - name: service.namespace
+      #   default: default
+      # - name: deployment.environment
+      #   default: default
       # This is added to ensure the uniqueness of the timeseries
       # Otherwise, identical timeseries produced by multiple replicas of
       # collectors result in incorrect APM metrics

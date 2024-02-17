@@ -69,13 +69,13 @@ func (e *UsageCollector) CreateTable(db clickhouse.Conn, databaseName string) er
 	query := fmt.Sprintf(
 		`
 		CREATE TABLE IF NOT EXISTS %s.%s ON CLUSTER %s (
-			tenant String,
+			teamId String,
 			collector_id String,
 			exporter_id String,
 			timestamp DateTime,
 			data String
 		) ENGINE MergeTree()
-		ORDER BY (tenant, collector_id, exporter_id, timestamp)
+		ORDER BY (teamId, collector_id, exporter_id, timestamp)
 		TTL timestamp + INTERVAL %d DAY;
 		`,
 		databaseName,

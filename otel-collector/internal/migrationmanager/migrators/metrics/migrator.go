@@ -9,7 +9,7 @@ import (
 const (
 	name            = "metrics"
 	database        = "xobserve_metrics"
-	migrationFolder = "internal/migrationmanager/migrators/metrics/migrations"
+	migrationFolder = "migrations/metrics"
 )
 
 type MetricsMigrator struct {
