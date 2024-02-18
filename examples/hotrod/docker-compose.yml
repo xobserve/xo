@@ -1,0 +1,43 @@
+version: "3.7"
+
+services:
+  hotrod-frontend:
+    image: "xobserve-hotrod"
+    container_name: frontend
+    hostname: frontend-1
+    ports:
+      - "8080:8080"
+    command: ["frontend"]
+    environment:
+      - OTEL_RESOURCE_ATTRIBUTES="service.name=frontend,host.name=frontend-1"
+      - CLICKHOUSE_ADDR=host.docker.internal:9000
+  hotrod-driver:
+    image: "xobserve-hotrod"
+    container_name: driver
+    hostname: driver-1
+    ports:
+      - "8082:8082"
+    command: ["driver"]
+    environment:
+      - OTEL_RESOURCE_ATTRIBUTES="service.name=driver,host.name=driver-1"
+      - CLICKHOUSE_ADDR=host.docker.internal:9000
+  hotrod-customer:
+    image: "xobserve-hotrod"
+    container_name: customer
+    hostname: customer-1
+    ports:
+      - "8081:8081"
+    command: ["customer"]
+    environment:
+      - OTEL_RESOURCE_ATTRIBUTES="service.name=customer,host.name=customer-1"
+      - CLICKHOUSE_ADDR=host.docker.internal:9000
+  hotrod-route:
+    image: "xobserve-hotrod"
+    container_name: route
+    hostname: route-1
+    ports:
+      - "8083:8083"
+    command: ["route"]
+    environment:
+      - OTEL_RESOURCE_ATTRIBUTES="service.name=route,host.name=route-1"
+      - CLICKHOUSE_ADDR=host.docker.internal:9000

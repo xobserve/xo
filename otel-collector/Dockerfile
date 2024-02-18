@@ -18,8 +18,8 @@ LABEL maintainer="xobserve"
 # RUN apk update && apk add ca-certificates && rm -rf /var/cache/apk/*
 
 # set working directory
-WORKDIR /app/collector
-COPY --from=builder /app/collector /app/collector/collector
+WORKDIR /app
+COPY --from=builder /app/collector /app/collector
 COPY ./config/config.yaml /etc/collector/config.yaml
 
 

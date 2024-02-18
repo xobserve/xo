@@ -56,8 +56,6 @@ receivers:
       # - type: filter
       #   id: xobserve_logs_filter
       #   expr: 'resource.container_name matches "^xobserve-(logspout|frontend|alertmanager|query-service|otel-collector|otel-collector-metrics|clickhouse|zookeeper)"'
-  opencensus:
-    endpoint: 0.0.0.0:55678
   otlp/spanmetrics:
     protocols:
       grpc:
@@ -201,11 +199,11 @@ extensions:
 
 exporters:
   clickhousetraces:
-    dsn: tcp://localhost:9000/?database=xobserve_traces
+    dsn: tcp://${CLICKHOUSE_ADDR}/?database=xobserve_traces
     docker_multi_node_cluster: ${DOCKER_MULTI_NODE_CLUSTER}
     low_cardinal_exception_grouping: ${LOW_CARDINAL_EXCEPTION_GROUPING}
   clickhousemetricswrite:
-    endpoint: tcp://localhost:9000/?database=xobserve_metrics
+    endpoint: tcp://${CLICKHOUSE_ADDR}/?database=xobserve_metrics
     retry_on_failure:
       enabled: true
       initial_interval: 10s
@@ -214,7 +212,7 @@ exporters:
     resource_to_telemetry_conversion:
       enabled: true
   clickhousemetricswrite/prometheus:
-    endpoint: tcp://localhost:9000/?database=xobserve_metrics
+    endpoint: tcp://${CLICKHOUSE_ADDR}/?database=xobserve_metrics
     retry_on_failure:
       enabled: true
       initial_interval: 10s
@@ -227,7 +225,7 @@ exporters:
   # logging: {}
 
   clickhouselogsexporter:
-    dsn: tcp://localhost:9000/?database=xobserve_logs
+    dsn: tcp://${CLICKHOUSE_ADDR}/?database=xobserve_logs
     docker_multi_node_cluster: ${DOCKER_MULTI_NODE_CLUSTER}
     timeout: 5s
     sending_queue:
