@@ -229,12 +229,13 @@ export const queryPluginDataToNodeGraph = (
   const nodesMap: Record<string, Node> = {}
   const edges: Edge[] = []
   for (const row of data.data) {
+    const target = row[targetIndex]
     const callsCount = row[callsIndex]
     const errorsCount = row[errorsIndex]
     const successCount = callsCount - errorsCount
     const latency = round(row[p99Index] / 1000000, 1) + 'ms'
     const source = row[sourceIndex]
-    const target = row[targetIndex]
+
     const edge: Edge = {
       source: source,
       target: target,
@@ -272,7 +273,10 @@ export const queryPluginDataToNodeGraph = (
       nodesMap[source] = {
         id: source,
         label: source,
-        data: {},
+        data: {
+          success: 0,
+          error: 0,
+        },
       }
   }
 
