@@ -5,6 +5,7 @@ go 1.20
 require (
 	github.com/ClickHouse/clickhouse-go/v2 v2.14.3
 	github.com/gogo/protobuf v1.3.2
+	github.com/golang-migrate/migrate/v4 v4.16.2
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da
 	github.com/golang/snappy v0.0.4
 	github.com/google/uuid v1.3.1
@@ -14,17 +15,11 @@ require (
 	github.com/knadh/koanf v1.5.0
 	github.com/oklog/ulid v1.3.1
 	github.com/open-telemetry/opamp-go v0.9.0
-	github.com/open-telemetry/opentelemetry-collector-contrib/exporter/carbonexporter v0.87.0
 	github.com/open-telemetry/opentelemetry-collector-contrib/exporter/fileexporter v0.87.0
 	github.com/open-telemetry/opentelemetry-collector-contrib/exporter/jaegerexporter v0.85.0
-	github.com/open-telemetry/opentelemetry-collector-contrib/exporter/jaegerthrifthttpexporter v0.85.0
 	github.com/open-telemetry/opentelemetry-collector-contrib/exporter/kafkaexporter v0.87.0
-	github.com/open-telemetry/opentelemetry-collector-contrib/exporter/loadbalancingexporter v0.87.0
-	github.com/open-telemetry/opentelemetry-collector-contrib/exporter/opencensusexporter v0.87.0
 	github.com/open-telemetry/opentelemetry-collector-contrib/exporter/prometheusexporter v0.87.0
 	github.com/open-telemetry/opentelemetry-collector-contrib/exporter/prometheusremotewriteexporter v0.87.0
-	github.com/open-telemetry/opentelemetry-collector-contrib/exporter/pulsarexporter v0.87.0
-	github.com/open-telemetry/opentelemetry-collector-contrib/exporter/zipkinexporter v0.87.0
 	github.com/open-telemetry/opentelemetry-collector-contrib/extension/basicauthextension v0.87.0
 	github.com/open-telemetry/opentelemetry-collector-contrib/extension/bearertokenauthextension v0.87.0
 	github.com/open-telemetry/opentelemetry-collector-contrib/extension/healthcheckextension v0.87.0
@@ -104,7 +99,6 @@ require (
 	github.com/open-telemetry/opentelemetry-collector-contrib/receiver/receivercreator v0.87.0
 	github.com/open-telemetry/opentelemetry-collector-contrib/receiver/redisreceiver v0.87.0
 	github.com/open-telemetry/opentelemetry-collector-contrib/receiver/simpleprometheusreceiver v0.87.0
-	github.com/open-telemetry/opentelemetry-collector-contrib/receiver/skywalkingreceiver v0.87.0
 	github.com/open-telemetry/opentelemetry-collector-contrib/receiver/sqlqueryreceiver v0.87.0
 	github.com/open-telemetry/opentelemetry-collector-contrib/receiver/sqlserverreceiver v0.87.0
 	github.com/open-telemetry/opentelemetry-collector-contrib/receiver/statsdreceiver v0.87.0
@@ -119,6 +113,7 @@ require (
 	github.com/prometheus/prometheus v0.47.1
 	github.com/segmentio/ksuid v1.0.4
 	github.com/sirupsen/logrus v1.9.2
+	github.com/spf13/cobra v1.7.0
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.16.0
 	github.com/stretchr/testify v1.8.4
@@ -269,7 +264,6 @@ require (
 	github.com/gogo/googleapis v1.4.1 // indirect
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/golang-jwt/jwt/v4 v4.5.0 // indirect
-	github.com/golang-migrate/migrate/v4 v4.16.2 // indirect
 	github.com/golang-sql/civil v0.0.0-20190719163853-cb61b32ac6fe // indirect
 	github.com/golang-sql/sqlexp v0.1.0 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
@@ -423,7 +417,6 @@ require (
 	github.com/spaolacci/murmur3 v1.1.0 // indirect
 	github.com/spf13/afero v1.9.5 // indirect
 	github.com/spf13/cast v1.5.1 // indirect
-	github.com/spf13/cobra v1.7.0 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/stretchr/objx v0.5.0 // indirect
 	github.com/subosito/gotenv v1.4.2 // indirect
@@ -510,11 +503,9 @@ require (
 	k8s.io/kube-openapi v0.0.0-20230717233707-2695361300d9 // indirect
 	k8s.io/kubelet v0.28.2 // indirect
 	k8s.io/utils v0.0.0-20230711102312-30195339c3c7 // indirect
-	sigs.k8s.io/controller-runtime v0.16.2 // indirect
 	sigs.k8s.io/json v0.0.0-20221116044647-bc3834ca7abd // indirect
 	sigs.k8s.io/structured-merge-diff/v4 v4.3.0 // indirect
 	sigs.k8s.io/yaml v1.3.0 // indirect
-	skywalking.apache.org/repo/goapi v0.0.0-20220121092418-9c455d0dda3f // indirect
 )
 
 replace (

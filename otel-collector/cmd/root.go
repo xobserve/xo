@@ -85,7 +85,7 @@ func startCollector() {
 
 	collectorConfig, _ := f.GetString("config")
 	if collectorConfig == "" {
-		collectorConfig = "./config/config.yaml"
+		collectorConfig = "./config/collector.yaml"
 	}
 
 	managerConfig, _ := f.GetString("manager-config")

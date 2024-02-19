@@ -66,25 +66,6 @@ receivers:
         endpoint: 0.0.0.0:4317
       http:
         endpoint: 0.0.0.0:4318
-  jaeger:
-    protocols:
-      grpc:
-        endpoint: 0.0.0.0:14250
-      thrift_http:
-        endpoint: 0.0.0.0:14268
-      # thrift_compact:
-      #   endpoint: 0.0.0.0:6831
-      # thrift_binary:
-      #   endpoint: 0.0.0.0:6832
-  hostmetrics:
-    collection_interval: 15s
-    scrapers:
-      cpu: {}
-      load: {}
-      memory: {}
-      disk: {}
-      filesystem: {}
-      network: {}
   prometheus:
     config:
       global:
@@ -241,16 +222,12 @@ service:
     - pprof
   pipelines:
     traces:
-      receivers: [jaeger, otlp]
+      receivers: [otlp]
       processors: [xobservespanmetrics/prometheus, batch]
       exporters: [clickhousetraces]
-    # metrics:
-    #   receivers: [otlp]
-    #   processors: [batch]
-    #   exporters: [prometheus]
-    metrics/generic:
-      receivers: [hostmetrics]
-      processors: [batch, resourcedetection]
+    metrics:
+      receivers: [otlp]
+      processors: [batch]
       exporters: [prometheus]
     # metrics/prometheus:
     #   receivers: [prometheus]

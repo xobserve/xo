@@ -20,12 +20,12 @@ LABEL maintainer="xobserve"
 # set working directory
 WORKDIR /app
 COPY --from=builder /app/collector /app/collector
-COPY ./config/config.yaml /etc/collector/config.yaml
+COPY ./config/* /etc/collector/
 
 
 # run the binary
 ENTRYPOINT ["./collector"]
 
-CMD ["--config", "/etc/collector/config.yaml"]
+CMD ["--config", "/etc/collector/collector.yaml"]
 
 EXPOSE 10086

@@ -38,7 +38,7 @@ func Test_loadConfig(t *testing.T) {
 
 	factory := NewFactory()
 	factories.Exporters[typeStr] = factory
-	cfg, err := otelcoltest.LoadConfigAndValidate(path.Join(".", "testdata", "config.yaml"), factories)
+	cfg, err := otelcoltest.LoadConfigAndValidate(path.Join(".", "testdata", "collector.yaml"), factories)
 
 	require.NoError(t, err)
 	require.NotNil(t, cfg)

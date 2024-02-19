@@ -9,8 +9,8 @@ services:
       - "8080:8080"
     command: ["frontend"]
     environment:
-      - OTEL_RESOURCE_ATTRIBUTES="service.name=frontend,host.name=frontend-1"
-      - CLICKHOUSE_ADDR=host.docker.internal:9000
+      - OTEL_RESOURCE_ATTRIBUTES="service_name=frontend,host_name=frontend-1"
+      - XO_COLLECTOR_ENDPOINT=host.docker.internal:4317
   hotrod-driver:
     image: "xobserve-hotrod"
     container_name: driver
@@ -19,8 +19,8 @@ services:
       - "8082:8082"
     command: ["driver"]
     environment:
-      - OTEL_RESOURCE_ATTRIBUTES="service.name=driver,host.name=driver-1"
-      - CLICKHOUSE_ADDR=host.docker.internal:9000
+      - OTEL_RESOURCE_ATTRIBUTES="service_name=driver,host_name=driver-1"
+      - XO_COLLECTOR_ENDPOINT=host.docker.internal:4317
   hotrod-customer:
     image: "xobserve-hotrod"
     container_name: customer
@@ -29,8 +29,8 @@ services:
       - "8081:8081"
     command: ["customer"]
     environment:
-      - OTEL_RESOURCE_ATTRIBUTES="service.name=customer,host.name=customer-1"
-      - CLICKHOUSE_ADDR=host.docker.internal:9000
+      - OTEL_RESOURCE_ATTRIBUTES="service_name=customer,host_name=customer-1"
+      - XO_COLLECTOR_ENDPOINT=host.docker.internal:4317
   hotrod-route:
     image: "xobserve-hotrod"
     container_name: route
@@ -39,5 +39,5 @@ services:
       - "8083:8083"
     command: ["route"]
     environment:
-      - OTEL_RESOURCE_ATTRIBUTES="service.name=route,host.name=route-1"
-      - CLICKHOUSE_ADDR=host.docker.internal:9000
+      - OTEL_RESOURCE_ATTRIBUTES="service_name=route,host_name=route-1"
+      - XO_COLLECTOR_ENDPOINT=host.docker.internal:4317
