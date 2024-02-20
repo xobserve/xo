@@ -1,10 +1,6 @@
 # tcplog/docker raw body: <11>1 2023-10-23T09:11:43Z b39fb8a20536 hotrod 7835 - - 2023-10-23T09:11:43.915Z\tINFO\tfrontend/best_eta.go:90\tFound routes\t{\"service\": \"frontend\", \"trace_id\": \"3f7fd2b0689627b8\", \"span_id\": \"3f7fd2b0689627b8\", \"routes\": [{},{},{},{},{},{},{},{},{},{}]}","attributes":{"body":"2023-10-23T09:11:43.915Z\tINFO\tfrontend/best_eta.go:90\tFound routes\t{\"service\": \"frontend\", \"trace_id\": \"3f7fd2b0689627b8\", \"span_id\": \"3f7fd2b0689627b8\", \"routes\": [{},{},{},{},{},{},{},{},{},{}]}"
 
 receivers:
-  otlp/spanmetrics:
-    protocols:
-      grpc:
-        endpoint: localhost:12345
   otlp:
     protocols:
       grpc:
@@ -20,16 +16,6 @@ receivers:
       disk: {}
       filesystem: {}
       network: {}
-  prometheus:
-    config:
-      global:
-        scrape_interval: 60s
-      scrape_configs:
-        # otel-collector internal metrics
-        - job_name: otel-collector
-          static_configs:
-            - targets:
-                - localhost:8888
 
 processors:
   batch:
@@ -52,7 +38,6 @@ processors:
   #   queue_size: 100
   #   retry_on_failure: true
   resourcedetection:
-    # Using OTEL_RESOURCE_ATTRIBUTES envvar, env detector adds custom labels.
     detectors: [env] # include ec2 for AWS, gcp for GCP and azure for Azure.
     timeout: 2s
 
@@ -82,9 +67,6 @@ service:
       processors: [batch]
       exporters: [otlp]
     metrics:
-      receivers: [hostmetrics]
+      receivers: [hostmetrics, otlp]
       processors: [batch, resourcedetection]
       exporters: [otlp]
-    # metrics/spanmetrics:
-    #   receivers: [otlp/spanmetrics]
-    #   exporters: [otlp]

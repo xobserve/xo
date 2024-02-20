@@ -19,13 +19,13 @@ LABEL maintainer="xobserve"
 
 # set working directory
 WORKDIR /app
-COPY --from=builder /app/collector /app/collector
-COPY ./config/* /etc/collector/
+COPY --from=builder /app/collector /app/xo-collector
+COPY ./config/* /etc/xobserve/
 
 
 # run the binary
-ENTRYPOINT ["./collector"]
+ENTRYPOINT ["./xo-collector"]
 
-CMD ["--config", "/etc/collector/collector.yaml"]
+CMD ["--config", "/etc/xobserve/collector.yaml"]
 
 EXPOSE 10086

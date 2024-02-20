@@ -56,28 +56,12 @@ receivers:
       # - type: filter
       #   id: xobserve_logs_filter
       #   expr: 'resource.container_name matches "^xobserve-(logspout|frontend|alertmanager|query-service|otel-collector|otel-collector-metrics|clickhouse|zookeeper)"'
-  otlp/spanmetrics:
-    protocols:
-      grpc:
-        endpoint: localhost:12345
   otlp:
     protocols:
       grpc:
         endpoint: 0.0.0.0:4317
       http:
         endpoint: 0.0.0.0:4318
-  prometheus:
-    config:
-      global:
-        scrape_interval: 60s
-      scrape_configs:
-        # otel-collector internal metrics
-        - job_name: otel-collector
-          static_configs:
-            - targets:
-                - localhost:8888
-              labels:
-                job_name: otel-collector
 
 processors:
   logstransform/internal:
@@ -150,25 +134,6 @@ processors:
       # Otherwise, identical timeseries produced by multiple replicas of
       # collectors result in incorrect APM metrics
       - name: "xobserve.collector.id"
-  # memory_limiter:
-  #   # 80% of maximum memory up to 2G
-  #   limit_mib: 1500
-  #   # 25% of limit up to 2G
-  #   spike_limit_mib: 512
-  #   check_interval: 5s
-  #
-  #   # 50% of the maximum memory
-  #   limit_percentage: 50
-  #   # 20% of max memory usage spike expected
-  #   spike_limit_percentage: 20
-  # queued_retry:
-  #   num_workers: 4
-  #   queue_size: 100
-  #   retry_on_failure: true
-  resourcedetection:
-    # Using OTEL_RESOURCE_ATTRIBUTES envvar, env detector adds custom labels.
-    detectors: [env] # include ec2 for AWS, gcp for GCP and azure for Azure.
-    timeout: 2s
 
 extensions:
   health_check:
@@ -211,6 +176,7 @@ exporters:
     timeout: 5s
     sending_queue:
       queue_size: 100
+  debug:
 
 service:
   telemetry:
@@ -224,18 +190,11 @@ service:
     traces:
       receivers: [otlp]
       processors: [xobservespanmetrics/prometheus, batch]
-      exporters: [clickhousetraces]
+      exporters: [debug]
     metrics:
       receivers: [otlp]
       processors: [batch]
       exporters: [prometheus]
-    # metrics/prometheus:
-    #   receivers: [prometheus]
-    #   processors: [batch]
-    #   exporters: [prometheus]
-    # metrics/spanmetrics:
-    #   receivers: [otlp/spanmetrics]
-    #   exporters: [prometheus]
     logs:
       receivers: [otlp, tcplog/docker]
       processors: [logstransform/internal, batch]
