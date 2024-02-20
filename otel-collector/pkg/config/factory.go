@@ -31,7 +31,7 @@ func GetConfigProvider(flagSet *flag.FlagSet) otelcol.ConfigProvider {
 		ResolverSettings: confmap.ResolverSettings{
 			URIs:       []string{configFilePath},
 			Providers:  mapProviders,
-			Converters: []confmap.Converter{expandconverter.New()},
+			Converters: []confmap.Converter{expandconverter.New(confmap.ConverterSettings{})},
 		},
 	}
 

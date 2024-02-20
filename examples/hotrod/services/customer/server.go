@@ -26,6 +26,7 @@ import (
 
 	"hotrod/pkg/httperr"
 	"hotrod/pkg/log"
+	"hotrod/pkg/otel"
 	"hotrod/pkg/tracing"
 
 	"github.com/jaegertracing/jaeger/pkg/metrics"
@@ -54,6 +55,15 @@ func NewServer(hostPort string, otelExporter string, metricsFactory metrics.Fact
 
 // Run starts the Customer server
 func (s *Server) Run() error {
+	err := otel.InitMetricProvider()
+	if err != nil {
+		return err
+	}
+	err = otel.InitRuntimeStats()
+	if err != nil {
+		return err
+	}
+
 	mux := s.createServeMux()
 	s.logger.Bg().Info("Starting", zap.String("address", "http://"+s.hostPort))
 	server := &http.Server{

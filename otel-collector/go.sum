@@ -918,6 +918,8 @@ go.opentelemetry.io/collector/consumer v0.94.1 h1:l/9h5L71xr/d93snQ9fdxgz64C4UuB
 go.opentelemetry.io/collector/consumer v0.94.1/go.mod h1:BIPWmw8wES6jlPTPC+acJxLvUzIdOm6uh/p/X85ALsY=
 go.opentelemetry.io/collector/exporter v0.94.1 h1:tu9l/lZdgf0zLvWTZeRPV6wKLkQ8ymMFx7GBGjweQtw=
 go.opentelemetry.io/collector/exporter v0.94.1/go.mod h1:XO3dwIIjrHTu0Z9Fs0pQASFTNZcT7uQiYd78f49gNsk=
+go.opentelemetry.io/collector/exporter/debugexporter v0.94.1 h1:MnkJyhP8BXbL8BVCiIQBQ85B7zr9HqclZ2SrmPVIK4s=
+go.opentelemetry.io/collector/exporter/debugexporter v0.94.1/go.mod h1:o+bHTalT4rP3GbMFZqQV4NnPeXc8zc26isrkimUF+CQ=
 go.opentelemetry.io/collector/exporter/loggingexporter v0.94.1 h1:11b+RGJ2YUGlHTTIBqTujL052jRX7VSdZAq+xeSB0Pg=
 go.opentelemetry.io/collector/exporter/loggingexporter v0.94.1/go.mod h1:m0Rjlm7A9NFn87qvtWyad2BI9GVeNA/5SaZuW2t2eGQ=
 go.opentelemetry.io/collector/exporter/otlpexporter v0.94.1 h1:0GLWchZb+2Lv3wCIjypKvqk66BXPuh0PomW310c3mNY=

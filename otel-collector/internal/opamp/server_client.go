@@ -74,7 +74,7 @@ func NewServerClient(args *NewServerClientOpts) (Client, error) {
 	}
 	svrClient.configManager.Set(dynamicConfig)
 
-	svrClient.opampClient = client.NewWebSocket(clientLogger.Sugar())
+	svrClient.opampClient = client.NewWebSocket(nil)
 
 	return svrClient, nil
 }
@@ -123,13 +123,13 @@ func (s *serverClient) Start(ctx context.Context) error {
 		OpAMPServerURL: s.managerConfig.ServerEndpoint,
 		InstanceUid:    s.instanceId.String(),
 		Callbacks: types.CallbacksStruct{
-			OnConnectFunc: func() {
+			OnConnectFunc: func(ctx context.Context) {
 				s.logger.Info("Connected to the server.")
 			},
-			OnConnectFailedFunc: func(err error) {
+			OnConnectFailedFunc: func(ctx context.Context, err error) {
 				s.logger.Error("Failed to connect to the server: %v", zap.Error(err))
 			},
-			OnErrorFunc: func(err *protobufs.ServerErrorResponse) {
+			OnErrorFunc: func(ctx context.Context, err *protobufs.ServerErrorResponse) {
 				s.logger.Error("Server returned an error response: %v", zap.String("", err.ErrorMessage))
 			},
 			GetEffectiveConfigFunc: func(ctx context.Context) (*protobufs.EffectiveConfig, error) {
@@ -148,7 +148,7 @@ func (s *serverClient) Start(ctx context.Context) error {
 			protobufs.AgentCapabilities_AgentCapabilities_ReportsHealth,
 	}
 
-	err := s.opampClient.SetHealth(&protobufs.AgentHealth{Healthy: false})
+	err := s.opampClient.SetHealth(&protobufs.ComponentHealth{Healthy: false})
 	if err != nil {
 		return err
 	}

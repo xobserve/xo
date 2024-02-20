@@ -25,6 +25,7 @@ import (
 	"google.golang.org/grpc"
 
 	"hotrod/pkg/log"
+	"hotrod/pkg/otel"
 	"hotrod/pkg/tracing"
 
 	"github.com/jaegertracing/jaeger/pkg/metrics"
@@ -56,6 +57,15 @@ func NewServer(hostPort string, otelExporter string, metricsFactory metrics.Fact
 
 // Run starts the Driver server
 func (s *Server) Run() error {
+	err := otel.InitMetricProvider()
+	if err != nil {
+		return err
+	}
+	err = otel.InitRuntimeStats()
+	if err != nil {
+		return err
+	}
+
 	lis, err := net.Listen("tcp", s.hostPort)
 	if err != nil {
 		s.logger.Bg().Fatal("Unable to create http listener", zap.Error(err))

@@ -166,8 +166,8 @@ exporters:
       max_elapsed_time: 10m
   prometheus:
     endpoint: 0.0.0.0:8889
-    resource_to_telemetry_conversion:
-      enabled: true
+    # resource_to_telemetry_conversion:
+    #   enabled: true
   # logging: {}
 
   clickhouselogsexporter:
@@ -176,7 +176,6 @@ exporters:
     timeout: 5s
     sending_queue:
       queue_size: 100
-  debug:
 
 service:
   telemetry:
@@ -190,7 +189,7 @@ service:
     traces:
       receivers: [otlp]
       processors: [xobservespanmetrics/prometheus, batch]
-      exporters: [debug]
+      exporters: [clickhousetraces]
     metrics:
       receivers: [otlp]
       processors: [batch]

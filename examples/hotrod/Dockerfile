@@ -10,9 +10,9 @@ RUN CGO_ENABLED=1 go build -o hotrod
 
 
 
-FROM xobserve/otel-collector
+FROM xobserve/agent
 
-# define arguments that can be passed during build time
+# define arguments that can be passed during build time1
 ARG TARGETOS TARGETARCH
 
 # add ca-certificates in case you need them
@@ -22,8 +22,8 @@ ARG TARGETOS TARGETARCH
 WORKDIR /app
 COPY --from=builder /app/hotrod /app/hotrod
 COPY ./start.sh /app/start.sh
-# Make query-service executable for non-root users
-RUN chmod +x /app/start.sh
+
+RUN mv /app/xo-collector /app/xo-agent && chmod +x /app/start.sh
 
 # run the binary
 ENTRYPOINT ["/bin/sh", "/app/start.sh"]

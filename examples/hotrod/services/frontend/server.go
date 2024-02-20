@@ -30,6 +30,7 @@ import (
 
 	"hotrod/pkg/httperr"
 	"hotrod/pkg/log"
+	"hotrod/pkg/otel"
 	"hotrod/pkg/tracing"
 
 	"github.com/jaegertracing/jaeger/pkg/httpfs"
@@ -75,6 +76,15 @@ func NewServer(options ConfigOptions, tracer trace.TracerProvider, logger log.Fa
 
 // Run starts the frontend server
 func (s *Server) Run() error {
+	err := otel.InitMetricProvider()
+	if err != nil {
+		return err
+	}
+	err = otel.InitRuntimeStats()
+	if err != nil {
+		return err
+	}
+
 	mux := s.createServeMux()
 	s.logger.Bg().Info("Starting", zap.String("address", "http://"+path.Join(s.hostPort, s.basepath)))
 	server := &http.Server{

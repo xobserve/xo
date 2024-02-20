@@ -22,6 +22,14 @@ processors:
     send_batch_size: 10000
     send_batch_max_size: 11000
     timeout: 10s
+  attributes:
+    actions:
+      - key: service.name
+        value: ${XO_SERVICE_NAME}
+        action: upsert
+      - key: host.name
+        value: ${XO_HOST_NAME}
+        action: upsert
   # memory_limiter:
   #   # 80% of maximum memory up to 2G
   #   limit_mib: 1500
@@ -54,7 +62,7 @@ exporters:
     endpoint: ${XO_COLLECTOR_ENDPOINT}
     tls:
       insecure: true
-  # logging: {}
+  debug:
 
 service:
   extensions:
@@ -64,9 +72,9 @@ service:
   pipelines:
     traces:
       receivers: [otlp]
-      processors: [batch]
+      processors: [attributes, batch]
       exporters: [otlp]
     metrics:
       receivers: [hostmetrics, otlp]
-      processors: [batch, resourcedetection]
+      processors: [attributes, batch]
       exporters: [otlp]

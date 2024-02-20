@@ -17,6 +17,7 @@ package clickhouselogsexporter
 import (
 	"errors"
 
+	"go.opentelemetry.io/collector/config/configretry"
 	"go.opentelemetry.io/collector/exporter/exporterhelper"
 	"go.uber.org/multierr"
 )
@@ -24,7 +25,7 @@ import (
 // Config defines configuration for ClickHouse exporter.
 type Config struct {
 	exporterhelper.TimeoutSettings `mapstructure:",squash"`
-	exporterhelper.RetrySettings   `mapstructure:"retry_on_failure"`
+	configretry.BackOffConfig      `mapstructure:"retry_on_failure"`
 	exporterhelper.QueueSettings   `mapstructure:"sending_queue"`
 
 	// DSN is the ClickHouse server Data Source Name.

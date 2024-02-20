@@ -24,6 +24,7 @@ import (
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/config/confighttp"
 	"go.opentelemetry.io/collector/config/configopaque"
+	"go.opentelemetry.io/collector/config/configretry"
 	"go.opentelemetry.io/collector/config/configtls"
 	"go.opentelemetry.io/collector/exporter/exporterhelper"
 	"go.opentelemetry.io/collector/otelcol/otelcoltest"
@@ -52,7 +53,7 @@ func Test_loadConfig(t *testing.T) {
 	assert.Equal(t, e1,
 		&Config{
 			TimeoutSettings: exporterhelper.NewDefaultTimeoutSettings(),
-			RetrySettings: exporterhelper.RetrySettings{
+			BackOffConfig: configretry.BackOffConfig{
 				Enabled:         true,
 				InitialInterval: 10 * time.Second,
 				MaxInterval:     1 * time.Minute,

@@ -32,6 +32,7 @@ import (
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/component/componenttest"
 	"go.opentelemetry.io/collector/config/confighttp"
+	"go.opentelemetry.io/collector/config/configretry"
 	"go.opentelemetry.io/collector/config/configtls"
 	"go.opentelemetry.io/collector/exporter"
 	"go.opentelemetry.io/collector/exporter/exporterhelper"
@@ -45,7 +46,7 @@ import (
 func skip_Test_NewPRWExporter(t *testing.T) {
 	cfg := &Config{
 		TimeoutSettings:    exporterhelper.TimeoutSettings{},
-		RetrySettings:      exporterhelper.RetrySettings{},
+		BackOffConfig:      configretry.BackOffConfig{},
 		Namespace:          "",
 		ExternalLabels:     map[string]string{},
 		HTTPClientSettings: confighttp.HTTPClientSettings{Endpoint: ""},
@@ -136,7 +137,7 @@ func skip_Test_NewPRWExporter(t *testing.T) {
 func skip_Test_Start(t *testing.T) {
 	cfg := &Config{
 		TimeoutSettings: exporterhelper.TimeoutSettings{},
-		RetrySettings:   exporterhelper.RetrySettings{},
+		BackOffConfig:   configretry.BackOffConfig{},
 		Namespace:       "",
 		ExternalLabels:  map[string]string{},
 	}

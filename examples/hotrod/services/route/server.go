@@ -29,6 +29,7 @@ import (
 	"hotrod/pkg/delay"
 	"hotrod/pkg/httperr"
 	"hotrod/pkg/log"
+	"hotrod/pkg/otel"
 	"hotrod/pkg/tracing"
 	"hotrod/services/config"
 )
@@ -51,6 +52,15 @@ func NewServer(hostPort string, tracer trace.TracerProvider, logger log.Factory)
 
 // Run starts the Route server
 func (s *Server) Run() error {
+	err := otel.InitMetricProvider()
+	if err != nil {
+		return err
+	}
+	err = otel.InitRuntimeStats()
+	if err != nil {
+		return err
+	}
+
 	mux := s.createServeMux()
 	s.logger.Bg().Info("Starting", zap.String("address", "http://"+s.hostPort))
 	server := &http.Server{

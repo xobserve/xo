@@ -187,7 +187,7 @@ func (wCol *WrappedCollector) GetState() otelcol.State {
 }
 
 func newOtelColSettings(configPaths []string, version string, desc string, loggingOpts []zap.Option) (*otelcol.CollectorSettings, error) {
-	factories, err := components.Components()
+	_, err := components.Components()
 	if err != nil {
 		return nil, fmt.Errorf("error while setting up default factories: %w", err)
 	}
@@ -203,7 +203,7 @@ func newOtelColSettings(configPaths []string, version string, desc string, loggi
 		ResolverSettings: confmap.ResolverSettings{
 			URIs:       configPaths,
 			Providers:  map[string]confmap.Provider{fmp.Scheme(): fmp},
-			Converters: []confmap.Converter{expandconverter.New()},
+			Converters: []confmap.Converter{expandconverter.New(confmap.ConverterSettings{})},
 		},
 	}
 	provider, err := otelcol.NewConfigProvider(configProviderSettings)
@@ -212,7 +212,7 @@ func newOtelColSettings(configPaths []string, version string, desc string, loggi
 	}
 
 	return &otelcol.CollectorSettings{
-		Factories:      factories,
+		Factories:      components.Components,
 		BuildInfo:      buildInfo,
 		LoggingOptions: loggingOpts,
 		ConfigProvider: provider,

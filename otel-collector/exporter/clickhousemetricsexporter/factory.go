@@ -24,6 +24,7 @@ import (
 	"go.opencensus.io/stats/view"
 	"go.opencensus.io/tag"
 	"go.opentelemetry.io/collector/component"
+	"go.opentelemetry.io/collector/config/configretry"
 	"go.opentelemetry.io/collector/exporter"
 	"go.opentelemetry.io/collector/exporter/exporterhelper"
 )
@@ -89,7 +90,7 @@ func createMetricsExporter(ctx context.Context, set exporter.CreateSettings,
 			NumConsumers: 1,
 			QueueSize:    prwCfg.RemoteWriteQueue.QueueSize,
 		}),
-		exporterhelper.WithRetry(exporterhelper.NewDefaultRetrySettings()),
+		exporterhelper.WithRetry(configretry.NewDefaultBackOffConfig()),
 		exporterhelper.WithStart(prwe.Start),
 		exporterhelper.WithShutdown(prwe.Shutdown),
 	)
@@ -106,7 +107,7 @@ func createDefaultConfig() component.Config {
 		Namespace:       "",
 		ExternalLabels:  map[string]string{},
 		TimeoutSettings: exporterhelper.NewDefaultTimeoutSettings(),
-		RetrySettings:   exporterhelper.NewDefaultRetrySettings(),
+		BackOffConfig:   configretry.NewDefaultBackOffConfig(),
 		// HTTPClientSettings: confighttp.HTTPClientSettings{
 		// 	Endpoint: "http://some.url:9411/api/prom/push",
 		// 	// We almost read 0 bytes, so no need to tune ReadBufferSize.
