@@ -9,7 +9,7 @@ services:
       - "8080:8080"
     command: ["frontend"]
     environment:
-      - XO_SERVICE_NAME=frontendd
+      - XO_SERVICE_NAME=frontend
       - XO_HOST_NAME=frontend-1
       - XO_COLLECTOR_ENDPOINT=host.docker.internal:4317
   hotrod-driver:
@@ -20,7 +20,7 @@ services:
       - "8082:8082"
     command: ["driver"]
     environment:
-      - XO_SERVICE_NAME=driverr
+      - XO_SERVICE_NAME=driver
       - XO_HOST_NAME=driver-1
       - XO_COLLECTOR_ENDPOINT=host.docker.internal:4317
   hotrod-customer:
@@ -31,7 +31,7 @@ services:
       - "8081:8081"
     command: ["customer"]
     environment:
-      - XO_SERVICE_NAME=customerr
+      - XO_SERVICE_NAME=customer
       - XO_HOST_NAME=customer-1
       - XO_COLLECTOR_ENDPOINT=host.docker.internal:4317
   hotrod-route:
@@ -42,6 +42,6 @@ services:
       - "8083:8083"
     command: ["route"]
     environment:
-      - XO_SERVICE_NAME=routee
+      - XO_SERVICE_NAME=route
       - XO_HOST_NAME=route-1
       - XO_COLLECTOR_ENDPOINT=host.docker.internal:4317

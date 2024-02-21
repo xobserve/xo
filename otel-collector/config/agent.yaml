@@ -30,6 +30,14 @@ processors:
       - key: host.name
         value: ${XO_HOST_NAME}
         action: upsert
+  resource:
+    attributes:
+      - key: service.name
+        value: ${XO_SERVICE_NAME}
+        action: upsert
+      - key: host.name
+        value: ${XO_HOST_NAME}
+        action: upsert
   # memory_limiter:
   #   # 80% of maximum memory up to 2G
   #   limit_mib: 1500
@@ -72,7 +80,7 @@ service:
   pipelines:
     traces:
       receivers: [otlp]
-      processors: [attributes, batch]
+      processors: [resource, batch]
       exporters: [otlp]
     metrics:
       receivers: [hostmetrics, otlp]

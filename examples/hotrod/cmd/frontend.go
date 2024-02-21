@@ -44,7 +44,7 @@ var frontendCmd = &cobra.Command{
 		logger := log.NewFactory(zapLogger)
 		server := frontend.NewServer(
 			options,
-			tracing.InitOTEL("frontend", otelExporter, metricsFactory, logger),
+			tracing.InitOTEL("", otelExporter, metricsFactory, logger),
 			logger,
 		)
 		return logError(zapLogger, server.Run())

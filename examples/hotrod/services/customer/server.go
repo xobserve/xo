@@ -44,7 +44,7 @@ type Server struct {
 func NewServer(hostPort string, otelExporter string, metricsFactory metrics.Factory, logger log.Factory) *Server {
 	return &Server{
 		hostPort: hostPort,
-		tracer:   tracing.InitOTEL("customer", otelExporter, metricsFactory, logger),
+		tracer:   tracing.InitOTEL("", otelExporter, metricsFactory, logger),
 		logger:   logger,
 		database: newDatabase(
 			tracing.InitOTEL("mysql", otelExporter, metricsFactory, logger).Tracer("mysql"),
