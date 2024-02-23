@@ -5,8 +5,8 @@ Datav is a modern data visualization platform for observability. It is another a
 - Website: [https://datav.io](https://datav.io)
 
 
-## Datav and xObserve
+## Datav and XO
 
-xObserve is an observability platform, and its UI is built on top of Datav.
+XO is an observability platform, and its UI is built on top of Datav.
 
 But you can also use Datav as a standalone data visualization platform.
