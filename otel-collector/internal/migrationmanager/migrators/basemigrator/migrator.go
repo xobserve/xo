@@ -11,7 +11,7 @@ import (
 	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/clickhouse"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
-	"github.com/xObserve/xObserve/otel-collector/internal/migrationmanager/migrators"
+	"github.com/xobserve/xo/otel-collector/internal/migrationmanager/migrators"
 	"go.uber.org/zap"
 )
 

@@ -4,7 +4,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/xObserve/xObserve/otel-collector/processor/xobservetailsampler/internal/sampling"
+	"github.com/xobserve/xo/otel-collector/processor/xobservetailsampler/internal/sampling"
 	"go.opentelemetry.io/collector/pdata/pcommon"
 	"go.uber.org/zap"
 )

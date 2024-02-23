@@ -10,10 +10,10 @@ import (
 	"github.com/gin-gonic/gin"
 	sb "github.com/huandu/go-sqlbuilder"
 	lep "github.com/mgudov/logic-expression-parser"
-	xobservemodels "github.com/xObserve/xObserve/query/internal/plugins/builtin/xobserve/models"
-	xobserveutils "github.com/xObserve/xObserve/query/internal/plugins/builtin/xobserve/utils"
-	pluginUtils "github.com/xObserve/xObserve/query/internal/plugins/utils"
-	"github.com/xObserve/xObserve/query/pkg/models"
+	xobservemodels "github.com/xobserve/xo/query/internal/plugins/builtin/xobserve/models"
+	xobserveutils "github.com/xobserve/xo/query/internal/plugins/builtin/xobserve/utils"
+	pluginUtils "github.com/xobserve/xo/query/internal/plugins/utils"
+	"github.com/xobserve/xo/query/pkg/models"
 )
 
 func GetLogs(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[string]interface{}) models.PluginResult {

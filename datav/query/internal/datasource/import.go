@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/xObserve/xObserve/query/pkg/db"
-	"github.com/xObserve/xObserve/query/pkg/models"
+	"github.com/xobserve/xo/query/pkg/db"
+	"github.com/xobserve/xo/query/pkg/models"
 )
 
 func ImportFromJSON(ctx context.Context, raw string, teamId int64, u *models.User) error {

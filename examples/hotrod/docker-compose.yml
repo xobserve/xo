@@ -12,6 +12,9 @@ services:
       - XO_SERVICE_NAME=frontend
       - XO_HOST_NAME=frontend-1
       - XO_COLLECTOR_ENDPOINT=host.docker.internal:4317
+      - XO_TEAM_ID=1
+      - XO_K8S_CLUSTER_NAME=local
+      - XO_K8S_NAMESPACE_NAME=default
   hotrod-driver:
     image: xobserve/hotrod
     container_name: driver
@@ -23,6 +26,9 @@ services:
       - XO_SERVICE_NAME=driver
       - XO_HOST_NAME=driver-1
       - XO_COLLECTOR_ENDPOINT=host.docker.internal:4317
+      - XO_TEAM_ID=1
+      - XO_K8S_CLUSTER_NAME=local
+      - XO_K8S_NAMESPACE_NAME=default
   hotrod-customer:
     image: xobserve/hotrod
     container_name: customer
@@ -34,6 +40,9 @@ services:
       - XO_SERVICE_NAME=customer
       - XO_HOST_NAME=customer-1
       - XO_COLLECTOR_ENDPOINT=host.docker.internal:4317
+      - XO_TEAM_ID=1
+      - XO_K8S_CLUSTER_NAME=local
+      - XO_K8S_NAMESPACE_NAME=default
   hotrod-route:
     image: xobserve/hotrod
     container_name: route
@@ -45,3 +54,6 @@ services:
       - XO_SERVICE_NAME=route
       - XO_HOST_NAME=route-1
       - XO_COLLECTOR_ENDPOINT=host.docker.internal:4317
+      - XO_TEAM_ID=1
+      - XO_K8S_CLUSTER_NAME=local
+      - XO_K8S_NAMESPACE_NAME=default

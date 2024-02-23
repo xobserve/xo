@@ -12,7 +12,7 @@ RUN CGO_ENABLED=1 go build -o hotrod
 
 FROM xobserve/agent
 
-# define arguments that can be passed during build time1
+# define arguments that can be passed during build time
 ARG TARGETOS TARGETARCH
 
 # add ca-certificates in case you need them

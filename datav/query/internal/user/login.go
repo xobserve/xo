@@ -28,10 +28,10 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/xObserve/xObserve/query/pkg/config"
-	"github.com/xObserve/xObserve/query/pkg/e"
-	"github.com/xObserve/xObserve/query/pkg/models"
-	"github.com/xObserve/xObserve/query/pkg/utils"
+	"github.com/xobserve/xo/query/pkg/config"
+	"github.com/xobserve/xo/query/pkg/e"
+	"github.com/xobserve/xo/query/pkg/models"
+	"github.com/xobserve/xo/query/pkg/utils"
 
 	// "fmt"
 	"net/http"
@@ -39,8 +39,8 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/xObserve/xObserve/query/pkg/common"
-	"github.com/xObserve/xObserve/query/pkg/db"
+	"github.com/xobserve/xo/query/pkg/common"
+	"github.com/xobserve/xo/query/pkg/db"
 )
 
 // LoginModel ...

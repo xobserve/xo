@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/xObserve/xObserve/otel-collector/internal/collector"
-	"github.com/xObserve/xObserve/otel-collector/internal/opamp"
+	"github.com/xobserve/xo/otel-collector/internal/collector"
+	"github.com/xobserve/xo/otel-collector/internal/opamp"
 	"go.uber.org/zap"
 )
 

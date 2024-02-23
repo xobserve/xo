@@ -14,7 +14,7 @@
 package main
 
 import (
-	"github.com/xObserve/xObserve/otel-collector/cmd"
+	"github.com/xobserve/xo/otel-collector/cmd"
 )
 
 func main() {

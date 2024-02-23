@@ -31,10 +31,10 @@ import (
 	"fmt"
 	"time"
 
-	storageData "github.com/xObserve/xObserve/query/internal/storage/data"
-	"github.com/xObserve/xObserve/query/pkg/common"
-	"github.com/xObserve/xObserve/query/pkg/db"
-	"github.com/xObserve/xObserve/query/pkg/e"
+	storageData "github.com/xobserve/xo/query/internal/storage/data"
+	"github.com/xobserve/xo/query/pkg/common"
+	"github.com/xobserve/xo/query/pkg/db"
+	"github.com/xobserve/xo/query/pkg/e"
 )
 
 // dont change !

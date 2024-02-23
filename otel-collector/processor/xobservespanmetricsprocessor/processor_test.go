@@ -42,8 +42,8 @@ import (
 	"go.uber.org/zap/zaptest/observer"
 	"google.golang.org/grpc/metadata"
 
-	"github.com/xObserve/xObserve/otel-collector/processor/xobservespanmetricsprocessor/internal/cache"
-	"github.com/xObserve/xObserve/otel-collector/processor/xobservespanmetricsprocessor/mocks"
+	"github.com/xobserve/xo/otel-collector/processor/xobservespanmetricsprocessor/internal/cache"
+	"github.com/xobserve/xo/otel-collector/processor/xobservespanmetricsprocessor/mocks"
 )
 
 const (

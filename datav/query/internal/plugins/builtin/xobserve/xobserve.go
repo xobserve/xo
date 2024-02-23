@@ -8,10 +8,10 @@ import (
 
 	ch "github.com/ClickHouse/clickhouse-go/v2"
 	"github.com/gin-gonic/gin"
-	"github.com/xObserve/xObserve/query/internal/plugins/builtin/xobserve/api"
-	pluginUtils "github.com/xObserve/xObserve/query/internal/plugins/utils"
-	"github.com/xObserve/xObserve/query/pkg/colorlog"
-	"github.com/xObserve/xObserve/query/pkg/models"
+	"github.com/xobserve/xo/query/internal/plugins/builtin/xobserve/api"
+	pluginUtils "github.com/xobserve/xo/query/internal/plugins/utils"
+	"github.com/xobserve/xo/query/pkg/colorlog"
+	"github.com/xobserve/xo/query/pkg/models"
 )
 
 /* Query plugin for xobserve observability*/

@@ -4,11 +4,11 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/xObserve/xObserve/otel-collector/internal/migrationmanager/migrators"
-	"github.com/xObserve/xObserve/otel-collector/internal/migrationmanager/migrators/basemigrator"
-	"github.com/xObserve/xObserve/otel-collector/internal/migrationmanager/migrators/logs"
-	"github.com/xObserve/xObserve/otel-collector/internal/migrationmanager/migrators/metrics"
-	"github.com/xObserve/xObserve/otel-collector/internal/migrationmanager/migrators/traces"
+	"github.com/xobserve/xo/otel-collector/internal/migrationmanager/migrators"
+	"github.com/xobserve/xo/otel-collector/internal/migrationmanager/migrators/basemigrator"
+	"github.com/xobserve/xo/otel-collector/internal/migrationmanager/migrators/logs"
+	"github.com/xobserve/xo/otel-collector/internal/migrationmanager/migrators/metrics"
+	"github.com/xobserve/xo/otel-collector/internal/migrationmanager/migrators/traces"
 	"go.uber.org/zap"
 )
 

@@ -22,7 +22,6 @@ import (
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 
-	"hotrod/pkg/jaegerclientenv2otel"
 	"hotrod/services/config"
 
 	"hotrod/pkg/metrics/expvar"
@@ -59,18 +58,11 @@ func init() {
 
 // onInitialize is called before the command is executed.
 func onInitialize() {
-	zapOptions := []zap.Option{
-		zap.AddStacktrace(zapcore.FatalLevel),
-		zap.AddCallerSkip(1),
+	var err error
+	logger, err = newLogger()
+	if err != nil {
+		panic("init logger error:" + err.Error())
 	}
-	if !verbose {
-		zapOptions = append(zapOptions,
-			zap.IncreaseLevel(zap.LevelEnablerFunc(func(l zapcore.Level) bool { return l != zapcore.DebugLevel })),
-		)
-	}
-	logger, _ = zap.NewDevelopment(zapOptions...)
-
-	jaegerclientenv2otel.MapJaegerToOtelEnvVars(logger)
 
 	switch metricsBackend {
 	case "expvar":
@@ -121,4 +113,26 @@ func logError(logger *zap.Logger, err error) error {
 		logger.Error("Error running command", zap.Error(err))
 	}
 	return err
+}
+
+func newLogger(options ...zap.Option) (*zap.Logger, error) {
+	cfg := zap.NewProductionConfig()
+	cfg.OutputPaths = []string{
+		"/var/log/out.log", "stderr",
+	}
+	cfg.ErrorOutputPaths = []string{
+		"/var/log/out.log", "stderr",
+	}
+	cfg.EncoderConfig.EncodeTime = zapcore.ISO8601TimeEncoder
+	zapOptions := []zap.Option{
+		zap.AddStacktrace(zapcore.FatalLevel),
+		zap.AddCallerSkip(1),
+	}
+	if !verbose {
+		zapOptions = append(zapOptions,
+			zap.IncreaseLevel(zap.LevelEnablerFunc(func(l zapcore.Level) bool { return l != zapcore.DebugLevel })),
+		)
+	}
+
+	return cfg.Build(zapOptions...)
 }

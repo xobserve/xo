@@ -11,7 +11,7 @@ import (
 	"github.com/open-telemetry/opamp-go/protobufs"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/xObserve/xObserve/otel-collector/internal/collector"
+	"github.com/xobserve/xo/otel-collector/internal/collector"
 	"go.uber.org/zap"
 )
 

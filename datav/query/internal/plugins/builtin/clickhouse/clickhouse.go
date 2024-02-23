@@ -5,9 +5,9 @@ import (
 
 	ch "github.com/ClickHouse/clickhouse-go/v2"
 	"github.com/gin-gonic/gin"
-	pluginUtils "github.com/xObserve/xObserve/query/internal/plugins/utils"
-	"github.com/xObserve/xObserve/query/pkg/colorlog"
-	"github.com/xObserve/xObserve/query/pkg/models"
+	pluginUtils "github.com/xobserve/xo/query/internal/plugins/utils"
+	"github.com/xobserve/xo/query/pkg/colorlog"
+	"github.com/xobserve/xo/query/pkg/models"
 )
 
 /* Query plugin for clickhouse database */

@@ -28,8 +28,8 @@ import (
 	"database/sql"
 	"time"
 
-	"github.com/xObserve/xObserve/query/pkg/common"
-	"github.com/xObserve/xObserve/query/pkg/e"
+	"github.com/xobserve/xo/query/pkg/common"
+	"github.com/xobserve/xo/query/pkg/e"
 )
 
 type Datasource struct {

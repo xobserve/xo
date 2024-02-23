@@ -36,7 +36,7 @@ import (
 	"go.uber.org/multierr"
 	"go.uber.org/zap"
 
-	"github.com/xObserve/xObserve/otel-collector/processor/xobservespanmetricsprocessor/internal/cache"
+	"github.com/xobserve/xo/otel-collector/processor/xobservespanmetricsprocessor/internal/cache"
 )
 
 const (

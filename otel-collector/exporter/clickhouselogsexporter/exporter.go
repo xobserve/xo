@@ -29,14 +29,16 @@ import (
 	"github.com/ClickHouse/clickhouse-go/v2"
 	driver "github.com/ClickHouse/clickhouse-go/v2/lib/driver"
 	"github.com/segmentio/ksuid"
-	"github.com/xObserve/xObserve/otel-collector/pkg/usage"
-	"github.com/xObserve/xObserve/otel-collector/pkg/utils"
+	"github.com/xobserve/xo/otel-collector/pkg/constants"
+	"github.com/xobserve/xo/otel-collector/pkg/usage"
+	"github.com/xobserve/xo/otel-collector/pkg/utils"
 	"go.opencensus.io/stats"
 	"go.opencensus.io/stats/view"
 	"go.opencensus.io/tag"
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/pdata/pcommon"
 	"go.opentelemetry.io/collector/pdata/plog"
+	conventions "go.opentelemetry.io/collector/semconv/v1.5.0"
 	"go.uber.org/zap"
 )
 
@@ -154,7 +156,7 @@ func (e *clickhouseLogsExporter) pushLogsData(ctx context.Context, ld plog.Logs)
 				for k := 0; k < rs.Len(); k++ {
 					r := rs.At(k)
 
-					teamId := utils.GetTeamIdFromResource(res)
+					teamId := utils.GetStringValueFromResource(res, constants.AttributeTeamId, constants.DefaultTeamId)
 
 					// capturing the metrics
 					attrBytes, _ := json.Marshal(r.Attributes().AsRaw())
@@ -176,11 +178,10 @@ func (e *clickhouseLogsExporter) pushLogsData(ctx context.Context, ld plog.Logs)
 						return err
 					}
 
-					namespace := utils.GetNamespaceFromResource(res)
-					cluster := utils.GetClusterFromResource(res)
-
-					service, _ := res.Attributes().Get("service_name")
-					host, _ := res.Attributes().Get("host_name")
+					cluster := utils.GetStringValueFromResource(res, conventions.AttributeK8SClusterName, "")
+					namespace := utils.GetStringValueFromResource(res, conventions.AttributeK8SNamespaceName, "")
+					service := utils.GetStringValueFromResource(res, conventions.AttributeServiceName, "<nil-service-name>")
+					host := utils.GetStringValueFromResource(res, conventions.AttributeHostName, "<nil-host-name>")
 
 					err = statement.Append(
 						ts,
@@ -203,8 +204,8 @@ func (e *clickhouseLogsExporter) pushLogsData(ctx context.Context, ld plog.Logs)
 						teamId,
 						cluster,
 						namespace,
-						service.AsString(),
-						host.AsString(),
+						service,
+						host,
 					)
 					if err != nil {
 						return fmt.Errorf("StatementAppend:%w", err)

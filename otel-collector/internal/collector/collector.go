@@ -7,7 +7,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/xObserve/xObserve/otel-collector/components"
+	"github.com/xobserve/xo/otel-collector/components"
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/confmap"
 	"go.opentelemetry.io/collector/confmap/converter/expandconverter"
@@ -65,7 +65,6 @@ func New(settings WrappedCollectorSettings) *WrappedCollector {
 
 // Run runs the collector.
 func (wCol *WrappedCollector) Run(ctx context.Context) error {
-	fmt.Println("here33333333333")
 	wCol.mux.Lock()
 	defer wCol.mux.Unlock()
 
@@ -77,7 +76,6 @@ func (wCol *WrappedCollector) Run(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	fmt.Printf("here33333333333111112%#v \n", settings)
 
 	wCol.logger.Info("Created new settings for collector", zap.Any("settings", settings))
 

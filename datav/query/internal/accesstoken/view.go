@@ -5,8 +5,8 @@ import (
 	"errors"
 	"strconv"
 
-	"github.com/xObserve/xObserve/query/pkg/common"
-	"github.com/xObserve/xObserve/query/pkg/models"
+	"github.com/xobserve/xo/query/pkg/common"
+	"github.com/xobserve/xo/query/pkg/models"
 )
 
 func CanViewDashboard(teamId int64, dashId string, tokenStr string) (bool, error) {

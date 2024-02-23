@@ -1,5 +1,3 @@
-# tcplog/docker raw body: <11>1 2023-10-23T09:11:43Z b39fb8a20536 hotrod 7835 - - 2023-10-23T09:11:43.915Z\tINFO\tfrontend/best_eta.go:90\tFound routes\t{\"service\": \"frontend\", \"trace_id\": \"3f7fd2b0689627b8\", \"span_id\": \"3f7fd2b0689627b8\", \"routes\": [{},{},{},{},{},{},{},{},{},{}]}","attributes":{"body":"2023-10-23T09:11:43.915Z\tINFO\tfrontend/best_eta.go:90\tFound routes\t{\"service\": \"frontend\", \"trace_id\": \"3f7fd2b0689627b8\", \"span_id\": \"3f7fd2b0689627b8\", \"routes\": [{},{},{},{},{},{},{},{},{},{}]}"
-
 receivers:
   otlp:
     protocols:
@@ -16,6 +14,32 @@ receivers:
       disk: {}
       filesystem: {}
       network: {}
+  filelog/json:
+    include: ["/var/log/out.log"]
+    start_at: end
+    include_file_path: true
+    include_file_name: false
+    operators:
+      - type: json_parser
+        parse_to: body
+      - type: time_parser
+        layout_type: strptime
+        parse_from: body.ts
+        layout: "%Y-%m-%dT%H:%M:%S.%f%z"
+      - type: copy
+        from: body.level
+        to: attributes.severity_text
+      - type: severity_parser
+        parse_from: attributes.severity_text
+        if: attributes.severity_text != nil
+      - type: copy
+        from: body.trace_id
+        to: attributes.trace_id
+      - type: copy
+        from: body.span_id
+        to: attributes.span_id
+      - type: remove
+        field: attributes.severity_text
 
 processors:
   batch:
@@ -30,6 +54,15 @@ processors:
       - key: host.name
         value: ${XO_HOST_NAME}
         action: upsert
+      - key: xo.teamId
+        value: ${XO_TEAM_ID}
+        action: upsert
+      - key: k8s.cluster.name
+        value: ${XO_K8S_CLUSTER_NAME}
+        action: upsert
+      - key: k8s.namespace.name
+        value: ${XO_K8S_NAMESPACE_NAME}
+        action: upsert
   resource:
     attributes:
       - key: service.name
@@ -38,24 +71,49 @@ processors:
       - key: host.name
         value: ${XO_HOST_NAME}
         action: upsert
-  # memory_limiter:
-  #   # 80% of maximum memory up to 2G
-  #   limit_mib: 1500
-  #   # 25% of limit up to 2G
-  #   spike_limit_mib: 512
-  #   check_interval: 5s
-  #
-  #   # 50% of the maximum memory
-  #   limit_percentage: 50
-  #   # 20% of max memory usage spike expected
-  #   spike_limit_percentage: 20
-  # queued_retry:
-  #   num_workers: 4
-  #   queue_size: 100
-  #   retry_on_failure: true
-  resourcedetection:
-    detectors: [env] # include ec2 for AWS, gcp for GCP and azure for Azure.
-    timeout: 2s
+      - key: xo.teamId
+        value: ${XO_TEAM_ID}
+        action: upsert
+      - key: k8s.cluster.name
+        value: ${XO_K8S_CLUSTER_NAME}
+        action: upsert
+      - key: k8s.namespace.name
+        value: ${XO_K8S_NAMESPACE_NAME}
+        action: upsert
+  memory_limiter:
+    check_interval: 2s
+    limit_mib: 1800
+    spike_limit_mib: 500    
+  logstransform/traceid:
+    operators:
+      - type: trace_parser
+        if: '"trace_id" in attributes or "span_id" in attributes'
+        trace_id:
+          parse_from: attributes.trace_id
+        span_id:
+          parse_from: attributes.span_id
+      - type: trace_parser
+        if: '"traceId" in attributes or "spanId" in attributes'
+        trace_id:
+          parse_from: attributes.traceId
+        span_id:
+          parse_from: attributes.spanId
+      - id: remove_traceId
+        type: remove
+        if: '"traceId" in attributes'
+        field: attributes.traceId
+      - id: remove_spanId
+        type: remove
+        if: '"spanId" in attributes'
+        field: attributes.spanId
+      - id: remove_trace_id
+        type: remove
+        if: '"trace_id" in attributes'
+        field: attributes.trace_id
+      - id: remove_span_id
+        type: remove
+        if: '"span_id" in attributes'
+        field: attributes.span_id
 
 extensions:
   health_check:
@@ -70,7 +128,7 @@ exporters:
     endpoint: ${XO_COLLECTOR_ENDPOINT}
     tls:
       insecure: true
-  debug:
+  debug: 
 
 service:
   extensions:
@@ -85,4 +143,8 @@ service:
     metrics:
       receivers: [hostmetrics, otlp]
       processors: [attributes, batch]
+      exporters: [otlp]
+    logs:
+      receivers: [otlp, filelog/json]
+      processors: [resource, logstransform/traceid, batch]
       exporters: [otlp]

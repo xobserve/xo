@@ -15,7 +15,7 @@
 
 
 <div>
-   <img src="https://github.com/xObserve/assets/blob/main/datav-readme/home-example1.jpg?raw=true" />
+   <img src="https://github.com/xobserve/assets/blob/main/datav-readme/home-example1.jpg?raw=true" />
    <p align="center">
         <a href="./README.md">English</a> | 简体中文
   </p>
@@ -30,7 +30,7 @@ xObserve 是专门为开发者设计的、可编程的可观测性平台，同�
 
 ## Roadmap to V1.0
 
-我们目前已经实现了 xObserve 的 UI 部分，可以作为 Grafana 的替代品使用，而可观测性相关的功能将在 [V1.0](https://github.com/xObserve/xObserve/milestone/7) 版本中发布。
+我们目前已经实现了 xObserve 的 UI 部分，可以作为 Grafana 的替代品使用，而可观测性相关的功能将在 [V1.0](https://github.com/xobserve/xo/milestone/7) 版本中发布。
 
 
 ## 核心特性

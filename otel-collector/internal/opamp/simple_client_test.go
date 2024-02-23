@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/xObserve/xObserve/otel-collector/internal/collector"
+	"github.com/xobserve/xo/otel-collector/internal/collector"
 	"go.opentelemetry.io/collector/otelcol"
 	"go.uber.org/zap"
 )

@@ -44,13 +44,13 @@ import (
 	"go.opentelemetry.io/collector/receiver/otlpreceiver"
 	"go.uber.org/multierr"
 
-	"github.com/xObserve/xObserve/otel-collector/exporter/clickhouselogsexporter"
-	"github.com/xObserve/xObserve/otel-collector/exporter/clickhousemetricsexporter"
-	"github.com/xObserve/xObserve/otel-collector/exporter/clickhousetracesexporter"
-	_ "github.com/xObserve/xObserve/otel-collector/pkg/parser/grok"
-	"github.com/xObserve/xObserve/otel-collector/processor/xobservespanmetricsprocessor"
-	"github.com/xObserve/xObserve/otel-collector/processor/xobservetailsampler"
-	"github.com/xObserve/xObserve/otel-collector/receiver/httpreceiver"
+	"github.com/xobserve/xo/otel-collector/exporter/clickhouselogsexporter"
+	"github.com/xobserve/xo/otel-collector/exporter/clickhousemetricsexporter"
+	"github.com/xobserve/xo/otel-collector/exporter/clickhousetracesexporter"
+	_ "github.com/xobserve/xo/otel-collector/pkg/parser/grok"
+	"github.com/xobserve/xo/otel-collector/processor/xobservespanmetricsprocessor"
+	"github.com/xobserve/xo/otel-collector/processor/xobservetailsampler"
+	"github.com/xobserve/xo/otel-collector/receiver/httpreceiver"
 )
 
 func Components() (otelcol.Factories, error) {

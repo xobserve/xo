@@ -10,8 +10,8 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
-	"github.com/xObserve/xObserve/otel-collector/receiver/httpreceiver/bodyparser"
-	"github.com/xObserve/xObserve/otel-collector/receiver/httpreceiver/internal/metadata"
+	"github.com/xobserve/xo/otel-collector/receiver/httpreceiver/bodyparser"
+	"github.com/xobserve/xo/otel-collector/receiver/httpreceiver/internal/metadata"
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/config/confighttp"
 	"go.opentelemetry.io/collector/consumer"

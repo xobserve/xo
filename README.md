@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/xobserve/xobserve/assets/7036754/b3e45ea5-8e03-46c1-870d-719889f44067" width="110px" />
+  <img src="https://github.com/xobserve/xo/assets/7036754/b3e45ea5-8e03-46c1-870d-719889f44067" width="110px" />
 </p>
 
 <p align="center">
@@ -13,7 +13,7 @@
 </p>
 
 <div>
-  <img src="https://github.com/xObserve/assets/blob/main/datav-readme/home-example1.jpg?raw=true" />
+  <img src="https://github.com/xobserve/assets/blob/main/datav-readme/home-example1.jpg?raw=true" />
   <p align="center">
     English | <a href="./README_CN.md">简体中文</a>
   </p>
@@ -22,18 +22,18 @@
 
 
 
-## xObserve
+## XO
 
-xObserve is a programmable observability platform designed specifically for developers. It also serves as an alternative data visualization platform to Grafana.
+XO is short for xobserve. It is a programmable observability platform designed specifically for developers. It also serves as an alternative data visualization platform to Grafana.
 
-xObserve enables users to quickly create online observability scenarios such as monitoring, logging, and tracing. If xObserve does not meet your specific needs, you can always file an issue, and reasonable requests will be promptly addressed.
+XO enables users to quickly create online observability scenarios such as monitoring, logging, and tracing. If XO does not meet your specific needs, you can always file an issue, and reasonable requests will be promptly addressed.
 
 ## Roadmap to V1.0
 
-Up to this point, we have implemented the user interface (UI) part of xObserve, which can be used as an alternative to Grafana. We are currently working on the observability features, which will be released in V1.0.
+Up to this point, we have implemented the user interface (UI) part of XO, which can be used as an alternative to Grafana. We are currently working on the observability features, which will be released in V1.0.
 
 ## Features
-xObserve offers a wide range of features, including:
+XO offers a wide range of features, including:
 
 1. **Observability**: Encompasses an extensive range of observability scenarios with native support for Opentelemetry.
    

@@ -9,13 +9,13 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/xObserve/xObserve/query/internal/accesstoken"
-	"github.com/xObserve/xObserve/query/internal/datasource"
-	"github.com/xObserve/xObserve/query/internal/user"
-	"github.com/xObserve/xObserve/query/internal/variables"
-	"github.com/xObserve/xObserve/query/pkg/common"
-	"github.com/xObserve/xObserve/query/pkg/e"
-	"github.com/xObserve/xObserve/query/pkg/models"
+	"github.com/xobserve/xo/query/internal/accesstoken"
+	"github.com/xobserve/xo/query/internal/datasource"
+	"github.com/xobserve/xo/query/internal/user"
+	"github.com/xobserve/xo/query/internal/variables"
+	"github.com/xobserve/xo/query/pkg/common"
+	"github.com/xobserve/xo/query/pkg/e"
+	"github.com/xobserve/xo/query/pkg/models"
 )
 
 func GetDashboardConfig(c *gin.Context) {

@@ -30,7 +30,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/xObserve/xObserve/query/pkg/db"
+	"github.com/xobserve/xo/query/pkg/db"
 )
 
 // ! You should not modify the two constants below

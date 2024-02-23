@@ -13,8 +13,8 @@ import (
 	"github.com/open-telemetry/opamp-go/client"
 	"github.com/open-telemetry/opamp-go/client/types"
 	"github.com/open-telemetry/opamp-go/protobufs"
-	"github.com/xObserve/xObserve/otel-collector/internal/collector"
-	"github.com/xObserve/xObserve/otel-collector/pkg/constants"
+	"github.com/xobserve/xo/otel-collector/internal/collector"
+	"github.com/xobserve/xo/otel-collector/pkg/constants"
 	"go.uber.org/multierr"
 	"go.uber.org/zap"
 )
