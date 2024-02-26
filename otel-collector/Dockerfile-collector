@@ -5,7 +5,7 @@ WORKDIR /app
 ENV GOPROXY=https://goproxy.io,direct
 
 COPY ./ ./
-RUN go build -o collector
+RUN go build -o xo-collector
 
 
 
@@ -19,13 +19,9 @@ LABEL maintainer="xobserve"
 
 # set working directory
 WORKDIR /app
-COPY --from=builder /app/collector /app/xo-collector
-COPY ./config/* /etc/xobserve/
+COPY --from=builder /app/xo-collector /app/xo-collector
+COPY ./config/collector.yaml /etc/xobserve/
 
 
 # run the binary
 ENTRYPOINT ["./xo-collector"]
-
-CMD ["--config", "/etc/xobserve/collector.yaml"]
-
-EXPOSE 10086

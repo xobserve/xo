@@ -23,7 +23,7 @@ WORKDIR /app
 COPY --from=builder /app/hotrod /app/hotrod
 COPY ./start.sh /app/start.sh
 
-RUN mv /app/xo-collector /app/xo-agent && chmod +x /app/start.sh
+RUN chmod +x /app/start.sh
 
 # run the binary
 ENTRYPOINT ["/bin/sh", "/app/start.sh"]

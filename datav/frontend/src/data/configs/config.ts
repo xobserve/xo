@@ -22,7 +22,7 @@ export const URL_ROOT_PATH = import.meta.env.VITE_URL_ROOT_PATH
 // limitations under the License.
 const config: UIConfig = {
   appName: 'xobserve',
-  repoUrl: 'https://github.com/xObserve/xobserve',
+  repoUrl: 'https://github.com/xobserve/xo',
   panel: {
     echarts: {
       enableBaiduMap: false,

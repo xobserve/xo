@@ -1,0 +1,23 @@
+FROM golang:1.21.4-alpine3.18 as builder
+
+# set working directory
+WORKDIR /app
+ENV GOPROXY=https://goproxy.io,direct
+
+COPY ./ ./
+RUN go build -o xo-agent
+
+
+
+FROM alpine:3.18
+
+# Add Maintainer Info
+LABEL maintainer="xobserve"
+
+# add ca-certificates in case you need them
+# RUN apk update && apk add ca-certificates && rm -rf /var/cache/apk/*
+
+# set working directory
+WORKDIR /app
+COPY --from=builder /app/xo-agent /app/xo-agent
+COPY ./config/agent.yaml /etc/xobserve/
