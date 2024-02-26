@@ -8,7 +8,7 @@
 
 <p align="center">
     <img alt="License" src="https://img.shields.io/badge/license-Apache2.0-brightgreen"> 
-    <a href="https://datav.io"><img alt="Website" src="https://img.shields.io/badge/Website-datav.io-blue"></a>
+    <a href="https://xobserve.io"><img alt="Website" src="https://img.shields.io/badge/Website-xobserve.io-blue"></a>
     <a href="https://play.datav.io"><img alt="Online demo" src="https://img.shields.io/badge/Online-demo-blue"></a>
 </p>
 
