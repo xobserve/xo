@@ -39,7 +39,7 @@ x-db-depend: &db-depend
 services:
   zookeeper-1:
     image: bitnami/zookeeper:3.7.1
-    container_name: xobserve-zookeeper-1
+    container_name: zookeeper-1
     hostname: zookeeper-1
     user: root
     ports:
@@ -90,7 +90,7 @@ services:
 
   clickhouse:
     <<: *clickhouse-defaults
-    container_name: xobserve-clickhouse
+    container_name: clickhouse
     hostname: clickhouse
     ports:
       - "9000:9000"

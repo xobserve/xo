@@ -1,6 +1,6 @@
 version: "2.4"
 
 include:
+  - ./compose-prometheus.yaml
   - ./compose-clickhouse.yaml
-  - ./compose-mockdata.yaml
-  # - ./compose-otel-collector.yaml
+  - ./compose-hotrod.yaml

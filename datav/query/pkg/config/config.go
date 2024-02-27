@@ -87,8 +87,8 @@ type Config struct {
 	}
 
 	Paths struct {
-		SqliteData string `yaml:"sqlite_data"`
-		Logs       string
+		SqliteData string `yaml:"data"`
+		Logs       string `yaml:"logs"`
 	}
 
 	Sidemenu struct {

@@ -6,5 +6,5 @@ start.sh
 ui
 *.log
 *.mmdb
-data
+data/datav.db
 

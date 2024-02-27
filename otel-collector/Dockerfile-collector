@@ -25,3 +25,5 @@ COPY ./config/collector.yaml /etc/xobserve/
 
 # run the binary
 ENTRYPOINT ["./xo-collector"]
+
+CMD ["--config", "/etc/xobserve/collector.yaml"]

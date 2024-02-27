@@ -1,0 +1,25 @@
+version: "3.7"
+
+include:
+  - ./compose-prometheus.yaml
+  - ./compose-clickhouse.yaml
+  - ./compose-hotrod.yaml
+
+services:
+  datav:
+    image: "xobserve/datav"
+    container_name: xo-datav
+    ports:
+      - "10086:10086"
+    volumes:
+      - ./data/xobserve/:/app/datav/data/
+  collector:
+    image: "xobserve/collector"
+    container_name: xo-collector
+    hostname: collector
+    ports:
+      - "4317:4317"
+      - "4318:4318"
+    restart: on-failure
+    environment:
+      - CLICKHOUSE_ADDR=clickhouse:9000

@@ -3,7 +3,7 @@ version: "3.7"
 services:
   hotrod-frontend:
     image: xobserve/hotrod
-    container_name: frontend
+    container_name: hotrod-frontend
     hostname: frontend-1
     ports:
       - "8080:8080"
@@ -17,7 +17,7 @@ services:
       - XO_K8S_NAMESPACE_NAME=default
   hotrod-driver:
     image: xobserve/hotrod
-    container_name: driver
+    container_name: hotrod-driver
     hostname: driver-1
     ports:
       - "8082:8082"
@@ -31,7 +31,7 @@ services:
       - XO_K8S_NAMESPACE_NAME=default
   hotrod-customer:
     image: xobserve/hotrod
-    container_name: customer
+    container_name: hotrod-customer
     hostname: customer-1
     ports:
       - "8081:8081"
@@ -45,7 +45,7 @@ services:
       - XO_K8S_NAMESPACE_NAME=default
   hotrod-route:
     image: xobserve/hotrod
-    container_name: route
+    container_name: hotrod-route
     hostname: route-1
     ports:
       - "8083:8083"
@@ -57,3 +57,17 @@ services:
       - XO_TEAM_ID=1
       - XO_K8S_CLUSTER_NAME=local
       - XO_K8S_NAMESPACE_NAME=default
+  hotrod-load:
+    image: "signoz/locust:1.2.3"
+    container_name: hotrod-load
+    hostname: hotrod-load-1
+    environment:
+      ATTACKED_HOST: http://hotrod-frontend:8080
+      LOCUST_MODE: standalone
+      NO_PROXY: standalone
+      TASK_DELAY_FROM: 5
+      TASK_DELAY_TO: 30
+      QUIET_MODE: "${QUIET_MODE:-false}"
+      LOCUST_OPTS: "--headless -u 10 -r 1"
+    volumes:
+      - ./scripts/locust-scripts:/locust

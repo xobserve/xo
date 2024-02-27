@@ -1,0 +1,11 @@
+version: "3.7"
+
+services:
+  prometheus:
+    image: "prom/prometheus"
+    container_name: prometheus
+    hostname: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./scripts/prometheus.yml:/etc/prometheus/prometheus.yml
