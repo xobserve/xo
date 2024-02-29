@@ -1,12 +1,7 @@
 Copyright (C) 2024 xobserve.io.
 
-XO (xobserve) is offered under the [GNU Affero General Public License v3.0](https://opensource.org/licenses/AGPL-3.0)
-and as commercial software.
+XO (xobserve) is offered under the [GNU Affero General Public License v3.0](https://opensource.org/licenses/AGPL-3.0).
 A copy of the AGPL license can be found below.
-
-# Commercial Licensing
-For commercial licensing, please contact us.
-
 
 # AGPL
 This program is free software: you can redistribute it and/or modify
