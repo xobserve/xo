@@ -1,5 +1,3 @@
-# tcplog/docker raw body: <11>1 2023-10-23T09:11:43Z b39fb8a20536 hotrod 7835 - - 2023-10-23T09:11:43.915Z\tINFO\tfrontend/best_eta.go:90\tFound routes\t{\"service\": \"frontend\", \"trace_id\": \"3f7fd2b0689627b8\", \"span_id\": \"3f7fd2b0689627b8\", \"routes\": [{},{},{},{},{},{},{},{},{},{}]}","attributes":{"body":"2023-10-23T09:11:43.915Z\tINFO\tfrontend/best_eta.go:90\tFound routes\t{\"service\": \"frontend\", \"trace_id\": \"3f7fd2b0689627b8\", \"span_id\": \"3f7fd2b0689627b8\", \"routes\": [{},{},{},{},{},{},{},{},{},{}]}"
-
 receivers:
   otlp:
     protocols:

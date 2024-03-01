@@ -13,8 +13,8 @@ services:
       - XO_HOST_NAME=frontend-1
       - XO_COLLECTOR_ENDPOINT=host.docker.internal:4317
       - XO_TEAM_ID=1
-      - XO_K8S_CLUSTER_NAME=local
-      - XO_K8S_NAMESPACE_NAME=default
+      - XO_K8S_CLUSTER_NAME=
+      - XO_K8S_NAMESPACE_NAME=
   hotrod-driver:
     image: xobserve/hotrod
     container_name: hotrod-driver
@@ -27,8 +27,8 @@ services:
       - XO_HOST_NAME=driver-1
       - XO_COLLECTOR_ENDPOINT=host.docker.internal:4317
       - XO_TEAM_ID=1
-      - XO_K8S_CLUSTER_NAME=local
-      - XO_K8S_NAMESPACE_NAME=default
+      - XO_K8S_CLUSTER_NAME=
+      - XO_K8S_NAMESPACE_NAME=
   hotrod-customer:
     image: xobserve/hotrod
     container_name: hotrod-customer
@@ -41,8 +41,8 @@ services:
       - XO_HOST_NAME=customer-1
       - XO_COLLECTOR_ENDPOINT=host.docker.internal:4317
       - XO_TEAM_ID=1
-      - XO_K8S_CLUSTER_NAME=local
-      - XO_K8S_NAMESPACE_NAME=default
+      - XO_K8S_CLUSTER_NAME=
+      - XO_K8S_NAMESPACE_NAME=
   hotrod-route:
     image: xobserve/hotrod
     container_name: hotrod-route
@@ -55,8 +55,8 @@ services:
       - XO_HOST_NAME=route-1
       - XO_COLLECTOR_ENDPOINT=host.docker.internal:4317
       - XO_TEAM_ID=1
-      - XO_K8S_CLUSTER_NAME=local
-      - XO_K8S_NAMESPACE_NAME=default
+      - XO_K8S_CLUSTER_NAME=
+      - XO_K8S_NAMESPACE_NAME=
   hotrod-load:
     image: "signoz/locust:1.2.3"
     container_name: hotrod-load

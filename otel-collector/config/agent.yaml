@@ -50,10 +50,10 @@ processors:
     actions:
       - key: service.name
         value: ${XO_SERVICE_NAME}
-        action: upsert
+        action: insert
       - key: host.name
         value: ${XO_HOST_NAME}
-        action: upsert
+        action: insert
       - key: xo.teamId
         value: ${XO_TEAM_ID}
         action: upsert
@@ -67,10 +67,10 @@ processors:
     attributes:
       - key: service.name
         value: ${XO_SERVICE_NAME}
-        action: upsert
+        action: insert
       - key: host.name
         value: ${XO_HOST_NAME}
-        action: upsert
+        action: insert
       - key: xo.teamId
         value: ${XO_TEAM_ID}
         action: upsert

@@ -60,15 +60,26 @@ func InitOTEL(serviceName string, exporterType string, metricsFactory metrics.Fa
 	logger.Bg().Debug("using " + exporterType + " trace exporter")
 
 	rpcmetricsObserver := rpcmetrics.NewObserver(metricsFactory, rpcmetrics.DefaultNameNormalizer)
+	var res *resource.Resource
+	if serviceName == "" {
+		res, err = resource.New(
+			context.Background(),
+			resource.WithSchemaURL(semconv.SchemaURL),
+			resource.WithTelemetrySDK(),
+			resource.WithHost(),
+			resource.WithOSType(),
+		)
+	} else {
+		res, err = resource.New(
+			context.Background(),
+			resource.WithSchemaURL(semconv.SchemaURL),
+			resource.WithAttributes(semconv.ServiceNameKey.String(serviceName)),
+			resource.WithTelemetrySDK(),
+			resource.WithHost(),
+			resource.WithOSType(),
+		)
+	}
 
-	res, err := resource.New(
-		context.Background(),
-		resource.WithSchemaURL(semconv.SchemaURL),
-		resource.WithAttributes(semconv.ServiceNameKey.String(serviceName)),
-		resource.WithTelemetrySDK(),
-		resource.WithHost(),
-		resource.WithOSType(),
-	)
 	if err != nil {
 		logger.Bg().Fatal("resource creation failed", zap.Error(err))
 	}
