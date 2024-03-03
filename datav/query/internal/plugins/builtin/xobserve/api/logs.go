@@ -74,7 +74,7 @@ func GetLogs(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[str
 		order = orderI.(string)
 	}
 
-	var teamId int64 = 1
+	teamId := ds.TeamId
 	domainQuery := " AND " + xobserveutils.BuildBasicDomainQuery(teamId, params)
 	services := xobserveutils.GetValueListFromParams(params, "service")
 	hosts := xobserveutils.GetValueListFromParams(params, "host")

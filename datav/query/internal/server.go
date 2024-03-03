@@ -234,6 +234,9 @@ func (s *Server) Start() error {
 
 		r.GET("/common/proxy/:panelId", proxy.Proxy)
 
+		// xo proxy apis
+		r.Any("/xoProxy/:teamId/:dsId/:dashId", CheckLoginOrAk(), proxy.ProxyXoDatasource)
+
 		// server a directory called static
 		// ui static files
 		// router.NoRoute(gin.WrapH(http.FileServer(http.Dir("ui"))))
@@ -374,6 +377,7 @@ func CheckLoginOrAk() gin.HandlerFunc {
 
 		if ak == "" {
 			// no ak passed, check login
+			//@performance
 			u := user.CurrentUser(c)
 			c.Set("currentUser", u)
 			if u == nil {

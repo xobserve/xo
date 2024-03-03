@@ -20,7 +20,7 @@ func GetDependencyGraph(c *gin.Context, ds *models.Datasource, conn ch.Conn, par
 	source := xobserveutils.GetValueListFromParams(params, "source")
 	target := xobserveutils.GetValueListFromParams(params, "target")
 
-	var teamId int64 = 1
+	teamId := ds.TeamId
 	domainQuery := xobserveutils.BuildBasicDomainQuery(teamId, params)
 
 	if source != nil {

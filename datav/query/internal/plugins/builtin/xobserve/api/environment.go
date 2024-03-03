@@ -11,7 +11,6 @@ import (
 )
 
 func GetNamespaces(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[string]interface{}) models.PluginResult {
-
 	tenant := models.DefaultTenant
 	domainQuery := fmt.Sprintf(" tenant='%s'", tenant)
 
