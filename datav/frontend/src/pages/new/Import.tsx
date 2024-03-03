@@ -42,6 +42,7 @@ const ImportDashboardPage = () => {
     const res = await requestApi.post('/dashboard/save', {
       dashboard,
       changes: 'Imported from json',
+      isCreate: true,
     })
     toast({
       title: t1.importToast,
