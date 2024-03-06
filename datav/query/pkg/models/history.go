@@ -27,4 +27,5 @@ type DashboardHistory struct {
 	Dashboard *Dashboard `json:"dashboard"`
 	Changes   string     `json:"changes"` // describle what has been changed in this history
 	IsCreate  bool       `json:"isCreate"`
+	IsImport  bool       `json:"isImport"`
 }

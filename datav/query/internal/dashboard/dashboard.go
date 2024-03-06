@@ -65,11 +65,18 @@ func SaveDashboard(c *gin.Context) {
 	}
 
 	now := time.Now()
-	if req.IsCreate { // create dashboard
+	var isNew bool = false
+	if req.IsImport {
+		err := models.IsDashboardExist(c.Request.Context(), dash.OwnedBy, dash.Id)
+		if err != nil {
+			isNew = true
+		}
+		dash.Created = &now
+	} else if req.IsCreate { // create dashboard
 		if dash.Id == "" {
 			dash.Id = "d-" + utils.GenerateShortUID()
 		}
-
+		isNew = true
 		dash.Created = &now
 	} else {
 		err := models.IsDashboardExist(c.Request.Context(), dash.OwnedBy, dash.Id)
@@ -124,7 +131,7 @@ func SaveDashboard(c *gin.Context) {
 		return
 	}
 
-	if req.IsCreate {
+	if isNew {
 		_, err := db.Conn.ExecContext(c.Request.Context(), `INSERT INTO dashboard (id,title, team_id,visible_to, created_by,tags, data,links, created,updated) VALUES (?,?,?,?,?,?,?,?,?,?)`,
 			dash.Id, dash.Title, dash.OwnedBy, dash.VisibleTo, dash.CreatedBy, tags, jsonData, links, dash.Created, dash.Updated)
 		if err != nil {

@@ -42,6 +42,7 @@ const ImportDashboardPage = () => {
     const res = await requestApi.post('/dashboard/save', {
       dashboard,
       changes: 'Imported from json',
+      isImport: true,
     })
     toast({
       title: t1.importToast,
@@ -77,7 +78,7 @@ const ImportDashboardPage = () => {
       return
     }
 
-    delete dash.id
+    // delete dash.id
     delete dash.ownedBy
     setDashboard(dash)
   }
