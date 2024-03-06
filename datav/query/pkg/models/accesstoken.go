@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/xObserve/xObserve/query/pkg/db"
+	"github.com/xobserve/xo/query/pkg/db"
 )
 
 type AccessToken struct {

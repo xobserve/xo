@@ -131,7 +131,6 @@ const SelectUserTeam = ({ miniMode, tenants }: Props) => {
         <Portal>
           <PopoverContent
             width='fit-content'
-            minWidth='120px'
             border='null'
             pl='1'
           >

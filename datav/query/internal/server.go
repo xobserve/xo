@@ -33,29 +33,29 @@ import (
 	"github.com/gin-contrib/gzip"
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
-	"github.com/xObserve/xObserve/query/internal/accesstoken"
-	"github.com/xObserve/xObserve/query/internal/admin"
-	"github.com/xObserve/xObserve/query/internal/annotation"
-	"github.com/xObserve/xObserve/query/internal/cache"
-	"github.com/xObserve/xObserve/query/internal/dashboard"
-	"github.com/xObserve/xObserve/query/internal/datasource"
-	ot "github.com/xObserve/xObserve/query/internal/opentelemetry"
-	_ "github.com/xObserve/xObserve/query/internal/plugins/builtin"
-	_ "github.com/xObserve/xObserve/query/internal/plugins/external"
-	"github.com/xObserve/xObserve/query/internal/proxy"
-	"github.com/xObserve/xObserve/query/internal/storage"
-	"github.com/xObserve/xObserve/query/internal/task"
-	"github.com/xObserve/xObserve/query/internal/teams"
-	"github.com/xObserve/xObserve/query/internal/template"
-	"github.com/xObserve/xObserve/query/internal/tenant"
-	"github.com/xObserve/xObserve/query/internal/uiconfig"
-	"github.com/xObserve/xObserve/query/internal/user"
-	"github.com/xObserve/xObserve/query/internal/variables"
-	"github.com/xObserve/xObserve/query/pkg/colorlog"
-	"github.com/xObserve/xObserve/query/pkg/common"
-	"github.com/xObserve/xObserve/query/pkg/config"
-	"github.com/xObserve/xObserve/query/pkg/e"
-	"github.com/xObserve/xObserve/query/pkg/log"
+	"github.com/xobserve/xo/query/internal/accesstoken"
+	"github.com/xobserve/xo/query/internal/admin"
+	"github.com/xobserve/xo/query/internal/annotation"
+	"github.com/xobserve/xo/query/internal/cache"
+	"github.com/xobserve/xo/query/internal/dashboard"
+	"github.com/xobserve/xo/query/internal/datasource"
+	ot "github.com/xobserve/xo/query/internal/opentelemetry"
+	_ "github.com/xobserve/xo/query/internal/plugins/builtin"
+	_ "github.com/xobserve/xo/query/internal/plugins/external"
+	"github.com/xobserve/xo/query/internal/proxy"
+	"github.com/xobserve/xo/query/internal/storage"
+	"github.com/xobserve/xo/query/internal/task"
+	"github.com/xobserve/xo/query/internal/teams"
+	"github.com/xobserve/xo/query/internal/template"
+	"github.com/xobserve/xo/query/internal/tenant"
+	"github.com/xobserve/xo/query/internal/uiconfig"
+	"github.com/xobserve/xo/query/internal/user"
+	"github.com/xobserve/xo/query/internal/variables"
+	"github.com/xobserve/xo/query/pkg/colorlog"
+	"github.com/xobserve/xo/query/pkg/common"
+	"github.com/xobserve/xo/query/pkg/config"
+	"github.com/xobserve/xo/query/pkg/e"
+	"github.com/xobserve/xo/query/pkg/log"
 	"go.opentelemetry.io/contrib/instrumentation/github.com/gin-gonic/gin/otelgin"
 	"go.uber.org/zap"
 )
@@ -234,6 +234,9 @@ func (s *Server) Start() error {
 
 		r.GET("/common/proxy/:panelId", proxy.Proxy)
 
+		// xo proxy apis
+		r.Any("/xoProxy/:teamId/:dsId/:dashId", CheckLoginOrAk(), proxy.ProxyXoDatasource)
+
 		// server a directory called static
 		// ui static files
 		// router.NoRoute(gin.WrapH(http.FileServer(http.Dir("ui"))))
@@ -374,6 +377,7 @@ func CheckLoginOrAk() gin.HandlerFunc {
 
 		if ak == "" {
 			// no ak passed, check login
+			//@performance
 			u := user.CurrentUser(c)
 			c.Set("currentUser", u)
 			if u == nil {

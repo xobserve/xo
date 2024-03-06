@@ -1,9 +1,10 @@
-module github.com/xObserve/xObserve/query
+module github.com/xobserve/xo/query
 
 go 1.20
 
 require (
 	github.com/ClickHouse/clickhouse-go/v2 v2.14.3
+	github.com/davecgh/go-spew v1.1.1
 	github.com/gin-contrib/gzip v0.0.5
 	github.com/gin-contrib/static v0.0.1
 	github.com/gin-gonic/gin v1.9.1
@@ -11,10 +12,12 @@ require (
 	github.com/go-stack/stack v1.8.0
 	github.com/golang/snappy v0.0.4
 	github.com/gosimple/slug v1.9.0
+	github.com/huandu/go-sqlbuilder v1.22.0
 	github.com/inconshreveable/log15 v0.0.0-20201112154412-8562bdadbbac
 	github.com/lib/pq v1.10.9
 	github.com/lithammer/shortuuid/v3 v3.0.5
 	github.com/mattn/go-sqlite3 v1.14.17
+	github.com/mgudov/logic-expression-parser v0.1.4
 	github.com/spf13/cobra v1.6.1
 	github.com/teris-io/shortid v0.0.0-20220617161101-71ec9f2aa569
 	go.nhat.io/otelsql v0.12.0
@@ -41,7 +44,6 @@ require (
 	github.com/bytedance/sonic v1.9.1 // indirect
 	github.com/cenkalti/backoff/v4 v4.2.1 // indirect
 	github.com/chenzhuoyu/base64x v0.0.0-20221115062448-fe3a3abad311 // indirect
-	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/felixge/httpsnoop v1.0.3 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.2 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
@@ -56,7 +58,6 @@ require (
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/google/uuid v1.3.1 // indirect
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.16.0 // indirect
-	github.com/huandu/go-sqlbuilder v1.22.0 // indirect
 	github.com/huandu/xstrings v1.3.2 // indirect
 	github.com/inconshreveable/mousetrap v1.0.1 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
@@ -65,7 +66,6 @@ require (
 	github.com/leodido/go-urn v1.2.4 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.19 // indirect
-	github.com/mgudov/logic-expression-parser v0.1.4 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/paulmach/orb v0.10.0 // indirect

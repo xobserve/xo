@@ -7,7 +7,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/xObserve/xObserve/otel-collector/processor/xobservetailsampler/internal/sampling"
+	"github.com/xobserve/xo/otel-collector/processor/xobservetailsampler/internal/sampling"
 	"go.opentelemetry.io/collector/pdata/pcommon"
 	"go.opentelemetry.io/collector/pdata/ptrace"
 	"go.uber.org/atomic"

@@ -3,7 +3,7 @@ package clickhouselogsexporter
 import (
 	"strings"
 
-	"github.com/xObserve/xObserve/otel-collector/pkg/usage"
+	"github.com/xobserve/xo/otel-collector/pkg/usage"
 	"go.opencensus.io/metric/metricdata"
 	"go.opencensus.io/stats"
 	"go.opencensus.io/stats/view"

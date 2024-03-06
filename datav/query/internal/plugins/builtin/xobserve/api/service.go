@@ -7,11 +7,11 @@ import (
 
 	ch "github.com/ClickHouse/clickhouse-go/v2"
 	"github.com/gin-gonic/gin"
-	xobservemodels "github.com/xObserve/xObserve/query/internal/plugins/builtin/xobserve/models"
-	xobserveutils "github.com/xObserve/xObserve/query/internal/plugins/builtin/xobserve/utils"
-	pluginUtils "github.com/xObserve/xObserve/query/internal/plugins/utils"
-	"github.com/xObserve/xObserve/query/pkg/colorlog"
-	"github.com/xObserve/xObserve/query/pkg/models"
+	xobservemodels "github.com/xobserve/xo/query/internal/plugins/builtin/xobserve/models"
+	xobserveutils "github.com/xobserve/xo/query/internal/plugins/builtin/xobserve/utils"
+	pluginUtils "github.com/xobserve/xo/query/internal/plugins/utils"
+	"github.com/xobserve/xo/query/pkg/colorlog"
+	"github.com/xobserve/xo/query/pkg/models"
 )
 
 var logger = colorlog.RootLogger.New("logger", "observability")
@@ -21,7 +21,7 @@ type ServiceNameRes struct {
 }
 
 func GetServiceNames(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[string]interface{}) models.PluginResult {
-	var teamId int64 = 1
+	teamId := ds.TeamId
 	domainQuery := xobserveutils.BuildBasicDomainQuery(teamId, params)
 
 	query := fmt.Sprintf("SELECT DISTINCT serviceName FROM %s.%s WHERE %s", xobservemodels.DefaultTraceDB, xobservemodels.DefaultServiceOperationsTable, domainQuery)
@@ -43,7 +43,7 @@ func GetServiceNames(c *gin.Context, ds *models.Datasource, conn ch.Conn, params
 }
 
 func GetServiceOperations(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[string]interface{}) models.PluginResult {
-	var teamId int64 = 1
+	teamId := ds.TeamId
 	domainQuery := xobserveutils.BuildBasicDomainQuery(teamId, params)
 
 	service := xobserveutils.GetValueListFromParams(params, "service")
@@ -70,7 +70,7 @@ func GetServiceOperations(c *gin.Context, ds *models.Datasource, conn ch.Conn, p
 }
 
 func GetServiceRootOperations(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[string]interface{}) models.PluginResult {
-	var teamId int64 = 1
+	teamId := ds.TeamId
 	domainQuery := xobserveutils.BuildBasicDomainQuery(teamId, params)
 
 	service := xobserveutils.GetValueListFromParams(params, "service")
@@ -112,7 +112,7 @@ func GetServiceInfoList(c *gin.Context, ds *models.Datasource, conn ch.Conn, par
 		return models.GenPluginResult(models.PluginStatusError, "start and end is required", nil)
 	}
 
-	var teamId int64 = 1
+	teamId := ds.TeamId
 	domainQuery := xobserveutils.BuildBasicDomainQuery(teamId, params)
 
 	service := xobserveutils.GetValueListFromParams(params, "service")

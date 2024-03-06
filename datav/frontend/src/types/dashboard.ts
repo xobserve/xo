@@ -67,6 +67,7 @@ export interface DashboardData {
 
 export interface Panel {
   id?: number
+  dashId?: string
   title?: string
   gridPos: GridPos
   enableConditionRender?: boolean

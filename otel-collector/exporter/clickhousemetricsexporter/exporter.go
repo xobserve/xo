@@ -32,8 +32,8 @@ import (
 
 	"github.com/prometheus/prometheus/prompb"
 
-	"github.com/xObserve/xObserve/otel-collector/exporter/clickhousemetricsexporter/base"
-	"github.com/xObserve/xObserve/otel-collector/pkg/usage"
+	"github.com/xobserve/xo/otel-collector/exporter/clickhousemetricsexporter/base"
+	"github.com/xobserve/xo/otel-collector/pkg/usage"
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/config/confighttp"
 	"go.opentelemetry.io/collector/consumer/consumererror"

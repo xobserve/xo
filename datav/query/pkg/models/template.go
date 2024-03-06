@@ -9,9 +9,9 @@ import (
 	b64 "encoding/base64"
 	"encoding/json"
 
-	"github.com/xObserve/xObserve/query/pkg/common"
-	"github.com/xObserve/xObserve/query/pkg/db"
-	"github.com/xObserve/xObserve/query/pkg/e"
+	"github.com/xobserve/xo/query/pkg/common"
+	"github.com/xobserve/xo/query/pkg/db"
+	"github.com/xobserve/xo/query/pkg/e"
 )
 
 const (

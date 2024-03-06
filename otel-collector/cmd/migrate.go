@@ -21,7 +21,7 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
-	"github.com/xObserve/xObserve/otel-collector/internal/migrationmanager"
+	"github.com/xobserve/xo/otel-collector/internal/migrationmanager"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )

@@ -35,9 +35,9 @@ import (
 	semconv "go.opentelemetry.io/collector/semconv/v1.13.0"
 
 	"github.com/prometheus/prometheus/prompb"
-	"github.com/xObserve/xObserve/otel-collector/exporter/clickhousemetricsexporter/base"
-	"github.com/xObserve/xObserve/otel-collector/exporter/clickhousemetricsexporter/utils/timeseries"
-	"github.com/xObserve/xObserve/otel-collector/pkg/usage"
+	"github.com/xobserve/xo/otel-collector/exporter/clickhousemetricsexporter/base"
+	"github.com/xobserve/xo/otel-collector/exporter/clickhousemetricsexporter/utils/timeseries"
+	"github.com/xobserve/xo/otel-collector/pkg/usage"
 )
 
 const (

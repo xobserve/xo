@@ -3,8 +3,8 @@ package acl
 import (
 	"errors"
 
-	"github.com/xObserve/xObserve/query/pkg/e"
-	"github.com/xObserve/xObserve/query/pkg/models"
+	"github.com/xobserve/xo/query/pkg/e"
+	"github.com/xobserve/xo/query/pkg/models"
 )
 
 func CanViewWebsite(u *models.User) error {

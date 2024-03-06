@@ -5,13 +5,12 @@ import (
 
 	ch "github.com/ClickHouse/clickhouse-go/v2"
 	"github.com/gin-gonic/gin"
-	xobservemodels "github.com/xObserve/xObserve/query/internal/plugins/builtin/xobserve/models"
-	pluginUtils "github.com/xObserve/xObserve/query/internal/plugins/utils"
-	"github.com/xObserve/xObserve/query/pkg/models"
+	xobservemodels "github.com/xobserve/xo/query/internal/plugins/builtin/xobserve/models"
+	pluginUtils "github.com/xobserve/xo/query/internal/plugins/utils"
+	"github.com/xobserve/xo/query/pkg/models"
 )
 
 func GetNamespaces(c *gin.Context, ds *models.Datasource, conn ch.Conn, params map[string]interface{}) models.PluginResult {
-
 	tenant := models.DefaultTenant
 	domainQuery := fmt.Sprintf(" tenant='%s'", tenant)
 

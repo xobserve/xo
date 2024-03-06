@@ -12,7 +12,7 @@ RUN CGO_ENABLED=1 go build -o hotrod
 
 FROM xobserve/agent
 
-# define arguments that can be passed during build time1
+# define arguments that can be passed during build time
 ARG TARGETOS TARGETARCH
 
 # add ca-certificates in case you need them
@@ -23,7 +23,7 @@ WORKDIR /app
 COPY --from=builder /app/hotrod /app/hotrod
 COPY ./start.sh /app/start.sh
 
-RUN mv /app/xo-collector /app/xo-agent && chmod +x /app/start.sh
+RUN chmod +x /app/start.sh
 
 # run the binary
 ENTRYPOINT ["/bin/sh", "/app/start.sh"]

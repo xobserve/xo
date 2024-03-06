@@ -25,7 +25,7 @@
 package main
 
 import (
-	"github.com/xObserve/xObserve/query/cmd"
+	"github.com/xobserve/xo/query/cmd"
 	_ "go.uber.org/automaxprocs"
 )
 

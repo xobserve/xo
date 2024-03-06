@@ -28,15 +28,15 @@ import (
 	"database/sql"
 	"strconv"
 
-	"github.com/xObserve/xObserve/query/pkg/config"
+	"github.com/xobserve/xo/query/pkg/config"
 
-	"github.com/xObserve/xObserve/query/pkg/models"
+	"github.com/xobserve/xo/query/pkg/models"
 
 	// "fmt"
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/xObserve/xObserve/query/pkg/db"
+	"github.com/xobserve/xo/query/pkg/db"
 )
 
 func storeSession(ctx context.Context, s *models.Session) error {

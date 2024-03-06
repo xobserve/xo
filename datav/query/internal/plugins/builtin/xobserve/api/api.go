@@ -3,7 +3,7 @@ package api
 import (
 	ch "github.com/ClickHouse/clickhouse-go/v2"
 	"github.com/gin-gonic/gin"
-	"github.com/xObserve/xObserve/query/pkg/models"
+	"github.com/xobserve/xo/query/pkg/models"
 )
 
 const (

@@ -202,7 +202,7 @@ export const externalDatasourcePlugins: Record<string,DatasourcePluginComponents
 			continue
 		}
 
-		pluginFileStr += fmt.Sprintf("\nimport _ \"github.com/xObserve/xObserve/query/internal/plugins/external/%s\"", queryType)
+		pluginFileStr += fmt.Sprintf("\nimport _ \"github.com/xobserve/xo/query/internal/plugins/external/%s\"", queryType)
 	}
 
 	// generate plugins.go file

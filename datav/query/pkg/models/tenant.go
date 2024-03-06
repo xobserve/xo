@@ -5,8 +5,8 @@ import (
 	"database/sql"
 	"time"
 
-	"github.com/xObserve/xObserve/query/pkg/common"
-	"github.com/xObserve/xObserve/query/pkg/db"
+	"github.com/xobserve/xo/query/pkg/common"
+	"github.com/xobserve/xo/query/pkg/db"
 )
 
 const DefaultTenant = "default"

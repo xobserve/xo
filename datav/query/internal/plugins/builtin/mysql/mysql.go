@@ -10,8 +10,8 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/xObserve/xObserve/query/pkg/colorlog"
-	"github.com/xObserve/xObserve/query/pkg/models"
+	"github.com/xobserve/xo/query/pkg/colorlog"
+	"github.com/xobserve/xo/query/pkg/models"
 
 	_ "github.com/go-sql-driver/mysql"
 )

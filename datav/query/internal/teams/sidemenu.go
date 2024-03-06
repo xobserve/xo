@@ -31,12 +31,12 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/xObserve/xObserve/query/internal/accesstoken"
-	"github.com/xObserve/xObserve/query/internal/acl"
-	"github.com/xObserve/xObserve/query/pkg/common"
-	"github.com/xObserve/xObserve/query/pkg/db"
-	"github.com/xObserve/xObserve/query/pkg/e"
-	"github.com/xObserve/xObserve/query/pkg/models"
+	"github.com/xobserve/xo/query/internal/accesstoken"
+	"github.com/xobserve/xo/query/internal/acl"
+	"github.com/xobserve/xo/query/pkg/common"
+	"github.com/xobserve/xo/query/pkg/db"
+	"github.com/xobserve/xo/query/pkg/e"
+	"github.com/xobserve/xo/query/pkg/models"
 )
 
 func GetSideMenu(c *gin.Context) {

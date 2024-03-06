@@ -37,6 +37,7 @@ import { parseVariableFormat } from 'utils/format'
 import { VariableSplitChar } from 'src/data/variable'
 import { queryPluginDataToTrace, queryPluginDataToTraceChart } from './utils'
 import { $datasources } from 'src/views/datasource/store'
+import { $dashboard } from 'src/views/dashboard/store/dashboard'
 
 export const runQuery = async (
   panel: Panel,
@@ -55,8 +56,9 @@ export const runQuery = async (
   const start = roundDsTime(range.start.getTime() / 1000)
   const end = roundDsTime(range.end.getTime() / 1000)
 
+  const dash = $dashboard.get()
   // clickhouse data has writing lacency, so we need to fetch data from 2 seconds before
-  let url = `/proxy/${ds.teamId}/${ds.id}?query=${q.metrics}&params=${
+  let url = `/xoProxy/${ds.teamId}/${ds.id}/${dash ? dash.id : "null"}?query=${q.metrics}&params=${
     q.data[q.metrics]?.params ?? '{}'
   }&start=${start}&end=${end - 5}&step=${q.interval}`
   if (!isEmpty(extraParams)) {

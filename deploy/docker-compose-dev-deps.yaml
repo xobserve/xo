@@ -1,0 +1,6 @@
+version: "2.4"
+
+include:
+  - ./compose-prometheus.yaml
+  - ./compose-clickhouse.yaml
+  - ./compose-hotrod.yaml

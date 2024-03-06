@@ -8,30 +8,37 @@ import (
 	"github.com/open-telemetry/opentelemetry-collector-contrib/processor/attributesprocessor"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/processor/filterprocessor"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/processor/logstransformprocessor"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/processor/metricsgenerationprocessor"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/processor/metricstransformprocessor"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/processor/probabilisticsamplerprocessor"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/processor/resourcedetectionprocessor"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/processor/resourceprocessor"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/processor/routingprocessor"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/processor/schemaprocessor"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/processor/servicegraphprocessor"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/processor/spanmetricsprocessor"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/processor/spanprocessor"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/processor/tailsamplingprocessor"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/processor/transformprocessor"
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/elasticsearchreceiver"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/filelogreceiver"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/hostmetricsreceiver"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/httpcheckreceiver"
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/jmxreceiver"
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver"
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8seventsreceiver"
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sobjectsreceiver"
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kafkametricsreceiver"
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kafkareceiver"
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver"
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/lokireceiver"
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/mongodbreceiver"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/mysqlreceiver"
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/nginxreceiver"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/postgresqlreceiver"
+
+	// "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/redisreceiver"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/syslogreceiver"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/tcplogreceiver"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/udplogreceiver"
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/zookeeperreceiver"
+
 	"go.opentelemetry.io/collector/exporter"
 	"go.opentelemetry.io/collector/exporter/debugexporter"
-	"go.opentelemetry.io/collector/exporter/loggingexporter"
 	"go.opentelemetry.io/collector/exporter/otlpexporter"
 	"go.opentelemetry.io/collector/exporter/otlphttpexporter"
 	"go.opentelemetry.io/collector/extension"
@@ -44,13 +51,12 @@ import (
 	"go.opentelemetry.io/collector/receiver/otlpreceiver"
 	"go.uber.org/multierr"
 
-	"github.com/xObserve/xObserve/otel-collector/exporter/clickhouselogsexporter"
-	"github.com/xObserve/xObserve/otel-collector/exporter/clickhousemetricsexporter"
-	"github.com/xObserve/xObserve/otel-collector/exporter/clickhousetracesexporter"
-	_ "github.com/xObserve/xObserve/otel-collector/pkg/parser/grok"
-	"github.com/xObserve/xObserve/otel-collector/processor/xobservespanmetricsprocessor"
-	"github.com/xObserve/xObserve/otel-collector/processor/xobservetailsampler"
-	"github.com/xObserve/xObserve/otel-collector/receiver/httpreceiver"
+	"github.com/xobserve/xo/otel-collector/exporter/clickhouselogsexporter"
+	"github.com/xobserve/xo/otel-collector/exporter/clickhousemetricsexporter"
+	"github.com/xobserve/xo/otel-collector/exporter/clickhousetracesexporter"
+	_ "github.com/xobserve/xo/otel-collector/pkg/parser/grok"
+	"github.com/xobserve/xo/otel-collector/processor/xobservespanmetricsprocessor"
+	"github.com/xobserve/xo/otel-collector/processor/xobservetailsampler"
 )
 
 func Components() (otelcol.Factories, error) {
@@ -72,21 +78,23 @@ func Components() (otelcol.Factories, error) {
 	receivers := []receiver.Factory{
 		filelogreceiver.NewFactory(),
 		hostmetricsreceiver.NewFactory(),
+		elasticsearchreceiver.NewFactory(),
 		httpcheckreceiver.NewFactory(),
+		jmxreceiver.NewFactory(),
+		k8sclusterreceiver.NewFactory(),
+		k8seventsreceiver.NewFactory(),
+		k8sobjectsreceiver.NewFactory(),
+		kafkametricsreceiver.NewFactory(),
+		kafkareceiver.NewFactory(),
+		kubeletstatsreceiver.NewFactory(),
+		lokireceiver.NewFactory(),
+		mongodbreceiver.NewFactory(),
 		mysqlreceiver.NewFactory(),
+		nginxreceiver.NewFactory(),
 		postgresqlreceiver.NewFactory(),
+		// prometheusreceiver.NewFactory(),
 		redisreceiver.NewFactory(),
-		syslogreceiver.NewFactory(),
-		tcplogreceiver.NewFactory(),
-		udplogreceiver.NewFactory(),
-		httpreceiver.NewFactory(),
-	}
-	for _, rcv := range factories.Receivers {
-		receivers = append(receivers, rcv)
-	}
-	factories.Receivers, err = receiver.MakeFactoryMap(receivers...)
-	if err != nil {
-		errs = append(errs, err)
+		zookeeperreceiver.NewFactory(),
 	}
 
 	exporters := []exporter.Factory{
@@ -97,25 +105,14 @@ func Components() (otelcol.Factories, error) {
 		prometheusremotewriteexporter.NewFactory(),
 		debugexporter.NewFactory(),
 	}
-	for _, exp := range factories.Exporters {
-		exporters = append(exporters, exp)
-	}
-	factories.Exporters, err = exporter.MakeFactoryMap(exporters...)
-	if err != nil {
-		errs = append(errs, err)
-	}
 
 	processors := []processor.Factory{
 		attributesprocessor.NewFactory(),
 		filterprocessor.NewFactory(),
-		metricsgenerationprocessor.NewFactory(),
 		metricstransformprocessor.NewFactory(),
 		probabilisticsamplerprocessor.NewFactory(),
 		resourcedetectionprocessor.NewFactory(),
 		resourceprocessor.NewFactory(),
-		routingprocessor.NewFactory(),
-		schemaprocessor.NewFactory(),
-		servicegraphprocessor.NewFactory(),
 		xobservespanmetricsprocessor.NewFactory(),
 		spanmetricsprocessor.NewFactory(),
 		spanprocessor.NewFactory(),
@@ -124,6 +121,23 @@ func Components() (otelcol.Factories, error) {
 		logstransformprocessor.NewFactory(),
 		xobservetailsampler.NewFactory(),
 	}
+
+	for _, rcv := range factories.Receivers {
+		receivers = append(receivers, rcv)
+	}
+	factories.Receivers, err = receiver.MakeFactoryMap(receivers...)
+	if err != nil {
+		errs = append(errs, err)
+	}
+
+	for _, exp := range factories.Exporters {
+		exporters = append(exporters, exp)
+	}
+	factories.Exporters, err = exporter.MakeFactoryMap(exporters...)
+	if err != nil {
+		errs = append(errs, err)
+	}
+
 	for _, pr := range factories.Processors {
 		processors = append(processors, pr)
 	}
@@ -154,7 +168,6 @@ func CoreComponents() (
 	errs = multierr.Append(errs, err)
 
 	exporters, err := exporter.MakeFactoryMap(
-		loggingexporter.NewFactory(),
 		otlpexporter.NewFactory(),
 		otlphttpexporter.NewFactory(),
 	)

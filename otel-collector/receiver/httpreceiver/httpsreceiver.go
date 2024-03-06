@@ -10,8 +10,8 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
-	"github.com/xObserve/xObserve/otel-collector/receiver/httpreceiver/bodyparser"
-	"github.com/xObserve/xObserve/otel-collector/receiver/httpreceiver/internal/metadata"
+	"github.com/xobserve/xo/otel-collector/receiver/httpreceiver/bodyparser"
+	"github.com/xobserve/xo/otel-collector/receiver/httpreceiver/internal/metadata"
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/config/confighttp"
 	"go.opentelemetry.io/collector/consumer"
@@ -148,7 +148,7 @@ func (r *httpreceiver) Start(_ context.Context, host component.Host) error {
 	go func() {
 		defer r.shutdownWG.Done()
 		if errHTTP := r.server.Serve(ln); !errors.Is(errHTTP, http.ErrServerClosed) && errHTTP != nil {
-			host.ReportFatalError(errHTTP)
+			// host.ReportFatalError(errHTTP)
 		}
 	}()
 	return nil

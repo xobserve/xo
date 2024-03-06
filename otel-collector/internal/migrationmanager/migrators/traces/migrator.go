@@ -3,7 +3,7 @@ package traces
 import (
 	"context"
 
-	"github.com/xObserve/xObserve/otel-collector/internal/migrationmanager/migrators/basemigrator"
+	"github.com/xobserve/xo/otel-collector/internal/migrationmanager/migrators/basemigrator"
 )
 
 const (

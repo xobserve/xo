@@ -23,7 +23,7 @@
 // limitations under the License.
 package common
 
-import "github.com/xObserve/xObserve/query/pkg/e"
+import "github.com/xobserve/xo/query/pkg/e"
 
 type Resp struct {
 	Status  string      `json:"status"`

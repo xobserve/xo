@@ -24,6 +24,6 @@
 
 package admin
 
-import "github.com/xObserve/xObserve/query/pkg/colorlog"
+import "github.com/xobserve/xo/query/pkg/colorlog"
 
 var logger = colorlog.RootLogger.New("logger", "admin")

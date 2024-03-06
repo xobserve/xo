@@ -160,7 +160,7 @@ const LogDetail = ({ log: rawlog, isOpen, onClose, onSearch }: Props) => {
                     'rgb(166, 226, 46)',
                   )}
                 >
-                  {log.attributes.find((v) => v[0] == 'raw_log')[1]}
+                  {log.attributes.find((v) => v[0] == 'raw_log')?.[1]}
                 </Text>
               </TabPanel>
             </TabPanels>

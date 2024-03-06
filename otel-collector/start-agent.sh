@@ -1,0 +1,1 @@
+XO_SERVICE_NAME="collector" XO_HOST_NAME="collector-1" XO_COLLECTOR_ENDPOINT="localhost:4317" go run main.go --config config/agent.yaml

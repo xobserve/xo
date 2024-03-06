@@ -32,9 +32,9 @@ import (
 	"go.uber.org/atomic"
 	"go.uber.org/zap"
 
-	"github.com/xObserve/xObserve/otel-collector/processor/xobservetailsampler/internal/idbatcher"
-	"github.com/xObserve/xObserve/otel-collector/processor/xobservetailsampler/internal/sampling"
-	"github.com/xObserve/xObserve/otel-collector/processor/xobservetailsampler/internal/timeutils"
+	"github.com/xobserve/xo/otel-collector/processor/xobservetailsampler/internal/idbatcher"
+	"github.com/xobserve/xo/otel-collector/processor/xobservetailsampler/internal/sampling"
+	"github.com/xobserve/xo/otel-collector/processor/xobservetailsampler/internal/timeutils"
 )
 
 // policy combines a sampling policy evaluator with the destinations to be

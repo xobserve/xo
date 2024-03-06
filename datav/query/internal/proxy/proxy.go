@@ -34,8 +34,8 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/xObserve/xObserve/query/pkg/colorlog"
-	"github.com/xObserve/xObserve/query/pkg/common"
+	"github.com/xobserve/xo/query/pkg/colorlog"
+	"github.com/xobserve/xo/query/pkg/common"
 	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 )
 

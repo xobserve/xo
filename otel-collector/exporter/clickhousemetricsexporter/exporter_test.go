@@ -39,7 +39,7 @@ import (
 	"go.opentelemetry.io/collector/exporter/exportertest"
 	"go.opentelemetry.io/collector/pdata/pmetric"
 
-	"github.com/xObserve/xObserve/otel-collector/exporter/clickhousemetricsexporter/testdata"
+	"github.com/xobserve/xo/otel-collector/exporter/clickhousemetricsexporter/testdata"
 )
 
 // Test_NewPRWExporter checks that a new exporter instance with non-nil fields is initialized

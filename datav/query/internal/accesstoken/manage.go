@@ -5,9 +5,9 @@ import (
 	"errors"
 	"strconv"
 
-	"github.com/xObserve/xObserve/query/pkg/common"
-	"github.com/xObserve/xObserve/query/pkg/e"
-	"github.com/xObserve/xObserve/query/pkg/models"
+	"github.com/xobserve/xo/query/pkg/common"
+	"github.com/xobserve/xo/query/pkg/e"
+	"github.com/xobserve/xo/query/pkg/models"
 )
 
 func CanManageTeam(teamId int64, tokenStr string) (bool, error) {

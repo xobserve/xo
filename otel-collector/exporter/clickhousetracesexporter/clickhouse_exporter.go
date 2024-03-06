@@ -26,8 +26,9 @@ import (
 	"strings"
 
 	"github.com/google/uuid"
-	"github.com/xObserve/xObserve/otel-collector/pkg/usage"
-	"github.com/xObserve/xObserve/otel-collector/pkg/utils"
+	"github.com/xobserve/xo/otel-collector/pkg/constants"
+	"github.com/xobserve/xo/otel-collector/pkg/usage"
+	"github.com/xobserve/xo/otel-collector/pkg/utils"
 	"go.opencensus.io/stats/view"
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/pdata/pcommon"
@@ -276,9 +277,10 @@ func newStructuredSpan(otelSpan ptrace.Span, serviceName string, resource pcommo
 
 	resourceAttrs := map[string]string{}
 
-	teamId := utils.GetTeamIdFromResource(resource)
-	namespace := utils.GetNamespaceFromResource(resource)
-	cluster := utils.GetClusterFromResource(resource)
+	teamId := utils.GetStringValueFromResource(resource, constants.AttributeTeamId, constants.DefaultTeamId)
+	cluster := utils.GetStringValueFromResource(resource, conventions.AttributeK8SClusterName, "")
+	namespace := utils.GetStringValueFromResource(resource, conventions.AttributeK8SNamespaceName, "")
+
 	attributes.Range(func(k string, v pcommon.Value) bool {
 		tagMap[k] = v.AsString()
 		spanAttribute := SpanAttribute{
@@ -407,8 +409,7 @@ func (s *storage) pushTraceData(ctx context.Context, td ptrace.Traces) error {
 		// fmt.Printf("ResourceSpans #%d\n", i)
 		rs := rss.At(i)
 
-		serviceName := ServiceNameForResource(rs.Resource())
-
+		serviceName := utils.GetStringValueFromResource(rs.Resource(), conventions.AttributeServiceName, "<nil-service-name>")
 		ilss := rs.ScopeSpans()
 		for j := 0; j < ilss.Len(); j++ {
 			// fmt.Printf("InstrumentationLibrarySpans #%d\n", j)

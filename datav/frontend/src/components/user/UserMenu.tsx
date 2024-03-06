@@ -130,7 +130,7 @@ const UserMenu = ({ miniMode }) => {
           </MenuButton>
         )}
         <Portal>
-          <MenuList zIndex={1000} fontSize='1em'>
+          <MenuList zIndex={1500} fontSize='1em'>
             <Link
               to={session ? getNavigateTo(`${teamPath}/account/setting`) : null}
             >

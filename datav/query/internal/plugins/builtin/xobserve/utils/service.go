@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	ch "github.com/ClickHouse/clickhouse-go/v2"
-	xobservemodels "github.com/xObserve/xObserve/query/internal/plugins/builtin/xobserve/models"
+	xobservemodels "github.com/xobserve/xo/query/internal/plugins/builtin/xobserve/models"
 )
 
 func GetServiceAndOperations(ctx context.Context, conn ch.Conn) (*map[string][]string, error) {

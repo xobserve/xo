@@ -31,9 +31,9 @@ import (
 	"syscall"
 
 	"github.com/spf13/cobra"
-	server "github.com/xObserve/xObserve/query/internal"
-	"github.com/xObserve/xObserve/query/pkg/colorlog"
-	"github.com/xObserve/xObserve/query/pkg/config"
+	server "github.com/xobserve/xo/query/internal"
+	"github.com/xobserve/xo/query/pkg/colorlog"
+	"github.com/xobserve/xo/query/pkg/config"
 )
 
 var cfgFile string

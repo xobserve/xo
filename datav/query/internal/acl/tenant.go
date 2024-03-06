@@ -6,8 +6,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/xObserve/xObserve/query/pkg/e"
-	"github.com/xObserve/xObserve/query/pkg/models"
+	"github.com/xobserve/xo/query/pkg/e"
+	"github.com/xobserve/xo/query/pkg/models"
 )
 
 func CanViewTenant(ctx context.Context, tenantId int64, userId int64) error {

@@ -3,8 +3,8 @@ package utils
 import (
 	"strings"
 
-	xobservemodels "github.com/xObserve/xObserve/query/internal/plugins/builtin/xobserve/models"
-	"github.com/xObserve/xObserve/query/pkg/models"
+	xobservemodels "github.com/xobserve/xo/query/internal/plugins/builtin/xobserve/models"
+	"github.com/xobserve/xo/query/pkg/models"
 )
 
 func GetValueFromParams(params map[string]interface{}, key string) string {
