@@ -1,0 +1,1396 @@
+{
+    "dashboards": [
+        {
+            "id": "d-erUtV1hSz",
+            "title": "Home Dashboard",
+            "editable": true,
+            "updated": "2024-02-27T12:17:58.558657+08:00",
+            "ownedBy": 1,
+            "visibleTo": "team",
+            "data": {
+                "allowPanelsOverlap": false,
+                "annotation": {
+                    "color": "rgba(0, 211, 255, 1)",
+                    "enable": true,
+                    "enableRole": "Admin",
+                    "tagsFilter": ""
+                },
+                "autoSaveInterval": 120,
+                "description": "",
+                "enableAutoSave": false,
+                "enableUnsavePrompt": true,
+                "hiddenPanels": [],
+                "hidingVars": "service",
+                "layout": "vertical",
+                "lazyLoading": false,
+                "panels": [
+                    {
+                        "allowTypes": null,
+                        "collapsed": false,
+                        "conditionRender": {
+                            "type": "variable",
+                            "value": "service-display=graph"
+                        },
+                        "datasource": {
+                            "id": 1707742458986603,
+                            "queries": [
+                                {
+                                    "data": {
+                                        "enableVariableKeys": [
+                                            "getDependencyGraph"
+                                        ],
+                                        "format": "nodeGraph",
+                                        "getDependencyGraph": {
+                                            "params": "{\n}"
+                                        }
+                                    },
+                                    "id": 65,
+                                    "legend": "",
+                                    "metrics": "getDependencyGraph",
+                                    "visible": true
+                                }
+                            ],
+                            "queryOptions": {
+                                "maxDataPoints": 600,
+                                "minInterval": "15s"
+                            },
+                            "type": "xobserve"
+                        },
+                        "desc": "",
+                        "disableMenu": false,
+                        "enableConditionRender": true,
+                        "enableScopeTime": false,
+                        "enableTransform": false,
+                        "externalLinks": [],
+                        "gridPos": {
+                            "h": 42,
+                            "w": 24,
+                            "x": 0,
+                            "y": 0
+                        },
+                        "id": 1708139390,
+                        "interactions": {},
+                        "overrides": [],
+                        "plugins": {
+                            "nodeGraph": {
+                                "dragCanvas": true,
+                                "dragNode": true,
+                                "edge": {
+                                    "arrow": "default",
+                                    "color": {
+                                        "dark": "#8CA88C",
+                                        "light": "#ddd"
+                                    },
+                                    "detailPos": "edge",
+                                    "display": true,
+                                    "highlightColor": {
+                                        "dark": "#00B5D8",
+                                        "light": "#C8F2C2"
+                                    },
+                                    "opacity": 0.6,
+                                    "shape": "line",
+                                    "showDetail": "hover"
+                                },
+                                "layout": {
+                                    "gravity": 40,
+                                    "nodeStrength": 5000
+                                },
+                                "legend": {
+                                    "enable": true
+                                },
+                                "node": {
+                                    "baseSize": 60,
+                                    "borderColor": "#9FE6B8",
+                                    "donutColors": [
+                                        {
+                                            "attr": "success",
+                                            "color": "#32C5E9"
+                                        },
+                                        {
+                                            "attr": "error",
+                                            "color": "#fb7293"
+                                        }
+                                    ],
+                                    "enableHighlight": false,
+                                    "highlightColor": "$dark-red",
+                                    "highlightNodes": "",
+                                    "highlightNodesByFunc": "// data: {nodes, edges}\n// return nodes name list, e.g ['node-1', 'node-2']\nfunction highlightNodes(data, lodash) {\n    const matchingNodeNames = []\n    return matchingNodeNames\n}\n",
+                                    "icon": [],
+                                    "maxSize": 1.4,
+                                    "menu": [],
+                                    "shape": "donut",
+                                    "tooltipTrigger": "mouseenter"
+                                },
+                                "scrollCanvas": false,
+                                "value": {
+                                    "decimal": 3,
+                                    "units": [],
+                                    "unitsType": "none"
+                                },
+                                "zoomCanvas": false
+                            }
+                        },
+                        "scopeTime": null,
+                        "styles": {
+                            "border": "Normal",
+                            "borderOnHover": true,
+                            "decoration": {
+                                "height": "20px",
+                                "justifyContent": "center",
+                                "left": "",
+                                "reverse": false,
+                                "top": "-30px",
+                                "type": "None",
+                                "width": "100%"
+                            },
+                            "heightReduction": 0,
+                            "marginLeft": 0,
+                            "marginTop": 0,
+                            "palette": "echarts-light",
+                            "title": {
+                                "color": "inherit",
+                                "decoration": {
+                                    "height": "50px",
+                                    "margin": "10px",
+                                    "type": "None",
+                                    "width": "160px"
+                                },
+                                "fontSize": "14px",
+                                "fontWeight": "500",
+                                "paddingBottom": "0px",
+                                "paddingLeft": "0px",
+                                "paddingRight": "0px",
+                                "paddingTop": "0px",
+                                "position": "left"
+                            },
+                            "widthReduction": 0
+                        },
+                        "templateId": 0,
+                        "thresholds": {
+                            "enable": false,
+                            "thresholdArrow": "none",
+                            "thresholds": {
+                                "enableTransform": false,
+                                "mode": "absolute",
+                                "thresholds": [
+                                    {
+                                        "color": "#9FE6B8",
+                                        "value": null
+                                    }
+                                ],
+                                "transform": "function transform(data, lodash){\n\n}"
+                            },
+                            "thresholdsDisplay": "None"
+                        },
+                        "title": "New panel",
+                        "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
+                        "type": "nodeGraph",
+                        "valueMapping": null
+                    },
+                    {
+                        "collapsed": false,
+                        "conditionRender": {
+                            "type": "variable",
+                            "value": "service-display=table"
+                        },
+                        "datasource": {
+                            "id": 1707742458986603,
+                            "queries": [
+                                {
+                                    "data": {
+                                        "enableVariableKeys": [
+                                            "getServiceInfoList"
+                                        ],
+                                        "format": "table",
+                                        "getServiceInfoList": {
+                                            "params": "{\n}"
+                                        }
+                                    },
+                                    "id": 65,
+                                    "legend": "",
+                                    "metrics": "getServiceInfoList",
+                                    "visible": true
+                                }
+                            ],
+                            "queryOptions": {
+                                "maxDataPoints": 600,
+                                "minInterval": "15s"
+                            },
+                            "type": "xobserve"
+                        },
+                        "desc": "",
+                        "enableConditionRender": true,
+                        "enableScopeTime": false,
+                        "enableTransform": false,
+                        "gridPos": {
+                            "h": 25,
+                            "w": 24,
+                            "x": 0,
+                            "y": 0
+                        },
+                        "id": 1704289622,
+                        "interactions": {
+                            "enableRowClick": true,
+                            "onRowClick": "\n// setVariable: (varName:string, varValue:string) => void \n// navigate: react-router-dom -> useNavigate() -> navigate \n// setDateTime: (from: Timestamp, to: TimeStamp) => void\nfunction onRowClick(row, navigate, setVariable, setDateTime, $variables) {\n    // You can get all current variables in this way\n    // const currentVariables = $variables.get()\n    // console.log(row)\n}\n",
+                            "rowActions": []
+                        },
+                        "overrides": [],
+                        "plugins": {
+                            "table": {
+                                "actionButtonSize": "sm",
+                                "actionClumnWidth": null,
+                                "actionColumnName": null,
+                                "bordered": false,
+                                "cellSize": "middle",
+                                "column": {
+                                    "align": "auto",
+                                    "colorTitle": "#37A2DA",
+                                    "enableFilter": false,
+                                    "enableSort": true
+                                },
+                                "enablePagination": false,
+                                "globalSearch": false,
+                                "showHeader": true,
+                                "stickyHeader": false,
+                                "tableWidth": 100,
+                                "value": {
+                                    "decimal": 3,
+                                    "units": [],
+                                    "unitsType": "none"
+                                }
+                            }
+                        },
+                        "scopeTime": null,
+                        "styles": {
+                            "border": "None",
+                            "borderOnHover": true,
+                            "decoration": {
+                                "height": "20px",
+                                "justifyContent": "center",
+                                "left": "",
+                                "reverse": false,
+                                "top": "-30px",
+                                "type": "None",
+                                "width": "100%"
+                            },
+                            "heightReduction": 0,
+                            "marginLeft": 0,
+                            "marginTop": 0,
+                            "palette": "echarts-light",
+                            "title": {
+                                "color": "inherit",
+                                "decoration": {
+                                    "height": "50px",
+                                    "margin": "10px",
+                                    "type": "None",
+                                    "width": "160px"
+                                },
+                                "fontSize": "14px",
+                                "fontWeight": "500",
+                                "paddingBottom": "0px",
+                                "paddingLeft": "0px",
+                                "paddingRight": "0px",
+                                "paddingTop": "0px",
+                                "position": "left"
+                            },
+                            "widthReduction": 0
+                        },
+                        "templateId": 0,
+                        "thresholds": {
+                            "enable": false,
+                            "thresholdArrow": "none",
+                            "thresholds": {
+                                "enableTransform": false,
+                                "mode": "absolute",
+                                "thresholds": [
+                                    {
+                                        "color": "#9FE6B8",
+                                        "value": null
+                                    }
+                                ],
+                                "transform": "function transform(data, lodash){\n\n}"
+                            },
+                            "thresholdsDisplay": "None"
+                        },
+                        "title": "",
+                        "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
+                        "type": "table",
+                        "valueMapping": []
+                    }
+                ],
+                "sharedTooltip": false,
+                "styles": {
+                    "bg": {
+                        "colorMode": "dark",
+                        "url": "/dashboard/universe.png"
+                    },
+                    "bgColor": "",
+                    "bgEnabled": true,
+                    "border": "None"
+                },
+                "variables": [
+                    {
+                        "default": "table",
+                        "enableAll": false,
+                        "enableMulti": false,
+                        "id": "d-erUtV1hSz-1708139424777",
+                        "name": "service-display",
+                        "refresh": "OnDashboardLoad",
+                        "regex": "",
+                        "teamId": 1,
+                        "type": "custom",
+                        "value": "table,graph"
+                    }
+                ]
+            },
+            "templateId": 0,
+            "weight": 0,
+            "links": []
+        },
+        {
+            "id": "d-u39phJhSz",
+            "title": "{\"en\":\"Traces\",\"zh\":\"链路跟踪\"}",
+            "editable": true,
+            "updated": "2024-03-02T21:18:37.557934+08:00",
+            "ownedBy": 1,
+            "visibleTo": "team",
+            "data": {
+                "allowPanelsOverlap": false,
+                "annotation": {
+                    "color": "rgba(0, 211, 255, 1)",
+                    "enable": true,
+                    "enableRole": "Admin",
+                    "tagsFilter": ""
+                },
+                "autoSaveInterval": 120,
+                "description": "",
+                "enableAutoSave": false,
+                "enableUnsavePrompt": true,
+                "hiddenPanels": [],
+                "hidingVars": "",
+                "layout": "vertical",
+                "lazyLoading": false,
+                "panels": [
+                    {
+                        "allowTypes": null,
+                        "collapsed": false,
+                        "conditionRender": {
+                            "type": "variable",
+                            "value": ""
+                        },
+                        "datasource": {
+                            "id": 1707742458986603,
+                            "queries": [
+                                {
+                                    "data": {
+                                        "enableVariableKeys": [
+                                            "getTraces"
+                                        ],
+                                        "format": "traces",
+                                        "getTraces": {
+                                            "params": "{\n}"
+                                        }
+                                    },
+                                    "id": 65,
+                                    "legend": "",
+                                    "metrics": "getTraces",
+                                    "visible": true
+                                }
+                            ],
+                            "queryOptions": {
+                                "maxDataPoints": 600,
+                                "minInterval": "15s"
+                            },
+                            "type": "xobserve"
+                        },
+                        "desc": "",
+                        "disableMenu": false,
+                        "enableConditionRender": false,
+                        "enableScopeTime": false,
+                        "enableTransform": false,
+                        "externalLinks": [],
+                        "gridPos": {
+                            "h": 43,
+                            "w": 24,
+                            "x": 0,
+                            "y": 0
+                        },
+                        "id": 1707742520,
+                        "interactions": {
+                            "clickActions": [],
+                            "enableClick": false
+                        },
+                        "overrides": [],
+                        "plugins": {
+                            "xobserveTrace": {
+                                "chart": {
+                                    "bottom": 15,
+                                    "height": 100,
+                                    "left": 1,
+                                    "right": 3,
+                                    "stack": false,
+                                    "top": 6,
+                                    "type": "bar"
+                                },
+                                "defaultOperation": "${operation}",
+                                "defaultService": "${service}",
+                                "enableEditOperation": false,
+                                "enableEditService": false,
+                                "value": {
+                                    "decimal": 3,
+                                    "units": [],
+                                    "unitsType": "none"
+                                }
+                            }
+                        },
+                        "scopeTime": null,
+                        "styles": {
+                            "border": "Normal",
+                            "borderOnHover": true,
+                            "decoration": {
+                                "height": "20px",
+                                "justifyContent": "center",
+                                "left": "",
+                                "reverse": false,
+                                "top": "-30px",
+                                "type": "None",
+                                "width": "100%"
+                            },
+                            "heightReduction": 0,
+                            "marginLeft": 0,
+                            "marginTop": 0,
+                            "palette": "echarts-light",
+                            "title": {
+                                "color": "inherit",
+                                "decoration": {
+                                    "height": "50px",
+                                    "margin": "10px",
+                                    "type": "None",
+                                    "width": "160px"
+                                },
+                                "fontSize": "14px",
+                                "fontWeight": "500",
+                                "paddingBottom": "0px",
+                                "paddingLeft": "0px",
+                                "paddingRight": "0px",
+                                "paddingTop": "0px",
+                                "position": "left"
+                            },
+                            "widthReduction": 0
+                        },
+                        "templateId": 0,
+                        "thresholds": {
+                            "enable": false,
+                            "thresholdArrow": "none",
+                            "thresholds": {
+                                "enableTransform": false,
+                                "mode": "absolute",
+                                "thresholds": [
+                                    {
+                                        "color": "#9FE6B8",
+                                        "value": null
+                                    }
+                                ],
+                                "transform": "function transform(data, lodash){\n\n}"
+                            },
+                            "thresholdsDisplay": "None"
+                        },
+                        "title": "",
+                        "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
+                        "type": "xobserveTrace",
+                        "valueMapping": null
+                    }
+                ],
+                "sharedTooltip": false,
+                "styles": {
+                    "bg": {
+                        "colorMode": "dark",
+                        "url": ""
+                    },
+                    "bgColor": "",
+                    "bgEnabled": false,
+                    "border": "None"
+                },
+                "variables": [
+                    {
+                        "datasource": 1707742458986603,
+                        "enableAll": false,
+                        "enableMulti": false,
+                        "id": "d-u39phJhSz-1707742597117",
+                        "name": "operation",
+                        "refresh": "OnDashboardLoad",
+                        "regex": "",
+                        "teamId": 1,
+                        "type": "query",
+                        "value": "{\"params\":\"{\\n    \\\"service\\\": \\\"${service}\\\"\\n}\",\"url\":\"getServiceOperations\"}"
+                    }
+                ]
+            },
+            "templateId": 0,
+            "weight": 0,
+            "links": [
+                {
+                    "title": "test",
+                    "url": "https://qq.com",
+                    "targetBlank": true,
+                    "icon": "FaUser"
+                }
+            ]
+        },
+        {
+            "id": "d-6ani6x2Sz",
+            "title": "拓扑图",
+            "editable": true,
+            "updated": "2024-02-13T11:06:24.468462+08:00",
+            "ownedBy": 1,
+            "visibleTo": "team",
+            "data": {
+                "allowPanelsOverlap": false,
+                "annotation": {
+                    "color": "rgba(0, 211, 255, 1)",
+                    "enable": true,
+                    "enableRole": "Admin",
+                    "tagsFilter": ""
+                },
+                "autoSaveInterval": 120,
+                "description": "",
+                "enableAutoSave": false,
+                "enableUnsavePrompt": true,
+                "hiddenPanels": [],
+                "hidingVars": "",
+                "layout": "vertical",
+                "lazyLoading": false,
+                "panels": [
+                    {
+                        "allowTypes": null,
+                        "collapsed": false,
+                        "conditionRender": {
+                            "type": "variable",
+                            "value": ""
+                        },
+                        "datasource": {
+                            "id": 1707742458986603,
+                            "queries": [
+                                {
+                                    "data": {
+                                        "enableVariableKeys": [
+                                            "getDependencyGraph"
+                                        ],
+                                        "format": "nodeGraph",
+                                        "getDependencyGraph": {
+                                            "params": "{\n}"
+                                        }
+                                    },
+                                    "id": 65,
+                                    "legend": "",
+                                    "metrics": "getDependencyGraph",
+                                    "visible": true
+                                }
+                            ],
+                            "queryOptions": {
+                                "maxDataPoints": 600,
+                                "minInterval": "15s"
+                            },
+                            "type": "xobserve"
+                        },
+                        "desc": "",
+                        "disableMenu": false,
+                        "enableConditionRender": false,
+                        "enableScopeTime": false,
+                        "enableTransform": false,
+                        "externalLinks": [],
+                        "gridPos": {
+                            "h": 42,
+                            "w": 24,
+                            "x": 0,
+                            "y": 0
+                        },
+                        "id": 1707793516,
+                        "interactions": {},
+                        "overrides": [],
+                        "plugins": {
+                            "nodeGraph": {
+                                "dragCanvas": true,
+                                "dragNode": true,
+                                "edge": {
+                                    "arrow": "default",
+                                    "color": {
+                                        "dark": "#8CA88C",
+                                        "light": "#ddd"
+                                    },
+                                    "detailPos": "edge",
+                                    "display": true,
+                                    "highlightColor": {
+                                        "dark": "#00B5D8",
+                                        "light": "#C8F2C2"
+                                    },
+                                    "opacity": 0.6,
+                                    "shape": "line",
+                                    "showDetail": "hover"
+                                },
+                                "layout": {
+                                    "gravity": 40,
+                                    "nodeStrength": 5000
+                                },
+                                "legend": {
+                                    "enable": true
+                                },
+                                "node": {
+                                    "baseSize": 60,
+                                    "borderColor": "#9FE6B8",
+                                    "donutColors": [
+                                        {
+                                            "attr": "success",
+                                            "color": "#32C5E9"
+                                        },
+                                        {
+                                            "attr": "error",
+                                            "color": "#fb7293"
+                                        }
+                                    ],
+                                    "enableHighlight": false,
+                                    "highlightColor": "$dark-red",
+                                    "highlightNodes": "",
+                                    "highlightNodesByFunc": "// data: {nodes, edges}\n// return nodes name list, e.g ['node-1', 'node-2']\nfunction highlightNodes(data, lodash) {\n    const matchingNodeNames = []\n    return matchingNodeNames\n}\n",
+                                    "icon": [],
+                                    "maxSize": 1.4,
+                                    "menu": [],
+                                    "shape": "donut",
+                                    "tooltipTrigger": "mouseenter"
+                                },
+                                "scrollCanvas": false,
+                                "value": {
+                                    "decimal": 3,
+                                    "units": [],
+                                    "unitsType": "none"
+                                },
+                                "zoomCanvas": false
+                            }
+                        },
+                        "scopeTime": null,
+                        "styles": {
+                            "border": "Normal",
+                            "borderOnHover": true,
+                            "decoration": {
+                                "height": "20px",
+                                "justifyContent": "center",
+                                "left": "",
+                                "reverse": false,
+                                "top": "-30px",
+                                "type": "None",
+                                "width": "100%"
+                            },
+                            "heightReduction": 0,
+                            "marginLeft": 0,
+                            "marginTop": 0,
+                            "palette": "echarts-light",
+                            "title": {
+                                "color": "inherit",
+                                "decoration": {
+                                    "height": "50px",
+                                    "margin": "10px",
+                                    "type": "None",
+                                    "width": "160px"
+                                },
+                                "fontSize": "14px",
+                                "fontWeight": "500",
+                                "paddingBottom": "0px",
+                                "paddingLeft": "0px",
+                                "paddingRight": "0px",
+                                "paddingTop": "0px",
+                                "position": "left"
+                            },
+                            "widthReduction": 0
+                        },
+                        "templateId": 0,
+                        "thresholds": {
+                            "enable": false,
+                            "thresholdArrow": "none",
+                            "thresholds": {
+                                "enableTransform": false,
+                                "mode": "absolute",
+                                "thresholds": [
+                                    {
+                                        "color": "#9FE6B8",
+                                        "value": null
+                                    }
+                                ],
+                                "transform": "function transform(data, lodash){\n\n}"
+                            },
+                            "thresholdsDisplay": "None"
+                        },
+                        "title": "New panel",
+                        "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
+                        "type": "nodeGraph",
+                        "valueMapping": null
+                    }
+                ],
+                "sharedTooltip": false,
+                "styles": {
+                    "bg": {
+                        "colorMode": "dark",
+                        "url": ""
+                    },
+                    "bgColor": "",
+                    "bgEnabled": false,
+                    "border": "None"
+                },
+                "variables": []
+            },
+            "templateId": 0,
+            "weight": 0,
+            "links": []
+        },
+        {
+            "id": "d-Pwanx82Iz",
+            "title": "Logs",
+            "editable": true,
+            "updated": "2024-03-04T21:02:32.139654+08:00",
+            "ownedBy": 1,
+            "visibleTo": "team",
+            "data": {
+                "allowPanelsOverlap": false,
+                "annotation": {
+                    "color": "rgba(0, 211, 255, 1)",
+                    "enable": true,
+                    "enableRole": "Admin",
+                    "tagsFilter": ""
+                },
+                "autoSaveInterval": 120,
+                "description": "",
+                "enableAutoSave": false,
+                "enableUnsavePrompt": true,
+                "hiddenPanels": [],
+                "hidingVars": "host",
+                "layout": "vertical",
+                "lazyLoading": false,
+                "panels": [
+                    {
+                        "allowTypes": null,
+                        "collapsed": false,
+                        "conditionRender": {
+                            "type": "variable",
+                            "value": ""
+                        },
+                        "datasource": {
+                            "id": 1707742458986603,
+                            "queries": [
+                                {
+                                    "data": {
+                                        "enableVariableKeys": [
+                                            "getLogs"
+                                        ],
+                                        "format": "logs",
+                                        "getLogs": {
+                                            "params": "{\n    \"service\": \"${service}\"\n}"
+                                        }
+                                    },
+                                    "id": 65,
+                                    "legend": "",
+                                    "metrics": "getLogs",
+                                    "visible": true
+                                }
+                            ],
+                            "queryOptions": {
+                                "maxDataPoints": 600,
+                                "minInterval": "15s"
+                            },
+                            "type": "xobserve"
+                        },
+                        "desc": "",
+                        "disableMenu": false,
+                        "enableConditionRender": false,
+                        "enableScopeTime": false,
+                        "enableTransform": false,
+                        "externalLinks": [],
+                        "gridPos": {
+                            "h": 43,
+                            "w": 24,
+                            "x": 0,
+                            "y": 0
+                        },
+                        "id": 1707981322,
+                        "interactions": {},
+                        "overrides": [],
+                        "plugins": {
+                            "xobserveLog": {
+                                "chart": {
+                                    "bottom": 35,
+                                    "height": 150,
+                                    "left": 1,
+                                    "right": 3,
+                                    "stack": true,
+                                    "top": 16,
+                                    "type": "bar"
+                                },
+                                "columns": {
+                                    "displayColumns": [
+                                        {
+                                            "key": "timestamp",
+                                            "name": "timestamp",
+                                            "width": [
+                                                100,
+                                                170
+                                            ]
+                                        },
+                                        {
+                                            "key": "severity",
+                                            "name": "severity",
+                                            "width": [
+                                                50,
+                                                90
+                                            ]
+                                        },
+                                        {
+                                            "key": "service",
+                                            "name": "service",
+                                            "width": [
+                                                150,
+                                                120
+                                            ]
+                                        },
+                                        {
+                                            "key": "body",
+                                            "name": "body",
+                                            "width": [
+                                                500,
+                                                800
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "headerFontSize": 12.5,
+                                "logFontSize": 12.5,
+                                "logline": {
+                                    "allowOverflow": false,
+                                    "wrapLine": true
+                                },
+                                "showChart": true,
+                                "showLogs": true,
+                                "showSearch": true,
+                                "value": {
+                                    "decimal": 3,
+                                    "units": [],
+                                    "unitsType": "none"
+                                }
+                            }
+                        },
+                        "scopeTime": null,
+                        "styles": {
+                            "border": "Normal",
+                            "borderOnHover": true,
+                            "decoration": {
+                                "height": "20px",
+                                "justifyContent": "center",
+                                "left": "",
+                                "reverse": false,
+                                "top": "-30px",
+                                "type": "None",
+                                "width": "100%"
+                            },
+                            "heightReduction": 0,
+                            "marginLeft": 0,
+                            "marginTop": 0,
+                            "palette": "echarts-light",
+                            "title": {
+                                "color": "inherit",
+                                "decoration": {
+                                    "height": "50px",
+                                    "margin": "10px",
+                                    "type": "None",
+                                    "width": "160px"
+                                },
+                                "fontSize": "14px",
+                                "fontWeight": "500",
+                                "paddingBottom": "0px",
+                                "paddingLeft": "0px",
+                                "paddingRight": "0px",
+                                "paddingTop": "0px",
+                                "position": "left"
+                            },
+                            "widthReduction": 0
+                        },
+                        "templateId": 0,
+                        "thresholds": {
+                            "enable": false,
+                            "thresholdArrow": "none",
+                            "thresholds": {
+                                "enableTransform": false,
+                                "mode": "absolute",
+                                "thresholds": [
+                                    {
+                                        "color": "#9FE6B8",
+                                        "value": null
+                                    }
+                                ],
+                                "transform": "function transform(data, lodash){\n\n}"
+                            },
+                            "thresholdsDisplay": "None"
+                        },
+                        "title": "",
+                        "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
+                        "type": "xobserveLog",
+                        "valueMapping": null
+                    }
+                ],
+                "sharedTooltip": false,
+                "styles": {
+                    "bg": {
+                        "colorMode": "dark",
+                        "url": ""
+                    },
+                    "bgColor": "",
+                    "bgEnabled": false,
+                    "border": "None"
+                },
+                "variables": []
+            },
+            "templateId": 0,
+            "weight": 0,
+            "links": []
+        },
+        {
+            "id": "d-4U75BChIk",
+            "title": "Host Info",
+            "editable": true,
+            "updated": "2024-03-03T19:41:31.599608+08:00",
+            "ownedBy": 1,
+            "visibleTo": "team",
+            "data": {
+                "allowPanelsOverlap": false,
+                "annotation": {
+                    "color": "rgba(0, 211, 255, 1)",
+                    "enable": true,
+                    "enableRole": "Admin",
+                    "tagsFilter": ""
+                },
+                "autoSaveInterval": 120,
+                "description": "",
+                "enableAutoSave": false,
+                "enableUnsavePrompt": true,
+                "hiddenPanels": [],
+                "hidingVars": "",
+                "layout": "vertical",
+                "lazyLoading": false,
+                "panels": [
+                    {
+                        "allowTypes": null,
+                        "collapsed": false,
+                        "conditionRender": {
+                            "type": "variable",
+                            "value": ""
+                        },
+                        "datasource": {
+                            "id": 1708151425332515,
+                            "queries": [
+                                {
+                                    "data": {},
+                                    "id": 65,
+                                    "legend": "",
+                                    "metrics": "system_cpu_load_average_1m{xo_teamId=\"${__team__}\"}",
+                                    "visible": true
+                                }
+                            ],
+                            "queryOptions": {
+                                "maxDataPoints": 600,
+                                "minInterval": "15s"
+                            },
+                            "type": "prometheus"
+                        },
+                        "desc": "",
+                        "disableMenu": false,
+                        "enableConditionRender": false,
+                        "enableScopeTime": false,
+                        "enableTransform": false,
+                        "externalLinks": [],
+                        "gridPos": {
+                            "h": 18,
+                            "w": 14,
+                            "x": 0,
+                            "y": 0
+                        },
+                        "id": 1708152776,
+                        "interactions": {
+                            "clickActions": []
+                        },
+                        "overrides": [],
+                        "plugins": {
+                            "graph": {
+                                "alertFilter": {
+                                    "alertLabel": "",
+                                    "datasources": [],
+                                    "enableFilter": true,
+                                    "httpQuery": {
+                                        "data": {},
+                                        "id": 65,
+                                        "legend": "",
+                                        "metrics": "",
+                                        "visible": true
+                                    },
+                                    "ruleLabel": "",
+                                    "ruleName": "",
+                                    "state": []
+                                },
+                                "axis": {
+                                    "scale": "linear",
+                                    "scaleBase": 2,
+                                    "showGrid": true,
+                                    "showX": true,
+                                    "showY": true
+                                },
+                                "enableAlert": false,
+                                "legend": {
+                                    "mode": "table",
+                                    "nameWidth": "400",
+                                    "order": {
+                                        "by": "Last",
+                                        "sort": "desc"
+                                    },
+                                    "placement": "bottom",
+                                    "showValuesName": true,
+                                    "valueCalcs": [
+                                        "Last"
+                                    ],
+                                    "width": 500
+                                },
+                                "styles": {
+                                    "barGap": 10,
+                                    "barRadius": 0,
+                                    "connectNulls": false,
+                                    "enableStack": false,
+                                    "fillOpacity": 80,
+                                    "gradientMode": "opacity",
+                                    "lineWidth": 1,
+                                    "padding": [
+                                        null,
+                                        null,
+                                        null,
+                                        null
+                                    ],
+                                    "pointSize": 6,
+                                    "showPoints": "auto",
+                                    "style": "lines"
+                                },
+                                "tooltip": {
+                                    "mode": "all",
+                                    "sortBy": "name",
+                                    "sortDir": "desc"
+                                },
+                                "value": {
+                                    "decimal": 3,
+                                    "units": [],
+                                    "unitsType": "none"
+                                }
+                            }
+                        },
+                        "scopeTime": null,
+                        "styles": {
+                            "border": "Normal",
+                            "borderOnHover": true,
+                            "decoration": {
+                                "height": "20px",
+                                "justifyContent": "center",
+                                "left": "",
+                                "reverse": false,
+                                "top": "-30px",
+                                "type": "None",
+                                "width": "100%"
+                            },
+                            "heightReduction": 0,
+                            "marginLeft": 0,
+                            "marginTop": 0,
+                            "palette": "echarts-light",
+                            "title": {
+                                "color": "inherit",
+                                "decoration": {
+                                    "height": "50px",
+                                    "margin": "10px",
+                                    "type": "None",
+                                    "width": "160px"
+                                },
+                                "fontSize": "14px",
+                                "fontWeight": "500",
+                                "paddingBottom": "0px",
+                                "paddingLeft": "0px",
+                                "paddingRight": "0px",
+                                "paddingTop": "0px",
+                                "position": "left"
+                            },
+                            "widthReduction": 0
+                        },
+                        "templateId": 0,
+                        "thresholds": {
+                            "enable": false,
+                            "thresholdArrow": "none",
+                            "thresholds": {
+                                "enableTransform": false,
+                                "mode": "absolute",
+                                "thresholds": [
+                                    {
+                                        "color": "#9FE6B8",
+                                        "value": null
+                                    }
+                                ],
+                                "transform": "function transform(data, lodash){\n\n}"
+                            },
+                            "thresholdsDisplay": "None"
+                        },
+                        "title": "New panel",
+                        "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
+                        "type": "graph",
+                        "valueMapping": null
+                    },
+                    {
+                        "allowTypes": null,
+                        "collapsed": false,
+                        "conditionRender": {
+                            "type": "variable",
+                            "value": ""
+                        },
+                        "datasource": {
+                            "id": 1708151425332515,
+                            "queries": [
+                                {
+                                    "data": {},
+                                    "id": 65,
+                                    "legend": "",
+                                    "metrics": "process_runtime_go_goroutines{xo_teamId=\"${__team__}\"}",
+                                    "visible": true
+                                }
+                            ],
+                            "queryOptions": {
+                                "maxDataPoints": 600,
+                                "minInterval": "15s"
+                            },
+                            "type": "prometheus"
+                        },
+                        "desc": "",
+                        "disableMenu": false,
+                        "enableConditionRender": false,
+                        "enableScopeTime": false,
+                        "enableTransform": false,
+                        "externalLinks": [],
+                        "gridPos": {
+                            "h": 20,
+                            "w": 12,
+                            "x": 0,
+                            "y": 18
+                        },
+                        "id": 1708151407,
+                        "interactions": {
+                            "clickActions": []
+                        },
+                        "overrides": [],
+                        "plugins": {
+                            "graph": {
+                                "alertFilter": {
+                                    "alertLabel": "",
+                                    "datasources": [],
+                                    "enableFilter": true,
+                                    "httpQuery": {
+                                        "data": {},
+                                        "id": 65,
+                                        "legend": "",
+                                        "metrics": "",
+                                        "visible": true
+                                    },
+                                    "ruleLabel": "",
+                                    "ruleName": "",
+                                    "state": []
+                                },
+                                "axis": {
+                                    "scale": "linear",
+                                    "scaleBase": 2,
+                                    "showGrid": true,
+                                    "showX": true,
+                                    "showY": true
+                                },
+                                "enableAlert": false,
+                                "legend": {
+                                    "mode": "table",
+                                    "nameWidth": "400",
+                                    "order": {
+                                        "by": "Last",
+                                        "sort": "desc"
+                                    },
+                                    "placement": "bottom",
+                                    "showValuesName": true,
+                                    "valueCalcs": [
+                                        "Last"
+                                    ],
+                                    "width": 500
+                                },
+                                "styles": {
+                                    "barGap": 10,
+                                    "barRadius": 0,
+                                    "connectNulls": false,
+                                    "enableStack": false,
+                                    "fillOpacity": 80,
+                                    "gradientMode": "opacity",
+                                    "lineWidth": 1,
+                                    "padding": [
+                                        null,
+                                        null,
+                                        null,
+                                        null
+                                    ],
+                                    "pointSize": 6,
+                                    "showPoints": "auto",
+                                    "style": "lines"
+                                },
+                                "tooltip": {
+                                    "mode": "all",
+                                    "sortBy": "name",
+                                    "sortDir": "desc"
+                                },
+                                "value": {
+                                    "decimal": 3,
+                                    "units": [],
+                                    "unitsType": "none"
+                                }
+                            }
+                        },
+                        "scopeTime": null,
+                        "styles": {
+                            "border": "Normal",
+                            "borderOnHover": true,
+                            "decoration": {
+                                "height": "20px",
+                                "justifyContent": "center",
+                                "left": "",
+                                "reverse": false,
+                                "top": "-30px",
+                                "type": "None",
+                                "width": "100%"
+                            },
+                            "heightReduction": 0,
+                            "marginLeft": 0,
+                            "marginTop": 0,
+                            "palette": "echarts-light",
+                            "title": {
+                                "color": "inherit",
+                                "decoration": {
+                                    "height": "50px",
+                                    "margin": "10px",
+                                    "type": "None",
+                                    "width": "160px"
+                                },
+                                "fontSize": "14px",
+                                "fontWeight": "500",
+                                "paddingBottom": "0px",
+                                "paddingLeft": "0px",
+                                "paddingRight": "0px",
+                                "paddingTop": "0px",
+                                "position": "left"
+                            },
+                            "widthReduction": 0
+                        },
+                        "templateId": 0,
+                        "thresholds": {
+                            "enable": false,
+                            "thresholdArrow": "none",
+                            "thresholds": {
+                                "enableTransform": false,
+                                "mode": "absolute",
+                                "thresholds": [
+                                    {
+                                        "color": "#9FE6B8",
+                                        "value": null
+                                    }
+                                ],
+                                "transform": "function transform(data, lodash){\n\n}"
+                            },
+                            "thresholdsDisplay": "None"
+                        },
+                        "title": "New panel",
+                        "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
+                        "type": "graph",
+                        "valueMapping": null
+                    }
+                ],
+                "sharedTooltip": false,
+                "styles": {
+                    "bg": {
+                        "colorMode": "dark",
+                        "url": ""
+                    },
+                    "bgColor": "",
+                    "bgEnabled": false,
+                    "border": "None"
+                },
+                "variables": [
+                    {
+                        "datasource": 1708151425332515,
+                        "enableAll": false,
+                        "enableMulti": false,
+                        "id": "d-4U75BChIk-1708161547908",
+                        "name": "service",
+                        "refresh": "OnDashboardLoad",
+                        "regex": "",
+                        "teamId": 1,
+                        "type": "query",
+                        "value": "{\"type\":\"Label values\",\"useCurrentTime\":true,\"metrics\":\"system_cpu_load_average_1m_ratio\",\"label\":\"service_name\"}"
+                    }
+                ]
+            },
+            "templateId": 0,
+            "weight": 0,
+            "links": []
+        }
+    ],
+    "datasources": [
+        {
+            "id": 1707742458986603,
+            "name": "xo",
+            "type": "xobserve",
+            "url": "localhost:9000",
+            "data": {
+                "database": "default",
+                "password": "",
+                "username": "default"
+            },
+            "teamId": 1,
+            "templateId": 0,
+            "created": "2024-02-12T20:54:18.986603+08:00"
+        },
+        {
+            "id": 1708151425332515,
+            "name": "prometheus",
+            "type": "prometheus",
+            "url": "http://localhost:9090",
+            "teamId": 1,
+            "templateId": 0,
+            "created": "2024-02-17T14:30:25.332515+08:00"
+        }
+    ],
+    "variables": [
+        {
+            "id": 1707742568523248,
+            "name": "service",
+            "type": "query",
+            "value": "{\"type\":\"Label values\",\"useCurrentTime\":true,\"metrics\":\"system_cpu_load_average_1m\",\"label\":\"service_name\"}",
+            "default": null,
+            "datasource": 1708151425332515,
+            "description": "",
+            "created": "0001-01-01T00:00:00Z",
+            "refresh": "OnDashboardLoad",
+            "enableMulti": false,
+            "enableAll": false,
+            "regex": "",
+            "sortWeight": 1,
+            "teamId": 1,
+            "templateId": 0,
+            "selected": "customer"
+        }
+    ],
+    "sidemenu": [
+        {
+            "url": "/home",
+            "title": "Home",
+            "dashboardId": "d-erUtV1hSz",
+            "icon": "FaHome",
+            "children": null,
+            "templateId": 0
+        }
+    ]
+}
