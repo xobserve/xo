@@ -235,7 +235,7 @@ func (s *Server) Start() error {
 		r.GET("/common/proxy/:panelId", proxy.Proxy)
 
 		// xo proxy apis
-		r.Any("/xoProxy/:teamId/:dsId/:dashId", CheckLoginOrAk(), proxy.ProxyXoDatasource)
+		r.Any("/xoProxy/:teamId/:dsId/:dashId", proxy.ProxyXoDatasource)
 
 		// server a directory called static
 		// ui static files
