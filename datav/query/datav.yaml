@@ -125,3 +125,9 @@ observability:
 #################################### Access token ##############################
 accesstoken:
     length: 32
+
+#################################### provisioning ##############################
+provisioning:
+    ## when enabled, pre set data sources and dashboards
+    enable: false
+    path: "./provisioning"
