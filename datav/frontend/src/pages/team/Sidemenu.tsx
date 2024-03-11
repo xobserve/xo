@@ -127,7 +127,7 @@ const TeamSidemenu = ({ team }: { team: Team }) => {
       <Button
         mt='2'
         onClick={() => {
-          sidemenu.data.unshift([
+          sidemenu.data.push([
             {
               title: 'new menu item',
               icon: 'FaQuestion',

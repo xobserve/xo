@@ -91,7 +91,7 @@ paths:
 
 #################################### Sidemenu ##############################
 sidemenu:
-    show_alert_icon: true
+    # show_alert_icon: true
 
 
 #################################### Self monitoring ##############################
