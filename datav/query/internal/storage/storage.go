@@ -34,6 +34,7 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 	storageData "github.com/xobserve/xo/query/internal/storage/data"
+	provisioning "github.com/xobserve/xo/query/internal/storage/provisioning"
 	"github.com/xobserve/xo/query/pkg/colorlog"
 	"github.com/xobserve/xo/query/pkg/config"
 	"github.com/xobserve/xo/query/pkg/db"
@@ -212,6 +213,12 @@ func initTables() error {
 	err = tx.Commit()
 	if err != nil {
 		logger.Crit("commit sql transaction error", "error", err)
+		return err
+	}
+
+	err = provisioning.Init()
+	if err != nil {
+		logger.Crit("init provisioning error", "error:", err)
 		return err
 	}
 

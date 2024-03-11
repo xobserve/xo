@@ -120,6 +120,11 @@ type Config struct {
 	AccessToken struct {
 		Length int `yaml:"length"`
 	}
+
+	Provisioning struct {
+		Enable bool   `yaml:"enable"`
+		Path   string `yaml:"path"`
+	}
 }
 
 type Observability struct {
