@@ -21,10 +21,10 @@ import (
 	"strings"
 
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/xobserve/xo/query/internal/dashboard"
 	"github.com/xobserve/xo/query/internal/datasource"
 	"github.com/xobserve/xo/query/pkg/colorlog"
 	"github.com/xobserve/xo/query/pkg/config"
+	"github.com/xobserve/xo/query/pkg/db"
 	"github.com/xobserve/xo/query/pkg/e"
 	"github.com/xobserve/xo/query/pkg/models"
 )
@@ -80,10 +80,15 @@ func Init() error {
 						superAdmin := &models.User{Id: models.SuperAdminId, Username: models.SuperAdminUsername}
 						err = datasource.ImportFromJSON(ctx, string(datasourceContent), models.DefaultTeamId, superAdmin)
 
-						if err != nil && !e.IsErrUniqueConstraint(err) {
-							logger.Crit("provisioning import datasource", "error:", err)
-							return err
+						if err != nil {
+							if !e.IsErrUniqueConstraint(err) {
+								logger.Crit("provisioning import datasource", "error:", err)
+								return err
+							}
+						} else {
+							logger.Info("import provisioning datasource", "name", datasourcefile.Name())
 						}
+
 					}
 				}
 			}
@@ -103,6 +108,12 @@ func Init() error {
 					return err
 				}
 
+				tx, err := db.Conn.Begin()
+				if err != nil {
+					return fmt.Errorf("new user error: %w", err)
+				}
+				defer tx.Rollback()
+
 				for _, dashboardfile := range dashboardDirFiles {
 					if strings.HasSuffix(dashboardfile.Name(), ".json") {
 						dashboardContent, err := os.ReadFile(config.Data.Provisioning.Path + string(filepath.Separator) + "dashboard" + string(filepath.Separator) + dashboardfile.Name())
@@ -111,12 +122,21 @@ func Init() error {
 							return err
 						}
 
-						_, err = dashboard.ImportFromJSON(ctx, string(dashboardContent), models.DefaultTeamId, models.SuperAdminId)
-						if err != nil && !e.IsErrUniqueConstraint(err) {
-							logger.Crit("init provisioning dashboard error", "error:", err)
-							return err
+						_, err = models.ImportDashboardFromJSON(tx, string(dashboardContent), models.DefaultTeamId, models.SuperAdminId)
+						if err != nil {
+							if !e.IsErrUniqueConstraint(err) {
+								logger.Crit("init provisioning dashboard error", "error:", err)
+								return err
+							}
+						} else {
+							logger.Info("import provisioning dashboard", "name", dashboardfile.Name())
 						}
 					}
+				}
+
+				err = tx.Commit()
+				if err != nil {
+					return fmt.Errorf("commit transaction error: %w", err)
 				}
 			}
 		}

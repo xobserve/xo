@@ -8,12 +8,32 @@ receivers:
   hostmetrics:
     collection_interval: 15s
     scrapers:
-      cpu: {}
-      load: {}
-      memory: {}
+      cpu: 
+        metrics:
+          system.cpu.utilization:
+            enabled: true
+          system.cpu.physical.count:
+            enabled: true
+          system.cpu.logical.count:
+            enabled: true
       disk: {}
+      load: {}
       filesystem: {}
+      memory: {}
       network: {}
+      processes: {}
+      process: 
+        metrics:
+          process.context_switches:
+            enabled: true
+          process.open_file_descriptors:
+            enabled: true
+          process.paging.faults:
+            enabled: true
+          process.threads:
+            enabled: true
+          
+      
   filelog/json:
     include: ["/var/log/out.log"]
     start_at: end

@@ -1,0 +1,7 @@
+{
+    "id": 2,
+    "name": "prometheus",
+    "type": "prometheus",
+    "url": "http://localhost:9090",
+    "teamId": 1
+}

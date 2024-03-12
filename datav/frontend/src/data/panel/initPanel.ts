@@ -33,7 +33,7 @@ export const initPanel = (id?) => {
     collapsed: false,
     type: initPanelType,
     templateId: 0,
-    gridPos: { x: 0, y: 0, w: 12, h: 20 },
+    gridPos: { x: 0, y: 0, w: 8, h: 14 },
 
     datasource: initDatasource(),
     styles: initPanelStyles(),

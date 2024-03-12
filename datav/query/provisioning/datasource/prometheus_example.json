@@ -1,8 +1,0 @@
-{
-    "id": 2,
-    "name": "prometheus",
-    "type": "prometheus",
-    "url": "http://localhost:60909",
-    "teamId": 1,
-    "created": "2023-11-14T04:00:28.357898116Z"
-}

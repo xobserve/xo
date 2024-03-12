@@ -129,5 +129,5 @@ accesstoken:
 #################################### provisioning ##############################
 provisioning:
     ## when enabled, pre set data sources and dashboards
-    enable: false
-    path: "./provisioning"
+    enable: true
+    path: "./data/provisioning"
