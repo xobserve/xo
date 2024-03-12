@@ -292,7 +292,7 @@ const DashboardHeader = memo(
                 <VariablesLoader variables={displayVars} />
                 <Box flexGrow={1}></Box>
                 <>
-                  {dashboard.links.map((link) => (
+                  {dashboard.links?.map((link) => (
                     <ExternalLinkComponent link={link} />
                   ))}
                 </>

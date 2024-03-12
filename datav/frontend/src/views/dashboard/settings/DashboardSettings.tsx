@@ -45,6 +45,7 @@ import { commonMsg, dashboardSettingMsg } from 'src/i18n/locales/en'
 import AnnotationSettings from './Annotation'
 import { MobileBreakpoint } from 'src/data/constants'
 import DashboardAccessToken from './AccessToken'
+import { locale } from 'src/i18n/i18n'
 
 interface Props {
   dashboard: Dashboard
@@ -62,7 +63,7 @@ enum DashboardSettingType {
 const DashboardSettings = ({ dashboard, onChange }: Props) => {
   const t = useStore(commonMsg)
   const t1 = useStore(dashboardSettingMsg)
-
+  const lang = useStore(locale)
   const settings = useSearchParam('settings')
   useEffect(() => {
     if (settings) {
@@ -76,6 +77,13 @@ const DashboardSettings = ({ dashboard, onChange }: Props) => {
     removeParamFromUrl(['settings'])
     onClose()
   }
+
+  let dashTitle = dashboard.title
+  try {
+    const titleMap = JSON.parse(dashboard.title)
+    const title = titleMap[lang] ?? titleMap['en']
+    if (title) dashTitle = title
+  } catch (_) {}
 
   const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
   return (
@@ -98,7 +106,7 @@ const DashboardSettings = ({ dashboard, onChange }: Props) => {
           <ModalCloseButton mt='2' />
           <ModalBody p={isLargeScreen ? 2 : 1}>
             <Text textStyle='subTitle' mt='2'>
-              {dashboard.title} / {t.settings}
+              {dashTitle} / {t.settings}
             </Text>
             <Tabs
               orientation='vertical'
