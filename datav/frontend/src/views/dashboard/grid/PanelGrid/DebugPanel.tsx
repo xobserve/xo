@@ -41,7 +41,7 @@ import {
 } from '@chakra-ui/react'
 import CodeEditor from 'src/components/CodeEditor/CodeEditor'
 import React, { useRef, useState } from 'react'
-import { Panel } from 'types/dashboard'
+import { Dashboard, Panel } from 'types/dashboard'
 import { $rawDashAnnotations } from '../../store/annotation'
 import { Annotation } from 'types/annotation'
 import ColorTag from 'src/components/ColorTag'
@@ -55,17 +55,18 @@ import { commonMsg } from 'src/i18n/locales/en'
 import { requestApi } from 'utils/axios/request'
 import { EditorNumberItem } from 'src/components/editor/EditorItem'
 import { dispatch } from 'use-bus'
-import { ReloadDashAnnotationsEvent } from 'src/data/bus-events'
+import { ReloadDashAnnotationsEvent, SetDashboardEvent } from 'src/data/bus-events'
 import { $config } from 'src/data/configs/config'
+import { cloneDeep } from 'lodash'
 
 interface Props {
-  dashboardId: string
+  dashboard: Dashboard
   panel: Panel
   isOpen: boolean
   onClose: any
   data: any
 }
-const DebugPanel = ({ dashboardId, panel, isOpen, onClose, data }: Props) => {
+const DebugPanel = ({ dashboard, panel, isOpen, onClose, data }: Props) => {
   const [tabIndex, setTabIndex] = useState(0)
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -84,7 +85,16 @@ const DebugPanel = ({ dashboardId, panel, isOpen, onClose, data }: Props) => {
                 <CodeEditor
                   value={JSON.stringify(panel, null, 2)}
                   language='json'
-                  readonly
+                  onChange={v => {
+                    const dash:Dashboard = cloneDeep(dashboard)
+                    for (var i = 0; i < dash.data.panels.length; i++) {
+                      if (dash.data.panels[i].id === panel.id) {
+                        dash.data.panels[i] = JSON.parse(v)
+                        break
+                      }
+                    }
+                    dispatch({ type: SetDashboardEvent, data: dash })
+                  }}
                 />
               </TabPanel>
               <TabPanel h='600px'>
@@ -95,7 +105,7 @@ const DebugPanel = ({ dashboardId, panel, isOpen, onClose, data }: Props) => {
                 />
               </TabPanel>
               <TabPanel>
-                <PanelAnnotations panel={panel} dashboardId={dashboardId} />
+                <PanelAnnotations panel={panel} dashboardId={dashboard.id} />
               </TabPanel>
             </TabPanels>
           </Tabs>

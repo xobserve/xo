@@ -509,7 +509,7 @@ export const PanelComponent = ({
       {data && (
         <Box overflow='hidden'>
           <PanelHeader
-            dashboardId={dashboardId}
+            dashboard={dashboard}
             panel={panel}
             data={panelData}
             queryError={queryError}
@@ -591,7 +591,7 @@ const CustomPanelRender = memo((props: PanelProps) => {
 })
 
 interface PanelHeaderProps {
-  dashboardId: string
+  dashboard: Dashboard
   queryError: string
   panel: Panel
   onCopyPanel: (panel: Panel, type: string) => void
@@ -603,7 +603,7 @@ interface PanelHeaderProps {
 }
 
 const PanelHeader = ({
-  dashboardId,
+  dashboard,
   queryError,
   panel,
   onCopyPanel,
@@ -840,7 +840,7 @@ const PanelHeader = ({
       <PanelDecoration decoration={panel.styles.decoration} />
       {isOpen && (
         <DebugPanel
-          dashboardId={dashboardId}
+          dashboard={dashboard}
           panel={panel}
           isOpen={isOpen}
           onClose={onClose}
