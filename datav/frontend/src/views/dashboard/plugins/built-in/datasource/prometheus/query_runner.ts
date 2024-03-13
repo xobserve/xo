@@ -47,8 +47,9 @@ export const runPrometheusQuery = async (
   const alignedStart = start - (start % q.interval)
   const alignedEnd = end - (end % q.interval)
 
+  let encodedMetric = encodeURIComponent(q.metrics);
   const res: any = await requestApi.get(
-    `/proxy/${ds.teamId}/${ds.id}/api/v1/query_range?query=${q.metrics}&start=${alignedStart}&end=${end}&step=${q.interval}`,
+    `/proxy/${ds.teamId}/${ds.id}/api/v1/query_range?query=${encodedMetric}&start=${alignedStart}&end=${end}&step=${q.interval}`,
   )
   if (res.status !== 'success') {
     console.log('Failed to fetch data from prometheus', res)
@@ -231,9 +232,12 @@ export const replacePrometheusQueryWithVariables = (
       } else {
         selected = v.selected?.split(VariableSplitChar) ?? []
       }
-      const joined = selected.join('|')
+      // 当prometheus的查询语句使用多个变量，且使用正则匹配时，变量值放到url中时需要转义特殊字符，以免后端接收的数据变形
+      const joined = selected?.map(v1 => v1.replace(/[.*+?^${}()|[\]\\]/g, "\\\\$&"))?.join('|')
       if (joined) {
-        query.metrics = query.metrics.replaceAll(`\${${f}}`, joined)
+          query.metrics = query.metrics.replaceAll(`\${${f}}`,joined );
+      } else {
+          query.metrics = query.metrics.replaceAll(`\${${f}}`,"" );
       }
     }
   }
