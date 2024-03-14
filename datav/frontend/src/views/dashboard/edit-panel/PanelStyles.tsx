@@ -103,6 +103,21 @@ const PanelStyles = ({ panel, onChange }: PanelEditorProps) => {
               }
             />
           </PanelEditItem>
+          <PanelEditItem
+            title='height'
+            desc='panel height in dashboard'
+          >
+            <EditorNumberItem
+              min={1}
+              step={1}
+              value={panel.gridPos.h}
+              onChange={(v) =>
+                onChange((panel) => {
+                  panel.gridPos.h = v
+                })
+              }
+            />
+          </PanelEditItem>
           <PanelEditItem title='Title position'>
             <RadionButtons
               value={panel.styles.title.position}
