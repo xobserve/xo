@@ -41,6 +41,7 @@ import (
 
 const (
 	serviceNameKey     = conventions.AttributeServiceName
+	hostNameKey        = conventions.AttributeHostName
 	operationKey       = "operation"   // OpenTelemetry non-standard constant.
 	spanKindKey        = "span.kind"   // OpenTelemetry non-standard constant.
 	statusCodeKey      = "status.code" // OpenTelemetry non-standard constant.
@@ -70,6 +71,7 @@ type processorImp struct {
 	lock       sync.Mutex
 	logger     *zap.Logger
 	instanceID string
+	hostName   string
 	config     Config
 
 	metricsExporter exporter.Metrics
@@ -685,7 +687,7 @@ func getRemoteAddress(span ptrace.Span) (string, bool) {
 	return "", false
 }
 
-func (p *processorImp) aggregateMetricsForSpan(serviceName string, span ptrace.Span, resourceAttr pcommon.Map) {
+func (p *processorImp) aggregateMetricsForSpan(serviceName string, hostName string, span ptrace.Span, resourceAttr pcommon.Map) {
 
 	if p.shouldSkip(serviceName, span, resourceAttr) {
 		p.logger.Debug("Skipping span", zap.String("span", span.Name()), zap.String("service", serviceName))
@@ -702,13 +704,13 @@ func (p *processorImp) aggregateMetricsForSpan(serviceName string, span ptrace.S
 	p.keyBuf.Reset()
 	buildKey(p.keyBuf, serviceName, span, p.dimensions, resourceAttr)
 	key := metricKey(p.keyBuf.String())
-	p.cache(serviceName, span, key, resourceAttr)
+	p.cache(serviceName, hostName, span, key, resourceAttr)
 	p.updateHistogram(key, latencyInMilliseconds, span.TraceID(), span.SpanID())
 
 	p.keyBuf.Reset()
 	buildKey(p.keyBuf, serviceName, span, p.callDimensions, resourceAttr)
 	callKey := metricKey(p.keyBuf.String())
-	p.callCache(serviceName, span, callKey, resourceAttr)
+	p.callCache(serviceName, hostName, span, callKey, resourceAttr)
 	p.updateCallHistogram(callKey, latencyInMilliseconds, span.TraceID(), span.SpanID())
 
 	spanAttr := span.Attributes()
@@ -722,7 +724,7 @@ func (p *processorImp) aggregateMetricsForSpan(serviceName string, span ptrace.S
 		extraDims := map[string]pcommon.Value{
 			"address": pcommon.NewValueStr(remoteAddr),
 		}
-		p.externalCallCache(serviceName, span, externalCallKey, resourceAttr, extraDims)
+		p.externalCallCache(serviceName, hostName, span, externalCallKey, resourceAttr, extraDims)
 		p.updateExternalHistogram(externalCallKey, latencyInMilliseconds, span.TraceID(), span.SpanID())
 	}
 
@@ -731,7 +733,7 @@ func (p *processorImp) aggregateMetricsForSpan(serviceName string, span ptrace.S
 		p.keyBuf.Reset()
 		buildCustomKey(p.keyBuf, serviceName, span, p.dbCallDimensions, resourceAttr, nil)
 		dbCallKey := metricKey(p.keyBuf.String())
-		p.dbCallCache(serviceName, span, dbCallKey, resourceAttr)
+		p.dbCallCache(serviceName, hostName, span, dbCallKey, resourceAttr)
 		p.updateDBHistogram(dbCallKey, latencyInMilliseconds, span.TraceID(), span.SpanID())
 	}
 }
@@ -748,6 +750,12 @@ func (p *processorImp) aggregateMetrics(traces ptrace.Traces) {
 		if !ok {
 			continue
 		}
+		var hostName string
+		hostAttr, ok := resourceAttr.Get(conventions.AttributeHostName)
+		if ok {
+			hostName = hostAttr.Str()
+		}
+
 		resourceAttr.PutStr(xobserveID, p.instanceID)
 		serviceName := serviceAttr.Str()
 		ilsSlice := rspans.ScopeSpans()
@@ -756,7 +764,7 @@ func (p *processorImp) aggregateMetrics(traces ptrace.Traces) {
 			spans := ils.Spans()
 			for k := 0; k < spans.Len(); k++ {
 				span := spans.At(k)
-				p.aggregateMetricsForSpan(serviceName, span, resourceAttr)
+				p.aggregateMetricsForSpan(serviceName, hostName, span, resourceAttr)
 			}
 		}
 	}
@@ -863,10 +871,11 @@ func (p *processorImp) resetExemplarData() {
 	}
 }
 
-func (p *processorImp) buildDimensionKVs(serviceName string, span ptrace.Span, optionalDims []dimension, resourceAttrs pcommon.Map) pcommon.Map {
+func (p *processorImp) buildDimensionKVs(serviceName string, hostName string, span ptrace.Span, optionalDims []dimension, resourceAttrs pcommon.Map) pcommon.Map {
 	dims := pcommon.NewMap()
 	dims.EnsureCapacity(4 + len(optionalDims))
 	dims.PutStr(serviceNameKey, serviceName)
+	dims.PutStr(hostNameKey, hostName)
 	dims.PutStr(operationKey, span.Name())
 	dims.PutStr(spanKindKey, SpanKindStr(span.Kind()))
 	dims.PutStr(statusCodeKey, StatusCodeStr(span.Status().Code()))
@@ -889,10 +898,12 @@ func (p *processorImp) buildDimensionKVs(serviceName string, span ptrace.Span, o
 	return dims
 }
 
-func (p *processorImp) buildCustomDimensionKVs(serviceName string, span ptrace.Span, optionalDims []dimension, resourceAttrs pcommon.Map, extraDims map[string]pcommon.Value) pcommon.Map {
+func (p *processorImp) buildCustomDimensionKVs(serviceName string, hostName string, span ptrace.Span, optionalDims []dimension, resourceAttrs pcommon.Map, extraDims map[string]pcommon.Value) pcommon.Map {
 	dims := pcommon.NewMap()
 
 	dims.PutStr(serviceNameKey, serviceName)
+	dims.PutStr(hostNameKey, hostName)
+
 	for k, v := range extraDims {
 		v.CopyTo(dims.PutEmpty(k))
 	}
@@ -1007,10 +1018,10 @@ func getDimensionValueWithResource(d dimension, spanAttr pcommon.Map, resourceAt
 // This enables a lookup of the dimension key-value map when constructing the metric like so:
 //
 //	LabelsMap().InitFromMap(p.metricKeyToDimensions[key])
-func (p *processorImp) cache(serviceName string, span ptrace.Span, k metricKey, resourceAttrs pcommon.Map) {
+func (p *processorImp) cache(serviceName string, hostName string, span ptrace.Span, k metricKey, resourceAttrs pcommon.Map) {
 	// Use Get to ensure any existing key has its recent-ness updated.
 	if _, has := p.metricKeyToDimensions.Get(k); !has {
-		p.metricKeyToDimensions.Add(k, p.buildDimensionKVs(serviceName, span, p.dimensions, resourceAttrs))
+		p.metricKeyToDimensions.Add(k, p.buildDimensionKVs(serviceName, hostName, span, p.dimensions, resourceAttrs))
 	}
 }
 
@@ -1018,10 +1029,10 @@ func (p *processorImp) cache(serviceName string, span ptrace.Span, k metricKey, 
 // This enables a lookup of the dimension key-value map when constructing the metric like so:
 //
 //	LabelsMap().InitFromMap(p.callMetricKeyToDimensions[key])
-func (p *processorImp) callCache(serviceName string, span ptrace.Span, k metricKey, resourceAttrs pcommon.Map) {
+func (p *processorImp) callCache(serviceName string, hostName string, span ptrace.Span, k metricKey, resourceAttrs pcommon.Map) {
 	// Use Get to ensure any existing key has its recent-ness updated.
 	if _, has := p.callMetricKeyToDimensions.Get(k); !has {
-		p.callMetricKeyToDimensions.Add(k, p.buildDimensionKVs(serviceName, span, p.callDimensions, resourceAttrs))
+		p.callMetricKeyToDimensions.Add(k, p.buildDimensionKVs(serviceName, hostName, span, p.callDimensions, resourceAttrs))
 	}
 }
 
@@ -1029,10 +1040,10 @@ func (p *processorImp) callCache(serviceName string, span ptrace.Span, k metricK
 // This enables a lookup of the dimension key-value map when constructing the metric like so:
 //
 //	LabelsMap().InitFromMap(p.dbCallMetricKeyToDimensions[key])
-func (p *processorImp) dbCallCache(serviceName string, span ptrace.Span, k metricKey, resourceAttrs pcommon.Map) {
+func (p *processorImp) dbCallCache(serviceName string, hostName string, span ptrace.Span, k metricKey, resourceAttrs pcommon.Map) {
 	// Use Get to ensure any existing key has its recent-ness updated.
 	if _, has := p.dbCallMetricKeyToDimensions.Get(k); !has {
-		p.dbCallMetricKeyToDimensions.Add(k, p.buildCustomDimensionKVs(serviceName, span, p.dbCallDimensions, resourceAttrs, nil))
+		p.dbCallMetricKeyToDimensions.Add(k, p.buildCustomDimensionKVs(serviceName, hostName, span, p.dbCallDimensions, resourceAttrs, nil))
 	}
 }
 
@@ -1040,10 +1051,10 @@ func (p *processorImp) dbCallCache(serviceName string, span ptrace.Span, k metri
 // This enables a lookup of the dimension key-value map when constructing the metric like so:
 //
 //	LabelsMap().InitFromMap(p.externalCallMetricKeyToDimensions[key])
-func (p *processorImp) externalCallCache(serviceName string, span ptrace.Span, k metricKey, resourceAttrs pcommon.Map, extraDims map[string]pcommon.Value) {
+func (p *processorImp) externalCallCache(serviceName string, hostName string, span ptrace.Span, k metricKey, resourceAttrs pcommon.Map, extraDims map[string]pcommon.Value) {
 	// Use Get to ensure any existing key has its recent-ness updated.
 	if _, has := p.externalCallMetricKeyToDimensions.Get(k); !has {
-		p.externalCallMetricKeyToDimensions.Add(k, p.buildCustomDimensionKVs(serviceName, span, p.externalCallDimensions, resourceAttrs, extraDims))
+		p.externalCallMetricKeyToDimensions.Add(k, p.buildCustomDimensionKVs(serviceName, hostName, span, p.externalCallDimensions, resourceAttrs, extraDims))
 	}
 }
 
