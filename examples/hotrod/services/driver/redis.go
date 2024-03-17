@@ -24,15 +24,13 @@ import (
 
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
+	semconv "go.opentelemetry.io/otel/semconv/v1.4.0"
 	"go.opentelemetry.io/otel/trace"
 	"go.uber.org/zap"
 
 	"hotrod/pkg/delay"
 	"hotrod/pkg/log"
-	"hotrod/pkg/tracing"
 	"hotrod/services/config"
-
-	"github.com/jaegertracing/jaeger/pkg/metrics"
 )
 
 // Redis is a simulator of remote Redis cache
@@ -42,10 +40,9 @@ type Redis struct {
 	errorSimulator
 }
 
-func newRedis(otelExporter string, metricsFactory metrics.Factory, logger log.Factory) *Redis {
-	tp := tracing.InitOTEL("redis-manual", otelExporter, metricsFactory, logger)
+func newRedis(tracer trace.Tracer, logger log.Factory) *Redis {
 	return &Redis{
-		tracer: tp.Tracer("redis-manual"),
+		tracer: tracer,
 		logger: logger,
 	}
 }
@@ -53,7 +50,15 @@ func newRedis(otelExporter string, metricsFactory metrics.Factory, logger log.Fa
 // FindDriverIDs finds IDs of drivers who are near the location.
 func (r *Redis) FindDriverIDs(ctx context.Context, location string) []string {
 	ctx, span := r.tracer.Start(ctx, "FindDriverIDs", trace.WithSpanKind(trace.SpanKindClient))
-	span.SetAttributes(attribute.Key("param.driver.location").String(location))
+	span.SetAttributes(
+		semconv.PeerServiceKey.String(semconv.DBSystemRedis.Value.AsString()),
+		attribute.Key(semconv.DBSystemKey).String(semconv.DBSystemRedis.Value.AsString()),
+		attribute.Key("param.driver.location").String(location),
+		attribute.
+			Key(semconv.DBStatementKey).
+			String("redis:FindDriverIDs"),
+	)
+
 	defer span.End()
 
 	// simulate RPC delay
@@ -71,7 +76,14 @@ func (r *Redis) FindDriverIDs(ctx context.Context, location string) []string {
 // GetDriver returns driver and the current car location
 func (r *Redis) GetDriver(ctx context.Context, driverID string) (Driver, error) {
 	ctx, span := r.tracer.Start(ctx, "GetDriver", trace.WithSpanKind(trace.SpanKindClient))
-	span.SetAttributes(attribute.Key("param.driverID").String(driverID))
+	span.SetAttributes(
+		attribute.Key("param.driverID").String(driverID),
+		semconv.PeerServiceKey.String(semconv.DBSystemRedis.Value.AsString()),
+		attribute.Key(semconv.DBSystemKey).String(semconv.DBSystemRedis.Value.AsString()),
+		attribute.
+			Key(semconv.DBStatementKey).
+			String("redis:GetDriver"),
+	)
 	defer span.End()
 
 	// simulate RPC delay

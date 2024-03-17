@@ -42,12 +42,13 @@ type Server struct {
 
 // NewServer creates a new customer.Server
 func NewServer(hostPort string, otelExporter string, metricsFactory metrics.Factory, logger log.Factory) *Server {
+	traceProvider := tracing.InitOTEL("", otelExporter, metricsFactory, logger)
 	return &Server{
 		hostPort: hostPort,
-		tracer:   tracing.InitOTEL("", otelExporter, metricsFactory, logger),
+		tracer:   traceProvider,
 		logger:   logger,
 		database: newDatabase(
-			tracing.InitOTEL("mysql", otelExporter, metricsFactory, logger).Tracer("mysql"),
+			traceProvider.Tracer("mysql"),
 			logger.With(zap.String("component", "mysql")),
 		),
 	}

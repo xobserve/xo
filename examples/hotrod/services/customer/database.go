@@ -18,7 +18,6 @@ package customer
 import (
 	"context"
 	"errors"
-	"fmt"
 
 	"go.opentelemetry.io/otel/attribute"
 	semconv "go.opentelemetry.io/otel/semconv/v1.24.0"
@@ -77,10 +76,11 @@ func (d *database) Get(ctx context.Context, customerID int) (*Customer, error) {
 
 	ctx, span := d.tracer.Start(ctx, "SQL SELECT", trace.WithSpanKind(trace.SpanKindClient))
 	span.SetAttributes(
-		semconv.PeerServiceKey.String("mysql"),
+		semconv.PeerServiceKey.String(semconv.DBSystemMySQL.Value.AsString()),
+		attribute.Key(semconv.DBSystemKey).String(semconv.DBSystemMySQL.Value.AsString()),
 		attribute.
-			Key("sql.query").
-			String(fmt.Sprintf("SELECT * FROM customer WHERE customer_id=%d", customerID)),
+			Key(semconv.DBStatementKey).
+			String("SELECT * FROM customer WHERE customer_id=?"),
 	)
 	defer span.End()
 

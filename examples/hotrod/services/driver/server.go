@@ -51,7 +51,7 @@ func NewServer(hostPort string, otelExporter string, metricsFactory metrics.Fact
 		hostPort: hostPort,
 		logger:   logger,
 		server:   server,
-		redis:    newRedis(otelExporter, metricsFactory, logger),
+		redis:    newRedis(tracerProvider.Tracer("redis-manual"), logger),
 	}
 }
 
