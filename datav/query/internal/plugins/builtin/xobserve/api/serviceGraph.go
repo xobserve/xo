@@ -18,16 +18,22 @@ func GetDependencyGraph(c *gin.Context, ds *models.Datasource, conn ch.Conn, par
 	end, _ := strconv.ParseInt(c.Query("end"), 10, 64)
 
 	source := xobserveutils.GetValueListFromParams(params, "source")
-	target := xobserveutils.GetValueListFromParams(params, "target")
+	dest := xobserveutils.GetValueListFromParams(params, "dest")
+	center := xobserveutils.GetValueListFromParams(params, "center")
 
 	teamId := ds.TeamId
 	domainQuery := xobserveutils.BuildBasicDomainQuery(teamId, params)
 
-	if source != nil {
-		domainQuery += fmt.Sprintf(" AND src in ('%s')", strings.Join(source, "','"))
-	}
-	if target != nil {
-		domainQuery += fmt.Sprintf(" AND dest in ('%s')", strings.Join(target, "','"))
+	if center != nil {
+		cs := strings.Join(center, "','")
+		domainQuery += fmt.Sprintf(" AND (src in ('%s') OR dest in ('%s'))", cs, cs)
+	} else {
+		if source != nil {
+			domainQuery += fmt.Sprintf(" AND src in ('%s')", strings.Join(source, "','"))
+		}
+		if dest != nil {
+			domainQuery += fmt.Sprintf(" AND dest in ('%s')", strings.Join(dest, "','"))
+		}
 	}
 
 	query := fmt.Sprintf(`WITH

@@ -281,6 +281,14 @@ export const queryPluginDataToNodeGraph = (
   }
 
   const nodes = Object.values(nodesMap)
+  for (const n of nodes) {
+    //@ts-ignore
+    n.icon =  {
+      show: true,
+      img: null,
+      text:  `${n.data.success}\n${n.data.error}`,
+    }
+  }
   return {
     nodes,
     edges,

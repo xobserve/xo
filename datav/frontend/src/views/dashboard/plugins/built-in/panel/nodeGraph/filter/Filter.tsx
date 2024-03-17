@@ -273,7 +273,7 @@ const NodeGraphFilter = ({
   return (
     <>
       <Tooltip label='Filtering the nodes and edges you want to see'>
-        <Box cursor='pointer' onClick={onOpen}>
+        <Box cursor='pointer' onClick={onOpen} className={rules?.length > 0 ? 'color-text' : null}>
           <FaFilter />
         </Box>
       </Tooltip>

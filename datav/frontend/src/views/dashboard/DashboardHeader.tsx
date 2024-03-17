@@ -90,7 +90,7 @@ const DashboardHeader = memo(
       }
 
       return res
-    }, [vars])
+    }, [vars, dashboard?.data.hidingVars])
 
     const unlinkTemplate = async () => {
       await requestApi.post(

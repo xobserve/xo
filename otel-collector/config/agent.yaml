@@ -6,7 +6,7 @@ receivers:
       http:
         endpoint: 0.0.0.0:4318
   hostmetrics:
-    collection_interval: 15s
+    collection_interval: 10s
     scrapers:
       cpu: 
         metrics:
@@ -18,8 +18,18 @@ receivers:
             enabled: true
       disk: {}
       load: {}
-      filesystem: {}
-      memory: {}
+      filesystem: 
+        metrics:
+          system.filesystem.utilization:
+            enabled: true
+      memory: 
+        metrics:
+          system.memory.utilization:
+            enabled: true
+          system.linux.memory.available:
+            enabled: true
+          system.memory.limit:
+            enabled: true
       network: {}
       processes: {}
       process: 
@@ -162,7 +172,7 @@ service:
       exporters: [otlp]
     metrics:
       receivers: [hostmetrics, otlp]
-      processors: [attributes, batch]
+      processors: [attributes]
       exporters: [otlp]
     logs:
       receivers: [otlp, filelog/json]

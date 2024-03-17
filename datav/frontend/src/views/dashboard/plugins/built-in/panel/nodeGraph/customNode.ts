@@ -24,6 +24,7 @@ import {
 import { deepMix, isNumber, isArray } from '@antv/util'
 import { isEmpty } from 'lodash'
 import customColors from 'theme/colors'
+import { replaceWithVariables } from 'utils/variable'
 
 const { defaultSubjectColors } = Util
 
@@ -94,17 +95,19 @@ export const registerCustomNode = (
         })
 
         const { width, height, show, text } = icon
-
+        console.log("here33333:", show, icon)
         if (show) {
           if (text) {
             let matched = false
             if (enableHighlight) {
               const label = cfg.label
               const finded = highlightNodeNames.find((name) => name == label)
+              console.log("here33333",finded)
               if (finded) {
                 matched = true
               } else {
-                const highlightMatches = highlightNodes.split(',')
+                const hn = replaceWithVariables(highlightNodes)
+                const highlightMatches = hn.split(',')
                 for (const match of highlightMatches) {
                   if (!isEmpty(match)) {
                     const regex = new RegExp(match.trim())

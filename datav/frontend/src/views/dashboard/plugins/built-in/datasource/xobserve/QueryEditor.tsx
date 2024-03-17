@@ -188,13 +188,13 @@ const HttpQueryEditor = ({
 export default HttpQueryEditor
 
 const domainParams = [
-  [
-    'namespace',
-    'namespace name, can be an environment name, such as dev, test, prod etc',
-    'default',
-    '',
-  ],
-  ['gropu', 'group name, logical group of services', 'default', ''],
+  // [
+  //   'namespace',
+  //   'namespace name, can be an environment name, such as dev, test, prod etc',
+  //   'default',
+  //   '',
+  // ],
+  // ['gropu', 'group name, logical group of services', 'default', ''],
 ]
 
 export const apiList = [
@@ -274,8 +274,9 @@ export const apiList = [
 }`,
     paramsDesc: [
       ...domainParams,
-      ['source', 'service name list, e.g xobserve|mysql', '', ''],
-      ['target', 'service name list, e.g xobserve|mysql', '', ''],
+      ['source', 'source service name list, e.g xobserve|mysql', '', ''],
+      ['dest', 'destination service name list, e.g xobserve|mysql', '', ''],
+      ['center', 'center service name list, e.g xobserve|mysql', '', ''],
     ],
     format: DataFormat.NodeGraph,
   },
