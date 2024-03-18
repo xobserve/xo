@@ -11,7 +11,7 @@ CREATE TABLE xobserve_metrics.time_series
 )
 ENGINE = ReplacingMergeTree
 PARTITION BY toDate(timestamp_ms / 1000)
-ORDER BY (tenantId,environment,serviceName, temporality, metric_name, fingerprint)
+ORDER BY (teamId,environment,serviceName, temporality, metric_name, fingerprint)
 TTL toDateTime(timestamp_ms / 1000) + INTERVAL 1296000 SECOND DELETE
 SETTINGS index_granularity = 8192;
 

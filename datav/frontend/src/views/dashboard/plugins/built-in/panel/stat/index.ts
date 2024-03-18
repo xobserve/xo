@@ -34,7 +34,7 @@ const panelComponents: PanelPluginComponents = {
       showLegend: false,
       value: {
         ...getInitUnits(),
-        decimal: 3,
+        decimal: 1,
         calc: ValueCalculationType.Last,
       },
       styles: {

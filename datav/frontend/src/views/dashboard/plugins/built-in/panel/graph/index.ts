@@ -63,7 +63,7 @@ const panelComponents: PanelPluginComponents = {
         },
         value: {
           ...getInitUnits(),
-          decimal: 3,
+          decimal: 1,
         },
         enableAlert: false,
         alertFilter: initAlertFilter(),

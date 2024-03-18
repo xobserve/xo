@@ -27,7 +27,7 @@ const panelComponents: PanelPluginComponents = {
       },
       value: {
         ...getInitUnits(),
-        decimal: 3,
+        decimal: 1,
         calc: ValueCalculationType.Last,
       },
       scale: {

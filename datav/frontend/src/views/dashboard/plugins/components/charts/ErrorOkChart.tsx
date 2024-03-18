@@ -123,15 +123,15 @@ const ErrorOkChart = memo((props: Props) => {
         }
       },
     },
-    legend: {
-      show: names.length > 1,
-      top: 0,
-      selectedMode: true,
-      icon: 'circle',
-      textStyle: {
-        fontSize: 10,
-      },
-    },
+    // legend: {
+    //   show: names.length > 1,
+    //   top: 0,
+    //   selectedMode: true,
+    //   icon: 'circle',
+    //   textStyle: {
+    //     fontSize: 10,
+    //   },
+    // },
     grid: {
       left: `${options}%`,
       right: `${options.right}%`,

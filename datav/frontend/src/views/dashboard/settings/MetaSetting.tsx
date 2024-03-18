@@ -12,7 +12,6 @@
 // limitations under the License.
 
 import {
-  Alert,
   AlertDescription,
   AlertDialog,
   AlertDialogBody,
@@ -20,17 +19,13 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogOverlay,
-  AlertIcon,
-  AlertTitle,
   Box,
   Button,
   HStack,
   Text,
-  Textarea,
   useDisclosure,
   useToast,
 } from '@chakra-ui/react'
-import { useStore } from '@nanostores/react'
 import CodeEditor from 'src/components/CodeEditor/CodeEditor'
 import { DetailAlert, DetailAlertItem } from 'src/components/DetailAlert'
 import React from 'react'
@@ -47,7 +42,6 @@ import { TemplateType } from 'types/template'
 import { clone } from 'lodash'
 import {
   extractDashboardTemplateContent,
-  extractPanelTemplateContent,
 } from 'utils/template'
 
 interface Props {
@@ -80,8 +74,10 @@ const MetaSettings = ({ dashboard }: Props) => {
       return
     }
 
+    const dash:Dashboard = JSON.parse(meta)
+    dash.id = dashboard.id
     await requestApi.post('/dashboard/save', {
-      dashboard: JSON.parse(meta),
+      dashboard: dash,
       changes: 'modify dashboard meta data',
     })
     toast({

@@ -71,7 +71,6 @@ type processorImp struct {
 	lock       sync.Mutex
 	logger     *zap.Logger
 	instanceID string
-	hostName   string
 	config     Config
 
 	metricsExporter exporter.Metrics
@@ -728,7 +727,7 @@ func (p *processorImp) aggregateMetricsForSpan(serviceName string, hostName stri
 		p.updateExternalHistogram(externalCallKey, latencyInMilliseconds, span.TraceID(), span.SpanID())
 	}
 
-	_, dbCallPresent := spanAttr.Get("db.system")
+	_, dbCallPresent := spanAttr.Get(conventions.AttributeDBSystem)
 	if span.Kind() != ptrace.SpanKindServer && dbCallPresent {
 		p.keyBuf.Reset()
 		buildCustomKey(p.keyBuf, serviceName, span, p.dbCallDimensions, resourceAttr, nil)

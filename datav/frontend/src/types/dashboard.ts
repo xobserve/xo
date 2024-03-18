@@ -146,7 +146,7 @@ export interface PanelDatasource {
   type?: string
   queryOptions: {
     maxDataPoints?: number
-    minInterval: string
+    minInterval?: string
   }
   queries?: PanelQuery[]
 }

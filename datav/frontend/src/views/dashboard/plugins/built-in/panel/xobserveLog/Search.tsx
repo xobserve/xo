@@ -77,14 +77,14 @@ const Search = ({ panel }: Props) => {
   const inputWidth = 500
   return (
     <Box
-      position={isLargeScreen && !edit ? 'fixed' : null}
+      position={"absolute"}
       left={isLargeScreen && !edit ? `calc(50% - ${inputWidth / 2}px)` : null}
-      top='5px'
       display='flex'
       alignItems='center'
       justifyContent='center'
       zIndex={1002}
       width={500}
+      top="-2px"
     >
       <SearchInput
         placeholder='Search your logs, press Enter to submit...'

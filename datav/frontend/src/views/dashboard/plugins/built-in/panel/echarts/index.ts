@@ -23,7 +23,7 @@ const panelComponents: PanelPluginComponents = {
       setOptionsFunc: setEchartsOptions,
       value: {
         ...getInitUnits(),
-        decimal: 3,
+        decimal: 1,
       },
     }),
   },

@@ -100,7 +100,7 @@ export const initDatasource = () => {
     id: ds?.id,
     type: ds?.type,
     queryOptions: {
-      minInterval: DatasourceMinInterval,
+      // minInterval: DatasourceMinInterval,
       maxDataPoints: DatasourceMaxDataPoints,
     },
     queries: [
