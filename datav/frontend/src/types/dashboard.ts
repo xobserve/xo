@@ -49,6 +49,11 @@ export interface DashboardData {
     border: string
     bgColor: string
     // decoration: DecorationStyles
+    panelBg?: {
+      enabled?: boolean
+      darkThemeColor?: string
+      lightThemeColor?: string
+    }
   }
   layout: DashboardLayout
   allowPanelsOverlap: boolean

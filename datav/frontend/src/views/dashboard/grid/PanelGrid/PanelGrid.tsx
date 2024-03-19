@@ -251,6 +251,7 @@ export const PanelComponent = ({
   const datasources = useStore($datasources)
   const [onHover, setOnHover] = useState(false)
   const dashboard = useStore($dashboard)
+  const { colorMode } = useColorMode()
   const timeRange = cloneDeep(
     panel.enableScopeTime && panel.scopeTime ? panel.scopeTime : timeRange0,
   )
@@ -494,6 +495,26 @@ export const PanelComponent = ({
     return res
   }, [panel.transform, panel.enableTransform, panelData])
 
+  let backgroundColor:string = "";
+  if (dashboard.data.styles.panelBg) {
+    if (dashboard.data.styles.panelBg.enabled) {
+      if( colorMode == 'dark') {
+        backgroundColor = dashboard.data.styles.panelBg?.darkThemeColor
+      } else {
+        backgroundColor = dashboard.data.styles.panelBg?.lightThemeColor
+      }
+    }
+  }
+  if (panel.styles.background) {
+    if (panel.styles.background.enabled) {
+      if( colorMode == 'dark') {
+        backgroundColor = panel.styles.background?.darkThemeColor
+      } else {
+        backgroundColor = panel.styles.background?.lightThemeColor
+      }
+    }
+  }
+
   return (
     <Box
       height={height}
@@ -505,6 +526,10 @@ export const PanelComponent = ({
       position='relative'
       onMouseEnter={() => setOnHover(true)}
       onMouseLeave={() => setOnHover(false)}
+      backgroundColor={paletteColorNameToHex(
+        backgroundColor,
+        colorMode,
+      )}
     >
       {data && (
         <Box overflow='hidden'>

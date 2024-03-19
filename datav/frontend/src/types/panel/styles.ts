@@ -35,6 +35,11 @@ export interface PanelStyles {
     paddingLeft: string
     paddingRight: string
   }
+  background?: {
+    enabled?: boolean
+    darkThemeColor?: string
+    lightThemeColor?: string
+  }
   heightReduction: number
   widthReduction: number
   marginTop: number

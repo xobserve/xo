@@ -12,8 +12,9 @@
 // limitations under the License.
 
 import { Select, Switch, useMediaQuery } from '@chakra-ui/react'
+import { ColorPicker } from 'src/components/ColorPicker'
 import { EditorInputItem } from 'src/components/editor/EditorItem'
-import { Form } from 'src/components/form/Form'
+import { Form, FormSection  } from 'src/components/form/Form'
 import { Dashboard } from 'types/dashboard'
 import BorderSelect from 'src/components/largescreen/components/BorderSelect'
 import FormItem from 'src/components/form/Item'
@@ -153,6 +154,62 @@ const StyleSettings = ({ dashboard, onChange }: Props) => {
           }}
         />
       </FormItem>
+      <FormSection title="Panel背景色" spacing={1}>
+        <FormItem title="Enable" desc={t1.enableBgTips} alignItems='center'>
+          <Switch
+            defaultChecked={dashboard.data.styles?.panelBg?.enabled}
+            onChange={(e) =>
+              onChange((draft) => {
+                if(draft.data.styles.panelBg) {
+                  draft.data.styles.panelBg.enabled = e.currentTarget.checked
+                } else {
+                  draft.data.styles.panelBg = {enabled: e.currentTarget.checked}
+                }
+              })
+            }
+          />
+        </FormItem>
+        {dashboard.data.styles?.panelBg?.enabled && (<FormItem
+          title="Dark theme"
+          labelWidth='100px'
+          desc=""
+        >
+          <ColorPicker
+            color={dashboard.data.styles?.panelBg?.darkThemeColor}
+            onChange={(c) =>
+              onChange((draft: Dashboard) => {
+                if(draft.data.styles.panelBg) {
+                  draft.data.styles.panelBg.darkThemeColor = c
+                } else {
+                  draft.data.styles.panelBg = {darkThemeColor: c}
+                }
+              })
+            }
+            circlePicker
+          />
+        </FormItem>)}
+        
+        {dashboard.data.styles?.panelBg?.enabled && (<FormItem
+          title="Light theme"
+          labelWidth='100px'
+          desc=""
+        >
+          <ColorPicker
+            color={dashboard.data.styles?.panelBg?.lightThemeColor}
+            onChange={(c) =>
+              onChange((draft: Dashboard) => {
+                if(draft.data.styles.panelBg) {
+                  draft.data.styles.panelBg.lightThemeColor = c
+                } else {
+                  draft.data.styles.panelBg = {lightThemeColor: c}
+                }
+              })
+            }
+            circlePicker
+          />
+        </FormItem>)}
+        
+      </FormSection>
 
       {/* <PanelAccordion title="Decoration" defaultOpen>
                 <PanelEditItem title="type">
