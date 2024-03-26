@@ -132,6 +132,50 @@ const PanelStyles = ({ panel, onChange }: PanelEditorProps) => {
               }
             />
           </PanelEditItem>
+          <PanelEditItem title='background color'>
+            <PanelEditItem title='Enable'>
+              <Switch
+                defaultChecked={panel.styles.background?.enabled}
+                onChange={(e) =>
+                  onChange((panel: Panel) => {
+                    if(panel.styles.background) {
+                      panel.styles.background.enabled = e.currentTarget.checked
+                    } else {
+                      panel.styles.background = {enabled: e.currentTarget.checked}
+                    }
+                  })
+                }
+              />
+            </PanelEditItem>
+          </PanelEditItem>
+          {panel.styles.background?.enabled && (<PanelEditItem title='dark theme'>
+            <ColorPicker
+              color={panel.styles.background?.darkThemeColor ? panel.styles.background?.darkThemeColor: 'Transparent' }
+              onChange={(c) =>
+                onChange((panel: Panel) => {
+                  if(panel.styles.background) {
+                    panel.styles.background.darkThemeColor = c
+                  } else {
+                    panel.styles.background = {darkThemeColor: c}
+                  }
+                })
+              }
+            />
+          </PanelEditItem>)}
+          {panel.styles.background?.enabled && (<PanelEditItem title='light theme'>
+            <ColorPicker
+              color={panel.styles.background?.lightThemeColor ? panel.styles.background?.lightThemeColor: 'Transparent' }
+              onChange={(c) =>
+                onChange((panel: Panel) => {
+                  if(panel.styles.background) {
+                    panel.styles.background.lightThemeColor = c
+                  } else {
+                    panel.styles.background = {lightThemeColor: c}
+                  }
+                })
+              }
+            />
+          </PanelEditItem>)}
         </PanelAccordion>
       }
       <PanelAccordion title={t1.panelBorder} defaultOpen>
