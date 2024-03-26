@@ -40,6 +40,7 @@ const panelComponents: PanelPluginComponents = {
             by: ValueCalculationType.Last,
             sort: 'desc',
           },
+          defaultLegend: null
         },
         styles: {
           style: 'lines',
@@ -66,7 +67,7 @@ const panelComponents: PanelPluginComponents = {
           decimal: 1,
         },
         enableAlert: false,
-        alertFilter: initAlertFilter(),
+        alertFilter: initAlertFilter()
       } as GraphSettings),
   },
 }

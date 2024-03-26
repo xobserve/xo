@@ -42,6 +42,7 @@ import { BarRules } from '../built-in/panel/bar/OverridesEditor'
 import { PanelInactiveKey } from 'src/data/storage-keys'
 import storage from 'utils/localStorage'
 import CopyToClipboard from 'components/CopyToClipboard'
+import { isEmpty } from 'utils/validate'
 
 interface Props {
   dashboardId: string
@@ -56,6 +57,7 @@ interface Props {
   width?: number
   inactiveSeries: string[]
   onSeriesActive: any
+  defaultLegend?: string
 }
 
 const LegendTable = memo(
@@ -68,6 +70,7 @@ const LegendTable = memo(
     width,
     onSeriesActive,
     inactiveSeries,
+    defaultLegend
   }: Props) => {
     const inactiveKey = PanelInactiveKey + dashboardId + '-' + panel.id
     useEffect(() => {
@@ -268,6 +271,12 @@ const LegendTable = memo(
             </Thead>
             <Tbody>
               {values.map((v, i) => {
+                let inactive 
+                if (!isEmpty(inactiveSeries)) {
+                  inactive = inactiveSeries.includes(v.name)
+                } else {
+                  inactive = !v.name.match(defaultLegend)
+                }
                 return (
                   <Tr verticalAlign='top' width='100%'>
                     <Td
@@ -279,7 +288,7 @@ const LegendTable = memo(
                     >
                       <HStack
                         alignItems='start'
-                        opacity={inactiveSeries.includes(v.name) ? '0.6' : 1}
+                        opacity={inactive ? '0.6' : 1} 
                       >
                         <Box
                           width='10px'

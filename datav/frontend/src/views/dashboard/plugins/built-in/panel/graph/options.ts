@@ -40,6 +40,7 @@ export const parseOptions = (
   rawData: SeriesData[],
   colorMode,
   inactiveSeries,
+  defaultLegend
 ): uPlot.Options => {
   const textColor =
     colorMode == ColorMode.Light
@@ -206,8 +207,14 @@ export const parseOptions = (
       findRuleInOverride(override, GraphRules.SeriesLineWidth) ??
       config.panel.plugins.graph.styles?.lineWidth
 
+    let showSeries;
+    if (!isEmpty(inactiveSeries)) {
+      showSeries = inactiveSeries.includes(d.name) ? false : true
+    } else {
+      showSeries = d.name.match(defaultLegend)
+    }
     series.push({
-      show: inactiveSeries.includes(d.name) ? false : true,
+      show:  showSeries,
       label: d.name,
       rawLabel: d.rawName,
       points: pointCfg,

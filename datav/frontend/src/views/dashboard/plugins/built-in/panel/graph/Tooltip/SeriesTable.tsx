@@ -35,6 +35,7 @@ import { GraphRules } from '../OverridesEditor'
 import { StatRules } from '../../stat/OverridesEditor'
 import { MobileVerticalBreakpoint } from 'src/data/constants'
 import { PanelTypeGraph } from '../types'
+import { isEmpty } from 'utils/validate'
 
 interface Props {
   props: PanelProps
@@ -44,6 +45,7 @@ interface Props {
   panelType: string
   width?: number
   inactiveSeries?: string[]
+  defaultLegend?: string
 }
 
 const SeriesTable = memo(
@@ -55,6 +57,7 @@ const SeriesTable = memo(
     panelType,
     width,
     inactiveSeries,
+    defaultLegend
   }: Props) => {
     const valueSettings: ValueSetting = props.panel.plugins[panelType].value
 
@@ -157,7 +160,13 @@ const SeriesTable = memo(
           <Table variant='unstyled' size='sm' p='0'>
             <Tbody>
               {values.map((v, i) => {
-                if (inactiveSeries.includes(v.name)) {
+                let inactive 
+                if (!isEmpty(inactiveSeries)) {
+                  inactive = inactiveSeries.includes(v.name)
+                } else [
+                  inactive = !v.name.match(defaultLegend)
+                ]
+                if (inactive) {
                   // hiding inactive tooltips
                   return <></>
                 }

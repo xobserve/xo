@@ -129,7 +129,8 @@ const GraphPanel = memo((props: GraphPanelProps) => {
       // }
     })
 
-    o = parseOptions(props, data, colorMode, inactiveSeries)
+
+    o = parseOptions(props, data, colorMode, inactiveSeries, props.panel.plugins.graph.legend.defaultLegend)
 
     return o
   }, [props.panel, props.data, colorMode, inactiveSeries])
@@ -193,6 +194,7 @@ const GraphPanel = memo((props: GraphPanelProps) => {
                     data={data}
                     inactiveSeries={inactiveSeries}
                     onSeriesActive={onSeriesActive}
+                    defaultLegend={props.panel.plugins.graph.legend.defaultLegend}
                   />
                 )
               }
@@ -238,6 +240,7 @@ const GraphPanel = memo((props: GraphPanelProps) => {
                           options={options}
                           data={data}
                           inactiveSeries={inactiveSeries}
+                          defaultLegend={props.panel.plugins.graph.legend.defaultLegend}
                         />
                       )}
 

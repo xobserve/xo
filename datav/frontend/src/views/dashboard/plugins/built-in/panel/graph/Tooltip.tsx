@@ -34,11 +34,12 @@ interface Props {
   options: uPlot.Options
   data: SeriesData[]
   inactiveSeries: string[]
+  defaultLegend: string
 }
 
 const TOOLTIP_OFFSET = 10
 let plotInstance
-const Tooltip = memo(({ props, options, data, inactiveSeries }: Props) => {
+const Tooltip = memo(({ props, options, data, inactiveSeries, defaultLegend }: Props) => {
   const [coords, setCoords] = useState(null)
   const [focusSeries, setFocusSeries] = useState<SeriesData>(null)
   const [focusIdx, setFocusIdx] = useState(null)

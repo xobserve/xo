@@ -63,7 +63,7 @@ export const initPanel = (id?) => {
     disableMenu: false,
     allowTypes: null, // null means allow all types
 
-    externalLinks: [],
+    externalLinks: []
   }
 
   if (id) {

@@ -465,6 +465,8 @@
     "width": "宽度( css width )",
     "nameWidth": "名称宽度",
     "nameWidthTips": "legend 名称的 css 宽度，支持使用 'full' 或任意数字作为值",
+    "defaultLegend": "默认 Legend",
+    "defaultLegendTips": "当没有选择任何 legend 时，显示你指定的 legend",
     "values": "获取值",
     "valuesTips": "设定该如何计算以获取 legend 和 tooltip 显示的值",
     "graphStyles": "图表样式",

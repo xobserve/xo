@@ -182,6 +182,17 @@ const GraphPanelEditor = memo((props: GraphEditorProps) => {
                     }
                   />
                 </PanelEditItem>
+                <PanelEditItem title={t1.defaultLegend} desc={t1.defaultLegendTips}>
+                <EditorInputItem
+                      value={panel.plugins.graph.legend.defaultLegend}
+                      onChange={(v) =>
+                        onChange((panel: GraphPanel) => {
+                          panel.plugins.graph.legend.defaultLegend = v
+                        })
+                      }
+                      placeholder='support regex..'
+                    />
+                </PanelEditItem>
               </>
             )}
           </PanelAccordion>

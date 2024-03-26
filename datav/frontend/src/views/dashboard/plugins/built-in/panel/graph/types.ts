@@ -35,7 +35,8 @@ export interface GraphSettings {
     order: {
       by: ValueCalculationType
       sort: 'asc' | 'desc'
-    }
+    },
+    defaultLegend: string
   }
   styles?: {
     style: 'lines' | 'bars' | 'points'

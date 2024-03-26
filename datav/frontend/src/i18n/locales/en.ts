@@ -529,6 +529,8 @@ export const graphPanelMsg = i18n('graphPanel', {
   nameWidthTips: "width of legend name, support 'full' or any number",
   values: 'Values',
   showValuesName: 'Show values name',
+  defaultLegend: 'Default legend',
+  defaultLegendTips: 'Display a specific legend when no legend is selected',
   valuesTips: 'caculate values for legend&tooltip to show',
   graphStyles: 'Graph styles',
   lineWidth: 'Line width',
