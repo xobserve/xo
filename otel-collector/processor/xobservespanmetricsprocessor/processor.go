@@ -151,6 +151,11 @@ func newProcessor(logger *zap.Logger, instanceID string, config component.Config
 		return nil, err
 	}
 
+	metricDimensions := []Dimension{
+		{Name: tagHTTPStatusCode},
+	}
+	metricDimensions = append(metricDimensions, pConfig.Dimensions...)
+
 	callDimensions := []Dimension{
 		{Name: tagHTTPStatusCode},
 	}
@@ -159,6 +164,7 @@ func newProcessor(logger *zap.Logger, instanceID string, config component.Config
 	dbCallDimensions := []Dimension{
 		{Name: conventions.AttributeDBSystem},
 		{Name: conventions.AttributeDBName},
+		{Name: conventions.AttributeDBStatement},
 	}
 	dbCallDimensions = append(dbCallDimensions, pConfig.Dimensions...)
 
@@ -209,7 +215,7 @@ func newProcessor(logger *zap.Logger, instanceID string, config component.Config
 		dbCallLatencyBounds:               bounds,
 		externalCallLatencyBounds:         bounds,
 		nextConsumer:                      nextConsumer,
-		dimensions:                        newDimensions(pConfig.Dimensions),
+		dimensions:                        newDimensions(metricDimensions),
 		callDimensions:                    newDimensions(callDimensions),
 		dbCallDimensions:                  newDimensions(dbCallDimensions),
 		externalCallDimensions:            newDimensions(externalCallDimensions),

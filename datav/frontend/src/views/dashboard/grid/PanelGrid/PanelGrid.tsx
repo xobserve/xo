@@ -116,6 +116,7 @@ import { Lang } from 'types/misc'
 import TemplateExport from 'src/views/template/TemplateExport'
 import { TemplateType } from 'types/template'
 import { extractPanelTemplateContent } from 'utils/template'
+import { MarkdownRender } from 'components/markdown/MarkdownRender'
 
 interface PanelGridProps {
   dashboardId: string
@@ -738,7 +739,7 @@ const PanelHeader = ({
                 <Tooltip
                   label={
                     isEmpty(toString(queryError))
-                      ? replaceWithVariables(panel.desc)
+                      ? <MarkdownRender md={replaceWithVariables(panel.desc)} enableToc/>
                       : toString(queryError)
                   }
                 >

@@ -9,8 +9,8 @@ CREATE TABLE xobserve_traces.trace_index
     teamId LowCardinality(String) CODEC(ZSTD(1)),
     cluster LowCardinality(String) CODEC(ZSTD(1)),
     namespace LowCardinality(String) CODEC(ZSTD(1)),
-    `serviceName` LowCardinality(String) CODEC(ZSTD(1)),
-    `name` LowCardinality(String) CODEC(ZSTD(1)),
+    serviceName LowCardinality(String) CODEC(ZSTD(1)),
+    name LowCardinality(String) CODEC(ZSTD(1)),
 
     `kind` Int8 CODEC(T64, ZSTD(1)),
     
