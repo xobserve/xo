@@ -144,7 +144,7 @@ const SeriesTable = memo(
     return (
       <Box width='100%'>
         <TableContainer
-          maxW={width}
+          maxW={width + 100}
           p={0}
           marginLeft='-18px'
           sx={{

@@ -128,7 +128,7 @@ export const TooltipContainer: React.FC<TooltipContainerProps> = ({
         transform: `translate(${placement.x}px, ${placement.y}px)`,
         transition: 'transform ease-out 0.1s',
         zIndex: '1000',
-        // maxWidth: '800px'
+        // maxWidth: '800px',
         overflow: 'auto',
       }}
       {...otherProps}
