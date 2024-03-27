@@ -105,6 +105,8 @@ export const parseOptions = (
     },
   ]
 
+  const scales = {}
+
   rawData.forEach((d, i) => {
     const override: OverrideItem = findOverride(config.panel, d.rawName)
     let opacity = config.panel.plugins.graph.styles.fillOpacity / 100
@@ -168,6 +170,31 @@ export const parseOptions = (
         units: unitsOverride,
         side: 1,
       })
+
+      
+      const scaleYMinOverride = findRuleInOverride(override, GraphRules.SeriesScaleYMin)
+      const scaleYMaxOverride = findRuleInOverride(override, GraphRules.SeriesScaleYMax)
+
+      scales[d.rawName] = {
+        auto: true,
+        dir: 1,
+        distr: config.panel.plugins.graph.axis?.scale == 'linear' ? 1 : 3,
+        ori: 1,
+        log: config.panel.plugins.graph.axis?.scaleBase,
+        range: {
+          min: {
+            soft: scaleYMinOverride? scaleYMinOverride : 0,
+            mode: 1,
+            hard: scaleYMinOverride? scaleYMinOverride : null,
+          },
+          max: {
+            mode: 2,
+            hard: scaleYMaxOverride? scaleYMaxOverride  : null,
+            soft: scaleYMaxOverride? scaleYMaxOverride  : null,
+            pad: 0.05,
+          },
+        }
+      }
 
       scale = d.rawName
     }
@@ -258,9 +285,9 @@ export const parseOptions = (
       syncRect: [],
     },
     padding: [
-      padding[0] ?? 5,
-      padding[1] ?? 15,
-      padding[2] ?? -20,
+      padding[0] ?? 10, // 解决y轴上的数据被挡住的问题
+      padding[1] ?? 5,
+      padding[2] ?? 5,
       padding[3] ?? (config.panel.plugins.graph.axis.showY ? 0 : 25),
     ],
     plugins: [
@@ -291,8 +318,21 @@ export const parseOptions = (
         distr: config.panel.plugins.graph.axis?.scale == 'linear' ? 1 : 3,
         ori: 1,
         log: config.panel.plugins.graph.axis?.scaleBase,
-        // min: 1
+        range: {
+          min: {
+            soft: config.panel.plugins.graph.value.min? config.panel.plugins.graph.value.min : 0,
+            mode: 1,
+            hard: config.panel.plugins.graph.value.min? config.panel.plugins.graph.value.min : null,
+          },
+          max: {
+            mode: 2,
+            hard: config.panel.plugins.graph.value.max? config.panel.plugins.graph.value.max : null,
+            soft: config.panel.plugins.graph.value.max? config.panel.plugins.graph.value.max : null,
+            pad: config.panel.plugins.graph.value.max? null : 0.1,
+          },
+        }
       },
+      ...scales,
     },
     axes: [
       {

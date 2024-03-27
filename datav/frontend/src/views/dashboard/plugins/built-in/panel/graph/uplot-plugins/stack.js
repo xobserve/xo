@@ -57,15 +57,6 @@ export function getStackedOpts(opts, data, interp) {
 		}
 	});
 
-	// force 0 to be the sum minimum this instead of the bottom series
-	opts.scales.y = {
-		...opts.scales.y,
-		range: (u, min, max) => {
-			let minMax = uPlot.rangeNum(0, max, 0.1, true);
-			return [0, minMax[1]];
-		}
-	};
-
 	// restack on toggle
 	opts.hooks.setSeries =  [
 			(u, i) => {
