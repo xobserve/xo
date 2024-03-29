@@ -39,6 +39,7 @@ import { initTimeRange } from 'components/DatePicker/TimePicker'
 import DatePicker from '../components/PanelDatePicker'
 import customColors from 'theme/colors'
 import { ExternalLinksEditor } from 'components/ExternalLinks'
+import CodeEditor from 'components/CodeEditor/CodeEditor'
 
 // in edit mode, we need to cache all the plugins we have edited, until we save the dashboard
 let pluginsCachedInEdit = {}
@@ -116,16 +117,18 @@ const PanelSettings = memo(({ panel, onChange }: PanelEditorProps) => {
           />
         </PanelEditItem>
         <PanelEditItem title={t.description} desc={t1.panelDesc}>
-          <EditorInputItem
-            type='textarea'
-            size='sm'
-            value={panel.desc}
-            onChange={(v) =>
-              onChange((tempPanel: Panel) => {
-                tempPanel.desc = v
-              })
-            }
-          />
+          <Box className='bordered'>
+            <CodeEditor
+              value={panel.desc}
+              onChange={(v) =>
+                onChange((tempPanel: Panel) => {
+                  tempPanel.desc = v
+                })
+              }
+              height='150px'
+              language='markdown'
+            />
+          </Box>
         </PanelEditItem>
         <PanelEditItem title={t.transform} desc={t1.enableTransform}>
           <Switch
