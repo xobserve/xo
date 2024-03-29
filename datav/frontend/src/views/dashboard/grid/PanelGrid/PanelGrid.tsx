@@ -738,7 +738,7 @@ const PanelHeader = ({
           pl='2'
         >
           {panel.styles.title.position != 'left' && <Box></Box>}
-          {!isEmpty(title) ? (
+          {!(isEmpty(title) && isEmpty(queryError)) ? (
             <HStack
               paddingTop={panel.styles.title.paddingTop}
               paddingBottom={panel.styles.title.paddingBottom}
