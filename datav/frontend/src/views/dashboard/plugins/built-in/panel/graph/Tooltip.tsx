@@ -44,7 +44,6 @@ const Tooltip = memo(({ props, options, data, inactiveSeries, defaultLegend }: P
   const [focusSeries, setFocusSeries] = useState<SeriesData>(null)
   const [focusIdx, setFocusIdx] = useState(null)
   const [focusXVal, setFocusXVal] = useState(null)
-  const [focusYVal, setFocusYVal] = useState(null)
   const isMounted = useMountedState()
 
   useBus(OnGraphPanelClickEvent + props.panel.id, () => {
@@ -136,6 +135,7 @@ const Tooltip = memo(({ props, options, data, inactiveSeries, defaultLegend }: P
               background={'var(--chakra-colors-chakra-body-bg)'}
               p='2'
               fontSize='xs'
+              maxW={800}
             >
               <Text fontWeight='600'>{dateTimeFormat(focusXVal * 1000)}</Text>
               <SeriesTable

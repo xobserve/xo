@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { round, isNumber, isEqual, over } from 'lodash'
+import { round, isEqual } from 'lodash'
 import { ColorMode } from 'src/data/constants'
 import * as colorManipulator from 'src/components/uPlot/colorManipulator'
 import { canvasCtx } from 'src/App'

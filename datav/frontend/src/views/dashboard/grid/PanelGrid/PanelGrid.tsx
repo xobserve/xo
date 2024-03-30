@@ -143,7 +143,7 @@ export const PanelGrid = memo((props: PanelGridProps) => {
 
   useEffect(() => {
     if (!isEmpty(pvars)) {
-      initVariableSelected(pvars) 
+      initVariableSelected(pvars)
     }
     var retryNum = 0
     depsCheck.current = setInterval(() => {
@@ -524,10 +524,10 @@ export const PanelComponent = ({
     return res
   }, [panel.transform, panel.enableTransform, panelData])
 
-  let backgroundColor:string = "";
+  let backgroundColor: string = "";
   if (dashboard.data.styles.panelBg) {
     if (dashboard.data.styles.panelBg.enabled) {
-      if( colorMode == 'dark') {
+      if (colorMode == 'dark') {
         backgroundColor = dashboard.data.styles.panelBg?.darkThemeColor
       } else {
         backgroundColor = dashboard.data.styles.panelBg?.lightThemeColor
@@ -536,7 +536,7 @@ export const PanelComponent = ({
   }
   if (panel.styles.background) {
     if (panel.styles.background.enabled) {
-      if( colorMode == 'dark') {
+      if (colorMode == 'dark') {
         backgroundColor = panel.styles.background?.darkThemeColor
       } else {
         backgroundColor = panel.styles.background?.lightThemeColor
@@ -574,16 +574,6 @@ export const PanelComponent = ({
             onHover={onHover}
             pvariables={pvariables}
           />
-          <Center>
-          <Flex
-            flexWrap='wrap'
-            alignItems='center'
-            columnGap={3}
-            rowGap={0}
-          >
-            {!isEmpty(pvariables) && <VariablesLoader variables={pvariables} />}
-          </Flex>
-          </Center>
           <ErrorBoundary>
             <Box
               // panel={panel}
@@ -685,7 +675,7 @@ const PanelHeader = ({
   const t1 = panelMsg.get()
   const t2 = templateMsg.get()
 
-  const title = replaceWithVariables(panel.title,null,pvariables )
+  const title = replaceWithVariables(panel.title, null, pvariables)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [templatePanel, setTemplatePanel] = useState<Partial<Panel>>(null)
 
@@ -762,7 +752,7 @@ const PanelHeader = ({
     },
   ]
   return (
-    <>
+    <Box>
       <HStack
         className='grid-drag-handle'
         height={`${PANEL_HEADER_HEIGHT - (isEmpty(title) ? 0 : 0)}px`}
@@ -805,7 +795,7 @@ const PanelHeader = ({
                 <Tooltip
                   label={
                     isEmpty(toString(queryError))
-                      ? <MarkdownRender md={replaceWithVariables(panel.desc,{})} enableToc/>
+                      ? <MarkdownRender md={replaceWithVariables(panel.desc, {})} enableToc />
                       : toString(queryError)
                   }
                 >
@@ -931,7 +921,18 @@ const PanelHeader = ({
           />
         </Box>
       )}
-    </>
+      <Center>
+        <Flex
+          flexWrap='wrap'
+          alignItems='center'
+          columnGap={3}
+          rowGap={0}
+          zIndex={1500}
+        >
+          {!isEmpty(pvariables) && <VariablesLoader variables={pvariables} />}
+        </Flex>
+      </Center>
+    </Box>
   )
 }
 
