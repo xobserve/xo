@@ -43,6 +43,8 @@ export enum ThresholdDisplay {
 export interface ValueSetting extends Units {
   decimal: number
   calc?: ValueCalculationType
+  min?: number
+  max?: number
 }
 
 export type UnitsType =

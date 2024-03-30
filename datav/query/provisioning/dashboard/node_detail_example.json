@@ -2,9 +2,9 @@
     "id": "d-_NodeDetail",
     "title": "节点明细",
     "editable": true,
-    "updated": "2024-03-06T11:13:38.294777024+08:00",
+    "updated": "2024-03-25T19:51:45.813171695+08:00",
     "ownedBy": 1,
-    "ownerName": "global",
+    "ownerName": "default",
     "visibleTo": "team",
     "data": {
         "allowPanelsOverlap": false,
@@ -25,6 +25,7 @@
         "lazyLoading": false,
         "panels": [
             {
+                "allowTypes": null,
                 "collapsed": false,
                 "conditionRender": {
                     "type": "variable",
@@ -47,9 +48,11 @@
                     }
                 },
                 "desc": "",
+                "disableMenu": false,
                 "enableConditionRender": false,
                 "enableScopeTime": false,
                 "enableTransform": false,
+                "externalLinks": [],
                 "gridPos": {
                     "h": 9,
                     "w": 5,
@@ -57,6 +60,9 @@
                     "y": 0
                 },
                 "id": 1,
+                "interactions": {
+                    "clickActions": []
+                },
                 "overrides": [
                     {
                         "overrides": [
@@ -84,7 +90,6 @@
                             "scale": "linear",
                             "scaleBase": 2
                         },
-                        "clickAction": "\n// setVariable: (varName:string, varValue:string) => void \n// navigate: react-router-dom -> useNavigate() -> navigate \n// setDateTime: (from: Timestamp, to: TimeStamp) => void\nfunction onRowClick(row, navigate, setVariable, setDateTime, $variables) {\n    // You can get all current variables in this way\n    // const currentVariables = $variables.get()\n    // console.log(row, currentVariables)\n}\n",
                         "displaySeries": "__all__",
                         "enableClick": true,
                         "showGraph": false,
@@ -105,48 +110,28 @@
                             "legend": null,
                             "value": 50
                         },
-                        "thresholds": {
-                            "enableTransform": false,
-                            "mode": "absolute",
-                            "thresholds": [
-                                {
-                                    "color": "$yellow",
-                                    "value": 0
-                                },
-                                {
-                                    "color": "#9FE6B8",
-                                    "value": null
-                                }
-                            ],
-                            "transform": "function transform(data, lodash){\n\n}"
-                        },
                         "value": {
                             "calc": "Last",
-                            "decimal": 3,
+                            "decimal": 1,
                             "units": [
                                 {
                                     "operator": "/",
                                     "rhs": 1,
-                                    "unit": "ms"
-                                },
-                                {
-                                    "operator": "/",
-                                    "rhs": 1000,
                                     "unit": "s"
                                 },
                                 {
                                     "operator": "/",
-                                    "rhs": 60000,
+                                    "rhs": 60,
                                     "unit": "m"
                                 },
                                 {
                                     "operator": "/",
-                                    "rhs": 3600000,
+                                    "rhs": 3600,
                                     "unit": "h"
                                 },
                                 {
                                     "operator": "/",
-                                    "rhs": 86400000,
+                                    "rhs": 86400,
                                     "unit": "d"
                                 }
                             ],
@@ -189,12 +174,30 @@
                     },
                     "widthReduction": 0
                 },
+                "templateId": 0,
+                "thresholds": {
+                    "enable": false,
+                    "thresholdArrow": "none",
+                    "thresholds": {
+                        "enableTransform": false,
+                        "mode": "absolute",
+                        "thresholds": [
+                            {
+                                "color": "#9FE6B8",
+                                "value": null
+                            }
+                        ],
+                        "transform": "function transform(data, lodash){\n\n}"
+                    },
+                    "thresholdsDisplay": "None"
+                },
                 "title": "启动时长",
                 "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
                 "type": "stat",
                 "valueMapping": null
             },
             {
+                "allowTypes": null,
                 "collapsed": false,
                 "conditionRender": {
                     "type": "variable",
@@ -217,9 +220,11 @@
                     }
                 },
                 "desc": "",
+                "disableMenu": false,
                 "enableConditionRender": false,
                 "enableScopeTime": false,
                 "enableTransform": false,
+                "externalLinks": [],
                 "gridPos": {
                     "h": 9,
                     "w": 5,
@@ -227,6 +232,9 @@
                     "y": 0
                 },
                 "id": 2,
+                "interactions": {
+                    "clickActions": []
+                },
                 "overrides": [],
                 "plugins": {
                     "stat": {
@@ -234,7 +242,6 @@
                             "scale": "linear",
                             "scaleBase": 2
                         },
-                        "clickAction": "\n// setVariable: (varName:string, varValue:string) => void \n// navigate: react-router-dom -> useNavigate() -> navigate \n// setDateTime: (from: Timestamp, to: TimeStamp) => void\nfunction onRowClick(row, navigate, setVariable, setDateTime, $variables) {\n    // You can get all current variables in this way\n    // const currentVariables = $variables.get()\n    // console.log(row, currentVariables)\n}\n",
                         "displaySeries": "__all__",
                         "enableClick": true,
                         "showGraph": false,
@@ -254,21 +261,6 @@
                         "textSize": {
                             "legend": null,
                             "value": 50
-                        },
-                        "thresholds": {
-                            "enableTransform": false,
-                            "mode": "absolute",
-                            "thresholds": [
-                                {
-                                    "color": "$green",
-                                    "value": null
-                                },
-                                {
-                                    "color": "#9FE6B8",
-                                    "value": null
-                                }
-                            ],
-                            "transform": "function transform(data, lodash){\n\n}"
                         },
                         "value": {
                             "calc": "Last",
@@ -294,7 +286,7 @@
                     "heightReduction": 0,
                     "marginLeft": 0,
                     "marginTop": 0,
-                    "palette": "echarts-light",
+                    "palette": "classic",
                     "title": {
                         "color": "inherit",
                         "decoration": {
@@ -313,12 +305,30 @@
                     },
                     "widthReduction": 0
                 },
+                "templateId": 0,
+                "thresholds": {
+                    "enable": false,
+                    "thresholdArrow": "none",
+                    "thresholds": {
+                        "enableTransform": false,
+                        "mode": "absolute",
+                        "thresholds": [
+                            {
+                                "color": "$green",
+                                "value": null
+                            }
+                        ],
+                        "transform": "function transform(data, lodash){\n\n}"
+                    },
+                    "thresholdsDisplay": "None"
+                },
                 "title": "CPU核心数",
                 "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
                 "type": "stat",
                 "valueMapping": null
             },
             {
+                "allowTypes": null,
                 "collapsed": false,
                 "conditionRender": {
                     "type": "variable",
@@ -341,9 +351,11 @@
                     }
                 },
                 "desc": "",
+                "disableMenu": false,
                 "enableConditionRender": false,
                 "enableScopeTime": false,
                 "enableTransform": false,
+                "externalLinks": [],
                 "gridPos": {
                     "h": 9,
                     "w": 5,
@@ -351,6 +363,9 @@
                     "y": 0
                 },
                 "id": 3,
+                "interactions": {
+                    "clickActions": []
+                },
                 "overrides": [],
                 "plugins": {
                     "stat": {
@@ -358,7 +373,6 @@
                             "scale": "linear",
                             "scaleBase": 2
                         },
-                        "clickAction": "\n// setVariable: (varName:string, varValue:string) => void \n// navigate: react-router-dom -> useNavigate() -> navigate \n// setDateTime: (from: Timestamp, to: TimeStamp) => void\nfunction onRowClick(row, navigate, setVariable, setDateTime, $variables) {\n    // You can get all current variables in this way\n    // const currentVariables = $variables.get()\n    // console.log(row, currentVariables)\n}\n",
                         "displaySeries": "__all__",
                         "enableClick": true,
                         "showGraph": false,
@@ -379,24 +393,9 @@
                             "legend": null,
                             "value": 50
                         },
-                        "thresholds": {
-                            "enableTransform": false,
-                            "mode": "absolute",
-                            "thresholds": [
-                                {
-                                    "color": "$green",
-                                    "value": null
-                                },
-                                {
-                                    "color": "#9FE6B8",
-                                    "value": null
-                                }
-                            ],
-                            "transform": "function transform(data, lodash){\n\n}"
-                        },
                         "value": {
                             "calc": "Last",
-                            "decimal": 3,
+                            "decimal": 1,
                             "units": [
                                 {
                                     "operator": "/",
@@ -458,12 +457,30 @@
                     },
                     "widthReduction": 0
                 },
+                "templateId": 0,
+                "thresholds": {
+                    "enable": false,
+                    "thresholdArrow": "none",
+                    "thresholds": {
+                        "enableTransform": false,
+                        "mode": "absolute",
+                        "thresholds": [
+                            {
+                                "color": "$green",
+                                "value": null
+                            }
+                        ],
+                        "transform": "function transform(data, lodash){\n\n}"
+                    },
+                    "thresholdsDisplay": "None"
+                },
                 "title": "内存大小",
                 "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
                 "type": "stat",
                 "valueMapping": null
             },
             {
+                "allowTypes": null,
                 "collapsed": false,
                 "conditionRender": {
                     "type": "variable",
@@ -486,9 +503,11 @@
                     }
                 },
                 "desc": "",
+                "disableMenu": false,
                 "enableConditionRender": false,
                 "enableScopeTime": false,
                 "enableTransform": false,
+                "externalLinks": [],
                 "gridPos": {
                     "h": 9,
                     "w": 5,
@@ -496,6 +515,9 @@
                     "y": 0
                 },
                 "id": 4,
+                "interactions": {
+                    "clickActions": []
+                },
                 "overrides": [],
                 "plugins": {
                     "stat": {
@@ -503,7 +525,6 @@
                             "scale": "linear",
                             "scaleBase": 2
                         },
-                        "clickAction": "\n// setVariable: (varName:string, varValue:string) => void \n// navigate: react-router-dom -> useNavigate() -> navigate \n// setDateTime: (from: Timestamp, to: TimeStamp) => void\nfunction onRowClick(row, navigate, setVariable, setDateTime, $variables) {\n    // You can get all current variables in this way\n    // const currentVariables = $variables.get()\n    // console.log(row, currentVariables)\n}\n",
                         "displaySeries": "__all__",
                         "enableClick": true,
                         "showGraph": false,
@@ -524,24 +545,9 @@
                             "legend": null,
                             "value": 50
                         },
-                        "thresholds": {
-                            "enableTransform": false,
-                            "mode": "absolute",
-                            "thresholds": [
-                                {
-                                    "color": "$green",
-                                    "value": null
-                                },
-                                {
-                                    "color": "#9FE6B8",
-                                    "value": null
-                                }
-                            ],
-                            "transform": "function transform(data, lodash){\n\n}"
-                        },
                         "value": {
                             "calc": "Last",
-                            "decimal": 3,
+                            "decimal": 1,
                             "units": [
                                 {
                                     "operator": "/",
@@ -603,12 +609,30 @@
                     },
                     "widthReduction": 0
                 },
+                "templateId": 0,
+                "thresholds": {
+                    "enable": false,
+                    "thresholdArrow": "none",
+                    "thresholds": {
+                        "enableTransform": false,
+                        "mode": "absolute",
+                        "thresholds": [
+                            {
+                                "color": "$green",
+                                "value": null
+                            }
+                        ],
+                        "transform": "function transform(data, lodash){\n\n}"
+                    },
+                    "thresholdsDisplay": "None"
+                },
                 "title": "磁盘大小",
                 "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
                 "type": "stat",
                 "valueMapping": null
             },
             {
+                "allowTypes": null,
                 "collapsed": false,
                 "conditionRender": {
                     "type": "variable",
@@ -631,9 +655,11 @@
                     }
                 },
                 "desc": "",
+                "disableMenu": false,
                 "enableConditionRender": false,
                 "enableScopeTime": false,
                 "enableTransform": false,
+                "externalLinks": [],
                 "gridPos": {
                     "h": 9,
                     "w": 4,
@@ -641,6 +667,9 @@
                     "y": 0
                 },
                 "id": 6,
+                "interactions": {
+                    "clickActions": []
+                },
                 "overrides": [],
                 "plugins": {
                     "stat": {
@@ -648,7 +677,6 @@
                             "scale": "linear",
                             "scaleBase": 2
                         },
-                        "clickAction": "\n// setVariable: (varName:string, varValue:string) => void \n// navigate: react-router-dom -> useNavigate() -> navigate \n// setDateTime: (from: Timestamp, to: TimeStamp) => void\nfunction onRowClick(row, navigate, setVariable, setDateTime, $variables) {\n    // You can get all current variables in this way\n    // const currentVariables = $variables.get()\n    // console.log(row, currentVariables)\n}\n",
                         "displaySeries": "__all__",
                         "enableClick": true,
                         "showGraph": false,
@@ -669,24 +697,9 @@
                             "legend": null,
                             "value": 50
                         },
-                        "thresholds": {
-                            "enableTransform": false,
-                            "mode": "absolute",
-                            "thresholds": [
-                                {
-                                    "color": "$green",
-                                    "value": null
-                                },
-                                {
-                                    "color": "#9FE6B8",
-                                    "value": null
-                                }
-                            ],
-                            "transform": "function transform(data, lodash){\n\n}"
-                        },
                         "value": {
                             "calc": "Last",
-                            "decimal": 3,
+                            "decimal": 1,
                             "units": [
                                 {
                                     "operator": "/",
@@ -748,26 +761,779 @@
                     },
                     "widthReduction": 0
                 },
+                "templateId": 0,
+                "thresholds": {
+                    "enable": false,
+                    "thresholdArrow": "none",
+                    "thresholds": {
+                        "enableTransform": false,
+                        "mode": "absolute",
+                        "thresholds": [
+                            {
+                                "color": "$green",
+                                "value": null
+                            }
+                        ],
+                        "transform": "function transform(data, lodash){\n\n}"
+                    },
+                    "thresholdsDisplay": "None"
+                },
                 "title": "交换区大小",
                 "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
                 "type": "stat",
                 "valueMapping": null
             },
             {
-                "id": 23,
-                "title": "CPU",
-                "desc": "",
+                "allowTypes": null,
                 "collapsed": false,
-                "type": "row",
-                "gridPos": {
-                    "x": 0,
-                    "y": 9,
-                    "w": 24,
-                    "h": 1.5
+                "conditionRender": {
+                    "type": "variable",
+                    "value": ""
                 },
-                "panels": []
+                "datasource": {
+                    "id": 2,
+                    "queries": [
+                        {
+                            "data": {},
+                            "id": 65,
+                            "legend": "启动时长",
+                            "metrics": "avg by (node_name) (avg_over_time(node_load1{}[${__interval__}]))",
+                            "visible": true
+                        }
+                    ],
+                    "queryOptions": {
+                        "maxDataPoints": 600,
+                        "minInterval": "1m"
+                    }
+                },
+                "desc": "如果平均负载长期超过核心数，则需要关注系统的性能和稳定性",
+                "disableMenu": false,
+                "enableConditionRender": false,
+                "enableScopeTime": false,
+                "enableTransform": false,
+                "externalLinks": [],
+                "gridPos": {
+                    "h": 9,
+                    "w": 5,
+                    "x": 0,
+                    "y": 9
+                },
+                "id": 1711364131,
+                "interactions": {
+                    "clickActions": []
+                },
+                "overrides": [],
+                "plugins": {
+                    "stat": {
+                        "axisY": {
+                            "scale": "linear",
+                            "scaleBase": 2
+                        },
+                        "displaySeries": "__all__",
+                        "enableClick": true,
+                        "showGraph": true,
+                        "showLegend": false,
+                        "showTooltip": true,
+                        "styles": {
+                            "colorMode": "value",
+                            "connectNulls": false,
+                            "fillOpacity": 78,
+                            "graphHeight": 55,
+                            "hideGraphHeight": 70,
+                            "layout": "auto",
+                            "showPoints": false,
+                            "style": "lines",
+                            "textAlign": "center"
+                        },
+                        "textSize": {
+                            "legend": null,
+                            "value": 50
+                        },
+                        "value": {
+                            "calc": "Last",
+                            "decimal": 2,
+                            "units": [
+                                {
+                                    "operator": "/",
+                                    "rhs": 1,
+                                    "unit": ""
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1000,
+                                    "unit": "k"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1000000,
+                                    "unit": "m"
+                                }
+                            ],
+                            "unitsType": "short"
+                        }
+                    }
+                },
+                "scopeTime": null,
+                "styles": {
+                    "border": "None",
+                    "borderOnHover": true,
+                    "decoration": {
+                        "height": "20px",
+                        "justifyContent": "center",
+                        "left": "",
+                        "reverse": false,
+                        "top": "-30px",
+                        "type": "None",
+                        "width": "100%"
+                    },
+                    "heightReduction": 0,
+                    "marginLeft": 0,
+                    "marginTop": 0,
+                    "palette": "classic",
+                    "title": {
+                        "color": "inherit",
+                        "decoration": {
+                            "height": "50px",
+                            "margin": "10px",
+                            "type": "None",
+                            "width": "160px"
+                        },
+                        "fontSize": "14px",
+                        "fontWeight": "500",
+                        "paddingBottom": "0px",
+                        "paddingLeft": "0px",
+                        "paddingRight": "0px",
+                        "paddingTop": "0px",
+                        "position": "left"
+                    },
+                    "widthReduction": 0
+                },
+                "templateId": 0,
+                "thresholds": {
+                    "enable": false,
+                    "thresholdArrow": "none",
+                    "thresholds": {
+                        "enableTransform": false,
+                        "mode": "absolute",
+                        "thresholds": [
+                            {
+                                "color": "$red",
+                                "value": 8
+                            },
+                            {
+                                "color": "$yellow",
+                                "value": 4
+                            },
+                            {
+                                "color": "$green",
+                                "value": null
+                            }
+                        ],
+                        "transform": "function transform(data, lodash){\n\n}"
+                    },
+                    "thresholdsDisplay": "None"
+                },
+                "title": "平均负载",
+                "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
+                "type": "stat",
+                "valueMapping": null
             },
             {
+                "allowTypes": null,
+                "collapsed": false,
+                "conditionRender": {
+                    "type": "variable",
+                    "value": ""
+                },
+                "datasource": {
+                    "id": 2,
+                    "queries": [
+                        {
+                            "data": {},
+                            "id": 65,
+                            "legend": "启动时长",
+                            "metrics": "sum by (instance) (avg by (mode,instance)((clamp_max(rate(node_cpu_seconds_total{mode!=\"idle\",mode!=\"iowait\",mode!=\"steal\"}[${__interval__}]),1)) ))*100",
+                            "visible": true
+                        }
+                    ],
+                    "queryOptions": {
+                        "maxDataPoints": 600,
+                        "minInterval": "1m"
+                    }
+                },
+                "desc": "",
+                "disableMenu": false,
+                "enableConditionRender": false,
+                "enableScopeTime": false,
+                "enableTransform": false,
+                "externalLinks": [],
+                "gridPos": {
+                    "h": 9,
+                    "w": 5,
+                    "x": 5,
+                    "y": 9
+                },
+                "id": 1711364765,
+                "interactions": {
+                    "clickActions": []
+                },
+                "overrides": [],
+                "plugins": {
+                    "stat": {
+                        "axisY": {
+                            "scale": "linear",
+                            "scaleBase": 2
+                        },
+                        "displaySeries": "__all__",
+                        "enableClick": true,
+                        "showGraph": true,
+                        "showLegend": false,
+                        "showTooltip": true,
+                        "styles": {
+                            "colorMode": "value",
+                            "connectNulls": false,
+                            "fillOpacity": 78,
+                            "graphHeight": 55,
+                            "hideGraphHeight": 70,
+                            "layout": "auto",
+                            "showPoints": false,
+                            "style": "lines",
+                            "textAlign": "center"
+                        },
+                        "textSize": {
+                            "legend": null,
+                            "value": 50
+                        },
+                        "value": {
+                            "calc": "Last",
+                            "decimal": 1,
+                            "units": [
+                                {
+                                    "operator": "x",
+                                    "rhs": 1,
+                                    "unit": "%"
+                                }
+                            ],
+                            "unitsType": "percent%"
+                        }
+                    }
+                },
+                "scopeTime": null,
+                "styles": {
+                    "border": "None",
+                    "borderOnHover": true,
+                    "decoration": {
+                        "height": "20px",
+                        "justifyContent": "center",
+                        "left": "",
+                        "reverse": false,
+                        "top": "-30px",
+                        "type": "None",
+                        "width": "100%"
+                    },
+                    "heightReduction": 0,
+                    "marginLeft": 0,
+                    "marginTop": 0,
+                    "palette": "classic",
+                    "title": {
+                        "color": "inherit",
+                        "decoration": {
+                            "height": "50px",
+                            "margin": "10px",
+                            "type": "None",
+                            "width": "160px"
+                        },
+                        "fontSize": "14px",
+                        "fontWeight": "500",
+                        "paddingBottom": "0px",
+                        "paddingLeft": "0px",
+                        "paddingRight": "0px",
+                        "paddingTop": "0px",
+                        "position": "left"
+                    },
+                    "widthReduction": 0
+                },
+                "templateId": 0,
+                "thresholds": {
+                    "enable": false,
+                    "thresholdArrow": "none",
+                    "thresholds": {
+                        "enableTransform": false,
+                        "mode": "absolute",
+                        "thresholds": [
+                            {
+                                "color": "$red",
+                                "value": 80
+                            },
+                            {
+                                "color": "$yellow",
+                                "value": 60
+                            },
+                            {
+                                "color": "$green",
+                                "value": null
+                            }
+                        ],
+                        "transform": "function transform(data, lodash){\n\n}"
+                    },
+                    "thresholdsDisplay": "None"
+                },
+                "title": "CPU使用率",
+                "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
+                "type": "stat",
+                "valueMapping": null
+            },
+            {
+                "allowTypes": null,
+                "collapsed": false,
+                "conditionRender": {
+                    "type": "variable",
+                    "value": ""
+                },
+                "datasource": {
+                    "id": 2,
+                    "queries": [
+                        {
+                            "data": {},
+                            "id": 65,
+                            "legend": "启动时长",
+                            "metrics": "100 - avg by (instance) (((node_memory_MemAvailable_bytes{} or (node_memory_MemFree_bytes{} + node_memory_Buffers_bytes{} + node_memory_Cached_bytes{})) / node_memory_MemTotal_bytes{}) * 100)",
+                            "visible": true
+                        }
+                    ],
+                    "queryOptions": {
+                        "maxDataPoints": 600,
+                        "minInterval": "1m"
+                    }
+                },
+                "desc": "free、buffers、cached内存都属于未使用内存",
+                "disableMenu": false,
+                "enableConditionRender": false,
+                "enableScopeTime": false,
+                "enableTransform": false,
+                "externalLinks": [],
+                "gridPos": {
+                    "h": 9,
+                    "w": 5,
+                    "x": 10,
+                    "y": 9
+                },
+                "id": 1711365158,
+                "interactions": {
+                    "clickActions": []
+                },
+                "overrides": [],
+                "plugins": {
+                    "stat": {
+                        "axisY": {
+                            "scale": "linear",
+                            "scaleBase": 2
+                        },
+                        "displaySeries": "__all__",
+                        "enableClick": true,
+                        "showGraph": true,
+                        "showLegend": false,
+                        "showTooltip": true,
+                        "styles": {
+                            "colorMode": "value",
+                            "connectNulls": false,
+                            "fillOpacity": 78,
+                            "graphHeight": 55,
+                            "hideGraphHeight": 70,
+                            "layout": "auto",
+                            "showPoints": false,
+                            "style": "lines",
+                            "textAlign": "center"
+                        },
+                        "textSize": {
+                            "legend": null,
+                            "value": 50
+                        },
+                        "value": {
+                            "calc": "Last",
+                            "decimal": 1,
+                            "units": [
+                                {
+                                    "operator": "x",
+                                    "rhs": 1,
+                                    "unit": "%"
+                                }
+                            ],
+                            "unitsType": "percent%"
+                        }
+                    }
+                },
+                "scopeTime": null,
+                "styles": {
+                    "border": "None",
+                    "borderOnHover": true,
+                    "decoration": {
+                        "height": "20px",
+                        "justifyContent": "center",
+                        "left": "",
+                        "reverse": false,
+                        "top": "-30px",
+                        "type": "None",
+                        "width": "100%"
+                    },
+                    "heightReduction": 0,
+                    "marginLeft": 0,
+                    "marginTop": 0,
+                    "palette": "classic",
+                    "title": {
+                        "color": "inherit",
+                        "decoration": {
+                            "height": "50px",
+                            "margin": "10px",
+                            "type": "None",
+                            "width": "160px"
+                        },
+                        "fontSize": "14px",
+                        "fontWeight": "500",
+                        "paddingBottom": "0px",
+                        "paddingLeft": "0px",
+                        "paddingRight": "0px",
+                        "paddingTop": "0px",
+                        "position": "left"
+                    },
+                    "widthReduction": 0
+                },
+                "templateId": 0,
+                "thresholds": {
+                    "enable": false,
+                    "thresholdArrow": "none",
+                    "thresholds": {
+                        "enableTransform": false,
+                        "mode": "absolute",
+                        "thresholds": [
+                            {
+                                "color": "$red",
+                                "value": 80
+                            },
+                            {
+                                "color": "$yellow",
+                                "value": 60
+                            },
+                            {
+                                "color": "$green",
+                                "value": null
+                            }
+                        ],
+                        "transform": "function transform(data, lodash){\n\n}"
+                    },
+                    "thresholdsDisplay": "None"
+                },
+                "title": "内存使用率",
+                "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
+                "type": "stat",
+                "valueMapping": null
+            },
+            {
+                "allowTypes": null,
+                "collapsed": false,
+                "conditionRender": {
+                    "type": "variable",
+                    "value": ""
+                },
+                "datasource": {
+                    "id": 2,
+                    "queries": [
+                        {
+                            "data": {},
+                            "id": 65,
+                            "legend": "启动时长",
+                            "metrics": "avg by (instance) (min((node_filesystem_size_bytes{fstype!~\"rootfs|selinuxfs|autofs|rpc_pipefs|tmpfs|shm|overlay|squashfs\"}-node_filesystem_free_bytes{ fstype!~\"rootfs|selinuxfs|autofs|rpc_pipefs|tmpfs|shm|overlay|squashfs\"})/node_filesystem_size_bytes{fstype!~\"rootfs|selinuxfs|autofs|rpc_pipefs|tmpfs|shm|overlay|squashfs\"})*100)",
+                            "visible": true
+                        }
+                    ],
+                    "queryOptions": {
+                        "maxDataPoints": 600,
+                        "minInterval": "1m"
+                    }
+                },
+                "desc": "",
+                "disableMenu": false,
+                "enableConditionRender": false,
+                "enableScopeTime": false,
+                "enableTransform": false,
+                "externalLinks": [],
+                "gridPos": {
+                    "h": 9,
+                    "w": 5,
+                    "x": 15,
+                    "y": 9
+                },
+                "id": 1711365647,
+                "interactions": {
+                    "clickActions": []
+                },
+                "overrides": [],
+                "plugins": {
+                    "stat": {
+                        "axisY": {
+                            "scale": "linear",
+                            "scaleBase": 2
+                        },
+                        "displaySeries": "__all__",
+                        "enableClick": true,
+                        "showGraph": true,
+                        "showLegend": false,
+                        "showTooltip": true,
+                        "styles": {
+                            "colorMode": "value",
+                            "connectNulls": false,
+                            "fillOpacity": 78,
+                            "graphHeight": 55,
+                            "hideGraphHeight": 70,
+                            "layout": "auto",
+                            "showPoints": false,
+                            "style": "lines",
+                            "textAlign": "center"
+                        },
+                        "textSize": {
+                            "legend": null,
+                            "value": 50
+                        },
+                        "value": {
+                            "calc": "Last",
+                            "decimal": 1,
+                            "units": [
+                                {
+                                    "operator": "x",
+                                    "rhs": 1,
+                                    "unit": "%"
+                                }
+                            ],
+                            "unitsType": "percent%"
+                        }
+                    }
+                },
+                "scopeTime": null,
+                "styles": {
+                    "border": "None",
+                    "borderOnHover": true,
+                    "decoration": {
+                        "height": "20px",
+                        "justifyContent": "center",
+                        "left": "",
+                        "reverse": false,
+                        "top": "-30px",
+                        "type": "None",
+                        "width": "100%"
+                    },
+                    "heightReduction": 0,
+                    "marginLeft": 0,
+                    "marginTop": 0,
+                    "palette": "classic",
+                    "title": {
+                        "color": "inherit",
+                        "decoration": {
+                            "height": "50px",
+                            "margin": "10px",
+                            "type": "None",
+                            "width": "160px"
+                        },
+                        "fontSize": "14px",
+                        "fontWeight": "500",
+                        "paddingBottom": "0px",
+                        "paddingLeft": "0px",
+                        "paddingRight": "0px",
+                        "paddingTop": "0px",
+                        "position": "left"
+                    },
+                    "widthReduction": 0
+                },
+                "templateId": 0,
+                "thresholds": {
+                    "enable": false,
+                    "thresholdArrow": "none",
+                    "thresholds": {
+                        "enableTransform": false,
+                        "mode": "absolute",
+                        "thresholds": [
+                            {
+                                "color": "$red",
+                                "value": 80
+                            },
+                            {
+                                "color": "$yellow",
+                                "value": 60
+                            },
+                            {
+                                "color": "$green",
+                                "value": null
+                            }
+                        ],
+                        "transform": "function transform(data, lodash){\n\n}"
+                    },
+                    "thresholdsDisplay": "None"
+                },
+                "title": "磁盘使用率",
+                "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
+                "type": "stat",
+                "valueMapping": null
+            },
+            {
+                "allowTypes": null,
+                "collapsed": false,
+                "conditionRender": {
+                    "type": "variable",
+                    "value": ""
+                },
+                "datasource": {
+                    "id": 2,
+                    "queries": [
+                        {
+                            "data": {},
+                            "id": 65,
+                            "legend": "启动时长",
+                            "metrics": "100 - min(clamp_max((max_over_time(node_memory_SwapFree_bytes{}[${__interval__}])  * 100) / \r\nmax_over_time(node_memory_SwapTotal_bytes{}[${__interval__}]),100))",
+                            "visible": true
+                        }
+                    ],
+                    "queryOptions": {
+                        "maxDataPoints": 600,
+                        "minInterval": "1m"
+                    }
+                },
+                "desc": "交换区空间使用占比过大的情况，可能会造成磁盘IO压力，缩短磁盘使用寿命",
+                "disableMenu": false,
+                "enableConditionRender": false,
+                "enableScopeTime": false,
+                "enableTransform": false,
+                "externalLinks": [],
+                "gridPos": {
+                    "h": 9,
+                    "w": 4,
+                    "x": 20,
+                    "y": 9
+                },
+                "id": 1711366000,
+                "interactions": {
+                    "clickActions": []
+                },
+                "overrides": [],
+                "plugins": {
+                    "stat": {
+                        "axisY": {
+                            "scale": "linear",
+                            "scaleBase": 2
+                        },
+                        "displaySeries": "__all__",
+                        "enableClick": true,
+                        "showGraph": true,
+                        "showLegend": false,
+                        "showTooltip": true,
+                        "styles": {
+                            "colorMode": "value",
+                            "connectNulls": false,
+                            "fillOpacity": 78,
+                            "graphHeight": 55,
+                            "hideGraphHeight": 70,
+                            "layout": "auto",
+                            "showPoints": false,
+                            "style": "lines",
+                            "textAlign": "center"
+                        },
+                        "textSize": {
+                            "legend": null,
+                            "value": 50
+                        },
+                        "value": {
+                            "calc": "Last",
+                            "decimal": 1,
+                            "units": [
+                                {
+                                    "operator": "x",
+                                    "rhs": 1,
+                                    "unit": "%"
+                                }
+                            ],
+                            "unitsType": "percent%"
+                        }
+                    }
+                },
+                "scopeTime": null,
+                "styles": {
+                    "border": "None",
+                    "borderOnHover": true,
+                    "decoration": {
+                        "height": "20px",
+                        "justifyContent": "center",
+                        "left": "",
+                        "reverse": false,
+                        "top": "-30px",
+                        "type": "None",
+                        "width": "100%"
+                    },
+                    "heightReduction": 0,
+                    "marginLeft": 0,
+                    "marginTop": 0,
+                    "palette": "classic",
+                    "title": {
+                        "color": "inherit",
+                        "decoration": {
+                            "height": "50px",
+                            "margin": "10px",
+                            "type": "None",
+                            "width": "160px"
+                        },
+                        "fontSize": "14px",
+                        "fontWeight": "500",
+                        "paddingBottom": "0px",
+                        "paddingLeft": "0px",
+                        "paddingRight": "0px",
+                        "paddingTop": "0px",
+                        "position": "left"
+                    },
+                    "widthReduction": 0
+                },
+                "templateId": 0,
+                "thresholds": {
+                    "enable": false,
+                    "thresholdArrow": "none",
+                    "thresholds": {
+                        "enableTransform": false,
+                        "mode": "absolute",
+                        "thresholds": [
+                            {
+                                "color": "$red",
+                                "value": 80
+                            },
+                            {
+                                "color": "$yellow",
+                                "value": 60
+                            },
+                            {
+                                "color": "$green",
+                                "value": null
+                            }
+                        ],
+                        "transform": "function transform(data, lodash){\n\n}"
+                    },
+                    "thresholdsDisplay": "None"
+                },
+                "title": "交换区使用率",
+                "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
+                "type": "stat",
+                "valueMapping": null
+            },
+            {
+                "collapsed": false,
+                "desc": "",
+                "gridPos": {
+                    "h": 1.5,
+                    "w": 24,
+                    "x": 0,
+                    "y": 18
+                },
+                "id": 23,
+                "panels": [],
+                "title": "CPU",
+                "type": "row"
+            },
+            {
+                "allowTypes": null,
                 "collapsed": false,
                 "conditionRender": {
                     "type": "variable",
@@ -780,14 +1546,7 @@
                             "data": {},
                             "id": 65,
                             "legend": "{{mode}}",
-                            "metrics": "avg by (instance,mode) (clamp_max(((avg by (mode,instance) ( (clamp_max(rate(node_cpu_seconds_total{mode!=\"idle\"}[${__interval__}]),1))  ))*100 ),100))",
-                            "visible": true
-                        },
-                        {
-                            "data": {},
-                            "id": 66,
-                            "legend": "idle",
-                            "metrics": "avg by (instance,mode) (clamp_max(((avg by (mode,instance) ( (clamp_max(rate(node_cpu_seconds_total{mode=\"idle\"}[${__interval__}]),1))  ))*100 ),100))",
+                            "metrics": "avg by (instance,mode) (clamp_max(((avg by (mode,instance) ( (clamp_max(rate(node_cpu_seconds_total{mode=~\"user|system|iowait|steal|irq\"}[${__interval__}]),1))  ))*100 ),100))",
                             "visible": true
                         }
                     ],
@@ -797,16 +1556,21 @@
                     }
                 },
                 "desc": "",
+                "disableMenu": false,
                 "enableConditionRender": false,
                 "enableScopeTime": false,
                 "enableTransform": false,
+                "externalLinks": [],
                 "gridPos": {
                     "h": 15,
                     "w": 12,
                     "x": 0,
-                    "y": 10.5
+                    "y": 19.5
                 },
                 "id": 7,
+                "interactions": {
+                    "clickActions": []
+                },
                 "overrides": [
                     {
                         "overrides": [],
@@ -838,7 +1602,6 @@
                             "showX": true,
                             "showY": true
                         },
-                        "clickActions": [],
                         "enableAlert": false,
                         "legend": {
                             "mode": "table",
@@ -872,24 +1635,15 @@
                             "showPoints": "auto",
                             "style": "lines"
                         },
-                        "thresholds": {
-                            "enableTransform": false,
-                            "mode": "absolute",
-                            "thresholds": [
-                                {
-                                    "color": "#9FE6B8",
-                                    "value": null
-                                }
-                            ],
-                            "transform": "function transform(data, lodash){\n\n}"
-                        },
-                        "thresholdsDisplay": "None",
                         "tooltip": {
                             "mode": "all",
-                            "sort": "desc"
+                            "sort": "desc",
+                            "sortBy": "name",
+                            "sortDir": "desc"
                         },
                         "value": {
-                            "decimal": 3,
+                            "decimal": 1,
+                            "max": 100,
                             "units": [
                                 {
                                     "operator": "x",
@@ -942,12 +1696,30 @@
                     },
                     "widthReduction": 0
                 },
+                "templateId": 0,
+                "thresholds": {
+                    "enable": false,
+                    "thresholdArrow": "none",
+                    "thresholds": {
+                        "enableTransform": false,
+                        "mode": "absolute",
+                        "thresholds": [
+                            {
+                                "color": "#9FE6B8",
+                                "value": null
+                            }
+                        ],
+                        "transform": "function transform(data, lodash){\n\n}"
+                    },
+                    "thresholdsDisplay": "None"
+                },
                 "title": "CPU使用率",
                 "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
                 "type": "graph",
                 "valueMapping": null
             },
             {
+                "allowTypes": null,
                 "collapsed": false,
                 "conditionRender": {
                     "type": "variable",
@@ -958,16 +1730,16 @@
                     "queries": [
                         {
                             "data": {},
-                            "id": 65,
-                            "legend": "内核平均进程数",
-                            "metrics": "(avg_over_time(node_procs_running{}[${__interval__}])-1) / scalar(count(node_cpu_seconds_total{mode=\"user\"}))",
+                            "id": 66,
+                            "legend": "{{cpu}}",
+                            "metrics": "clamp_max(sum  by (cpu,instance) ( rate(node_cpu_seconds_total{mode!=\"idle\"}[${__interval__}]) ),1)*100",
                             "visible": true
                         },
                         {
                             "data": {},
-                            "id": 66,
-                            "legend": "内核最大使用率",
-                            "metrics": "clamp_max(max by (instance) (sum  by (cpu,instance) ( (clamp_max(rate(node_cpu_seconds_total{mode!=\"idle\",mode!=\"iowait\"}[${__interval__}]),1)) )),1)",
+                            "id": 67,
+                            "legend": "平均",
+                            "metrics": "clamp_max(sum  by (instance) ( rate(node_cpu_seconds_total{mode!=\"idle\"}[${__interval__}]) ),1)*100 / scalar(count(node_cpu_seconds_total{mode=\"user\"}))",
                             "visible": true
                         }
                     ],
@@ -976,43 +1748,31 @@
                         "minInterval": "1m"
                     }
                 },
-                "desc": "",
+                "desc": "展示每个CPU核心的使用率",
+                "disableMenu": false,
                 "enableConditionRender": false,
                 "enableScopeTime": false,
                 "enableTransform": false,
+                "externalLinks": [],
                 "gridPos": {
                     "h": 15,
                     "w": 12,
                     "x": 12,
-                    "y": 10.5
+                    "y": 19.5
                 },
                 "id": 8,
+                "interactions": {
+                    "clickActions": []
+                },
                 "overrides": [
                     {
                         "overrides": [
                             {
-                                "type": "Series.unit",
-                                "value": {
-                                    "units": [
-                                        {
-                                            "operator": "x",
-                                            "rhs": 1,
-                                            "unit": "%"
-                                        }
-                                    ],
-                                    "unitsType": "percent%"
-                                }
-                            },
-                            {
-                                "type": "Series.separateYAxis",
-                                "value": true
-                            },
-                            {
-                                "type": "Series.style",
-                                "value": "points"
+                                "type": "Series.color",
+                                "value": "#162A65"
                             }
                         ],
-                        "target": "内核最大使用率"
+                        "target": "平均"
                     }
                 ],
                 "plugins": {
@@ -1040,7 +1800,6 @@
                             "showX": true,
                             "showY": true
                         },
-                        "clickActions": [],
                         "enableAlert": false,
                         "legend": {
                             "mode": "table",
@@ -1060,7 +1819,7 @@
                             "barGap": 10,
                             "barRadius": 0,
                             "connectNulls": false,
-                            "enableStack": true,
+                            "enableStack": false,
                             "fillOpacity": 80,
                             "gradientMode": "opacity",
                             "lineWidth": 1,
@@ -1074,42 +1833,23 @@
                             "showPoints": "auto",
                             "style": "lines"
                         },
-                        "thresholds": {
-                            "enableTransform": false,
-                            "mode": "absolute",
-                            "thresholds": [
-                                {
-                                    "color": "#9FE6B8",
-                                    "value": null
-                                }
-                            ],
-                            "transform": "function transform(data, lodash){\n\n}"
-                        },
-                        "thresholdsDisplay": "None",
                         "tooltip": {
                             "mode": "all",
-                            "sort": "desc"
+                            "sort": "desc",
+                            "sortBy": "name",
+                            "sortDir": "desc"
                         },
                         "value": {
-                            "decimal": 3,
+                            "decimal": 1,
+                            "max": 100,
                             "units": [
                                 {
-                                    "operator": "/",
+                                    "operator": "x",
                                     "rhs": 1,
-                                    "unit": ""
-                                },
-                                {
-                                    "operator": "/",
-                                    "rhs": 1000,
-                                    "unit": "k"
-                                },
-                                {
-                                    "operator": "/",
-                                    "rhs": 1000000,
-                                    "unit": "m"
+                                    "unit": "%"
                                 }
                             ],
-                            "unitsType": "short"
+                            "unitsType": "percent%"
                         }
                     }
                 },
@@ -1154,12 +1894,30 @@
                     },
                     "widthReduction": 0
                 },
-                "title": "CPU饱和度",
+                "templateId": 0,
+                "thresholds": {
+                    "enable": false,
+                    "thresholdArrow": "none",
+                    "thresholds": {
+                        "enableTransform": false,
+                        "mode": "absolute",
+                        "thresholds": [
+                            {
+                                "color": "#9FE6B8",
+                                "value": null
+                            }
+                        ],
+                        "transform": "function transform(data, lodash){\n\n}"
+                    },
+                    "thresholdsDisplay": "None"
+                },
+                "title": "CPU核心饱和度",
                 "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
                 "type": "graph",
                 "valueMapping": null
             },
             {
+                "allowTypes": null,
                 "collapsed": false,
                 "conditionRender": {
                     "type": "variable",
@@ -1178,7 +1936,7 @@
                         {
                             "data": {},
                             "id": 66,
-                            "legend": "中断",
+                            "legend": "IO中断",
                             "metrics": "rate(node_intr_total{}[${__interval__}])",
                             "visible": true
                         }
@@ -1189,16 +1947,21 @@
                     }
                 },
                 "desc": "",
+                "disableMenu": false,
                 "enableConditionRender": false,
                 "enableScopeTime": false,
                 "enableTransform": false,
+                "externalLinks": [],
                 "gridPos": {
                     "h": 15,
                     "w": 12,
                     "x": 0,
-                    "y": 25.5
+                    "y": 34.5
                 },
                 "id": 9,
+                "interactions": {
+                    "clickActions": []
+                },
                 "overrides": [
                     {
                         "overrides": [
@@ -1235,7 +1998,6 @@
                             "showX": true,
                             "showY": true
                         },
-                        "clickActions": [],
                         "enableAlert": false,
                         "legend": {
                             "mode": "table",
@@ -1269,24 +2031,14 @@
                             "showPoints": "auto",
                             "style": "lines"
                         },
-                        "thresholds": {
-                            "enableTransform": false,
-                            "mode": "absolute",
-                            "thresholds": [
-                                {
-                                    "color": "#9FE6B8",
-                                    "value": null
-                                }
-                            ],
-                            "transform": "function transform(data, lodash){\n\n}"
-                        },
-                        "thresholdsDisplay": "None",
                         "tooltip": {
                             "mode": "all",
-                            "sort": "desc"
+                            "sort": "desc",
+                            "sortBy": "name",
+                            "sortDir": "desc"
                         },
                         "value": {
-                            "decimal": 3,
+                            "decimal": 1,
                             "units": [
                                 {
                                     "operator": "/",
@@ -1349,12 +2101,30 @@
                     },
                     "widthReduction": 0
                 },
+                "templateId": 0,
+                "thresholds": {
+                    "enable": false,
+                    "thresholdArrow": "none",
+                    "thresholds": {
+                        "enableTransform": false,
+                        "mode": "absolute",
+                        "thresholds": [
+                            {
+                                "color": "#9FE6B8",
+                                "value": null
+                            }
+                        ],
+                        "transform": "function transform(data, lodash){\n\n}"
+                    },
+                    "thresholdsDisplay": "None"
+                },
                 "title": "每秒上下文切换和中断",
                 "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
                 "type": "graph",
                 "valueMapping": null
             },
             {
+                "allowTypes": null,
                 "collapsed": false,
                 "conditionRender": {
                     "type": "variable",
@@ -1380,20 +2150,25 @@
                     ],
                     "queryOptions": {
                         "maxDataPoints": 600,
-                        "minInterval": "40s"
+                        "minInterval": "1m"
                     }
                 },
-                "desc": "",
+                "desc": "IO阻塞进程数不宜过大",
+                "disableMenu": false,
                 "enableConditionRender": false,
                 "enableScopeTime": false,
                 "enableTransform": false,
+                "externalLinks": [],
                 "gridPos": {
                     "h": 15,
                     "w": 12,
                     "x": 12,
-                    "y": 25.5
+                    "y": 34.5
                 },
                 "id": 10,
+                "interactions": {
+                    "clickActions": []
+                },
                 "overrides": [
                     {
                         "overrides": [
@@ -1430,7 +2205,6 @@
                             "showX": true,
                             "showY": true
                         },
-                        "clickActions": [],
                         "enableAlert": false,
                         "legend": {
                             "mode": "table",
@@ -1464,24 +2238,14 @@
                             "showPoints": "auto",
                             "style": "lines"
                         },
-                        "thresholds": {
-                            "enableTransform": false,
-                            "mode": "absolute",
-                            "thresholds": [
-                                {
-                                    "color": "#9FE6B8",
-                                    "value": null
-                                }
-                            ],
-                            "transform": "function transform(data, lodash){\n\n}"
-                        },
-                        "thresholdsDisplay": "None",
                         "tooltip": {
                             "mode": "all",
-                            "sort": "desc"
+                            "sort": "desc",
+                            "sortBy": "name",
+                            "sortDir": "desc"
                         },
                         "value": {
-                            "decimal": 3,
+                            "decimal": 1,
                             "units": [
                                 {
                                     "operator": "/",
@@ -1544,25 +2308,43 @@
                     },
                     "widthReduction": 0
                 },
+                "templateId": 0,
+                "thresholds": {
+                    "enable": false,
+                    "thresholdArrow": "none",
+                    "thresholds": {
+                        "enableTransform": false,
+                        "mode": "absolute",
+                        "thresholds": [
+                            {
+                                "color": "#9FE6B8",
+                                "value": null
+                            }
+                        ],
+                        "transform": "function transform(data, lodash){\n\n}"
+                    },
+                    "thresholdsDisplay": "None"
+                },
                 "title": "进程数",
                 "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
                 "type": "graph",
                 "valueMapping": null
             },
             {
+                "collapsed": false,
+                "desc": "",
+                "gridPos": {
+                    "h": 1.5,
+                    "w": 24,
+                    "x": 0,
+                    "y": 49.5
+                },
                 "id": 24,
                 "title": "内存",
-                "desc": "",
-                "collapsed": false,
-                "type": "row",
-                "gridPos": {
-                    "x": 0,
-                    "y": 40.5,
-                    "w": 24,
-                    "h": 1.5
-                }
+                "type": "row"
             },
             {
+                "allowTypes": null,
                 "collapsed": false,
                 "conditionRender": {
                     "type": "variable",
@@ -1606,16 +2388,21 @@
                     }
                 },
                 "desc": "",
+                "disableMenu": false,
                 "enableConditionRender": false,
                 "enableScopeTime": false,
                 "enableTransform": false,
+                "externalLinks": [],
                 "gridPos": {
                     "h": 15,
                     "w": 12,
                     "x": 0,
-                    "y": 42
+                    "y": 51
                 },
                 "id": 11,
+                "interactions": {
+                    "clickActions": []
+                },
                 "overrides": [],
                 "plugins": {
                     "graph": {
@@ -1642,7 +2429,6 @@
                             "showX": true,
                             "showY": true
                         },
-                        "clickActions": [],
                         "enableAlert": false,
                         "legend": {
                             "mode": "table",
@@ -1676,24 +2462,14 @@
                             "showPoints": "auto",
                             "style": "lines"
                         },
-                        "thresholds": {
-                            "enableTransform": false,
-                            "mode": "absolute",
-                            "thresholds": [
-                                {
-                                    "color": "#9FE6B8",
-                                    "value": null
-                                }
-                            ],
-                            "transform": "function transform(data, lodash){\n\n}"
-                        },
-                        "thresholdsDisplay": "None",
                         "tooltip": {
                             "mode": "all",
-                            "sort": "desc"
+                            "sort": "desc",
+                            "sortBy": "name",
+                            "sortDir": "desc"
                         },
                         "value": {
-                            "decimal": 3,
+                            "decimal": 1,
                             "units": [
                                 {
                                     "operator": "/",
@@ -1761,12 +2537,30 @@
                     },
                     "widthReduction": 0
                 },
+                "templateId": 0,
+                "thresholds": {
+                    "enable": false,
+                    "thresholdArrow": "none",
+                    "thresholds": {
+                        "enableTransform": false,
+                        "mode": "absolute",
+                        "thresholds": [
+                            {
+                                "color": "#9FE6B8",
+                                "value": null
+                            }
+                        ],
+                        "transform": "function transform(data, lodash){\n\n}"
+                    },
+                    "thresholdsDisplay": "None"
+                },
                 "title": "内存空间",
                 "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
                 "type": "graph",
                 "valueMapping": null
             },
             {
+                "allowTypes": null,
                 "collapsed": false,
                 "conditionRender": {
                     "type": "variable",
@@ -1795,17 +2589,22 @@
                         "minInterval": "1m"
                     }
                 },
-                "desc": "",
+                "desc": "交换区空间使用占比过大的情况，可能会造成磁盘IO压力，缩短磁盘使用寿命",
+                "disableMenu": false,
                 "enableConditionRender": false,
                 "enableScopeTime": false,
                 "enableTransform": false,
+                "externalLinks": [],
                 "gridPos": {
                     "h": 15,
                     "w": 12,
                     "x": 12,
-                    "y": 42
+                    "y": 51
                 },
                 "id": 12,
+                "interactions": {
+                    "clickActions": []
+                },
                 "overrides": [],
                 "plugins": {
                     "graph": {
@@ -1832,7 +2631,6 @@
                             "showX": true,
                             "showY": true
                         },
-                        "clickActions": [],
                         "enableAlert": false,
                         "legend": {
                             "mode": "table",
@@ -1866,24 +2664,14 @@
                             "showPoints": "auto",
                             "style": "lines"
                         },
-                        "thresholds": {
-                            "enableTransform": false,
-                            "mode": "absolute",
-                            "thresholds": [
-                                {
-                                    "color": "#9FE6B8",
-                                    "value": null
-                                }
-                            ],
-                            "transform": "function transform(data, lodash){\n\n}"
-                        },
-                        "thresholdsDisplay": "None",
                         "tooltip": {
                             "mode": "all",
-                            "sort": "desc"
+                            "sort": "desc",
+                            "sortBy": "name",
+                            "sortDir": "desc"
                         },
                         "value": {
-                            "decimal": 3,
+                            "decimal": 1,
                             "units": [
                                 {
                                     "operator": "/",
@@ -1951,25 +2739,43 @@
                     },
                     "widthReduction": 0
                 },
+                "templateId": 0,
+                "thresholds": {
+                    "enable": false,
+                    "thresholdArrow": "none",
+                    "thresholds": {
+                        "enableTransform": false,
+                        "mode": "absolute",
+                        "thresholds": [
+                            {
+                                "color": "#9FE6B8",
+                                "value": null
+                            }
+                        ],
+                        "transform": "function transform(data, lodash){\n\n}"
+                    },
+                    "thresholdsDisplay": "None"
+                },
                 "title": "交换区空间",
                 "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
                 "type": "graph",
                 "valueMapping": null
             },
             {
+                "collapsed": false,
+                "desc": "",
+                "gridPos": {
+                    "h": 1.5,
+                    "w": 24,
+                    "x": 0,
+                    "y": 66
+                },
                 "id": 25,
                 "title": "磁盘",
-                "desc": "",
-                "collapsed": false,
-                "type": "row",
-                "gridPos": {
-                    "x": 0,
-                    "y": 57,
-                    "w": 24,
-                    "h": 1.5
-                }
+                "type": "row"
             },
             {
+                "allowTypes": null,
                 "collapsed": false,
                 "conditionRender": {
                     "type": "variable",
@@ -1999,16 +2805,21 @@
                     }
                 },
                 "desc": "",
+                "disableMenu": false,
                 "enableConditionRender": false,
                 "enableScopeTime": false,
                 "enableTransform": false,
+                "externalLinks": [],
                 "gridPos": {
                     "h": 15,
                     "w": 12,
                     "x": 0,
-                    "y": 58.5
+                    "y": 67.5
                 },
                 "id": 13,
+                "interactions": {
+                    "clickActions": []
+                },
                 "overrides": [],
                 "plugins": {
                     "graph": {
@@ -2035,7 +2846,6 @@
                             "showX": true,
                             "showY": true
                         },
-                        "clickActions": [],
                         "enableAlert": false,
                         "legend": {
                             "mode": "table",
@@ -2069,24 +2879,14 @@
                             "showPoints": "auto",
                             "style": "lines"
                         },
-                        "thresholds": {
-                            "enableTransform": false,
-                            "mode": "absolute",
-                            "thresholds": [
-                                {
-                                    "color": "#9FE6B8",
-                                    "value": null
-                                }
-                            ],
-                            "transform": "function transform(data, lodash){\n\n}"
-                        },
-                        "thresholdsDisplay": "None",
                         "tooltip": {
                             "mode": "all",
-                            "sort": "desc"
+                            "sort": "desc",
+                            "sortBy": "name",
+                            "sortDir": "desc"
                         },
                         "value": {
-                            "decimal": 3,
+                            "decimal": 1,
                             "units": [
                                 {
                                     "operator": "/",
@@ -2154,12 +2954,30 @@
                     },
                     "widthReduction": 0
                 },
+                "templateId": 0,
+                "thresholds": {
+                    "enable": false,
+                    "thresholdArrow": "none",
+                    "thresholds": {
+                        "enableTransform": false,
+                        "mode": "absolute",
+                        "thresholds": [
+                            {
+                                "color": "#9FE6B8",
+                                "value": null
+                            }
+                        ],
+                        "transform": "function transform(data, lodash){\n\n}"
+                    },
+                    "thresholdsDisplay": "None"
+                },
                 "title": "磁盘空间",
                 "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
                 "type": "graph",
                 "valueMapping": null
             },
             {
+                "allowTypes": null,
                 "collapsed": false,
                 "conditionRender": {
                     "type": "variable",
@@ -2189,25 +3007,30 @@
                     }
                 },
                 "desc": "",
+                "disableMenu": false,
                 "enableConditionRender": false,
                 "enableScopeTime": false,
                 "enableTransform": false,
+                "externalLinks": [],
                 "gridPos": {
                     "h": 15,
                     "w": 12,
                     "x": 12,
-                    "y": 58.5
+                    "y": 67.5
                 },
                 "id": 14,
+                "interactions": {
+                    "clickActions": []
+                },
                 "overrides": [
                     {
-                        "target": "最大值",
                         "overrides": [
                             {
                                 "type": "Series.color",
                                 "value": "$red"
                             }
-                        ]
+                        ],
+                        "target": "最大值"
                     }
                 ],
                 "plugins": {
@@ -2235,7 +3058,6 @@
                             "showX": true,
                             "showY": true
                         },
-                        "clickActions": [],
                         "enableAlert": false,
                         "legend": {
                             "mode": "table",
@@ -2269,24 +3091,14 @@
                             "showPoints": "auto",
                             "style": "lines"
                         },
-                        "thresholds": {
-                            "enableTransform": false,
-                            "mode": "absolute",
-                            "thresholds": [
-                                {
-                                    "color": "#9FE6B8",
-                                    "value": null
-                                }
-                            ],
-                            "transform": "function transform(data, lodash){\n\n}"
-                        },
-                        "thresholdsDisplay": "None",
                         "tooltip": {
                             "mode": "all",
-                            "sort": "desc"
+                            "sort": "desc",
+                            "sortBy": "name",
+                            "sortDir": "desc"
                         },
                         "value": {
-                            "decimal": 3,
+                            "decimal": 1,
                             "units": [
                                 {
                                     "operator": "/",
@@ -2349,12 +3161,30 @@
                     },
                     "widthReduction": 0
                 },
+                "templateId": 0,
+                "thresholds": {
+                    "enable": false,
+                    "thresholdArrow": "none",
+                    "thresholds": {
+                        "enableTransform": false,
+                        "mode": "absolute",
+                        "thresholds": [
+                            {
+                                "color": "#9FE6B8",
+                                "value": null
+                            }
+                        ],
+                        "transform": "function transform(data, lodash){\n\n}"
+                    },
+                    "thresholdsDisplay": "None"
+                },
                 "title": "全局文件描述符",
                 "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
                 "type": "graph",
                 "valueMapping": null
             },
             {
+                "allowTypes": null,
                 "collapsed": false,
                 "conditionRender": {
                     "type": "variable",
@@ -2384,16 +3214,21 @@
                     }
                 },
                 "desc": "",
+                "disableMenu": false,
                 "enableConditionRender": false,
                 "enableScopeTime": false,
                 "enableTransform": false,
+                "externalLinks": [],
                 "gridPos": {
                     "h": 15,
                     "w": 12,
                     "x": 0,
-                    "y": 73.5
+                    "y": 82.5
                 },
                 "id": 15,
+                "interactions": {
+                    "clickActions": []
+                },
                 "overrides": [],
                 "plugins": {
                     "graph": {
@@ -2420,7 +3255,6 @@
                             "showX": true,
                             "showY": true
                         },
-                        "clickActions": [],
                         "enableAlert": false,
                         "legend": {
                             "mode": "table",
@@ -2454,24 +3288,14 @@
                             "showPoints": "auto",
                             "style": "lines"
                         },
-                        "thresholds": {
-                            "enableTransform": false,
-                            "mode": "absolute",
-                            "thresholds": [
-                                {
-                                    "color": "#9FE6B8",
-                                    "value": null
-                                }
-                            ],
-                            "transform": "function transform(data, lodash){\n\n}"
-                        },
-                        "thresholdsDisplay": "None",
                         "tooltip": {
                             "mode": "all",
-                            "sort": "desc"
+                            "sort": "desc",
+                            "sortBy": "name",
+                            "sortDir": "desc"
                         },
                         "value": {
-                            "decimal": 3,
+                            "decimal": 1,
                             "units": [
                                 {
                                     "operator": "/",
@@ -2539,12 +3363,30 @@
                     },
                     "widthReduction": 0
                 },
+                "templateId": 0,
+                "thresholds": {
+                    "enable": false,
+                    "thresholdArrow": "none",
+                    "thresholds": {
+                        "enableTransform": false,
+                        "mode": "absolute",
+                        "thresholds": [
+                            {
+                                "color": "#9FE6B8",
+                                "value": null
+                            }
+                        ],
+                        "transform": "function transform(data, lodash){\n\n}"
+                    },
+                    "thresholdsDisplay": "None"
+                },
                 "title": "IO读写",
                 "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
                 "type": "graph",
                 "valueMapping": null
             },
             {
+                "allowTypes": null,
                 "collapsed": false,
                 "conditionRender": {
                     "type": "variable",
@@ -2574,16 +3416,21 @@
                     }
                 },
                 "desc": "",
+                "disableMenu": false,
                 "enableConditionRender": false,
                 "enableScopeTime": false,
                 "enableTransform": false,
+                "externalLinks": [],
                 "gridPos": {
                     "h": 15,
                     "w": 12,
                     "x": 12,
-                    "y": 73.5
+                    "y": 82.5
                 },
                 "id": 16,
+                "interactions": {
+                    "clickActions": []
+                },
                 "overrides": [],
                 "plugins": {
                     "graph": {
@@ -2610,7 +3457,6 @@
                             "showX": true,
                             "showY": true
                         },
-                        "clickActions": [],
                         "enableAlert": false,
                         "legend": {
                             "mode": "table",
@@ -2644,21 +3490,11 @@
                             "showPoints": "auto",
                             "style": "lines"
                         },
-                        "thresholds": {
-                            "enableTransform": false,
-                            "mode": "absolute",
-                            "thresholds": [
-                                {
-                                    "color": "#9FE6B8",
-                                    "value": null
-                                }
-                            ],
-                            "transform": "function transform(data, lodash){\n\n}"
-                        },
-                        "thresholdsDisplay": "None",
                         "tooltip": {
                             "mode": "all",
-                            "sort": "desc"
+                            "sort": "desc",
+                            "sortBy": "name",
+                            "sortDir": "desc"
                         },
                         "value": {
                             "decimal": 3,
@@ -2734,26 +3570,44 @@
                     },
                     "widthReduction": 0
                 },
+                "templateId": 0,
+                "thresholds": {
+                    "enable": false,
+                    "thresholdArrow": "none",
+                    "thresholds": {
+                        "enableTransform": false,
+                        "mode": "absolute",
+                        "thresholds": [
+                            {
+                                "color": "#9FE6B8",
+                                "value": null
+                            }
+                        ],
+                        "transform": "function transform(data, lodash){\n\n}"
+                    },
+                    "thresholdsDisplay": "None"
+                },
                 "title": "IO读写平均耗时",
                 "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
                 "type": "graph",
                 "valueMapping": null
             },
             {
-                "id": 26,
-                "title": "网络",
-                "desc": "",
                 "collapsed": false,
-                "type": "row",
+                "desc": "",
                 "gridPos": {
-                    "x": 0,
-                    "y": 88.5,
+                    "h": 1.5,
                     "w": 24,
-                    "h": 1.5
+                    "x": 0,
+                    "y": 97.5
                 },
-                "panels": []
+                "id": 26,
+                "panels": [],
+                "title": "网络",
+                "type": "row"
             },
             {
+                "allowTypes": null,
                 "collapsed": false,
                 "conditionRender": {
                     "type": "variable",
@@ -2783,16 +3637,21 @@
                     }
                 },
                 "desc": "",
+                "disableMenu": false,
                 "enableConditionRender": false,
                 "enableScopeTime": false,
                 "enableTransform": false,
+                "externalLinks": [],
                 "gridPos": {
                     "h": 15,
                     "w": 12,
                     "x": 0,
-                    "y": 90
+                    "y": 99
                 },
                 "id": 17,
+                "interactions": {
+                    "clickActions": []
+                },
                 "overrides": [],
                 "plugins": {
                     "graph": {
@@ -2819,7 +3678,6 @@
                             "showX": true,
                             "showY": true
                         },
-                        "clickActions": [],
                         "enableAlert": false,
                         "legend": {
                             "mode": "table",
@@ -2853,24 +3711,14 @@
                             "showPoints": "auto",
                             "style": "lines"
                         },
-                        "thresholds": {
-                            "enableTransform": false,
-                            "mode": "absolute",
-                            "thresholds": [
-                                {
-                                    "color": "#9FE6B8",
-                                    "value": null
-                                }
-                            ],
-                            "transform": "function transform(data, lodash){\n\n}"
-                        },
-                        "thresholdsDisplay": "None",
                         "tooltip": {
                             "mode": "all",
-                            "sort": "desc"
+                            "sort": "desc",
+                            "sortBy": "name",
+                            "sortDir": "desc"
                         },
                         "value": {
-                            "decimal": 3,
+                            "decimal": 1,
                             "units": [
                                 {
                                     "operator": "/",
@@ -2938,12 +3786,30 @@
                     },
                     "widthReduction": 0
                 },
+                "templateId": 0,
+                "thresholds": {
+                    "enable": false,
+                    "thresholdArrow": "none",
+                    "thresholds": {
+                        "enableTransform": false,
+                        "mode": "absolute",
+                        "thresholds": [
+                            {
+                                "color": "#9FE6B8",
+                                "value": null
+                            }
+                        ],
+                        "transform": "function transform(data, lodash){\n\n}"
+                    },
+                    "thresholdsDisplay": "None"
+                },
                 "title": "网卡速率(流量)",
                 "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
                 "type": "graph",
                 "valueMapping": null
             },
             {
+                "allowTypes": null,
                 "collapsed": false,
                 "conditionRender": {
                     "type": "variable",
@@ -2973,16 +3839,21 @@
                     }
                 },
                 "desc": "",
+                "disableMenu": false,
                 "enableConditionRender": false,
                 "enableScopeTime": false,
                 "enableTransform": false,
+                "externalLinks": [],
                 "gridPos": {
                     "h": 15,
                     "w": 12,
                     "x": 12,
-                    "y": 90
+                    "y": 99
                 },
                 "id": 18,
+                "interactions": {
+                    "clickActions": []
+                },
                 "overrides": [],
                 "plugins": {
                     "graph": {
@@ -3009,7 +3880,6 @@
                             "showX": true,
                             "showY": true
                         },
-                        "clickActions": [],
                         "enableAlert": false,
                         "legend": {
                             "mode": "table",
@@ -3043,24 +3913,14 @@
                             "showPoints": "auto",
                             "style": "lines"
                         },
-                        "thresholds": {
-                            "enableTransform": false,
-                            "mode": "absolute",
-                            "thresholds": [
-                                {
-                                    "color": "#9FE6B8",
-                                    "value": null
-                                }
-                            ],
-                            "transform": "function transform(data, lodash){\n\n}"
-                        },
-                        "thresholdsDisplay": "None",
                         "tooltip": {
                             "mode": "all",
-                            "sort": "desc"
+                            "sort": "desc",
+                            "sortBy": "name",
+                            "sortDir": "desc"
                         },
                         "value": {
-                            "decimal": 3,
+                            "decimal": 1,
                             "units": [
                                 {
                                     "operator": "/",
@@ -3123,12 +3983,30 @@
                     },
                     "widthReduction": 0
                 },
+                "templateId": 0,
+                "thresholds": {
+                    "enable": false,
+                    "thresholdArrow": "none",
+                    "thresholds": {
+                        "enableTransform": false,
+                        "mode": "absolute",
+                        "thresholds": [
+                            {
+                                "color": "#9FE6B8",
+                                "value": null
+                            }
+                        ],
+                        "transform": "function transform(data, lodash){\n\n}"
+                    },
+                    "thresholdsDisplay": "None"
+                },
                 "title": "网络错误",
                 "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
                 "type": "graph",
                 "valueMapping": null
             },
             {
+                "allowTypes": null,
                 "collapsed": false,
                 "conditionRender": {
                     "type": "variable",
@@ -3152,11 +4030,11 @@
                             "visible": true
                         },
                         {
+                            "data": {},
                             "id": 67,
-                            "metrics": "irate(node_netstat_TcpExt_TCPSynRetrans{}[${__interval__}])",
                             "legend": "syn重发包数",
-                            "visible": true,
-                            "data": {}
+                            "metrics": "irate(node_netstat_TcpExt_TCPSynRetrans{}[${__interval__}])",
+                            "visible": true
                         }
                     ],
                     "queryOptions": {
@@ -3164,17 +4042,22 @@
                         "minInterval": "1m"
                     }
                 },
-                "desc": "",
+                "desc": "该3项指标如果过大都属于异常情况。\n监听丢弃包数：TCP半连接队列满后，无法继续接收SYN请求数；\n监听溢出包数：TCP全连接队列满后，无法继续处理的连接数；\nsyn重发包数：网关与后端服务之间过多的syn重发包数，意味着网络状态不好，或者后端服务瓶颈。\n\n",
+                "disableMenu": false,
                 "enableConditionRender": false,
                 "enableScopeTime": false,
                 "enableTransform": false,
+                "externalLinks": [],
                 "gridPos": {
                     "h": 15,
                     "w": 12,
                     "x": 0,
-                    "y": 105
+                    "y": 114
                 },
                 "id": 19,
+                "interactions": {
+                    "clickActions": []
+                },
                 "overrides": [],
                 "plugins": {
                     "graph": {
@@ -3201,7 +4084,6 @@
                             "showX": true,
                             "showY": true
                         },
-                        "clickActions": [],
                         "enableAlert": false,
                         "legend": {
                             "mode": "table",
@@ -3235,39 +4117,29 @@
                             "showPoints": "auto",
                             "style": "lines"
                         },
-                        "thresholds": {
-                            "enableTransform": false,
-                            "mode": "absolute",
-                            "thresholds": [
-                                {
-                                    "color": "#9FE6B8",
-                                    "value": null
-                                }
-                            ],
-                            "transform": "function transform(data, lodash){\n\n}"
-                        },
-                        "thresholdsDisplay": "None",
                         "tooltip": {
                             "mode": "all",
-                            "sort": "desc"
+                            "sort": "desc",
+                            "sortBy": "name",
+                            "sortDir": "desc"
                         },
                         "value": {
-                            "decimal": 3,
+                            "decimal": 1,
                             "units": [
                                 {
                                     "operator": "/",
                                     "rhs": 1,
-                                    "unit": ""
+                                    "unit": "ops/s"
                                 },
                                 {
                                     "operator": "/",
                                     "rhs": 1000,
-                                    "unit": "k"
+                                    "unit": "k ops/s"
                                 },
                                 {
                                     "operator": "/",
                                     "rhs": 1000000,
-                                    "unit": "m"
+                                    "unit": "m ops/s"
                                 }
                             ],
                             "unitsType": "short"
@@ -3315,12 +4187,30 @@
                     },
                     "widthReduction": 0
                 },
+                "templateId": 0,
+                "thresholds": {
+                    "enable": false,
+                    "thresholdArrow": "none",
+                    "thresholds": {
+                        "enableTransform": false,
+                        "mode": "absolute",
+                        "thresholds": [
+                            {
+                                "color": "#9FE6B8",
+                                "value": null
+                            }
+                        ],
+                        "transform": "function transform(data, lodash){\n\n}"
+                    },
+                    "thresholdsDisplay": "None"
+                },
                 "title": "TCP 错误",
                 "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
                 "type": "graph",
                 "valueMapping": null
             },
             {
+                "allowTypes": null,
                 "collapsed": false,
                 "conditionRender": {
                     "type": "variable",
@@ -3350,31 +4240,35 @@
                     }
                 },
                 "desc": "",
+                "disableMenu": false,
                 "enableConditionRender": false,
                 "enableScopeTime": false,
                 "enableTransform": false,
+                "externalLinks": [],
                 "gridPos": {
                     "h": 15,
                     "w": 12,
                     "x": 12,
-                    "y": 105
+                    "y": 114
                 },
                 "id": 20,
+                "interactions": {
+                    "clickActions": []
+                },
                 "overrides": [
                     {
-                        "target": "重传占比",
                         "overrides": [
                             {
                                 "type": "Series.unit",
                                 "value": {
-                                    "unitsType": "percent%",
                                     "units": [
                                         {
                                             "operator": "x",
                                             "rhs": 1,
                                             "unit": "%"
                                         }
-                                    ]
+                                    ],
+                                    "unitsType": "percent%"
                                 }
                             },
                             {
@@ -3384,8 +4278,13 @@
                             {
                                 "type": "Series.style",
                                 "value": "points"
+                            },
+                            {
+                                "type": "Series.scaleYMax",
+                                "value": 100
                             }
-                        ]
+                        ],
+                        "target": "重传占比"
                     }
                 ],
                 "plugins": {
@@ -3413,7 +4312,6 @@
                             "showX": true,
                             "showY": true
                         },
-                        "clickActions": [],
                         "enableAlert": false,
                         "legend": {
                             "mode": "table",
@@ -3447,24 +4345,14 @@
                             "showPoints": "auto",
                             "style": "lines"
                         },
-                        "thresholds": {
-                            "enableTransform": false,
-                            "mode": "absolute",
-                            "thresholds": [
-                                {
-                                    "color": "#9FE6B8",
-                                    "value": null
-                                }
-                            ],
-                            "transform": "function transform(data, lodash){\n\n}"
-                        },
-                        "thresholdsDisplay": "None",
                         "tooltip": {
                             "mode": "all",
-                            "sort": "desc"
+                            "sort": "desc",
+                            "sortBy": "name",
+                            "sortDir": "desc"
                         },
                         "value": {
-                            "decimal": 3,
+                            "decimal": 1,
                             "units": [
                                 {
                                     "operator": "/",
@@ -3527,12 +4415,30 @@
                     },
                     "widthReduction": 0
                 },
+                "templateId": 0,
+                "thresholds": {
+                    "enable": false,
+                    "thresholdArrow": "none",
+                    "thresholds": {
+                        "enableTransform": false,
+                        "mode": "absolute",
+                        "thresholds": [
+                            {
+                                "color": "#9FE6B8",
+                                "value": null
+                            }
+                        ],
+                        "transform": "function transform(data, lodash){\n\n}"
+                    },
+                    "thresholdsDisplay": "None"
+                },
                 "title": "TCP重传",
                 "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
                 "type": "graph",
                 "valueMapping": null
             },
             {
+                "allowTypes": null,
                 "collapsed": false,
                 "conditionRender": {
                     "type": "variable",
@@ -3544,16 +4450,16 @@
                         {
                             "data": {},
                             "id": 65,
-                            "legend": "队列大小",
-                            "metrics": "irate(node_netstat_Tcp_PassiveOpens{}[${__interval__}])",
+                            "legend": "limit",
+                            "metrics": "node_nf_conntrack_entries_limit",
                             "visible": true
                         },
                         {
+                            "data": {},
                             "id": 66,
-                            "metrics": "node_tcpext_synQueueSize{}",
-                            "legend": "队列大小2",
-                            "visible": true,
-                            "data": {}
+                            "legend": "used",
+                            "metrics": "node_nf_conntrack_entries",
+                            "visible": true
                         }
                     ],
                     "queryOptions": {
@@ -3561,17 +4467,22 @@
                         "minInterval": "1m"
                     }
                 },
-                "desc": "",
+                "desc": "全局连接跟踪使用量不宜过大，如果超过限制会导致无法建立连接",
+                "disableMenu": false,
                 "enableConditionRender": false,
                 "enableScopeTime": false,
                 "enableTransform": false,
+                "externalLinks": [],
                 "gridPos": {
                     "h": 15,
                     "w": 12,
                     "x": 0,
-                    "y": 120
+                    "y": 129
                 },
-                "id": 21,
+                "id": 1710931694,
+                "interactions": {
+                    "clickActions": []
+                },
                 "overrides": [],
                 "plugins": {
                     "graph": {
@@ -3598,7 +4509,6 @@
                             "showX": true,
                             "showY": true
                         },
-                        "clickActions": [],
                         "enableAlert": false,
                         "legend": {
                             "mode": "table",
@@ -3632,24 +4542,14 @@
                             "showPoints": "auto",
                             "style": "lines"
                         },
-                        "thresholds": {
-                            "enableTransform": false,
-                            "mode": "absolute",
-                            "thresholds": [
-                                {
-                                    "color": "#9FE6B8",
-                                    "value": null
-                                }
-                            ],
-                            "transform": "function transform(data, lodash){\n\n}"
-                        },
-                        "thresholdsDisplay": "None",
                         "tooltip": {
                             "mode": "all",
-                            "sort": "desc"
+                            "sort": "desc",
+                            "sortBy": "name",
+                            "sortDir": "desc"
                         },
                         "value": {
-                            "decimal": 3,
+                            "decimal": 1,
                             "units": [
                                 {
                                     "operator": "/",
@@ -3712,12 +4612,30 @@
                     },
                     "widthReduction": 0
                 },
-                "title": "TCP半连接队列",
+                "templateId": 0,
+                "thresholds": {
+                    "enable": false,
+                    "thresholdArrow": "none",
+                    "thresholds": {
+                        "enableTransform": false,
+                        "mode": "absolute",
+                        "thresholds": [
+                            {
+                                "color": "#9FE6B8",
+                                "value": null
+                            }
+                        ],
+                        "transform": "function transform(data, lodash){\n\n}"
+                    },
+                    "thresholdsDisplay": "None"
+                },
+                "title": "全局连接跟踪",
                 "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
                 "type": "graph",
                 "valueMapping": null
             },
             {
+                "allowTypes": null,
                 "collapsed": false,
                 "conditionRender": {
                     "type": "variable",
@@ -3740,16 +4658,21 @@
                     }
                 },
                 "desc": "",
+                "disableMenu": false,
                 "enableConditionRender": false,
                 "enableScopeTime": false,
                 "enableTransform": false,
+                "externalLinks": [],
                 "gridPos": {
                     "h": 15,
                     "w": 12,
                     "x": 12,
-                    "y": 120
+                    "y": 129
                 },
                 "id": 22,
+                "interactions": {
+                    "clickActions": []
+                },
                 "overrides": [],
                 "plugins": {
                     "graph": {
@@ -3776,7 +4699,6 @@
                             "showX": true,
                             "showY": true
                         },
-                        "clickActions": [],
                         "enableAlert": false,
                         "legend": {
                             "mode": "hidden",
@@ -3810,24 +4732,14 @@
                             "showPoints": "auto",
                             "style": "lines"
                         },
-                        "thresholds": {
-                            "enableTransform": false,
-                            "mode": "absolute",
-                            "thresholds": [
-                                {
-                                    "color": "#9FE6B8",
-                                    "value": null
-                                }
-                            ],
-                            "transform": "function transform(data, lodash){\n\n}"
-                        },
-                        "thresholdsDisplay": "None",
                         "tooltip": {
                             "mode": "all",
-                            "sort": "desc"
+                            "sort": "desc",
+                            "sortBy": "name",
+                            "sortDir": "desc"
                         },
                         "value": {
-                            "decimal": 3,
+                            "decimal": 1,
                             "units": [
                                 {
                                     "operator": "/",
@@ -3890,13 +4802,30 @@
                     },
                     "widthReduction": 0
                 },
+                "templateId": 0,
+                "thresholds": {
+                    "enable": false,
+                    "thresholdArrow": "none",
+                    "thresholds": {
+                        "enableTransform": false,
+                        "mode": "absolute",
+                        "thresholds": [
+                            {
+                                "color": "#9FE6B8",
+                                "value": null
+                            }
+                        ],
+                        "transform": "function transform(data, lodash){\n\n}"
+                    },
+                    "thresholdsDisplay": "None"
+                },
                 "title": "SYN cookies失败数",
                 "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
                 "type": "graph",
                 "valueMapping": null
             }
         ],
-        "sharedTooltip": false,
+        "sharedTooltip": true,
         "styles": {
             "bg": {
                 "colorMode": "dark",
@@ -3904,10 +4833,17 @@
             },
             "bgColor": "",
             "bgEnabled": false,
-            "border": "None"
+            "border": "None",
+            "panelBg": {
+                "darkThemeColor": "inherit",
+                "enabled": true,
+                "lightThemeColor": "#f3f8fe"
+            }
         },
         "variables": []
     },
+    "templateId": 0,
     "weight": 0,
+    "links": [],
     "tags": []
 }

@@ -449,6 +449,30 @@ const GraphPanelEditor = memo((props: GraphEditorProps) => {
                 }
               />
             </PanelEditItem>
+            <PanelEditItem title="min">
+              <EditorNumberItem
+                value={panel.plugins.graph.value?.min}
+                step={1}
+                onChange={(v) =>
+                  onChange((panel: GraphPanel) => {
+                    panel.plugins.graph.value.min = v
+                    dispatch(PanelForceRebuildEvent + panel.id)
+                  })
+                }
+              />
+            </PanelEditItem>
+            <PanelEditItem title="max">
+              <EditorNumberItem
+                value={panel.plugins.graph.value?.max}
+                step={1}
+                onChange={(v) =>
+                  onChange((panel: GraphPanel) => {
+                    panel.plugins.graph.value.max = v
+                    dispatch(PanelForceRebuildEvent + panel.id)
+                  })
+                }
+              />
+            </PanelEditItem>
           </PanelAccordion>
           <PanelAccordion title={t1.alertCorrelation}>
             <PanelEditItem title='Enable' desc={t1.alertCorrelationTips}>

@@ -133,6 +133,22 @@ const GraphOverridesEditor = ({ override, onChange, panel }: Props) => {
           }}
         />
       )
+    case GraphRules.SeriesScaleYMin:
+      return (
+        <EditorNumberItem
+          value={override.value}
+          step={1}
+          onChange={onChange}
+        />
+      )
+    case GraphRules.SeriesScaleYMax:
+      return (
+        <EditorNumberItem
+          value={override.value}
+          step={1}
+          onChange={onChange}
+        />
+      )
     default:
       return <></>
   }
@@ -151,6 +167,8 @@ export enum GraphRules {
   SeriesNegativeY = 'Series.negativeY',
   SeriesYAxis = 'Series.separateYAxis',
   SeriesThresholds = 'Series.thresholds',
+  SeriesScaleYMin = 'Series.scaleYMin',
+  SeriesScaleYMax = 'Series.scaleYMax',
 }
 
 export const getGraphOverrideTargets = (panel, data) => {
