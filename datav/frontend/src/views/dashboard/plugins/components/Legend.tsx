@@ -271,7 +271,7 @@ const LegendTable = memo(
             </Thead>
             <Tbody>
               {values.map((v, i) => {
-                let inactive 
+                let inactive
                 if (!isEmpty(inactiveSeries)) {
                   inactive = inactiveSeries.includes(v.name)
                 } else {
@@ -290,7 +290,7 @@ const LegendTable = memo(
                     >
                       <HStack
                         alignItems='start'
-                        opacity={inactive ? '0.6' : 1} 
+                        opacity={inactive ? '0.6' : 1}
                       >
                         <Box
                           width='10px'

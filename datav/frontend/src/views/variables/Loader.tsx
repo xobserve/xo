@@ -12,7 +12,7 @@
 // limitations under the License.
 
 import { HStack, Text, Tooltip } from '@chakra-ui/react'
-import {  PanelVariableChangeEvent, TimeChangedEvent, VariableForceReload } from 'src/data/bus-events'
+import { PanelVariableChangeEvent, TimeChangedEvent, VariableForceReload } from 'src/data/bus-events'
 import { Variable, VariableQueryType, VariableRefresh } from 'types/variable'
 import useBus, { dispatch } from 'use-bus'
 import storage from 'utils/localStorage'
@@ -62,7 +62,7 @@ const SelectVariable = memo(({ v }: { v: Variable }) => {
   const t1 = useStore(variableMsg)
   const [values, setValues] = useState<string[]>(null)
   const [loading, setLoading] = useState(false)
-  
+
   // const urlKey = 'var-' + v.name
   // const varInUrl = useSearchParam(urlKey)
 
@@ -89,8 +89,6 @@ const SelectVariable = memo(({ v }: { v: Variable }) => {
   )
 
   useEffect(() => {
-    console.log("here333331111:", v.name, v.values)
-
     if (!v.values) {
       // only load values when first loading
       loadValues(false)
@@ -250,7 +248,7 @@ const SelectVariable = memo(({ v }: { v: Variable }) => {
     <HStack key={v.id} spacing={1}>
       <Tooltip
         openDelay={300}
-        label={(isDashVar ? t1.dashScoped : t1.globalScoped) + ': ' + v.name}
+        label={(isDashVar ? (v.panelId ? t1.panelScoped : t1.dashScoped) : t1.globalScoped) + ': ' + v.name}
         placement='auto'
       >
         <Text
@@ -352,7 +350,7 @@ const setValue = (variable: Variable, value) => {
     })
     vars = $dashboard.get().data.panels.find((p) => p.id == variable.panelId).variables
   } else {
-    const vars = $variables.get()
+    vars = $variables.get()
     const newVars = []
     for (let i = 0; i < vars.length; i++) {
       if (vars[i].id == variable.id) {
@@ -363,7 +361,7 @@ const setValue = (variable: Variable, value) => {
     }
     $variables.set(newVars)
   }
-  
+
 
   setValueToStorage(variable, value)
 

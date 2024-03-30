@@ -395,6 +395,7 @@
   "variable": {
     "dashScoped": "仪表盘变量",
     "globalScoped": "全局变量",
+    "panelScoped": "图表变量",
     "textInputTips": "输入变量值"
   },
   "panel": {

@@ -44,7 +44,6 @@ import ContextMenu from './ContextMenu/ContextMenu'
 import { AnnotationsPlugin } from '../../../../../Annotation/Annotations'
 import NoData from 'src/views/dashboard/components/PanelNoData'
 import LegendTable from '../../../components/Legend'
-import useEmbed from 'hooks/useEmbed'
 import { useSearchParam } from 'react-use'
 
 interface GraphPanelProps extends PanelProps {
@@ -231,7 +230,7 @@ const GraphPanel = memo((props: GraphPanelProps) => {
                     <UplotReact
                       options={plotOpts}
                       data={plotData}
-                      onDelete={(chart: uPlot) => {}}
+                      onDelete={(chart: uPlot) => { }}
                       onCreate={onChartCreate}
                     >
                       {props.panel.plugins.graph.tooltip.mode != 'hidden' && (
@@ -263,15 +262,15 @@ const GraphPanel = memo((props: GraphPanelProps) => {
                       )}
                       {props.panel.thresholds.thresholdsDisplay !=
                         ThresholdDisplay.None && (
-                        <ThresholdsPlugin
-                          options={options}
-                          thresholdsConfig={props.panel.thresholds.thresholds}
-                          display={props.panel.thresholds.thresholdsDisplay}
-                        />
-                      )}
+                          <ThresholdsPlugin
+                            options={options}
+                            thresholdsConfig={props.panel.thresholds.thresholds}
+                            display={props.panel.thresholds.thresholdsDisplay}
+                          />
+                        )}
                       {v &&
                         props.panel.thresholds.thresholdsDisplay !=
-                          ThresholdDisplay.None && (
+                        ThresholdDisplay.None && (
                           <ThresholdsPlugin
                             options={options}
                             thresholdsConfig={v}

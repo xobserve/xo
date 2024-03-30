@@ -440,6 +440,7 @@ export const timePickerMsg = i18n('timePicker', {
 export const variableMsg = i18n('variable', {
   dashScoped: 'dashboard variable',
   globalScoped: 'global variable',
+  panelScoped: 'panel variable',
   textInputTips: 'input variable value',
 })
 
