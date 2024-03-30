@@ -83,12 +83,12 @@ export const checkAndTestJaeger = async (ds: Datasource) => {
   }
 }
 
-export const replaceJaegerQueryWithVariables = (query: PanelQuery) => {
+export const replaceJaegerQueryWithVariables = (query: PanelQuery, pvariables?: Variable[]) => {
   const showServices0 = query.metrics ? query.metrics.split(',') : []
 
   const ss = []
   showServices0.forEach((item, i) => {
-    ss.push(...replaceWithVariablesHasMultiValues(item))
+    ss.push(...replaceWithVariablesHasMultiValues(item, null, pvariables))
   })
   query.data.showServices = ss
 }
@@ -122,7 +122,7 @@ export const queryJaegerVariableValues = async (variable: Variable) => {
     result.data = res
   } else if (data.type == JaegerDsQueryTypes.Operations) {
     if (data.service) {
-      const services = replaceWithVariablesHasMultiValues(data.service)
+      const services = replaceWithVariablesHasMultiValues(data.service, null)
       for (let i = 0; i < services.length; i++) {
         const res = await queryJaegerOperations(
           variable.datasource,

@@ -21,6 +21,8 @@ export const FullscreenEvent = 'fullscreen'
 export const SetDashboardEvent = 'set-dashboard'
 export const PanelForceRebuildEvent = 'panel-force-rebuild'
 export const PanelForceRequeryEvent = 'panel-force-requery'
+export const PanelVariableChangeEvent = 'panel-variable-change'
+
 export const PanelDataEvent = 'panel-data'
 export const UpdatePanelEvent = 'update-panel'
 export const ShareUrlEvent = 'share-url'

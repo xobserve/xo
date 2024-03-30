@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { isEmpty } from 'lodash'
+import { concat, isEmpty } from 'lodash'
 import { Panel, PanelQuery } from 'types/dashboard'
 import { TimeRange } from 'types/time'
 import { clickhouseToPanelData } from './utils'
@@ -95,7 +95,7 @@ export const queryVariableValues = async (variable: Variable) => {
       let url = `/proxy/${ds.teamId}/${ds.id}/api/v1/label/${
         data.label
       }/values?${data.useCurrentTime ? `&start=${start}&end=${end}` : ''}`
-      const metrics = replaceWithVariablesHasMultiValues(data.metrics)
+      const metrics = replaceWithVariablesHasMultiValues(data.metrics, null)
       for (const m of metrics) {
         url += `${m ? `&match[]=${m}` : ''}`
       }
@@ -133,8 +133,9 @@ export const queryVariableValues = async (variable: Variable) => {
 export const replaceQueryWithVariables = (
   query: PanelQuery,
   interval: string,
+  pvariables?: Variable[],
 ) => {
-  const vars = $variables.get()
+  const vars = concat(pvariables ?? [], $variables.get()) 
   const formats = parseVariableFormat(query.metrics)
   for (const f of formats) {
     const v = vars.find((v) => v.name == f)
@@ -210,7 +211,7 @@ export const queryDemoLabels = async (
   const timeRange = getNewestTimeRange()
   const start = roundDsTime(timeRange.start.getTime() / 1000)
   const end = roundDsTime(timeRange.end.getTime() / 1000)
-  const metrics = replaceWithVariablesHasMultiValues(metric)
+  const metrics = replaceWithVariablesHasMultiValues(metric, null)
   let url = `/proxy/${ds.teamId}/${ds.id}/api/v1/labels?${
     useCurrentTimerange ? `&start=${start}&end=${end}` : ''
   }`

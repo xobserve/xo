@@ -78,6 +78,7 @@ import { Allotment } from 'allotment'
 import 'allotment/dist/style.css'
 import TemplateBadge from 'src/views/template/TemplateBadge'
 import { $dashboard } from '../store/dashboard'
+import PanelVariables from './PanelVariables'
 
 interface EditPanelProps {
   dashboardId: string
@@ -432,6 +433,7 @@ const EditPanel = memo(
                                             .enableAlert && (
                                             <Tab>{t.alert}</Tab>
                                           )}
+                                         <Tab>{t.variable}</Tab>
                                       </TabList>
                                       <TabIndicator
                                         mt='3px'
@@ -464,6 +466,13 @@ const EditPanel = memo(
                                               />
                                             </TabPanel>
                                           )}
+                                        <TabPanel px='0' pt='1' pb='0'>
+                                          <PanelVariables
+                                            panel={tempPanel}
+                                            dashboard={dashboard}
+                                            onChange={setTempPanel}
+                                          />
+                                        </TabPanel>
                                       </TabPanels>
                                     </Tabs>
                                   </Box>

@@ -46,8 +46,8 @@ const LogToolbar = memo((props: Props) => {
 
   const vars = useStore($variables)
   useEffect(() => {
-    onSearchChange(replaceWithVariables(search))
-    onLabelSearch(replaceWithVariables(labelSearch))
+    onSearchChange(replaceWithVariables(search,{}))
+    onLabelSearch(replaceWithVariables(labelSearch,{}))
   }, [vars])
 
   return (
@@ -88,7 +88,7 @@ const LogToolbar = memo((props: Props) => {
           value={search}
           onChange={(v) => {
             setSearch(v)
-            onSearchChange(replaceWithVariables(v))
+            onSearchChange(replaceWithVariables(v,{}))
           }}
           placeholder='textA || textB , A && B'
         />
@@ -100,7 +100,7 @@ const LogToolbar = memo((props: Props) => {
           value={labelSearch}
           onChange={(v) => {
             setLabelSearch(v)
-            onLabelSearch(replaceWithVariables(v))
+            onLabelSearch(replaceWithVariables(v,{}))
           }}
           placeholder='labelA=valueA,labelB=valueB'
         />

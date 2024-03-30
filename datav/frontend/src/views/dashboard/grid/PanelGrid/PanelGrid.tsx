@@ -65,6 +65,7 @@ import {
   PanelDataEvent,
   PanelForceRebuildEvent,
   PanelForceRequeryEvent,
+  PanelVariableChangeEvent,
   TimeChangedEvent,
   UpdatePanelEvent,
 } from 'src/data/bus-events'
@@ -117,6 +118,7 @@ import TemplateExport from 'src/views/template/TemplateExport'
 import { TemplateType } from 'types/template'
 import { extractPanelTemplateContent } from 'utils/template'
 import { MarkdownRender } from 'components/markdown/MarkdownRender'
+import VariablesLoader, { initVariableSelected } from 'src/views/variables/Loader'
 
 interface PanelGridProps {
   dashboardId: string
@@ -137,8 +139,12 @@ export const PanelGrid = memo((props: PanelGridProps) => {
   const [tr, setTr] = useState<TimeRange>(getCurrentTimeRange())
   const depsCheck = useRef(null)
   const variables = useStore($variables)
+  const [pvars, setPvars] = useState<Variable[]>(cloneDeep(props.panel.variables))
 
   useEffect(() => {
+    if (!isEmpty(pvars)) {
+      initVariableSelected(pvars) 
+    }
     var retryNum = 0
     depsCheck.current = setInterval(() => {
       if (retryNum > 5) {
@@ -181,6 +187,23 @@ export const PanelGrid = memo((props: PanelGridProps) => {
     },
   )
 
+  useBus(
+    (e) => {
+      return e.type == PanelVariableChangeEvent && e.panelId == props.panel.id
+    },
+    (e) => {
+      const vars = []
+      for (const v of pvars) {
+        if (v.id == e.variable.id) {
+          vars.push(cloneDeep(e.variable))
+        } else {
+          vars.push(v)
+        }
+      }
+      setPvars(vars)
+    },
+  )
+
   // rebuild pane ui
   useDedupEvent(PanelForceRebuildEvent + props.panel.id, () => {
     console.log('panel is forced to rebuild!', props.panel.id)
@@ -214,6 +237,7 @@ export const PanelGrid = memo((props: PanelGridProps) => {
           timeRange={tr}
           variables={variables}
           forceQuery={forceQueryCount}
+          pvariables={pvars}
         />
       )}
     </>
@@ -225,6 +249,7 @@ interface PanelComponentProps extends PanelGridProps {
   height: number
   timeRange: TimeRange
   variables: Variable[]
+  pvariables: Variable[]
   forceQuery: number
 }
 
@@ -234,6 +259,7 @@ export const PanelComponent = ({
   dashboardId,
   panel,
   variables,
+  pvariables,
   onRemovePanel,
   onHidePanel,
   width,
@@ -293,6 +319,7 @@ export const PanelComponent = ({
     panel.datasource,
     timeRange0,
     variables,
+    pvariables,
     datasources,
     panel.enableScopeTime,
     panel.scopeTime,
@@ -366,6 +393,7 @@ export const PanelComponent = ({
           datasource.type,
           intervalObj.interval,
           timeRange,
+          pvariables,
         )
         if (
           datasource.type != DatasourceTypeTestData &&
@@ -544,7 +572,18 @@ export const PanelComponent = ({
             onHidePanel={onHidePanel}
             loading={loading}
             onHover={onHover}
+            pvariables={pvariables}
           />
+          <Center>
+          <Flex
+            flexWrap='wrap'
+            alignItems='center'
+            columnGap={3}
+            rowGap={0}
+          >
+            {!isEmpty(pvariables) && <VariablesLoader variables={pvariables} />}
+          </Flex>
+          </Center>
           <ErrorBoundary>
             <Box
               // panel={panel}
@@ -626,6 +665,7 @@ interface PanelHeaderProps {
   data: any[]
   loading: boolean
   onHover: boolean
+  pvariables: Variable[]
 }
 
 const PanelHeader = ({
@@ -638,13 +678,14 @@ const PanelHeader = ({
   data,
   loading,
   onHover,
+  pvariables,
 }: PanelHeaderProps) => {
   const viewPanel = useSearchParam('viewPanel')
   const t = commonMsg.get()
   const t1 = panelMsg.get()
   const t2 = templateMsg.get()
 
-  const title = replaceWithVariables(panel.title)
+  const title = replaceWithVariables(panel.title,null,pvariables )
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [templatePanel, setTemplatePanel] = useState<Partial<Panel>>(null)
 
@@ -764,7 +805,7 @@ const PanelHeader = ({
                 <Tooltip
                   label={
                     isEmpty(toString(queryError))
-                      ? <MarkdownRender md={replaceWithVariables(panel.desc)} enableToc/>
+                      ? <MarkdownRender md={replaceWithVariables(panel.desc,{})} enableToc/>
                       : toString(queryError)
                   }
                 >

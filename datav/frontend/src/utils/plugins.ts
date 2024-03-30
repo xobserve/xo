@@ -108,7 +108,7 @@ export const queryPluginDataToTimeSeries = (
         }
       }
       // replace ${xxx} format with corresponding variables
-      s.name = replaceWithVariables(s.name)
+      s.name = replaceWithVariables(s.name,{})
     }
   }
 

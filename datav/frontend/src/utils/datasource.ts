@@ -10,7 +10,7 @@ export const getDatasource = (k, ds?): Datasource => {
   const datasources = ds ?? $datasources.get()
   let currentDatasource
   if (hasVariableFormat(k?.toString())) {
-    const name = replaceWithVariables(k)
+    const name = replaceWithVariables(k,{})
     currentDatasource = datasources?.find((ds) => ds.name == name)
   } else {
     currentDatasource = datasources?.find((ds) => ds.id == k)

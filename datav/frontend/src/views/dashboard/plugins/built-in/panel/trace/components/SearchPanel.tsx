@@ -143,6 +143,7 @@ const TraceSearchPanel = ({
   useEffect(() => {
     const query = replaceWithVariables(
       service + operation + tags + min + max + limit,
+      null,
     )
 
     const cachedQuery = traceQueryCache[dashboardId + panel.id]

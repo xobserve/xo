@@ -29,6 +29,8 @@ export interface Variable {
   sortWeight?: number
   teamId?: number
   templateId?: number
+
+  panelId?: number
 }
 
 export enum VariableQueryType {

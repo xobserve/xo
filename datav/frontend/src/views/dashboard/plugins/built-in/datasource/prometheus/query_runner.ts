@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { cloneDeep, isEmpty, round } from 'lodash'
+import { cloneDeep, concat, isEmpty, round } from 'lodash'
 import { Panel, PanelQuery } from 'types/dashboard'
 import { TimeRange } from 'types/time'
 import { prometheusToPanels } from './transformData'
@@ -195,7 +195,7 @@ export const queryPrometheusLabels = async (
   const timeRange = getNewestTimeRange()
   const start = roundDsTime(timeRange.start.getTime() / 1000)
   const end = roundDsTime(timeRange.end.getTime() / 1000)
-  const metrics = replaceWithVariablesHasMultiValues(metric)
+  const metrics = replaceWithVariablesHasMultiValues(metric, null)
   let url = `/proxy/${ds.teamId}/${ds.id}/api/v1/labels?${
     useCurrentTimerange ? `&start=${start}&end=${end}` : ''
   }`
@@ -220,8 +220,9 @@ export const queryPrometheusLabels = async (
 export const replacePrometheusQueryWithVariables = (
   query: PanelQuery,
   interval: string,
+  pvariables?: Variable[],
 ) => {
-  const vars = $variables.get()
+  const vars = concat(pvariables ?? [], $variables.get()) 
   const formats = parseVariableFormat(query.metrics)
   for (const f of formats) {
     const v = vars.find((v) => v.name == f)

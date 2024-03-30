@@ -3,7 +3,7 @@ import { TimeRange } from 'types/time'
 import { Datasource } from 'types/datasource'
 import { Variable } from 'types/variable'
 import { requestApi } from 'utils/axios/request'
-import { isEmpty } from 'lodash'
+import { concat, isEmpty } from 'lodash'
 import { QueryPluginResult } from 'types/plugin'
 import { postgresqlToSeriesData } from './utils'
 import { getDatasource, roundDsTime } from 'utils/datasource'
@@ -88,7 +88,7 @@ export const queryVariableValues = async (variable: Variable) => {
       let url = `/proxy/${ds.teamId}/${ds.id}/api/v1/label/${
         data.label
       }/values?${data.useCurrentTime ? `&start=${start}&end=${end}` : ''}`
-      const metrics = replaceWithVariablesHasMultiValues(data.metrics)
+      const metrics = replaceWithVariablesHasMultiValues(data.metrics, null)
       for (const m of metrics) {
         url += `${m ? `&match[]=${m}` : ''}`
       }
@@ -126,8 +126,9 @@ export const queryVariableValues = async (variable: Variable) => {
 export const replaceQueryWithVariables = (
   query: PanelQuery,
   interval: string,
+  pvariables?: Variable[],
 ) => {
-  const vars = $variables.get()
+  const vars = concat(pvariables ?? [], $variables.get()) 
   const formats = parseVariableFormat(query.metrics)
   for (const f of formats) {
     const v = vars.find((v) => v.name == f)
@@ -203,7 +204,7 @@ export const queryDemoLabels = async (
   const timeRange = getNewestTimeRange()
   const start = roundDsTime(timeRange.start.getTime() / 1000)
   const end = roundDsTime(timeRange.end.getTime() / 1000)
-  const metrics = replaceWithVariablesHasMultiValues(metric)
+  const metrics = replaceWithVariablesHasMultiValues(metric, null)
   let url = `/proxy/${ds.teamId}/${ds.id}/api/v1/labels?${
     useCurrentTimerange ? `&start=${start}&end=${end}` : ''
   }`

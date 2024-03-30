@@ -34,7 +34,7 @@ const PanelWrapper = (props: Props) => {
       <MarkdownRender
         fontSize={props.panel.plugins[PanelType].fontSize}
         fontWeight={props.panel.plugins[PanelType].fontWeight}
-        md={replaceWithVariables(props.panel.plugins[PanelType]?.md ?? '')}
+        md={replaceWithVariables(props.panel.plugins[PanelType]?.md ?? '',null)}
         width='100%'
       />
     </Box>

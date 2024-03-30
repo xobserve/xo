@@ -56,7 +56,6 @@ import { $config } from 'src/data/configs/config'
 import { MenuItem } from 'types/teams'
 import { locale } from 'src/i18n/i18n'
 import { dashboardLangTitle } from 'utils/dashboard/dashboard'
-import { use } from 'echarts'
 
 interface HeaderProps {
   dashboard: Dashboard

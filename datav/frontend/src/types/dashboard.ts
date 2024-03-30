@@ -106,7 +106,8 @@ export interface Panel {
   allowTypes?: string[]
 
   externalLinks?: ExternalLink[]
-  
+  variables?: Variable[]
+
   /*---- template content ----*/
   type: string
   plugins?: Record<string, any>

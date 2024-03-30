@@ -44,7 +44,7 @@ export const run_http_query = async (
   // 2. using `axios` instead of `fetch`
   const start = roundDsTime(range.start.getTime() / 1000)
   const end = roundDsTime(range.end.getTime() / 1000)
-  let url = replaceWithVariables(q.metrics)
+  let url = replaceWithVariables(q.metrics,{})
   const headers = {}
   if (!isEmpty(q.data.transformRequest)) {
     const transformRequest = genDynamicFunction(q.data.transformRequest)
@@ -130,7 +130,7 @@ export const queryHttpVariableValues = async (
     const transformRequest = genDynamicFunction(data.transformRequest)
     if (isFunction(transformRequest)) {
       url = transformRequest(
-        replaceWithVariables(data.url),
+        replaceWithVariables(data.url,{}),
         headers,
         start,
         end,

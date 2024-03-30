@@ -106,7 +106,7 @@ export const registerCustomNode = (
               if (finded) {
                 matched = true
               } else {
-                const hn = replaceWithVariables(highlightNodes)
+                const hn = replaceWithVariables(highlightNodes,null)
                 const highlightMatches = hn.split(',')
                 for (const match of highlightMatches) {
                   if (!isEmpty(match)) {

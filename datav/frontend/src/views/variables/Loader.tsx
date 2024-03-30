@@ -12,7 +12,7 @@
 // limitations under the License.
 
 import { HStack, Text, Tooltip } from '@chakra-ui/react'
-import { TimeChangedEvent, VariableForceReload } from 'src/data/bus-events'
+import {  PanelVariableChangeEvent, TimeChangedEvent, VariableForceReload } from 'src/data/bus-events'
 import { Variable, VariableQueryType, VariableRefresh } from 'types/variable'
 import useBus, { dispatch } from 'use-bus'
 import storage from 'utils/localStorage'
@@ -36,6 +36,7 @@ import { EditorInputItem } from 'components/editor/EditorItem'
 import { externalDatasourcePlugins } from '../dashboard/plugins/external/plugins'
 import { builtinDatasourcePlugins } from '../dashboard/plugins/built-in/plugins'
 import { replaceWithBuiltinVariables } from 'utils/variable'
+import { $dashboard } from '../dashboard/store/dashboard'
 
 interface Props {
   variables: Variable[]
@@ -61,7 +62,7 @@ const SelectVariable = memo(({ v }: { v: Variable }) => {
   const t1 = useStore(variableMsg)
   const [values, setValues] = useState<string[]>(null)
   const [loading, setLoading] = useState(false)
-
+  
   // const urlKey = 'var-' + v.name
   // const varInUrl = useSearchParam(urlKey)
 
@@ -87,11 +88,9 @@ const SelectVariable = memo(({ v }: { v: Variable }) => {
     [],
   )
 
-  // useEffect(() => {
-  //     setValue(v, varInUrl)
-  // }, [varInUrl])
-
   useEffect(() => {
+    console.log("here333331111:", v.name, v.values)
+
     if (!v.values) {
       // only load values when first loading
       loadValues(false)
@@ -108,16 +107,24 @@ const SelectVariable = memo(({ v }: { v: Variable }) => {
 
   const forceReload = async () => {
     await loadValues(true)
-    const vars = $variables.get()
-    const newVars = []
-    for (const v1 of vars) {
-      if (v1.id == v.id) {
-        newVars.push(cloneDeep(v))
-      } else {
-        newVars.push(v1)
+    if (v.panelId) {
+      dispatch({
+        type: PanelVariableChangeEvent,
+        panelId: v.panelId,
+        variable: v,
+      })
+    } else {
+      const vars = $variables.get()
+      const newVars = []
+      for (const v1 of vars) {
+        if (v1.id == v.id) {
+          newVars.push(cloneDeep(v))
+        } else {
+          newVars.push(v1)
+        }
       }
+      $variables.set(newVars)
     }
-    $variables.set(newVars)
   }
 
   const loadValues = async (forceLoad = false) => {
@@ -225,7 +232,15 @@ const SelectVariable = memo(({ v }: { v: Variable }) => {
     setValues(result ?? [])
     v.values = result
     if (needQuery) {
-      $variables.set([...vars])
+      if (v.panelId) {
+        dispatch({
+          type: PanelVariableChangeEvent,
+          panelId: v.panelId,
+          variable: v
+        })
+      } else {
+        $variables.set([...vars])
+      }
     }
   }
 
@@ -327,17 +342,28 @@ export const setVariableValue = (variable: Variable, value) => {
 }
 
 const setValue = (variable: Variable, value) => {
-  const vars = $variables.get()
   variable.selected = value
-  const newVars = []
-  for (let i = 0; i < vars.length; i++) {
-    if (vars[i].id == variable.id) {
-      newVars.push(cloneDeep(variable))
-    } else {
-      newVars.push(vars[i])
+  let vars;
+  if (variable.panelId) {
+    dispatch({
+      type: PanelVariableChangeEvent,
+      panelId: variable.panelId,
+      variable: variable,
+    })
+    vars = $dashboard.get().data.panels.find((p) => p.id == variable.panelId).variables
+  } else {
+    const vars = $variables.get()
+    const newVars = []
+    for (let i = 0; i < vars.length; i++) {
+      if (vars[i].id == variable.id) {
+        newVars.push(cloneDeep(variable))
+      } else {
+        newVars.push(vars[i])
+      }
     }
+    $variables.set(newVars)
   }
-  $variables.set(newVars)
+  
 
   setValueToStorage(variable, value)
 
@@ -378,6 +404,7 @@ const setValueToStorage = (variable: Variable, value) => {
     storage.set(vkey, sv)
   }
 }
+
 export const setVariable = (name, value) => {
   const vars = $variables.get()
   let v

@@ -15,7 +15,7 @@ import { Datasource } from 'types/datasource'
 import { Variable } from 'types/variable'
 import { Panel, PanelQuery } from 'types/dashboard'
 import { TimeRange } from 'types/time'
-import { isObject } from 'lodash'
+import { concat, isObject } from 'lodash'
 import _ from 'lodash'
 import { getNewestTimeRange } from 'src/components/DatePicker/TimePicker'
 import { isJSON } from 'utils/is'
@@ -196,8 +196,9 @@ export const queryxobserveVariableValues = async (
 export const replacexobserveQueryWithVariables = (
   query: PanelQuery | string,
   interval: string,
+  pvariables?: Variable[],
 ) => {
-  const vars = $variables.get()
+  const vars = concat(pvariables ?? [], $variables.get()) 
   if (!query) {
     return query
   }

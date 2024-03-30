@@ -393,7 +393,7 @@ export const filterAlerts = (
     // filter by rule name
 
     if (!isEmpty(ruleNameFilter)) {
-      const ruleFilters = replaceWithVariables(ruleNameFilter).split(',')
+      const ruleFilters = replaceWithVariables(ruleNameFilter,{}).split(',')
       let pass = false
       for (const ruleFilter of ruleFilters) {
         const filter = ruleFilter.trim().toLowerCase()
@@ -408,7 +408,7 @@ export const filterAlerts = (
     }
 
     // fitler by rule label
-    const labelFilter = equalPairsToJson(replaceWithVariables(ruleLabelFilter))
+    const labelFilter = equalPairsToJson(replaceWithVariables(ruleLabelFilter,{}))
     if (labelFilter) {
       let matches = true
       for (const k in labelFilter) {
@@ -439,7 +439,7 @@ export const filterAlerts = (
       // filter by alert label
 
       const labelFilter = equalPairsToJson(
-        replaceWithVariables(alertLabelFilter),
+        replaceWithVariables(alertLabelFilter,{}),
       )
       if (labelFilter) {
         let matches = true

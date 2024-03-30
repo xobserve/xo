@@ -149,7 +149,7 @@ export const prometheusToSeriesData = (
           }
         }
         // replace ${xxx} format with corresponding variables
-        series.name = replaceWithVariables(series.name)
+        series.name = replaceWithVariables(series.name,{})
       }
 
       res.push(series)

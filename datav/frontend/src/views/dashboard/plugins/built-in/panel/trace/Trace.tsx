@@ -88,11 +88,11 @@ const TracePanel = (props: PanelProps) => {
     }
     switch (ds.type) {
       case DatasourceTypeJaeger:
-        tags = replaceWithVariables(tags)
-        min = replaceWithVariables(min)
-        max = replaceWithVariables(max)
-        limit = replaceWithVariables(limit)
-        const services = replaceWithVariablesHasMultiValues(service)
+        tags = replaceWithVariables(tags,null)
+        min = replaceWithVariables(min,null)
+        max = replaceWithVariables(max,null)
+        limit = replaceWithVariables(limit,null)
+        const services = replaceWithVariablesHasMultiValues(service,null)
         const operations = replaceWithVariablesHasMultiValues(operation, 'all')
 
         const promises = []

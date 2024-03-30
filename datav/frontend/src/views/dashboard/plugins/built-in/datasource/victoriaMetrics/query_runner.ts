@@ -121,7 +121,7 @@ export const queryVariableValues = async (variable: Variable) => {
       let url = `/proxy/${ds.teamId}/${ds.id}/api/v1/label/${
         data.label
       }/values?${data.useCurrentTime ? `&start=${start}&end=${end}` : ''}`
-      const metrics = replaceWithVariablesHasMultiValues(data.metrics)
+      const metrics = replaceWithVariablesHasMultiValues(data.metrics, null)
       for (const m of metrics) {
         url += `${m ? `&match[]=${m}` : ''}`
       }
@@ -220,7 +220,7 @@ export const queryDemoLabels = async (
   const timeRange = getNewestTimeRange()
   const start = roundDsTime(timeRange.start.getTime() / 1000)
   const end = roundDsTime(timeRange.end.getTime() / 1000)
-  const metrics = replaceWithVariablesHasMultiValues(metric)
+  const metrics = replaceWithVariablesHasMultiValues(metric, null)
   let url = `/proxy/${ds.teamId}/${ds.id}/api/v1/labels?${
     useCurrentTimerange ? `&start=${start}&end=${end}` : ''
   }`

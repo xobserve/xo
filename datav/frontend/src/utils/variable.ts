@@ -28,10 +28,11 @@ import { isEmpty } from './validate'
 import { externalDatasourcePlugins } from 'src/views/dashboard/plugins/external/plugins'
 import { builtinDatasourcePlugins } from 'src/views/dashboard/plugins/built-in/plugins'
 import { TimeRange } from 'types/time'
-import { isObject } from 'lodash'
+import { concat, isObject } from 'lodash'
 import { getCurrentTimeRange } from 'components/DatePicker/TimePicker'
 import { formatDuration } from './date'
 import { $config } from 'src/data/configs/config'
+import { Variable } from 'types/variable'
 
 export const hasVariableFormat = (s: string) => {
   return isEmpty(s) ? false : s.includes('${')
@@ -41,11 +42,12 @@ export const hasVariableFormat = (s: string) => {
 // extraVars: xobserve preserved variables, such as __curentValue__
 export const replaceWithVariables = (
   s: string,
-  extraVars?: {
+  extraVars: {
     [varName: string]: string | number
   },
+  pvariables?: Variable[]
 ) => {
-  const vars = $variables.get()
+  const vars =  concat(pvariables??[],$variables.get()) 
   const formats = parseVariableFormat(s)
 
   for (const f of formats) {
@@ -110,11 +112,12 @@ export const replaceQueryWithVariables = (
   dsType: string,
   interval: string,
   timeRange: TimeRange,
+  pvariables?: Variable[],
 ) => {
   const p =
     builtinDatasourcePlugins[dsType] ?? externalDatasourcePlugins[dsType]
   if (p && p.replaceQueryWithVariables) {
-    p.replaceQueryWithVariables(q, interval)
+    p.replaceQueryWithVariables(q, interval, pvariables)
   }
 
   q.metrics = replaceWithBuiltinVariables(q.metrics, {
@@ -129,16 +132,16 @@ export const replaceQueryWithVariables = (
       if (isObject(v)) {
         if (p && p.replaceQueryWithVariables) {
           q.data[k] = JSON.parse(
-            p.replaceQueryWithVariables(JSON.stringify(v), interval),
+            p.replaceQueryWithVariables(JSON.stringify(v), interval, pvariables),
           )
         } else {
-          q.data[k] = JSON.parse(replaceWithVariables(JSON.stringify(v)))
+          q.data[k] = JSON.parse(replaceWithVariables(JSON.stringify(v), null, pvariables))
         }
       } else {
         if (p && p.replaceQueryWithVariables) {
-          q.data[k] = p.replaceQueryWithVariables(v, interval)
+          q.data[k] = p.replaceQueryWithVariables(v, interval, pvariables)
         } else {
-          q.data[k] = replaceWithVariables(v)
+          q.data[k] = replaceWithVariables(v, null, pvariables)
         }
       }
     }
@@ -155,9 +158,10 @@ export const replaceWithRangeVariable = (s: string) => {
 // if s doesn't contain any variable, return [s]
 export const replaceWithVariablesHasMultiValues = (
   s: string,
-  replaceAllWith?,
+  replaceAllWith: string,
+  pvariables?: Variable[]
 ): string[] => {
-  const vars = $variables.get()
+  const vars = concat(pvariables??[],$variables.get())
   let res = []
 
   const formats = parseVariableFormat(s)
