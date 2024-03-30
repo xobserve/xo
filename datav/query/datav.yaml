@@ -130,4 +130,4 @@ accesstoken:
 provisioning:
     ## when enabled, pre set data sources and dashboards
     enable: true
-    path: "./provisioning"
+    path: "./data/provisioning"

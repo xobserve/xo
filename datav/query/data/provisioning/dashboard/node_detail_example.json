@@ -1,0 +1,3913 @@
+{
+    "id": "d-_NodeDetail",
+    "title": "节点明细",
+    "editable": true,
+    "updated": "2024-03-06T11:13:38.294777024+08:00",
+    "ownedBy": 1,
+    "ownerName": "global",
+    "visibleTo": "team",
+    "data": {
+        "allowPanelsOverlap": false,
+        "annotation": {
+            "color": "rgba(0, 211, 255, 1)",
+            "enable": true,
+            "enableRole": "Admin",
+            "tagsFilter": ""
+        },
+        "autoSaveInterval": 120,
+        "description": "",
+        "editable": true,
+        "enableAutoSave": false,
+        "enableUnsavePrompt": true,
+        "hiddenPanels": [],
+        "hidingVars": "",
+        "layout": "vertical",
+        "lazyLoading": false,
+        "panels": [
+            {
+                "collapsed": false,
+                "conditionRender": {
+                    "type": "variable",
+                    "value": ""
+                },
+                "datasource": {
+                    "id": 2,
+                    "queries": [
+                        {
+                            "data": {},
+                            "id": 65,
+                            "legend": "启动时长",
+                            "metrics": "node_time_seconds - node_boot_time_seconds",
+                            "visible": true
+                        }
+                    ],
+                    "queryOptions": {
+                        "maxDataPoints": 600,
+                        "minInterval": "15s"
+                    }
+                },
+                "desc": "",
+                "enableConditionRender": false,
+                "enableScopeTime": false,
+                "enableTransform": false,
+                "gridPos": {
+                    "h": 9,
+                    "w": 5,
+                    "x": 0,
+                    "y": 0
+                },
+                "id": 1,
+                "overrides": [
+                    {
+                        "overrides": [
+                            {
+                                "type": "Series.thresholds",
+                                "value": {
+                                    "enableTransform": false,
+                                    "mode": "absolute",
+                                    "thresholds": [
+                                        {
+                                            "color": "$green",
+                                            "value": null
+                                        }
+                                    ],
+                                    "transform": "function transform(data, lodash){\n\n}"
+                                }
+                            }
+                        ],
+                        "target": "启动时长"
+                    }
+                ],
+                "plugins": {
+                    "stat": {
+                        "axisY": {
+                            "scale": "linear",
+                            "scaleBase": 2
+                        },
+                        "clickAction": "\n// setVariable: (varName:string, varValue:string) => void \n// navigate: react-router-dom -> useNavigate() -> navigate \n// setDateTime: (from: Timestamp, to: TimeStamp) => void\nfunction onRowClick(row, navigate, setVariable, setDateTime, $variables) {\n    // You can get all current variables in this way\n    // const currentVariables = $variables.get()\n    // console.log(row, currentVariables)\n}\n",
+                        "displaySeries": "__all__",
+                        "enableClick": true,
+                        "showGraph": false,
+                        "showLegend": false,
+                        "showTooltip": true,
+                        "styles": {
+                            "colorMode": "value",
+                            "connectNulls": false,
+                            "fillOpacity": 78,
+                            "graphHeight": 55,
+                            "hideGraphHeight": 70,
+                            "layout": "auto",
+                            "showPoints": false,
+                            "style": "lines",
+                            "textAlign": "center"
+                        },
+                        "textSize": {
+                            "legend": null,
+                            "value": 50
+                        },
+                        "thresholds": {
+                            "enableTransform": false,
+                            "mode": "absolute",
+                            "thresholds": [
+                                {
+                                    "color": "$yellow",
+                                    "value": 0
+                                },
+                                {
+                                    "color": "#9FE6B8",
+                                    "value": null
+                                }
+                            ],
+                            "transform": "function transform(data, lodash){\n\n}"
+                        },
+                        "value": {
+                            "calc": "Last",
+                            "decimal": 3,
+                            "units": [
+                                {
+                                    "operator": "/",
+                                    "rhs": 1,
+                                    "unit": "ms"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1000,
+                                    "unit": "s"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 60000,
+                                    "unit": "m"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 3600000,
+                                    "unit": "h"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 86400000,
+                                    "unit": "d"
+                                }
+                            ],
+                            "unitsType": "time"
+                        }
+                    }
+                },
+                "scopeTime": null,
+                "styles": {
+                    "border": "None",
+                    "borderOnHover": true,
+                    "decoration": {
+                        "height": "20px",
+                        "justifyContent": "center",
+                        "left": "",
+                        "reverse": false,
+                        "top": "-30px",
+                        "type": "None",
+                        "width": "100%"
+                    },
+                    "heightReduction": 0,
+                    "marginLeft": 0,
+                    "marginTop": 0,
+                    "palette": "classic",
+                    "title": {
+                        "color": "inherit",
+                        "decoration": {
+                            "height": "50px",
+                            "margin": "10px",
+                            "type": "None",
+                            "width": "160px"
+                        },
+                        "fontSize": "14px",
+                        "fontWeight": "500",
+                        "paddingBottom": "0px",
+                        "paddingLeft": "0px",
+                        "paddingRight": "0px",
+                        "paddingTop": "0px",
+                        "position": "left"
+                    },
+                    "widthReduction": 0
+                },
+                "title": "启动时长",
+                "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
+                "type": "stat",
+                "valueMapping": null
+            },
+            {
+                "collapsed": false,
+                "conditionRender": {
+                    "type": "variable",
+                    "value": ""
+                },
+                "datasource": {
+                    "id": 2,
+                    "queries": [
+                        {
+                            "data": {},
+                            "id": 65,
+                            "legend": "",
+                            "metrics": "count(node_cpu_seconds_total{mode=~\"user\"})",
+                            "visible": true
+                        }
+                    ],
+                    "queryOptions": {
+                        "maxDataPoints": 600,
+                        "minInterval": "15s"
+                    }
+                },
+                "desc": "",
+                "enableConditionRender": false,
+                "enableScopeTime": false,
+                "enableTransform": false,
+                "gridPos": {
+                    "h": 9,
+                    "w": 5,
+                    "x": 5,
+                    "y": 0
+                },
+                "id": 2,
+                "overrides": [],
+                "plugins": {
+                    "stat": {
+                        "axisY": {
+                            "scale": "linear",
+                            "scaleBase": 2
+                        },
+                        "clickAction": "\n// setVariable: (varName:string, varValue:string) => void \n// navigate: react-router-dom -> useNavigate() -> navigate \n// setDateTime: (from: Timestamp, to: TimeStamp) => void\nfunction onRowClick(row, navigate, setVariable, setDateTime, $variables) {\n    // You can get all current variables in this way\n    // const currentVariables = $variables.get()\n    // console.log(row, currentVariables)\n}\n",
+                        "displaySeries": "__all__",
+                        "enableClick": true,
+                        "showGraph": false,
+                        "showLegend": false,
+                        "showTooltip": true,
+                        "styles": {
+                            "colorMode": "value",
+                            "connectNulls": false,
+                            "fillOpacity": 80,
+                            "graphHeight": 60,
+                            "hideGraphHeight": 70,
+                            "layout": "auto",
+                            "showPoints": false,
+                            "style": "lines",
+                            "textAlign": "center"
+                        },
+                        "textSize": {
+                            "legend": null,
+                            "value": 50
+                        },
+                        "thresholds": {
+                            "enableTransform": false,
+                            "mode": "absolute",
+                            "thresholds": [
+                                {
+                                    "color": "$green",
+                                    "value": null
+                                },
+                                {
+                                    "color": "#9FE6B8",
+                                    "value": null
+                                }
+                            ],
+                            "transform": "function transform(data, lodash){\n\n}"
+                        },
+                        "value": {
+                            "calc": "Last",
+                            "decimal": 3,
+                            "units": [],
+                            "unitsType": "none"
+                        }
+                    }
+                },
+                "scopeTime": null,
+                "styles": {
+                    "border": "None",
+                    "borderOnHover": true,
+                    "decoration": {
+                        "height": "20px",
+                        "justifyContent": "center",
+                        "left": "",
+                        "reverse": false,
+                        "top": "-30px",
+                        "type": "None",
+                        "width": "100%"
+                    },
+                    "heightReduction": 0,
+                    "marginLeft": 0,
+                    "marginTop": 0,
+                    "palette": "echarts-light",
+                    "title": {
+                        "color": "inherit",
+                        "decoration": {
+                            "height": "50px",
+                            "margin": "10px",
+                            "type": "None",
+                            "width": "160px"
+                        },
+                        "fontSize": "14px",
+                        "fontWeight": "500",
+                        "paddingBottom": "0px",
+                        "paddingLeft": "0px",
+                        "paddingRight": "0px",
+                        "paddingTop": "0px",
+                        "position": "left"
+                    },
+                    "widthReduction": 0
+                },
+                "title": "CPU核心数",
+                "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
+                "type": "stat",
+                "valueMapping": null
+            },
+            {
+                "collapsed": false,
+                "conditionRender": {
+                    "type": "variable",
+                    "value": ""
+                },
+                "datasource": {
+                    "id": 2,
+                    "queries": [
+                        {
+                            "data": {},
+                            "id": 65,
+                            "legend": "",
+                            "metrics": "node_memory_MemTotal_bytes",
+                            "visible": true
+                        }
+                    ],
+                    "queryOptions": {
+                        "maxDataPoints": 600,
+                        "minInterval": "15s"
+                    }
+                },
+                "desc": "",
+                "enableConditionRender": false,
+                "enableScopeTime": false,
+                "enableTransform": false,
+                "gridPos": {
+                    "h": 9,
+                    "w": 5,
+                    "x": 10,
+                    "y": 0
+                },
+                "id": 3,
+                "overrides": [],
+                "plugins": {
+                    "stat": {
+                        "axisY": {
+                            "scale": "linear",
+                            "scaleBase": 2
+                        },
+                        "clickAction": "\n// setVariable: (varName:string, varValue:string) => void \n// navigate: react-router-dom -> useNavigate() -> navigate \n// setDateTime: (from: Timestamp, to: TimeStamp) => void\nfunction onRowClick(row, navigate, setVariable, setDateTime, $variables) {\n    // You can get all current variables in this way\n    // const currentVariables = $variables.get()\n    // console.log(row, currentVariables)\n}\n",
+                        "displaySeries": "__all__",
+                        "enableClick": true,
+                        "showGraph": false,
+                        "showLegend": false,
+                        "showTooltip": true,
+                        "styles": {
+                            "colorMode": "value",
+                            "connectNulls": false,
+                            "fillOpacity": 80,
+                            "graphHeight": 60,
+                            "hideGraphHeight": 70,
+                            "layout": "auto",
+                            "showPoints": false,
+                            "style": "lines",
+                            "textAlign": "center"
+                        },
+                        "textSize": {
+                            "legend": null,
+                            "value": 50
+                        },
+                        "thresholds": {
+                            "enableTransform": false,
+                            "mode": "absolute",
+                            "thresholds": [
+                                {
+                                    "color": "$green",
+                                    "value": null
+                                },
+                                {
+                                    "color": "#9FE6B8",
+                                    "value": null
+                                }
+                            ],
+                            "transform": "function transform(data, lodash){\n\n}"
+                        },
+                        "value": {
+                            "calc": "Last",
+                            "decimal": 3,
+                            "units": [
+                                {
+                                    "operator": "/",
+                                    "rhs": 1,
+                                    "unit": "B"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1024,
+                                    "unit": "KB"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1048576,
+                                    "unit": "MB"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1073741824,
+                                    "unit": "GB"
+                                }
+                            ],
+                            "unitsType": "bytes"
+                        }
+                    }
+                },
+                "scopeTime": null,
+                "styles": {
+                    "border": "None",
+                    "borderOnHover": true,
+                    "decoration": {
+                        "height": "20px",
+                        "justifyContent": "center",
+                        "left": "",
+                        "reverse": false,
+                        "top": "-30px",
+                        "type": "None",
+                        "width": "100%"
+                    },
+                    "heightReduction": 0,
+                    "marginLeft": 0,
+                    "marginTop": 0,
+                    "palette": "echarts-light",
+                    "title": {
+                        "color": "inherit",
+                        "decoration": {
+                            "height": "50px",
+                            "margin": "10px",
+                            "type": "None",
+                            "width": "160px"
+                        },
+                        "fontSize": "14px",
+                        "fontWeight": "500",
+                        "paddingBottom": "0px",
+                        "paddingLeft": "0px",
+                        "paddingRight": "0px",
+                        "paddingTop": "0px",
+                        "position": "left"
+                    },
+                    "widthReduction": 0
+                },
+                "title": "内存大小",
+                "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
+                "type": "stat",
+                "valueMapping": null
+            },
+            {
+                "collapsed": false,
+                "conditionRender": {
+                    "type": "variable",
+                    "value": ""
+                },
+                "datasource": {
+                    "id": 2,
+                    "queries": [
+                        {
+                            "data": {},
+                            "id": 65,
+                            "legend": "",
+                            "metrics": "avg by (instance) (sum(avg(node_filesystem_size_bytes{fstype=~\"(ext.|xfs|vfat|)\"}) without (mountpoint)) without (device,fstype))",
+                            "visible": true
+                        }
+                    ],
+                    "queryOptions": {
+                        "maxDataPoints": 600,
+                        "minInterval": "15s"
+                    }
+                },
+                "desc": "",
+                "enableConditionRender": false,
+                "enableScopeTime": false,
+                "enableTransform": false,
+                "gridPos": {
+                    "h": 9,
+                    "w": 5,
+                    "x": 15,
+                    "y": 0
+                },
+                "id": 4,
+                "overrides": [],
+                "plugins": {
+                    "stat": {
+                        "axisY": {
+                            "scale": "linear",
+                            "scaleBase": 2
+                        },
+                        "clickAction": "\n// setVariable: (varName:string, varValue:string) => void \n// navigate: react-router-dom -> useNavigate() -> navigate \n// setDateTime: (from: Timestamp, to: TimeStamp) => void\nfunction onRowClick(row, navigate, setVariable, setDateTime, $variables) {\n    // You can get all current variables in this way\n    // const currentVariables = $variables.get()\n    // console.log(row, currentVariables)\n}\n",
+                        "displaySeries": "__all__",
+                        "enableClick": true,
+                        "showGraph": false,
+                        "showLegend": false,
+                        "showTooltip": true,
+                        "styles": {
+                            "colorMode": "value",
+                            "connectNulls": false,
+                            "fillOpacity": 80,
+                            "graphHeight": 60,
+                            "hideGraphHeight": 70,
+                            "layout": "auto",
+                            "showPoints": false,
+                            "style": "lines",
+                            "textAlign": "center"
+                        },
+                        "textSize": {
+                            "legend": null,
+                            "value": 50
+                        },
+                        "thresholds": {
+                            "enableTransform": false,
+                            "mode": "absolute",
+                            "thresholds": [
+                                {
+                                    "color": "$green",
+                                    "value": null
+                                },
+                                {
+                                    "color": "#9FE6B8",
+                                    "value": null
+                                }
+                            ],
+                            "transform": "function transform(data, lodash){\n\n}"
+                        },
+                        "value": {
+                            "calc": "Last",
+                            "decimal": 3,
+                            "units": [
+                                {
+                                    "operator": "/",
+                                    "rhs": 1,
+                                    "unit": "B"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1024,
+                                    "unit": "KB"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1048576,
+                                    "unit": "MB"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1073741824,
+                                    "unit": "GB"
+                                }
+                            ],
+                            "unitsType": "bytes"
+                        }
+                    }
+                },
+                "scopeTime": null,
+                "styles": {
+                    "border": "None",
+                    "borderOnHover": true,
+                    "decoration": {
+                        "height": "20px",
+                        "justifyContent": "center",
+                        "left": "",
+                        "reverse": false,
+                        "top": "-30px",
+                        "type": "None",
+                        "width": "100%"
+                    },
+                    "heightReduction": 0,
+                    "marginLeft": 0,
+                    "marginTop": 0,
+                    "palette": "echarts-light",
+                    "title": {
+                        "color": "inherit",
+                        "decoration": {
+                            "height": "50px",
+                            "margin": "10px",
+                            "type": "None",
+                            "width": "160px"
+                        },
+                        "fontSize": "14px",
+                        "fontWeight": "500",
+                        "paddingBottom": "0px",
+                        "paddingLeft": "0px",
+                        "paddingRight": "0px",
+                        "paddingTop": "0px",
+                        "position": "left"
+                    },
+                    "widthReduction": 0
+                },
+                "title": "磁盘大小",
+                "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
+                "type": "stat",
+                "valueMapping": null
+            },
+            {
+                "collapsed": false,
+                "conditionRender": {
+                    "type": "variable",
+                    "value": ""
+                },
+                "datasource": {
+                    "id": 2,
+                    "queries": [
+                        {
+                            "data": {},
+                            "id": 65,
+                            "legend": "",
+                            "metrics": "node_memory_SwapTotal_bytes",
+                            "visible": true
+                        }
+                    ],
+                    "queryOptions": {
+                        "maxDataPoints": 600,
+                        "minInterval": "15s"
+                    }
+                },
+                "desc": "",
+                "enableConditionRender": false,
+                "enableScopeTime": false,
+                "enableTransform": false,
+                "gridPos": {
+                    "h": 9,
+                    "w": 4,
+                    "x": 20,
+                    "y": 0
+                },
+                "id": 6,
+                "overrides": [],
+                "plugins": {
+                    "stat": {
+                        "axisY": {
+                            "scale": "linear",
+                            "scaleBase": 2
+                        },
+                        "clickAction": "\n// setVariable: (varName:string, varValue:string) => void \n// navigate: react-router-dom -> useNavigate() -> navigate \n// setDateTime: (from: Timestamp, to: TimeStamp) => void\nfunction onRowClick(row, navigate, setVariable, setDateTime, $variables) {\n    // You can get all current variables in this way\n    // const currentVariables = $variables.get()\n    // console.log(row, currentVariables)\n}\n",
+                        "displaySeries": "__all__",
+                        "enableClick": true,
+                        "showGraph": false,
+                        "showLegend": false,
+                        "showTooltip": true,
+                        "styles": {
+                            "colorMode": "value",
+                            "connectNulls": false,
+                            "fillOpacity": 80,
+                            "graphHeight": 60,
+                            "hideGraphHeight": 70,
+                            "layout": "auto",
+                            "showPoints": false,
+                            "style": "lines",
+                            "textAlign": "center"
+                        },
+                        "textSize": {
+                            "legend": null,
+                            "value": 50
+                        },
+                        "thresholds": {
+                            "enableTransform": false,
+                            "mode": "absolute",
+                            "thresholds": [
+                                {
+                                    "color": "$green",
+                                    "value": null
+                                },
+                                {
+                                    "color": "#9FE6B8",
+                                    "value": null
+                                }
+                            ],
+                            "transform": "function transform(data, lodash){\n\n}"
+                        },
+                        "value": {
+                            "calc": "Last",
+                            "decimal": 3,
+                            "units": [
+                                {
+                                    "operator": "/",
+                                    "rhs": 1,
+                                    "unit": "B"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1024,
+                                    "unit": "KB"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1048576,
+                                    "unit": "MB"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1073741824,
+                                    "unit": "GB"
+                                }
+                            ],
+                            "unitsType": "bytes"
+                        }
+                    }
+                },
+                "scopeTime": null,
+                "styles": {
+                    "border": "None",
+                    "borderOnHover": true,
+                    "decoration": {
+                        "height": "20px",
+                        "justifyContent": "center",
+                        "left": "",
+                        "reverse": false,
+                        "top": "-30px",
+                        "type": "None",
+                        "width": "100%"
+                    },
+                    "heightReduction": 0,
+                    "marginLeft": 0,
+                    "marginTop": 0,
+                    "palette": "echarts-light",
+                    "title": {
+                        "color": "inherit",
+                        "decoration": {
+                            "height": "50px",
+                            "margin": "10px",
+                            "type": "None",
+                            "width": "160px"
+                        },
+                        "fontSize": "14px",
+                        "fontWeight": "500",
+                        "paddingBottom": "0px",
+                        "paddingLeft": "0px",
+                        "paddingRight": "0px",
+                        "paddingTop": "0px",
+                        "position": "left"
+                    },
+                    "widthReduction": 0
+                },
+                "title": "交换区大小",
+                "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
+                "type": "stat",
+                "valueMapping": null
+            },
+            {
+                "id": 23,
+                "title": "CPU",
+                "desc": "",
+                "collapsed": false,
+                "type": "row",
+                "gridPos": {
+                    "x": 0,
+                    "y": 9,
+                    "w": 24,
+                    "h": 1.5
+                },
+                "panels": []
+            },
+            {
+                "collapsed": false,
+                "conditionRender": {
+                    "type": "variable",
+                    "value": ""
+                },
+                "datasource": {
+                    "id": 2,
+                    "queries": [
+                        {
+                            "data": {},
+                            "id": 65,
+                            "legend": "{{mode}}",
+                            "metrics": "avg by (instance,mode) (clamp_max(((avg by (mode,instance) ( (clamp_max(rate(node_cpu_seconds_total{mode!=\"idle\"}[${__interval__}]),1))  ))*100 ),100))",
+                            "visible": true
+                        },
+                        {
+                            "data": {},
+                            "id": 66,
+                            "legend": "idle",
+                            "metrics": "avg by (instance,mode) (clamp_max(((avg by (mode,instance) ( (clamp_max(rate(node_cpu_seconds_total{mode=\"idle\"}[${__interval__}]),1))  ))*100 ),100))",
+                            "visible": true
+                        }
+                    ],
+                    "queryOptions": {
+                        "maxDataPoints": 600,
+                        "minInterval": "1m"
+                    }
+                },
+                "desc": "",
+                "enableConditionRender": false,
+                "enableScopeTime": false,
+                "enableTransform": false,
+                "gridPos": {
+                    "h": 15,
+                    "w": 12,
+                    "x": 0,
+                    "y": 10.5
+                },
+                "id": 7,
+                "overrides": [
+                    {
+                        "overrides": [],
+                        "target": "idle"
+                    }
+                ],
+                "plugins": {
+                    "graph": {
+                        "alertFilter": {
+                            "alertLabel": "",
+                            "datasources": [],
+                            "enableFilter": true,
+                            "httpQuery": {
+                                "data": {},
+                                "id": 65,
+                                "legend": "",
+                                "metrics": "",
+                                "visible": true
+                            },
+                            "ruleLabel": "",
+                            "ruleName": "",
+                            "state": []
+                        },
+                        "axis": {
+                            "label": "",
+                            "scale": "linear",
+                            "scaleBase": 2,
+                            "showGrid": true,
+                            "showX": true,
+                            "showY": true
+                        },
+                        "clickActions": [],
+                        "enableAlert": false,
+                        "legend": {
+                            "mode": "table",
+                            "nameWidth": "90",
+                            "order": {
+                                "by": "Last",
+                                "sort": "desc"
+                            },
+                            "placement": "right",
+                            "showValuesName": false,
+                            "valueCalcs": [
+                                "Last"
+                            ],
+                            "width": 100
+                        },
+                        "styles": {
+                            "barGap": 10,
+                            "barRadius": 0,
+                            "connectNulls": false,
+                            "enableStack": true,
+                            "fillOpacity": 80,
+                            "gradientMode": "none",
+                            "lineWidth": 1,
+                            "padding": [
+                                null,
+                                null,
+                                null,
+                                null
+                            ],
+                            "pointSize": 6,
+                            "showPoints": "auto",
+                            "style": "lines"
+                        },
+                        "thresholds": {
+                            "enableTransform": false,
+                            "mode": "absolute",
+                            "thresholds": [
+                                {
+                                    "color": "#9FE6B8",
+                                    "value": null
+                                }
+                            ],
+                            "transform": "function transform(data, lodash){\n\n}"
+                        },
+                        "thresholdsDisplay": "None",
+                        "tooltip": {
+                            "mode": "all",
+                            "sort": "desc"
+                        },
+                        "value": {
+                            "decimal": 3,
+                            "units": [
+                                {
+                                    "operator": "x",
+                                    "rhs": 1,
+                                    "unit": "%"
+                                }
+                            ],
+                            "unitsType": "percent%"
+                        }
+                    }
+                },
+                "scopeTime": {
+                    "end": "2024-03-05T10:19:03.964Z",
+                    "endRaw": "now",
+                    "start": "2024-03-04T22:19:03.964Z",
+                    "startRaw": "now-12h",
+                    "sub": 720
+                },
+                "styles": {
+                    "border": "None",
+                    "borderOnHover": true,
+                    "decoration": {
+                        "height": "20px",
+                        "justifyContent": "center",
+                        "left": "",
+                        "reverse": false,
+                        "top": "-30px",
+                        "type": "None",
+                        "width": "100%"
+                    },
+                    "heightReduction": 0,
+                    "marginLeft": 0,
+                    "marginTop": 0,
+                    "palette": "classic",
+                    "title": {
+                        "color": "inherit",
+                        "decoration": {
+                            "height": "50px",
+                            "margin": "10px",
+                            "type": "None",
+                            "width": "160px"
+                        },
+                        "fontSize": "14px",
+                        "fontWeight": "500",
+                        "paddingBottom": "0px",
+                        "paddingLeft": "0px",
+                        "paddingRight": "0px",
+                        "paddingTop": "0px",
+                        "position": "left"
+                    },
+                    "widthReduction": 0
+                },
+                "title": "CPU使用率",
+                "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
+                "type": "graph",
+                "valueMapping": null
+            },
+            {
+                "collapsed": false,
+                "conditionRender": {
+                    "type": "variable",
+                    "value": ""
+                },
+                "datasource": {
+                    "id": 2,
+                    "queries": [
+                        {
+                            "data": {},
+                            "id": 65,
+                            "legend": "内核平均进程数",
+                            "metrics": "(avg_over_time(node_procs_running{}[${__interval__}])-1) / scalar(count(node_cpu_seconds_total{mode=\"user\"}))",
+                            "visible": true
+                        },
+                        {
+                            "data": {},
+                            "id": 66,
+                            "legend": "内核最大使用率",
+                            "metrics": "clamp_max(max by (instance) (sum  by (cpu,instance) ( (clamp_max(rate(node_cpu_seconds_total{mode!=\"idle\",mode!=\"iowait\"}[${__interval__}]),1)) )),1)",
+                            "visible": true
+                        }
+                    ],
+                    "queryOptions": {
+                        "maxDataPoints": 600,
+                        "minInterval": "1m"
+                    }
+                },
+                "desc": "",
+                "enableConditionRender": false,
+                "enableScopeTime": false,
+                "enableTransform": false,
+                "gridPos": {
+                    "h": 15,
+                    "w": 12,
+                    "x": 12,
+                    "y": 10.5
+                },
+                "id": 8,
+                "overrides": [
+                    {
+                        "overrides": [
+                            {
+                                "type": "Series.unit",
+                                "value": {
+                                    "units": [
+                                        {
+                                            "operator": "x",
+                                            "rhs": 1,
+                                            "unit": "%"
+                                        }
+                                    ],
+                                    "unitsType": "percent%"
+                                }
+                            },
+                            {
+                                "type": "Series.separateYAxis",
+                                "value": true
+                            },
+                            {
+                                "type": "Series.style",
+                                "value": "points"
+                            }
+                        ],
+                        "target": "内核最大使用率"
+                    }
+                ],
+                "plugins": {
+                    "graph": {
+                        "alertFilter": {
+                            "alertLabel": "",
+                            "datasources": [],
+                            "enableFilter": true,
+                            "httpQuery": {
+                                "data": {},
+                                "id": 65,
+                                "legend": "",
+                                "metrics": "",
+                                "visible": true
+                            },
+                            "ruleLabel": "",
+                            "ruleName": "",
+                            "state": []
+                        },
+                        "axis": {
+                            "label": "",
+                            "scale": "linear",
+                            "scaleBase": 2,
+                            "showGrid": true,
+                            "showX": true,
+                            "showY": true
+                        },
+                        "clickActions": [],
+                        "enableAlert": false,
+                        "legend": {
+                            "mode": "table",
+                            "nameWidth": "90",
+                            "order": {
+                                "by": "Last",
+                                "sort": "desc"
+                            },
+                            "placement": "right",
+                            "showValuesName": false,
+                            "valueCalcs": [
+                                "Last"
+                            ],
+                            "width": 100
+                        },
+                        "styles": {
+                            "barGap": 10,
+                            "barRadius": 0,
+                            "connectNulls": false,
+                            "enableStack": true,
+                            "fillOpacity": 80,
+                            "gradientMode": "opacity",
+                            "lineWidth": 1,
+                            "padding": [
+                                null,
+                                null,
+                                null,
+                                null
+                            ],
+                            "pointSize": 6,
+                            "showPoints": "auto",
+                            "style": "lines"
+                        },
+                        "thresholds": {
+                            "enableTransform": false,
+                            "mode": "absolute",
+                            "thresholds": [
+                                {
+                                    "color": "#9FE6B8",
+                                    "value": null
+                                }
+                            ],
+                            "transform": "function transform(data, lodash){\n\n}"
+                        },
+                        "thresholdsDisplay": "None",
+                        "tooltip": {
+                            "mode": "all",
+                            "sort": "desc"
+                        },
+                        "value": {
+                            "decimal": 3,
+                            "units": [
+                                {
+                                    "operator": "/",
+                                    "rhs": 1,
+                                    "unit": ""
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1000,
+                                    "unit": "k"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1000000,
+                                    "unit": "m"
+                                }
+                            ],
+                            "unitsType": "short"
+                        }
+                    }
+                },
+                "scopeTime": {
+                    "end": "2024-03-05T10:19:03.964Z",
+                    "endRaw": "now",
+                    "start": "2024-03-04T22:19:03.964Z",
+                    "startRaw": "now-12h",
+                    "sub": 720
+                },
+                "styles": {
+                    "border": "None",
+                    "borderOnHover": true,
+                    "decoration": {
+                        "height": "20px",
+                        "justifyContent": "center",
+                        "left": "",
+                        "reverse": false,
+                        "top": "-30px",
+                        "type": "None",
+                        "width": "100%"
+                    },
+                    "heightReduction": 0,
+                    "marginLeft": 0,
+                    "marginTop": 0,
+                    "palette": "classic",
+                    "title": {
+                        "color": "inherit",
+                        "decoration": {
+                            "height": "50px",
+                            "margin": "10px",
+                            "type": "None",
+                            "width": "160px"
+                        },
+                        "fontSize": "14px",
+                        "fontWeight": "500",
+                        "paddingBottom": "0px",
+                        "paddingLeft": "0px",
+                        "paddingRight": "0px",
+                        "paddingTop": "0px",
+                        "position": "left"
+                    },
+                    "widthReduction": 0
+                },
+                "title": "CPU饱和度",
+                "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
+                "type": "graph",
+                "valueMapping": null
+            },
+            {
+                "collapsed": false,
+                "conditionRender": {
+                    "type": "variable",
+                    "value": ""
+                },
+                "datasource": {
+                    "id": 2,
+                    "queries": [
+                        {
+                            "data": {},
+                            "id": 65,
+                            "legend": "上下文切换",
+                            "metrics": "rate(node_context_switches_total{}[${__interval__}])",
+                            "visible": true
+                        },
+                        {
+                            "data": {},
+                            "id": 66,
+                            "legend": "中断",
+                            "metrics": "rate(node_intr_total{}[${__interval__}])",
+                            "visible": true
+                        }
+                    ],
+                    "queryOptions": {
+                        "maxDataPoints": 600,
+                        "minInterval": "1m"
+                    }
+                },
+                "desc": "",
+                "enableConditionRender": false,
+                "enableScopeTime": false,
+                "enableTransform": false,
+                "gridPos": {
+                    "h": 15,
+                    "w": 12,
+                    "x": 0,
+                    "y": 25.5
+                },
+                "id": 9,
+                "overrides": [
+                    {
+                        "overrides": [
+                            {
+                                "type": "Series.name",
+                                "value": null
+                            }
+                        ],
+                        "target": "iowait"
+                    }
+                ],
+                "plugins": {
+                    "graph": {
+                        "alertFilter": {
+                            "alertLabel": "",
+                            "datasources": [],
+                            "enableFilter": true,
+                            "httpQuery": {
+                                "data": {},
+                                "id": 65,
+                                "legend": "",
+                                "metrics": "",
+                                "visible": true
+                            },
+                            "ruleLabel": "",
+                            "ruleName": "",
+                            "state": []
+                        },
+                        "axis": {
+                            "label": "",
+                            "scale": "linear",
+                            "scaleBase": 2,
+                            "showGrid": true,
+                            "showX": true,
+                            "showY": true
+                        },
+                        "clickActions": [],
+                        "enableAlert": false,
+                        "legend": {
+                            "mode": "table",
+                            "nameWidth": "90",
+                            "order": {
+                                "by": "Last",
+                                "sort": "desc"
+                            },
+                            "placement": "right",
+                            "showValuesName": false,
+                            "valueCalcs": [
+                                "Last"
+                            ],
+                            "width": 100
+                        },
+                        "styles": {
+                            "barGap": 10,
+                            "barRadius": 0,
+                            "connectNulls": false,
+                            "enableStack": false,
+                            "fillOpacity": 0,
+                            "gradientMode": "opacity",
+                            "lineWidth": 2,
+                            "padding": [
+                                null,
+                                null,
+                                null,
+                                null
+                            ],
+                            "pointSize": 6,
+                            "showPoints": "auto",
+                            "style": "lines"
+                        },
+                        "thresholds": {
+                            "enableTransform": false,
+                            "mode": "absolute",
+                            "thresholds": [
+                                {
+                                    "color": "#9FE6B8",
+                                    "value": null
+                                }
+                            ],
+                            "transform": "function transform(data, lodash){\n\n}"
+                        },
+                        "thresholdsDisplay": "None",
+                        "tooltip": {
+                            "mode": "all",
+                            "sort": "desc"
+                        },
+                        "value": {
+                            "decimal": 3,
+                            "units": [
+                                {
+                                    "operator": "/",
+                                    "rhs": 1,
+                                    "unit": ""
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1000,
+                                    "unit": "k"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1000000,
+                                    "unit": "m"
+                                }
+                            ],
+                            "unitsType": "short"
+                        }
+                    }
+                },
+                "scopeTime": {
+                    "end": "2024-03-05T10:19:03.964Z",
+                    "endRaw": "now",
+                    "start": "2024-03-04T22:19:03.964Z",
+                    "startRaw": "now-12h",
+                    "sub": 720
+                },
+                "styles": {
+                    "border": "None",
+                    "borderOnHover": true,
+                    "decoration": {
+                        "height": "20px",
+                        "justifyContent": "center",
+                        "left": "",
+                        "reverse": false,
+                        "top": "-30px",
+                        "type": "None",
+                        "width": "100%"
+                    },
+                    "heightReduction": 0,
+                    "marginLeft": 0,
+                    "marginTop": 0,
+                    "palette": "classic",
+                    "title": {
+                        "color": "inherit",
+                        "decoration": {
+                            "height": "50px",
+                            "margin": "10px",
+                            "type": "None",
+                            "width": "160px"
+                        },
+                        "fontSize": "14px",
+                        "fontWeight": "500",
+                        "paddingBottom": "0px",
+                        "paddingLeft": "0px",
+                        "paddingRight": "0px",
+                        "paddingTop": "0px",
+                        "position": "left"
+                    },
+                    "widthReduction": 0
+                },
+                "title": "每秒上下文切换和中断",
+                "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
+                "type": "graph",
+                "valueMapping": null
+            },
+            {
+                "collapsed": false,
+                "conditionRender": {
+                    "type": "variable",
+                    "value": ""
+                },
+                "datasource": {
+                    "id": 2,
+                    "queries": [
+                        {
+                            "data": {},
+                            "id": 65,
+                            "legend": "运行中进程数",
+                            "metrics": "node_procs_running{}",
+                            "visible": true
+                        },
+                        {
+                            "data": {},
+                            "id": 66,
+                            "legend": "IO阻塞进程数",
+                            "metrics": "node_procs_blocked{}",
+                            "visible": true
+                        }
+                    ],
+                    "queryOptions": {
+                        "maxDataPoints": 600,
+                        "minInterval": "40s"
+                    }
+                },
+                "desc": "",
+                "enableConditionRender": false,
+                "enableScopeTime": false,
+                "enableTransform": false,
+                "gridPos": {
+                    "h": 15,
+                    "w": 12,
+                    "x": 12,
+                    "y": 25.5
+                },
+                "id": 10,
+                "overrides": [
+                    {
+                        "overrides": [
+                            {
+                                "type": "Series.name",
+                                "value": null
+                            }
+                        ],
+                        "target": "iowait"
+                    }
+                ],
+                "plugins": {
+                    "graph": {
+                        "alertFilter": {
+                            "alertLabel": "",
+                            "datasources": [],
+                            "enableFilter": true,
+                            "httpQuery": {
+                                "data": {},
+                                "id": 65,
+                                "legend": "",
+                                "metrics": "",
+                                "visible": true
+                            },
+                            "ruleLabel": "",
+                            "ruleName": "",
+                            "state": []
+                        },
+                        "axis": {
+                            "label": "",
+                            "scale": "linear",
+                            "scaleBase": 2,
+                            "showGrid": true,
+                            "showX": true,
+                            "showY": true
+                        },
+                        "clickActions": [],
+                        "enableAlert": false,
+                        "legend": {
+                            "mode": "table",
+                            "nameWidth": "90",
+                            "order": {
+                                "by": "Last",
+                                "sort": "desc"
+                            },
+                            "placement": "right",
+                            "showValuesName": false,
+                            "valueCalcs": [
+                                "Last"
+                            ],
+                            "width": 100
+                        },
+                        "styles": {
+                            "barGap": 10,
+                            "barRadius": 0,
+                            "connectNulls": false,
+                            "enableStack": false,
+                            "fillOpacity": 0,
+                            "gradientMode": "opacity",
+                            "lineWidth": 2,
+                            "padding": [
+                                null,
+                                null,
+                                null,
+                                null
+                            ],
+                            "pointSize": 6,
+                            "showPoints": "auto",
+                            "style": "lines"
+                        },
+                        "thresholds": {
+                            "enableTransform": false,
+                            "mode": "absolute",
+                            "thresholds": [
+                                {
+                                    "color": "#9FE6B8",
+                                    "value": null
+                                }
+                            ],
+                            "transform": "function transform(data, lodash){\n\n}"
+                        },
+                        "thresholdsDisplay": "None",
+                        "tooltip": {
+                            "mode": "all",
+                            "sort": "desc"
+                        },
+                        "value": {
+                            "decimal": 3,
+                            "units": [
+                                {
+                                    "operator": "/",
+                                    "rhs": 1,
+                                    "unit": ""
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1000,
+                                    "unit": "k"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1000000,
+                                    "unit": "m"
+                                }
+                            ],
+                            "unitsType": "short"
+                        }
+                    }
+                },
+                "scopeTime": {
+                    "end": "2024-03-05T10:19:03.964Z",
+                    "endRaw": "now",
+                    "start": "2024-03-04T22:19:03.964Z",
+                    "startRaw": "now-12h",
+                    "sub": 720
+                },
+                "styles": {
+                    "border": "None",
+                    "borderOnHover": true,
+                    "decoration": {
+                        "height": "20px",
+                        "justifyContent": "center",
+                        "left": "",
+                        "reverse": false,
+                        "top": "-30px",
+                        "type": "None",
+                        "width": "100%"
+                    },
+                    "heightReduction": 0,
+                    "marginLeft": 0,
+                    "marginTop": 0,
+                    "palette": "classic",
+                    "title": {
+                        "color": "inherit",
+                        "decoration": {
+                            "height": "50px",
+                            "margin": "10px",
+                            "type": "None",
+                            "width": "160px"
+                        },
+                        "fontSize": "14px",
+                        "fontWeight": "500",
+                        "paddingBottom": "0px",
+                        "paddingLeft": "0px",
+                        "paddingRight": "0px",
+                        "paddingTop": "0px",
+                        "position": "left"
+                    },
+                    "widthReduction": 0
+                },
+                "title": "进程数",
+                "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
+                "type": "graph",
+                "valueMapping": null
+            },
+            {
+                "id": 24,
+                "title": "内存",
+                "desc": "",
+                "collapsed": false,
+                "type": "row",
+                "gridPos": {
+                    "x": 0,
+                    "y": 40.5,
+                    "w": 24,
+                    "h": 1.5
+                }
+            },
+            {
+                "collapsed": false,
+                "conditionRender": {
+                    "type": "variable",
+                    "value": ""
+                },
+                "datasource": {
+                    "id": 2,
+                    "queries": [
+                        {
+                            "data": {},
+                            "id": 65,
+                            "legend": "free",
+                            "metrics": "avg_over_time(node_memory_MemFree_bytes{}[${__interval__}])",
+                            "visible": true
+                        },
+                        {
+                            "data": {},
+                            "id": 66,
+                            "legend": "buffers",
+                            "metrics": "avg_over_time(node_memory_Buffers_bytes{}[${__interval__}])",
+                            "visible": true
+                        },
+                        {
+                            "data": {},
+                            "id": 67,
+                            "legend": "used",
+                            "metrics": "avg_over_time(node_memory_MemTotal_bytes{}[${__interval__}])-avg_over_time(node_memory_MemFree_bytes{}[${__interval__}])-avg_over_time(node_memory_Buffers_bytes{}[${__interval__}])-avg_over_time(node_memory_Cached_bytes{}[${__interval__}])",
+                            "visible": true
+                        },
+                        {
+                            "data": {},
+                            "id": 68,
+                            "legend": "cached",
+                            "metrics": "avg_over_time(node_memory_Cached_bytes{}[${__interval__}])",
+                            "visible": true
+                        }
+                    ],
+                    "queryOptions": {
+                        "maxDataPoints": 600,
+                        "minInterval": "1m"
+                    }
+                },
+                "desc": "",
+                "enableConditionRender": false,
+                "enableScopeTime": false,
+                "enableTransform": false,
+                "gridPos": {
+                    "h": 15,
+                    "w": 12,
+                    "x": 0,
+                    "y": 42
+                },
+                "id": 11,
+                "overrides": [],
+                "plugins": {
+                    "graph": {
+                        "alertFilter": {
+                            "alertLabel": "",
+                            "datasources": [],
+                            "enableFilter": true,
+                            "httpQuery": {
+                                "data": {},
+                                "id": 65,
+                                "legend": "",
+                                "metrics": "",
+                                "visible": true
+                            },
+                            "ruleLabel": "",
+                            "ruleName": "",
+                            "state": []
+                        },
+                        "axis": {
+                            "label": "",
+                            "scale": "linear",
+                            "scaleBase": 2,
+                            "showGrid": true,
+                            "showX": true,
+                            "showY": true
+                        },
+                        "clickActions": [],
+                        "enableAlert": false,
+                        "legend": {
+                            "mode": "table",
+                            "nameWidth": "90",
+                            "order": {
+                                "by": "Last",
+                                "sort": "desc"
+                            },
+                            "placement": "right",
+                            "showValuesName": false,
+                            "valueCalcs": [
+                                "Last"
+                            ],
+                            "width": 100
+                        },
+                        "styles": {
+                            "barGap": 10,
+                            "barRadius": 0,
+                            "connectNulls": false,
+                            "enableStack": true,
+                            "fillOpacity": 80,
+                            "gradientMode": "none",
+                            "lineWidth": 1,
+                            "padding": [
+                                null,
+                                null,
+                                null,
+                                null
+                            ],
+                            "pointSize": 6,
+                            "showPoints": "auto",
+                            "style": "lines"
+                        },
+                        "thresholds": {
+                            "enableTransform": false,
+                            "mode": "absolute",
+                            "thresholds": [
+                                {
+                                    "color": "#9FE6B8",
+                                    "value": null
+                                }
+                            ],
+                            "transform": "function transform(data, lodash){\n\n}"
+                        },
+                        "thresholdsDisplay": "None",
+                        "tooltip": {
+                            "mode": "all",
+                            "sort": "desc"
+                        },
+                        "value": {
+                            "decimal": 3,
+                            "units": [
+                                {
+                                    "operator": "/",
+                                    "rhs": 1,
+                                    "unit": "B"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1024,
+                                    "unit": "KB"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1048576,
+                                    "unit": "MB"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1073741824,
+                                    "unit": "GB"
+                                }
+                            ],
+                            "unitsType": "bytes"
+                        }
+                    }
+                },
+                "scopeTime": {
+                    "end": "2024-03-05T10:19:03.964Z",
+                    "endRaw": "now",
+                    "start": "2024-03-04T22:19:03.964Z",
+                    "startRaw": "now-12h",
+                    "sub": 720
+                },
+                "styles": {
+                    "border": "None",
+                    "borderOnHover": true,
+                    "decoration": {
+                        "height": "20px",
+                        "justifyContent": "center",
+                        "left": "",
+                        "reverse": false,
+                        "top": "-30px",
+                        "type": "None",
+                        "width": "100%"
+                    },
+                    "heightReduction": 0,
+                    "marginLeft": 0,
+                    "marginTop": 0,
+                    "palette": "classic",
+                    "title": {
+                        "color": "inherit",
+                        "decoration": {
+                            "height": "50px",
+                            "margin": "10px",
+                            "type": "None",
+                            "width": "160px"
+                        },
+                        "fontSize": "14px",
+                        "fontWeight": "500",
+                        "paddingBottom": "0px",
+                        "paddingLeft": "0px",
+                        "paddingRight": "0px",
+                        "paddingTop": "0px",
+                        "position": "left"
+                    },
+                    "widthReduction": 0
+                },
+                "title": "内存空间",
+                "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
+                "type": "graph",
+                "valueMapping": null
+            },
+            {
+                "collapsed": false,
+                "conditionRender": {
+                    "type": "variable",
+                    "value": ""
+                },
+                "datasource": {
+                    "id": 2,
+                    "queries": [
+                        {
+                            "data": {},
+                            "id": 65,
+                            "legend": "free",
+                            "metrics": "avg_over_time(node_memory_SwapFree_bytes{}[${__interval__}])",
+                            "visible": true
+                        },
+                        {
+                            "data": {},
+                            "id": 66,
+                            "legend": "used",
+                            "metrics": "avg_over_time(node_memory_SwapTotal_bytes{}[${__interval__}])-avg_over_time(node_memory_SwapFree_bytes{}[${__interval__}])",
+                            "visible": true
+                        }
+                    ],
+                    "queryOptions": {
+                        "maxDataPoints": 600,
+                        "minInterval": "1m"
+                    }
+                },
+                "desc": "",
+                "enableConditionRender": false,
+                "enableScopeTime": false,
+                "enableTransform": false,
+                "gridPos": {
+                    "h": 15,
+                    "w": 12,
+                    "x": 12,
+                    "y": 42
+                },
+                "id": 12,
+                "overrides": [],
+                "plugins": {
+                    "graph": {
+                        "alertFilter": {
+                            "alertLabel": "",
+                            "datasources": [],
+                            "enableFilter": true,
+                            "httpQuery": {
+                                "data": {},
+                                "id": 65,
+                                "legend": "",
+                                "metrics": "",
+                                "visible": true
+                            },
+                            "ruleLabel": "",
+                            "ruleName": "",
+                            "state": []
+                        },
+                        "axis": {
+                            "label": "",
+                            "scale": "linear",
+                            "scaleBase": 2,
+                            "showGrid": true,
+                            "showX": true,
+                            "showY": true
+                        },
+                        "clickActions": [],
+                        "enableAlert": false,
+                        "legend": {
+                            "mode": "table",
+                            "nameWidth": "90",
+                            "order": {
+                                "by": "Last",
+                                "sort": "desc"
+                            },
+                            "placement": "right",
+                            "showValuesName": false,
+                            "valueCalcs": [
+                                "Last"
+                            ],
+                            "width": 100
+                        },
+                        "styles": {
+                            "barGap": 10,
+                            "barRadius": 0,
+                            "connectNulls": false,
+                            "enableStack": true,
+                            "fillOpacity": 80,
+                            "gradientMode": "none",
+                            "lineWidth": 1,
+                            "padding": [
+                                null,
+                                null,
+                                null,
+                                null
+                            ],
+                            "pointSize": 6,
+                            "showPoints": "auto",
+                            "style": "lines"
+                        },
+                        "thresholds": {
+                            "enableTransform": false,
+                            "mode": "absolute",
+                            "thresholds": [
+                                {
+                                    "color": "#9FE6B8",
+                                    "value": null
+                                }
+                            ],
+                            "transform": "function transform(data, lodash){\n\n}"
+                        },
+                        "thresholdsDisplay": "None",
+                        "tooltip": {
+                            "mode": "all",
+                            "sort": "desc"
+                        },
+                        "value": {
+                            "decimal": 3,
+                            "units": [
+                                {
+                                    "operator": "/",
+                                    "rhs": 1,
+                                    "unit": "B"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1024,
+                                    "unit": "KB"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1048576,
+                                    "unit": "MB"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1073741824,
+                                    "unit": "GB"
+                                }
+                            ],
+                            "unitsType": "bytes"
+                        }
+                    }
+                },
+                "scopeTime": {
+                    "end": "2024-03-05T10:19:03.964Z",
+                    "endRaw": "now",
+                    "start": "2024-03-04T22:19:03.964Z",
+                    "startRaw": "now-12h",
+                    "sub": 720
+                },
+                "styles": {
+                    "border": "None",
+                    "borderOnHover": true,
+                    "decoration": {
+                        "height": "20px",
+                        "justifyContent": "center",
+                        "left": "",
+                        "reverse": false,
+                        "top": "-30px",
+                        "type": "None",
+                        "width": "100%"
+                    },
+                    "heightReduction": 0,
+                    "marginLeft": 0,
+                    "marginTop": 0,
+                    "palette": "classic",
+                    "title": {
+                        "color": "inherit",
+                        "decoration": {
+                            "height": "50px",
+                            "margin": "10px",
+                            "type": "None",
+                            "width": "160px"
+                        },
+                        "fontSize": "14px",
+                        "fontWeight": "500",
+                        "paddingBottom": "0px",
+                        "paddingLeft": "0px",
+                        "paddingRight": "0px",
+                        "paddingTop": "0px",
+                        "position": "left"
+                    },
+                    "widthReduction": 0
+                },
+                "title": "交换区空间",
+                "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
+                "type": "graph",
+                "valueMapping": null
+            },
+            {
+                "id": 25,
+                "title": "磁盘",
+                "desc": "",
+                "collapsed": false,
+                "type": "row",
+                "gridPos": {
+                    "x": 0,
+                    "y": 57,
+                    "w": 24,
+                    "h": 1.5
+                }
+            },
+            {
+                "collapsed": false,
+                "conditionRender": {
+                    "type": "variable",
+                    "value": ""
+                },
+                "datasource": {
+                    "id": 2,
+                    "queries": [
+                        {
+                            "data": {},
+                            "id": 65,
+                            "legend": "free",
+                            "metrics": "avg by (instance) (node_filesystem_free_bytes{fstype!~\"rootfs|selinuxfs|autofs|rpc_pipefs|tmpfs|shm|overlay|squashfs\"})",
+                            "visible": true
+                        },
+                        {
+                            "data": {},
+                            "id": 66,
+                            "legend": "used",
+                            "metrics": "avg by (instance) (node_filesystem_size_bytes{fstype!~\"rootfs|selinuxfs|autofs|rpc_pipefs|tmpfs|shm|overlay|squashfs\"}) - avg by (instance) (node_filesystem_free_bytes{ fstype!~\"rootfs|selinuxfs|autofs|rpc_pipefs|tmpfs|shm|overlay|squashfs\"})",
+                            "visible": true
+                        }
+                    ],
+                    "queryOptions": {
+                        "maxDataPoints": 600,
+                        "minInterval": "1m"
+                    }
+                },
+                "desc": "",
+                "enableConditionRender": false,
+                "enableScopeTime": false,
+                "enableTransform": false,
+                "gridPos": {
+                    "h": 15,
+                    "w": 12,
+                    "x": 0,
+                    "y": 58.5
+                },
+                "id": 13,
+                "overrides": [],
+                "plugins": {
+                    "graph": {
+                        "alertFilter": {
+                            "alertLabel": "",
+                            "datasources": [],
+                            "enableFilter": true,
+                            "httpQuery": {
+                                "data": {},
+                                "id": 65,
+                                "legend": "",
+                                "metrics": "",
+                                "visible": true
+                            },
+                            "ruleLabel": "",
+                            "ruleName": "",
+                            "state": []
+                        },
+                        "axis": {
+                            "label": "",
+                            "scale": "linear",
+                            "scaleBase": 2,
+                            "showGrid": true,
+                            "showX": true,
+                            "showY": true
+                        },
+                        "clickActions": [],
+                        "enableAlert": false,
+                        "legend": {
+                            "mode": "table",
+                            "nameWidth": "90",
+                            "order": {
+                                "by": "Last",
+                                "sort": "desc"
+                            },
+                            "placement": "right",
+                            "showValuesName": false,
+                            "valueCalcs": [
+                                "Last"
+                            ],
+                            "width": 100
+                        },
+                        "styles": {
+                            "barGap": 10,
+                            "barRadius": 0,
+                            "connectNulls": false,
+                            "enableStack": true,
+                            "fillOpacity": 80,
+                            "gradientMode": "none",
+                            "lineWidth": 1,
+                            "padding": [
+                                null,
+                                null,
+                                null,
+                                null
+                            ],
+                            "pointSize": 6,
+                            "showPoints": "auto",
+                            "style": "lines"
+                        },
+                        "thresholds": {
+                            "enableTransform": false,
+                            "mode": "absolute",
+                            "thresholds": [
+                                {
+                                    "color": "#9FE6B8",
+                                    "value": null
+                                }
+                            ],
+                            "transform": "function transform(data, lodash){\n\n}"
+                        },
+                        "thresholdsDisplay": "None",
+                        "tooltip": {
+                            "mode": "all",
+                            "sort": "desc"
+                        },
+                        "value": {
+                            "decimal": 3,
+                            "units": [
+                                {
+                                    "operator": "/",
+                                    "rhs": 1,
+                                    "unit": "B"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1024,
+                                    "unit": "KB"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1048576,
+                                    "unit": "MB"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1073741824,
+                                    "unit": "GB"
+                                }
+                            ],
+                            "unitsType": "bytes"
+                        }
+                    }
+                },
+                "scopeTime": {
+                    "end": "2024-03-05T10:19:03.964Z",
+                    "endRaw": "now",
+                    "start": "2024-03-04T22:19:03.964Z",
+                    "startRaw": "now-12h",
+                    "sub": 720
+                },
+                "styles": {
+                    "border": "None",
+                    "borderOnHover": true,
+                    "decoration": {
+                        "height": "20px",
+                        "justifyContent": "center",
+                        "left": "",
+                        "reverse": false,
+                        "top": "-30px",
+                        "type": "None",
+                        "width": "100%"
+                    },
+                    "heightReduction": 0,
+                    "marginLeft": 0,
+                    "marginTop": 0,
+                    "palette": "classic",
+                    "title": {
+                        "color": "inherit",
+                        "decoration": {
+                            "height": "50px",
+                            "margin": "10px",
+                            "type": "None",
+                            "width": "160px"
+                        },
+                        "fontSize": "14px",
+                        "fontWeight": "500",
+                        "paddingBottom": "0px",
+                        "paddingLeft": "0px",
+                        "paddingRight": "0px",
+                        "paddingTop": "0px",
+                        "position": "left"
+                    },
+                    "widthReduction": 0
+                },
+                "title": "磁盘空间",
+                "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
+                "type": "graph",
+                "valueMapping": null
+            },
+            {
+                "collapsed": false,
+                "conditionRender": {
+                    "type": "variable",
+                    "value": ""
+                },
+                "datasource": {
+                    "id": 2,
+                    "queries": [
+                        {
+                            "data": {},
+                            "id": 65,
+                            "legend": "最大值",
+                            "metrics": "max_over_time(node_filefd_maximum{}[${__interval__}])",
+                            "visible": true
+                        },
+                        {
+                            "data": {},
+                            "id": 66,
+                            "legend": "已使用",
+                            "metrics": "max_over_time(node_filefd_allocated{}[${__interval__}])",
+                            "visible": true
+                        }
+                    ],
+                    "queryOptions": {
+                        "maxDataPoints": 600,
+                        "minInterval": "1m"
+                    }
+                },
+                "desc": "",
+                "enableConditionRender": false,
+                "enableScopeTime": false,
+                "enableTransform": false,
+                "gridPos": {
+                    "h": 15,
+                    "w": 12,
+                    "x": 12,
+                    "y": 58.5
+                },
+                "id": 14,
+                "overrides": [
+                    {
+                        "target": "最大值",
+                        "overrides": [
+                            {
+                                "type": "Series.color",
+                                "value": "$red"
+                            }
+                        ]
+                    }
+                ],
+                "plugins": {
+                    "graph": {
+                        "alertFilter": {
+                            "alertLabel": "",
+                            "datasources": [],
+                            "enableFilter": true,
+                            "httpQuery": {
+                                "data": {},
+                                "id": 65,
+                                "legend": "",
+                                "metrics": "",
+                                "visible": true
+                            },
+                            "ruleLabel": "",
+                            "ruleName": "",
+                            "state": []
+                        },
+                        "axis": {
+                            "label": "",
+                            "scale": "linear",
+                            "scaleBase": 2,
+                            "showGrid": true,
+                            "showX": true,
+                            "showY": true
+                        },
+                        "clickActions": [],
+                        "enableAlert": false,
+                        "legend": {
+                            "mode": "table",
+                            "nameWidth": "90",
+                            "order": {
+                                "by": "Last",
+                                "sort": "desc"
+                            },
+                            "placement": "right",
+                            "showValuesName": false,
+                            "valueCalcs": [
+                                "Last"
+                            ],
+                            "width": 100
+                        },
+                        "styles": {
+                            "barGap": 10,
+                            "barRadius": 0,
+                            "connectNulls": false,
+                            "enableStack": false,
+                            "fillOpacity": 0,
+                            "gradientMode": "none",
+                            "lineWidth": 2,
+                            "padding": [
+                                null,
+                                null,
+                                null,
+                                null
+                            ],
+                            "pointSize": 6,
+                            "showPoints": "auto",
+                            "style": "lines"
+                        },
+                        "thresholds": {
+                            "enableTransform": false,
+                            "mode": "absolute",
+                            "thresholds": [
+                                {
+                                    "color": "#9FE6B8",
+                                    "value": null
+                                }
+                            ],
+                            "transform": "function transform(data, lodash){\n\n}"
+                        },
+                        "thresholdsDisplay": "None",
+                        "tooltip": {
+                            "mode": "all",
+                            "sort": "desc"
+                        },
+                        "value": {
+                            "decimal": 3,
+                            "units": [
+                                {
+                                    "operator": "/",
+                                    "rhs": 1,
+                                    "unit": ""
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1000,
+                                    "unit": "k"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1000000,
+                                    "unit": "m"
+                                }
+                            ],
+                            "unitsType": "short"
+                        }
+                    }
+                },
+                "scopeTime": {
+                    "end": "2024-03-05T10:19:03.964Z",
+                    "endRaw": "now",
+                    "start": "2024-03-04T22:19:03.964Z",
+                    "startRaw": "now-12h",
+                    "sub": 720
+                },
+                "styles": {
+                    "border": "None",
+                    "borderOnHover": true,
+                    "decoration": {
+                        "height": "20px",
+                        "justifyContent": "center",
+                        "left": "",
+                        "reverse": false,
+                        "top": "-30px",
+                        "type": "None",
+                        "width": "100%"
+                    },
+                    "heightReduction": 0,
+                    "marginLeft": 0,
+                    "marginTop": 0,
+                    "palette": "classic",
+                    "title": {
+                        "color": "inherit",
+                        "decoration": {
+                            "height": "50px",
+                            "margin": "10px",
+                            "type": "None",
+                            "width": "160px"
+                        },
+                        "fontSize": "14px",
+                        "fontWeight": "500",
+                        "paddingBottom": "0px",
+                        "paddingLeft": "0px",
+                        "paddingRight": "0px",
+                        "paddingTop": "0px",
+                        "position": "left"
+                    },
+                    "widthReduction": 0
+                },
+                "title": "全局文件描述符",
+                "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
+                "type": "graph",
+                "valueMapping": null
+            },
+            {
+                "collapsed": false,
+                "conditionRender": {
+                    "type": "variable",
+                    "value": ""
+                },
+                "datasource": {
+                    "id": 2,
+                    "queries": [
+                        {
+                            "data": {},
+                            "id": 65,
+                            "legend": "磁盘读",
+                            "metrics": "rate(node_vmstat_pgpgin{}[${__interval__}]) * 1024",
+                            "visible": true
+                        },
+                        {
+                            "data": {},
+                            "id": 66,
+                            "legend": "磁盘写",
+                            "metrics": "rate(node_vmstat_pgpgout{}[${__interval__}]) * 1024",
+                            "visible": true
+                        }
+                    ],
+                    "queryOptions": {
+                        "maxDataPoints": 600,
+                        "minInterval": "1m"
+                    }
+                },
+                "desc": "",
+                "enableConditionRender": false,
+                "enableScopeTime": false,
+                "enableTransform": false,
+                "gridPos": {
+                    "h": 15,
+                    "w": 12,
+                    "x": 0,
+                    "y": 73.5
+                },
+                "id": 15,
+                "overrides": [],
+                "plugins": {
+                    "graph": {
+                        "alertFilter": {
+                            "alertLabel": "",
+                            "datasources": [],
+                            "enableFilter": true,
+                            "httpQuery": {
+                                "data": {},
+                                "id": 65,
+                                "legend": "",
+                                "metrics": "",
+                                "visible": true
+                            },
+                            "ruleLabel": "",
+                            "ruleName": "",
+                            "state": []
+                        },
+                        "axis": {
+                            "label": "",
+                            "scale": "linear",
+                            "scaleBase": 2,
+                            "showGrid": true,
+                            "showX": true,
+                            "showY": true
+                        },
+                        "clickActions": [],
+                        "enableAlert": false,
+                        "legend": {
+                            "mode": "table",
+                            "nameWidth": "90",
+                            "order": {
+                                "by": "Last",
+                                "sort": "desc"
+                            },
+                            "placement": "right",
+                            "showValuesName": false,
+                            "valueCalcs": [
+                                "Last"
+                            ],
+                            "width": 100
+                        },
+                        "styles": {
+                            "barGap": 10,
+                            "barRadius": 0,
+                            "connectNulls": false,
+                            "enableStack": false,
+                            "fillOpacity": 0,
+                            "gradientMode": "none",
+                            "lineWidth": 2,
+                            "padding": [
+                                null,
+                                null,
+                                null,
+                                null
+                            ],
+                            "pointSize": 6,
+                            "showPoints": "auto",
+                            "style": "lines"
+                        },
+                        "thresholds": {
+                            "enableTransform": false,
+                            "mode": "absolute",
+                            "thresholds": [
+                                {
+                                    "color": "#9FE6B8",
+                                    "value": null
+                                }
+                            ],
+                            "transform": "function transform(data, lodash){\n\n}"
+                        },
+                        "thresholdsDisplay": "None",
+                        "tooltip": {
+                            "mode": "all",
+                            "sort": "desc"
+                        },
+                        "value": {
+                            "decimal": 3,
+                            "units": [
+                                {
+                                    "operator": "/",
+                                    "rhs": 1,
+                                    "unit": "B/s"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1024,
+                                    "unit": "KB/s"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1048576,
+                                    "unit": "MB/s"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1073741824,
+                                    "unit": "GB/s"
+                                }
+                            ],
+                            "unitsType": "bytes"
+                        }
+                    }
+                },
+                "scopeTime": {
+                    "end": "2024-03-05T10:19:03.964Z",
+                    "endRaw": "now",
+                    "start": "2024-03-04T22:19:03.964Z",
+                    "startRaw": "now-12h",
+                    "sub": 720
+                },
+                "styles": {
+                    "border": "None",
+                    "borderOnHover": true,
+                    "decoration": {
+                        "height": "20px",
+                        "justifyContent": "center",
+                        "left": "",
+                        "reverse": false,
+                        "top": "-30px",
+                        "type": "None",
+                        "width": "100%"
+                    },
+                    "heightReduction": 0,
+                    "marginLeft": 0,
+                    "marginTop": 0,
+                    "palette": "classic",
+                    "title": {
+                        "color": "inherit",
+                        "decoration": {
+                            "height": "50px",
+                            "margin": "10px",
+                            "type": "None",
+                            "width": "160px"
+                        },
+                        "fontSize": "14px",
+                        "fontWeight": "500",
+                        "paddingBottom": "0px",
+                        "paddingLeft": "0px",
+                        "paddingRight": "0px",
+                        "paddingTop": "0px",
+                        "position": "left"
+                    },
+                    "widthReduction": 0
+                },
+                "title": "IO读写",
+                "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
+                "type": "graph",
+                "valueMapping": null
+            },
+            {
+                "collapsed": false,
+                "conditionRender": {
+                    "type": "variable",
+                    "value": ""
+                },
+                "datasource": {
+                    "id": 2,
+                    "queries": [
+                        {
+                            "data": {},
+                            "id": 65,
+                            "legend": "磁盘读",
+                            "metrics": "irate(node_disk_read_time_seconds_total{}[${__interval__}]) / irate(node_disk_reads_completed_total{}[${__interval__}])",
+                            "visible": true
+                        },
+                        {
+                            "data": {},
+                            "id": 66,
+                            "legend": "磁盘写",
+                            "metrics": "irate(node_disk_write_time_seconds_total{}[${__interval__}]) / irate(node_disk_writes_completed_total{}[${__interval__}])",
+                            "visible": true
+                        }
+                    ],
+                    "queryOptions": {
+                        "maxDataPoints": 600,
+                        "minInterval": "1m"
+                    }
+                },
+                "desc": "",
+                "enableConditionRender": false,
+                "enableScopeTime": false,
+                "enableTransform": false,
+                "gridPos": {
+                    "h": 15,
+                    "w": 12,
+                    "x": 12,
+                    "y": 73.5
+                },
+                "id": 16,
+                "overrides": [],
+                "plugins": {
+                    "graph": {
+                        "alertFilter": {
+                            "alertLabel": "",
+                            "datasources": [],
+                            "enableFilter": true,
+                            "httpQuery": {
+                                "data": {},
+                                "id": 65,
+                                "legend": "",
+                                "metrics": "",
+                                "visible": true
+                            },
+                            "ruleLabel": "",
+                            "ruleName": "",
+                            "state": []
+                        },
+                        "axis": {
+                            "label": "",
+                            "scale": "linear",
+                            "scaleBase": 2,
+                            "showGrid": true,
+                            "showX": true,
+                            "showY": true
+                        },
+                        "clickActions": [],
+                        "enableAlert": false,
+                        "legend": {
+                            "mode": "table",
+                            "nameWidth": "90",
+                            "order": {
+                                "by": "Last",
+                                "sort": "desc"
+                            },
+                            "placement": "right",
+                            "showValuesName": false,
+                            "valueCalcs": [
+                                "Last"
+                            ],
+                            "width": 100
+                        },
+                        "styles": {
+                            "barGap": 10,
+                            "barRadius": 0,
+                            "connectNulls": false,
+                            "enableStack": false,
+                            "fillOpacity": 0,
+                            "gradientMode": "none",
+                            "lineWidth": 2,
+                            "padding": [
+                                null,
+                                null,
+                                null,
+                                null
+                            ],
+                            "pointSize": 6,
+                            "showPoints": "auto",
+                            "style": "lines"
+                        },
+                        "thresholds": {
+                            "enableTransform": false,
+                            "mode": "absolute",
+                            "thresholds": [
+                                {
+                                    "color": "#9FE6B8",
+                                    "value": null
+                                }
+                            ],
+                            "transform": "function transform(data, lodash){\n\n}"
+                        },
+                        "thresholdsDisplay": "None",
+                        "tooltip": {
+                            "mode": "all",
+                            "sort": "desc"
+                        },
+                        "value": {
+                            "decimal": 3,
+                            "units": [
+                                {
+                                    "operator": "/",
+                                    "rhs": 1,
+                                    "unit": "ms"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1000,
+                                    "unit": "s"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 60000,
+                                    "unit": "m"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 3600000,
+                                    "unit": "h"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 86400000,
+                                    "unit": "d"
+                                }
+                            ],
+                            "unitsType": "time"
+                        }
+                    }
+                },
+                "scopeTime": {
+                    "end": "2024-03-05T10:19:03.964Z",
+                    "endRaw": "now",
+                    "start": "2024-03-04T22:19:03.964Z",
+                    "startRaw": "now-12h",
+                    "sub": 720
+                },
+                "styles": {
+                    "border": "None",
+                    "borderOnHover": true,
+                    "decoration": {
+                        "height": "20px",
+                        "justifyContent": "center",
+                        "left": "",
+                        "reverse": false,
+                        "top": "-30px",
+                        "type": "None",
+                        "width": "100%"
+                    },
+                    "heightReduction": 0,
+                    "marginLeft": 0,
+                    "marginTop": 0,
+                    "palette": "classic",
+                    "title": {
+                        "color": "inherit",
+                        "decoration": {
+                            "height": "50px",
+                            "margin": "10px",
+                            "type": "None",
+                            "width": "160px"
+                        },
+                        "fontSize": "14px",
+                        "fontWeight": "500",
+                        "paddingBottom": "0px",
+                        "paddingLeft": "0px",
+                        "paddingRight": "0px",
+                        "paddingTop": "0px",
+                        "position": "left"
+                    },
+                    "widthReduction": 0
+                },
+                "title": "IO读写平均耗时",
+                "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
+                "type": "graph",
+                "valueMapping": null
+            },
+            {
+                "id": 26,
+                "title": "网络",
+                "desc": "",
+                "collapsed": false,
+                "type": "row",
+                "gridPos": {
+                    "x": 0,
+                    "y": 88.5,
+                    "w": 24,
+                    "h": 1.5
+                },
+                "panels": []
+            },
+            {
+                "collapsed": false,
+                "conditionRender": {
+                    "type": "variable",
+                    "value": ""
+                },
+                "datasource": {
+                    "id": 2,
+                    "queries": [
+                        {
+                            "data": {},
+                            "id": 65,
+                            "legend": "流入",
+                            "metrics": "sum by (instance) (rate(node_network_receive_bytes_total{device!=\"lo\"}[${__interval__}]))",
+                            "visible": true
+                        },
+                        {
+                            "data": {},
+                            "id": 66,
+                            "legend": "流出",
+                            "metrics": "sum by (instance) (rate(node_network_transmit_bytes_total{device!=\"lo\"}[${__interval__}]))",
+                            "visible": true
+                        }
+                    ],
+                    "queryOptions": {
+                        "maxDataPoints": 600,
+                        "minInterval": "1m"
+                    }
+                },
+                "desc": "",
+                "enableConditionRender": false,
+                "enableScopeTime": false,
+                "enableTransform": false,
+                "gridPos": {
+                    "h": 15,
+                    "w": 12,
+                    "x": 0,
+                    "y": 90
+                },
+                "id": 17,
+                "overrides": [],
+                "plugins": {
+                    "graph": {
+                        "alertFilter": {
+                            "alertLabel": "",
+                            "datasources": [],
+                            "enableFilter": true,
+                            "httpQuery": {
+                                "data": {},
+                                "id": 65,
+                                "legend": "",
+                                "metrics": "",
+                                "visible": true
+                            },
+                            "ruleLabel": "",
+                            "ruleName": "",
+                            "state": []
+                        },
+                        "axis": {
+                            "label": "",
+                            "scale": "linear",
+                            "scaleBase": 2,
+                            "showGrid": true,
+                            "showX": true,
+                            "showY": true
+                        },
+                        "clickActions": [],
+                        "enableAlert": false,
+                        "legend": {
+                            "mode": "table",
+                            "nameWidth": "90",
+                            "order": {
+                                "by": "Last",
+                                "sort": "desc"
+                            },
+                            "placement": "right",
+                            "showValuesName": false,
+                            "valueCalcs": [
+                                "Last"
+                            ],
+                            "width": 100
+                        },
+                        "styles": {
+                            "barGap": 10,
+                            "barRadius": 0,
+                            "connectNulls": false,
+                            "enableStack": false,
+                            "fillOpacity": 0,
+                            "gradientMode": "none",
+                            "lineWidth": 2,
+                            "padding": [
+                                null,
+                                null,
+                                null,
+                                null
+                            ],
+                            "pointSize": 6,
+                            "showPoints": "auto",
+                            "style": "lines"
+                        },
+                        "thresholds": {
+                            "enableTransform": false,
+                            "mode": "absolute",
+                            "thresholds": [
+                                {
+                                    "color": "#9FE6B8",
+                                    "value": null
+                                }
+                            ],
+                            "transform": "function transform(data, lodash){\n\n}"
+                        },
+                        "thresholdsDisplay": "None",
+                        "tooltip": {
+                            "mode": "all",
+                            "sort": "desc"
+                        },
+                        "value": {
+                            "decimal": 3,
+                            "units": [
+                                {
+                                    "operator": "/",
+                                    "rhs": 1,
+                                    "unit": "B/s"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1024,
+                                    "unit": "KB/s"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1048576,
+                                    "unit": "MB/s"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1073741824,
+                                    "unit": "GB/s"
+                                }
+                            ],
+                            "unitsType": "bytes"
+                        }
+                    }
+                },
+                "scopeTime": {
+                    "end": "2024-03-05T10:19:03.964Z",
+                    "endRaw": "now",
+                    "start": "2024-03-04T22:19:03.964Z",
+                    "startRaw": "now-12h",
+                    "sub": 720
+                },
+                "styles": {
+                    "border": "None",
+                    "borderOnHover": true,
+                    "decoration": {
+                        "height": "20px",
+                        "justifyContent": "center",
+                        "left": "",
+                        "reverse": false,
+                        "top": "-30px",
+                        "type": "None",
+                        "width": "100%"
+                    },
+                    "heightReduction": 0,
+                    "marginLeft": 0,
+                    "marginTop": 0,
+                    "palette": "classic",
+                    "title": {
+                        "color": "inherit",
+                        "decoration": {
+                            "height": "50px",
+                            "margin": "10px",
+                            "type": "None",
+                            "width": "160px"
+                        },
+                        "fontSize": "14px",
+                        "fontWeight": "500",
+                        "paddingBottom": "0px",
+                        "paddingLeft": "0px",
+                        "paddingRight": "0px",
+                        "paddingTop": "0px",
+                        "position": "left"
+                    },
+                    "widthReduction": 0
+                },
+                "title": "网卡速率(流量)",
+                "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
+                "type": "graph",
+                "valueMapping": null
+            },
+            {
+                "collapsed": false,
+                "conditionRender": {
+                    "type": "variable",
+                    "value": ""
+                },
+                "datasource": {
+                    "id": 2,
+                    "queries": [
+                        {
+                            "data": {},
+                            "id": 65,
+                            "legend": "接收包错误数",
+                            "metrics": "sum by (instance) (rate(node_network_receive_errs_total{device!=\"lo\"}[${__interval__}]))",
+                            "visible": true
+                        },
+                        {
+                            "data": {},
+                            "id": 66,
+                            "legend": "发送包错误数",
+                            "metrics": "sum by (instance) (rate(node_network_transmit_errs_total{device!=\"lo\"}[${__interval__}]))",
+                            "visible": true
+                        }
+                    ],
+                    "queryOptions": {
+                        "maxDataPoints": 600,
+                        "minInterval": "1m"
+                    }
+                },
+                "desc": "",
+                "enableConditionRender": false,
+                "enableScopeTime": false,
+                "enableTransform": false,
+                "gridPos": {
+                    "h": 15,
+                    "w": 12,
+                    "x": 12,
+                    "y": 90
+                },
+                "id": 18,
+                "overrides": [],
+                "plugins": {
+                    "graph": {
+                        "alertFilter": {
+                            "alertLabel": "",
+                            "datasources": [],
+                            "enableFilter": true,
+                            "httpQuery": {
+                                "data": {},
+                                "id": 65,
+                                "legend": "",
+                                "metrics": "",
+                                "visible": true
+                            },
+                            "ruleLabel": "",
+                            "ruleName": "",
+                            "state": []
+                        },
+                        "axis": {
+                            "label": "",
+                            "scale": "linear",
+                            "scaleBase": 2,
+                            "showGrid": true,
+                            "showX": true,
+                            "showY": true
+                        },
+                        "clickActions": [],
+                        "enableAlert": false,
+                        "legend": {
+                            "mode": "table",
+                            "nameWidth": "90",
+                            "order": {
+                                "by": "Last",
+                                "sort": "desc"
+                            },
+                            "placement": "right",
+                            "showValuesName": false,
+                            "valueCalcs": [
+                                "Last"
+                            ],
+                            "width": 100
+                        },
+                        "styles": {
+                            "barGap": 10,
+                            "barRadius": 0,
+                            "connectNulls": false,
+                            "enableStack": false,
+                            "fillOpacity": 0,
+                            "gradientMode": "none",
+                            "lineWidth": 2,
+                            "padding": [
+                                null,
+                                null,
+                                null,
+                                null
+                            ],
+                            "pointSize": 6,
+                            "showPoints": "auto",
+                            "style": "lines"
+                        },
+                        "thresholds": {
+                            "enableTransform": false,
+                            "mode": "absolute",
+                            "thresholds": [
+                                {
+                                    "color": "#9FE6B8",
+                                    "value": null
+                                }
+                            ],
+                            "transform": "function transform(data, lodash){\n\n}"
+                        },
+                        "thresholdsDisplay": "None",
+                        "tooltip": {
+                            "mode": "all",
+                            "sort": "desc"
+                        },
+                        "value": {
+                            "decimal": 3,
+                            "units": [
+                                {
+                                    "operator": "/",
+                                    "rhs": 1,
+                                    "unit": "ops/s"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1000,
+                                    "unit": "k ops/s"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1000000,
+                                    "unit": "m ops/s"
+                                }
+                            ],
+                            "unitsType": "short"
+                        }
+                    }
+                },
+                "scopeTime": {
+                    "end": "2024-03-05T10:19:03.964Z",
+                    "endRaw": "now",
+                    "start": "2024-03-04T22:19:03.964Z",
+                    "startRaw": "now-12h",
+                    "sub": 720
+                },
+                "styles": {
+                    "border": "None",
+                    "borderOnHover": true,
+                    "decoration": {
+                        "height": "20px",
+                        "justifyContent": "center",
+                        "left": "",
+                        "reverse": false,
+                        "top": "-30px",
+                        "type": "None",
+                        "width": "100%"
+                    },
+                    "heightReduction": 0,
+                    "marginLeft": 0,
+                    "marginTop": 0,
+                    "palette": "classic",
+                    "title": {
+                        "color": "inherit",
+                        "decoration": {
+                            "height": "50px",
+                            "margin": "10px",
+                            "type": "None",
+                            "width": "160px"
+                        },
+                        "fontSize": "14px",
+                        "fontWeight": "500",
+                        "paddingBottom": "0px",
+                        "paddingLeft": "0px",
+                        "paddingRight": "0px",
+                        "paddingTop": "0px",
+                        "position": "left"
+                    },
+                    "widthReduction": 0
+                },
+                "title": "网络错误",
+                "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
+                "type": "graph",
+                "valueMapping": null
+            },
+            {
+                "collapsed": false,
+                "conditionRender": {
+                    "type": "variable",
+                    "value": ""
+                },
+                "datasource": {
+                    "id": 2,
+                    "queries": [
+                        {
+                            "data": {},
+                            "id": 65,
+                            "legend": "监听溢出包数",
+                            "metrics": "irate(node_netstat_TcpExt_ListenOverflows{}[${__interval__}])",
+                            "visible": true
+                        },
+                        {
+                            "data": {},
+                            "id": 66,
+                            "legend": "监听丢弃包数",
+                            "metrics": "irate(node_netstat_TcpExt_ListenDrops{}[${__interval__}])",
+                            "visible": true
+                        },
+                        {
+                            "id": 67,
+                            "metrics": "irate(node_netstat_TcpExt_TCPSynRetrans{}[${__interval__}])",
+                            "legend": "syn重发包数",
+                            "visible": true,
+                            "data": {}
+                        }
+                    ],
+                    "queryOptions": {
+                        "maxDataPoints": 600,
+                        "minInterval": "1m"
+                    }
+                },
+                "desc": "",
+                "enableConditionRender": false,
+                "enableScopeTime": false,
+                "enableTransform": false,
+                "gridPos": {
+                    "h": 15,
+                    "w": 12,
+                    "x": 0,
+                    "y": 105
+                },
+                "id": 19,
+                "overrides": [],
+                "plugins": {
+                    "graph": {
+                        "alertFilter": {
+                            "alertLabel": "",
+                            "datasources": [],
+                            "enableFilter": true,
+                            "httpQuery": {
+                                "data": {},
+                                "id": 65,
+                                "legend": "",
+                                "metrics": "",
+                                "visible": true
+                            },
+                            "ruleLabel": "",
+                            "ruleName": "",
+                            "state": []
+                        },
+                        "axis": {
+                            "label": "",
+                            "scale": "linear",
+                            "scaleBase": 2,
+                            "showGrid": true,
+                            "showX": true,
+                            "showY": true
+                        },
+                        "clickActions": [],
+                        "enableAlert": false,
+                        "legend": {
+                            "mode": "table",
+                            "nameWidth": "90",
+                            "order": {
+                                "by": "Last",
+                                "sort": "desc"
+                            },
+                            "placement": "right",
+                            "showValuesName": false,
+                            "valueCalcs": [
+                                "Last"
+                            ],
+                            "width": 100
+                        },
+                        "styles": {
+                            "barGap": 10,
+                            "barRadius": 0,
+                            "connectNulls": false,
+                            "enableStack": false,
+                            "fillOpacity": 0,
+                            "gradientMode": "none",
+                            "lineWidth": 2,
+                            "padding": [
+                                null,
+                                null,
+                                null,
+                                null
+                            ],
+                            "pointSize": 6,
+                            "showPoints": "auto",
+                            "style": "lines"
+                        },
+                        "thresholds": {
+                            "enableTransform": false,
+                            "mode": "absolute",
+                            "thresholds": [
+                                {
+                                    "color": "#9FE6B8",
+                                    "value": null
+                                }
+                            ],
+                            "transform": "function transform(data, lodash){\n\n}"
+                        },
+                        "thresholdsDisplay": "None",
+                        "tooltip": {
+                            "mode": "all",
+                            "sort": "desc"
+                        },
+                        "value": {
+                            "decimal": 3,
+                            "units": [
+                                {
+                                    "operator": "/",
+                                    "rhs": 1,
+                                    "unit": ""
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1000,
+                                    "unit": "k"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1000000,
+                                    "unit": "m"
+                                }
+                            ],
+                            "unitsType": "short"
+                        }
+                    }
+                },
+                "scopeTime": {
+                    "end": "2024-03-05T10:19:03.964Z",
+                    "endRaw": "now",
+                    "start": "2024-03-04T22:19:03.964Z",
+                    "startRaw": "now-12h",
+                    "sub": 720
+                },
+                "styles": {
+                    "border": "None",
+                    "borderOnHover": true,
+                    "decoration": {
+                        "height": "20px",
+                        "justifyContent": "center",
+                        "left": "",
+                        "reverse": false,
+                        "top": "-30px",
+                        "type": "None",
+                        "width": "100%"
+                    },
+                    "heightReduction": 0,
+                    "marginLeft": 0,
+                    "marginTop": 0,
+                    "palette": "classic",
+                    "title": {
+                        "color": "inherit",
+                        "decoration": {
+                            "height": "50px",
+                            "margin": "10px",
+                            "type": "None",
+                            "width": "160px"
+                        },
+                        "fontSize": "14px",
+                        "fontWeight": "500",
+                        "paddingBottom": "0px",
+                        "paddingLeft": "0px",
+                        "paddingRight": "0px",
+                        "paddingTop": "0px",
+                        "position": "left"
+                    },
+                    "widthReduction": 0
+                },
+                "title": "TCP 错误",
+                "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
+                "type": "graph",
+                "valueMapping": null
+            },
+            {
+                "collapsed": false,
+                "conditionRender": {
+                    "type": "variable",
+                    "value": ""
+                },
+                "datasource": {
+                    "id": 2,
+                    "queries": [
+                        {
+                            "data": {},
+                            "id": 65,
+                            "legend": "重传数",
+                            "metrics": "irate(node_netstat_Tcp_RetransSegs{}[${__interval__}])",
+                            "visible": true
+                        },
+                        {
+                            "data": {},
+                            "id": 66,
+                            "legend": "重传占比",
+                            "metrics": "irate(node_netstat_Tcp_RetransSegs{}[${__interval__}])/ irate(node_netstat_Tcp_OutSegs{}[${__interval__}]) * 100",
+                            "visible": true
+                        }
+                    ],
+                    "queryOptions": {
+                        "maxDataPoints": 600,
+                        "minInterval": "1m"
+                    }
+                },
+                "desc": "",
+                "enableConditionRender": false,
+                "enableScopeTime": false,
+                "enableTransform": false,
+                "gridPos": {
+                    "h": 15,
+                    "w": 12,
+                    "x": 12,
+                    "y": 105
+                },
+                "id": 20,
+                "overrides": [
+                    {
+                        "target": "重传占比",
+                        "overrides": [
+                            {
+                                "type": "Series.unit",
+                                "value": {
+                                    "unitsType": "percent%",
+                                    "units": [
+                                        {
+                                            "operator": "x",
+                                            "rhs": 1,
+                                            "unit": "%"
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                "type": "Series.separateYAxis",
+                                "value": true
+                            },
+                            {
+                                "type": "Series.style",
+                                "value": "points"
+                            }
+                        ]
+                    }
+                ],
+                "plugins": {
+                    "graph": {
+                        "alertFilter": {
+                            "alertLabel": "",
+                            "datasources": [],
+                            "enableFilter": true,
+                            "httpQuery": {
+                                "data": {},
+                                "id": 65,
+                                "legend": "",
+                                "metrics": "",
+                                "visible": true
+                            },
+                            "ruleLabel": "",
+                            "ruleName": "",
+                            "state": []
+                        },
+                        "axis": {
+                            "label": "",
+                            "scale": "linear",
+                            "scaleBase": 2,
+                            "showGrid": true,
+                            "showX": true,
+                            "showY": true
+                        },
+                        "clickActions": [],
+                        "enableAlert": false,
+                        "legend": {
+                            "mode": "table",
+                            "nameWidth": "90",
+                            "order": {
+                                "by": "Last",
+                                "sort": "desc"
+                            },
+                            "placement": "right",
+                            "showValuesName": false,
+                            "valueCalcs": [
+                                "Last"
+                            ],
+                            "width": 100
+                        },
+                        "styles": {
+                            "barGap": 10,
+                            "barRadius": 0,
+                            "connectNulls": false,
+                            "enableStack": false,
+                            "fillOpacity": 0,
+                            "gradientMode": "none",
+                            "lineWidth": 2,
+                            "padding": [
+                                null,
+                                null,
+                                null,
+                                null
+                            ],
+                            "pointSize": 6,
+                            "showPoints": "auto",
+                            "style": "lines"
+                        },
+                        "thresholds": {
+                            "enableTransform": false,
+                            "mode": "absolute",
+                            "thresholds": [
+                                {
+                                    "color": "#9FE6B8",
+                                    "value": null
+                                }
+                            ],
+                            "transform": "function transform(data, lodash){\n\n}"
+                        },
+                        "thresholdsDisplay": "None",
+                        "tooltip": {
+                            "mode": "all",
+                            "sort": "desc"
+                        },
+                        "value": {
+                            "decimal": 3,
+                            "units": [
+                                {
+                                    "operator": "/",
+                                    "rhs": 1,
+                                    "unit": ""
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1000,
+                                    "unit": "k"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1000000,
+                                    "unit": "m"
+                                }
+                            ],
+                            "unitsType": "short"
+                        }
+                    }
+                },
+                "scopeTime": {
+                    "end": "2024-03-05T10:19:03.964Z",
+                    "endRaw": "now",
+                    "start": "2024-03-04T22:19:03.964Z",
+                    "startRaw": "now-12h",
+                    "sub": 720
+                },
+                "styles": {
+                    "border": "None",
+                    "borderOnHover": true,
+                    "decoration": {
+                        "height": "20px",
+                        "justifyContent": "center",
+                        "left": "",
+                        "reverse": false,
+                        "top": "-30px",
+                        "type": "None",
+                        "width": "100%"
+                    },
+                    "heightReduction": 0,
+                    "marginLeft": 0,
+                    "marginTop": 0,
+                    "palette": "classic",
+                    "title": {
+                        "color": "inherit",
+                        "decoration": {
+                            "height": "50px",
+                            "margin": "10px",
+                            "type": "None",
+                            "width": "160px"
+                        },
+                        "fontSize": "14px",
+                        "fontWeight": "500",
+                        "paddingBottom": "0px",
+                        "paddingLeft": "0px",
+                        "paddingRight": "0px",
+                        "paddingTop": "0px",
+                        "position": "left"
+                    },
+                    "widthReduction": 0
+                },
+                "title": "TCP重传",
+                "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
+                "type": "graph",
+                "valueMapping": null
+            },
+            {
+                "collapsed": false,
+                "conditionRender": {
+                    "type": "variable",
+                    "value": ""
+                },
+                "datasource": {
+                    "id": 2,
+                    "queries": [
+                        {
+                            "data": {},
+                            "id": 65,
+                            "legend": "队列大小",
+                            "metrics": "irate(node_netstat_Tcp_PassiveOpens{}[${__interval__}])",
+                            "visible": true
+                        },
+                        {
+                            "id": 66,
+                            "metrics": "node_tcpext_synQueueSize{}",
+                            "legend": "队列大小2",
+                            "visible": true,
+                            "data": {}
+                        }
+                    ],
+                    "queryOptions": {
+                        "maxDataPoints": 600,
+                        "minInterval": "1m"
+                    }
+                },
+                "desc": "",
+                "enableConditionRender": false,
+                "enableScopeTime": false,
+                "enableTransform": false,
+                "gridPos": {
+                    "h": 15,
+                    "w": 12,
+                    "x": 0,
+                    "y": 120
+                },
+                "id": 21,
+                "overrides": [],
+                "plugins": {
+                    "graph": {
+                        "alertFilter": {
+                            "alertLabel": "",
+                            "datasources": [],
+                            "enableFilter": true,
+                            "httpQuery": {
+                                "data": {},
+                                "id": 65,
+                                "legend": "",
+                                "metrics": "",
+                                "visible": true
+                            },
+                            "ruleLabel": "",
+                            "ruleName": "",
+                            "state": []
+                        },
+                        "axis": {
+                            "label": "",
+                            "scale": "linear",
+                            "scaleBase": 2,
+                            "showGrid": true,
+                            "showX": true,
+                            "showY": true
+                        },
+                        "clickActions": [],
+                        "enableAlert": false,
+                        "legend": {
+                            "mode": "table",
+                            "nameWidth": "90",
+                            "order": {
+                                "by": "Last",
+                                "sort": "desc"
+                            },
+                            "placement": "right",
+                            "showValuesName": false,
+                            "valueCalcs": [
+                                "Last"
+                            ],
+                            "width": 100
+                        },
+                        "styles": {
+                            "barGap": 10,
+                            "barRadius": 0,
+                            "connectNulls": false,
+                            "enableStack": false,
+                            "fillOpacity": 0,
+                            "gradientMode": "none",
+                            "lineWidth": 2,
+                            "padding": [
+                                null,
+                                null,
+                                null,
+                                null
+                            ],
+                            "pointSize": 6,
+                            "showPoints": "auto",
+                            "style": "lines"
+                        },
+                        "thresholds": {
+                            "enableTransform": false,
+                            "mode": "absolute",
+                            "thresholds": [
+                                {
+                                    "color": "#9FE6B8",
+                                    "value": null
+                                }
+                            ],
+                            "transform": "function transform(data, lodash){\n\n}"
+                        },
+                        "thresholdsDisplay": "None",
+                        "tooltip": {
+                            "mode": "all",
+                            "sort": "desc"
+                        },
+                        "value": {
+                            "decimal": 3,
+                            "units": [
+                                {
+                                    "operator": "/",
+                                    "rhs": 1,
+                                    "unit": ""
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1000,
+                                    "unit": "k"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1000000,
+                                    "unit": "m"
+                                }
+                            ],
+                            "unitsType": "short"
+                        }
+                    }
+                },
+                "scopeTime": {
+                    "end": "2024-03-05T10:19:03.964Z",
+                    "endRaw": "now",
+                    "start": "2024-03-04T22:19:03.964Z",
+                    "startRaw": "now-12h",
+                    "sub": 720
+                },
+                "styles": {
+                    "border": "None",
+                    "borderOnHover": true,
+                    "decoration": {
+                        "height": "20px",
+                        "justifyContent": "center",
+                        "left": "",
+                        "reverse": false,
+                        "top": "-30px",
+                        "type": "None",
+                        "width": "100%"
+                    },
+                    "heightReduction": 0,
+                    "marginLeft": 0,
+                    "marginTop": 0,
+                    "palette": "classic",
+                    "title": {
+                        "color": "inherit",
+                        "decoration": {
+                            "height": "50px",
+                            "margin": "10px",
+                            "type": "None",
+                            "width": "160px"
+                        },
+                        "fontSize": "14px",
+                        "fontWeight": "500",
+                        "paddingBottom": "0px",
+                        "paddingLeft": "0px",
+                        "paddingRight": "0px",
+                        "paddingTop": "0px",
+                        "position": "left"
+                    },
+                    "widthReduction": 0
+                },
+                "title": "TCP半连接队列",
+                "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
+                "type": "graph",
+                "valueMapping": null
+            },
+            {
+                "collapsed": false,
+                "conditionRender": {
+                    "type": "variable",
+                    "value": ""
+                },
+                "datasource": {
+                    "id": 2,
+                    "queries": [
+                        {
+                            "data": {},
+                            "id": 65,
+                            "legend": "失败数",
+                            "metrics": "irate(node_netstat_TcpExt_SyncookiesFailed{}[${__interval__}])",
+                            "visible": true
+                        }
+                    ],
+                    "queryOptions": {
+                        "maxDataPoints": 600,
+                        "minInterval": "1m"
+                    }
+                },
+                "desc": "",
+                "enableConditionRender": false,
+                "enableScopeTime": false,
+                "enableTransform": false,
+                "gridPos": {
+                    "h": 15,
+                    "w": 12,
+                    "x": 12,
+                    "y": 120
+                },
+                "id": 22,
+                "overrides": [],
+                "plugins": {
+                    "graph": {
+                        "alertFilter": {
+                            "alertLabel": "",
+                            "datasources": [],
+                            "enableFilter": true,
+                            "httpQuery": {
+                                "data": {},
+                                "id": 65,
+                                "legend": "",
+                                "metrics": "",
+                                "visible": true
+                            },
+                            "ruleLabel": "",
+                            "ruleName": "",
+                            "state": []
+                        },
+                        "axis": {
+                            "label": "",
+                            "scale": "linear",
+                            "scaleBase": 2,
+                            "showGrid": true,
+                            "showX": true,
+                            "showY": true
+                        },
+                        "clickActions": [],
+                        "enableAlert": false,
+                        "legend": {
+                            "mode": "hidden",
+                            "nameWidth": "90",
+                            "order": {
+                                "by": "Last",
+                                "sort": "desc"
+                            },
+                            "placement": "right",
+                            "showValuesName": false,
+                            "valueCalcs": [
+                                "Last"
+                            ],
+                            "width": 100
+                        },
+                        "styles": {
+                            "barGap": 10,
+                            "barRadius": 0,
+                            "connectNulls": false,
+                            "enableStack": false,
+                            "fillOpacity": 0,
+                            "gradientMode": "none",
+                            "lineWidth": 2,
+                            "padding": [
+                                null,
+                                null,
+                                null,
+                                null
+                            ],
+                            "pointSize": 6,
+                            "showPoints": "auto",
+                            "style": "lines"
+                        },
+                        "thresholds": {
+                            "enableTransform": false,
+                            "mode": "absolute",
+                            "thresholds": [
+                                {
+                                    "color": "#9FE6B8",
+                                    "value": null
+                                }
+                            ],
+                            "transform": "function transform(data, lodash){\n\n}"
+                        },
+                        "thresholdsDisplay": "None",
+                        "tooltip": {
+                            "mode": "all",
+                            "sort": "desc"
+                        },
+                        "value": {
+                            "decimal": 3,
+                            "units": [
+                                {
+                                    "operator": "/",
+                                    "rhs": 1,
+                                    "unit": ""
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1000,
+                                    "unit": "k"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1000000,
+                                    "unit": "m"
+                                }
+                            ],
+                            "unitsType": "short"
+                        }
+                    }
+                },
+                "scopeTime": {
+                    "end": "2024-03-05T10:19:03.964Z",
+                    "endRaw": "now",
+                    "start": "2024-03-04T22:19:03.964Z",
+                    "startRaw": "now-12h",
+                    "sub": 720
+                },
+                "styles": {
+                    "border": "None",
+                    "borderOnHover": true,
+                    "decoration": {
+                        "height": "20px",
+                        "justifyContent": "center",
+                        "left": "",
+                        "reverse": false,
+                        "top": "-30px",
+                        "type": "None",
+                        "width": "100%"
+                    },
+                    "heightReduction": 0,
+                    "marginLeft": 0,
+                    "marginTop": 0,
+                    "palette": "classic",
+                    "title": {
+                        "color": "inherit",
+                        "decoration": {
+                            "height": "50px",
+                            "margin": "10px",
+                            "type": "None",
+                            "width": "160px"
+                        },
+                        "fontSize": "14px",
+                        "fontWeight": "500",
+                        "paddingBottom": "0px",
+                        "paddingLeft": "0px",
+                        "paddingRight": "0px",
+                        "paddingTop": "0px",
+                        "position": "left"
+                    },
+                    "widthReduction": 0
+                },
+                "title": "SYN cookies失败数",
+                "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
+                "type": "graph",
+                "valueMapping": null
+            }
+        ],
+        "sharedTooltip": false,
+        "styles": {
+            "bg": {
+                "colorMode": "dark",
+                "url": ""
+            },
+            "bgColor": "",
+            "bgEnabled": false,
+            "border": "None"
+        },
+        "variables": []
+    },
+    "weight": 0,
+    "tags": []
+}

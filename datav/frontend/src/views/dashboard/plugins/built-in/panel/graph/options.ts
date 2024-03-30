@@ -291,7 +291,7 @@ export const parseOptions = (
     padding: [
       padding[0] ?? 10, // 解决y轴上的数据被挡住的问题
       padding[1] ?? 5,
-      padding[2] ?? 5,
+      padding[2] ?? -20,
       padding[3] ?? (config.panel.plugins.graph.axis.showY ? 0 : 25),
     ],
     plugins: [
