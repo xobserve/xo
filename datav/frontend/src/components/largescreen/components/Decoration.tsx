@@ -34,7 +34,7 @@ interface Props {
   decoration: DecorationStyles
 }
 
-const Decoration = memo(({ decoration }: Props) => {
+const PanelDecoration = memo(({ decoration }: Props) => {
   return (
     <Box display='flex' justifyContent={decoration.justifyContent}>
       <Inner decoration={decoration} />
@@ -76,4 +76,4 @@ const Inner = ({ decoration }: Props) => {
       return <></>
   }
 }
-export default Decoration
+export default PanelDecoration

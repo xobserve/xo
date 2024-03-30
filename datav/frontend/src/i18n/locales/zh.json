@@ -400,6 +400,7 @@
   "panel": {
     "hidePanel": "隐藏图表",
     "viewPanel": "查看图表",
+    "reQeuryData": "重新查询数据",
     "exitlView": "退出查看",
     "debugPanel": "Debug 图表",
     "discard": "丢弃",

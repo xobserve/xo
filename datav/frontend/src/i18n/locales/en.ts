@@ -446,6 +446,7 @@ export const variableMsg = i18n('variable', {
 export const panelMsg = i18n('panel', {
   hidePanel: 'Hide panel',
   viewPanel: 'View Panel',
+  reQeuryData: 'Requery data',
   exitlView: 'Exit View',
   debugPanel: 'Debug Panel',
   discard: 'Discard',
