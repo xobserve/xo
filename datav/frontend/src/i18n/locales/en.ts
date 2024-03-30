@@ -464,7 +464,7 @@ export const panelMsg = i18n('panel', {
     "Final interval is caculated based on the current time range, max data points and the min interval, it's sent to datasource, e.g final interval will be directly passed as the step option that Prometheus requires",
 
   panelTitle: 'Panel Title',
-  panelDesc: 'give a short description to this panel',
+  panelDesc: 'give a short description to this panel, support markdown',
   panelType: 'Panel type',
   visualization: 'Built-in',
   externalPanels: 'External',

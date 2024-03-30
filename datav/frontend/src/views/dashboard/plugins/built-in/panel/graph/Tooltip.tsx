@@ -145,6 +145,7 @@ const Tooltip = memo(({ props, options, data, inactiveSeries, defaultLegend }: P
                 filterIdx={focusIdx}
                 panelType={props.panel.type}
                 inactiveSeries={inactiveSeries}
+                defaultLegend={defaultLegend}
               />
             </Box>
           </TooltipContainer>

@@ -414,7 +414,7 @@
     "finalInterval": "最终间隔",
     "finalIntervalTips": "最终间隔是根据当前的时间范围、最大点数和最小间隔综合计算出的，它将被发送到数据源并用于最终渲染的图表点间隔，例如 Prometheus 需要的 step 参数就是使用该值",
     "panelTitle": "图表标题",
-    "panelDesc": "给图表一个简单描述",
+    "panelDesc": "给图表一个简单描述，支持 markdown",
     "panelType": "图表类型",
     "visualization": "内置图表",
     "externalPanels": "外部图表",

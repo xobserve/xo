@@ -238,7 +238,11 @@ export const parseOptions = (
     if (!isEmpty(inactiveSeries)) {
       showSeries = inactiveSeries.includes(d.name) ? false : true
     } else {
-      showSeries = d.name.match(defaultLegend)
+      if (defaultLegend) {
+        showSeries = d.name.match(defaultLegend)
+      } else {
+        showSeries = true
+      }
     }
     series.push({
       show:  showSeries,
