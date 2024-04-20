@@ -34,6 +34,7 @@ import { PanelForceRebuildEvent } from 'src/data/bus-events'
 import { MobileBreakpoint } from 'src/data/constants'
 import { externalPanelPlugins } from '../plugins/external/plugins'
 import { builtinPanelPlugins } from '../plugins/built-in/plugins'
+import InputSelect from 'components/select/InputSelect'
 
 const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
   const t1 = useStore(panelMsg)
@@ -115,23 +116,15 @@ const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
             <FaTimes fontSize='0.8rem' />
           </Box>
           <FormItem title={t1.targetName} alignItems='center'>
-            <Select
-              style={{ minWidth: isLargeScreen ? '150px' : '100px' }}
-              showSearch
-              size='large'
-              value={o.target}
-              onChange={(v) => {
-                onChange((panel: Panel) => {
-                  const o = panel.overrides[i]
-                  o.target = v
-                })
-              }}
-              options={names.map((name, i) => ({
-                value: name.value,
-                label: name.label,
-              }))}
-              popupMatchSelectWidth={false}
-            />
+            <InputSelect value={o.target} options={names.map((name, i) => ({
+              value: name.value,
+              label: name.label,
+            }))} onChange={(v) => {
+              onChange((panel: Panel) => {
+                const o = panel.overrides[i]
+                o.target = v
+              })
+            }} />
           </FormItem>
 
           <VStack

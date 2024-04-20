@@ -29,7 +29,7 @@ export const findOverrideRule = (panel: Panel, overideTarget, ruleType) => {
 }
 
 export const findOverride = (panel: Panel, overideTarget) => {
-  return panel.overrides.find((o) => o.target == overideTarget)
+  return panel.overrides.find((o) => overideTarget.match(o.target))
 }
 
 export const findRuleInOverride = (override: OverrideItem, ruleType) => {
