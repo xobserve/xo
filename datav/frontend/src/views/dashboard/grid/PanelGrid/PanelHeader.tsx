@@ -177,26 +177,7 @@ const PanelHeader = ({
                                 </TitleDecoration>
                             </Box>
                             {(queryError || panel.desc) && (
-                                <Tooltip
-                                    label={
-                                        isEmpty(toString(queryError))
-                                            ? <MarkdownRender md={replaceWithVariables(panel.desc, {})} enableToc />
-                                            : toString(queryError)
-                                    }
-                                >
-                                    <Tag
-                                        variant='subtle'
-                                        size='sm'
-                                        colorScheme={queryError ? 'red' : null}
-                                        paddingInlineStart='6px'
-                                        paddingInlineEnd='6px'
-                                        minW='auto'
-                                        minH='14px'
-                                        borderRadius={1}
-                                    >
-                                        i
-                                    </Tag>
-                                </Tooltip>
+                                <PanelDesc queryError={queryError} desc={panel.desc} />
                             )}
                         </HStack>
                     ) : (
@@ -212,6 +193,9 @@ const PanelHeader = ({
                         />
                     )}
                 </Flex>
+                {isEmpty(panel.title) && (queryError || !isEmpty(panel.desc)) && (
+                    <PanelDesc queryError={queryError} desc={panel.desc} />
+                )}
                 {!loading && panel.enableScopeTime && (
                     <Popover trigger='hover'>
                         <PopoverTrigger>
@@ -347,4 +331,27 @@ const PanelMenu = ({ panel, menuItems, onHover, embed, colorMode }) => {
             </Box>
         </Dropdown>
     )
+}
+
+const PanelDesc = ({ queryError, desc }) => {
+    return <Tooltip
+        label={
+            isEmpty(toString(queryError))
+                ? <MarkdownRender md={replaceWithVariables(desc, {})} fontSize="0.9rem" enableToc />
+                : toString(queryError)
+        }
+    >
+        <Tag
+            variant='subtle'
+            size='sm'
+            colorScheme={queryError ? 'red' : null}
+            paddingInlineStart='6px'
+            paddingInlineEnd='6px'
+            minW='auto'
+            minH='14px'
+            borderRadius={1}
+        >
+            i
+        </Tag>
+    </Tooltip>
 }
